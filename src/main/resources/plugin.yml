@@ -1,5 +1,5 @@
 name: VoxelSniper
-main: com.thevoxelbox.VoxelSniper
+main: com.thevoxelbox.voxelsniper.VoxelSniper
 version: 5.131
 website: http://www.voxelwiki.com/minecraft/VoxelSniper
 author: przerwap; With additional brushes by Gavjenks, giltwist, psanker, Deamon5550 & DivineRage
