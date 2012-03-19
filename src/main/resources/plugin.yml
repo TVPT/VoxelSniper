@@ -10,7 +10,7 @@ commands:
     description: Gives the player a litesniper license.
     usage: |
            /<command> playername
-           Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
+           Example: /<command> sniperstudent -- awards a license to 'sniperstudent'
   addlitesnipertemp:
     description: Gives the the specified player a temporary litesniper license.
     usage: |
@@ -20,7 +20,7 @@ commands:
     description: Gives the specified player a sniper license.
     usage: |
            /<command> playername
-           Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
+           Example: /<command> sniperstudent -- awards a license to 'sniperstudent'
   addsnipertemp:
     description: Gives the specified player a temporary sniper license
     usage: |
