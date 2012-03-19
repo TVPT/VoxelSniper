@@ -1,0 +1,132 @@
+name: VoxelSniper
+main: com.thevoxelbox.VoxelSniper
+version: 5.131
+website: http://www.voxelwiki.com/minecraft/VoxelSniper
+author: przerwap; With additional brushes by Gavjenks, giltwist, psanker, Deamon5550 & DivineRage
+description: >
+             World editing from ingame using 3D brushes.
+commands:
+  addlitesniper:
+    description: Needs a description.
+    usage: |
+           /<command> playername
+           Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
+  addlitesnipertemp:
+    description: Needs a description.
+    usage: |
+           /<command> playername
+           Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
+  addsnipertemp:
+    description: Needs a description.
+    usage: |
+           /<command> playername
+           Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
+  paint:
+    description: Needs a description.
+    usage: |
+           /<command>
+           Example: /<command>
+  addsniper:
+    description: Needs a description.
+    usage: |
+           /<command> playername
+           Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
+  removesniper:
+    description: Needs a description.
+    usage: |
+           /<command> playername
+           Example: /<command> badsniper -- revokes badsniper's license
+  goto:
+    description: Warps to the specified coordinates.
+    usage: |
+           /<command> X Z
+           Example: /<command> 100 -100 takes the user to x: 100, z: -1000
+  u:
+    description: undoes the last snipe.
+    usage: |
+           /<command>
+           Example: /<command> - does your most recent sniper.
+  uu:
+    description: UndoUser undoes another sniper user's snipes.
+    usage: |
+           /<command> playername (truncation okay)
+           Example: /<command> bads -- undoes BadSniper's last snipe.  BadSniper must be online for this to work.
+  uuu:
+    description: Ultimate Undo User.
+    usage: |
+           /<command> PlayerName
+           Example: /<command> BadSniper -- undoes BadSniper's last snipe, even though they logged off.
+  d:
+    description: VoxelSniper Default.
+    usage: |
+           /<command>
+           Example: /<command> -- resets the sniper to default settings.
+  p:
+    description: Voxelsniper performer.
+    usage: |
+           /<command>
+           Example: /<command> -- sets the performer of the current brush to "m"
+           /<command> <performer>
+           Example: /<command> -- sets the performer of the current brush to <performer>
+  vs:
+    description: VoxelSniper Settings.
+    usage: |
+           /<command>
+           Example: /<command> -- gives the sniper's settings in a printout.
+  vc:
+    description: VoxelCentroid.
+    usage: |
+           /<command> ADJUST
+           Example: /<command> -1 -- Sets the Clone Cylinder's Y value for the base relative to the Clone Point.
+  vh:
+    description: VoxelHeight.
+    usage: |
+           /<command>
+           Example: /<command> -- sets the height from the center of the Clone Cylinder to copy.
+  vi:
+    description: VoxelInk (Data Value).
+    usage: |
+           /<command> 6
+           Example: /<command> -- sets a data value of 6 (e.g. Pink Wool).
+  vr:
+    description: VoxelReplace.
+    usage: |
+           /<command> 0-94
+           Example: /<command> 12 - sets a replace brush to select Sand blocks for replacement.
+  vl:
+    description: VoxelBlockExclusion list
+    usage: |
+      /<command>
+      Example: /<command> 89 -5: Add glowstone to voxel list and remove plank from voxel list.
+  
+  vir:
+    description: VoxelInkReplace.
+    usage: |
+           /<command> 6
+           Example: /<command> 12 - sets a replace ink brush to select data 6 blocks for replacement.
+  v:
+    description: Voxel input.
+    usage: |
+           /<command> 0-94
+           Example: /<command> 1 -- loads the sniper with Stone blocks.
+  b:
+    description: Brush.
+    usage: |
+           /<command> select-radius
+           Example: /<command> 5 -- sets a brush radius size of 5 (11 spaces across).
+           Example: /<command> idr -- sets an ink disc replace brush.
+  bms:
+    description: Save brush preset.
+    usage: |
+           /<command> Integer preset key
+           Example: /<command> 13 -- Saves your current brush settings to index 13.
+  bml:
+    description: Load brush preset.
+    usage: |
+           /<command> Integer preset key
+           Example: /<command> 13 -- Loads the brush settings you set earlier to index 13.
+  vchunk:
+    description: Update the chunk you are standing in.
+    usage: |
+           /<command>
+           Example: /<command> -- Loads the chunk you stand in.
