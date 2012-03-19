@@ -7,32 +7,32 @@ description: >
              World editing from ingame using 3D brushes.
 commands:
   addlitesniper:
-    description: Needs a description.
+    description: Gives the player a litesniper license.
     usage: |
            /<command> playername
            Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
   addlitesnipertemp:
-    description: Needs a description.
+    description: Gives the the specified player a temporary litesniper license.
     usage: |
            /<command> playername
            Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
   addsnipertemp:
-    description: Needs a description.
+    description: Gives the specified player a temporary sniper license
     usage: |
            /<command> playername
            Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
   paint:
-    description: Needs a description.
+    description: Change the selected painting to another painting.
     usage: |
            /<command>
            Example: /<command>
   addsniper:
-    description: Needs a description.
+    description: Gives the specified player a sniper license.
     usage: |
            /<command> playername
            Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
   removesniper:
-    description: Needs a description.
+    description: Removes the specified sniper's license.
     usage: |
            /<command> playername
            Example: /<command> badsniper -- revokes badsniper's license
