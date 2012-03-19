@@ -16,18 +16,13 @@ commands:
     usage: |
            /<command> playername
            Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
-  addsnipertemp:
-    description: Gives the specified player a temporary sniper license
+  addsniper:
+    description: Gives the specified player a sniper license.
     usage: |
            /<command> playername
            Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
-  paint:
-    description: Change the selected painting to another painting.
-    usage: |
-           /<command>
-           Example: /<command>
-  addsniper:
-    description: Gives the specified player a sniper license.
+  addsnipertemp:
+    description: Gives the specified player a temporary sniper license
     usage: |
            /<command> playername
            Example: /<command> sniperstudent -- awards a temporary license to 'sniperstudent'
@@ -36,6 +31,11 @@ commands:
     usage: |
            /<command> playername
            Example: /<command> badsniper -- revokes badsniper's license
+  paint:
+    description: Change the selected painting to another painting.
+    usage: |
+           /<command>
+           Example: /<command>
   goto:
     description: Warps to the specified coordinates.
     usage: |
