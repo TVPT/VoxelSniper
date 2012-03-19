@@ -61,7 +61,11 @@ public class Monster extends Brush {
 
     protected void spawn(vSniper v) {
         for(int x = 0; x < v.brushSize; x++) {
-            w.spawnCreature(lb.getLocation(), ct);
+            try {
+                w.spawnCreature(lb.getLocation(), ct);
+            } catch (ClassCastException ex) {
+                v.p.sendMessage(ChatColor.RED + "Invalid living entity");
+            }
         }
     }
 }
