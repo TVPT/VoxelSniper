@@ -76,17 +76,6 @@ public class Sneak extends Brush {
                         v.info();
                         return true;
 
-                    case SLIME_BALL: //Cross your fingers - Giltwist
-                        HitBlox hb = null;
-                        hb = new HitBlox(v.p, v.p.getWorld());
-                        tb = hb.getTargetBlock();
-                        if(tb == null) {
-                            return true;
-                        }
-                        tb.setTypeId(0, false);
-                        ((CraftPlayer) v.p).getHandle().netServerHandler.sendPacket(new Packet53BlockChange(tb.getX(), tb.getY(), tb.getZ(), ((CraftWorld) v.p.getWorld()).getHandle()));
-                        return true;
-
                     default:
                         return false;
                 }
