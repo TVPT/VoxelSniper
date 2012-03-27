@@ -13,10 +13,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 import com.thevoxelbox.voxelsniper.HitBlox;
 
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import net.minecraft.server.Packet53BlockChange;
-import org.bukkit.craftbukkit.CraftWorld;
-
 /**
  *
  * @author Piotr
