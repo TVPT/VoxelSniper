@@ -13,10 +13,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 import com.thevoxelbox.voxelsniper.HitBlox;
 
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import net.minecraft.server.Packet53BlockChange;
-import org.bukkit.craftbukkit.CraftWorld;
-
 /**
  *
  * @author Piotr
@@ -74,17 +70,6 @@ public class Sneak extends Brush {
                     case STONE_AXE:
                         v.reset();
                         v.info();
-                        return true;
-
-                    case SLIME_BALL: //Cross your fingers - Giltwist
-                        HitBlox hb = null;
-                        hb = new HitBlox(v.p, v.p.getWorld());
-                        tb = hb.getTargetBlock();
-                        if(tb == null) {
-                            return true;
-                        }
-                        tb.setTypeId(0, false);
-                        ((CraftPlayer) v.p).getHandle().netServerHandler.sendPacket(new Packet53BlockChange(tb.getX(), tb.getY(), tb.getZ(), ((CraftWorld) v.p.getWorld()).getHandle()));
                         return true;
 
                     default:
