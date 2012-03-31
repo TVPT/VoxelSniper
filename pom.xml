@@ -4,7 +4,7 @@
 
   <groupId>com.thevoxelbox</groupId>
   <artifactId>VoxelSniper</artifactId>
-  <version>5.132-SNAPSHOT</version>
+  <version>5.133-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>VoxelSniper</name>
@@ -13,6 +13,15 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  
+  <repositories>
+      
+      <!-- Bukkit -->
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
+    </repositories>
 
   <dependencies>
     <dependency>

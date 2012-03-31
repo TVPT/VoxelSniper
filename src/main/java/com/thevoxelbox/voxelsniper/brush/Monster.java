@@ -8,6 +8,7 @@ import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 
 /**
  *THIS BRUSH SHOULD NOT USE PERFORMERS
@@ -42,7 +43,10 @@ public class Monster extends Brush {
         if(par[1].equalsIgnoreCase("info")) {
             v.p.sendMessage(ChatColor.BLUE + "The aviable creature types are as follows:");
             String names = "";
-            for(EntityType cre : EntityType.values()) {
+            for (EntityType cre : EntityType.values()) {
+                if (cre != null && !cre.getEntityClass().isAssignableFrom(LivingEntity.class))
+                    continue;
+                
                 names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + cre.getName();
             }
             names += ChatColor.AQUA + " |";

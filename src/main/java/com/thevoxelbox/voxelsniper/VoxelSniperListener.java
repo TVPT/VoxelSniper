@@ -13,17 +13,14 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.logging.Level;
-import net.minecraft.server.Packet13PlayerLookMove;
 import net.minecraft.server.Packet39AttachEntity;
 
-import net.minecraft.server.Packet51MapChunk;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -133,26 +130,6 @@ public class VoxelSniperListener implements Listener {
         }
     }
 
-    public static class Derp implements Runnable {
-
-        private Player player;
-
-        public Derp(Player p) {
-            player = p;
-        }
-
-        public void run() {
-            Location l = player.getLocation();
-            ((CraftPlayer) player).getHandle().netServerHandler.sendPacket(new Packet13PlayerLookMove(l.getX() + 2, l.getY(), l.getZ(), 1, l.getYaw(), l.getPitch(), false));
-            //((CraftServer)player.getServer()).getHandle().sendAll(new Packet39AttachEntity(((CraftPlayer)player).getHandle(), ((CraftPlayer)player).getHandle()));
-//            for (Player p : player.getServer().getOnlinePlayers()) {
-//                if (!p.getName().equals(player.getName())) {
-//                    ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet39AttachEntity(((CraftPlayer) player).getHandle(), ((CraftPlayer) player).getHandle()));
-//                }
-//            }
-        }
-    }
-
     @EventHandler
     public void onPlayerPreprocessCommand(PlayerCommandPreprocessEvent event) {
         if (event.getMessage().contains("|")) {
@@ -168,9 +145,7 @@ public class VoxelSniperListener implements Listener {
 
     public static boolean onCommand(Player player, String[] split, String command) {
         if (command.equalsIgnoreCase("vchunk")) {
-            ((CraftPlayer) player).getHandle().netServerHandler.sendPacket(new Packet51MapChunk(((CraftChunk) player.getWorld().getChunkAt(player.getLocation().getBlock())).getHandle(), true, 0));
-            
-            // ... why the hack method when there is a built-in Bukkit protocol for this? That I added? -psa
+            player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
             return true;
         }
         if (command.equalsIgnoreCase("paint")) {
@@ -456,14 +431,6 @@ public class VoxelSniperListener implements Listener {
                                 VoxelSnipers.get(player.getName()).setRange(-1);
                                 return true;
                             }
-                        } else if (split[0].equalsIgnoreCase("test")) {
-                            ((CraftPlayer) player).getHandle().netServerHandler.sendPacket(new Packet39AttachEntity(((CraftPlayer) player).getHandle(), ((CraftPlayer) player).getHandle()));
-                            for (Player p : player.getServer().getOnlinePlayers()) {
-                                if (!p.getName().equals(player.getName())) {
-                                    ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet39AttachEntity(((CraftPlayer) player).getHandle(), ((CraftPlayer) player).getHandle()));
-                                }
-                            }
-                            return true;
                         } else if (split[0].equalsIgnoreCase("sitall")) {
                             player.sendMessage("Sitting all the players...");
                             sitAll();
@@ -1088,6 +1055,7 @@ public class VoxelSniperListener implements Listener {
     public void runFoodTimer(final Player p) {
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
 
+            @Override
             public void run() {
                 if (voxelFood.contains(p)) {
                     voxelFood.remove(p);
