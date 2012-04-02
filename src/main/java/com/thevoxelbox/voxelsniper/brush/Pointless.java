@@ -17,7 +17,7 @@ public class Pointless extends Brush {
     Server server = VoxelSniper.s;
     private boolean broadcastIt = false;
     private boolean loadedPrintouts = false;
-    public static HashMap<String, String[]> printouts = new HashMap();
+    public static HashMap<String, String[]> printouts = new HashMap<String, String[]>();
     private String selection = "voxelbox";
     private boolean password = false;
     

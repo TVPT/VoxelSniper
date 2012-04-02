@@ -9,6 +9,8 @@ import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+
 import java.util.List;
 
 /**
@@ -71,7 +73,7 @@ public class ForceBrush extends Brush {
                         v.p.sendMessage(ChatColor.AQUA + "Maximum 500 radius.  Brush size changed for you.");
                     }
             if (RADIUS != -3) {
-                List nearbyEnts = w.getLivingEntities();
+                List<LivingEntity> nearbyEnts = w.getLivingEntities();
                 Location loc = clampY(bx, by, bz).getLocation(); //location of snipe
                 try {
                     for (int i = 0; i < nearbyEnts.size(); i++) {
@@ -92,7 +94,7 @@ public class ForceBrush extends Brush {
                     //may not be any entities, or whatever other problem.
                 }
             } else {
-                List nearbyEnts = w.getLivingEntities();
+                List<LivingEntity> nearbyEnts = w.getLivingEntities();
                 Location loc = clampY(bx, by, bz).getLocation(); //location of snipe
                 try {
                     for (int i = 0; i < nearbyEnts.size(); i++) {
@@ -109,7 +111,7 @@ public class ForceBrush extends Brush {
 
     public void Repel(vSniper v) {
         if (passCorrect) {
-            List nearbyEnts = w.getLivingEntities();
+            List<LivingEntity> nearbyEnts = w.getLivingEntities();
             //Location loc = clampY(bx, by, bz).getLocation(); //location of snipe
             try {
                 for (int i = 0; i < nearbyEnts.size(); i++) {

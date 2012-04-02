@@ -10,7 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,12 +27,12 @@ public class OinkiesPorkSandwich extends Food {
         Location loc = p.getLocation();
         
         if(rand == 25){
-            world.spawnCreature(loc, CreatureType.PIG_ZOMBIE);
+            world.spawnCreature(loc, EntityType.PIG_ZOMBIE);
             world.strikeLightningEffect(loc);
             p.chat(ChatColor.GRAY + "Fear my pig zombie army!");
         }
         else {
-            world.spawnCreature(loc, CreatureType.PIG);
+            world.spawnCreature(loc, EntityType.PIG);
             p.chat(ChatColor.GRAY + "No! My pig experiments failed!");
         }
         
@@ -59,12 +59,12 @@ public class OinkiesPorkSandwich extends Food {
         Location loc = p.getLocation();
         
         if(rand == 25){
-            world.spawnCreature(loc, CreatureType.PIG_ZOMBIE);
+            world.spawnCreature(loc, EntityType.PIG_ZOMBIE);
             world.strikeLightningEffect(loc);
             p.chat(ChatColor.GRAY + "Muahaha! This is the beginning of the end!");
         }
         else {
-            world.spawnCreature(loc, CreatureType.ZOMBIE);
+            world.spawnCreature(loc, EntityType.ZOMBIE);
             p.chat(ChatColor.GRAY + "I must have ran out of pigs for my experiments...");
         }
         

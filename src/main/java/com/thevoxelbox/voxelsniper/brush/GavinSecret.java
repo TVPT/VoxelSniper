@@ -31,7 +31,7 @@ public class GavinSecret extends Brush {
     private int[][][] frontiers;
     private Random generator = new Random();
     private int sumFronts = 1;
-    private List<int[]> FrontsList = new ArrayList();
+    private List<int[]> FrontsList = new ArrayList<int[]>();
 
     //private Iterator HashIt;
     public GavinSecret() {
@@ -526,7 +526,7 @@ public class GavinSecret extends Brush {
     private ArrayList<int[]> search(vSniper v, int[][][] frontiers, int[][][] wilderness, int[] targetCell) { //returns a list of all the "in" cells adjacent to any given frontier cell.
         //int[][] frontiersList = new int[6][3];
         v.p.sendMessage("got to search");
-        ArrayList<int[]> inList = new ArrayList();
+        ArrayList<int[]> inList = new ArrayList<int[]>();
         inList.clear();
         int[] temp;
         v.p.sendMessage("target" + targetCell[0] + targetCell[1] + targetCell[2]);

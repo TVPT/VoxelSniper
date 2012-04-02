@@ -131,7 +131,7 @@ public enum liteBrushes {
     }
 
     static {
-        brushes = new HashMap();
+        brushes = new HashMap<String, liteBrushes>();
 
         for (liteBrushes vb : values()) {
             brushes.put(vb.getShort(), vb);

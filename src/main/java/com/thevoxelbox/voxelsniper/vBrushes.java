@@ -177,7 +177,7 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     }
 
     static {
-        brushes = new HashMap();
+        brushes = new HashMap<String, vBrushes>();
 
         for (vBrushes vb : values()) {
             brushes.put(vb.getShort(), vb);

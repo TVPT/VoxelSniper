@@ -106,10 +106,10 @@ public class vSniper {
     //
     protected HashMap<String, Brush> myBrushes;
     protected HashMap<String, String> brushAlt;
-    protected HashMap<Integer, Brush> brushPresets = new HashMap();
-    protected HashMap<Integer, int[]> brushPresetsParams = new HashMap();
-    protected HashMap<String, Brush> brushPresetsS = new HashMap();
-    protected HashMap<String, int[]> brushPresetsParamsS = new HashMap();
+    protected HashMap<Integer, Brush> brushPresets = new HashMap<Integer, Brush>();
+    protected HashMap<Integer, int[]> brushPresetsParams = new HashMap<Integer, int[]>();
+    protected HashMap<String, Brush> brushPresetsS = new HashMap<String, Brush>();
+    protected HashMap<String, int[]> brushPresetsParamsS = new HashMap<String, int[]>();
     //activated
     private Brush current = new Snipe();
     private Brush previous = new Snipe();
