@@ -52,7 +52,7 @@ public class vPainting {
 
         AxisAlignedBB bb = AxisAlignedBB.a(Math.min(x1, x2), y1, Math.min(z1, z2), Math.max(x1, x2), y2, Math.max(z1, z2));
 
-        List entities = craftWorld.getHandle().getEntities(((CraftPlayer) p).getHandle(), bb);
+        List<?> entities = craftWorld.getHandle().getEntities(((CraftPlayer) p).getHandle(), bb);
         if ((entities.size() == 1) && ((entities.get(0) instanceof EntityPainting))) {
             EntityPainting oldPainting = (EntityPainting) entities.get(0);
             EntityPainting newPainting = new EntityPainting(craftWorld.getHandle(), oldPainting.x, oldPainting.y, oldPainting.z, oldPainting.direction % 4);

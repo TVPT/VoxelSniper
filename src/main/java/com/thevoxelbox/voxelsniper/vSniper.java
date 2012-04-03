@@ -677,7 +677,7 @@ public class vSniper {
             try {
                 writer = new PrintWriter(location);
                 int[] presetsHolder = new int[8];
-                Iterator it = brushPresets.keySet().iterator();
+                Iterator<?> it = brushPresets.keySet().iterator();
                 if (!brushPresets.isEmpty()) {
                     while (it.hasNext()) {
                         int i = (Integer) it.next();
