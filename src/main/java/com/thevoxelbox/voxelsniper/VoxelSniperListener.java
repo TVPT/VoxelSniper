@@ -136,7 +136,10 @@ public class VoxelSniperListener implements Listener {
             String[] commands = event.getMessage().split("\\|");
             
             for (String command : commands) {
-                event.getPlayer().chat(command.trim());
+                command = command.trim();
+                if (command.charAt(0) == '/') {
+                    event.getPlayer().chat(command);
+                }
             }
             
             event.setCancelled(true);
