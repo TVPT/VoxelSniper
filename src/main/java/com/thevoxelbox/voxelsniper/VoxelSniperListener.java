@@ -129,23 +129,7 @@ public class VoxelSniperListener implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onPlayerPreprocessCommand(PlayerCommandPreprocessEvent event) {
-        if (event.getMessage().contains("|")) {
-            String[] commands = event.getMessage().split("\\|");
-            
-            for (String command : commands) {
-                command = command.trim();
-                if (command.charAt(0) == '/') {
-                    event.getPlayer().chat(command);
-                }
-            }
-            
-            event.setCancelled(true);
-        }
-    }
-
+	
     public static boolean onCommand(Player player, String[] split, String command) {
         if (command.equalsIgnoreCase("vchunk")) {
             player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
