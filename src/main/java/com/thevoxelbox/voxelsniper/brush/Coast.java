@@ -87,7 +87,7 @@ public class Coast extends Brush {
         //int bsize = v.brushSize;
         int r = 0; //for random numbers
         Random generator = new Random();
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
 
         //1) original disc - do it in a matrix mask form
         //actually hold off on this... after #4 will know full range of the brush

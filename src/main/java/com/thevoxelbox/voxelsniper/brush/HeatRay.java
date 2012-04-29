@@ -24,7 +24,7 @@ public class HeatRay extends Brush {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        HeatRay(v);
+        heatRay(v);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class HeatRay extends Brush {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        HeatRay(v);
+        heatRay(v);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class HeatRay extends Brush {
         vm.size();
     }
 
-    public void HeatRay(vSniper v) {
+    public void heatRay(vSniper v) {
 
         //This is designed as a purely entertaining brush to use to destroy things you hate in a dramatic fashion.  E.g. Daro builds.  Just using a /b br with fire is not nearly as much fun as this:
         //Basically burns anything that would seem flammable in real life, smelts stone-like things into stone (or 10% chance of destroyign outright or charring into obsidian), kills plants, turns grass to dirt, evaporates water and snow and ice, turns sandy things to glass.

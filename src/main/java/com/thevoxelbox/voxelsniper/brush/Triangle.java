@@ -92,7 +92,7 @@ public class Triangle extends PerformBrush {
 
     public void TriangleP(vSniper v) {
         w = v.p.getWorld();
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
         double lengthone = 0;
         double lengthtwo = 0;
         double lengththree = 0;

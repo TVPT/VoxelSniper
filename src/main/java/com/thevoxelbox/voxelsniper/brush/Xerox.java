@@ -110,6 +110,7 @@ public class Xerox extends PerformBrush{
          }
          return false;
      }
+     /* This function is never used. Remove comment if needed.
      private boolean XeroxA(Block block1){
          if(block == null){
              block = block1;
@@ -120,6 +121,6 @@ public class Xerox extends PerformBrush{
              block = null;
              return false;
          }
-     }
+     }*/
 
 }

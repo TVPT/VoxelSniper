@@ -35,9 +35,9 @@ public class LoadChunk extends Brush {
     }
 
     public void dochunkload(vSniper v) {
-        int j = v.p.getWorld().getChunkAt(v.p.getLocation()).getX();
-        int k = v.p.getWorld().getChunkAt(v.p.getLocation()).getZ();
-        byte[] data = new byte[81920];
+        //int j = v.p.getWorld().getChunkAt(v.p.getLocation()).getX();
+        //int k = v.p.getWorld().getChunkAt(v.p.getLocation()).getZ();
+        //byte[] data = new byte[81920];
         ((CraftPlayer) v.p).getHandle().netServerHandler.sendPacket(new Packet51MapChunk(((CraftChunk) v.p.getWorld().getChunkAt(v.p.getLocation().getBlock())).getHandle(), true, 0));
         
         // ... why the hack method when there is a built-in Bukkit protocol for this? That I added? -psa

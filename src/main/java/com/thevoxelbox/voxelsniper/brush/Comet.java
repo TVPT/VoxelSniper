@@ -85,7 +85,7 @@ public class Comet extends Brush {
     }
 
     public void dofireball(vSniper v) {
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
         double linelength = 0;
 
         //Calculate slope vector

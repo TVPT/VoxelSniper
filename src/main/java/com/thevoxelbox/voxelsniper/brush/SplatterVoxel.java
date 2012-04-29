@@ -120,7 +120,7 @@ public class SplatterVoxel extends PerformBrush {
             splatterrecursions = 3;
         }
         int bsize = v.brushSize;
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
         int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
 
         // Seed the array

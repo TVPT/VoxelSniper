@@ -328,6 +328,7 @@ public class Stamp extends Brush {
             z = blz;
         }
 
+        /* This function is never used. Remove comment if needed.
         private boolean holdsData(int da) {
             switch (da) {
 
@@ -337,6 +338,6 @@ public class Stamp extends Brush {
                 default:
                     return false;
             }
-        }
+        }*/
     }
 }

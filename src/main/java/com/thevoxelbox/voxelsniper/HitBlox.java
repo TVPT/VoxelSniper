@@ -17,7 +17,7 @@ public class HitBlox {
     private double player_x, player_y, player_z;
     private double x_offset, y_offset, z_offset;
     private int last_x, last_y, last_z;
-    private int target_x, target_y, target_z, target_type;
+    private int target_x, target_y, target_z;
     private World w;
 
     /**

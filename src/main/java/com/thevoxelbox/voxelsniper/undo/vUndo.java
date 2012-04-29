@@ -101,9 +101,10 @@ public class vUndo {
         }
     }
 
+    /* This function is never used. Remove comment if needed.
     private void setBlock(vBlock vb) {
         w.getBlockAt(vb.x, vb.y, vb.z).setTypeIdAndData(vb.id, vb.d, false);
-    }
+    }*/
 
     /**
      * Checks whether a block falls off. Doesn't stay in mid air.

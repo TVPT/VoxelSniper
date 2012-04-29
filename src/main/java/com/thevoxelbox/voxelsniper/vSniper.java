@@ -120,7 +120,7 @@ public class vSniper {
     private Brush sneak = new Sneak();
     
     // VOXELGUEST HOOKS
-    private Integer group;
+    //private Integer group;
 
     /**
      * Default constructor, gathers the brushes for the Sniper'w use
@@ -393,6 +393,7 @@ public class vSniper {
     }
 
     //reads parameters from the current key in the hashmap
+    /* This function is never used. Remove comment if needed.
     private void readCurrent() {
         int[] currentP = brushPresetsParamsS.get("current@");
         this.voxelId = currentP[0];
@@ -403,7 +404,7 @@ public class vSniper {
         this.cCen = currentP[5];
         this.replaceData = (byte) currentP[6];
         this.range = currentP[7];
-    }
+    }*/
 
     //reads parameters from the previous key in the hashmap
     private void readPrevious() {

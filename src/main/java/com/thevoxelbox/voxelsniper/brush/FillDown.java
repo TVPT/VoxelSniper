@@ -17,7 +17,7 @@ import org.bukkit.block.Block;
  */
 public class FillDown extends PerformBrush {
 
-    private int i;
+    //private int i;
     private int bsize;
     private vUndo h;
 
@@ -27,7 +27,7 @@ public class FillDown extends PerformBrush {
 
     @Override
     protected void arrow(vSniper v) {
-        i = v.voxelId;
+        //i = v.voxelId;
         bsize = v.brushSize;
         fillDown(tb);
         v.hashUndo.put(v.hashEn, h);
@@ -36,7 +36,7 @@ public class FillDown extends PerformBrush {
 
     @Override
     protected void powder(vSniper v) {
-        i = v.voxelId;
+        //i = v.voxelId;
         bsize = v.brushSize;
         fillDown(lb);
         v.hashUndo.put(v.hashEn, h);

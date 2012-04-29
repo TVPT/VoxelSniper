@@ -21,9 +21,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author geekygenius
  */
 public class Fertilize extends Brush {
-    private Player dummy;
+    //private Player dummy;
 
-    private int brushSize;
+    //private int brushSize;
     private double trueCircle;
 
     public Fertilize() {
@@ -64,7 +64,7 @@ public class Fertilize extends Brush {
     }
 
     private void boneMeal(Block b, Player p) {//I think I need to make a legit bonemeal player.
-        Player dummy = p;//Make a dummy referance so we don't modify the origional
+        //Player dummy = p;//Make a dummy referance so we don't modify the origional
         VoxelSniper.s.getPluginManager().callEvent(
                 new PlayerInteractEvent(p, Action.RIGHT_CLICK_BLOCK, new ItemStack(351, 1, (short) 0, (byte) 15), b, BlockFace.UP));
     }

@@ -74,7 +74,7 @@ public class Line extends PerformBrush {
 
     public void LineP(vSniper v) {
         w = v.p.getWorld();
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
         double linelength = 0;
 
         //Calculate slope vector

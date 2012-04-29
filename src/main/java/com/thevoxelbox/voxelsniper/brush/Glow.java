@@ -6,7 +6,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.vSniper;
-import org.bukkit.craftbukkit.CraftWorld;
 
 /**
  *
@@ -45,7 +44,7 @@ public class Glow extends Brush{
 
     public void doglow (vSniper v) {
         
-        CraftWorld cWorld = (CraftWorld)v.p.getWorld();
+        //CraftWorld cWorld = (CraftWorld)v.p.getWorld();
 //cWorld.getHandle().b(EnumSkyBlock.BLOCK, bx, by, bz. glevel); //not sure why this is throwing an error. - Giltwist
     
     }

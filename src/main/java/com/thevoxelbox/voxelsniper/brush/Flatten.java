@@ -57,7 +57,7 @@ public class Flatten extends Brush {
 
     public void flatten(vSniper v) {
         int bsize = v.brushSize;
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
 
         // Store all values in the affected cylinder.
         vUndo h = new vUndo(tb.getWorld().getName());
@@ -90,7 +90,7 @@ public class Flatten extends Brush {
         // P = (1-t)*A + t*B
 
         double falloffThreshold = bsize * falloff;
-        double smoothThreshold = bsize - (bsize - falloffThreshold) * smooth;
+        //double smoothThreshold = bsize - (bsize - falloffThreshold) * smooth;
         double curStr;
         double curT;
         int firstAirHeight;
@@ -154,6 +154,7 @@ public class Flatten extends Brush {
         return height;
     }
 
+    /* This function is never used. Remove comment if needed.
     private int clamp(int value, int min, int max) {
         if (value < min) {
             return min;
@@ -162,5 +163,5 @@ public class Flatten extends Brush {
             return max;
         }
         return value;
-    }
+    }*/
 }

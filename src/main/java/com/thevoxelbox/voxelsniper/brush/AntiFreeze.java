@@ -44,7 +44,7 @@ public class AntiFreeze extends Brush {
     
     public void AF(vSniper v) {
         int bsize = v.brushSize;
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
        
 
         double bpow = Math.pow(bsize + 0.5, 2);

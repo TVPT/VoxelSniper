@@ -39,9 +39,9 @@ public class Parabola extends Brush {
     }
 
     //default parameters
-    private int full = 0;
+    //private int full = 0;
     private int height = 2;
-    private int up = 1;
+    //private int up = 1;
     private int width = 2;
 
     @Override
@@ -64,14 +64,14 @@ public class Parabola extends Brush {
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("full")) {
-                full = 1;
+                //full = 1;
                 v.p.sendMessage(ChatColor.AQUA + "Full step accuracy set (less accurate).");
                 continue;
             } else if (par[x].startsWith("half")) {
-                full = 0;
+                //full = 0;
                 if (getBlockIdAt(bx, by, bz) != 44){
                     v.p.sendMessage(ChatColor.RED + "Half step accuracy not available for this block type. /v must be 44.");
-                    full = 1;
+                    //full = 1;
                 } else {
                     v.p.sendMessage(ChatColor.AQUA + "Half step accuracy set (more accurate).");
                 }
@@ -87,11 +87,11 @@ public class Parabola extends Brush {
                 v.p.sendMessage(ChatColor.BLUE + "Parabola height set to: " + height);
                 continue;
             } else if (par[x].startsWith("up")) {
-                up = 1;
+                //up = 1;
                 v.p.sendMessage(ChatColor.AQUA + "Middle will be higher than feet.");
                 continue;
             } else if (par[x].startsWith("down")) {
-                up = 0;
+                //up = 0;
                 v.p.sendMessage(ChatColor.AQUA + "Middle will be lower than feet.");
                 continue;
             } else if (par[x].startsWith("w")) {
@@ -109,11 +109,12 @@ public class Parabola extends Brush {
     }
 
     public void vParabola (vSniper v) {
+        /* This block of code is never read.
         int bId = v.voxelId;
         int bIdLow = bId;
         if (bId == 44) {
             bIdLow = 43;
-        }
+        }*/
 
         vUndo h = new vUndo(tb.getWorld().getName());
 

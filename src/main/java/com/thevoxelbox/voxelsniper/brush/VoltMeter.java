@@ -43,7 +43,7 @@ public class VoltMeter extends Brush {
 
     
     public void volt(vSniper v) {
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
         int x = tb.getX();
         int y = tb.getY();
         int z = tb.getZ();
@@ -92,7 +92,7 @@ public class VoltMeter extends Brush {
 
     }
     public void data(vSniper v){
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
         int x = tb.getX();
         int y = tb.getY();
         int z = tb.getZ();

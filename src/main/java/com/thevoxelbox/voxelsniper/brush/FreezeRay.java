@@ -26,7 +26,7 @@ public class FreezeRay extends Brush {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        FreezeRay(v);
+        freezeRay(v);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class FreezeRay extends Brush {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        FreezeRay(v);
+        freezeRay(v);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class FreezeRay extends Brush {
         }
     }
 
-    public void FreezeRay(vSniper v) {
+    public void freezeRay(vSniper v) {
         //This is designed as a purely entertaining brush to use to destroy things you hate in a dramatic fashion.  E.g. Daro builds.  Just using a /b br with fire is not nearly as much fun as this:
         //Basically freezes water, quenches lava and torches, encases everything solid with a sheath of ice, generates random ice crystals that destroy anything they intersect with, and then covers everything inside and out with snow.
 

@@ -94,7 +94,7 @@ public class BlendVoxelDisc extends Brush {
 
     public void vdblend(vSniper v) {
         int bsize = v.brushSize;
-        int bId = v.voxelId;
+        //int bId = v.voxelId;
         int[][] oldmats = new int[2 * (bsize+1) + 1][2 * (bsize+1) + 1]; //Array that holds the original materials plus a buffer
         int[][] newmats = new int[2 * bsize + 1][2 * bsize + 1]; //Array that holds the blended materials
         int maxblock = 0;  //What is the highest material ID that is a block?

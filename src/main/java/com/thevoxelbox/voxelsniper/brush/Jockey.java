@@ -46,10 +46,10 @@ public class Jockey extends Brush {
     }
 
     private void sitOn(vSniper v) {
-        Location l = v.p.getLocation();
-        double px = l.getX();
-        double py = l.getY();
-        double pz = l.getZ();
+        //Location l = v.p.getLocation();
+        //double px = l.getX();
+        //double py = l.getY();
+        //double pz = l.getZ();
 
         Entity closest = null;
         double range = 99999999;

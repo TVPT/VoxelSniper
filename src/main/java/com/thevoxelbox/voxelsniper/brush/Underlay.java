@@ -28,7 +28,7 @@ public class Underlay extends PerformBrush {  // You Really Fucked up. Please us
     bx = tb.getX();
     by = tb.getY();
     bz = tb.getZ();
-    Underlay(v);
+    underlay(v);
     }
     /*
     @Override
@@ -79,7 +79,7 @@ public class Underlay extends PerformBrush {  // You Really Fucked up. Please us
     }
  }
 
-   public void Underlay (vSniper v) {
+   public void underlay (vSniper v) {
         int bsize = v.brushSize;
 
         int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];

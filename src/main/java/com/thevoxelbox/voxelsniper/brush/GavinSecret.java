@@ -20,8 +20,8 @@ import java.util.ArrayList;
  */
 public class GavinSecret extends Brush {
 
-    private int i;
-    private Block b = null;
+    //private int i;
+    //private Block b = null;
     private vUndo h;
     private boolean passCorrect = false;
     private int height = 2;
@@ -56,7 +56,7 @@ public class GavinSecret extends Brush {
 
     @Override
     public void info(vMessage vm) {
-        b = null;
+        //b = null;
         vm.brushName(name);
         vm.voxel();
     }
