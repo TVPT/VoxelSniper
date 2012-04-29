@@ -21,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -129,26 +130,8 @@ public class VoxelSniperListener implements Listener {
             }
         }
     }
-	
-    public static boolean onCommand(Player player, String[] split, String command) {
-        if (command.equalsIgnoreCase("vchunk")) {
-            player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
-            return true;
-        }
-        if (command.equalsIgnoreCase("paint")) {
-            if (split.length == 1) {
-                try {
-                    vPainting.paint(player, false, false, Integer.parseInt(split[0]));
-                    return true;
-                } catch (Exception e) {
-                    player.sendMessage(ChatColor.RED + "Invalid input!");
-                    return true;
-                }
-            } else {
-                vPainting.paint(player, true, false, 0);
-                return true;
-            }
-        }
+    
+    public static boolean onConsoleSafeCommand(CommandSender player, String[] split, String command) {
         if (command.equalsIgnoreCase("addlitesniper") && (isAdmin(player.getName()) || player.isOp())) {
             if (VoxelSnipers.get(player.getName()) instanceof liteSniper) {
                 player.sendMessage(ChatColor.RED + "A liteSniper is not permitted to use this command.");
@@ -306,6 +289,31 @@ public class VoxelSniperListener implements Listener {
                 return true;
             }
         }
+        return false;
+    }
+    
+    public static boolean onCommand(Player player, String[] split, String command) {
+        if (command.equalsIgnoreCase("vchunk")) {
+            player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
+            return true;
+        }
+        if (command.equalsIgnoreCase("paint")) {
+            if (split.length == 1) {
+                try {
+                    vPainting.paint(player, false, false, Integer.parseInt(split[0]));
+                    return true;
+                } catch (Exception e) {
+                    player.sendMessage(ChatColor.RED + "Invalid input!");
+                    return true;
+                }
+            } else {
+                vPainting.paint(player, true, false, 0);
+                return true;
+            }
+        }
+        //if the return value is true, then the command was in onConsoleSafeCommand()
+        if(onConsoleSafeCommand(player, split, command))
+            return true;
         if (command.equalsIgnoreCase("goto") && isAdmin(player.getName())) {
             if (VoxelSnipers.get(player.getName()) instanceof liteSniper) {
                 player.sendMessage(ChatColor.RED + "A liteSniper is not permitted to use this command.");

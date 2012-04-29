@@ -52,37 +52,36 @@ public class VoxelSniper extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+        String comm = command.getName();
+        String[] myArgs = args;
+        if (myArgs == null) {
+            myArgs = new String[0];
+        }
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            String comm = command.getName();
-            if (args == null) {
-                if (!VoxelSniperListener.onCommand(p, new String[0], comm)) {
-                    if (p.isOp()) {
-                        p.sendMessage(ChatColor.RED + "Your name is not listed on the snipers.txt or you haven't /reload 'ed the server yet.");
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
+            if (!VoxelSniperListener.onCommand(p, myArgs, comm)) {
+                if (p.isOp()) {
+                    p.sendMessage(ChatColor.RED + "Your name is not listed on the snipers.txt or you haven't /reload 'ed the server yet.");
                     return true;
+                } else {
+                    return false;
                 }
             } else {
-                if (!VoxelSniperListener.onCommand(p, args, comm)) {
-                    if (p.isOp()) {
-                        p.sendMessage(ChatColor.RED + "Your name is not listed on the snipers.txt or you haven't /reload 'ed the server yet.");
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
+                return true;
+            }
+        }else {
+            CommandSender p = sender;
+            if (!VoxelSniperListener.onConsoleSafeCommand(p, myArgs, comm)) {
+                if (p.isOp()) {
+                    p.sendMessage(ChatColor.RED + "Your name is not listed on the snipers.txt or you haven't /reload 'ed the server yet.");
                     return true;
+                } else {
+                    return false;
                 }
+            } else {
+                return true;
             }
         }
-
-        System.out.println("Not instanceof Player!");
-
-        return false;
     }
 
     public void loadItems() {
