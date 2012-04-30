@@ -75,6 +75,21 @@ public class TreeSnipe extends Brush {
                 printTreeType(v.vm);
                 break;
             }
+            if (par[x].equals("jungle")) {
+                treeType = TreeType.JUNGLE;
+                printTreeType(v.vm);
+                break;
+            }
+            if (par[x].equals("redmushroom")) {
+                treeType = TreeType.RED_MUSHROOM;
+                printTreeType(v.vm);
+                break;
+            }
+            if (par[x].equals("brownmushroom")) {
+                treeType = TreeType.BROWN_MUSHROOM;
+                printTreeType(v.vm);
+                break;
+            }
         }
 
     }
@@ -82,7 +97,15 @@ public class TreeSnipe extends Brush {
     public void single(vSniper v) {
         try {
             //int id = clampY(bx,by,bz).getTypeId();
-            if (clampY(bx,tb.getY(),bz).getTypeId()!= 18) {clampY(bx,tb.getY(),bz).setTypeId(3);} //makes its own dirt so it can go anywhere
+            if (clampY(bx,tb.getY(),bz).getTypeId()!= 18) {
+                if(treeType.equals(TreeType.RED_MUSHROOM) || treeType.equals(TreeType.BROWN_MUSHROOM)){
+                    clampY(bx,tb.getY(),bz).setTypeId(110);
+                }
+                else{
+                    clampY(bx,tb.getY(),bz).setTypeId(3);
+                }//makes its own dirt so it can go anywhere
+            } 
+            
             w.generateTree(new Location(w, (double) bx, (double) by, (double) bz), treeType);
             //s.getBlockAt(bx,by,bz).setTypeId(id); //replace the original block that was there.
         }
@@ -92,7 +115,7 @@ public class TreeSnipe extends Brush {
     }
 
     private int getLocation(vSniper v) {
-        for (int i = 1; i < (127 - by); i++) {
+        for (int i = 1; i < (256 - by); i++) {
             if (clampY(bx, by+i, bz).getType() == Material.AIR) { // Dont you mean != AIR ?  -- prz
                 return by+i;                                            // But why are you even grabbing the highest Y ?
             }
@@ -103,24 +126,36 @@ public class TreeSnipe extends Brush {
     private void printTreeType(vMessage vm) {
         switch (treeType) {
             case BIG_TREE:
-                vm.custom(ChatColor.GRAY + "bigtree " + ChatColor.DARK_GRAY + "birch " + "redwood " + "tallredwood " + "tree");
+                vm.custom(ChatColor.GRAY + "bigtree " + ChatColor.DARK_GRAY + "birch " + "redwood " + "tallredwood " + "tree" + "jungle" + "redmushroom" + "brownmushroom");
                 break;
 
             case BIRCH:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + ChatColor.GRAY + "birch " + ChatColor.DARK_GRAY + "redwood " + "tallredwood " + "tree");
+                vm.custom(ChatColor.DARK_GRAY + "bigtree " + ChatColor.GRAY + "birch " + ChatColor.DARK_GRAY + "redwood " + "tallredwood " + "tree" + "jungle" + "redmushroom" + "brownmushroom");
                 break;
 
             case REDWOOD:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + ChatColor.GRAY + "redwood " + ChatColor.DARK_GRAY + "tallredwood " + "tree");
+                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + ChatColor.GRAY + "redwood " + ChatColor.DARK_GRAY + "tallredwood " + "tree " + "jungle " + "redmushroom " + "brownmushroom");
                 break;
 
             case TALL_REDWOOD:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + ChatColor.GRAY + "tallredwood " + ChatColor.DARK_GRAY + "tree");
+                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + ChatColor.GRAY + "tallredwood " + ChatColor.DARK_GRAY + "tree " + "jungle " + "redmushroom " + "brownmushroom");
                 break;
 
             case TREE:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + "tallredwood " + ChatColor.GRAY + "tree");
+                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + "tallredwood " + ChatColor.GRAY + "tree " + ChatColor.DARK_GRAY + "jungle " + "redmushroom " + "brownmushroom");
                 break;
+                
+            case JUNGLE:
+                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + "tallredwood " + "tree " + ChatColor.GRAY + "jungle " + ChatColor.DARK_GRAY + "redmushroom " + "brownmushroom");
+                break;    
+                
+            case RED_MUSHROOM:
+                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + "tallredwood " + "tree " +  "jungle " + ChatColor.GRAY + "redmushroom " + ChatColor.DARK_GRAY  + "brownmushroom");
+                break;        
+            
+           case BROWN_MUSHROOM:
+                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + "tallredwood " + "tree " +  "jungle " + "redmushroom " + ChatColor.GRAY  + "brownmushroom");
+                break;             
         }
     }
 }
