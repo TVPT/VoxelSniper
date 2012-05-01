@@ -225,4 +225,4 @@ I would like to start a sort of changeLog to track changes done to VoxelSniper
 [5.129] -- Updated, yet again, the usage of the constructor of Packet51MapChunk.java to craftbukkit-1.2.3-R0.2 -prz
 [5.130] -- Removed unused imports, self-assigned variables, other warnings -psa @prz: That's regex. "\\|" in Java regex is "|". Furthermore, I added the "|" split to A) match Mumfrey's macro mod and B) remove potential confusion about demonstrating commands e.g. "/m person do /spawn". -- Sorry, I wrote that before you fixed it, but committed it after, before I knew that you fixed it. -prz
 [5.131] -- Fully compatible with 1.2 (added redstone lamps and changed the deprecated CreatureType to EntityType in the Monster brush) -psa
-[5.134] -- Added Jungle tree type + mushrooms, fixed trees not being able to spawn above 126 -butters
+[5.133] -- Added Jungle tree type + mushrooms, fixed trees not being able to spawn above 126 -butters
