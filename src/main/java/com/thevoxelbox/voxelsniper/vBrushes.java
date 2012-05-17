@@ -67,7 +67,8 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     TRIANGLE(                           Triangle.class,                 "tri",      "triangle"),                //  [   19   ]  \\
     ERASER(                             Eraser.class,                   "erase",    "eraser"),                  //  [   20   ]  \\
     COPYPASTA(                          CopyPasta.class,                "cp",    "copypasta"),                  //  [   22   ]  \\
-    COMET(                              Comet.class,                "com",    "comet"),                  //  [   24   ]  \\
+    COMET(                              Comet.class,                "com",    "comet"),                  //  [   23   ]  \\
+    JAGGED(                             Jagged.class,                "j",    "jagged"),                  //  [   24   ]  \\
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Ghost8700~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  \\
     GENERATE_TREE(                      GenerateTree.class,             "gt",       "generatetree"),            //  [   1    ]  \\
