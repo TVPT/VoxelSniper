@@ -5,24 +5,24 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import org.bukkit.ChatColor;
 import com.thevoxelbox.voxelsniper.undo.uBlock;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import org.bukkit.ChatColor;
 
 /**
  *
  * @author Gavjenks
  */
 public class Savannah extends PerformBrush {
-    
+
     public Savannah() {
         name = "Overlay (Topsoil Filling)";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -30,7 +30,7 @@ public class Savannah extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -42,24 +42,22 @@ public class Savannah extends PerformBrush {
         vm.brushName(name);
         vm.size();
         //vm.voxel();
-  }
+    }
     int depth = 3;
     boolean allBlocks = false;
 
-     @Override
-    public void parameters(String[] par, vSniper v) {
+    @Override
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Savannah brush has no parameters.");
+            v.sendMessage(ChatColor.GOLD + "Savannah brush has no parameters.");
             return;
         }
-         for (int x = 1; x < par.length; x++) {
-
-             v.p.sendMessage(ChatColor.RED + "This brush takes no parameters.");
-
-         }
+        for (int x = 1; x < par.length; x++) {
+            v.sendMessage(ChatColor.RED + "This brush takes no parameters.");
+        }
     }
 
-    public void savannah (vSniper v) {
+    public void savannah(vData v) {
         vUndo h = new vUndo(tb.getWorld().getName());
         int bsize = v.brushSize;
 
@@ -85,10 +83,10 @@ public class Savannah extends PerformBrush {
             }
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
-    public void savannahTwo (vSniper v) {
+
+    public void savannahTwo(vData v) {
         int bsize = v.brushSize;
         vUndo h = new vUndo(tb.getWorld().getName());
 
@@ -139,7 +137,7 @@ public class Savannah extends PerformBrush {
                                         for (int d = 0; (d < 1); d++) {
                                             if (clampY(bx + x, y + 1, bz + z).getTypeId() == 0) {
                                                 //s.getBlockAt(bx + x, y - d, bz + z).setTypeId(60);
-                                                h.put(new uBlock(clampY(bx + x, y+1, bz + z)));
+                                                h.put(new uBlock(clampY(bx + x, y + 1, bz + z)));
                                                 clampY(bx + x, y + 1, bz + z).setTypeId(101);
                                                 if (Math.random() > 0.5) {
                                                     h.put(new uBlock(clampY(bx + x, y + 2, bz + z)));
@@ -158,11 +156,6 @@ public class Savannah extends PerformBrush {
             }
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
-
-
 }
-
-

@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -25,7 +25,7 @@ public class Canyon extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         bz = tb.getZ();
 
@@ -33,7 +33,7 @@ public class Canyon extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         bz = tb.getZ();
 
@@ -49,8 +49,7 @@ public class Canyon extends Brush {
         multiCanyon(w.getChunkAt(clampY(bx, 63, bz - 16)), v);
         multiCanyon(w.getChunkAt(clampY(bx + 16, 63, bz - 16)), v);
 
-        v.hashUndo.put(v.hashEn, m);
-        v.hashEn++;
+        v.storeUndo(m);
     }
 
     @Override
@@ -60,9 +59,9 @@ public class Canyon extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
+            v.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
         }
         if (par[1].startsWith("y")) {
             int i = Integer.parseInt(par[1].replace("y", ""));
@@ -72,11 +71,11 @@ public class Canyon extends Brush {
                 i = 60;
             }
             yLevel = i;
-            v.p.sendMessage(ChatColor.GREEN + "Shift Level set to " + yLevel);
+            v.sendMessage(ChatColor.GREEN + "Shift Level set to " + yLevel);
         }
     }
 
-    private void canyon(Chunk c, vSniper v) {
+    private void canyon(Chunk c, vData v) {
         int yy;
 
         vUndo h = new vUndo(c.getWorld().getName());
@@ -104,11 +103,10 @@ public class Canyon extends Brush {
             }
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
-    protected void multiCanyon(Chunk c, vSniper v) {
+    protected void multiCanyon(Chunk c, vData v) {
         int yy;
 
         for (int x = 0; x < 16; x++) {

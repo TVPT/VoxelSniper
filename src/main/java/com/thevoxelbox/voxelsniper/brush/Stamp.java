@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import java.util.HashSet;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -14,7 +14,7 @@ import org.bukkit.block.Block;
 /**
  *
  * @author Voxel
- * 
+ *
  * Would it be possible to make this a performer brush, so people can use the Inclusion and Exclusion performers? -psa
  */
 public class Stamp extends Brush {
@@ -34,13 +34,13 @@ public class Stamp extends Brush {
     protected void setStamp(byte by) {
         stamp = by;
     }
-    
+
     public Stamp() {
         name = "Stamp";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         switch (stamp) {
             case 0:
                 stamp(v);
@@ -55,13 +55,13 @@ public class Stamp extends Brush {
                 break;
 
             default:
-                v.p.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+                v.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
                 break;
         }
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -86,7 +86,7 @@ public class Stamp extends Brush {
         }
     }
 
-    protected void stamp(vSniper v) {
+    protected void stamp(vData v) {
 
         bx = tb.getX();
         by = tb.getY() + v.cCen;
@@ -127,11 +127,10 @@ public class Stamp extends Brush {
             sorted = true;
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
-    protected void stampNoAir(vSniper v) {
+    protected void stampNoAir(vData v) {
 
         bx = tb.getX();
         by = tb.getY() + v.cCen;
@@ -172,11 +171,10 @@ public class Stamp extends Brush {
             sorted = true;
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
-    protected void stampFill(vSniper v) {
+    protected void stampFill(vData v) {
 
         bx = tb.getX();
         by = tb.getY() + v.cCen;
@@ -217,8 +215,7 @@ public class Stamp extends Brush {
             sorted = true;
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
     protected boolean fallsOff(int id) {
@@ -244,7 +241,7 @@ public class Stamp extends Brush {
 
             case (51):
                 return true;        // Fire drops off of blocks?
-                                        // No, but it will burn out if placed before the fuel under it -- prz
+            // No, but it will burn out if placed before the fuel under it -- prz
             case (55):
                 return true;
 
@@ -328,7 +325,6 @@ public class Stamp extends Brush {
             z = blz;
         }
 
-        /* This function is never used. Remove comment if needed.
         private boolean holdsData(int da) {
             switch (da) {
 
@@ -338,6 +334,6 @@ public class Stamp extends Brush {
                 default:
                     return false;
             }
-        }*/
+        }
     }
 }

@@ -6,12 +6,11 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.vSniper;
-import org.bukkit.block.Block;
-import org.bukkit.ChatColor;
-
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import net.minecraft.server.Packet53BlockChange;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 /**
  *
@@ -27,10 +26,10 @@ public class pMaterialNoPhysUpdate extends vPerformer {
     }
 
     @Override
-    public void init(vSniper v) {
-        w = v.p.getWorld();
+    public void init(com.thevoxelbox.voxelsniper.vData v) {
+        w = v.getWorld();
         i = v.voxelId;
-        s = v;
+        s = v.owner();
     }
 
     @Override

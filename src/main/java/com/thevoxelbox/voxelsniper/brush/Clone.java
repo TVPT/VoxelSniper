@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 
 /**
@@ -13,22 +13,22 @@ import org.bukkit.ChatColor;
 public class Clone extends Stamp {
 
     /**
-     *  The starring Y position
-     *  At the bottom of the cylinder
+     * The starring Y position
+     * At the bottom of the cylinder
      */
     protected int st;
     /**
-     *  End Y position
-     *  At the top of the cylinder
+     * End Y position
+     * At the top of the cylinder
      */
     protected int en;
-    
+
     public Clone() {
         name = "Clone";
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         clone(v);
     }
 
@@ -58,28 +58,28 @@ public class Clone extends Stamp {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
-            v.p.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
-            v.p.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
-            v.p.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
+            v.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
+            v.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
+            v.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
+            v.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
         }
         if (par[1].equalsIgnoreCase("a")) {
             setStamp((byte) 1);
             reSort();
-            v.p.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
+            v.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
         } else if (par[1].equalsIgnoreCase("f")) {
             setStamp((byte) 2);
             reSort();
-            v.p.sendMessage(ChatColor.AQUA + "Fill stamp brush");
+            v.sendMessage(ChatColor.AQUA + "Fill stamp brush");
         } else if (par[1].equalsIgnoreCase("d")) {
             setStamp((byte) 0);
             reSort();
-            v.p.sendMessage(ChatColor.AQUA + "Default stamp brush");
+            v.sendMessage(ChatColor.AQUA + "Default stamp brush");
         } else if (par[1].startsWith("c")) {
             v.cCen = Integer.parseInt(par[1].replace("c", ""));
-            v.p.sendMessage(ChatColor.BLUE + "Center set to " + v.cCen);
+            v.sendMessage(ChatColor.BLUE + "Center set to " + v.cCen);
         }
     }
 
@@ -91,12 +91,12 @@ public class Clone extends Stamp {
      * v.brushSize -- the radius of the cylinder
      * v.voxelHeight -- the heigth of the cylinder
      * c.cCen -- the offset on the Y axis of the selection ( bottom of the
-     *              cylinder ) as by:
-     *                      Bottom_Y = tb.y + v.cCen;
+     * cylinder ) as by:
+     * Bottom_Y = tb.y + v.cCen;
      *
      * @param v the caller
      */
-    protected void clone(vSniper v) {
+    protected void clone(vData v) {
         this.clone.clear();
         fall.clear();
         drop.clear();
@@ -112,17 +112,17 @@ public class Clone extends Stamp {
         en = by + v.voxelHeight + v.cCen;
         if (st < 0) {
             st = 0;
-            v.p.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
         } else if (st > 127) {
             st = 127;
-            v.p.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
         }
         if (en < 0) {
             en = 0;
-            v.p.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         } else if (en > 127) {
             en = 127;
-            v.p.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
         double bpow = Math.pow(bsize, 2);
         for (int z = st; z < en; z++) {
@@ -145,6 +145,6 @@ public class Clone extends Stamp {
                 }
             }
         }
-        v.p.sendMessage("" + ChatColor.GREEN + clone.size() + ChatColor.AQUA + " blocks copied sucessfully.");
+        v.sendMessage("" + ChatColor.GREEN + clone.size() + ChatColor.AQUA + " blocks copied sucessfully.");
     }
 }

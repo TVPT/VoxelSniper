@@ -5,14 +5,15 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.undo.uBlock;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Piotr
  */
 public class Erode extends Brush {
@@ -27,19 +28,18 @@ public class Erode extends Brush {
     private int fillRecursion = 1;
     private double trueCircle = 0.5;
     private boolean reverse = false;
-    
+
     public Erode() {
         name = "Erode";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
 
         bsize = v.brushSize;
-
 
         snap = new eBlock[0][0][0];
         reverse = false;
@@ -48,11 +48,11 @@ public class Erode extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        
+
         bsize = v.brushSize;
 
         snap = new eBlock[0][0][0];
@@ -73,28 +73,26 @@ public class Erode extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Erode brush parameters");
-            v.p.sendMessage(ChatColor.RED + "NOT for litesnipers:");
-            v.p.sendMessage(ChatColor.GREEN + "b[number] (ex:   b23) Sets your sniper brush size.");
-            v.p.sendMessage(ChatColor.AQUA + "e[number] (ex:  e3) Sets the number of minimum exposed faces to erode a block.");
-            v.p.sendMessage(ChatColor.BLUE + "f[number] (ex:  f5) Sets the number of minumum faces containing a block to place a block.");
-            v.p.sendMessage(ChatColor.DARK_BLUE + "re[number] (ex:  re3) Sets the number of recursions the brush will perform erosion.");
-            v.p.sendMessage(ChatColor.DARK_GREEN + "rf[number] (ex:  rf5) Sets the number of recursions the brush will perform filling.");
-            v.p.sendMessage(ChatColor.AQUA + "/b d false -- will turn off true circle algorithm /b b true will switch back. (true is default for this brush.)");
-            v.p.sendMessage(ChatColor.GOLD + "For user-friendly pre-sets, type /b e info2.");
-
+            v.sendMessage(ChatColor.GOLD + "Erode brush parameters");
+            v.sendMessage(ChatColor.RED + "NOT for litesnipers:");
+            v.sendMessage(ChatColor.GREEN + "b[number] (ex:   b23) Sets your sniper brush size.");
+            v.sendMessage(ChatColor.AQUA + "e[number] (ex:  e3) Sets the number of minimum exposed faces to erode a block.");
+            v.sendMessage(ChatColor.BLUE + "f[number] (ex:  f5) Sets the number of minumum faces containing a block to place a block.");
+            v.sendMessage(ChatColor.DARK_BLUE + "re[number] (ex:  re3) Sets the number of recursions the brush will perform erosion.");
+            v.sendMessage(ChatColor.DARK_GREEN + "rf[number] (ex:  rf5) Sets the number of recursions the brush will perform filling.");
+            v.sendMessage(ChatColor.AQUA + "/b d false -- will turn off true circle algorithm /b b true will switch back. (true is default for this brush.)");
+            v.sendMessage(ChatColor.GOLD + "For user-friendly pre-sets, type /b e info2.");
             return;
         }
         if (par[1].equalsIgnoreCase("info2")) {
-            v.p.sendMessage(ChatColor.GOLD + "User-friendly Preset Options.  These are for the arrow.  Powder will do reverse for the first two (for fast switching):");
-            v.p.sendMessage(ChatColor.BLUE + "OK for litesnipers:");
-            v.p.sendMessage(ChatColor.GREEN + "/b e melt -- for melting away protruding corners and edges.");
-            v.p.sendMessage(ChatColor.AQUA + "/b e fill -- for building up inside corners");
-            v.p.sendMessage(ChatColor.AQUA + "/b e smooth -- For the most part, does not change total number of blocks, but smooths the shape nicely.  Use as a finishing touch for the most part, before overlaying grass and trees, etc.");
-            v.p.sendMessage(ChatColor.BLUE + "/b e lift-- More or less raises each block in the brush area by one");  // Giltwist
-            
+            v.sendMessage(ChatColor.GOLD + "User-friendly Preset Options.  These are for the arrow.  Powder will do reverse for the first two (for fast switching):");
+            v.sendMessage(ChatColor.BLUE + "OK for litesnipers:");
+            v.sendMessage(ChatColor.GREEN + "/b e melt -- for melting away protruding corners and edges.");
+            v.sendMessage(ChatColor.AQUA + "/b e fill -- for building up inside corners");
+            v.sendMessage(ChatColor.AQUA + "/b e smooth -- For the most part, does not change total number of blocks, but smooths the shape nicely.  Use as a finishing touch for the most part, before overlaying grass and trees, etc.");
+            v.sendMessage(ChatColor.BLUE + "/b e lift-- More or less raises each block in the brush area by one");  // Giltwist
             return;
         }
         for (int x = 1; x < par.length; x++) {
@@ -104,74 +102,72 @@ public class Erode extends Brush {
                     erodeRecursion = 1;
                     fillFace = 5;
                     erodeFace = 2;
-                    v.setBrushSize(10);
-                    v.p.sendMessage(ChatColor.AQUA + "Melt mode. (/b e e2 f5 re1 rf1 b10)");
+                    v.owner().setBrushSize(10);
+                    v.sendMessage(ChatColor.AQUA + "Melt mode. (/b e e2 f5 re1 rf1 b10)");
                     continue;
                 } else if (par[x].startsWith("fill")) {
                     fillRecursion = 1;
                     erodeRecursion = 1;
                     fillFace = 2;
                     erodeFace = 5;
-                    v.setBrushSize(8);
-                    v.p.sendMessage(ChatColor.AQUA + "Fill mode. (/b e e5 f2 re1 rf1 b8)");
+                    v.owner().setBrushSize(8);
+                    v.sendMessage(ChatColor.AQUA + "Fill mode. (/b e e5 f2 re1 rf1 b8)");
                     continue;
                 } else if (par[x].startsWith("smooth")) {
                     fillRecursion = 1;
                     erodeRecursion = 1;
                     fillFace = 3;
                     erodeFace = 3;
-                    v.setBrushSize(16);
-                    v.p.sendMessage(ChatColor.AQUA + "Smooth mode. (/b e e3 f3 re1 rf1 b16)");
+                    v.owner().setBrushSize(16);
+                    v.sendMessage(ChatColor.AQUA + "Smooth mode. (/b e e3 f3 re1 rf1 b16)");
                     continue;
                 } else if (par[x].startsWith("lift")) { //Giltwist
                     fillRecursion = 1;
                     erodeRecursion = 0;
                     fillFace = 1;
                     erodeFace = 6;
-                    v.setBrushSize(10);
-                    v.p.sendMessage(ChatColor.AQUA + "Lift mode. (/b e e6 f1 re0 rf1 b10)");
+                    v.owner().setBrushSize(10);
+                    v.sendMessage(ChatColor.AQUA + "Lift mode. (/b e e6 f1 re0 rf1 b10)");
                     continue;
                 } else if (par[x].startsWith("true")) {
                     trueCircle = 0.5;
-                    v.p.sendMessage(ChatColor.AQUA + "True circle mode ON." + erodeRecursion);
+                    v.sendMessage(ChatColor.AQUA + "True circle mode ON." + erodeRecursion);
                     continue;
                 } else if (par[x].startsWith("false")) {
                     trueCircle = 0;
-                    v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF." + erodeRecursion);
+                    v.sendMessage(ChatColor.AQUA + "True circle mode OFF." + erodeRecursion);
                     continue;
-                }
-                else if(par[x].startsWith("rf")) {
+                } else if (par[x].startsWith("rf")) {
                     fillRecursion = Integer.parseInt(par[x].replace("rf", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Fill recursion amount set to " + fillRecursion);
+                    v.sendMessage(ChatColor.BLUE + "Fill recursion amount set to " + fillRecursion);
                     continue;
                 } else if (par[x].startsWith("re")) {
                     erodeRecursion = Integer.parseInt(par[x].replace("re", ""));
-                    v.p.sendMessage(ChatColor.AQUA + "Erosion recursion amount set to " + erodeRecursion);
+                    v.sendMessage(ChatColor.AQUA + "Erosion recursion amount set to " + erodeRecursion);
                     continue;
 
                 } else if (par[x].startsWith("f")) {
                     fillFace = Integer.parseInt(par[x].replace("f", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + fillFace);
+                    v.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + fillFace);
                     continue;
                 } else if (par[x].startsWith("b")) {
-                    v.setBrushSize(Integer.parseInt(par[x].replace("b", "")));
-                    v.p.sendMessage(ChatColor.GREEN + "Brush size set to " + v.brushSize);
+                    v.owner().setBrushSize(Integer.parseInt(par[x].replace("b", "")));
+                    //v.sendMessage(ChatColor.GREEN + "Brush size set to " + v.brushSize);  // - setBrushSize(#) already prints info
                     continue;
                 } else if (par[x].startsWith("e")) {
                     erodeFace = Integer.parseInt(par[x].replace("e", ""));
-                    v.p.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + erodeFace);
+                    v.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + erodeFace);
                     continue;
                 } else {
-                    v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
                 }
             } catch (Exception e) {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + par[x] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + par[x] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
             }
-
         }
     }
 
-    private void erosion(vSniper v) {
+    private void erosion(vData v) {
         if (reverse) {
             int temp = erodeFace;
             erodeFace = fillFace;
@@ -244,8 +240,7 @@ public class Erode extends Brush {
             }
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
         if (reverse) { //if you dont put it back where it was, powder flips back and forth from fill to erode each time
             int temp = erodeFace;
             erodeFace = fillFace;
@@ -256,77 +251,76 @@ public class Erode extends Brush {
         }
     }
 
-    /*private void filling(vSniper v) {
-        vUndo h = new vUndo(tb.getWorld().getName());
-
-        if (fillFace >= 0 && fillFace <= 6) {
-            for (int fr = 0; fr < fillRecursion; fr++) {
-                getMatrix();
-
-                int derp = bsize + 1;
-
-                double bpow = Math.pow(bsize + 0.5, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
-
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
-
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
-
-                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (fill(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(snap[x][y][z].id);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (erodeFace >= 0 && erodeFace <= 6) {
-            for (int er = 0; er < erodeRecursion; er++) {
-                getMatrix();
-
-                int derp = bsize + 1;
-
-                double bpow = Math.pow(bsize + trueCircle, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
-
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
-
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
-
-                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (erode(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int x = 0; x < firstSnap.length; x++) {
-            for (int y = 0; y < firstSnap.length; y++) {
-                for (int z = 0; z < firstSnap.length; z++) {
-                    eBlock e = firstSnap[x][y][z];
-                    if (e.i != e.b.getTypeId()) {
-                        h.put(new vBlock(e.b, e.i));
-                    }
-                }
-            }
-        }
-
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
-    }
+    /* private void filling(vSniper v) {
+     * vUndo h = new vUndo(tb.getWorld().getName());
+     *
+     * if (fillFace >= 0 && fillFace <= 6) {
+     * for (int fr = 0; fr < fillRecursion; fr++) {
+     * getMatrix();
+     *
+     * int derp = bsize + 1;
+     *
+     * double bpow = Math.pow(bsize + 0.5, 2);
+     * for (int z = 1; z < snap.length - 1; z++) {
+     *
+     * double zpow = Math.pow(z - derp, 2);
+     * for (int x = 1; x < snap.length - 1; x++) {
+     *
+     * double xpow = Math.pow(x - derp, 2);
+     * for (int y = 1; y < snap.length - 1; y++) {
+     *
+     * if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
+     * if (fill(x, y, z)) {
+     * snap[x][y][z].b.setTypeId(snap[x][y][z].id);
+     * }
+     * }
+     * }
+     * }
+     * }
+     * }
+     * }
+     * if (erodeFace >= 0 && erodeFace <= 6) {
+     * for (int er = 0; er < erodeRecursion; er++) {
+     * getMatrix();
+     *
+     * int derp = bsize + 1;
+     *
+     * double bpow = Math.pow(bsize + trueCircle, 2);
+     * for (int z = 1; z < snap.length - 1; z++) {
+     *
+     * double zpow = Math.pow(z - derp, 2);
+     * for (int x = 1; x < snap.length - 1; x++) {
+     *
+     * double xpow = Math.pow(x - derp, 2);
+     * for (int y = 1; y < snap.length - 1; y++) {
+     *
+     * if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
+     * if (erode(x, y, z)) {
+     * snap[x][y][z].b.setTypeId(0);
+     * }
+     * }
+     * }
+     * }
+     * }
+     * }
+     * }
+     *
+     * for (int x = 0; x < firstSnap.length; x++) {
+     * for (int y = 0; y < firstSnap.length; y++) {
+     * for (int z = 0; z < firstSnap.length; z++) {
+     * eBlock e = firstSnap[x][y][z];
+     * if (e.i != e.b.getTypeId()) {
+     * h.put(new vBlock(e.b, e.i));
+     * }
+     * }
+     * }
+     * }
+     *
+     * v.hashUndo.put(v.hashEn, h);
+     * v.hashEn++;
+     * }
      *
      */
-
     private void getMatrix() {
         brushSize = ((bsize + 1) * 2) + 1;
 

@@ -2,18 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.block.Block;
 
 /**
  *
  * @author Voxel
  */
-public class pMatMat extends vPerformer{
+public class pMatMat extends vPerformer {
 
     private int i;
     private int r;
@@ -23,8 +21,8 @@ public class pMatMat extends vPerformer{
     }
 
     @Override
-    public void init(vSniper v) {
-        w = v.p.getWorld();
+    public void init(com.thevoxelbox.voxelsniper.vData v) {
+        w = v.getWorld();
         i = v.voxelId;
         r = v.replaceId;
     }
@@ -38,7 +36,7 @@ public class pMatMat extends vPerformer{
 
     @Override
     public void perform(Block b) {
-        if(b.getTypeId() == r) {
+        if (b.getTypeId() == r) {
             h.put(b);
             b.setTypeId(i);
         }

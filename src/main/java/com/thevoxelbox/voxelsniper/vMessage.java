@@ -14,44 +14,47 @@ import org.bukkit.Material;
  */
 public class vMessage {
 
-    private vSniper v;
+    private vData v;
 
-    public vMessage(vSniper vs) {
+    public vMessage(vData vs) {
         v = vs;
     }
 
     public void size() {
-        v.p.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.DARK_RED + v.brushSize);
+        v.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.DARK_RED + v.brushSize);
+        if (v.brushSize >= 20) {
+            v.sendMessage(ChatColor.RED + "WARNING: Large brush size selected!");
+        }
     }
 
     public void voxel() {
-        if (v.printout) {
-            v.p.sendMessage(ChatColor.GOLD + "Voxel set to " + ChatColor.DARK_RED + v.voxelId + ChatColor.AQUA + " (" + Material.getMaterial(v.voxelId).toString() + ")");
+        if (v.owner().printout) {
+            v.sendMessage(ChatColor.GOLD + "Voxel set to " + ChatColor.DARK_RED + v.voxelId + ChatColor.AQUA + " (" + Material.getMaterial(v.voxelId).toString() + ")");
         }
     }
 
     public void replace() {
-        if (v.printout) {
-            v.p.sendMessage(ChatColor.AQUA + "Replace material set to " + ChatColor.DARK_RED + v.replaceId + ChatColor.AQUA + " (" + Material.getMaterial(v.replaceId).toString() + ")");
+        if (v.owner().printout) {
+            v.sendMessage(ChatColor.AQUA + "Replace material set to " + ChatColor.DARK_RED + v.replaceId + ChatColor.AQUA + " (" + Material.getMaterial(v.replaceId).toString() + ")");
         }
     }
 
     public void data() {
-        if (v.printout) {
-            v.p.sendMessage(ChatColor.BLUE + "Data variable set to " + ChatColor.DARK_RED + v.data);
+        if (v.owner().printout) {
+            v.sendMessage(ChatColor.BLUE + "Data variable set to " + ChatColor.DARK_RED + v.data);
         }
     }
 
     public void replaceData() {
-        if (v.printout) {
-            v.p.sendMessage(ChatColor.DARK_GRAY + "Replace data variable set to " + ChatColor.DARK_RED + v.replaceData);
+        if (v.owner().printout) {
+            v.sendMessage(ChatColor.DARK_GRAY + "Replace data variable set to " + ChatColor.DARK_RED + v.replaceData);
         }
     }
 
     public void voxelList() {
-        if (v.printout) {
+        if (v.owner().printout) {
             if (v.voxelList.isEmpty()) {
-                v.p.sendMessage(ChatColor.DARK_GREEN + "No selected blocks!");
+                v.sendMessage(ChatColor.DARK_GREEN + "No selected blocks!");
             } else {
                 VoxIterator it = v.voxelList.getIterator();
                 String pre = ChatColor.DARK_GREEN + "Block types selected: " + ChatColor.AQUA;
@@ -59,50 +62,50 @@ public class vMessage {
                     pre = pre + it.next() + " ";
                 }
 
-                v.p.sendMessage(pre);
+                v.sendMessage(pre);
             }
         }
     }
 
     public void height() {
-        if (v.printout) {
-            v.p.sendMessage(ChatColor.DARK_AQUA + "Brush height " + ChatColor.DARK_RED + v.voxelHeight);
+        if (v.owner().printout) {
+            v.sendMessage(ChatColor.DARK_AQUA + "Brush height " + ChatColor.DARK_RED + v.voxelHeight);
         }
     }
 
     public void center() {
-        if (v.printout) {
-            v.p.sendMessage(ChatColor.DARK_BLUE + "Center set to " + ChatColor.DARK_RED + v.cCen);
+        if (v.owner().printout) {
+            v.sendMessage(ChatColor.DARK_BLUE + "Center set to " + ChatColor.DARK_RED + v.cCen);
         }
     }
 
     public void brushMessage(String brushMessage) {
-        if (v.printout) {
-            v.p.sendMessage(ChatColor.LIGHT_PURPLE + brushMessage);
+        if (v.owner().printout) {
+            v.sendMessage(ChatColor.LIGHT_PURPLE + brushMessage);
         }
     }
 
     public void brushName(String brushName) {
-        v.p.sendMessage(ChatColor.LIGHT_PURPLE + "Brush set to " + brushName);
+        v.sendMessage(ChatColor.LIGHT_PURPLE + "Brush set to " + brushName);
     }
 
     public void performerName(String performerName) {
-        v.p.sendMessage(ChatColor.DARK_GREEN + performerName + ChatColor.LIGHT_PURPLE + " Performer selected");
+        v.sendMessage(ChatColor.DARK_GREEN + performerName + ChatColor.LIGHT_PURPLE + " Performer selected");
     }
 
     public void toggleRange() {
-        v.p.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((v.distRestrict) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + v.range);
+        v.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((v.owner().distRestrict) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + v.owner().range);
     }
 
     public void toggleLightning() {
-        v.p.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((v.lightning) ? "on" : "off"));
+        v.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((v.owner().lightning) ? "on" : "off"));
     }
 
     public void togglePrintout() {
-        v.p.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((v.printout) ? "on" : "off"));
+        v.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((v.owner().printout) ? "on" : "off"));
     }
 
     public void custom(String message) {
-        v.p.sendMessage(message);
+        v.sendMessage(message);
     }
 }

@@ -5,8 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 
 /**
@@ -18,7 +18,7 @@ public class Ball extends PerformBrush {
     private double trueCircle = 0;
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -26,7 +26,7 @@ public class Ball extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
@@ -37,28 +37,28 @@ public class Ball extends PerformBrush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+            v.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("true")) {
                 trueCircle = 0.5;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                 continue;
             } else if (par[x].startsWith("false")) {
                 trueCircle = 0;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }
 
-    public void ball(vSniper v) {
+    public void ball(vData v) {
         int bsize = v.brushSize;
 
         double bpow = Math.pow(bsize + trueCircle, 2);
@@ -115,9 +115,6 @@ public class Ball extends PerformBrush {
             }
         }
 
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 }

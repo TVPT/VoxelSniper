@@ -5,8 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockFace;
 
@@ -15,13 +15,13 @@ import org.bukkit.block.BlockFace;
  * @author Voxel
  */
 public class DiscFace extends PerformBrush {
-    
+
     public DiscFace() {
         name = "Disc Face";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -29,7 +29,7 @@ public class DiscFace extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -42,33 +42,32 @@ public class DiscFace extends PerformBrush {
         vm.size();
         //vm.voxel();
     }
-
     double trueCircle = 0;
+
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+            v.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("true")) {
                 trueCircle = 0.5;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                 continue;
             } else if (par[x].startsWith("false")) {
                 trueCircle = 0;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-
     }
 
-    private void pre(vSniper v, BlockFace bf) {
-        if(bf == null) {
+    private void pre(vData v, BlockFace bf) {
+        if (bf == null) {
             return;
         }
         switch (bf) {
@@ -92,7 +91,7 @@ public class DiscFace extends PerformBrush {
         }
     }
 
-    public void disc(vSniper v) {
+    public void disc(vData v) {
         int bsize = v.brushSize;
 
         double bpow = Math.pow(bsize + trueCircle, 2);
@@ -107,12 +106,11 @@ public class DiscFace extends PerformBrush {
                 }
             }
         }
-        
-        v.hashUndo.put(v.hashEn, current.getUndo());
-        v.hashEn++;
+
+        v.storeUndo(current.getUndo());
     }
 
-    public void discEW(vSniper v) {
+    public void discEW(vData v) {
         int bsize = v.brushSize;
 
         double bpow = Math.pow(bsize + trueCircle, 2);
@@ -127,12 +125,11 @@ public class DiscFace extends PerformBrush {
                 }
             }
         }
-        
-        v.hashUndo.put(v.hashEn, current.getUndo());
-        v.hashEn++;
+
+        v.storeUndo(current.getUndo());
     }
 
-    public void discNS(vSniper v) {
+    public void discNS(vData v) {
         int bsize = v.brushSize;
 
         double bpow = Math.pow(bsize + trueCircle, 2);
@@ -147,8 +144,7 @@ public class DiscFace extends PerformBrush {
                 }
             }
         }
-        
-        v.hashUndo.put(v.hashEn, current.getUndo());
-        v.hashEn++;
+
+        v.storeUndo(current.getUndo());
     }
 }

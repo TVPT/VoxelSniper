@@ -6,15 +6,15 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.vPainting;
-import com.thevoxelbox.voxelsniper.vSniper;
 
 /**
  * Painting scrolling Brush
  * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Voxel
  */
 public class Painting extends Brush {
-    
+
     public Painting() {
         name = "Painting";
     }
@@ -25,8 +25,8 @@ public class Painting extends Brush {
      * @param v vSniper caller
      */
     @Override
-    public void arrow(vSniper v) {
-        vPainting.paint(v.p, true, false, 0);
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
+        vPainting.paint(v.owner().p, true, false, 0);
     }
 
     /**
@@ -35,8 +35,8 @@ public class Painting extends Brush {
      * @param v vSniper caller
      */
     @Override
-    public void powder(vSniper v) {
-        vPainting.paint(v.p, true, true, 0);
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
+        vPainting.paint(v.owner().p, true, true, 0);
     }
 
     @Override

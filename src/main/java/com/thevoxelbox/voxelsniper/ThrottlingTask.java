@@ -11,14 +11,15 @@ public class ThrottlingTask implements Runnable {
 
     Brush b;
     int[] pn;
-    vSniper v;
+    vData v;
 
-    public ThrottlingTask(vSniper vs, Brush br, int[] pieceNumbers) {
+    public ThrottlingTask(vData vs, Brush br, int[] pieceNumbers) {
         b = br;
         v = vs;
         pn = pieceNumbers;
     }
 
+    @Override
     public void run() {
         b.ThrottledRun(v, pn);
     }

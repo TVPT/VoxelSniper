@@ -1,83 +1,38 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import org.bukkit.block.Block;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.block.Action;
-
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.Sneak;
 import com.thevoxelbox.voxelsniper.brush.Snipe;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
-import com.thevoxelbox.voxelsniper.util.VoxelList;
-
+import com.thevoxelbox.voxelsniper.brush.tool.BrushTool;
+import com.thevoxelbox.voxelsniper.brush.tool.SneakBrushTool;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
-
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 
 /**
- * VoxelSniper'w core class
  *
- * vSniper holds a Sniper'w data and provides methods for the brushes to work properly
- *
- * @author Voxel
+ * @author Piotr
  */
 public class vSniper {
 
-//    /**
-//     * World pointer to the last World a snipe occurred in
-//     */
-//    @Deprecated
-//    public World w;
-    /**
-     * Player pointer
-     * Who does this class belong to?
-     */
-    public Player p;
-    // 
-    public vMessage vm;
-    /**
-     * Sniper'w brush size
-     */
+    public static int UNDO_CACHE_SIZE = 20;
     public Brush readingBrush;
     public String readingString;
-
     public int pieceSize = 5000; //for CPU throttling purposes.  Needs to be set by the config file later (NOT the sniper himself), but just testing for now.
-
-    public int brushSize;  // Brush size  --  set by /b #
-    /**
-     * Sniper'w voxel ID
-     */
-    public int voxelId;     // Voxel Id   --   set by /v (#,name)
-    /**
-     * Sniper'w voxel replace ID
-     */
-    public int replaceId;   // Voxel Replace Id   --   set by /vr #
-    /**
-     * Sniper'w voxel ink data
-     */
-    public byte data;   // Voxel 'ink'  --   set by /vi #
-    /**
-     * Sniper'w voxel ink replace data
-     */
-    public byte replaceData; // Voxel 'ink' Replace -- set bt /vir #
-    /**
-     * Sniper'w block exclusion list for the Exclude performer
-     */
-    public VoxelList voxelList = new VoxelList();
-    //public ArrayList<Integer> voxelList = new ArrayList<Integer>(); // Voxel Exclusion List -- set by /ve #
-    /**
-     * Sniper'w voxel height
-     */
-    public int voxelHeight;    // Voxel 'heigth'   --  set by /vh #
+    public Player p;
+    // 
+    protected vData data = new vData(this);
+    public vMessage vm;
     //
     //
     public boolean lightning = false;
@@ -86,49 +41,28 @@ public class vSniper {
     public double range = 5.0D;
     //
     //
-    /**
-     * Sniper'w centroid
-     *
-     * TODO: Move to Clone.java
-     */
-    public int cCen;
-    //
-    //
-    /**
-     * Holds the index of the last entry of the vUndo
-     */
-    public int hashEn = 0;
-    /**
-     * Map of vUndo'w
-     */
-    public HashMap<Integer, vUndo> hashUndo = new HashMap<Integer, vUndo>();
-    //
-    //
+    protected LinkedList<vUndo> undoList = new LinkedList<vUndo>();
     protected HashMap<String, Brush> myBrushes;
     protected HashMap<String, String> brushAlt;
-    protected HashMap<Integer, Brush> brushPresets = new HashMap<Integer, Brush>();
-    protected HashMap<Integer, int[]> brushPresetsParams = new HashMap<Integer, int[]>();
-    protected HashMap<String, Brush> brushPresetsS = new HashMap<String, Brush>();
-    protected HashMap<String, int[]> brushPresetsParamsS = new HashMap<String, int[]>();
+    protected EnumMap<Material, BrushTool> brushTools = new EnumMap<Material, BrushTool>(Material.class);
+    protected HashMap<Integer, Brush> brushPresets = new HashMap();
+    protected HashMap<Integer, int[]> brushPresetsParams = new HashMap();
+    protected HashMap<String, Brush> brushPresetsS = new HashMap();
+    protected HashMap<String, int[]> brushPresetsParamsS = new HashMap();
     //activated
-    private Brush current = new Snipe();
-    private Brush previous = new Snipe();
-    private Brush twoBack = new Snipe();
-    //private int[] currentP = new int[6];
-    //private int[] previousP = new int[6];
-    //private int[] twoBackP = new int[6];
-    private Brush sneak = new Sneak();
-    
+    protected Brush current = new Snipe();
+    protected Brush previous = new Snipe();
+    protected Brush twoBack = new Snipe();
+    protected Brush sneak = new Sneak();
     // VOXELGUEST HOOKS
-    //private Integer group;
+    protected Integer group;
 
-    /**
-     * Default constructor, gathers the brushes for the Sniper'w use
-     */
     public vSniper() {
         myBrushes = vBrushes.getSniperBrushes();
         brushAlt = vBrushes.getBrushAlternates();
-        vm = new vMessage(this);
+
+        vm = new vMessage(data);
+        data.vm = vm;
         //defaults
         int[] currentP = new int[8];
         currentP[0] = 0;
@@ -146,53 +80,113 @@ public class vSniper {
     }
 
     public void setBrushSize(int size) {
-        brushSize = size;
-        vm.size();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.brushSize = size;
+            bt.data.vm.size();
+        } else {
+            data.brushSize = size;
+            vm.size();
+        }
     }
 
     public void setVoxel(int voxel) {
-        voxelId = voxel;
-        vm.voxel();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.voxelId = voxel;
+            bt.data.vm.voxel();
+        } else {
+            data.voxelId = voxel;
+            vm.voxel();
+        }
     }
 
     public void setReplace(int replace) {
-        replaceId = replace;
-        vm.replace();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.replaceId = replace;
+            bt.data.vm.replace();
+        } else {
+            data.replaceId = replace;
+            vm.replace();
+        }
     }
 
     public void setData(byte dat) {
-        data = dat;
-        vm.data();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.data = dat;
+            bt.data.vm.data();
+        } else {
+            data.data = dat;
+            vm.data();
+        }
     }
 
     public void setReplaceData(byte dat) {
-        replaceData = dat;
-        vm.replaceData();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.replaceData = dat;
+            bt.data.vm.replaceData();
+        } else {
+            data.replaceData = dat;
+            vm.replaceData();
+        }
     }
 
     public void addVoxelToList(int i) {
-        voxelList.add(i);
-        vm.voxelList();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.voxelList.add(i);
+            bt.data.vm.voxelList();
+        } else {
+            data.voxelList.add(i);
+            vm.voxelList();
+        }
     }
 
     public void removeVoxelFromList(int i) {
-        voxelList.removeValue(i);
-        vm.voxelList();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.voxelList.removeValue(i);
+            bt.data.vm.voxelList();
+        } else {
+            data.voxelList.removeValue(i);
+            vm.voxelList();
+        }
     }
 
     public void clearVoxelList() {
-        voxelList.clear();
-        vm.voxelList();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.voxelList.clear();
+            bt.data.vm.voxelList();
+        } else {
+            data.voxelList.clear();
+            vm.voxelList();
+        }
     }
 
     public void setHeigth(int heigth) {
-        voxelHeight = heigth;
-        vm.height();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.voxelHeight = heigth;
+            bt.data.vm.height();
+        } else {
+            data.voxelHeight = heigth;
+            vm.height();
+        }
     }
 
     public void setCentroid(int centroid) {
-        cCen = centroid;
-        vm.center();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.data.cCen = centroid;
+            bt.data.vm.center();
+        } else {
+            data.cCen = centroid;
+            vm.center();
+        }
     }
 
     public void setRange(double rng) {
@@ -216,50 +210,81 @@ public class vSniper {
         vm.togglePrintout();
     }
 
+    public void addBrushTool() {
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            p.sendMessage(ChatColor.DARK_GREEN + "Brush tool already exists!");
+        } else {
+            brushTools.put(p.getItemInHand().getType(), new BrushTool(this));
+            p.sendMessage(ChatColor.GOLD + "Brush tool has been added.");
+        }
+    }
+
+    public void addBrushTool(boolean arrow) {
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            p.sendMessage(ChatColor.DARK_GREEN + "Brush tool already exists!");
+        } else {
+            brushTools.put(p.getItemInHand().getType(), new SneakBrushTool(this, arrow));
+            p.sendMessage(ChatColor.GOLD + "Brush tool has been added.");
+        }
+    }
+
+    public void removeBrushTool() {
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            brushTools.remove(p.getItemInHand().getType());
+            p.sendMessage(ChatColor.GOLD + "Brush tool has been removed.");
+        } else {
+            p.sendMessage(ChatColor.DARK_GREEN + "Brush tool is non-existant!");
+        }
+    }
+
     public void setPerformer(String[] args) {
         String[] derp = new String[args.length + 1];
         derp[0] = "";
         System.arraycopy(args, 0, derp, 1, args.length);
-        if (current instanceof Performer) {
-            ((Performer) current).parse(derp, this);
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.setPerformer(derp);
         } else {
-            vm.custom(ChatColor.GOLD + "This brush is not a Performer brush!");
+            if (current instanceof Performer) {
+                ((Performer) current).parse(derp, data);
+            } else {
+                vm.custom(ChatColor.GOLD + "This brush is not a Performer brush!");
+            }
         }
     }
 
-    /**
-     * The set brush method
-     *
-     *
-     * @param args String array of arguments where args[0] is the name of the brush being set
-     * @return true if brush exists
-     */
     public boolean setBrush(String[] args) {
-
-
         try {
             if (args == null || args.length == 0) {
                 p.sendMessage(ChatColor.RED + "Invalid input!");  //This was spamming the console and people were complaining.  Fixed below with a catch instead.  -GJ
                 return false;
             }
             if (myBrushes.containsKey(args[0])) {
-                //parameters:
-                brushPresetsParamsS.put("twoBack@", brushPresetsParamsS.get("previous@"));
-                fillPrevious(); //there are no current parameters yet, you just declared the brush / haven't input your new params.
+                if (brushTools.containsKey(p.getItemInHand().getType())) {
+                    BrushTool bt = brushTools.get(p.getItemInHand().getType());
+                    bt.setBrush(vBrushes.getBrushInstance(args[0]));
+                } else {
+                    //parameters:
+                    brushPresetsParamsS.put("twoBack@", brushPresetsParamsS.get("previous@"));
+                    fillPrevious(); //there are no current parameters yet, you just declared the brush / haven't input your new params.
 
-                twoBack = previous;
-                previous = current;
-                current = myBrushes.get(args[0]);
-
+                    twoBack = previous;
+                    previous = current;
+                    current = myBrushes.get(args[0]);
+                }
             } else if (brushAlt.containsKey(args[0])) {
-                //parameters:
-                brushPresetsParamsS.put("twoBack@", brushPresetsParamsS.get("previous@"));
-                fillPrevious();
+                if (brushTools.containsKey(p.getItemInHand().getType())) {
+                    BrushTool bt = brushTools.get(p.getItemInHand().getType());
+                    bt.setBrush(vBrushes.getBrushInstance(args[0]));
+                } else {
+                    //parameters:
+                    brushPresetsParamsS.put("twoBack@", brushPresetsParamsS.get("previous@"));
+                    fillPrevious();
 
-                twoBack = previous;
-                previous = current;
-                current = myBrushes.get(brushAlt.get(args[0]));
-
+                    twoBack = previous;
+                    previous = current;
+                    current = myBrushes.get(brushAlt.get(args[0]));
+                }
             } else {
                 p.sendMessage(ChatColor.LIGHT_PURPLE + "No such brush.");
                 return false;
@@ -269,10 +294,15 @@ public class vSniper {
 
             if (args.length > 1) {
                 try {
-                    if (current instanceof Performer) {
-                        ((Performer) current).parse(args, this);
+                    if (brushTools.containsKey(p.getItemInHand().getType())) {
+                        BrushTool bt = brushTools.get(p.getItemInHand().getType());
+                        bt.parse(args);
                     } else {
-                        current.parameters(args, this);
+                        if (current instanceof Performer) {
+                            ((Performer) current).parse(args, data);
+                        } else {
+                            current.parameters(args, data);
+                        }
                     }
                     return true;
                 } catch (Exception e) {
@@ -367,89 +397,83 @@ public class vSniper {
     //writes parameters to the current key in the hashmap
     public void fillCurrent() {
         int[] currentP = new int[8];
-        currentP[0] = this.voxelId;
-        currentP[1] = this.replaceId;
-        currentP[2] = this.data;
-        currentP[3] = this.brushSize;
-        currentP[4] = this.voxelHeight;
-        currentP[5] = this.cCen;
-        currentP[6] = this.replaceData;
-        currentP[7] = (int)this.range;
+        currentP[0] = data.voxelId;
+        currentP[1] = data.replaceId;
+        currentP[2] = data.data;
+        currentP[3] = data.brushSize;
+        currentP[4] = data.voxelHeight;
+        currentP[5] = data.cCen;
+        currentP[6] = data.replaceData;
+        currentP[7] = (int) range;
         brushPresetsParamsS.put("current@", currentP);
     }
 
     //writes parameters of the last brush you were working with to the previous key in the hashmap
     public void fillPrevious() {
         int[] currentP = new int[8];
-        currentP[0] = this.voxelId;
-        currentP[1] = this.replaceId;
-        currentP[2] = this.data;
-        currentP[3] = this.brushSize;
-        currentP[4] = this.voxelHeight;
-        currentP[5] = this.cCen;
-        currentP[6] = this.replaceData;
-        currentP[7] = (int)this.range;
+        currentP[0] = data.voxelId;
+        currentP[1] = data.replaceId;
+        currentP[2] = data.data;
+        currentP[3] = data.brushSize;
+        currentP[4] = data.voxelHeight;
+        currentP[5] = data.cCen;
+        currentP[6] = data.replaceData;
+        currentP[7] = (int) range;
         brushPresetsParamsS.put("previous@", currentP);
     }
 
     //reads parameters from the current key in the hashmap
-    /* This function is never used. Remove comment if needed.
     private void readCurrent() {
         int[] currentP = brushPresetsParamsS.get("current@");
-        this.voxelId = currentP[0];
-        this.replaceId = currentP[1];
-        this.data = (byte) currentP[2];
-        this.brushSize = currentP[3];
-        this.voxelHeight = currentP[4];
-        this.cCen = currentP[5];
-        this.replaceData = (byte) currentP[6];
-        this.range = currentP[7];
-    }*/
+        data.voxelId = currentP[0];
+        data.replaceId = currentP[1];
+        data.data = (byte) currentP[2];
+        data.brushSize = currentP[3];
+        data.voxelHeight = currentP[4];
+        data.cCen = currentP[5];
+        data.replaceData = (byte) currentP[6];
+        range = currentP[7];
+    }
 
     //reads parameters from the previous key in the hashmap
     private void readPrevious() {
         int[] currentP = brushPresetsParamsS.get("previous@");
-        this.voxelId = currentP[0];
-        this.replaceId = currentP[1];
-        this.data = (byte) currentP[2];
-        this.brushSize = currentP[3];
-        this.voxelHeight = currentP[4];
-        this.cCen = currentP[5];
-        this.replaceData = (byte) currentP[6];
-        this.range = currentP[7];
+        data.voxelId = currentP[0];
+        data.replaceId = currentP[1];
+        data.data = (byte) currentP[2];
+        data.brushSize = currentP[3];
+        data.voxelHeight = currentP[4];
+        data.cCen = currentP[5];
+        data.replaceData = (byte) currentP[6];
+        range = currentP[7];
     }
 
     private void readTwoBack() {
         int[] currentP = brushPresetsParamsS.get("twoBack@");
-        this.voxelId = currentP[0];
-        this.replaceId = currentP[1];
-        this.data = (byte) currentP[2];
-        this.brushSize = currentP[3];
-        this.voxelHeight = currentP[4];
-        this.cCen = currentP[5];
-        this.replaceData = (byte) currentP[6];
+        data.voxelId = currentP[0];
+        data.replaceId = currentP[1];
+        data.data = (byte) currentP[2];
+        data.brushSize = currentP[3];
+        data.voxelHeight = currentP[4];
+        data.cCen = currentP[5];
+        data.replaceData = (byte) currentP[6];
         this.range = currentP[7];
     }
 
-    /**
-     * The main sniper method
-     * Executes the current selected brush
-     *
-     * @param playr The caller
-     */
     public boolean snipe(Player playr, Action action, Material itemInHand, Block clickedBlock, BlockFace clickedFace) {
         boolean bool = false;
         try {
             p = playr;
+            if (brushTools.containsKey(p.getItemInHand().getType())) {
+                BrushTool bt = brushTools.get(p.getItemInHand().getType());
+                bool = bt.snipe(playr, action, itemInHand, clickedBlock, clickedFace);
+            } else {
+                if (p.isSneaking()) {
+                    bool = sneak.perform(action, data, itemInHand, clickedBlock, clickedFace);
+                    return bool;
+                }
 
-            if (p.isSneaking()) {
-                return sneak.perform(action, this, itemInHand, clickedBlock, clickedFace);
-            }
-
-            bool = current.perform(action, this, itemInHand, clickedBlock, clickedFace);
-
-            if (this.hashUndo.size() > 20) {
-                this.hashUndo.remove(this.hashEn - 20);
+                bool = current.perform(action, data, itemInHand, clickedBlock, clickedFace);
             }
         } catch (Exception e) {
             p.sendMessage(ChatColor.RED + "An Exception has occured! (Sniping error)");
@@ -465,50 +489,59 @@ public class vSniper {
         return bool;
     }
 
-    /**
-     * Performs the undo process
-     */
-    public void doUndo() {
-        if (this.hashEn > 0) {
-            vUndo h = this.hashUndo.get(--hashEn);
-            if (h != null) {
-                h.undo();
-                this.hashUndo.remove(hashEn);
-                this.p.sendMessage(ChatColor.GREEN + "Undo succesfull!  " + ChatColor.RED + h.getSize() + ChatColor.GREEN + "  Blocks have been replaced.");
+    public void storeUndo(vUndo undo) {
+        if (UNDO_CACHE_SIZE <= 0) {
+            return;
+        }
+        if (undo != null && undo.getSize() > 0) {
+            while (undoList.size() > UNDO_CACHE_SIZE) {
+                undoList.pop();
             }
+            undoList.add(undo);
+        }
+    }
+
+    public void doUndo() {
+        if (undoList.isEmpty()) {
+            p.sendMessage(ChatColor.GREEN + "Nothing to undo");
         } else {
-            this.p.sendMessage(ChatColor.GREEN + "Nothing to undo");
+            vUndo undo = undoList.pollLast();
+            if (undo != null) {
+                undo.undo();
+                p.sendMessage(ChatColor.GREEN + "Undo succesfull!  " + ChatColor.RED + undo.getSize() + ChatColor.GREEN + "  Blocks have been replaced.");
+            } else {
+                p.sendMessage(ChatColor.GREEN + "Nothing to undo");
+            }
         }
     }
 
     public void doUndo(int num) {
         int sum = 0;
-        if (hashEn > 0) {
+        if (undoList.isEmpty()) {
+            p.sendMessage(ChatColor.GREEN + "Nothing to undo");
+        } else {
             for (int x = 0; x < num; x++) {
-                if (hashEn > 0) {
-                    vUndo h = hashUndo.get(--hashEn);
-                    if (h != null) {
-                        h.undo();
-                        this.hashUndo.remove(hashEn);
-                        sum += h.getSize();
-                    }
+                vUndo undo = undoList.pollLast();
+                if (undo != null) {
+                    undo.undo();
+                    sum += undo.getSize();
                 } else {
                     break;
                 }
             }
             p.sendMessage(ChatColor.GREEN + "Undo succesfull!  " + ChatColor.RED + sum + ChatColor.GREEN + "  Blocks have been replaced.");
-        } else {
-            p.sendMessage(ChatColor.GREEN + "Nothing to undo");
         }
     }
 
-    /**
-     * Displays the info of the current brush to the player
-     */
     public void info() {
-        current.info(vm);
-        if (current instanceof Performer) {
-            ((Performer) current).showInfo(vm);
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.info();
+        } else {
+            current.info(vm);
+            if (current instanceof Performer) {
+                ((Performer) current).showInfo(vm);
+            }
         }
     }
 
@@ -528,9 +561,6 @@ public class vSniper {
         p.sendMessage(msg);
     }
 
-    /**
-     * Switches the current brush to the previous brush.  just returns a snipe brush if they haven't chosen anything else in the past.
-     */
     public void previousBrush() {
         Brush temp = current;
         current = previous;
@@ -543,9 +573,6 @@ public class vSniper {
         info();
     }
 
-    /**
-     * Switches the current brush to the brush two back from this one (also just a snipe if nothing else exists)
-     */
     public void twoBackBrush() {
         fillCurrent();
         Brush temp = current;
@@ -563,9 +590,6 @@ public class vSniper {
         info();
     }
 
-    /**
-     * Loads current brush settings to a numerical preset, to be grabbed later.  More complicated but more powerful version of green record, basically.
-     */
     public void savePreset(int slot) {
         brushPresets.put(slot, current);
         fillCurrent();
@@ -582,9 +606,6 @@ public class vSniper {
         p.sendMessage(ChatColor.AQUA + "Preset saved in slot " + slot);
     }
 
-    /**
-     * Loads presets that have been set with savePreset().
-     */
     public void loadPreset(int slot) {
         try {
             int[] paramArray = brushPresetsParams.get(slot);
@@ -596,15 +617,15 @@ public class vSniper {
                 current = temp;
             }
             fillPrevious();
-            this.voxelId = paramArray[0];
-            this.replaceId = paramArray[1];
-            this.data = (byte) paramArray[2];
-            this.brushSize = paramArray[3];
-            this.voxelHeight = paramArray[4];
-            this.cCen = paramArray[5];
-            this.replaceData = (byte) paramArray[6];
-            this.range = paramArray[7];
-            this.setPerformer(new String[]{"", "m"});
+            data.voxelId = paramArray[0];
+            data.replaceId = paramArray[1];
+            data.data = (byte) paramArray[2];
+            data.brushSize = paramArray[3];
+            data.voxelHeight = paramArray[4];
+            data.cCen = paramArray[5];
+            data.replaceData = (byte) paramArray[6];
+            range = paramArray[7];
+            setPerformer(new String[]{"", "m"});
 
             p.sendMessage("Preset loaded.");
         } catch (Exception e) {
@@ -624,15 +645,15 @@ public class vSniper {
                 current = temp;
             }
             fillPrevious();
-            this.voxelId = paramArray[0];
-            this.replaceId = paramArray[1];
-            this.data = (byte) paramArray[2];
-            this.brushSize = paramArray[3];
-            this.voxelHeight = paramArray[4];
-            this.cCen = paramArray[5];
-            this.replaceData = (byte) paramArray[6]; // Noticed this was missing - Giltwist
-            this.range = paramArray[7];
-            this.setPerformer(new String[]{"", "m"});
+            data.voxelId = paramArray[0];
+            data.replaceId = paramArray[1];
+            data.data = (byte) paramArray[2];
+            data.brushSize = paramArray[3];
+            data.voxelHeight = paramArray[4];
+            data.cCen = paramArray[5];
+            data.replaceData = (byte) paramArray[6]; // Noticed this was missing - Giltwist
+            range = paramArray[7];
+            setPerformer(new String[]{"", "m"});
 
             p.sendMessage("Preset loaded.");
         } catch (Exception e) {
@@ -641,9 +662,6 @@ public class vSniper {
         }
     }
 
-    /**
-     * Resets the Sniper'w data
-     */
     public void reset() {
         if (this instanceof liteSniper) {
             myBrushes = liteBrushes.getSniperBrushes();
@@ -651,39 +669,68 @@ public class vSniper {
             myBrushes = vBrushes.getSniperBrushes();
         }
 
-        current = new Snipe();
+        if (brushTools.containsKey(p.getItemInHand().getType())) {
+            BrushTool bt = brushTools.get(p.getItemInHand().getType());
+            bt.setBrush(new Snipe());
 
-        fillPrevious();
-        this.voxelId = 0;
-        this.replaceId = 0;
-        this.data = 0;
-        this.brushSize = 3;
-        this.voxelHeight = 1;
-        this.cCen = 0;
-        this.replaceData = 0; // Noticed this was missing - Giltwist
-        this.range = 1;
+            bt.data.voxelId = 0;
+            bt.data.replaceId = 0;
+            bt.data.data = 0;
+            bt.data.brushSize = 3;
+            bt.data.voxelHeight = 1;
+            bt.data.cCen = 0;
+            bt.data.replaceData = 0;
+        } else {
+            current = new Snipe();
 
-        //Is it possible to set the performer of every brush simultaneously or would
-        //there need to be a for loop? - Giltwist
+            fillPrevious();
+            data.voxelId = 0;
+            data.replaceId = 0;
+            data.data = 0;
+            data.brushSize = 3;
+            data.voxelHeight = 1;
+            data.cCen = 0;
+            data.replaceData = 0; // Noticed this was missing - Giltwist
+            range = 1;
 
+            //Is it possible to set the performer of every brush simultaneously or would
+            //there need to be a for loop? - Giltwist
+        }
         fillCurrent();
     }
 
     public void saveAllPresets() {
-        String location = "plugins/VoxelSniper/presetsBySniper/"+p.getName()+".txt";
+        String location = "plugins/VoxelSniper/presetsBySniper/" + p.getName() + ".txt";
         File nf = new File(location);
         //if (!nf.exists()) {
-            nf.getParentFile().mkdirs();
-            PrintWriter writer = null;
-            try {
-                writer = new PrintWriter(location);
-                int[] presetsHolder = new int[8];
-                Iterator<?> it = brushPresets.keySet().iterator();
-                if (!brushPresets.isEmpty()) {
-                    while (it.hasNext()) {
-                        int i = (Integer) it.next();
-                        writer.write(i + "\r\n" + brushPresets.get(i).name + "\r\n");
-                        presetsHolder = brushPresetsParams.get(i);
+        nf.getParentFile().mkdirs();
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(location);
+            int[] presetsHolder = new int[8];
+            Iterator it = brushPresets.keySet().iterator();
+            if (!brushPresets.isEmpty()) {
+                while (it.hasNext()) {
+                    int i = (Integer) it.next();
+                    writer.write(i + "\r\n" + brushPresets.get(i).name + "\r\n");
+                    presetsHolder = brushPresetsParams.get(i);
+                    writer.write(presetsHolder[0] + "\r\n");
+                    writer.write(presetsHolder[1] + "\r\n");
+                    writer.write(presetsHolder[2] + "\r\n");
+                    writer.write(presetsHolder[3] + "\r\n");
+                    writer.write(presetsHolder[4] + "\r\n");
+                    writer.write(presetsHolder[5] + "\r\n");
+                    writer.write(presetsHolder[6] + "\r\n");
+                    writer.write(presetsHolder[7] + "\r\n");
+                }
+            }
+            it = brushPresetsS.keySet().iterator();
+            if (!brushPresetsS.isEmpty()) {
+                while (it.hasNext()) {
+                    String key = (String) it.next();
+                    if (!key.startsWith("current") && !key.startsWith("previous") && !key.startsWith("twoBack")) {
+                        writer.write(key + "\r\n" + brushPresetsS.get(key).name + "\r\n");
+                        presetsHolder = brushPresetsParamsS.get(key);
                         writer.write(presetsHolder[0] + "\r\n");
                         writer.write(presetsHolder[1] + "\r\n");
                         writer.write(presetsHolder[2] + "\r\n");
@@ -694,32 +741,15 @@ public class vSniper {
                         writer.write(presetsHolder[7] + "\r\n");
                     }
                 }
-                it = brushPresetsS.keySet().iterator();
-                if (!brushPresetsS.isEmpty()) {
-                    while (it.hasNext()) {
-                        String key = (String) it.next();
-                        if (!key.startsWith("current") && !key.startsWith("previous") && !key.startsWith("twoBack")) {
-                            writer.write(key + "\r\n" + brushPresetsS.get(key).name + "\r\n");
-                            presetsHolder = brushPresetsParamsS.get(key);
-                            writer.write(presetsHolder[0] + "\r\n");
-                            writer.write(presetsHolder[1] + "\r\n");
-                            writer.write(presetsHolder[2] + "\r\n");
-                            writer.write(presetsHolder[3] + "\r\n");
-                            writer.write(presetsHolder[4] + "\r\n");
-                            writer.write(presetsHolder[5] + "\r\n");
-                            writer.write(presetsHolder[6] + "\r\n");
-                            writer.write(presetsHolder[7] + "\r\n");
-                        }
-                    }
-                }
-                writer.close();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //}
     }
 
-    public void loadAllPresets(){
+    public void loadAllPresets() {
         try {
             File f = new File("plugins/VoxelSniper/presetsBySniper/" + p.getName() + ".txt");
             if (f.exists()) {
@@ -730,21 +760,21 @@ public class vSniper {
                         readingString = snr.nextLine();
                         int key = Integer.parseInt(readingString);
                         readingBrush = myBrushes.get(snr.nextLine());
-                        brushPresets.put(key,readingBrush);
-                        presetsHolder[0]= Integer.parseInt(snr.nextLine());
-                        presetsHolder[1]= Integer.parseInt(snr.nextLine());
-                        presetsHolder[2]= Byte.parseByte(snr.nextLine());
-                        presetsHolder[3]= Integer.parseInt(snr.nextLine());
-                        presetsHolder[4]= Integer.parseInt(snr.nextLine());
-                        presetsHolder[5]= Integer.parseInt(snr.nextLine());
-                        presetsHolder[6]= Byte.parseByte(snr.nextLine());
-                        presetsHolder[7]= Integer.parseInt(snr.nextLine());
-                        brushPresetsParams.put(key,presetsHolder);
+                        brushPresets.put(key, readingBrush);
+                        presetsHolder[0] = Integer.parseInt(snr.nextLine());
+                        presetsHolder[1] = Integer.parseInt(snr.nextLine());
+                        presetsHolder[2] = Byte.parseByte(snr.nextLine());
+                        presetsHolder[3] = Integer.parseInt(snr.nextLine());
+                        presetsHolder[4] = Integer.parseInt(snr.nextLine());
+                        presetsHolder[5] = Integer.parseInt(snr.nextLine());
+                        presetsHolder[6] = Byte.parseByte(snr.nextLine());
+                        presetsHolder[7] = Integer.parseInt(snr.nextLine());
+                        brushPresetsParams.put(key, presetsHolder);
                     } catch (NumberFormatException e) {
                         boolean first = true;
                         while (snr.hasNext()) {
                             String keyS;
-                            if (first){
+                            if (first) {
                                 keyS = readingString;
                                 first = false;
                             } else {
@@ -761,7 +791,7 @@ public class vSniper {
                             presetsHolder[6] = Byte.parseByte(snr.nextLine());
                             presetsHolder[7] = Integer.parseInt(snr.nextLine());
                             brushPresetsParamsS.put(keyS, presetsHolder);
-                            
+
                         }
                     }
                 }

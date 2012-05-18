@@ -5,7 +5,6 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.block.Block;
 
 /**
@@ -21,8 +20,8 @@ public class pInkNoUndo extends vPerformer {
     }
 
     @Override
-    public void init(vSniper v) {
-        w = v.p.getWorld();
+    public void init(com.thevoxelbox.voxelsniper.vData v) {
+        w = v.getWorld();
         d = v.data;
     }
 
@@ -34,7 +33,7 @@ public class pInkNoUndo extends vPerformer {
 
     @Override
     public void perform(Block b) {
-        if(b.getData() != d) {
+        if (b.getData() != d) {
             b.setData(d);
         }
     }

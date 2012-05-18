@@ -5,11 +5,11 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.undo.uBlock;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import org.bukkit.block.Block;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import java.util.Random;
+import org.bukkit.block.Block;
 
 /**
  *
@@ -34,11 +34,11 @@ public class RandomErode extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        
+
         bsize = v.brushSize;
 
         snap = new eBlock[0][0][0];
@@ -57,7 +57,7 @@ public class RandomErode extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -85,7 +85,7 @@ public class RandomErode extends Brush {
 
     }
 
-    private void rerosion(vSniper v) {
+    private void rerosion(vData v) {
         vUndo h = new vUndo(tb.getWorld().getName());
 
         if (erodeFace >= 0 && erodeFace <= 6) {
@@ -150,11 +150,10 @@ public class RandomErode extends Brush {
             }
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
-    private void rfilling(vSniper v) {
+    private void rfilling(vData v) {
         vUndo h = new vUndo(tb.getWorld().getName());
 
         if (fillFace >= 0 && fillFace <= 6) {
@@ -219,8 +218,7 @@ public class RandomErode extends Brush {
             }
         }
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
     private void getMatrix() {

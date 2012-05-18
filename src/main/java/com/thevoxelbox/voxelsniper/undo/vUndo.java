@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.undo;
 
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import org.bukkit.World;
-
 import org.bukkit.block.Block;
 
 /**
@@ -101,10 +100,9 @@ public class vUndo {
         }
     }
 
-    /* This function is never used. Remove comment if needed.
     private void setBlock(vBlock vb) {
         w.getBlockAt(vb.x, vb.y, vb.z).setTypeIdAndData(vb.id, vb.d, false);
-    }*/
+    }
 
     /**
      * Checks whether a block falls off. Doesn't stay in mid air.
@@ -252,7 +250,7 @@ public class vUndo {
      * @return true if the block falls. Otherwise false
      */
     public static boolean falling(int id) {
-        if (id > 7 && id < 14 || id == 122) {
+        if ((id > 7 && id < 14) || id == 122) {
             return true;
         } else {
             return false;

@@ -6,7 +6,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 
 /**
  *
@@ -20,21 +19,15 @@ public class Snipe extends PerformBrush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         current.perform(tb);
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         current.perform(lb);
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 
     @Override

@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
 /**
@@ -14,13 +14,13 @@ import org.bukkit.ChatColor;
  * @author Gavin
  */
 public class Parabola extends Brush {
-    
+
     public Parabola() {
         name = "Parabola";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -28,7 +28,7 @@ public class Parabola extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         hParabola(v);
     }
 
@@ -37,43 +37,42 @@ public class Parabola extends Brush {
         vm.brushName(name);
         vm.voxel();
     }
-
     //default parameters
-    //private int full = 0;
+    private int full = 0;
     private int height = 2;
-    //private int up = 1;
+    private int up = 1;
     private int width = 2;
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Parabola Brush Arrow Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b p full -- will set the parabola to full step accuracy for the curve (less accurate than default half step). Type 'half' instead to return to default.  Will always be set to full if /v isn't a half block.");
-            v.p.sendMessage(ChatColor.BLUE + "/b p h[number] -- sets the height of the parabola. This is measured from whichever of your two feet is LOWER.");
-            v.p.sendMessage(ChatColor.GREEN + "/b p down -- Makes the parabola curve upward (the middle is LOWER than the feet).  '/b p up' which is default, does the opposite.");
-            v.p.sendMessage(ChatColor.GOLD + "To use, set your height and click the two bases of the desired parabola.  These can be diagonal or different heights from each other.");
-            v.p.sendMessage(ChatColor.GOLD + "Type /b p info2  for gunpowder parameters and instructions.");
+            v.sendMessage(ChatColor.GOLD + "Parabola Brush Arrow Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b p full -- will set the parabola to full step accuracy for the curve (less accurate than default half step). Type 'half' instead to return to default.  Will always be set to full if /v isn't a half block.");
+            v.sendMessage(ChatColor.BLUE + "/b p h[number] -- sets the height of the parabola. This is measured from whichever of your two feet is LOWER.");
+            v.sendMessage(ChatColor.GREEN + "/b p down -- Makes the parabola curve upward (the middle is LOWER than the feet).  '/b p up' which is default, does the opposite.");
+            v.sendMessage(ChatColor.GOLD + "To use, set your height and click the two bases of the desired parabola.  These can be diagonal or different heights from each other.");
+            v.sendMessage(ChatColor.GOLD + "Type /b p info2  for gunpowder parameters and instructions.");
             return;
         }
         if (par[1].equalsIgnoreCase("info2")) {
-            v.p.sendMessage(ChatColor.GOLD + "Parabola Brush Gunpowder Parameters:");
-            v.p.sendMessage(ChatColor.BLUE + "/b p h[number] -- sets the height of the parabola. Default 2.");
-            v.p.sendMessage(ChatColor.LIGHT_PURPLE + "/b p w[number] -- sets the width of the parabola. Default 2.");
-            v.p.sendMessage(ChatColor.GOLD + "To use, set your height and click the apex of the parabola.  It will orient itself based on which face you click.  If an even width, the apex is considered the middle block to your right.");
+            v.sendMessage(ChatColor.GOLD + "Parabola Brush Gunpowder Parameters:");
+            v.sendMessage(ChatColor.BLUE + "/b p h[number] -- sets the height of the parabola. Default 2.");
+            v.sendMessage(ChatColor.LIGHT_PURPLE + "/b p w[number] -- sets the width of the parabola. Default 2.");
+            v.sendMessage(ChatColor.GOLD + "To use, set your height and click the apex of the parabola.  It will orient itself based on which face you click.  If an even width, the apex is considered the middle block to your right.");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("full")) {
-                //full = 1;
-                v.p.sendMessage(ChatColor.AQUA + "Full step accuracy set (less accurate).");
+                full = 1;
+                v.sendMessage(ChatColor.AQUA + "Full step accuracy set (less accurate).");
                 continue;
             } else if (par[x].startsWith("half")) {
-                //full = 0;
-                if (getBlockIdAt(bx, by, bz) != 44){
-                    v.p.sendMessage(ChatColor.RED + "Half step accuracy not available for this block type. /v must be 44.");
-                    //full = 1;
+                full = 0;
+                if (getBlockIdAt(bx, by, bz) != 44) {
+                    v.sendMessage(ChatColor.RED + "Half step accuracy not available for this block type. /v must be 44.");
+                    full = 1;
                 } else {
-                    v.p.sendMessage(ChatColor.AQUA + "Half step accuracy set (more accurate).");
+                    v.sendMessage(ChatColor.AQUA + "Half step accuracy set (more accurate).");
                 }
                 continue;
             } else if (par[x].startsWith("h")) {
@@ -82,39 +81,37 @@ public class Parabola extends Brush {
                     height = 1;
                 }
                 if (height > 40) {
-                    v.p.sendMessage(ChatColor.RED + "WARNING: High parabola.  Make sure you won't hit sky limit.");
+                    v.sendMessage(ChatColor.RED + "WARNING: High parabola.  Make sure you won't hit sky limit.");
                 }
-                v.p.sendMessage(ChatColor.BLUE + "Parabola height set to: " + height);
+                v.sendMessage(ChatColor.BLUE + "Parabola height set to: " + height);
                 continue;
             } else if (par[x].startsWith("up")) {
-                //up = 1;
-                v.p.sendMessage(ChatColor.AQUA + "Middle will be higher than feet.");
+                up = 1;
+                v.sendMessage(ChatColor.AQUA + "Middle will be higher than feet.");
                 continue;
             } else if (par[x].startsWith("down")) {
-                //up = 0;
-                v.p.sendMessage(ChatColor.AQUA + "Middle will be lower than feet.");
+                up = 0;
+                v.sendMessage(ChatColor.AQUA + "Middle will be lower than feet.");
                 continue;
             } else if (par[x].startsWith("w")) {
                 width = Integer.parseInt(par[x].replace("w", ""));
                 if (width < 0) {
                     width = 1;
                 }
-                v.p.sendMessage(ChatColor.BLUE + "Parabola width set to: " + width);
+                v.sendMessage(ChatColor.BLUE + "Parabola width set to: " + width);
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-
     }
 
-    public void vParabola (vSniper v) {
-        /* This block of code is never read.
+    public void vParabola(vData v) {
         int bId = v.voxelId;
         int bIdLow = bId;
         if (bId == 44) {
             bIdLow = 43;
-        }*/
+        }
 
         vUndo h = new vUndo(tb.getWorld().getName());
 
@@ -129,40 +126,39 @@ public class Parabola extends Brush {
 
 //ruler code - keep the double clicking stuff, change the math.
 /*
-if (xOff == 0 && yOff == 0 && zOff == 0) {
-
-            //if (sel) {  //commented out - I am making arrow select first point always and powder report back distances from it as many times as you want.
-                coords[0] = tb.getX();
-                coords[1] = tb.getY();
-                coords[2] = tb.getZ();
-                v.p.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
-                sel = !sel;
-            //}
-            //else {
-            //    double distance = Math.sqrt(Math.pow((coords[0] - tb.getX()), 2) + Math.pow((coords[1] - tb.getY()), 2) + Math.pow((coords[2] - tb.getZ()), 2));
-            //    distance = roundTwoDecimals(distance);
-            //    v.p.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance);
-            //    sel = !sel;
-            //}
-        } else {
-            vUndo h = new vUndo(tb.getWorld().getName());
-            v.p.sendMessage(ChatColor.AQUA + "xyz tb xyz offset: " + bx + " " + by + " " + bz + " " + xOff + " " + yOff + " " + zOff);
-
-            h.put(clampY(bx + xOff, by + yOff, bz + zOff));
-            setBlockIdAt(bId, bx + xOff, by + yOff, bz + zOff);
-            v.hashUndo.put(v.hashEn, h);
-            v.hashEn++;
-        }
- */
-
-
+         * if (xOff == 0 && yOff == 0 && zOff == 0) {
+         *
+         * //if (sel) { //commented out - I am making arrow select first point always and powder report back distances from it as many times as you want.
+         * coords[0] = tb.getX();
+         * coords[1] = tb.getY();
+         * coords[2] = tb.getZ();
+         * v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+         * sel = !sel;
+         * //}
+         * //else {
+         * // double distance = Math.sqrt(Math.pow((coords[0] - tb.getX()), 2) + Math.pow((coords[1] - tb.getY()), 2) + Math.pow((coords[2] - tb.getZ()), 2));
+         * // distance = roundTwoDecimals(distance);
+         * // v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance);
+         * // sel = !sel;
+         * //}
+         * } else {
+         * vUndo h = new vUndo(tb.getWorld().getName());
+         * v.sendMessage(ChatColor.AQUA + "xyz tb xyz offset: " + bx + " " + by + " " + bz + " " + xOff + " " + yOff + " " + zOff);
+         *
+         * h.put(clampY(bx + xOff, by + yOff, bz + zOff));
+         * setBlockIdAt(bId, bx + xOff, by + yOff, bz + zOff);
+         * v.hashUndo.put(v.hashEn, h);
+         * v.hashEn++;
+         * }
+         */
 
 
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+
+
+        v.storeUndo(h);
     }
 
-    public void hParabola (vSniper v) {
+    public void hParabola(vData v) {
         //herp derp;
     }
 }

@@ -4,12 +4,13 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Voxel
  */
 public class Eraser extends Brush {
@@ -21,7 +22,7 @@ public class Eraser extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -30,7 +31,7 @@ public class Eraser extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -44,30 +45,24 @@ public class Eraser extends Brush {
         vm.size();
     }
 
-    public void doerase(vSniper v) {
+    public void doerase(vData v) {
         int bsize = v.brushSize;
 
         vUndo h = new vUndo(tb.getWorld().getName());
         int temp;
         for (int x = 2 * bsize; x >= 0; x--) {
-
             for (int y = 0; y <= 2 * bsize; y++) {
-
                 for (int z = 2 * bsize; z >= 0; z--) {
-
                     temp = getBlockIdAt(bx - bsize + x, by - bsize + y, bz - bsize + z);
                     if (temp > 3 && temp != 12 && temp != 13) {
-                        if (!(werasemode.equalsIgnoreCase("keep")&&(temp==8||temp==9))) {
+                        if (!(werasemode.equalsIgnoreCase("keep") && (temp == 8 || temp == 9))) {
                             h.put(clampY(bx - bsize + x, by - bsize + y, bz - bsize + z));
                             setBlockIdAt(0, bx - bsize + x, by - bsize + y, bz - bsize + z);
                         }
                     }
-
-
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 }

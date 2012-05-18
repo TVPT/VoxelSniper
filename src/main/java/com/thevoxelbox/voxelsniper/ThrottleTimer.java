@@ -12,9 +12,9 @@ public class ThrottleTimer implements Runnable {
 
     Brush b;
     int[] pieceNumbers;
-    vSniper v;
+    vData v;
 
-    public ThrottleTimer(vSniper vs, Brush br, int numPieces) {
+    public ThrottleTimer(vData vs, Brush br, int numPieces) {
         b = br;
         v = vs;
     }

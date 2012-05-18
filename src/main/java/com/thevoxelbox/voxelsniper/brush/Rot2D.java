@@ -5,8 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.undo.vBlock;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -21,13 +21,13 @@ public class Rot2D extends Brush {
     private int brushSize;
     private vBlock[][][] snap;
     private double se;
-    
+
     public Rot2D() {
         name = "2D Rotation";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -41,13 +41,13 @@ public class Rot2D extends Brush {
                 break;
 
             default:
-                v.p.sendMessage(ChatColor.RED + "Something went wrong.");
+                v.sendMessage(ChatColor.RED + "Something went wrong.");
                 break;
         }
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
     }
 
     @Override
@@ -56,12 +56,12 @@ public class Rot2D extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         se = Math.toRadians(Double.parseDouble(par[1]));
-        v.p.sendMessage(ChatColor.GREEN + "Angle set to " + se);
+        v.sendMessage(ChatColor.GREEN + "Angle set to " + se);
     }
 
-    private void rotate(vSniper v) {
+    private void rotate(vData v) {
         int xx;
         int zz;
         int yy;

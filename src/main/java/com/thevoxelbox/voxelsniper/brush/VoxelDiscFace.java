@@ -5,8 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.block.BlockFace;
 
 /**
@@ -20,7 +20,7 @@ public class VoxelDiscFace extends PerformBrush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -28,7 +28,7 @@ public class VoxelDiscFace extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -41,7 +41,7 @@ public class VoxelDiscFace extends PerformBrush {
         vm.size();
     }
 
-    private void pre(vSniper v, BlockFace bf) {
+    private void pre(vData v, BlockFace bf) {
         if (bf == null) {
             return;
         }
@@ -66,7 +66,7 @@ public class VoxelDiscFace extends PerformBrush {
         }
     }
 
-    public void disc(vSniper v) {
+    public void disc(vData v) {
         int bsize = v.brushSize;
 
         for (int x = bsize; x >= -bsize; x--) {
@@ -75,13 +75,10 @@ public class VoxelDiscFace extends PerformBrush {
             }
         }
 
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 
-    public void discEW(vSniper v) {
+    public void discEW(vData v) {
         int bsize = v.brushSize;
 
         for (int x = bsize; x >= -bsize; x--) {
@@ -90,13 +87,10 @@ public class VoxelDiscFace extends PerformBrush {
             }
         }
 
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 
-    public void discNS(vSniper v) {
+    public void discNS(vData v) {
         int bsize = v.brushSize;
 
         for (int x = bsize; x >= -bsize; x--) {
@@ -105,9 +99,6 @@ public class VoxelDiscFace extends PerformBrush {
             }
         }
 
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 }

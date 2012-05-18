@@ -5,17 +5,16 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.undo.vBlock;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
 
 /**
  *
  * @author Gavjenks (from Gavjenks & Piotr'w 2D brush)
  */
-
 public class Rot3D extends Brush {
 
     protected int mode = 0;
@@ -25,13 +24,13 @@ public class Rot3D extends Brush {
     private double seYaw;
     private double sePitch;
     private double seRoll;
-    
+
     public Rot3D() {
         name = "3D Rotation";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -45,13 +44,13 @@ public class Rot3D extends Brush {
                 break;
 
             default:
-                v.p.sendMessage(ChatColor.RED + "Something went wrong.");
+                v.owner().p.sendMessage(ChatColor.RED + "Something went wrong.");
                 break;
         }
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
@@ -62,12 +61,12 @@ public class Rot3D extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "p[0-359] -- set degrees of pitch rotation (rotation about the Z axis).");
-            v.p.sendMessage(ChatColor.BLUE + "r[0-359] -- set degrees of roll rotation (rotation about the X axis).");
-            v.p.sendMessage(ChatColor.LIGHT_PURPLE + "y[0-359] -- set degrees of yaw rotation (Rotation about the Y axis).");
+            v.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");
+            v.sendMessage(ChatColor.AQUA + "p[0-359] -- set degrees of pitch rotation (rotation about the Z axis).");
+            v.sendMessage(ChatColor.BLUE + "r[0-359] -- set degrees of roll rotation (rotation about the X axis).");
+            v.sendMessage(ChatColor.LIGHT_PURPLE + "y[0-359] -- set degrees of yaw rotation (Rotation about the Y axis).");
 
             return;
         }
@@ -75,30 +74,30 @@ public class Rot3D extends Brush {
             //which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
             if (par[x].startsWith("p")) {
                 sePitch = Math.toRadians(Double.parseDouble(par[x].replace("p", "")));
-                v.p.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + sePitch);
+                v.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + sePitch);
                 if (sePitch < 0 || sePitch > 359) {
-                    v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
+                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
                 continue;
             } else if (par[x].startsWith("r")) {
                 seRoll = Math.toRadians(Double.parseDouble(par[x].replace("r", "")));
-                v.p.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + seRoll);
+                v.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + seRoll);
                 if (seRoll < 0 || seRoll > 359) {
-                    v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
+                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
                 continue;
             } else if (par[x].startsWith("y")) {
                 seYaw = Math.toRadians(Double.parseDouble(par[x].replace("y", "")));
-                v.p.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + seYaw);
+                v.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + seYaw);
                 if (seYaw < 0 || seYaw > 359) {
-                    v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
+                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
                 continue;
             }
         }
     }
 
-    private void rotate(vSniper v) {
+    private void rotate(vData v) {
         //basically 1) make it a sphere we are rotating in, not a cylinder
         // 2) do three rotations in a row, one in each dimension, unless some dimensions are set to zero or udnefined or whatever, then skip those.
         //  --> Why not utilize Sniper'w new oportunities and have arrow rotate all 3, powder rotate x, goldsisc y, otherdisc z. Or something like that. Or we could just use arrow and powder and just differenciate between left and right click that gis 4 different situations
@@ -128,9 +127,9 @@ public class Rot3D extends Brush {
             for (int z = 0; z < snap.length; z++) {
                 zz = z - bsize;
                 double zpow = Math.pow(zz, 2);
-                    newxzX = (xx * cosYaw) - (zz * sinYaw);
-                    newxzZ = (xx * sinYaw) + (zz * cosYaw);
-                    for (int y = 0; y < snap.length; y++) {
+                newxzX = (xx * cosYaw) - (zz * sinYaw);
+                newxzZ = (xx * sinYaw) + (zz * cosYaw);
+                for (int y = 0; y < snap.length; y++) {
                     yy = y - bsize;
                     if (xpow + zpow + Math.pow(yy, 2) <= bpow) {
                         h.put(clampY(bx + xx, by + yy, bz + zz)); //just store whole sphere in undo, too complicated otherwise, since this brush both adds and remos things unpredictably.
@@ -190,11 +189,10 @@ public class Rot3D extends Brush {
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
     //after all rotations, compare snapshot to new state of world, and store changed blocks to undo?
-        // --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that matrix and compare Block.getId with 'id' if different undo.add( new vBlock ( Block, oldId ) )
+    // --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that matrix and compare Block.getId with 'id' if different undo.add( new vBlock ( Block, oldId ) )
 
     private void getMatrix() {// only need to do once.  But y needs to change + sphere
         brushSize = (bsize * 2) + 1;

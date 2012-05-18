@@ -5,7 +5,6 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.block.Block;
 
 /**
@@ -17,18 +16,17 @@ public class pComboInk extends vPerformer {
     private byte d;
     private byte dr;
     private int i;
-    
+
     public pComboInk() {
         name = "Combo-Ink";
     }
 
     @Override
-    public void init(vSniper v) {
-        w = v.p.getWorld();
+    public void init(com.thevoxelbox.voxelsniper.vData v) {
+        w = v.getWorld();
         d = v.data;
         dr = v.replaceData;
         i = v.voxelId;
-        
     }
 
     @Override
@@ -41,7 +39,7 @@ public class pComboInk extends vPerformer {
 
     @Override
     public void perform(Block b) {
-        if(b.getData() == dr) {
+        if (b.getData() == dr) {
             h.put(b);
             b.setTypeIdAndData(i, d, true);
         }

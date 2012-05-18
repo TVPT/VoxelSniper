@@ -4,8 +4,8 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.Location;
 
 /**
@@ -13,13 +13,13 @@ import org.bukkit.Location;
  * @author Gavjenks
  */
 public class Lightning extends Brush {
-    
+
     public Lightning() {
         name = "Lightning";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -27,7 +27,7 @@ public class Lightning extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -40,28 +40,29 @@ public class Lightning extends Brush {
         vm.brushMessage("Lightning Brush!  Please use in moderation.");
     }
 
-    public void Strike(vSniper v) {
+    public void Strike(vData v) {
 
         Location loc = clampY(bx, by, bz).getLocation();
         w.strikeLightning(loc);
     }
-    public void StrikeDestructive(vSniper v) { //more to be added
+
+    public void StrikeDestructive(vData v) { //more to be added
 /*
-        for (int x = 1; x < par.length; x++) {
-            if (par[x].startsWith("true")) {
-                trueCircle = 0.5;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
-            } else if (par[x].startsWith("false")) {
-                trueCircle = 0;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
-            } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
- * 
- */
+         * for (int x = 1; x < par.length; x++) {
+         * if (par[x].startsWith("true")) {
+         * trueCircle = 0.5;
+         * v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+         * continue;
+         * } else if (par[x].startsWith("false")) {
+         * trueCircle = 0;
+         * v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+         * continue;
+         * } else {
+         * v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+         * }
+         * }
+         *
+         */
         Location loc = clampY(bx, by, bz).getLocation();
         w.strikeLightning(loc);
     }

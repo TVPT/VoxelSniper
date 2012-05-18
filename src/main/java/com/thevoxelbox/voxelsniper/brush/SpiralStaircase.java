@@ -4,13 +4,14 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vSniper;
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author giltwist
  */
 public class SpiralStaircase extends Brush {
@@ -20,19 +21,19 @@ public class SpiralStaircase extends Brush {
     protected String sopen = "n"; // "n" north (default), "e" east, "w" south, "w" west
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
         digstairwell(v); //make stairwell below target
     }
-    
+
     public SpiralStaircase() {
         name = "Spiral Staircase";
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -41,7 +42,6 @@ public class SpiralStaircase extends Brush {
 
     @Override
     public void info(vMessage vm) {
-
         vm.brushName("Spiral Staircase");
         vm.size();
         vm.voxel();
@@ -50,50 +50,44 @@ public class SpiralStaircase extends Brush {
         vm.custom(ChatColor.BLUE + "Staircase type: " + stairtype);
         vm.custom(ChatColor.BLUE + "Staircase turns: " + sdirect);
         vm.custom(ChatColor.BLUE + "Staircase opens: " + sopen);
-
-
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
-
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
-            v.p.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
-            v.p.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'w' -- set the opening direction of staircase");
+            v.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
+            v.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
+            v.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'w' -- set the opening direction of staircase");
             return;
         }
 
         for (int x = 1; x < par.length; x++) {
             if (par[x].equalsIgnoreCase("block") || par[x].equalsIgnoreCase("step") || par[x].equalsIgnoreCase("woodstair") || par[x].equalsIgnoreCase("cobblestair")) {
                 stairtype = par[x];
-                v.p.sendMessage(ChatColor.BLUE + "Staircase type: " + stairtype);
+                v.sendMessage(ChatColor.BLUE + "Staircase type: " + stairtype);
                 continue;
             } else if (par[x].equalsIgnoreCase("c") || par[x].equalsIgnoreCase("cc")) {
                 sdirect = par[x];
-                v.p.sendMessage(ChatColor.BLUE + "Staircase turns: " + sdirect);
+                v.sendMessage(ChatColor.BLUE + "Staircase turns: " + sdirect);
                 continue;
             } else if (par[x].equalsIgnoreCase("n") || par[x].equalsIgnoreCase("e") || par[x].equalsIgnoreCase("s") || par[x].equalsIgnoreCase("w")) {
                 sopen = par[x];
-                v.p.sendMessage(ChatColor.BLUE + "Staircase opens: " + sopen);
+                v.sendMessage(ChatColor.BLUE + "Staircase opens: " + sopen);
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-
-
     }
 
-    public void buildstairwell(vSniper v) {
-
+    public void buildstairwell(vData v) {
         int bsize = v.brushSize;
         int bId = v.voxelId;
 
         if (v.voxelHeight < 1) {
             v.voxelHeight = 1;
-            v.p.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+            v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
         int height = v.voxelHeight;
 
@@ -139,9 +133,6 @@ public class SpiralStaircase extends Brush {
             }
         }
 
-
-
-
         while (y < height) {
             if (stairtype.equalsIgnoreCase("block")) {
                 // 1x1x1 voxel material steps
@@ -168,7 +159,7 @@ public class SpiralStaircase extends Brush {
             }
 
             // Adjust horizontal position and do stair-option array stuff
-            //v.p.sendMessage(ChatColor.DARK_RED + "" + (startx + xoffset) + " " + (startz + zoffset));
+            //v.sendMessage(ChatColor.DARK_RED + "" + (startx + xoffset) + " " + (startz + zoffset));
             if (startx + xoffset == 0) { //All North
                 if (startz + zoffset == 0) { //NORTHEAST
                     if (stairtype.equalsIgnoreCase("woodstair") || stairtype.equalsIgnoreCase("cobblestair")) {
@@ -205,8 +196,6 @@ public class SpiralStaircase extends Brush {
                         zoffset++;
                     }
                 }
-
-
             } else if (startx + xoffset == 2 * bsize) { //ALL SOUTH
                 if (startz + zoffset == 0) { //SOUTHEAST
                     if (stairtype.equalsIgnoreCase("woodstair") || stairtype.equalsIgnoreCase("cobblestair")) {
@@ -245,8 +234,6 @@ public class SpiralStaircase extends Brush {
                         zoffset--;
                     }
                 }
-
-
             } else if (startz + zoffset == 0) { //JUST PLAIN EAST
                 if (sdirect.equalsIgnoreCase("c")) {
                     if (stairtype.equalsIgnoreCase("woodstair") || stairtype.equalsIgnoreCase("cobblestair")) {
@@ -276,21 +263,13 @@ public class SpiralStaircase extends Brush {
                     xoffset++;
                 }
             }
-
-
         }
-
-
-
         vUndo h = new vUndo(tb.getWorld().getName());
         // Make the changes
 
         for (int x = 2 * bsize; x >= 0; x--) {
-
             for (int i = height - 1; i >= 0; i--) {
-
                 for (int z = 2 * bsize; z >= 0; z--) {
-
                     switch (spiral[x][i][z]) {
                         case 0:
                             if (i != height - 1) {
@@ -365,25 +344,20 @@ public class SpiralStaircase extends Brush {
                                 clampY(bx - bsize + x, by + i, bz - bsize + z).setData((byte) (spiral[x][i][z] - 2));
                             }
                             break;
-
                     }
-
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
-
+        v.storeUndo(h);
     }
 
-    public void digstairwell(vSniper v) {
-
+    public void digstairwell(vData v) {
         int bsize = v.brushSize;
         int bId = v.voxelId;
 
         if (v.voxelHeight < 1) {
             v.voxelHeight = 1;
-            v.p.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+            v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
         int height = v.voxelHeight;
 
@@ -458,7 +432,7 @@ public class SpiralStaircase extends Brush {
             }
 
             // Adjust horizontal position and do stair-option array stuff
-            //v.p.sendMessage(ChatColor.DARK_RED + "" + (startx + xoffset) + " " + (startz + zoffset));
+            //v.sendMessage(ChatColor.DARK_RED + "" + (startx + xoffset) + " " + (startz + zoffset));
             if (startx + xoffset == 0) { //All North
                 if (startz + zoffset == 0) { //NORTHEAST
                     if (stairtype.equalsIgnoreCase("woodstair") || stairtype.equalsIgnoreCase("cobblestair")) {
@@ -650,8 +624,7 @@ public class SpiralStaircase extends Brush {
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
 
     }
 }

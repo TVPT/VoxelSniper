@@ -4,14 +4,14 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-import java.util.Random;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  *
@@ -20,8 +20,8 @@ import java.util.ArrayList;
  */
 public class GavinSecret extends Brush {
 
-    //private int i;
-    //private Block b = null;
+    private int i;
+    private Block b = null;
     private vUndo h;
     private boolean passCorrect = false;
     private int height = 2;
@@ -31,7 +31,7 @@ public class GavinSecret extends Brush {
     private int[][][] frontiers;
     private Random generator = new Random();
     private int sumFronts = 1;
-    private List<int[]> FrontsList = new ArrayList<int[]>();
+    private List<int[]> FrontsList = new ArrayList();
 
     //private Iterator HashIt;
     public GavinSecret() {
@@ -39,34 +39,33 @@ public class GavinSecret extends Brush {
     }
 
     @Override
-    protected void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
 
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
         maze(tb, v);
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
     @Override
-    protected void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
     @Override
     public void info(vMessage vm) {
-        //b = null;
+        b = null;
         vm.brushName(name);
         vm.voxel();
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.AQUA + "This brush requires a password to function.");
-            v.p.sendMessage(ChatColor.BLUE + "Include password and also size in each dimension, e.g. x5 y3 z10.");
-            v.p.sendMessage(ChatColor.BLUE + "Will begin from -x -y -z corner from target block. (x3 each dim + 1)");
+            v.sendMessage(ChatColor.AQUA + "This brush requires a password to function.");
+            v.sendMessage(ChatColor.BLUE + "Include password and also size in each dimension, e.g. x5 y3 z10.");
+            v.sendMessage(ChatColor.BLUE + "Will begin from -x -y -z corner from target block. (x3 each dim + 1)");
             return;
         }
         for (int x = 1; x < par.length; x++) {
@@ -83,7 +82,7 @@ public class GavinSecret extends Brush {
         }
     }
 
-    private void maze(Block bl, vSniper v) {
+    private void maze(Block bl, vData v) {
         FrontsList.clear();
         if (passCorrect) {
             h = new vUndo(tb.getWorld().getName()); // line was wrong -prz
@@ -104,13 +103,13 @@ public class GavinSecret extends Brush {
                 }
             }
         } else {
-            v.p.sendMessage(ChatColor.RED + "Incorrect password.");
+            v.sendMessage(ChatColor.RED + "Incorrect password.");
         }
     }
 
-    private void junction(Block bl, int openings, vSniper v) { //Builds a junction.  bl is at lowest XYZ corner of module
+    private void junction(Block bl, int openings, vData v) { //Builds a junction.  bl is at lowest XYZ corner of module
         //hard-coded design.
-        v.p.sendMessage("openingscode@junction " + openings);
+        v.sendMessage("openingscode@junction " + openings);
         //build floor
         for (int x = 0; x < 4; x++) {
             for (int z = 0; z < 4; z++) {
@@ -188,7 +187,7 @@ public class GavinSecret extends Brush {
         //13 = Y   6
     }
 
-    private int[][][] blueprint(vSniper v, int X, int Z, int Y) { //generates the design for a maze XYZ in size.
+    private int[][][] blueprint(vData v, int X, int Z, int Y) { //generates the design for a maze XYZ in size.
         int[] toInclude = new int[4];
         int[][][] blueprintM = new int[X][Y][Z];
         frontiers = new int[X][Y][Z];
@@ -214,7 +213,7 @@ public class GavinSecret extends Brush {
         int randZ = generator.nextInt(Z);
         int passage = generator.nextInt(6) + 1;
         sumFronts = 1;
-        v.p.sendMessage("passage" + passage);
+        v.sendMessage("passage" + passage);
         if (passage == 1) {
             if (randX > 0) {
                 blueprintM[randX][randY][randZ] = blueprintM[randX][randY][randZ] * 2;
@@ -317,7 +316,7 @@ public class GavinSecret extends Brush {
                 include(v, frontiers, wilderness, toInclude);
             }
         }
-        v.p.sendMessage("sumfronts" + sumFronts);
+        v.sendMessage("sumfronts" + sumFronts);
 
 
         while (sumFronts > 0) { //build the rest of the blueprint
@@ -325,9 +324,9 @@ public class GavinSecret extends Brush {
             int ListSize = FrontsList.size();
             int ListRand = generator.nextInt(ListSize);
             int[] frontierCell = (int[]) FrontsList.get(ListRand); //seriously, this cast works?  Gets a frontier cell at random
-            v.p.sendMessage("frontssize " + ListSize);
-            v.p.sendMessage("just before search");
-            v.p.sendMessage("frontier " + frontierCell[0] + " " + frontierCell[1] + " " + frontierCell[2]);
+            v.sendMessage("frontssize " + ListSize);
+            v.sendMessage("just before search");
+            v.sendMessage("frontier " + frontierCell[0] + " " + frontierCell[1] + " " + frontierCell[2]);
 
             List<int[]> searchResults = search(v, frontiers, wilderness, frontierCell);
 
@@ -337,20 +336,20 @@ public class GavinSecret extends Brush {
             } else {
                 searchRand = generator.nextInt(1);
             }
-            v.p.sendMessage("searchSize " + searchResults.size());
+            v.sendMessage("searchSize " + searchResults.size());
             if (searchResults.isEmpty()) {
-                v.p.sendMessage("On second thought, I think it's this one that's empty...");
+                v.sendMessage("On second thought, I think it's this one that's empty...");
                 sumFronts--;
                 continue;
             }
             int[] inCell = searchResults.get(searchRand); //finds a cell in the maze at random next to this frontier cell
             if (inCell.length == 0) {
-                v.p.sendMessage("Gavin the error was due to empty array");
+                v.sendMessage("Gavin the error was due to empty array");
                 sumFronts--;
                 continue;
             }
             include(v, frontiers, wilderness, frontierCell);
-            v.p.sendMessage("in " + inCell[0] + " " + inCell[1] + " " + inCell[2]);
+            v.sendMessage("in " + inCell[0] + " " + inCell[1] + " " + inCell[2]);
             if (frontierCell[0] < inCell[0]) { //carve the actual passages between the two cells
                 blueprintM[frontierCell[0]][frontierCell[1]][frontierCell[2]] = blueprintM[frontierCell[0]][frontierCell[1]][frontierCell[2]] * 2;
                 blueprintM[inCell[0]][inCell[1]][inCell[2]] = blueprintM[inCell[0]][inCell[1]][inCell[2]] * 3;
@@ -370,15 +369,15 @@ public class GavinSecret extends Brush {
                 blueprintM[frontierCell[0]][frontierCell[1]][frontierCell[2]] = blueprintM[frontierCell[0]][frontierCell[1]][frontierCell[2]] * 5;
                 blueprintM[inCell[0]][inCell[1]][inCell[2]] = blueprintM[inCell[0]][inCell[1]][inCell[2]] * 7;
             }
-            v.p.sendMessage("blueprintcode" + blueprintM[frontierCell[0]][frontierCell[1]][frontierCell[2]]);
+            v.sendMessage("blueprintcode" + blueprintM[frontierCell[0]][frontierCell[1]][frontierCell[2]]);
         }
 
         return blueprintM;
     }
 
-    private void include(vSniper v, int[][][] frontiers, int[][][] wilderness, int[] targetCell) { //adds a frontier cell to the maze, and then adds any wilderness cells next to it to the list of frontier cells
-        v.p.sendMessage("SF before" + sumFronts);
-        v.p.sendMessage("including: " + targetCell[0] + " " + targetCell[1] + " " + targetCell[2]);
+    private void include(vData v, int[][][] frontiers, int[][][] wilderness, int[] targetCell) { //adds a frontier cell to the maze, and then adds any wilderness cells next to it to the list of frontier cells
+        v.sendMessage("SF before" + sumFronts);
+        v.sendMessage("including: " + targetCell[0] + " " + targetCell[1] + " " + targetCell[2]);
         int[] refCell = targetCell;
         int[] WTF = targetCell;
         frontiers[targetCell[0]][targetCell[1]][targetCell[2]] = 0;
@@ -394,23 +393,23 @@ public class GavinSecret extends Brush {
                 wilderness[targetCell[0] + 1][targetCell[1]][targetCell[2]] = 0;
                 frontiers[targetCell[0] + 1][targetCell[1]][targetCell[2]] = 1;
                 sumFronts++;
-                v.p.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
-                //v.p.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
+                v.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
+                //v.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
 
                 otherCell[0] = refCell[0];
                 otherCell[1] = refCell[1];
                 otherCell[2] = refCell[2];
-                v.p.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 otherCell[0] = otherCell[0] + 1; //add new frontier cell to hashset
-                v.p.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 FrontsList.add(otherCell);
-                v.p.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
             }
         } catch (Exception e) {
-            //v.p.sendMessage("EXCEPTIONTYPE" + e.toString());
-            //v.p.sendMessage("EXCEPTION");//nothing  This is just a cheap and easy way to not run specific boudnary checks.
+            //v.sendMessage("EXCEPTIONTYPE" + e.toString());
+            //v.sendMessage("EXCEPTION");//nothing  This is just a cheap and easy way to not run specific boudnary checks.
         }
 
         try {
@@ -418,18 +417,18 @@ public class GavinSecret extends Brush {
                 wilderness[targetCell[0] - 1][targetCell[1]][targetCell[2]] = 0;
                 frontiers[targetCell[0] - 1][targetCell[1]][targetCell[2]] = 1;
                 sumFronts++;
-                v.p.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
-                //v.p.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
+                v.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
+                //v.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
                 otherCell[0] = refCell[0];
                 otherCell[1] = refCell[1];
                 otherCell[2] = refCell[2];
-                v.p.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 otherCell[0] = otherCell[0] - 1;
-                v.p.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 FrontsList.add(otherCell);
-                v.p.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
             }
         } catch (Exception e) {
             //nothing  This is just a cheap and easy way to not run specific boudnary checks.
@@ -440,18 +439,18 @@ public class GavinSecret extends Brush {
                 wilderness[targetCell[0]][targetCell[1] + 1][targetCell[2]] = 0;
                 frontiers[targetCell[0]][targetCell[1] + 1][targetCell[2]] = 1;
                 sumFronts++;
-                v.p.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
-                //v.p.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
+                v.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
+                //v.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
                 otherCell[0] = refCell[0];
                 otherCell[1] = refCell[1];
                 otherCell[2] = refCell[2];
-                v.p.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 otherCell[1] = otherCell[1] + 1;
-                v.p.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 FrontsList.add(otherCell);
-                v.p.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
             }
         } catch (Exception e) {
             //nothing  This is just a cheap and easy way to not run specific boudnary checks.
@@ -462,16 +461,16 @@ public class GavinSecret extends Brush {
                 wilderness[targetCell[0]][targetCell[1] - 1][targetCell[2]] = 0;
                 frontiers[targetCell[0]][targetCell[1] - 1][targetCell[2]] = 1;
                 sumFronts++;
-                v.p.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
-                //v.p.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
+                v.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
+                //v.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
                 otherCell[0] = refCell[0];
                 otherCell[1] = refCell[1];
                 otherCell[2] = refCell[2];
-                v.p.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
                 otherCell[1] = otherCell[1] - 1;
-                v.p.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
                 FrontsList.add(otherCell);
-                v.p.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
             }
         } catch (Exception e) {
             //nothing  This is just a cheap and easy way to not run specific boudnary checks.
@@ -482,18 +481,18 @@ public class GavinSecret extends Brush {
                 wilderness[targetCell[0]][targetCell[1]][targetCell[2] + 1] = 0;
                 frontiers[targetCell[0]][targetCell[1]][targetCell[2] + 1] = 1;
                 sumFronts++;
-                v.p.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
-                v.p.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
+                v.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
+                v.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
                 otherCell[0] = refCell[0];
                 otherCell[1] = refCell[1];
                 otherCell[2] = refCell[2];
-                v.p.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 otherCell[2] = otherCell[2] + 1;
-                v.p.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 FrontsList.add(otherCell);
-                v.p.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
             }
         } catch (Exception e) {
             //nothing  This is just a cheap and easy way to not run specific boudnary checks.
@@ -504,97 +503,97 @@ public class GavinSecret extends Brush {
                 wilderness[targetCell[0]][targetCell[1]][targetCell[2] - 1] = 0;
                 frontiers[targetCell[0]][targetCell[1]][targetCell[2] - 1] = 1;
                 sumFronts++;
-                v.p.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
-                v.p.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
+                v.sendMessage("Ref before being referenced: " + refCell[0] + " " + refCell[1] + " " + refCell[2]);
+                v.sendMessage("WTF which is not ref'd AT ALL: " + WTF[0] + " " + WTF[1] + " " + WTF[2]);
                 otherCell[0] = refCell[0];
                 otherCell[1] = refCell[1];
                 otherCell[2] = refCell[2];
-                v.p.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after restting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 otherCell[2] = otherCell[2] - 1;
-                v.p.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("Other right after adjusting: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
 
                 FrontsList.add(otherCell);
-                v.p.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
+                v.sendMessage("New Frontier: " + otherCell[0] + " " + otherCell[1] + " " + otherCell[2]);
             }
         } catch (Exception e) {
             //nothing  This is just a cheap and easy way to not run specific boudnary checks.
         }
-        v.p.sendMessage("SF after" + sumFronts);
+        v.sendMessage("SF after" + sumFronts);
     }
 
-    private ArrayList<int[]> search(vSniper v, int[][][] frontiers, int[][][] wilderness, int[] targetCell) { //returns a list of all the "in" cells adjacent to any given frontier cell.
+    private ArrayList<int[]> search(vData v, int[][][] frontiers, int[][][] wilderness, int[] targetCell) { //returns a list of all the "in" cells adjacent to any given frontier cell.
         //int[][] frontiersList = new int[6][3];
-        v.p.sendMessage("got to search");
-        ArrayList<int[]> inList = new ArrayList<int[]>();
+        v.sendMessage("got to search");
+        ArrayList<int[]> inList = new ArrayList();
         inList.clear();
         int[] temp;
-        v.p.sendMessage("target" + targetCell[0] + targetCell[1] + targetCell[2]);
+        v.sendMessage("target" + targetCell[0] + targetCell[1] + targetCell[2]);
 
         try {
             if (frontiers[targetCell[0] + 1][targetCell[1]][targetCell[2]] == 0 && wilderness[targetCell[0] + 1][targetCell[1]][targetCell[2]] == 0) {
                 temp = targetCell;
                 temp[0] = temp[0] + 1;
                 inList.add(temp);
-                v.p.sendMessage("yes");
+                v.sendMessage("yes");
             }
         } catch (Exception e) {
-            v.p.sendMessage("no");
+            v.sendMessage("no");
         }
-        v.p.sendMessage("second check in search");
+        v.sendMessage("second check in search");
         try {
             if (frontiers[targetCell[0] - 1][targetCell[1]][targetCell[2]] == 0 && wilderness[targetCell[0] - 1][targetCell[1]][targetCell[2]] == 0) {
                 temp = targetCell;
                 temp[0] = temp[0] - 1;
                 inList.add(temp);
-                v.p.sendMessage("yes");
+                v.sendMessage("yes");
             }
         } catch (Exception e) {
-            v.p.sendMessage("no");
+            v.sendMessage("no");
         }
-        v.p.sendMessage("third check in search");
+        v.sendMessage("third check in search");
         try {
             if (frontiers[targetCell[0]][targetCell[1] + 1][targetCell[2]] == 0 && wilderness[targetCell[0]][targetCell[1] + 1][targetCell[2]] == 0) {
                 temp = targetCell;
                 temp[0] = temp[1] + 1;
                 inList.add(temp);
-                v.p.sendMessage("yes");
+                v.sendMessage("yes");
             }
         } catch (Exception e) {
-            v.p.sendMessage("no");
+            v.sendMessage("no");
         }
-        v.p.sendMessage("fourth check in search");
+        v.sendMessage("fourth check in search");
         try {
             if (frontiers[targetCell[0]][targetCell[1] - 1][targetCell[2]] == 0 && wilderness[targetCell[0]][targetCell[1] - 1][targetCell[2]] == 0) {
                 temp = targetCell;
                 temp[0] = temp[1] - 1;
                 inList.add(temp);
-                v.p.sendMessage("yes");
+                v.sendMessage("yes");
             }
         } catch (Exception e) {
-            v.p.sendMessage("no");
+            v.sendMessage("no");
         }
-        v.p.sendMessage("fifth check in search");
+        v.sendMessage("fifth check in search");
         try {
             if (frontiers[targetCell[0]][targetCell[1]][targetCell[2] + 1] == 0 && wilderness[targetCell[0]][targetCell[1]][targetCell[2] + 1] == 0) {
                 temp = targetCell;
                 temp[0] = temp[2] + 1;
                 inList.add(temp);
-                v.p.sendMessage("yes");
+                v.sendMessage("yes");
             }
         } catch (Exception e) {
-            v.p.sendMessage("no");
+            v.sendMessage("no");
         }
-        v.p.sendMessage("sixth check in search");
+        v.sendMessage("sixth check in search");
         try {
             if (frontiers[targetCell[0]][targetCell[1]][targetCell[2] - 1] == 0 && wilderness[targetCell[0]][targetCell[1]][targetCell[2] - 1] == 0) {
                 temp = targetCell;
                 temp[0] = temp[2] - 1;
                 inList.add(temp);
-                v.p.sendMessage("yes");
+                v.sendMessage("yes");
             }
         } catch (Exception e) {
-            v.p.sendMessage("no");
+            v.sendMessage("no");
         }
         return inList;
     }

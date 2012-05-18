@@ -5,8 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +36,7 @@ public class Jagged extends PerformBrush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    public void arrow(vData v) {
         origincoords[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX()); //I hate you sometimes, Notch.  Really? Every quadrant is different?
         origincoords[1] = tb.getY() + .5;
         origincoords[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
@@ -44,10 +44,10 @@ public class Jagged extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    public void powder(vData v) {
 
         if (origincoords[0] == 0 && origincoords[1] == 0 && origincoords[2] == 0) {
-            v.p.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+            v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 
         } else {
             targetcoords[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX());
@@ -65,10 +65,10 @@ public class Jagged extends PerformBrush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
-            v.p.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
+            v.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
+            v.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
             return;
         }
         if (par[1].startsWith("r")) {
@@ -76,9 +76,9 @@ public class Jagged extends PerformBrush {
             int temp = Integer.parseInt(par[1].substring(1));
             if (temp > 0 && temp <= 10) {
                 recursion = temp;
-                v.p.sendMessage(ChatColor.GREEN + "Recursion set to: " + recursion);
+                v.sendMessage(ChatColor.GREEN + "Recursion set to: " + recursion);
             } else {
-                v.p.sendMessage(ChatColor.RED + "ERROR: Deviation must be 1-10.");
+                v.sendMessage(ChatColor.RED + "ERROR: Deviation must be 1-10.");
             }
 
 
@@ -92,12 +92,12 @@ public class Jagged extends PerformBrush {
 
     }
 
-    public void JaggedA(vSniper v) {
-        v.p.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+    public void JaggedA(vData v) {
+        v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
     }
 
-    public void JaggedP(vSniper v) {
-        w = v.p.getWorld();
+    public void JaggedP(vData v) {
+        w = v.getWorld();
         int bId = v.voxelId;
         double linelength = 0;
 
@@ -140,10 +140,7 @@ public class Jagged extends PerformBrush {
         }
 
 
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
 
         //RESET BRUSH
         //origincoords[0] = 0;

@@ -4,35 +4,36 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import java.util.Random;
 
 /**
- *THIS BRUSH SHOULD NOT USE PERFORMERS
+ * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Gavjenks (derived from Piotr'w ball replace brush)
  */
 public class HeatRay extends Brush {
-    
+
     public HeatRay() {
         name = "Heat Ray";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        heatRay(v);
+        HeatRay(v);
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        heatRay(v);
+        HeatRay(v);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class HeatRay extends Brush {
         vm.size();
     }
 
-    public void heatRay(vSniper v) {
+    public void HeatRay(vData v) {
 
         //This is designed as a purely entertaining brush to use to destroy things you hate in a dramatic fashion.  E.g. Daro builds.  Just using a /b br with fire is not nearly as much fun as this:
         //Basically burns anything that would seem flammable in real life, smelts stone-like things into stone (or 10% chance of destroyign outright or charring into obsidian), kills plants, turns grass to dirt, evaporates water and snow and ice, turns sandy things to glass.
@@ -108,7 +109,7 @@ public class HeatRay extends Brush {
                             //Air with something below it to fire 50%, for sual effect
                             if (octant == 0 && getBlockIdAt(octX, octY - 1, octZ) != 0) {
                                 r = generator.nextInt(10);
-                                if (r <6){
+                                if (r < 6) {
                                     setBlockIdAt(51, octX, octY, octZ); //no need for undo, since fire will burn out.
                                 }
                             }
@@ -124,7 +125,7 @@ public class HeatRay extends Brush {
                                 setBlockIdAt(0, octX, octY, octZ);
                             }
                             //grass to dirt
-                            if (octant == 2 || octant ==60) {
+                            if (octant == 2 || octant == 60) {
                                 h.put(clampY(octX, octY, octZ));
                                 setBlockIdAt(3, octX, octY, octZ);
                             }
@@ -139,13 +140,13 @@ public class HeatRay extends Brush {
                             }
 
                             //evaporate non ocean water
-                            if ((octant == 8 || octant ==9) && octY > 63) {
+                            if ((octant == 8 || octant == 9) && octY > 63) {
                                 h.put(clampY(octX, octY, octZ));
                                 setBlockIdAt(0, octX, octY, octZ);
                             }
 
                             //stone mats to cobble, air, or obsidian
-                            if (octant == 70 || octant ==12 || octant ==24 || octant == 49 || octant == 1 || octant == 4 || octant == 12 || octant == 24 || octant == 67 || octant == 61 || octant == 62 || octant == 48 || octant == 45 || octant == 43 || octant == 23 || octant == 13 || octant == 7 || octant == 14 || octant == 15 || octant == 16 || octant == 21) {
+                            if (octant == 70 || octant == 12 || octant == 24 || octant == 49 || octant == 1 || octant == 4 || octant == 12 || octant == 24 || octant == 67 || octant == 61 || octant == 62 || octant == 48 || octant == 45 || octant == 43 || octant == 23 || octant == 13 || octant == 7 || octant == 14 || octant == 15 || octant == 16 || octant == 21) {
                                 h.put(clampY(octX, octY, octZ));
                                 r = generator.nextInt(10);
                                 if (r < 2) { //10% chance of destroying stone stuff
@@ -156,15 +157,13 @@ public class HeatRay extends Brush {
                                     setBlockIdAt(4, octX, octY, octZ);
                                 }
                             }
-                            
+
                         } //end for loop for 8 octants
 
                     }//end if for whether it'w in the brush or not.
                 }//Y
             }//X
-            v.hashUndo.put(v.hashEn, h);
-            v.hashEn++;
+            v.storeUndo(h);
         }//Z
-
     }
 }

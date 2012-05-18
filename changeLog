@@ -227,3 +227,4 @@ I would like to start a sort of changeLog to track changes done to VoxelSniper
 [5.131] -- Fully compatible with 1.2 (added redstone lamps and changed the deprecated CreatureType to EntityType in the Monster brush) -psa
 [5.133] -- Added Jungle tree type + mushrooms, fixed trees not being able to spawn above 126 -butters
 [5.134] -- Added jagged brush -- giltwist
+[5.135] -- Unfinished BrushTools -- prz

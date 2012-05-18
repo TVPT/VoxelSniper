@@ -4,10 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 
 /**
@@ -31,13 +30,13 @@ public class Triangle extends PerformBrush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
 
         TriangleA(v);
     }
 
     @Override
-    public void powder(vSniper v) {  //Add a point
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {  //Add a point
 
         TriangleP(v);
 
@@ -53,46 +52,43 @@ public class Triangle extends PerformBrush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
-            return;
+            v.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
         }
-
-
     }
 
-    public void TriangleA(vSniper v) {
+    public void TriangleA(vData v) {
         switch (cornernumber) {
             case 1:
                 coordsone[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX()); //I hate you sometimes, Notch.  Really? Every quadrant is different?
                 coordsone[1] = tb.getY() + .5;
                 coordsone[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
                 cornernumber = 2;
-                v.p.sendMessage(ChatColor.GRAY + "First Corner set.");
+                v.sendMessage(ChatColor.GRAY + "First Corner set.");
                 break;
             case 2:
                 coordstwo[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX()); //I hate you sometimes, Notch.  Really? Every quadrant is different?
                 coordstwo[1] = tb.getY() + .5;
                 coordstwo[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
                 cornernumber = 3;
-                v.p.sendMessage(ChatColor.GRAY + "Second Corner set.");
+                v.sendMessage(ChatColor.GRAY + "Second Corner set.");
                 break;
             case 3:
                 coordsthree[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX()); //I hate you sometimes, Notch.  Really? Every quadrant is different?
                 coordsthree[1] = tb.getY() + .5;
                 coordsthree[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
                 cornernumber = 1;
-                v.p.sendMessage(ChatColor.GRAY + "Third Corner set.");
+                v.sendMessage(ChatColor.GRAY + "Third Corner set.");
                 break;
 
         }
 
     }
 
-    public void TriangleP(vSniper v) {
-        w = v.p.getWorld();
-        //int bId = v.voxelId;
+    public void TriangleP(vData v) {
+        w = v.owner().p.getWorld();
+        int bId = v.voxelId;
         double lengthone = 0;
         double lengthtwo = 0;
         double lengththree = 0;
@@ -127,7 +123,7 @@ public class Triangle extends PerformBrush {
 
 
         if (lengthone == 0 || lengthtwo == 0 || (coordsone[0] == 0 && coordsone[1] == 0 && coordsone[2] == 0) || (coordstwo[0] == 0 && coordstwo[1] == 0 && coordstwo[2] == 0) || (coordsthree[0] == 0 && coordsthree[1] == 0 && coordsthree[2] == 0)) {
-            v.p.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
+            v.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
         } else {
             //Make the Changes
 
@@ -143,7 +139,7 @@ public class Triangle extends PerformBrush {
             double herontwo;
             double heronthree;
 
-            
+
             for (int y = -bsize; y <= bsize; y++) { //X DEPENDENT
                 for (int z = -bsize; z <= bsize; z++) {
 
@@ -161,9 +157,9 @@ public class Triangle extends PerformBrush {
                     clengthone = Math.pow(Math.pow(cvectorone[0], 2) + Math.pow(cvectorone[1], 2) + Math.pow(cvectorone[2], 2), .5);
                     clengthtwo = Math.pow(Math.pow(cvectortwo[0], 2) + Math.pow(cvectortwo[1], 2) + Math.pow(cvectortwo[2], 2), .5);
                     clengththree = Math.pow(Math.pow(cvectorthree[0], 2) + Math.pow(cvectorthree[1], 2) + Math.pow(cvectorthree[2], 2), .5);
-                    
-                   
-                    
+
+
+
                     heronone = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
                     //Area of triangle currentcoords, coordsthree, coordstwo
@@ -177,8 +173,8 @@ public class Triangle extends PerformBrush {
                     clengththree = Math.pow(Math.pow(cvectorthree[0], 2) + Math.pow(cvectorthree[1], 2) + Math.pow(cvectorthree[2], 2), .5);
                     herontwo = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
-                    
-                    
+
+
                     //Area of triangle currentcoords, coordsthree, coordsone
                     for (int i = 0; i < 3; i++) {
                         cvectorone[i] = coordsone[i] - coordsthree[i];
@@ -191,25 +187,25 @@ public class Triangle extends PerformBrush {
                     heronthree = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
 
-                    double barycentric=(heronone+herontwo+heronthree)/heronbig;
-                    
+                    double barycentric = (heronone + herontwo + heronthree) / heronbig;
+
                     //VoxelSniper.log.info("Bary: "+barycentric+", hb: "+heronbig+", h1: "+heronone+", h2: "+herontwo+", h3: "+heronthree);
-                    
-                    
-                    if (barycentric<=1.1){
-                    
 
-                    current.perform(clampY( (int) currentcoords[0], (int) currentcoords[1], (int) currentcoords[2]));
 
-                        
+                    if (barycentric <= 1.1) {
+
+
+                        current.perform(clampY((int) currentcoords[0], (int) currentcoords[1], (int) currentcoords[2]));
+
+
                     }
-                    
-                    
+
+
 
 
                 }
             } //END X DEPENDENT
-            
+
             for (int x = -bsize; x <= bsize; x++) { //Y DEPENDENT
                 for (int z = -bsize; z <= bsize; z++) {
 
@@ -227,9 +223,9 @@ public class Triangle extends PerformBrush {
                     clengthone = Math.pow(Math.pow(cvectorone[0], 2) + Math.pow(cvectorone[1], 2) + Math.pow(cvectorone[2], 2), .5);
                     clengthtwo = Math.pow(Math.pow(cvectortwo[0], 2) + Math.pow(cvectortwo[1], 2) + Math.pow(cvectortwo[2], 2), .5);
                     clengththree = Math.pow(Math.pow(cvectorthree[0], 2) + Math.pow(cvectorthree[1], 2) + Math.pow(cvectorthree[2], 2), .5);
-                    
-                   
-                    
+
+
+
                     heronone = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
                     //Area of triangle currentcoords, coordsthree, coordstwo
@@ -243,8 +239,8 @@ public class Triangle extends PerformBrush {
                     clengththree = Math.pow(Math.pow(cvectorthree[0], 2) + Math.pow(cvectorthree[1], 2) + Math.pow(cvectorthree[2], 2), .5);
                     herontwo = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
-                    
-                    
+
+
                     //Area of triangle currentcoords, coordsthree, coordsone
                     for (int i = 0; i < 3; i++) {
                         cvectorone[i] = coordsone[i] - coordsthree[i];
@@ -257,20 +253,20 @@ public class Triangle extends PerformBrush {
                     heronthree = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
 
-                    double barycentric=(heronone+herontwo+heronthree)/heronbig;
-                    
+                    double barycentric = (heronone + herontwo + heronthree) / heronbig;
+
                     //VoxelSniper.log.info("Bary: "+barycentric+", hb: "+heronbig+", h1: "+heronone+", h2: "+herontwo+", h3: "+heronthree);
-                    
-                    
-                    if (barycentric<=1.1){
-                    
 
-                    current.perform(clampY( (int) currentcoords[0], (int) currentcoords[1], (int) currentcoords[2]));
 
-                        
+                    if (barycentric <= 1.1) {
+
+
+                        current.perform(clampY((int) currentcoords[0], (int) currentcoords[1], (int) currentcoords[2]));
+
+
                     }
-                    
-                    
+
+
 
 
                 }
@@ -292,9 +288,9 @@ public class Triangle extends PerformBrush {
                     clengthone = Math.pow(Math.pow(cvectorone[0], 2) + Math.pow(cvectorone[1], 2) + Math.pow(cvectorone[2], 2), .5);
                     clengthtwo = Math.pow(Math.pow(cvectortwo[0], 2) + Math.pow(cvectortwo[1], 2) + Math.pow(cvectortwo[2], 2), .5);
                     clengththree = Math.pow(Math.pow(cvectorthree[0], 2) + Math.pow(cvectorthree[1], 2) + Math.pow(cvectorthree[2], 2), .5);
-                    
-                   
-                    
+
+
+
                     heronone = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
                     //Area of triangle currentcoords, coordsthree, coordstwo
@@ -308,8 +304,8 @@ public class Triangle extends PerformBrush {
                     clengththree = Math.pow(Math.pow(cvectorthree[0], 2) + Math.pow(cvectorthree[1], 2) + Math.pow(cvectorthree[2], 2), .5);
                     herontwo = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
-                    
-                    
+
+
                     //Area of triangle currentcoords, coordsthree, coordsone
                     for (int i = 0; i < 3; i++) {
                         cvectorone[i] = coordsone[i] - coordsthree[i];
@@ -322,28 +318,25 @@ public class Triangle extends PerformBrush {
                     heronthree = .25 * Math.pow(Math.pow(Math.pow(clengthone, 2) + Math.pow(clengthtwo, 2) + Math.pow(clengththree, 2), 2) - 2 * (Math.pow(clengthone, 4) + Math.pow(clengthtwo, 4) + Math.pow(clengththree, 4)), .5);
 
 
-                    double barycentric=(heronone+herontwo+heronthree)/heronbig;
-                    
+                    double barycentric = (heronone + herontwo + heronthree) / heronbig;
+
                     //VoxelSniper.log.info("Bary: "+barycentric+", hb: "+heronbig+", h1: "+heronone+", h2: "+herontwo+", h3: "+heronthree);
-                    
-                    
-                    if (barycentric<=1.1){
 
-                    current.perform(clampY( (int) currentcoords[0], (int) currentcoords[1], (int) currentcoords[2]));
 
-                        
+                    if (barycentric <= 1.1) {
+
+                        current.perform(clampY((int) currentcoords[0], (int) currentcoords[1], (int) currentcoords[2]));
+
+
                     }
-                    
-                    
+
+
 
 
                 }
             } //END Z DEPENDENT
 
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+            v.storeUndo(current.getUndo());
 
 
 

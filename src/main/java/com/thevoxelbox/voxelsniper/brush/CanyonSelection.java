@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
@@ -25,23 +25,23 @@ public class CanyonSelection extends Canyon {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         powder(v);
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         if (first) {
             Chunk c = w.getChunkAt(tb);
             fx = c.getX();
             fz = c.getZ();
-            v.p.sendMessage(ChatColor.YELLOW + "First point selected!");
+            v.sendMessage(ChatColor.YELLOW + "First point selected!");
             first = !first;
         } else {
             Chunk c = w.getChunkAt(tb);
             bx = c.getX();
             bz = c.getZ();
-            v.p.sendMessage(ChatColor.YELLOW + "Second point selected!");
+            v.sendMessage(ChatColor.YELLOW + "Second point selected!");
             selection(fx < bx ? fx : bx, fz < bz ? fz : bz, fx > bx ? fx : bx, fz > bz ? fz : bz, v);
             first = !first;
         }
@@ -53,7 +53,7 @@ public class CanyonSelection extends Canyon {
         vm.custom(ChatColor.GREEN + "Shift Level set to " + yLevel);
     }
 
-    private void selection(int lowX, int lowZ, int highX, int highZ, vSniper v) {
+    private void selection(int lowX, int lowZ, int highX, int highZ, vData v) {
         m = new vUndo(w.getChunkAt(tb).getWorld().getName());
 
         for (int x = lowX; x <= highX; x++) {
@@ -62,7 +62,6 @@ public class CanyonSelection extends Canyon {
             }
         }
 
-        v.hashUndo.put(v.hashEn, m);
-        v.hashEn++;
+        v.storeUndo(m);
     }
 }

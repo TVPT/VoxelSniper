@@ -6,17 +6,16 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.undo.vUndo;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import java.util.ArrayList;
 import java.util.Random;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.ChatColor;
 
 /**
  *
  * @author Ghost8700 @ Voxel
- * 
+ *
  */
 public class GenerateTree extends Brush {
 
@@ -50,7 +49,7 @@ public class GenerateTree extends Brush {
     }
 
     @Override
-    protected void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
 
         h = new vUndo(tb.getWorld().getName());
 
@@ -77,13 +76,12 @@ public class GenerateTree extends Brush {
         }
 
         //Ends the undo function and mos on.
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
     //The Powder currently does nothing extra.
     @Override
-    protected void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
@@ -93,39 +91,35 @@ public class GenerateTree extends Brush {
     }
 
     /*
-     * 
+     *
      * Code Concerning Parameters
-     * 
+     *
      */
     @Override
-    public void parameters(String[] par, vSniper v) {
-
-
-
-
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "lt# - leaf type (data value)");
-            v.p.sendMessage(ChatColor.AQUA + "wt# - wood type (data value)");
-            v.p.sendMessage(ChatColor.AQUA + "tt# - tree thickness (whote number)");
-            v.p.sendMessage(ChatColor.AQUA + "rfX - root float (true or false)");
-            v.p.sendMessage(ChatColor.AQUA + "sh# - starting height (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "rl# - root length (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "ts# - trunk slope chance (0-100)");
-            v.p.sendMessage(ChatColor.AQUA + "bl# - branch length (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "info2 - more parameters");
+            v.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
+            v.sendMessage(ChatColor.AQUA + "lt# - leaf type (data value)");
+            v.sendMessage(ChatColor.AQUA + "wt# - wood type (data value)");
+            v.sendMessage(ChatColor.AQUA + "tt# - tree thickness (whote number)");
+            v.sendMessage(ChatColor.AQUA + "rfX - root float (true or false)");
+            v.sendMessage(ChatColor.AQUA + "sh# - starting height (whole number)");
+            v.sendMessage(ChatColor.AQUA + "rl# - root length (whole number)");
+            v.sendMessage(ChatColor.AQUA + "ts# - trunk slope chance (0-100)");
+            v.sendMessage(ChatColor.AQUA + "bl# - branch length (whole number)");
+            v.sendMessage(ChatColor.AQUA + "info2 - more parameters");
             return;
         }
 
         if (par[1].equalsIgnoreCase("info2")) {
-            v.p.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "minr# - minimum roots (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "maxr# - maximum roots (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "minh# - minimum height (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "maxh# - maximum height (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "minl# - minimum leaf node size (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "maxl# - maximum leaf node size (whole number)");
-            v.p.sendMessage(ChatColor.AQUA + "default - restore default params");
+            v.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
+            v.sendMessage(ChatColor.AQUA + "minr# - minimum roots (whole number)");
+            v.sendMessage(ChatColor.AQUA + "maxr# - maximum roots (whole number)");
+            v.sendMessage(ChatColor.AQUA + "minh# - minimum height (whole number)");
+            v.sendMessage(ChatColor.AQUA + "maxh# - maximum height (whole number)");
+            v.sendMessage(ChatColor.AQUA + "minl# - minimum leaf node size (whole number)");
+            v.sendMessage(ChatColor.AQUA + "maxl# - maximum leaf node size (whole number)");
+            v.sendMessage(ChatColor.AQUA + "default - restore default params");
             return;
         }
 
@@ -135,79 +129,79 @@ public class GenerateTree extends Brush {
             try {
                 if (par[x].startsWith("lt")) { //Leaf Type
                     leafType = Byte.parseByte(par[x].replace("lt", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Leaf Type set to " + leafType);
+                    v.sendMessage(ChatColor.BLUE + "Leaf Type set to " + leafType);
                     continue;
                 } else if (par[x].startsWith("wt")) { //Wood Type
                     woodType = Byte.parseByte(par[x].replace("wt", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Wood Type set to " + woodType);
+                    v.sendMessage(ChatColor.BLUE + "Wood Type set to " + woodType);
                     continue;
                 } else if (par[x].startsWith("tt")) { //Tree Thickness
                     thickness = Integer.parseInt(par[x].replace("tt", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Thickness set to " + thickness);
+                    v.sendMessage(ChatColor.BLUE + "Thickness set to " + thickness);
                     continue;
                 } else if (par[x].startsWith("rf")) { //Root Float
                     rootFloat = Boolean.parseBoolean(par[x].replace("rf", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Floating Roots set to " + rootFloat);
+                    v.sendMessage(ChatColor.BLUE + "Floating Roots set to " + rootFloat);
                     continue;
                 } else if (par[x].startsWith("sh")) { //Starting Height
                     startHeight = Integer.parseInt(par[x].replace("sh", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Starting Height set to " + startHeight);
+                    v.sendMessage(ChatColor.BLUE + "Starting Height set to " + startHeight);
                     continue;
                 } else if (par[x].startsWith("rl")) { //Root Length
                     rootLength = Integer.parseInt(par[x].replace("rl", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Root Length set to " + rootLength);
+                    v.sendMessage(ChatColor.BLUE + "Root Length set to " + rootLength);
                     continue;
                 } else if (par[x].startsWith("minr")) { //Minimum Roots
                     minRoots = Integer.parseInt(par[x].replace("minr", ""));
                     if (minRoots > maxRoots) {
                         minRoots = maxRoots;
-                        v.p.sendMessage(ChatColor.RED + "Minimum Roots can't exceed Maximum Roots, has  been set to " + minRoots + " Instead!");
+                        v.sendMessage(ChatColor.RED + "Minimum Roots can't exceed Maximum Roots, has  been set to " + minRoots + " Instead!");
                     } else {
-                        v.p.sendMessage(ChatColor.BLUE + "Minimum Roots set to " + minRoots);
+                        v.sendMessage(ChatColor.BLUE + "Minimum Roots set to " + minRoots);
                     }
                     continue;
                 } else if (par[x].startsWith("maxr")) { //Maximum Roots
                     maxRoots = Integer.parseInt(par[x].replace("maxr", ""));
                     if (minRoots > maxRoots) {
                         maxRoots = minRoots;
-                        v.p.sendMessage(ChatColor.RED + "Maximum Roots can't be lower than Minimum Roots, has been set to " + minRoots + " Instead!");
+                        v.sendMessage(ChatColor.RED + "Maximum Roots can't be lower than Minimum Roots, has been set to " + minRoots + " Instead!");
                     } else {
-                        v.p.sendMessage(ChatColor.BLUE + "Maximum Roots set to " + maxRoots);
+                        v.sendMessage(ChatColor.BLUE + "Maximum Roots set to " + maxRoots);
                     }
                     continue;
                 } else if (par[x].startsWith("ts")) { //Trunk Slope Chance
                     slopeChance = Integer.parseInt(par[x].replace("ts", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Trunk Slope set to " + slopeChance);
+                    v.sendMessage(ChatColor.BLUE + "Trunk Slope set to " + slopeChance);
                     continue;
                 } else if (par[x].startsWith("minh")) { //Height Minimum
                     heightMininmum = Integer.parseInt(par[x].replace("minh", ""));
                     if (heightMininmum > heightMaximum) {
                         heightMininmum = heightMaximum;
-                        v.p.sendMessage(ChatColor.RED + "Minimum Height exceed than Maximum Height, has been set to " + heightMininmum + " Instead!");
+                        v.sendMessage(ChatColor.RED + "Minimum Height exceed than Maximum Height, has been set to " + heightMininmum + " Instead!");
                     } else {
-                        v.p.sendMessage(ChatColor.BLUE + "Minimum Height set to " + heightMininmum);
+                        v.sendMessage(ChatColor.BLUE + "Minimum Height set to " + heightMininmum);
                     }
                     continue;
                 } else if (par[x].startsWith("maxh")) { //Height Maximum
                     heightMaximum = Integer.parseInt(par[x].replace("maxh", ""));
                     if (heightMininmum > heightMaximum) {
                         heightMaximum = heightMininmum;
-                        v.p.sendMessage(ChatColor.RED + "Maximum Height can't be lower than Minimum Height, has been set to " + heightMaximum + " Instead!");
+                        v.sendMessage(ChatColor.RED + "Maximum Height can't be lower than Minimum Height, has been set to " + heightMaximum + " Instead!");
                     } else {
-                        v.p.sendMessage(ChatColor.BLUE + "Maximum Roots set to " + heightMaximum);
+                        v.sendMessage(ChatColor.BLUE + "Maximum Roots set to " + heightMaximum);
                     }
                     continue;
                 } else if (par[x].startsWith("bl")) { //Branch Length
                     branchLength = Integer.parseInt(par[x].replace("bl", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Branch Length set to " + branchLength);
+                    v.sendMessage(ChatColor.BLUE + "Branch Length set to " + branchLength);
                     continue;
                 } else if (par[x].startsWith("maxl")) { //Leaf Node Max Size
                     nodeMax = Integer.parseInt(par[x].replace("maxl", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Leaf Max Thickness set to " + nodeMax + " (Default 4)");
+                    v.sendMessage(ChatColor.BLUE + "Leaf Max Thickness set to " + nodeMax + " (Default 4)");
                     continue;
                 } else if (par[x].startsWith("minl")) { //Leaf Node Min Size
                     nodeMin = Integer.parseInt(par[x].replace("minl", ""));
-                    v.p.sendMessage(ChatColor.BLUE + "Leaf Min Thickness set to " + nodeMin + " (Default 3)");
+                    v.sendMessage(ChatColor.BLUE + "Leaf Min Thickness set to " + nodeMin + " (Default 3)");
                     continue;
 
                     //-------
@@ -228,21 +222,21 @@ public class GenerateTree extends Brush {
                     branchLength = 8;
                     nodeMax = 4;
                     nodeMin = 3;
-                    v.p.sendMessage(ChatColor.GOLD + "Brush reset to default parameters.");
+                    v.sendMessage(ChatColor.GOLD + "Brush reset to default parameters.");
                     continue;
                 } else {
-                    v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
                 }
             } catch (Exception e) {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + par[x] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + par[x] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
             }
 
         }
     }
     /*
-     * 
+     *
      * Code Concerning Root Generation
-     * 
+     *
      */
 
     public void rootGen() {
@@ -261,9 +255,9 @@ public class GenerateTree extends Brush {
     }
 
     /*
-     * 
+     *
      * Code Concerning Root Generation
-     * 
+     *
      */
     public void rootCreate(int xDirection, int zDirection) {
 
@@ -360,7 +354,7 @@ public class GenerateTree extends Brush {
     }
 
     /*
-     * 
+     *
      * Code Concerning Trunk Generation
      *
      */

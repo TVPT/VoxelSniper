@@ -5,7 +5,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -55,13 +54,13 @@ public class PullTest extends SoftSelection {
         }
 //        }
     }
-    
+
     public PullTest() {
         name = "Soft Selection";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         vh = v.voxelHeight;
         getSurface(v);
 
@@ -79,7 +78,7 @@ public class PullTest extends SoftSelection {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         int bsize = v.brushSize;
         // sel = new sBlock[(int)Math.pow(((bsize*2) + 1), 3)];
 
@@ -246,14 +245,14 @@ public class PullTest extends SoftSelection {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         try {
             double pinch = Double.parseDouble(par[1]);
             double bubble = Double.parseDouble(par[2]);
             c1 = 1 - pinch;
             c2 = bubble;
         } catch (Exception ex) {
-            v.p.sendMessage(ChatColor.RED + "Invalid brush parameters!");
+            v.sendMessage(ChatColor.RED + "Invalid brush parameters!");
         }
     }
 }

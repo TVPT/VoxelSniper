@@ -6,7 +6,6 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 
 /**
  *
@@ -16,7 +15,8 @@ public abstract class PerformBrush extends Brush implements Performer {
 
     protected vPerformer current = new pMaterial();
 
-    public void parse(String[] args, vSniper v) {
+    @Override
+    public void parse(String[] args, com.thevoxelbox.voxelsniper.vData v) {
         if (PerformerE.has(args[1])) {
             vPerformer p = PerformerE.getPerformer(args[1]);
             if (p != null) {
@@ -39,11 +39,12 @@ public abstract class PerformBrush extends Brush implements Performer {
         }
     }
 
-    public void initP(vSniper v) {
+    public void initP(com.thevoxelbox.voxelsniper.vData v) {
         current.init(v);
         current.setUndo(undoScale);
     }
 
+    @Override
     public void showInfo(vMessage vm) {
         current.info(vm);
     }

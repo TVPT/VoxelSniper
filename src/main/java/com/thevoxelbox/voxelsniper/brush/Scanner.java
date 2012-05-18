@@ -4,8 +4,8 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -15,15 +15,16 @@ import org.bukkit.block.BlockFace;
  * @author DivineRage
  */
 public class Scanner extends Brush {
+
     private int depth = 24;
     private Material checkFor = Material.AIR;
-    
+
     public Scanner() {
         name = "Scanner";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -33,7 +34,7 @@ public class Scanner extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
@@ -45,99 +46,99 @@ public class Scanner extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
+            v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("d")) {
                 depth = clamp(Integer.parseInt(par[x].substring(1)), 1, 64);
-                v.p.sendMessage(ChatColor.AQUA + "Scanner depth set to " + clamp(Integer.parseInt(par[x].substring(1)), 1, 64));
+                v.sendMessage(ChatColor.AQUA + "Scanner depth set to " + clamp(Integer.parseInt(par[x].substring(1)), 1, 64));
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
 
     }
 
-    private void scan(vSniper v, BlockFace bf) {
-        if(bf == null) {
+    private void scan(vData v, BlockFace bf) {
+        if (bf == null) {
             return;
         }
         switch (bf) {
             case NORTH:
                 // Scan south
-                for (int i = 1; i < depth+1; i++) {
-                    if (clampY(bx+i, by, bz).getType() == checkFor) {
-                        v.p.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
+                for (int i = 1; i < depth + 1; i++) {
+                    if (clampY(bx + i, by, bz).getType() == checkFor) {
+                        v.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.p.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(ChatColor.GRAY + "Nope.");
                 break;
 
             case SOUTH:
                 // Scan north
-                for (int i = 1; i < depth+1; i++) {
-                    if (clampY(bx-i, by, bz).getType() == checkFor) {
-                        v.p.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
+                for (int i = 1; i < depth + 1; i++) {
+                    if (clampY(bx - i, by, bz).getType() == checkFor) {
+                        v.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.p.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(ChatColor.GRAY + "Nope.");
                 break;
 
             case EAST:
                 // Scan west
-                for (int i = 1; i < depth+1; i++) {
-                    if (clampY(bx, by, bz+i).getType() == checkFor) {
-                        v.p.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
+                for (int i = 1; i < depth + 1; i++) {
+                    if (clampY(bx, by, bz + i).getType() == checkFor) {
+                        v.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.p.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(ChatColor.GRAY + "Nope.");
                 break;
 
             case WEST:
                 // Scan east
-                for (int i = 1; i < depth+1; i++) {
-                    if (clampY(bx, by, bz-i).getType() == checkFor) {
-                        v.p.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
+                for (int i = 1; i < depth + 1; i++) {
+                    if (clampY(bx, by, bz - i).getType() == checkFor) {
+                        v.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.p.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(ChatColor.GRAY + "Nope.");
                 break;
 
             case UP:
                 // Scan down
-                for (int i = 1; i < depth+1; i++) {
-                    if ((by-i) <= 0) {
+                for (int i = 1; i < depth + 1; i++) {
+                    if ((by - i) <= 0) {
                         break;
                     }
-                    if (clampY(bx, by-i, bz).getType() == checkFor) {
-                        v.p.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
+                    if (clampY(bx, by - i, bz).getType() == checkFor) {
+                        v.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.p.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(ChatColor.GRAY + "Nope.");
                 break;
 
             case DOWN:
                 // Scan up
-                for (int i = 1; i < depth+1; i++) {
-                    if ((by+i) >= 127) {
+                for (int i = 1; i < depth + 1; i++) {
+                    if ((by + i) >= 127) {
                         break;
                     }
-                    if (clampY(bx, by+i, bz).getType() == checkFor) {
-                        v.p.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
+                    if (clampY(bx, by + i, bz).getType() == checkFor) {
+                        v.sendMessage(ChatColor.GREEN + "" + checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.p.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(ChatColor.GRAY + "Nope.");
                 break;
 
             default:

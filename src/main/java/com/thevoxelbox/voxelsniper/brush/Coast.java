@@ -4,11 +4,12 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import java.util.Arrays;
+import java.util.Random;
 import org.bukkit.ChatColor;
-import java.util.*;
 
 /**
  *
@@ -22,13 +23,13 @@ public class Coast extends Brush {
     double sigmoid = 0.5; //hardness of the sigmoid. (harsher vs. softer selection)
     int strength = 10; //amount that the strongest topographic layer will attempt to scrape off.
     int bsize = 3; //brush size
-    
+
     public Coast() {
         name = "Coast Creation";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -36,7 +37,7 @@ public class Coast extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -54,17 +55,15 @@ public class Coast extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.LIGHT_PURPLE + "Coast Creation brush. Parameters:");
-            v.p.sendMessage(ChatColor.BLUE + "ecc[number] (ex:  ecc1.2) How far out the random distortions of your brush can be generated.  Units are multiples of the brush size.");
-            v.p.sendMessage(ChatColor.DARK_BLUE + "nb[number] (ex:  nb5) How many 'blobs' your distorted brush will have.  More blobs = smoother, more circular end shape, more or less.");
-            v.p.sendMessage(ChatColor.GOLD + "sig[number] (ex:   sig0.9) Sets the hardness of the sigmoid curve.  must be between 0 and 1.  Closer to zero = you will have sudden, steep cliffs.  Closer to 1 = gentle slopes.");
-            v.p.sendMessage(ChatColor.DARK_GREEN + "str[number] (ex:   str30) Number of blocks that will be attempted to be scraped off the terrain at the strongest point of the brush (the center).");
-
+            v.sendMessage(ChatColor.LIGHT_PURPLE + "Coast Creation brush. Parameters:");
+            v.sendMessage(ChatColor.BLUE + "ecc[number] (ex:  ecc1.2) How far out the random distortions of your brush can be generated.  Units are multiples of the brush size.");
+            v.sendMessage(ChatColor.DARK_BLUE + "nb[number] (ex:  nb5) How many 'blobs' your distorted brush will have.  More blobs = smoother, more circular end shape, more or less.");
+            v.sendMessage(ChatColor.GOLD + "sig[number] (ex:   sig0.9) Sets the hardness of the sigmoid curve.  must be between 0 and 1.  Closer to zero = you will have sudden, steep cliffs.  Closer to 1 = gentle slopes.");
+            v.sendMessage(ChatColor.DARK_GREEN + "str[number] (ex:   str30) Number of blocks that will be attempted to be scraped off the terrain at the strongest point of the brush (the center).");
             return;
         }
-
 
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("ecc")) {
@@ -76,18 +75,17 @@ public class Coast extends Brush {
             } else if (par[x].startsWith("str")) {
                 strength = Integer.parseInt(par[x].substring(0));
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }
 
-    public void coast(vSniper v) {
-        
+    public void coast(vData v) {
+
         //things to declare in general
         //int bsize = v.brushSize;
         int r = 0; //for random numbers
         Random generator = new Random();
-        //int bId = v.voxelId;
 
         //1) original disc - do it in a matrix mask form
         //actually hold off on this... after #4 will know full range of the brush
@@ -128,22 +126,22 @@ public class Coast extends Brush {
         byte[][] mask = new byte[maxX - minX + 4][maxZ - minZ + 4]; //+1 just so that both ends of the range are inclusive.  +2 more to give a border around the mask which is needed later, and +1 more to make it so I don't have to remember to type in annoying -1'w all the time to access arrays.
         centers = backupCenters;
 
-        makeblob(mask,0,0,bsize); //the original disc is included in the mask
-        for (int n = 0; n< numBlobs;n++){ //fill up the mask with zeros - the union of the original disc plus all blobs.
-            makeblob(mask,centers[1][n],centers[2][n],centers[3][n]);
+        makeblob(mask, 0, 0, bsize); //the original disc is included in the mask
+        for (int n = 0; n < numBlobs; n++) { //fill up the mask with zeros - the union of the original disc plus all blobs.
+            makeblob(mask, centers[1][n], centers[2][n], centers[3][n]);
         }
 
         vUndo h = new vUndo(tb.getWorld().getName());
 
         //kill trees and store top four other block types in memory
-        v.p.sendMessage(ChatColor.LIGHT_PURPLE + "maxX" + maxX);
-        v.p.sendMessage(ChatColor.LIGHT_PURPLE + "minX" + minX);
-        v.p.sendMessage(ChatColor.LIGHT_PURPLE + "maxZ" + maxZ);
-        v.p.sendMessage(ChatColor.LIGHT_PURPLE + "minZ" + minZ);
+        v.sendMessage(ChatColor.LIGHT_PURPLE + "maxX" + maxX);
+        v.sendMessage(ChatColor.LIGHT_PURPLE + "minX" + minX);
+        v.sendMessage(ChatColor.LIGHT_PURPLE + "maxZ" + maxZ);
+        v.sendMessage(ChatColor.LIGHT_PURPLE + "minZ" + minZ);
         int[][][] memory = new int[maxX - minX + 4][maxZ - minZ + 4][5]; //NOTE: This is not in the normal XYZ order.  It is XZY!!  To match up more conveniently with the mask.  But keep in mind.
-        for(int x = 0; x < maxX-minX+4;x++){
-            for(int y = 128; y > 0;y--){
-                for(int z = 0; z < maxZ-minZ+4; z++){
+        for (int x = 0; x < maxX - minX + 4; x++) {
+            for (int y = 128; y > 0; y--) {
+                for (int z = 0; z < maxZ - minZ + 4; z++) {
 
                     switch (getBlockIdAt(x, y, z)) {//kill trees and ice (just to avoid water annoyingness) and plants.  Not the most elegant of solutions.  But remembering trees and lowering them would make lopsided trees...  Would have to memorize their trunk positions and generate brand new ones, or something.
                         case 17:
@@ -165,8 +163,8 @@ public class Coast extends Brush {
                     }
 
                     //top four layers of natural ground types other than liquids
-                    if (memory[x][z][5]==0){ //if column hasn't been memorized already
-                        if (getBlockIdAt(x, y-1, z) != 0) { //if not a floating block (like one of Notch'w pools)
+                    if (memory[x][z][5] == 0) { //if column hasn't been memorized already
+                        if (getBlockIdAt(x, y - 1, z) != 0) { //if not a floating block (like one of Notch'w pools)
                             switch (getBlockIdAt(x, y, z)) {
                                 case 1:
                                 case 2:
@@ -215,24 +213,23 @@ public class Coast extends Brush {
 
 
 
-        
 
-        
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+
+
+        v.storeUndo(h);
     }
 
     public void makeblob(byte[][] array, int xC, int yC, int rC) {
-    
-    double bpow = Math.pow(rC + 0.5, 2);
+
+        double bpow = Math.pow(rC + 0.5, 2);
         for (int x = rC; x >= 0; x--) {
             double xpow = Math.pow(x, 2);
             for (int y = rC; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                        array[xC+x][yC+y] = 1;
-                        //array[xC+x][yC-y] = 1;
-                        array[xC-x][yC+y] = 1; //array exception
-                        //array[xC-x][yC-y] = 1;
+                    array[xC + x][yC + y] = 1;
+                    //array[xC+x][yC-y] = 1;
+                    array[xC - x][yC + y] = 1; //array exception
+                    //array[xC-x][yC-y] = 1;
                 }
             }
         }

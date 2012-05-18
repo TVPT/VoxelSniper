@@ -22,34 +22,34 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     SNIPE(                              Snipe.class,                    "s",        "snipe"),                   //  [   1    ]  \\
     DISC(                               Disc.class,                     "d",        "disc"),                    //  [   2    ]  \\
     DISC_FACE(                          DiscFace.class,                 "df",       "discface"),                //  [   3    ]  \\
-    BALL(                               Ball.class,                     "b",        "ball"),                    //  [   6    ]  \\
-    VOXEL(                              Voxel.class,                    "v",        "voxel"),                   //  [   8    ]  \\
-    VOXEL_DISC(                         VoxelDisc.class,                "vd",       "voxeldisc"),               //  [   9    ]  \\
-    VOXEL_DISC_FACE(                    VoxelDiscFace.class,            "vdf",      "voxeldiscface"),           //  [   11   ]  \\
-    MONSTER(                            Monster.class,                  "m",        "monster"),                 //  [   19   ]  \\
-    OCEAN(                              Ocean.class,                    "o",        "ocean"),                   //  [   20   ]  \\
-    OCEAN_SELECTION(                    OceanSelection.class,           "ocs",      "oceanselection"),          //  [   21   ]  \\
-    CLONE_STAMP(                        Clone.class,                    "cs",       "clonestamp"),              //  [   22   ]  \\
-    ERODE(                              Erode.class,                    "e",        "erode"),                   //  [   23   ]  \\
-    SOFT_SELECT_TEST(                   PullTest.class,                 "pull",     "pull"),                    //  [   24   ]  \\
-    PAINTING(                           Painting.class,                 "paint",    "painting"),                //  [   25   ]  \\
-    CANYON(                             Canyon.class,                   "ca",       "canyon"),                  //  [   26   ]  \\
-    CANYON_SELECTION(                   CanyonSelection.class,          "cas",      "canyonselection"),         //  [   27   ]  \\
-    TWO_D_ROTATION(                     Rot2D.class,                    "rot2",     "rotation2D"),              //  [   28   ]  \\
-    WARP_IN_STYLE(                      WarpInStyle.class,              "w",        "warpinstyle"),             //  [   32   ]  \\
-    FILL_DOWN(                          FillDown.class,                 "fd",       "filldown"),                //  [   33   ]  \\
-    SET(                                Set.class,                      "set",      "set"),                     //  [   34   ]  \\ derp Heeeerp
-    NOUNDOVOXEL(                        noUndoVoxel.class,              "nv",       "noundovoxel"),             //  [   35   ]  \\
-    JOCKEY(                             Jockey.class,                   "jockey",   "jockey"),                  //  [   38   ]  \\
-    NOUNDOSET(                          noUndoSet.class,                "nset",     "noundoset"),               //  [   39   ]  \\
-    ENTITY_REMOVAL(                     EntityRemoval.class,            "er",       "entityremoval"),           //  [   40   ]  \\
-    RING(                               Ring.class,                     "ri",       "ring"),                    //  [   41   ]  \\
+    BALL(                               Ball.class,                     "b",        "ball"),                    //  [   4    ]  \\
+    VOXEL(                              Voxel.class,                    "v",        "voxel"),                   //  [   5    ]  \\
+    VOXEL_DISC(                         VoxelDisc.class,                "vd",       "voxeldisc"),               //  [   6    ]  \\
+    VOXEL_DISC_FACE(                    VoxelDiscFace.class,            "vdf",      "voxeldiscface"),           //  [   7    ]  \\
+    MONSTER(                            Monster.class,                  "m",        "monster"),                 //  [   8    ]  \\
+    OCEAN(                              Ocean.class,                    "o",        "ocean"),                   //  [   9    ]  \\
+    OCEAN_SELECTION(                    OceanSelection.class,           "ocs",      "oceanselection"),          //  [   10   ]  \\
+    CLONE_STAMP(                        Clone.class,                    "cs",       "clonestamp"),              //  [   11   ]  \\
+    ERODE(                              Erode.class,                    "e",        "erode"),                   //  [   12   ]  \\
+    SOFT_SELECT_TEST(                   PullTest.class,                 "pull",     "pull"),                    //  [   13   ]  \\
+    PAINTING(                           Painting.class,                 "paint",    "painting"),                //  [   14   ]  \\
+    CANYON(                             Canyon.class,                   "ca",       "canyon"),                  //  [   15   ]  \\
+    CANYON_SELECTION(                   CanyonSelection.class,          "cas",      "canyonselection"),         //  [   16   ]  \\
+    TWO_D_ROTATION(                     Rot2D.class,                    "rot2",     "rotation2D"),              //  [   17   ]  \\
+    WARP_IN_STYLE(                      WarpInStyle.class,              "w",        "warpinstyle"),             //  [   18   ]  \\
+    FILL_DOWN(                          FillDown.class,                 "fd",       "filldown"),                //  [   19   ]  \\
+    SET(                                Set.class,                      "set",      "set"),                     //  [   20   ]  \\
+    JOCKEY(                             Jockey.class,                   "jockey",   "jockey"),                  //  [   21   ]  \\
+    ENTITY_REMOVAL(                     EntityRemoval.class,            "er",       "entityremoval"),           //  [   22   ]  \\
+    RING(                               Ring.class,                     "ri",       "ring"),                    //  [   23   ]  \\
+    SHELL_SET(                          ShellSet.class,                 "shs",      "shellset"),                //  [   24   ]  \\
+    BIOME(                              Biome.class,                    "bio",      "biome"),                   //  [   25   ]  \\
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~giltwist~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  \\
     SPLATTER_DISC(                      SplatterDisc.class,             "sd",       "splatdisc"),               //  [   1    ]  \\
     SPLATTER_VOXEL_DISC(                SplatterVoxelDisc.class,        "svd",      "splatvoxeldisc"),          //  [   2    ]  \\
     SPLATTER_BALL(                      SplatterBall.class,             "sb",       "splatball"),               //  [   3    ]  \\
-    SPLATTER_VOXEL(                     SplatterVoxel.class,            "sv",          "splatvoxel"),          //  [   4    ]  \\
+    SPLATTER_VOXEL(                     SplatterVoxel.class,            "sv",       "splatvoxel"),              //  [   4    ]  \\
     BLOB(                               Blob.class,                     "blob",     "splatblob"),               //  [   5    ]  \\
     SPIRAL_STAIRCASE(                   SpiralStaircase.class,          "sstair",   "spiralstaircase"),         //  [   6    ]  \\
     SPLATTER_OVERLAY(                   SplatterOverlay.class,          "sover",    "splatteroverlay"),         //  [   7    ]  \\
@@ -66,9 +66,9 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     LOAD_CHUNK(                         LoadChunk.class,                "lc",       "loadchunk"),               //  [   18   ]  \\
     TRIANGLE(                           Triangle.class,                 "tri",      "triangle"),                //  [   19   ]  \\
     ERASER(                             Eraser.class,                   "erase",    "eraser"),                  //  [   20   ]  \\
-    COPYPASTA(                          CopyPasta.class,                "cp",    "copypasta"),                  //  [   22   ]  \\
-    COMET(                              Comet.class,                "com",    "comet"),                  //  [   23   ]  \\
-    JAGGED(                             Jagged.class,                "j",    "jagged"),                  //  [   24   ]  \\
+    COPYPASTA(                          CopyPasta.class,                "cp",       "copypasta"),               //  [   22   ]  \\
+    COMET(                              Comet.class,                    "com",      "comet"),                   //  [   23   ]  \\
+    JAGGED(                             Jagged.class,                   "j",        "jagged"),                  //  [   24   ]  \\
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Ghost8700~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  \\
     GENERATE_TREE(                      GenerateTree.class,             "gt",       "generatetree"),            //  [   1    ]  \\
@@ -76,7 +76,7 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DivineRage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  \\
     GENERATE_CHUNK(                     GenerateChunk.class,            "gc",       "generatechunk"),           //  [   1    ]  \\      // No documentation. Fucks up client-sided. Still works though.
     TREE_GENERATE(                      TreeSnipe.class,                "t",        "treesnipe"),               //  [   2    ]  \\
-    POINTLESS(                          Pointless.class,                "drlolol",     "pointlessbrush"),          //  [   4    ]  \\
+    POINTLESS(                          Pointless.class,                "drlolol",  "pointlessbrush"),          //  [   4    ]  \\
     SCANNER(                            Scanner.class,                  "sc",       "scanner"),                 //  [   5    ]  \\
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  \\
@@ -175,6 +175,41 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
         }
 
         return temp;
+    }
+    
+    public static String getName(Brush br) {
+        for(vBrushes vbs : brushes.values()) {
+            if(br.getClass().getName().equals(vbs.brush.getName())) {
+                return vbs.long_name;
+            }
+        }
+        return null;
+    }
+    
+    public static boolean hasBrush(String name) {
+        if(brushes.containsKey(name)) {
+            return true;
+        } else {
+            for(vBrushes vb : brushes.values()) {
+                if(vb.getLong().equalsIgnoreCase(name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static Brush getBrushInstance(String name) {
+        if(brushes.containsKey(name)) {
+            return brushes.get(name).getBrush();
+        } else {
+            for(vBrushes vb : brushes.values()) {
+                if(vb.getLong().equalsIgnoreCase(name)) {
+                    return vb.getBrush();
+                }
+            }
+        }
+        return null;
     }
 
     static {

@@ -1,6 +1,6 @@
 name: VoxelSniper
 main: com.thevoxelbox.voxelsniper.VoxelSniper
-version: 5.134
+version: 5.135
 website: http://www.voxelwiki.com/minecraft/VoxelSniper
 author: przerwap; With additional brushes by Gavjenks, giltwist, psanker, Deamon5550 & DivineRage
 description: >
@@ -115,6 +115,10 @@ commands:
            /<command> select-radius
            Example: /<command> 5 -- sets a brush radius size of 5 (11 spaces across).
            Example: /<command> idr -- sets an ink disc replace brush.
+  btool:
+    description: Brush Tool Command.
+    usage : |
+            /<command> prints out the usage of the command.
   bms:
     description: Save brush preset.
     usage: |

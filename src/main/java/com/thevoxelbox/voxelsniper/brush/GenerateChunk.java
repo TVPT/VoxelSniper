@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.Chunk;
 
 /**
@@ -12,13 +12,13 @@ import org.bukkit.Chunk;
 public class GenerateChunk extends Brush {
 
     private Chunk ch;
-    
+
     public GenerateChunk() {
         name = "Chunk Generator 40k";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -26,7 +26,7 @@ public class GenerateChunk extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
@@ -37,8 +37,7 @@ public class GenerateChunk extends Brush {
         vm.brushMessage("This brush will melt your spleen and sell your kidneys.");
     }
 
-
-    public void generateChunk(vSniper v) {
+    public void generateChunk(vData v) {
         ch = tb.getChunk();
 
         vUndo h = new vUndo(tb.getWorld().getName());
@@ -50,14 +49,12 @@ public class GenerateChunk extends Brush {
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
-        
+        v.storeUndo(h);
+
         // !!! Very dangerous! Do not touch! It will melt your spleen and sell your kidneys.  <- disregard DivineRage he knows not what he speaks of... -prz
-        v.p.sendMessage("Generate that chunk! " + ch.getX() + " " + ch.getZ());
+        v.owner().p.sendMessage("Generate that chunk! " + ch.getX() + " " + ch.getZ());
         w.regenerateChunk(ch.getX(), ch.getZ());
         w.refreshChunk(ch.getX(), ch.getZ());
         //s.regenerateChunk((int) Math.floor(ch.getX() / 16), (int) Math.floor(ch.getZ() / 16));
     }
-
 }

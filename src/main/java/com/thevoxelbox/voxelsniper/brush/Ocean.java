@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 
@@ -14,11 +14,9 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-
 //NOTE: Possibly add a parameter to change the sea level when using the brush.
 //This would allow for higher or lower oceans. It'w also more useful on maps
 //where the sea level isn't at the standard elevation.
-
 public class Ocean extends Brush {
 
     protected int s1x;
@@ -26,25 +24,23 @@ public class Ocean extends Brush {
     protected int s2x;
     protected int s2z;
     protected vUndo h;
-    
+
     public Ocean() {
         name = "OCEANATOR 5000(tm)";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         h = new vUndo(tb.getWorld().getName());
         oceanator(v);
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         h = new vUndo(tb.getWorld().getName());
         oceanatorBig(v);
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 
     @Override
@@ -52,8 +48,7 @@ public class Ocean extends Brush {
         vm.brushName(name);
     }
 
-    protected void oceanator(vSniper v) {
-
+    protected void oceanator(vData v) {
         int sx = (int) Math.floor((double) tb.getX() / 16) * 16;
         int sz = (int) Math.floor((double) tb.getZ() / 16) * 16;
 
@@ -198,7 +193,7 @@ public class Ocean extends Brush {
         }
     }
 
-    protected void oceanatorBig(vSniper v) {
+    protected void oceanatorBig(vData v) {
         oceanator(v); // center
         tb = setX(tb, tb.getX() + 16);
         oceanator(v); // right
@@ -227,9 +222,6 @@ public class Ocean extends Brush {
     }
 
     protected void ocean(Chunk c) {
-
-
-
     }
 
     protected int getHeight(int bx, int bz) {

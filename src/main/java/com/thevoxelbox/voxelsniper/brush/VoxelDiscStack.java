@@ -5,7 +5,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 
 /**
@@ -13,20 +12,20 @@ import org.bukkit.ChatColor;
  * @author DivineRage
  */
 public class VoxelDiscStack extends Brush {
-    
+
     public VoxelDiscStack() {
         name = "Stack";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
@@ -36,22 +35,18 @@ public class VoxelDiscStack extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Stack brush Parameters:");
+            v.sendMessage(ChatColor.GOLD + "Stack brush Parameters:");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("d")) {
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
 
     }
-    
-    
-    
-    
 }

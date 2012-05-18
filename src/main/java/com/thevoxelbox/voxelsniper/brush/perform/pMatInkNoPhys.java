@@ -5,7 +5,6 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.block.Block;
 
 /**
@@ -17,17 +16,15 @@ public class pMatInkNoPhys extends vPerformer {
     private int i;
     private byte dr;
 
-
     public pMatInkNoPhys() {
         name = "Mat-Ink, No Physics";
     }
 
     @Override
-    public void init(vSniper v) {
-        w = v.p.getWorld();
+    public void init(com.thevoxelbox.voxelsniper.vData v) {
+        w = v.getWorld();
         i = v.voxelId;
         dr = v.replaceData;
-
     }
 
     @Override
@@ -39,7 +36,7 @@ public class pMatInkNoPhys extends vPerformer {
 
     @Override
     public void perform(Block b) {
-        if( b.getData() == dr) {
+        if (b.getData() == dr) {
             h.put(b);
             b.setTypeId(i, false);
         }

@@ -4,8 +4,8 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import net.minecraft.server.EntityCreature;
 import net.minecraft.server.NPC;
 import org.bukkit.ChatColor;
@@ -34,16 +34,16 @@ public class EntityRemoval extends Brush {
     }
 
     @Override
-    protected void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         radialRemoval(v);
     }
 
     @Override
-    protected void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         radialRemoval(v);
     }
 
-    protected void radialRemoval(vSniper v) {
+    protected void radialRemoval(vData v) {
         entcount = 0;
         chunkcount = 0;
         Chunk ch = tb.getChunk();
@@ -54,7 +54,7 @@ public class EntityRemoval extends Brush {
                 chunkcount++;
             }
         }
-        v.p.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entcount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkcount + ChatColor.GREEN + " chunks.");
+        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entcount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkcount + ChatColor.GREEN + " chunks.");
     }
 
     protected void removeEntities(Chunk c) {

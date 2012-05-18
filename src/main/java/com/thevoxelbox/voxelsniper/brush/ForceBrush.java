@@ -4,14 +4,12 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-
-import java.util.List;
 
 /**
  *
@@ -27,7 +25,7 @@ public class ForceBrush extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -35,7 +33,7 @@ public class ForceBrush extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -49,9 +47,9 @@ public class ForceBrush extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.AQUA + "This brush requires a password to function.");
+            v.sendMessage(ChatColor.AQUA + "This brush requires a password to function.");
             return;
         }
         for (int x = 1; x < par.length; x++) {
@@ -59,21 +57,21 @@ public class ForceBrush extends Brush {
             if (par[x].startsWith("Scorpion")) {
                 passCorrect = true;
                 continue;
-            } 
+            }
         }
     }
 
-    public void Attract(vSniper v) {
+    public void Attract(vData v) {
 
         if (passCorrect) {
             RADIUS = v.brushSize;
             if (RADIUS > 500 || RADIUS < -500) {
-                        RADIUS = 500;
-                        v.brushSize = 500;
-                        v.p.sendMessage(ChatColor.AQUA + "Maximum 500 radius.  Brush size changed for you.");
-                    }
+                RADIUS = 500;
+                v.brushSize = 500;
+                v.owner().p.sendMessage(ChatColor.AQUA + "Maximum 500 radius.  Brush size changed for you.");
+            }
             if (RADIUS != -3) {
-                List<LivingEntity> nearbyEnts = w.getLivingEntities();
+                List nearbyEnts = w.getLivingEntities();
                 Location loc = clampY(bx, by, bz).getLocation(); //location of snipe
                 try {
                     for (int i = 0; i < nearbyEnts.size(); i++) {
@@ -94,7 +92,7 @@ public class ForceBrush extends Brush {
                     //may not be any entities, or whatever other problem.
                 }
             } else {
-                List<LivingEntity> nearbyEnts = w.getLivingEntities();
+                List nearbyEnts = w.getLivingEntities();
                 Location loc = clampY(bx, by, bz).getLocation(); //location of snipe
                 try {
                     for (int i = 0; i < nearbyEnts.size(); i++) {
@@ -109,9 +107,9 @@ public class ForceBrush extends Brush {
         }
     }
 
-    public void Repel(vSniper v) {
+    public void Repel(vData v) {
         if (passCorrect) {
-            List<LivingEntity> nearbyEnts = w.getLivingEntities();
+            List nearbyEnts = w.getLivingEntities();
             //Location loc = clampY(bx, by, bz).getLocation(); //location of snipe
             try {
                 for (int i = 0; i < nearbyEnts.size(); i++) {

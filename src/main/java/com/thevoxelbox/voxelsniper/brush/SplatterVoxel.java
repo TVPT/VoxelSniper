@@ -5,10 +5,10 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import org.bukkit.ChatColor;
 import java.util.Random;
+import org.bukkit.ChatColor;
 
 /**
  *
@@ -20,13 +20,13 @@ public class SplatterVoxel extends PerformBrush {
     protected int growpercent; // chance block on recursion pass is made active
     protected int splatterrecursions; // How many times you grow the seeds
     protected Random generator = new Random();
-    
+
     public SplatterVoxel() {
         name = "Splatter Voxel";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -34,7 +34,7 @@ public class SplatterVoxel extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -42,44 +42,44 @@ public class SplatterVoxel extends PerformBrush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Splatter Voxel brush Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b sv s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-            v.p.sendMessage(ChatColor.AQUA + "/b sv g[int] -- set a growth percentage (1-9999).  Default is 1000");
-            v.p.sendMessage(ChatColor.AQUA + "/b sv r[int] -- set a recursion (1-10).  Default is 3");
+            v.sendMessage(ChatColor.GOLD + "Splatter Voxel brush Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b sv s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
+            v.sendMessage(ChatColor.AQUA + "/b sv g[int] -- set a growth percentage (1-9999).  Default is 1000");
+            v.sendMessage(ChatColor.AQUA + "/b sv r[int] -- set a recursion (1-10).  Default is 3");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("s")) {
                 double temp = Integer.parseInt(par[x].replace("s", ""));
                 if (temp >= 1 && temp <= 9999) {
-                    v.p.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
+                    v.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
                     seedpercent = (int) temp;
                 } else {
-                    v.p.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
+                    v.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
                 }
                 continue;
             } else if (par[x].startsWith("g")) {
                 double temp = Integer.parseInt(par[x].replace("g", ""));
                 if (temp >= 1 && temp <= 9999) {
-                    v.p.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
+                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
                     growpercent = (int) temp;
                 } else {
-                    v.p.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                    v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
                 }
                 continue;
             } else if (par[x].startsWith("r")) {
                 int temp = Integer.parseInt(par[x].replace("r", ""));
                 if (temp >= 1 && temp <= 10) {
-                    v.p.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
+                    v.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
                     splatterrecursions = temp;
                 } else {
-                    v.p.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+                    v.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
                 }
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
 
         }
@@ -106,21 +106,21 @@ public class SplatterVoxel extends PerformBrush {
 
     }
 
-    public void vsplatterball(vSniper v) {
+    public void vsplatterball(vData v) {
         if (seedpercent < 1 || seedpercent > 9999) {
-            v.p.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
+            v.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
             seedpercent = 1000;
         }
         if (growpercent < 1 || growpercent > 9999) {
-            v.p.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
             growpercent = 1000;
         }
         if (splatterrecursions < 1 || splatterrecursions > 10) {
-            v.p.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
+            v.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
             splatterrecursions = 3;
         }
         int bsize = v.brushSize;
-        //int bId = v.voxelId;
+        int bId = v.voxelId;
         int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
 
         // Seed the array
@@ -136,15 +136,15 @@ public class SplatterVoxel extends PerformBrush {
         // Grow the seeds
         int gref = growpercent;
         int growcheck;
-         int[][][] tempsplat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
+        int[][][] tempsplat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
         for (int r = 0; r < splatterrecursions; r++) {
-            
+
             growpercent = (int) (gref - ((gref / splatterrecursions) * (r)));
             for (int x = 2 * bsize; x >= 0; x--) {
                 for (int y = 2 * bsize; y >= 0; y--) {
                     for (int z = 2 * bsize; z >= 0; z--) {
                         tempsplat[x][y][z] = splat[x][y][z]; //prime tempsplat
-                        
+
                         growcheck = 0;
                         if (splat[x][y][z] == 0) {
                             if (x != 0 && splat[x - 1][y][z] == 1) {
@@ -170,7 +170,7 @@ public class SplatterVoxel extends PerformBrush {
                         if (growcheck >= 1 && generator.nextInt(10000) <= growpercent) {
                             tempsplat[x][y][z] = 1; //prevent bleed into splat
                         }
-                        
+
                     }
                 }
             }
@@ -198,23 +198,20 @@ public class SplatterVoxel extends PerformBrush {
 
 
         // Make the changes
-        
+
         for (int x = 2 * bsize; x >= 0; x--) {
-            
+
             for (int y = 2 * bsize; y >= 0; y--) {
-                
+
                 for (int z = 2 * bsize; z >= 0; z--) {
                     if (splat[x][y][z] == 1) {
 
-                        current.perform(clampY( bx - bsize + x, by - bsize + z, bz - bsize + y));
+                        current.perform(clampY(bx - bsize + x, by - bsize + z, bz - bsize + y));
 
                     }
                 }
             }
         }
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 }

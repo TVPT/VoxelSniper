@@ -6,7 +6,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.undo.vUndo;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,22 +24,20 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     }
 
     @Override
-    protected void arrow(vSniper v) { // Derp
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) { // Derp
         if (set(tb)) {
-            v.p.sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().p.sendMessage(ChatColor.GRAY + "Point one");
         } else {
-            v.hashUndo.put(v.hashEn, h);
-            v.hashEn++;
+            v.storeUndo(h);
         }
     }
 
     @Override
-    protected void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         if (set(lb)) {
-            v.p.sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().p.sendMessage(ChatColor.GRAY + "Point one");
         } else {
-            v.hashUndo.put(v.hashEn, h);
-            v.hashEn++;
+            v.storeUndo(h);
         }
     }
 
@@ -51,7 +48,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         super.parameters(par, v);
     }
 

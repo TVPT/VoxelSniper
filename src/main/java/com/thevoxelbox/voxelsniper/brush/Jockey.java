@@ -4,8 +4,8 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -16,7 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
- *THIS BRUSH SHOULD NOT USE PERFORMERS
+ * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Voxel
  */
 public class Jockey extends Brush {
@@ -31,7 +32,7 @@ public class Jockey extends Brush {
     }
 
     @Override
-    protected void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -40,16 +41,16 @@ public class Jockey extends Brush {
     }
 
     @Override
-    protected void powder(vSniper v) {
-        v.p.eject();
-        v.p.sendMessage(ChatColor.GOLD + "You have been ejected!");
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
+        v.owner().p.eject();
+        v.owner().p.sendMessage(ChatColor.GOLD + "You have been ejected!");
     }
 
-    private void sitOn(vSniper v) {
-        //Location l = v.p.getLocation();
-        //double px = l.getX();
-        //double py = l.getY();
-        //double pz = l.getZ();
+    private void sitOn(vData v) {
+        Location l = v.owner().p.getLocation();
+        double px = l.getX();
+        double py = l.getY();
+        double pz = l.getZ();
 
         Entity closest = null;
         double range = 99999999;
@@ -63,7 +64,7 @@ public class Jockey extends Brush {
                 c = w.getChunkAt(x, y);
                 Entity[] toCheck = c.getEntities();
                 for (Entity e : toCheck) {
-                    if (e.getEntityId() == v.p.getEntityId()) {
+                    if (e.getEntityId() == v.owner().p.getEntityId()) {
                         continue;
                     }
                     Location el = e.getLocation();
@@ -82,7 +83,7 @@ public class Jockey extends Brush {
             boolean teleport = false;
             PlayerTeleportEvent teleEvent = null;
 
-            Player player = v.p;
+            Player player = v.owner().p;
             teleport = player.isOnline();
 
             if (teleport) {
@@ -92,11 +93,11 @@ public class Jockey extends Brush {
             }
 
             if (teleport) {
-                ((CraftEntity) v.p).getHandle().setPassengerOf(((CraftEntity) closest).getHandle());
-                v.p.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
+                ((CraftEntity) v.owner().p).getHandle().setPassengerOf(((CraftEntity) closest).getHandle());
+                v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
             }
         } else {
-            v.p.sendMessage(ChatColor.RED + "Could not find any entities");
+            v.sendMessage(ChatColor.RED + "Could not find any entities");
         }
     }
 }

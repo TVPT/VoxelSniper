@@ -5,8 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.undo.vBlock;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -14,10 +14,7 @@ import org.bukkit.block.Block;
  *
  * @author Gavjenks, hack job from the other 2d rotation brush by piotr
  */
-
 //The X Y and Z variable names in this file do NOT MAKE ANY SENSE.  Do not attempt to actually figure out what on earth is going on here.  Just go to the original 2d horizontal brush if you wish to make anything similar to this, and start there.  I didn't bother renaming everything.
-
-
 public class Rot2Dvert extends Brush {
 
     protected int mode = 0;
@@ -25,13 +22,13 @@ public class Rot2Dvert extends Brush {
     private int brushSize;
     private vBlock[][][] snap;
     private double se;
-    
+
     public Rot2Dvert() {
         name = "2D Rotation";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -45,13 +42,13 @@ public class Rot2Dvert extends Brush {
                 break;
 
             default:
-                v.p.sendMessage(ChatColor.RED + "Something went wrong.");
+                v.owner().p.sendMessage(ChatColor.RED + "Something went wrong.");
                 break;
         }
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
     }
 
     @Override
@@ -60,12 +57,12 @@ public class Rot2Dvert extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         se = Math.toRadians(Double.parseDouble(par[1]));
-        v.p.sendMessage(ChatColor.GREEN + "Angle set to " + se);
+        v.sendMessage(ChatColor.GREEN + "Angle set to " + se);
     }
 
-    private void rotate(vSniper v) {
+    private void rotate(vData v) {
         int xx;
         int zz;
         int yy;
@@ -121,10 +118,10 @@ public class Rot2Dvert extends Brush {
 
                         for (int y = 0; y < snap.length; y++) {
                             fy = y + by - bsize;
-                            A = getBlockIdAt( fy, fx + 1,fz);
-                            D = getBlockIdAt( fy,fx - 1, fz);
-                            C = getBlockIdAt(fy,fx,  fz + 1);
-                            B = getBlockIdAt(fy,fx,  fz - 1);
+                            A = getBlockIdAt(fy, fx + 1, fz);
+                            D = getBlockIdAt(fy, fx - 1, fz);
+                            C = getBlockIdAt(fy, fx, fz + 1);
+                            B = getBlockIdAt(fy, fx, fz - 1);
                             if (A == B || A == C || A == D) {   //I figure that since we are already narrowing it down to ONLY the holes left behind, it should be fine to do all 5 checks needed to be legit about it.
                                 winner = A;
                             } else if (B == D || C == D) {
@@ -133,7 +130,7 @@ public class Rot2Dvert extends Brush {
                                 winner = B; // by making this default, it will also automatically cover situations where B = C;
                             }
 
-                            setBlockIdAt(winner,  fy,fx, fz);
+                            setBlockIdAt(winner, fy, fx, fz);
                         }
                     }
                 }
@@ -157,12 +154,12 @@ public class Rot2Dvert extends Brush {
             for (int z = 0; z < snap.length; z++) {
                 sy = by - derp;
                 //if (xpow + Math.pow(z - bsize, 2) <= bpow) {
-                    for (int y = 0; y < snap.length; y++) {
-                        Block b = clampY(sx, sy, sz);  //why is this not sx + x, sy + y sz + z?
-                        snap[x][y][z] = new vBlock(b);
-                        b.setTypeId(0);
-                        sy++;
-                    }
+                for (int y = 0; y < snap.length; y++) {
+                    Block b = clampY(sx, sy, sz);  //why is this not sx + x, sy + y sz + z?
+                    snap[x][y][z] = new vBlock(b);
+                    b.setTypeId(0);
+                    sy++;
+                }
                 //}
                 sz++;
             }

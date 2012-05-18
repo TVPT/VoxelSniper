@@ -5,9 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -19,31 +18,28 @@ public class Set extends PerformBrush {
 
     protected int i;
     protected Block b = null;
-    protected vUndo h;
 
     public Set() {
         name = "Set";
     }
 
     @Override
-    protected void arrow(vSniper v) { // Derp
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) { // Derp
         i = v.voxelId;
         if (set(tb, v)) {
-            v.p.sendMessage(ChatColor.GRAY + "Point one");
+            v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
+            v.storeUndo(current.getUndo());
         }
     }
 
     @Override
-    protected void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         i = v.voxelId;
         if (set(lb, v)) {
-            v.p.sendMessage(ChatColor.GRAY + "Point one");
+            v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
-            v.hashUndo.put(v.hashEn, current.getUndo()); //was still on h -Giltwist
-            v.hashEn++;
+            v.storeUndo(current.getUndo());
         }
     }
 
@@ -54,17 +50,17 @@ public class Set extends PerformBrush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         super.parameters(par, v);
     }
 
-    private boolean set(Block bl, vSniper v) {
+    private boolean set(Block bl, vData v) {
         if (b == null) {
             b = bl;
             return true;
         } else {
             if (!b.getWorld().getName().equals(bl.getWorld().getName())) {
-                v.p.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+                v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
                 b = null;
                 return true;
             }
@@ -75,7 +71,7 @@ public class Set extends PerformBrush {
             int highy = (b.getY() >= bl.getY()) ? b.getY() : bl.getY();
             int highz = (b.getZ() >= bl.getZ()) ? b.getZ() : bl.getZ();
             if (Math.abs(highx - lowx) * Math.abs(highz - lowz) * Math.abs(highy - lowy) > 5000000) {
-                v.p.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+                v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
                 for (int y = lowy; y <= highy; y++) {
                     for (int x = lowx; x <= highx; x++) {

@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
 /**
@@ -16,42 +16,40 @@ import org.bukkit.ChatColor;
 public class OceanSelection extends Ocean {
 
     protected boolean sel = true;
-    
+
     public OceanSelection() {
         name = "Ocean Selection";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         oceanSelection(v);
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         oceanSelection(v);
     }
 
     @Override
     public void info(vMessage vm) {
-            vm.brushName(name);
+        vm.brushName(name);
     }
 
-    public void oceanSelection(vSniper v) {
+    public void oceanSelection(vData v) {
         if (sel) {
             h = new vUndo(tb.getWorld().getName());
             oceanator(v);
-            v.hashUndo.put(v.hashEn, h);
-            v.hashEn++;
+            v.storeUndo(h);
             s1x = tb.getX();
             s1z = tb.getZ();
-            v.p.sendMessage(ChatColor.DARK_PURPLE + "Chunk one selected");
+            v.sendMessage(ChatColor.DARK_PURPLE + "Chunk one selected");
             sel = !sel;
         } else {
-            v.p.sendMessage(ChatColor.DARK_PURPLE + "Chunk two selected");
+            v.sendMessage(ChatColor.DARK_PURPLE + "Chunk two selected");
             h = new vUndo(tb.getWorld().getName());
             oceanator(v);
-            v.hashUndo.put(v.hashEn, h);
-            v.hashEn++;
+            v.storeUndo(h);
             s2x = tb.getX();
             s2z = tb.getZ();
             oceanate(v, ((s1x <= s2x) ? s1x : s2x), ((s2x >= s1x) ? s2x : s1x), ((s1z <= s2z) ? s1z : s2z), ((s2z >= s1z) ? s2z : s1z));
@@ -59,7 +57,7 @@ public class OceanSelection extends Ocean {
         }
     }
 
-    public void oceanate(vSniper v, int lowx, int highx, int lowz, int highz) {
+    public void oceanate(vData v, int lowx, int highx, int lowz, int highz) {
         h = new vUndo(tb.getWorld().getName());
         for (int x = lowx; x <= highx; x += 16) {
             tb = setX(tb, x);
@@ -68,7 +66,6 @@ public class OceanSelection extends Ocean {
                 oceanator(v);
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 }

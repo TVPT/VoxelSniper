@@ -4,6 +4,7 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.HitBlox;
 import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
@@ -11,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
-import com.thevoxelbox.voxelsniper.HitBlox;
 
 /**
  *
@@ -24,12 +24,12 @@ public class Sneak extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -39,37 +39,37 @@ public class Sneak extends Brush {
     }
 
     @Override
-    public boolean perform(Action action, vSniper v, Material heldItem, Block clickedBlock, BlockFace clickedFace) {
+    public boolean perform(Action action, com.thevoxelbox.voxelsniper.vData v, Material heldItem, Block clickedBlock, BlockFace clickedFace) {
         switch (action) {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 switch (heldItem) {
                     case ARROW:
-                        if (getSilentTarget(v, clickedBlock, clickedFace)) {
-                            v.setReplace(tb.getTypeId());
+                        if (getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
+                            v.owner().setReplace(tb.getTypeId());
                             return true;
                         } else {                 //Changed due to an excellent member suggestion: when crouch clicking the sky or void, it should just set material or replace material to air.  Just added this and the else{} for left click.  -Gavjenks
-                            v.setReplace(0);
+                            v.owner().setReplace(0);
                             return true;
                         }
 
                     case SULPHUR:
-                        if (getSilentTarget(v, clickedBlock, clickedFace)) {
-                            v.setReplaceData(tb.getData());
+                        if (getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
+                            v.owner().setReplaceData(tb.getData());
                             return true;
                         } else {
-                            v.setReplaceData((byte) 0);
+                            v.owner().setReplaceData((byte) 0);
                             return true;
                         }
 
                     case GREEN_RECORD:
-                        v.twoBackBrush();
-                        v.p.sendMessage(ChatColor.GOLD + "Two Back");
+                        v.owner().twoBackBrush();
+                        v.sendMessage(ChatColor.GOLD + "Two Back");
                         return true;
 
                     case STONE_AXE:
                         v.reset();
-                        v.info();
+                        v.owner().info();
                         return true;
 
                     default:
@@ -80,32 +80,32 @@ public class Sneak extends Brush {
             case LEFT_CLICK_BLOCK:
                 switch (heldItem) {
                     case ARROW:
-                        if (getSilentTarget(v, clickedBlock, clickedFace)) {
-                            v.setVoxel(tb.getTypeId());
+                        if (getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
+                            v.owner().setVoxel(tb.getTypeId());
                             return true;
                         } else {                 //See above comment for right click -Gavjenks
-                            v.setVoxel(0);
+                            v.owner().setVoxel(0);
                             return true;
                         }
 
                     case SULPHUR:
-                        if (getSilentTarget(v, clickedBlock, clickedFace)) {
-                            v.setData(tb.getData());
+                        if (getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
+                            v.owner().setData(tb.getData());
                             return true;
                         } else {
-                            v.setData((byte) 0);
+                            v.owner().setData((byte) 0);
                             return true;
                         }
 
                     case GREEN_RECORD:
-                        v.previousBrush();
-                        v.p.sendMessage(ChatColor.GOLD + "One Back");
+                        v.owner().previousBrush();
+                        v.sendMessage(ChatColor.GOLD + "One Back");
                         return true;
 
                     case STONE_AXE:
                         if (getTarget(v, clickedBlock, clickedFace)) {
-                            v.setVoxel(tb.getTypeId());
-                            v.setData(tb.getData());
+                            v.owner().setVoxel(tb.getTypeId());
+                            v.owner().setData(tb.getData());
                             return true;
                         }
                         break;
@@ -119,7 +119,7 @@ public class Sneak extends Brush {
                 return false;
 
             default:
-                v.p.sendMessage(ChatColor.RED + "Something is not right. Report this to przerwap. (Perform Error)");
+                v.sendMessage(ChatColor.RED + "Something is not right. Report this to przerwap. (Perform Error)");
                 return true;
         }
         return false;

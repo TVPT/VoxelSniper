@@ -4,13 +4,14 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Voxel
  */
 public class ShellBall extends Brush {
@@ -20,7 +21,7 @@ public class ShellBall extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -28,7 +29,7 @@ public class ShellBall extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -45,8 +46,7 @@ public class ShellBall extends Brush {
     }
 
     //parameters isn't an abstract method, gilt.  You can just leave it out if there are none.
-
-    public void bshell(vSniper v) {
+    public void bshell(vData v) {
         int bsize = v.brushSize;
         int bId = v.voxelId;
         int brId = v.replaceId;
@@ -78,29 +78,28 @@ public class ShellBall extends Brush {
                 for (int z = 0; z <= 2 * bsize; z++) {
                     temp = 0;
 
-                    if (oldmats[x + 1+1][y + 1][z + 1] == brId) {
+                    if (oldmats[x + 1 + 1][y + 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1-1][y + 1][z + 1] == brId) {
+                    if (oldmats[x + 1 - 1][y + 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1+1][z + 1] == brId) {
+                    if (oldmats[x + 1][y + 1 + 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1-1][z + 1] == brId) {
+                    if (oldmats[x + 1][y + 1 - 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1][z + 1+1] == brId) {
+                    if (oldmats[x + 1][y + 1][z + 1 + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1][z + 1-1] == brId) {
+                    if (oldmats[x + 1][y + 1][z + 1 - 1] == brId) {
                         temp++;
                     }
 
                     if (temp == 0) {
                         newmats[x][y][z] = bId;
                     }
-
                 }
             }
         }
@@ -123,9 +122,8 @@ public class ShellBall extends Brush {
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
-        
-        v.p.sendMessage(ChatColor.AQUA+"Shell complete.");  //This is needed because most uses of this brush will not be sible to the sniper.
+        v.storeUndo(h);
+
+        v.owner().p.sendMessage(ChatColor.AQUA + "Shell complete.");  //This is needed because most uses of this brush will not be sible to the sniper.
     }
 }

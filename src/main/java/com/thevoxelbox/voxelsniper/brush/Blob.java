@@ -5,10 +5,10 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import org.bukkit.ChatColor;
 import java.util.Random;
+import org.bukkit.ChatColor;
 
 /**
  *
@@ -24,7 +24,7 @@ public class Blob extends PerformBrush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -32,7 +32,7 @@ public class Blob extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -40,28 +40,26 @@ public class Blob extends PerformBrush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (1-9999).  Default is 1500");
+            v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (1-9999).  Default is 1500");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("g")) {
                 double temp = Integer.parseInt(par[x].replace("g", ""));
                 if (temp >= 1 && temp <= 9999) {
-                    v.p.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
+                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
                     growpercent = (int) temp;
                 } else {
-                    v.p.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                    v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
                 }
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
-
         }
-
     }
 
     @Override
@@ -73,12 +71,11 @@ public class Blob extends PerformBrush {
         vm.size();
         //vm.voxel();
         vm.custom(ChatColor.BLUE + "Growth percent set to: " + growpercent / 100 + "%");
-
     }
 
-    public void growblob(vSniper v) {
+    public void growblob(vData v) {
         if (growpercent < 1 || growpercent > 9999) {
-            v.p.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
             growpercent = 1500;
         }
         int bsize = v.brushSize;
@@ -133,9 +130,9 @@ public class Blob extends PerformBrush {
                     }
                 }
             }
-
         }
-// Make the changes
+
+        // Make the changes
         double rpow = Math.pow(bsize + 1, 2);
         for (int x = 2 * bsize; x >= 0; x--) {
             double xpow = Math.pow(x - bsize - 1, 2);
@@ -148,17 +145,16 @@ public class Blob extends PerformBrush {
                 }
             }
         }
-        
-        v.hashUndo.put(v.hashEn, current.getUndo());
-        v.hashEn++;
+
+        v.storeUndo(current.getUndo());
     }
 
-    public void digblob(vSniper v) {
+    public void digblob(vData v) {
         if (growpercent < 1 || growpercent > 9999) {
-            v.p.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
             growpercent = 1000;
         }
-        
+
         int bsize = v.brushSize;
         int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
 
@@ -167,10 +163,9 @@ public class Blob extends PerformBrush {
             for (int y = 2 * bsize; y >= 0; y--) {
                 for (int z = 2 * bsize; z >= 0; z--) {
                     if ((x == 0 || y == 0 | z == 0 || x == 2 * bsize || y == 2 * bsize || z == 2 * bsize) && generator.nextInt(10000) <= growpercent) {
-                    splat[x][y][z]=0;
-                    }
-                    else{
-                    splat[x][y][z]=1;
+                        splat[x][y][z] = 0;
+                    } else {
+                        splat[x][y][z] = 1;
                     }
                 }
             }
@@ -223,11 +218,9 @@ public class Blob extends PerformBrush {
                     }
                 }
             }
-
         }
-        
-        
-// Make the changes
+
+        // Make the changes
         double rpow = Math.pow(bsize + 1, 2);
         for (int x = 2 * bsize; x >= 0; x--) {
             double xpow = Math.pow(x - bsize - 1, 2);
@@ -240,8 +233,7 @@ public class Blob extends PerformBrush {
                 }
             }
         }
-        
-        v.hashUndo.put(v.hashEn, current.getUndo());
-        v.hashEn++;
+
+        v.storeUndo(current.getUndo());
     }
 }

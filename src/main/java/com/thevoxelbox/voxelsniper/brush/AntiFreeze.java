@@ -4,24 +4,25 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 
 /**
  *
- * @author Gavjenks
+ * @author
+ * Gavjenks
  */
 public class AntiFreeze extends Brush {
 
     boolean bool = true;
-    
+
     public AntiFreeze() {
         name = "AntiFreeze";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -29,9 +30,10 @@ public class AntiFreeze extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bool = false;
         arrow(v);
+        bool = true;
     }
 
     @Override
@@ -41,41 +43,38 @@ public class AntiFreeze extends Brush {
         vm.size();
     }
 
-    
-    public void AF(vSniper v) {
+    public void AF(vData v) {
         int bsize = v.brushSize;
-        //int bId = v.voxelId;
-       
 
         double bpow = Math.pow(bsize + 0.5, 2);
         for (int x = bsize; x >= 0; x--) {
             double xpow = Math.pow(x, 2);
             for (int z = bsize; z >= 0; z--) {
                 double zpow = Math.pow(z, 2);
-                    if (xpow + zpow <= bpow) { 
-                        for (int y = 1; y<127; y++){
-                            if (getBlockIdAt(bx+x,y,bz+z) == 79 && getBlockIdAt(bx+x,y+1,bz+z) == 0){
-                            if (bool){
-                                setBlockIdAt(53, bx + x, y+1, bz + z);
-                                if(getBlockIdAt(bx + x, y, bz + z) == 53) {
+                if (xpow + zpow <= bpow) {
+                    for (int y = 1; y < 127; y++) {
+                        if (getBlockIdAt(bx + x, y, bz + z) == 79 && getBlockIdAt(bx + x, y + 1, bz + z) == 0) {
+                            if (bool) {
+                                setBlockIdAt(53, bx + x, y + 1, bz + z);
+                                if (getBlockIdAt(bx + x, y, bz + z) == 53) {
                                     setBlockIdAt(9, bx + x, y, bz + z);
                                 }
-                                setBlockIdAt(53, bx + x, y+1, bz - z);
-                                if(getBlockIdAt(bx + x, y, bz - z) == 53) {
+                                setBlockIdAt(53, bx + x, y + 1, bz - z);
+                                if (getBlockIdAt(bx + x, y, bz - z) == 53) {
                                     setBlockIdAt(9, bx + x, y, bz - z);
                                 }
-                                setBlockIdAt(53, bx - x, y+1, bz + z);
-                                if(getBlockIdAt(bx - x, y, bz + z) == 53) {
+                                setBlockIdAt(53, bx - x, y + 1, bz + z);
+                                if (getBlockIdAt(bx - x, y, bz + z) == 53) {
                                     setBlockIdAt(9, bx - x, y, bz + z);
                                 }
-                                setBlockIdAt(53, bx - x, y+1, bz - z);
-                                if(getBlockIdAt(bx - x, y, bz - z) == 53) {
+                                setBlockIdAt(53, bx - x, y + 1, bz - z);
+                                if (getBlockIdAt(bx - x, y, bz - z) == 53) {
                                     setBlockIdAt(9, bx - x, y, bz - z);
                                 }
-                                w.getBlockAt(bx + x, y+1, bz + z).setData((byte)6);
-                                w.getBlockAt(bx + x, y+1, bz - z).setData((byte)6);
-                                w.getBlockAt(bx - x, y+1, bz + z).setData((byte)6);
-                                w.getBlockAt(bx - x, y+1, bz - z).setData((byte)6);
+                                w.getBlockAt(bx + x, y + 1, bz + z).setData((byte) 6);
+                                w.getBlockAt(bx + x, y + 1, bz - z).setData((byte) 6);
+                                w.getBlockAt(bx - x, y + 1, bz + z).setData((byte) 6);
+                                w.getBlockAt(bx - x, y + 1, bz - z).setData((byte) 6);
                                 setBlockIdAt(9, bx + x, y, bz + z);
                                 setBlockIdAt(9, bx + x, y, bz - z);
                                 setBlockIdAt(9, bx - x, y, bz + z);
@@ -84,30 +83,29 @@ public class AntiFreeze extends Brush {
                                 setBlockIdAt(9, bx + x, y, bz - z);
                                 setBlockIdAt(9, bx - x, y, bz + z);
                                 setBlockIdAt(9, bx - x, y, bz - z);
-                            }
-                            else {
-                               
-                                setBlockIdAt(67, bx + x, y+1, bz + z);
-                                if(getBlockIdAt(bx + x, y, bz + z) == 67) {
+                            } else {
+
+                                setBlockIdAt(67, bx + x, y + 1, bz + z);
+                                if (getBlockIdAt(bx + x, y, bz + z) == 67) {
                                     setBlockIdAt(9, bx + x, y, bz + z);
                                 }
-                                setBlockIdAt(67, bx + x, y+1, bz - z);
-                                if(getBlockIdAt(bx + x, y, bz - z) == 67) {
+                                setBlockIdAt(67, bx + x, y + 1, bz - z);
+                                if (getBlockIdAt(bx + x, y, bz - z) == 67) {
                                     setBlockIdAt(9, bx + x, y, bz - z);
                                 }
-                                setBlockIdAt(67, bx - x, y+1, bz + z);
-                                if(getBlockIdAt(bx - x, y, bz + z) == 67) {
+                                setBlockIdAt(67, bx - x, y + 1, bz + z);
+                                if (getBlockIdAt(bx - x, y, bz + z) == 67) {
                                     setBlockIdAt(9, bx - x, y, bz + z);
                                 }
-                                setBlockIdAt(67, bx - x, y+1, bz - z);
-                                if(getBlockIdAt(bx - x, y, bz - z) == 67) {
+                                setBlockIdAt(67, bx - x, y + 1, bz - z);
+                                if (getBlockIdAt(bx - x, y, bz - z) == 67) {
                                     setBlockIdAt(9, bx - x, y, bz - z);
                                 }
-                                w.getBlockAt(bx + x, y+1, bz + z).setData((byte)6);
-                                w.getBlockAt(bx + x, y+1, bz - z).setData((byte)6);
-                                w.getBlockAt(bx - x, y+1, bz + z).setData((byte)6);
-                                w.getBlockAt(bx - x, y+1, bz - z).setData((byte)6);
-                                setBlockIdAt(9, bx + x, y, bz + z); 
+                                w.getBlockAt(bx + x, y + 1, bz + z).setData((byte) 6);
+                                w.getBlockAt(bx + x, y + 1, bz - z).setData((byte) 6);
+                                w.getBlockAt(bx - x, y + 1, bz + z).setData((byte) 6);
+                                w.getBlockAt(bx - x, y + 1, bz - z).setData((byte) 6);
+                                setBlockIdAt(9, bx + x, y, bz + z);
                                 setBlockIdAt(9, bx + x, y, bz - z);
                                 setBlockIdAt(9, bx - x, y, bz + z);
                                 setBlockIdAt(9, bx - x, y, bz - z);
@@ -115,13 +113,12 @@ public class AntiFreeze extends Brush {
                                 setBlockIdAt(9, bx + x, y, bz - z);
                                 setBlockIdAt(9, bx - x, y, bz + z);
                                 setBlockIdAt(9, bx - x, y, bz - z);
-                            
-                                }
+
                             }
                         }
+                    }
                 }
             }
         }
     }
 }
-    

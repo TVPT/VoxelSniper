@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import java.util.HashSet;
 import org.bukkit.block.Block;
 
@@ -22,18 +22,18 @@ public class SoftSelection extends Brush {
     protected double c1 = 1;
     protected double c2 = 0;
     protected vUndo h;
-    
+
     public SoftSelection() {
         name = "SoftSelection";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -42,13 +42,13 @@ public class SoftSelection extends Brush {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    protected void getSurface(vSniper v) {
+    protected void getSurface(vData v) {
         int bsize = v.brushSize;
 
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        
+
         surface.clear();
 
         double bpow = Math.pow(bsize + 0.5, 2);

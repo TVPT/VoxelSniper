@@ -5,21 +5,21 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 
 /**
  *
  * @author Voxel
  */
 public class VoxelDisc extends PerformBrush {
-    
+
     public VoxelDisc() {
         name = "Voxel Disc";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -27,7 +27,7 @@ public class VoxelDisc extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -41,7 +41,7 @@ public class VoxelDisc extends PerformBrush {
         //vm.voxel();
     }
 
-    public void disc(vSniper v) {
+    public void disc(vData v) {
         int bsize = v.brushSize;
 
         for (int x = bsize; x >= -bsize; x--) {
@@ -49,9 +49,6 @@ public class VoxelDisc extends PerformBrush {
                 current.perform(clampY(bx + x, by, bz + y));
             }
         }
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 }

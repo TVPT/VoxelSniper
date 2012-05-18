@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -30,28 +30,26 @@ public class CopyPasta extends Brush {
     protected int[] arraysize = new int[3];
     protected int pivot = 0; //ccw degrees
     protected int blocklimit = 10000;
-    
-    
 
     public CopyPasta() {
         name = "CopyPasta";
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         switch (points) {
             case 0:
                 firstpoint[0] = tb.getX();
                 firstpoint[1] = tb.getY();
                 firstpoint[2] = tb.getZ();
-                v.p.sendMessage(ChatColor.GRAY + "First point");
+                v.sendMessage(ChatColor.GRAY + "First point");
                 points = 1;
                 break;
             case 1:
                 secondpoint[0] = tb.getX();
                 secondpoint[1] = tb.getY();
                 secondpoint[2] = tb.getZ();
-                v.p.sendMessage(ChatColor.GRAY + "Second point");
+                v.sendMessage(ChatColor.GRAY + "Second point");
                 points = 2;
                 break;
             default:
@@ -61,14 +59,13 @@ public class CopyPasta extends Brush {
                 blockarray = new int[1];
                 dataarray = new byte[1];
                 points = 0;
-                v.p.sendMessage(ChatColor.GRAY + "Points cleared.");
+                v.sendMessage(ChatColor.GRAY + "Points cleared.");
                 break;
         }
     }
 
     @Override
-    public void powder(vSniper v) {
-
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         if (points == 2) {
             if (numblocks == 0) {
                 docopy(v);
@@ -78,16 +75,11 @@ public class CopyPasta extends Brush {
                 pastepoint[2] = tb.getZ();
                 dopasta(v);
             } else {
-
-                v.p.sendMessage(ChatColor.RED + "C");
-
+                v.sendMessage(ChatColor.RED + "C");
             }
-
-
         } else {
-            v.p.sendMessage(ChatColor.RED + "You must select exactly two points.");
+            v.sendMessage(ChatColor.RED + "You must select exactly two points.");
         }
-
     }
 
     @Override
@@ -95,15 +87,14 @@ public class CopyPasta extends Brush {
         vm.brushName(name);
         vm.custom(ChatColor.GOLD + "Paste air: " + airmode);
         vm.custom(ChatColor.GOLD + "Pivot angle: " + pivot);
-
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
-            v.p.sendMessage(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
+            v.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
+            v.sendMessage(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
             return;
         }
 
@@ -115,20 +106,18 @@ public class CopyPasta extends Brush {
                 airmode = true;
             }
 
-            v.p.sendMessage(ChatColor.GOLD + "Paste air: " + airmode);
+            v.sendMessage(ChatColor.GOLD + "Paste air: " + airmode);
             return;
         }
 
         if (par[1].equalsIgnoreCase("90") || par[1].equalsIgnoreCase("180") || par[1].equalsIgnoreCase("270") || par[1].equalsIgnoreCase("0")) {
             pivot = Integer.parseInt(par[1]);
-            v.p.sendMessage(ChatColor.GOLD + "Pivot angle: " + pivot);
-            return;
+            v.sendMessage(ChatColor.GOLD + "Pivot angle: " + pivot);
         }
-
     }
 
-    public void docopy(vSniper v) {
-        w = v.p.getWorld();
+    public void docopy(vData v) {
+        w = v.owner().p.getWorld();
         for (int i = 0; i < 3; i++) {
             arraysize[i] = Math.abs(firstpoint[i] - secondpoint[i]) + 1;
             minpoint[i] = Math.min(firstpoint[i], secondpoint[i]);
@@ -147,18 +136,16 @@ public class CopyPasta extends Brush {
                         dataarray[curpos] = clampY(minpoint[0] + i, minpoint[1] + j, minpoint[2] + k).getData();
                     }
                 }
-
             }
 
-            v.p.sendMessage(ChatColor.AQUA + "" + numblocks + " blocks copied.");
-
+            v.sendMessage(ChatColor.AQUA + "" + numblocks + " blocks copied.");
         } else {
-            v.p.sendMessage(ChatColor.RED + "Copy area too big: " + numblocks + "(Limit: "+blocklimit+")");
+            v.sendMessage(ChatColor.RED + "Copy area too big: " + numblocks + "(Limit: " + blocklimit + ")");
         }
     }
 
-    public void dopasta(vSniper v) {
-        w = v.p.getWorld();
+    public void dopasta(vData v) {
+        w = v.owner().p.getWorld();
         vUndo h = new vUndo(tb.getWorld().getName());
         Block b;
 
@@ -179,7 +166,6 @@ public class CopyPasta extends Brush {
                         default: // assume no rotation
                             b = clampY(pastepoint[0] + offsetpoint[0] + i, pastepoint[1] + offsetpoint[1] + j, pastepoint[2] + offsetpoint[2] + k);
                             break;
-
                     }
 
                     if (!(blockarray[curpos] == 0 && airmode == false)) {
@@ -191,13 +177,8 @@ public class CopyPasta extends Brush {
                 }
             }
         }
-        v.p.sendMessage(ChatColor.AQUA + "" + numblocks + " blocks pasted."); //at (" +pastepoint[0]+", "+pastepoint[1]+", "+pastepoint[2]+")"
+        v.sendMessage(ChatColor.AQUA + "" + numblocks + " blocks pasted."); //at (" +pastepoint[0]+", "+pastepoint[1]+", "+pastepoint[2]+")"
 
-
-
-
-
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 }

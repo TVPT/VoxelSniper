@@ -6,8 +6,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -17,30 +15,24 @@ import org.bukkit.block.Block;
  */
 public class FillDown extends PerformBrush {
 
-    //private int i;
     private int bsize;
-    private vUndo h;
 
     public FillDown() {
         name = "Fill Down";
     }
 
     @Override
-    protected void arrow(vSniper v) {
-        //i = v.voxelId;
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bsize = v.brushSize;
         fillDown(tb);
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(current.getUndo());
     }
 
     @Override
-    protected void powder(vSniper v) {
-        //i = v.voxelId;
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bsize = v.brushSize;
         fillDown(lb);
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(current.getUndo());
     }
 
     @Override
@@ -52,30 +44,28 @@ public class FillDown extends PerformBrush {
     double trueCircle = 0;
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
-            v.p.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+            v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("true")) {
                 trueCircle = 0.5;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                 continue;
             } else if (par[x].startsWith("false")) {
                 trueCircle = 0;
-                v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                 continue;
             } else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }
 
     private void fillDown(Block b) {
-        h = new vUndo(b.getWorld().getName());
-
         bx = b.getX();
         by = b.getY();
         bz = b.getZ();
@@ -94,7 +84,6 @@ public class FillDown extends PerformBrush {
                         }
                         for (int yy = y; yy <= by; yy++) {
                             Block bl = clampY(bx + x, yy, bz + z);
-                            h.put(bl);
                             current.perform(bl);
                         }
                     }

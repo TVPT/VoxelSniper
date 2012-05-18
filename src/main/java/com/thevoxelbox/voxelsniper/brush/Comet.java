@@ -4,19 +4,20 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
-import org.bukkit.Location;
+import net.minecraft.server.EntitySmallFireball;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.entity.CraftSmallFireball;
-import net.minecraft.server.EntitySmallFireball;
 import org.bukkit.util.Vector;
-import org.bukkit.craftbukkit.CraftServer;
 
 /**
- *THIS BRUSH SHOULD NOT USE PERFORMERS
+ * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Gavjenks
  * Heavily revamped from ruler brush by Giltwist
  */
@@ -36,9 +37,8 @@ public class Comet extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
-
-        player_loc = v.p.getLocation();
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
+        player_loc = v.owner().p.getLocation();
 
         origincoords[0] = player_loc.getX();
         origincoords[1] = player_loc.getY();
@@ -56,11 +56,10 @@ public class Comet extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         if (passCorrect) {
             arrow(v);
         }
-
     }
 
     @Override
@@ -70,9 +69,9 @@ public class Comet extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) { //borrowed from Force Brush at Ridge'w
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) { //borrowed from Force Brush at Ridge'w
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.AQUA + "This brush requires a password to function.");
+            v.sendMessage(ChatColor.AQUA + "This brush requires a password to function.");
             return;
         }
         for (int x = 1; x < par.length; x++) {
@@ -84,8 +83,7 @@ public class Comet extends Brush {
         }
     }
 
-    public void dofireball(vSniper v) {
-        //int bId = v.voxelId;
+    public void dofireball(vData v) {
         double linelength = 0;
 
         //Calculate slope vector
@@ -98,21 +96,16 @@ public class Comet extends Brush {
         //Unitize slope vector
         for (int i = 0; i < 3; i++) {
             slopevector[i] = slopevector[i] / linelength;
-
         }
 
         //Hadoken!
-
-        EntitySmallFireball entityfireball = new EntitySmallFireball(((CraftWorld) v.p.getWorld()).getHandle(), ((CraftPlayer) v.p).getHandle(), slopevector[0] * linelength, slopevector[1] * linelength, slopevector[2] * linelength);
-        CraftSmallFireball craftfireball = new CraftSmallFireball((CraftServer) v.p.getServer(), entityfireball);
+        EntitySmallFireball entityfireball = new EntitySmallFireball(((CraftWorld) v.owner().p.getWorld()).getHandle(), ((CraftPlayer) v.owner().p).getHandle(), slopevector[0] * linelength, slopevector[1] * linelength, slopevector[2] * linelength);
+        CraftSmallFireball craftfireball = new CraftSmallFireball((CraftServer) v.owner().p.getServer(), entityfireball);
         Vector velocity = new Vector();
         velocity.setX(slopevector[0]);
         velocity.setY(slopevector[1]);
         velocity.setZ(slopevector[2]);
         craftfireball.setVelocity(velocity);
-        ((CraftWorld) v.p.getWorld()).getHandle().addEntity(entityfireball);
-
-
-
+        ((CraftWorld) v.owner().p.getWorld()).getHandle().addEntity(entityfireball);
     }
 }

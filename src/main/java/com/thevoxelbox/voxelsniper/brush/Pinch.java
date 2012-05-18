@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.vMessage;
+import org.bukkit.block.Block;
 
 /**
  *
@@ -12,7 +13,7 @@ import com.thevoxelbox.voxelsniper.vMessage;
  */
 public class Pinch extends Brush {
 
-    //private boolean[][][] area;
+    private boolean[][][] area;
 
     public Pinch() {
         name = "Pinch";
@@ -23,10 +24,6 @@ public class Pinch extends Brush {
         vm.brushName(name);
     }
 
-
-    
-
-    /* This function is never used. Remove comment if needed.
     private class pBlock {
 
         public Block b;
@@ -38,5 +35,5 @@ public class Pinch extends Brush {
             i = bl.getTypeId();
             d = bl.getData();
         }
-    }*/
+    }
 }

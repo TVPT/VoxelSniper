@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -24,30 +24,30 @@ public class BlendBall extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        
+
         ablendmode = "include";
         bblend(v);
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
-        
+
         ablendmode = "exclude";
         bblend(v);
     }
 
     @Override
     public void info(vMessage vm) {
-        /*if (!ablendmode.equalsIgnoreCase("exclude") && !ablendmode.equalsIgnoreCase("include")) {
-            ablendmode = "exclude";
-        }*/
+        /* if (!ablendmode.equalsIgnoreCase("exclude") && !ablendmode.equalsIgnoreCase("include")) {
+         * ablendmode = "exclude";
+         * } */
         if (!wblendmode.equalsIgnoreCase("exclude") && !wblendmode.equalsIgnoreCase("include")) {
             wblendmode = "exclude";
         }
@@ -59,42 +59,37 @@ public class BlendBall extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Blend Ball Parameters:");
-            //v.p.sendMessage(ChatColor.AQUA + "/b bb air -- toggle include or exclude (default) air");
-            v.p.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default) water");
+            v.sendMessage(ChatColor.GOLD + "Blend Ball Parameters:");
+            //v.sendMessage(ChatColor.AQUA + "/b bb air -- toggle include or exclude (default) air");
+            v.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default) water");
             return;
         }
-       /* if (par[1].equalsIgnoreCase("air")) {
-            if (ablendmode.equalsIgnoreCase("exclude")){
-            ablendmode="include";
-            }
-            else
-            {
-            ablendmode="exclude";
-            }
-            v.p.sendMessage(ChatColor.AQUA + "Air Mode: " + ablendmode);
-            
-            return;
-        } */
+        /* if (par[1].equalsIgnoreCase("air")) {
+         * if (ablendmode.equalsIgnoreCase("exclude")){
+         * ablendmode="include";
+         * }
+         * else
+         * {
+         * ablendmode="exclude";
+         * }
+         * v.sendMessage(ChatColor.AQUA + "Air Mode: " + ablendmode);
+         *
+         * return;
+         * } */
         if (par[1].equalsIgnoreCase("water")) {
-            if (wblendmode.equalsIgnoreCase("exclude")){
-            wblendmode="include";
+            if (wblendmode.equalsIgnoreCase("exclude")) {
+                wblendmode = "include";
+            } else {
+                wblendmode = "exclude";
             }
-            else
-            {
-            wblendmode="exclude";
-            }
-            v.p.sendMessage(ChatColor.AQUA + "Water Mode: " + wblendmode);
-            
-            return;
+            v.sendMessage(ChatColor.AQUA + "Water Mode: " + wblendmode);
         }
     }
 
-    public void bblend(vSniper v) {
+    public void bblend(vData v) {
         int bsize = v.brushSize;
-        //int bId = v.voxelId;
         int[][][] oldmats = new int[2 * (bsize + 1) + 1][2 * (bsize + 1) + 1][2 * (bsize + 1) + 1]; //Array that holds the original materials plus a buffer
         int[][][] newmats = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1]; //Array that holds the blended materials
         int maxblock = 0;  //What is the highest material ID that is a block?
@@ -124,7 +119,6 @@ public class BlendBall extends Brush {
             }
         }
 
-
         //Blend materials
         for (int x = 0; x <= 2 * bsize; x++) {
             for (int y = 0; y <= 2 * bsize; y++) {
@@ -144,18 +138,16 @@ public class BlendBall extends Brush {
                         }
                     }
 
-
-
                     //Find most common neighboring material.
                     for (int i = 0; i <= maxblock; i++) {
-                        if (matfreq[i] > modematcount && !(ablendmode.equalsIgnoreCase("exclude") && i == 0)&& !(wblendmode.equalsIgnoreCase("exclude") && (i == 8||i==9))) {
+                        if (matfreq[i] > modematcount && !(ablendmode.equalsIgnoreCase("exclude") && i == 0) && !(wblendmode.equalsIgnoreCase("exclude") && (i == 8 || i == 9))) {
                             modematcount = matfreq[i];
                             modematid = i;
                         }
                     }
                     //Make sure there'w not a tie for most common
                     for (int i = 0; i < modematid; i++) {
-                        if (matfreq[i] == modematcount && !(ablendmode.equalsIgnoreCase("exclude") && i == 0)&& !(wblendmode.equalsIgnoreCase("exclude") && (i == 8||i==9))) {
+                        if (matfreq[i] == modematcount && !(ablendmode.equalsIgnoreCase("exclude") && i == 0) && !(wblendmode.equalsIgnoreCase("exclude") && (i == 8 || i == 9))) {
                             tiecheck = false;
                         }
                     }
@@ -177,7 +169,7 @@ public class BlendBall extends Brush {
                 double ypow = Math.pow(y - bsize - 1, 2);
                 for (int z = 2 * bsize; z >= 0; z--) {
                     if (xpow + ypow + Math.pow(z - bsize - 1, 2) <= rpow) {
-                        if (!(ablendmode.equalsIgnoreCase("exclude") && newmats[x][y][z] == 0)&& !(wblendmode.equalsIgnoreCase("exclude") && (newmats[x][y][z] == 8||newmats[x][y][z]==9))) {
+                        if (!(ablendmode.equalsIgnoreCase("exclude") && newmats[x][y][z] == 0) && !(wblendmode.equalsIgnoreCase("exclude") && (newmats[x][y][z] == 8 || newmats[x][y][z] == 9))) {
                             if (getBlockIdAt(bx - bsize + x, by - bsize + y, bz - bsize + z) != newmats[x][y][z]) {
                                 h.put(clampY(bx - bsize + x, by - bsize + y, bz - bsize + z));
                             }
@@ -187,7 +179,6 @@ public class BlendBall extends Brush {
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 }

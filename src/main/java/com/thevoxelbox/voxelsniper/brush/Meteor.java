@@ -4,18 +4,19 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.craftbukkit.entity.CraftFireball;
 import net.minecraft.server.EntityFireball;
-import org.bukkit.util.Vector;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftFireball;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.util.Vector;
 
 /**
- *THIS BRUSH SHOULD NOT USE PERFORMERS
+ * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Gavjenks
  * Heavily revamped from ruler brush by Giltwist
  */
@@ -34,9 +35,8 @@ public class Meteor extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
-        
-        player_loc=v.p.getLocation();
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
+        player_loc = v.owner().p.getLocation();
 
         origincoords[0] = player_loc.getX();
         origincoords[1] = player_loc.getY();
@@ -46,18 +46,16 @@ public class Meteor extends Brush {
         targetcoords[1] = tb.getY() + .5;
         targetcoords[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
 
-       //didn't work.  I guess I don't understand where the origin of the fireball is determined in this code.  shrug.  -Gav
-       // origincoords[0] = origincoords[0] + (int)(targetcoords[0] - origincoords[0])*0.1; //attempting to make fireballs not blow up in your face anymore.  -Gav
-       // origincoords[1] = origincoords[1] + (int)(targetcoords[1] - origincoords[1])*0.1;
-       // origincoords[2] = origincoords[2] + (int)(targetcoords[2] - origincoords[2])*0.1;
+        //didn't work.  I guess I don't understand where the origin of the fireball is determined in this code.  shrug.  -Gav
+        // origincoords[0] = origincoords[0] + (int)(targetcoords[0] - origincoords[0])*0.1; //attempting to make fireballs not blow up in your face anymore.  -Gav
+        // origincoords[1] = origincoords[1] + (int)(targetcoords[1] - origincoords[1])*0.1;
+        // origincoords[2] = origincoords[2] + (int)(targetcoords[2] - origincoords[2])*0.1;
         dofireball(v);
     }
 
     @Override
-    public void powder(vSniper v) {
-
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
-
     }
 
     @Override
@@ -66,8 +64,8 @@ public class Meteor extends Brush {
         vm.voxel();
     }
 
-    public void dofireball(vSniper v) {
-        //int bId = v.voxelId;
+    public void dofireball(vData v) {
+        int bId = v.voxelId;
         double linelength = 0;
 
         //Calculate slope vector
@@ -80,21 +78,16 @@ public class Meteor extends Brush {
         //Unitize slope vector
         for (int i = 0; i < 3; i++) {
             slopevector[i] = slopevector[i] / linelength;
-
         }
 
         //Hadoken!
-        
-          EntityFireball entityfireball = new EntityFireball(((CraftWorld) v.p.getWorld()).getHandle(), ((CraftPlayer) v.p).getHandle(),slopevector[0]*linelength,slopevector[1]*linelength,slopevector[2]*linelength);
-          CraftFireball craftfireball = new CraftFireball((CraftServer) v.p.getServer(),entityfireball);
-          Vector velocity = new Vector();
-          velocity.setX(slopevector[0]);
-          velocity.setY(slopevector[1]);
-          velocity.setZ(slopevector[2]);
-          craftfireball.setVelocity(velocity);
-          ((CraftWorld) v.p.getWorld()).getHandle().addEntity(entityfireball);
-
-        
-
+        EntityFireball entityfireball = new EntityFireball(((CraftWorld) v.owner().p.getWorld()).getHandle(), ((CraftPlayer) v.owner().p).getHandle(), slopevector[0] * linelength, slopevector[1] * linelength, slopevector[2] * linelength);
+        CraftFireball craftfireball = new CraftFireball((CraftServer) v.owner().p.getServer(), entityfireball);
+        Vector velocity = new Vector();
+        velocity.setX(slopevector[0]);
+        velocity.setY(slopevector[1]);
+        velocity.setZ(slopevector[2]);
+        craftfireball.setVelocity(velocity);
+        ((CraftWorld) v.owner().p.getWorld()).getHandle().addEntity(entityfireball);
     }
 }

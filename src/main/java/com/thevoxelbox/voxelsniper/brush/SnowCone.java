@@ -4,19 +4,20 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Voxel
  */
 public class SnowCone extends Brush {
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -24,7 +25,7 @@ public class SnowCone extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -38,7 +39,7 @@ public class SnowCone extends Brush {
                     by++;
                     addsnow(v);
                 } else {
-                    v.p.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
+                    v.owner().p.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
                 }
                 break;
         }
@@ -51,17 +52,13 @@ public class SnowCone extends Brush {
     double trueCircle = 0;
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
-            //v.p.sendMessage(ChatColor.AQUA + "/b snow true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b snow false will switch back. (false is default)");
-            return;
+            v.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
         }
-
-
     }
 
-    public void addsnow(vSniper v) {
+    public void addsnow(vData v) {
         int bsize;
 
         if (getBlockIdAt(bx, by, bz) == 0) {
@@ -69,16 +66,9 @@ public class SnowCone extends Brush {
         } else {
             bsize = clampY(bx, by, bz).getData() + 1;
         }
-
-
-
-
         int[][] snowcone = new int[2 * bsize + 1][2 * bsize + 1]; //Will hold block IDs
         int[][] snowconedata = new int[2 * bsize + 1][2 * bsize + 1]; // Will hold data values for snowcone
         int[][] yoffset = new int[bsize * 2 + 1][bsize * 2 + 1];
-
-
-
         //prime the arrays
 
         for (int x = 0; x <= 2 * bsize; x++) {
@@ -86,17 +76,16 @@ public class SnowCone extends Brush {
                 boolean flag = true;
                 for (int i = 0; i < 10; i++) { //overlay
                     if (flag) {
-                        if ((getBlockIdAt(bx - bsize + x, by-i, bz - bsize + z) == 0||getBlockIdAt(bx - bsize + x, by-i, bz - bsize + z) == 78) && getBlockIdAt(bx - bsize + x, by-i - 1, bz - bsize + z) != 0&& getBlockIdAt(bx - bsize + x, by-i - 1, bz - bsize + z) != 78) {
+                        if ((getBlockIdAt(bx - bsize + x, by - i, bz - bsize + z) == 0 || getBlockIdAt(bx - bsize + x, by - i, bz - bsize + z) == 78) && getBlockIdAt(bx - bsize + x, by - i - 1, bz - bsize + z) != 0 && getBlockIdAt(bx - bsize + x, by - i - 1, bz - bsize + z) != 78) {
                             flag = false;
                             yoffset[x][z] = i;
                         }
                     }
                 }
-                snowcone[x][z] = getBlockIdAt(bx - bsize + x, by-yoffset[x][z], bz - bsize + z);
-                snowconedata[x][z] = clampY(bx - bsize + x, by-yoffset[x][z], bz - bsize + z).getData();
+                snowcone[x][z] = getBlockIdAt(bx - bsize + x, by - yoffset[x][z], bz - bsize + z);
+                snowconedata[x][z] = clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z).getData();
             }
         }
-
 
         //figure out new snowheights
         for (int x = 0; x <= 2 * bsize; x++) {
@@ -105,7 +94,6 @@ public class SnowCone extends Brush {
                 double zpow = Math.pow(z - bsize, 2);
                 double dist = Math.pow(xpow + zpow, .5); //distance from center of array
                 int snowdata = bsize - (int) Math.ceil(dist);
-
 
                 if (snowdata >= 0) { //no funny business
                     switch (snowdata) {
@@ -134,16 +122,15 @@ public class SnowCone extends Brush {
                                         snowconedata[x][z] = snowdata;
                                         break;
                                     default:
-                                        //v.p.sendMessage(ChatColor.RED+"Case: "+snowcone[x][z]);
+                                        //v.sendMessage(ChatColor.RED+"Case: "+snowcone[x][z]);
                                         break;
 
                                 }
-                            } else if (yoffset[x][z]>0 && snowcone[x][z]==78)
-                            {
+                            } else if (yoffset[x][z] > 0 && snowcone[x][z] == 78) {
                                 snowconedata[x][z]++;
-                                if (snowconedata[x][z]==7){
-                                snowconedata[x][z]=0;
-                                snowcone[x][z]=80;
+                                if (snowconedata[x][z] == 7) {
+                                    snowconedata[x][z] = 0;
+                                    snowcone[x][z] = 80;
                                 }
                             }
                             break;
@@ -151,24 +138,19 @@ public class SnowCone extends Brush {
                 }
             }
         }
-
-
-
-
         vUndo h = new vUndo(tb.getWorld().getName());
 
         for (int x = 0; x <= 2 * bsize; x++) {
             for (int z = 0; z <= 2 * bsize; z++) {
 
-                if (getBlockIdAt(bx - bsize + x, by-yoffset[x][z], bz - bsize + z) != snowcone[x][z] || clampY(bx - bsize + x, by-yoffset[x][z], bz - bsize + z).getData() != snowconedata[x][z]) {
-                    h.put(clampY(bx - bsize + x, by-yoffset[x][z], bz - bsize + z));
+                if (getBlockIdAt(bx - bsize + x, by - yoffset[x][z], bz - bsize + z) != snowcone[x][z] || clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z).getData() != snowconedata[x][z]) {
+                    h.put(clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z));
                 }
-                setBlockIdAt(snowcone[x][z], bx - bsize + x, by-yoffset[x][z], bz - bsize + z);
-                clampY(bx - bsize + x, by-yoffset[x][z], bz - bsize + z).setData((byte) snowconedata[x][z]);
+                setBlockIdAt(snowcone[x][z], bx - bsize + x, by - yoffset[x][z], bz - bsize + z);
+                clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z).setData((byte) snowconedata[x][z]);
 
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
+        v.storeUndo(h);
     }
 }

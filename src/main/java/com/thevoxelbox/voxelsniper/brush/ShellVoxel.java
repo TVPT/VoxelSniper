@@ -4,13 +4,14 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
+ *
  * @author Voxel
  */
 public class ShellVoxel extends Brush {
@@ -20,7 +21,7 @@ public class ShellVoxel extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -28,7 +29,7 @@ public class ShellVoxel extends Brush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         bx = lb.getX();
         by = lb.getY();
         bz = lb.getZ();
@@ -41,20 +42,18 @@ public class ShellVoxel extends Brush {
         vm.size();
         vm.voxel();
         vm.replace();
-
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.p.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
-            return;
+            v.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
         } else {
-            v.p.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
+            v.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
         }
     }
 
-    public void vshell(vSniper v) {
+    public void vshell(vData v) {
         int bsize = v.brushSize;
         int bId = v.voxelId;
         int brId = v.replaceId;
@@ -86,54 +85,48 @@ public class ShellVoxel extends Brush {
                 for (int z = 0; z <= 2 * bsize; z++) {
                     temp = 0;
 
-                    if (oldmats[x + 1+1][y + 1][z + 1] == brId) {
+                    if (oldmats[x + 1 + 1][y + 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1-1][y + 1][z + 1] == brId) {
+                    if (oldmats[x + 1 - 1][y + 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1+1][z + 1] == brId) {
+                    if (oldmats[x + 1][y + 1 + 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1-1][z + 1] == brId) {
+                    if (oldmats[x + 1][y + 1 - 1][z + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1][z + 1+1] == brId) {
+                    if (oldmats[x + 1][y + 1][z + 1 + 1] == brId) {
                         temp++;
                     }
-                    if (oldmats[x + 1][y + 1][z + 1-1] == brId) {
+                    if (oldmats[x + 1][y + 1][z + 1 - 1] == brId) {
                         temp++;
                     }
 
                     if (temp == 0) {
                         newmats[x][y][z] = bId;
                     }
-
                 }
             }
         }
 
         //Make the changes
         vUndo h = new vUndo(tb.getWorld().getName());
-        
-        for (int x = 2 * bsize; x >= 0; x--) {
-           
-            for (int y = 0; y <= 2 * bsize; y++) {
-               
-                for (int z = 2 * bsize; z >= 0; z--) {
-                   
 
-                        if (getBlockIdAt(bx - bsize + x, by - bsize + y, bz - bsize + z) != newmats[x][y][z]) {
-                            h.put(clampY(bx - bsize + x, by - bsize + y, bz - bsize + z));
-                        }
-                        setBlockIdAt(newmats[x][y][z], bx - bsize + x, by - bsize + y, bz - bsize + z);
-                    
+        for (int x = 2 * bsize; x >= 0; x--) {
+            for (int y = 0; y <= 2 * bsize; y++) {
+                for (int z = 2 * bsize; z >= 0; z--) {
+
+                    if (getBlockIdAt(bx - bsize + x, by - bsize + y, bz - bsize + z) != newmats[x][y][z]) {
+                        h.put(clampY(bx - bsize + x, by - bsize + y, bz - bsize + z));
+                    }
+                    setBlockIdAt(newmats[x][y][z], bx - bsize + x, by - bsize + y, bz - bsize + z);
                 }
             }
         }
-        v.hashUndo.put(v.hashEn, h);
-        v.hashEn++;
-        
-        v.p.sendMessage(ChatColor.AQUA+"Shell complete.");
+        v.storeUndo(h);
+
+        v.owner().p.sendMessage(ChatColor.AQUA + "Shell complete.");
     }
 }

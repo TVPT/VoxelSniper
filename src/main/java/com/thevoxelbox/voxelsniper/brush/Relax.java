@@ -5,7 +5,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 
 /**
@@ -19,12 +18,12 @@ public class Relax extends Brush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -35,7 +34,7 @@ public class Relax extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
-        v.p.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+        v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
     }
 }

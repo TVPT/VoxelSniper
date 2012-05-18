@@ -19,18 +19,16 @@ import org.bukkit.World;
 
 /**
  * The abstract class Brush
- * Base of all the brushes 
+ * Base of all the brushes
  *
  * @author Piotr
  */
 public abstract class Brush {
 
-
     protected int currentPiece; //for throttled execution of large brushes so as not to crash the server, holds info about which piece is currently in need of processing.
     public int currentTimerID = -1;
     public int currentOneOffID = -1;
     public Queue<int[]> throttleQueue;
-
     /**
      * Pointer to the world the current action is being executed
      */
@@ -52,7 +50,6 @@ public abstract class Brush {
      * Derived from getTarget()
      */
     protected Block tb;
-    
     /**
      * Brush'w Target 'Last' Block
      * Block at the face of the block clicked
@@ -73,43 +70,45 @@ public abstract class Brush {
         w.getBlockAt(v.x, v.y, v.z).setTypeId(v.id);
     }
 
-    public int getPiece(){
+    public int getPiece() {
         return currentPiece;
     }
-    public void setPiece(int piece){
+
+    public void setPiece(int piece) {
         currentPiece = piece;
     }
-    public void ThrottledRun(vSniper v, int[] pieceNumbers){  //to be overriden by individual brushes
+
+    public void ThrottledRun(com.thevoxelbox.voxelsniper.vData v, int[] pieceNumbers) {  //to be overriden by individual brushes
     }
-    public int[] getPieceNumbers(vSniper v, int piece, int numPieces){ //method for determinine the loop starting and stoppping numbers for partial pieces of a 3d snipe.  Currently only 3d brush shapes supported (discs can be hundreds in size and still solve without crashing, aside from shadows)
+
+    public int[] getPieceNumbers(com.thevoxelbox.voxelsniper.vData v, int piece, int numPieces) { //method for determinine the loop starting and stoppping numbers for partial pieces of a 3d snipe.  Currently only 3d brush shapes supported (discs can be hundreds in size and still solve without crashing, aside from shadows)
         int bsize = v.brushSize;
-        int pieceSize = v.pieceSize;
+        int pieceSize = v.owner().pieceSize;
         int nextBlock = (piece - 1) * pieceSize + 1;
 
-        int innerLoop = (nextBlock % (bsize*bsize)) % bsize; // hmm, + 1 or something?
-        int middleLoop = ((nextBlock % (bsize*bsize)) - innerLoop) / bsize + 1;
-        int outerLoop = (nextBlock - innerLoop - middleLoop*bsize) / (bsize*bsize) + 1;
+        int innerLoop = (nextBlock % (bsize * bsize)) % bsize; // hmm, + 1 or something?
+        int middleLoop = ((nextBlock % (bsize * bsize)) - innerLoop) / bsize + 1;
+        int outerLoop = (nextBlock - innerLoop - middleLoop * bsize) / (bsize * bsize) + 1;
 
         double endBlock;
         if (piece < numPieces) {
             endBlock = nextBlock + pieceSize;
         } else {
-            endBlock = bsize*bsize*bsize;
+            endBlock = bsize * bsize * bsize;
         }
-        double innerDone = (endBlock % (bsize*bsize)) % bsize; // hmm, + 1 or something?
-        double middleDone = ((endBlock % (bsize*bsize)) - innerLoop) / bsize + 1;
-        double outerDone = (endBlock - innerLoop - middleLoop*bsize) / (bsize*bsize) + 1;
+        double innerDone = (endBlock % (bsize * bsize)) % bsize; // hmm, + 1 or something?
+        double middleDone = ((endBlock % (bsize * bsize)) - innerLoop) / bsize + 1;
+        double outerDone = (endBlock - innerLoop - middleLoop * bsize) / (bsize * bsize) + 1;
 
         int[] returnNumbers = new int[6];
         returnNumbers[0] = innerLoop;
         returnNumbers[1] = middleLoop;
         returnNumbers[2] = outerLoop;
-        returnNumbers[3] = (int)innerDone;
-        returnNumbers[4] = (int)middleDone;
-        returnNumbers[5] = (int)outerDone;
+        returnNumbers[3] = (int) innerDone;
+        returnNumbers[4] = (int) middleDone;
+        returnNumbers[5] = (int) outerDone;
         return returnNumbers;
     }
-
 
     /**
      * Sets the Id of the block at the passed coordinate
@@ -140,7 +139,7 @@ public abstract class Brush {
      *
      * @param v vSniper caller
      */
-    protected void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
     }
 
     /**
@@ -148,7 +147,7 @@ public abstract class Brush {
      *
      * @param v vSniper caller
      */
-    protected void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
     }
 
     /**
@@ -159,14 +158,14 @@ public abstract class Brush {
 
     public void updateScale() {
     }
-    
+
     public Block clampY(int x, int y, int z) {
         if (y < 0) {
             y = 0;
         } else if (y > w.getMaxHeight()) {
             y = w.getMaxHeight();
         }
-        
+
         return w.getBlockAt(x, y, z);
     }
 
@@ -178,7 +177,7 @@ public abstract class Brush {
      * @param clickedBlock
      * @param clickedFace
      */
-    public boolean perform(Action action, vSniper v, Material heldItem, Block clickedBlock, BlockFace clickedFace) {
+    public boolean perform(Action action, com.thevoxelbox.voxelsniper.vData v, Material heldItem, Block clickedBlock, BlockFace clickedFace) {
         switch (action) {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
@@ -222,7 +221,7 @@ public abstract class Brush {
                 break;
 
             default:
-                v.p.sendMessage(ChatColor.RED + "Something is not right. Report this to przerwap. (Perform Error)");
+                v.sendMessage(ChatColor.RED + "Something is not right. Report this to przerwap. (Perform Error)");
                 return true;
         }
         return false;
@@ -236,52 +235,52 @@ public abstract class Brush {
      * @param clickedFace
      * @return
      */
-    protected boolean getTarget(vSniper v, Block clickedBlock, BlockFace clickedFace) {
-        w = v.p.getWorld();
+    protected boolean getTarget(com.thevoxelbox.voxelsniper.vData v, Block clickedBlock, BlockFace clickedFace) {
+        w = v.getWorld();
         if (clickedBlock != null) {
             tb = clickedBlock;
             lb = clickedBlock.getRelative(clickedFace);
             if (lb == null) {
-                v.p.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
+                v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
                 return false;
             }
-            if (v.lightning) {
+            if (v.owner().lightning) {
                 w.strikeLightning(tb.getLocation());
             }
             return true;
         } else {
             HitBlox hb = null;
-            if (v.distRestrict) {
-                hb = new HitBlox(v.p, w, v.range);
+            if (v.owner().distRestrict) {
+                hb = new HitBlox(v.owner().p, w, v.owner().range);
                 tb = hb.getRangeBlock();
             } else {
-                hb = new HitBlox(v.p, w);
+                hb = new HitBlox(v.owner().p, w);
                 tb = hb.getTargetBlock();
             }
             if (tb != null) {
                 lb = hb.getLastBlock();
                 if (lb == null) {
-                    v.p.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
+                    v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
                     return false;
                 }
-                if (v.lightning) {
+                if (v.owner().lightning) {
                     w.strikeLightning(tb.getLocation());
                 }
                 return true;
             } else {
-                v.p.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
+                v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
                 return false;
             }
         }
     }
 
     /**
-     * A Brush'w custom command handler
+     * A Brush's custom command handler
      *
      * @param par Array of string containing parameters
      * @param v vSniper caller
      */
-    public void parameters(String[] par, vSniper v) {
-        v.p.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+        v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
     }
 }

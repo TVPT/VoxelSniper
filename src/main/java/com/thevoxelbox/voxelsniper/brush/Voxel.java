@@ -5,8 +5,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 
 /**
  *
@@ -19,7 +19,7 @@ public class Voxel extends PerformBrush {
     }
 
     @Override
-    public void arrow(vSniper v) {
+    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
         bx = tb.getX();
         by = tb.getY();
         bz = tb.getZ();
@@ -27,7 +27,7 @@ public class Voxel extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v) {
+    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         arrow(v);
     }
 
@@ -37,7 +37,7 @@ public class Voxel extends PerformBrush {
         vm.size();
     }
 
-    public void voxel(vSniper v) {
+    public void voxel(vData v) {
         int bsize = v.brushSize;
 
         for (int z = bsize; z >= -bsize; z--) {
@@ -47,9 +47,6 @@ public class Voxel extends PerformBrush {
                 }
             }
         }
-        if (current.getUndo().getSize() > 0) {
-            v.hashUndo.put(v.hashEn, current.getUndo());
-            v.hashEn++;
-        }
+        v.storeUndo(current.getUndo());
     }
 }

@@ -7,7 +7,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
 import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,22 +15,21 @@ import org.bukkit.event.block.Action;
 
 /**
  * Xerox is a Copy/Paste and Stack brush
- * 
+ *
  * @author Panda
  */
-public class Xerox extends PerformBrush{
-    
+public class Xerox extends PerformBrush {
+
     protected boolean first = true, cp = false, stack = false;
     protected Block block = null;
     protected int id;
     protected double[] firstCoords = new double[3], secondCoords = new double[3];
     protected vUndo h;
 
-    
-    public Xerox(){
+    public Xerox() {
         name = "Xerox";
     }
-    
+
     @Override
     public void info(vMessage vm) {
         block = null;
@@ -39,88 +37,79 @@ public class Xerox extends PerformBrush{
     }
 
     @Override
-    public void parameters(String[] par, vSniper v) {
-        if (par[1].equalsIgnoreCase("info")){
-           v.p.sendMessage(ChatColor.LIGHT_PURPLE + "Xerox Brush Instructions: ");
-           v.p.sendMessage(ChatColor.LIGHT_PURPLE + "   For Copy/Paste: " + ChatColor.BLUE + "Left Click with arrow for fist position(Note: The paste is relevant to the location of the first position NOT where the user is standing.) and right click with the arrow to select second point. Right click with gunpowder to paste.");
-           v.p.sendMessage(ChatColor.BLUE + "      For more detailed information on Copy/Paste please type '/xr cp info' ");
-           v.p.sendMessage(ChatColor.LIGHT_PURPLE + "   For Stack: " + ChatColor.BLUE + "Left click with the gunpowder to stack in given ammount and given direction.");
-           v.p.sendMessage(ChatColor.BLUE + "      For more detailed information on Stack please type '/xr stack info' ");
-           return;
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+        if (par[1].equalsIgnoreCase("info")) {
+            v.sendMessage(ChatColor.LIGHT_PURPLE + "Xerox Brush Instructions: ");
+            v.sendMessage(ChatColor.LIGHT_PURPLE + "   For Copy/Paste: " + ChatColor.BLUE + "Left Click with arrow for fist position(Note: The paste is relevant to the location of the first position NOT where the user is standing.) and right click with the arrow to select second point. Right click with gunpowder to paste.");
+            v.sendMessage(ChatColor.BLUE + "      For more detailed information on Copy/Paste please type '/xr cp info' ");
+            v.sendMessage(ChatColor.LIGHT_PURPLE + "   For Stack: " + ChatColor.BLUE + "Left click with the gunpowder to stack in given ammount and given direction.");
+            v.sendMessage(ChatColor.BLUE + "      For more detailed information on Stack please type '/xr stack info' ");
+            return;
         }
-        if(par[1].equalsIgnoreCase("stack")){
+        if (par[1].equalsIgnoreCase("stack")) {
             stack = true;
-            if(par[2].equalsIgnoreCase("info")){
-                v.p.sendMessage(ChatColor.BLUE + "Detailed Information on Stack:");
-                v.p.sendMessage(ChatColor.LIGHT_PURPLE + "  To use Stack type /b xr stack [direction] [ammount]");
-                v.p.sendMessage(ChatColor.LIGHT_PURPLE + "      [direction]: 'U' (Up), 'D' (Down), 'N' or 'F' (North/Forward), 'S' or 'B'(South/Backward), 'E' or 'R' (East/Right), 'W' or 'L' (West/Left)");
-                v.p.sendMessage(ChatColor.LIGHT_PURPLE + "      [ammount]: Number value for how many blocks you want to stack in the given direction");
-                 v.p.sendMessage(ChatColor.LIGHT_PURPLE + " Example Usage: '/b xr stack N 4' would stack the block right clicked on with gunpowder 4 blocks to the North");
-            //completely unecessary parsing. If only Java 6 allowed switch statements on Strings -.- OR Minecraft/bukkit had been written in Java 7       -Panda
-            }else if(par[2].equalsIgnoreCase("u")){
-                
-            } else if(par[2].equalsIgnoreCase("d")){
-                
-            }else if(par[2].equalsIgnoreCase("n") || par[2].equalsIgnoreCase("f")){
-                
-            }else if(par[2].equalsIgnoreCase("s") || par[2].equalsIgnoreCase("b")){
-                
-            }else if(par[2].equalsIgnoreCase("e") || par[2].equalsIgnoreCase("r")){
-                
-            }else if(par[2].equalsIgnoreCase("w") || par[2].equalsIgnoreCase("l")){
-                
+            if (par[2].equalsIgnoreCase("info")) {
+                v.sendMessage(ChatColor.BLUE + "Detailed Information on Stack:");
+                v.sendMessage(ChatColor.LIGHT_PURPLE + "  To use Stack type /b xr stack [direction] [ammount]");
+                v.sendMessage(ChatColor.LIGHT_PURPLE + "      [direction]: 'U' (Up), 'D' (Down), 'N' or 'F' (North/Forward), 'S' or 'B'(South/Backward), 'E' or 'R' (East/Right), 'W' or 'L' (West/Left)");
+                v.sendMessage(ChatColor.LIGHT_PURPLE + "      [ammount]: Number value for how many blocks you want to stack in the given direction");
+                v.sendMessage(ChatColor.LIGHT_PURPLE + " Example Usage: '/b xr stack N 4' would stack the block right clicked on with gunpowder 4 blocks to the North");
+                //completely unecessary parsing. If only Java 6 allowed switch statements on Strings -.- OR Minecraft/bukkit had been written in Java 7       -Panda
+            } else if (par[2].equalsIgnoreCase("u")) {
+            } else if (par[2].equalsIgnoreCase("d")) {
+            } else if (par[2].equalsIgnoreCase("n") || par[2].equalsIgnoreCase("f")) {
+            } else if (par[2].equalsIgnoreCase("s") || par[2].equalsIgnoreCase("b")) {
+            } else if (par[2].equalsIgnoreCase("e") || par[2].equalsIgnoreCase("r")) {
+            } else if (par[2].equalsIgnoreCase("w") || par[2].equalsIgnoreCase("l")) {
             }
         }
-        if(par[1].equalsIgnoreCase("cp")){
+        if (par[1].equalsIgnoreCase("cp")) {
             cp = true;
-            if(par[2].equalsIgnoreCase("info")){
+            if (par[2].equalsIgnoreCase("info")) {
                 //TODO: Write detailed information on Coopy/Paste
             }
-                //TODO: Write the copy/paste code >.<
+            //TODO: Write the copy/paste code >.<
         }
     }
-    
-        
-     @Override
-    public boolean perform(Action action, vSniper v, Material heldItem, Block clickedBlock, BlockFace clickedFace){
-         switch(action){
-             case RIGHT_CLICK_AIR:
-             case RIGHT_CLICK_BLOCK:
-                 switch(heldItem){
-                     case ARROW:
-                         if(stack){
-                             bx = tb.getX();
-                             by = tb.getY();
-                             bz = tb.getZ();
-                             
-                         }else if(cp){
-                             
-                         }else{
-                             return false;
-                         }
-                     case SULPHUR:
-                 }
-             case LEFT_CLICK_AIR:
-             case LEFT_CLICK_BLOCK:
-             case PHYSICAL:
-                 return false;
-             default:
-                 v.p.sendMessage(ChatColor.RED + "Something went wrong! Please report this to PandaNati0n or any other sniper dev! (Action Error)");
-                 
-         }
-         return false;
-     }
-     /* This function is never used. Remove comment if needed.
-     private boolean XeroxA(Block block1){
-         if(block == null){
-             block = block1;
-             return true;
-         } else{
-             int lowx = (block.getX() <= block1.getX()) ? block.getX() : block1.getX();
-             
-             block = null;
-             return false;
-         }
-     }*/
 
+    @Override
+    public boolean perform(Action action, com.thevoxelbox.voxelsniper.vData v, Material heldItem, Block clickedBlock, BlockFace clickedFace) {
+        switch (action) {
+            case RIGHT_CLICK_AIR:
+            case RIGHT_CLICK_BLOCK:
+                switch (heldItem) {
+                    case ARROW:
+                        if (stack) {
+                            bx = tb.getX();
+                            by = tb.getY();
+                            bz = tb.getZ();
+
+                        } else if (cp) {
+                        } else {
+                            return false;
+                        }
+                    case SULPHUR:
+                }
+            case LEFT_CLICK_AIR:
+            case LEFT_CLICK_BLOCK:
+            case PHYSICAL:
+                return false;
+            default:
+                v.owner().p.sendMessage(ChatColor.RED + "Something went wrong! Please report this to PandaNati0n or any other sniper dev! (Action Error)");
+
+        }
+        return false;
+    }
+
+    private boolean XeroxA(Block block1) {
+        if (block == null) {
+            block = block1;
+            return true;
+        } else {
+            int lowx = (block.getX() <= block1.getX()) ? block.getX() : block1.getX();
+
+            block = null;
+            return false;
+        }
+    }
 }
