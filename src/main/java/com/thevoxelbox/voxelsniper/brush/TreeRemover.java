@@ -23,19 +23,17 @@ public class TreeRemover extends Brush {
 
 	@Override
     protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-
 		for (int x = 0; x < dx; x++) {
 			for (int y = 0; y < dy; y++) {
-				for (int z = 0; z < dz; z++) {
-					Location l = new Location(tb.getWorld(), tb.getX() + x - (Integer) (dx / 2), tb.getY() + y - (Integer) (dy / 2), tb.getZ() + z - (Integer) (dz / 2));
+				for (int z = 0; z < dz; z++) {			
 					
-					Block tempBlock = l.getWorld().getBlockAt(l);
+					Block tempBlock = v.getWorld().getBlockAt(new Location(tb.getWorld(), tb.getX() + x - (Integer) (dx / 2), tb.getY() + y - (Integer) (dy / 2), tb.getZ() + z - (Integer) (dz / 2)));
 					
 					for (Integer i : treeIds) {
 						if (tempBlock.getTypeId() == i)
 							tempBlock.setTypeId(0);
 						
-						Block blockBelow = tempBlock.getWorld().getBlockAt(new Location(tempBlock.getWorld(), tempBlock.getLocation().getX(), tempBlock.getLocation().getY() - 1, tempBlock.getLocation().getZ()));
+						Block blockBelow = v.getWorld().getBlockAt(new Location(v.getWorld(), tempBlock.getLocation().getX(), tempBlock.getLocation().getY() - 1, tempBlock.getLocation().getZ()));
 						if (blockBelow.getTypeId() == 3)
 							blockBelow.setTypeId(2);	
 					}
