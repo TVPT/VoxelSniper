@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import com.thevoxelbox.voxelsniper.vMessage;
@@ -27,13 +26,13 @@ public class TreeRemover extends Brush {
 			for (int y = 0; y < dy; y++) {
 				for (int z = 0; z < dz; z++) {			
 					
-					Block tempBlock = v.getWorld().getBlockAt(new Location(tb.getWorld(), tb.getX() + x - (Integer) (dx / 2), tb.getY() + y - (Integer) (dy / 2), tb.getZ() + z - (Integer) (dz / 2)));
+					Block tempBlock = v.getWorld().getBlockAt(tb.getX() + x - (int) (dx / 2), tb.getY() + y - (int) (dy / 2), tb.getZ() + z - (int) (dz / 2));
 					
-					for (Integer i : treeIds) {
+					for (int i : treeIds) {
 						if (tempBlock.getTypeId() == i)
 							tempBlock.setTypeId(0);
 						
-						Block blockBelow = v.getWorld().getBlockAt(new Location(v.getWorld(), tempBlock.getLocation().getX(), tempBlock.getLocation().getY() - 1, tempBlock.getLocation().getZ()));
+						Block blockBelow = v.getWorld().getBlockAt(tempBlock.getX(), tempBlock.getY() - 1, tempBlock.getZ());
 						if (blockBelow.getTypeId() == 3)
 							blockBelow.setTypeId(2);	
 					}
