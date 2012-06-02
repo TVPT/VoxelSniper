@@ -17,8 +17,8 @@ import org.bukkit.ChatColor;
  * Big Thank you to GavJenks
  */
 
-public class Underlay extends PerformBrush {  // You Really Fucked up. Please use a Compiler with syntax highlighting, so that you know when there is a million errors due to a missing bracket.
-                                                // Download NetBeans. And do NOT commit again with errors like this.
+public class Underlay extends PerformBrush { 
+                                                
     public Underlay(){
     name="Underlay (Reverse Overlay)";
     }
@@ -28,9 +28,9 @@ public class Underlay extends PerformBrush {  // You Really Fucked up. Please us
     bx = tb.getX();
     by = tb.getY();
     bz = tb.getZ();
-    underlay(v);
+    Underlay(v);
     }
-    /*
+
     @Override
     public void powder(vSniper v){
     bx = tb.getX();
@@ -38,7 +38,7 @@ public class Underlay extends PerformBrush {  // You Really Fucked up. Please us
     bz = tb.getZ();
     Underlaytwo(v);
     
-    }*/
+    }
     @Override
     public void info(vMessage vm){
     vm.brushName(name);
@@ -79,7 +79,7 @@ public class Underlay extends PerformBrush {  // You Really Fucked up. Please us
     }
  }
 
-   public void underlay (vSniper v) {
+   public void Underlay (vSniper v) {
         int bsize = v.brushSize;
 
         int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];
@@ -133,7 +133,7 @@ public class Underlay extends PerformBrush {  // You Really Fucked up. Please us
 
         v.hashUndo.put(v.hashEn, current.getUndo());
         v.hashEn++;
-   }/*
+   }
     public void Underlaytwo (vSniper v) {
         int bsize = v.brushSize;
 
@@ -187,5 +187,5 @@ public class Underlay extends PerformBrush {  // You Really Fucked up. Please us
 
         v.hashUndo.put(v.hashEn, current.getUndo());
         v.hashEn++;
-    }*/
+    }
 }
