@@ -20,7 +20,7 @@ import org.bukkit.ChatColor;
 public class Underlay extends PerformBrush { 
                                                 
     public Underlay(){
-    name="Underlay (Reverse Overlay)";
+    name = "Underlay (Reverse Overlay)";
     }
     
     @Override
