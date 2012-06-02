@@ -46,7 +46,7 @@ public class TreeSnipe extends Brush {
     public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-            v.sendMessage(ChatColor.AQUA + "/b ts treetype");
+            v.sendMessage(ChatColor.AQUA + "/b t treetype");
             printTreeType(v.vm);
             return;
         }
