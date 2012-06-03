@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.brush.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +117,10 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     TREE_REMOVER(						TreeRemover.class, 				"tr", 	"treeremover"),
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~geekygenius~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FERTILIZE(                           Fertilize.class,                 "fert",        "fertilize");          //  [   3    ]  \\
+    FERTILIZE(                          Fertilize.class,                 "fert",        "fertilize"),          //  [   3    ]  \\
+    
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Monofraps~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    PUNISH(								Punish.class,                 "p",        "punish");          //  [   1    ]  \\
            
     private static final Map<String, vBrushes> brushes;
     private Class<? extends Brush> brush;
