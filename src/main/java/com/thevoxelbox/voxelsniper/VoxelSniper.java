@@ -27,14 +27,16 @@ public class VoxelSniper extends JavaPlugin {
     public static HashMap<String, Integer> items;
     public static Server s;
     public static HashSet<File> plugins = new HashSet<File>();
-
+    public static VoxelSniper instance;
+    
     @Override
     public void onDisable() {
-    
+    	
     }
 
     @Override
     public void onEnable() {
+    	instance = this;
         loadItems();
         s = getServer();
         VSPlayer.initSnipers();

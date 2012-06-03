@@ -113,10 +113,10 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     CYLINDER(                           Cylinder.class,                 "c",        "cylinder"),
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Baseball435~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    TREE_REMOVER(						TreeRemover.class, 				"tr", 	"treeremover"),
+    LAYERS(								Layers.class, 					"layers", 	"layers"),
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~geekygenius~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FERTILIZE(                           Fertilize.class,                 "fert",        "fertilize");          //  [   3    ]  \\
+    FERTILIZE(                          Fertilize.class,                 "fert",        "fertilize");          //  [   3    ]  \\
            
     private static final Map<String, vBrushes> brushes;
     private Class<? extends Brush> brush;
