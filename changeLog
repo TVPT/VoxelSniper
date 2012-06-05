@@ -228,3 +228,4 @@ I would like to start a sort of changeLog to track changes done to VoxelSniper
 [5.133] -- Added Jungle tree type + mushrooms, fixed trees not being able to spawn above 126 -butters
 [5.134] -- Added jagged brush -- giltwist
 [5.135] -- Unfinished BrushTools -- prz
+[5.136] -- Fixed Underlay brush having compile errors, Added Move Brush -- MikeMatrix

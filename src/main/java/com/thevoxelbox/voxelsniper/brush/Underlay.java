@@ -6,6 +6,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
@@ -24,7 +25,7 @@ public class Underlay extends PerformBrush {
     }
     
     @Override
-    public void arrow(vSniper v){
+    public void arrow(com.thevoxelbox.voxelsniper.vData v){
     bx = tb.getX();
     by = tb.getY();
     bz = tb.getZ();
@@ -32,7 +33,7 @@ public class Underlay extends PerformBrush {
     }
 
     @Override
-    public void powder(vSniper v){
+    public void powder(com.thevoxelbox.voxelsniper.vData v){
     bx = tb.getX();
     by = tb.getY();
     bz = tb.getZ();
@@ -48,11 +49,11 @@ public class Underlay extends PerformBrush {
     boolean allBlocks = false;
     
     @Override
-    public void parameters(String[] par, vSniper v){
+    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v){
     if(par[1].equalsIgnoreCase("info")){
-    v.p.sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
-    v.p.sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
-    v.p.sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
+    v.owner().p.sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
+    v.owner().p.sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
+    v.owner().p.sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
     if(depth < 1){
         depth = 1;
     }
@@ -61,25 +62,25 @@ public class Underlay extends PerformBrush {
     for(int x=1; x < par.length;x++){
     if (par[x].startsWith("d")){
         depth = Integer.parseInt(par[x].replace("d", ""));
-                v.p.sendMessage(ChatColor.AQUA + "Depth set to " + depth);
+                v.owner().p.sendMessage(ChatColor.AQUA + "Depth set to " + depth);
               
                 continue;
             } else if (par[x].startsWith("all")) {
                 allBlocks = true;
-                v.p.sendMessage(ChatColor.BLUE + "Will underlay over any block." + depth);
+                v.owner().p.sendMessage(ChatColor.BLUE + "Will underlay over any block." + depth);
                 continue;
             }else if (par[x].startsWith("some")) {
                 allBlocks = false;
-                v.p.sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + depth);
+                v.owner().p.sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + depth);
                 continue;
             }else {
-                v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.owner().p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         
     }
  }
 
-   public void Underlay (vSniper v) {
+   public void Underlay (vData v) {
         int bsize = v.brushSize;
 
         int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];
@@ -130,11 +131,9 @@ public class Underlay extends PerformBrush {
                 }
             }
         
-
-        v.hashUndo.put(v.hashEn, current.getUndo());
-        v.hashEn++;
+        v.storeUndo(current.getUndo());
    }
-    public void Underlaytwo (vSniper v) {
+    public void Underlaytwo (vData v) {
         int bsize = v.brushSize;
 
         int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];
@@ -185,7 +184,6 @@ public class Underlay extends PerformBrush {
             }
         
 
-        v.hashUndo.put(v.hashEn, current.getUndo());
-        v.hashEn++;
+        v.storeUndo(current.getUndo());
     }
 }
