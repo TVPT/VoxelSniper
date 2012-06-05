@@ -28,10 +28,6 @@ public class Move extends Brush {
      * @author MikeMatrix
      * 
      */
-    /**
-     * @author MikeMatrix
-     * 
-     */
     private class Selection {
         /**
          * Maximum amount of Blocks allowed by the Selection.
@@ -129,6 +125,36 @@ public class Move extends Brush {
      * Saved direction.
      */
     private int[] moveDirections = { 0, 0, 0 };
+    /**
+     * Breakable Blocks to determine if no-physics should be used.
+     */
+    private static final ArrayList<Material> breakableMaterials = new ArrayList<Material>();
+
+    static {
+        breakableMaterials.add(Material.WOOD_DOOR);
+        breakableMaterials.add(Material.WOODEN_DOOR);
+        breakableMaterials.add(Material.PAINTING);
+        breakableMaterials.add(Material.BED);
+        breakableMaterials.add(Material.CROPS);
+        breakableMaterials.add(Material.DETECTOR_RAIL);
+        breakableMaterials.add(Material.LADDER);
+        breakableMaterials.add(Material.LEVER);
+        breakableMaterials.add(Material.LOCKED_CHEST);
+        breakableMaterials.add(Material.CHEST);
+        breakableMaterials.add(Material.DIODE);
+        breakableMaterials.add(Material.DIODE_BLOCK_OFF);
+        breakableMaterials.add(Material.DIODE_BLOCK_ON);
+        breakableMaterials.add(Material.REDSTONE);
+        breakableMaterials.add(Material.REDSTONE_TORCH_OFF);
+        breakableMaterials.add(Material.REDSTONE_TORCH_ON);
+        breakableMaterials.add(Material.REDSTONE_WIRE);
+        breakableMaterials.add(Material.PORTAL);
+        breakableMaterials.add(Material.POWERED_RAIL);
+        breakableMaterials.add(Material.RAILS);
+        breakableMaterials.add(Material.SUGAR_CANE_BLOCK);
+        breakableMaterials.add(Material.IRON_DOOR);
+        breakableMaterials.add(Material.IRON_DOOR_BLOCK);
+    }
 
     /**
      * 
@@ -220,8 +246,10 @@ public class Move extends Brush {
                 _blockState.getBlock().setType(Material.AIR);
             }
             for (final BlockState _blockState : selection.getBlockStates()) {
-                _world.getBlockAt(_blockState.getX() + direction[0], _blockState.getY() + direction[1], _blockState.getZ() + direction[2]).setTypeIdAndData(
-                        _blockState.getTypeId(), _blockState.getRawData(), true);
+                Block _affectedBlock = _world.getBlockAt(_blockState.getX() + direction[0], _blockState.getY() + direction[1], _blockState.getZ()
+                        + direction[2]);
+                _affectedBlock.setTypeId(_blockState.getTypeId(), !breakableMaterials.contains(_blockState.getType()));
+                _affectedBlock.setData(_blockState.getRawData());
             }
         }
     }

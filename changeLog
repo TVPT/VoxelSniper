@@ -229,3 +229,4 @@ I would like to start a sort of changeLog to track changes done to VoxelSniper
 [5.134] -- Added jagged brush -- giltwist
 [5.135] -- Unfinished BrushTools -- prz
 [5.136] -- Fixed Underlay brush having compile errors, Added Move Brush -- MikeMatrix
+[5.137] -- Fixed some errors with datavalues and breakable blocks in the Move Brush. -- MikeMatrix
