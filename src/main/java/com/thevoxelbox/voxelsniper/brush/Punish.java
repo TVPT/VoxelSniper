@@ -118,7 +118,7 @@ public class Punish extends PerformBrush {
 					passCorrect = true;
 					v.sendMessage("Punish brush enabled!");
 				}
-				continue;
+				continue;		
 			}
 		}
 	}
