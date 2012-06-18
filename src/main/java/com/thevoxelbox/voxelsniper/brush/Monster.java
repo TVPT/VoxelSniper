@@ -67,8 +67,8 @@ public class Monster extends Brush {
             try {
             	Class<? extends Entity> ent = ct.getEntityClass();
                 w.spawn(lb.getLocation(), ent);
-            } catch (ClassCastException ex) {
-                v.sendMessage(ChatColor.RED + "Invalid entity");
+            } catch (IllegalArgumentException ex) {
+                v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
             }
         }
     }
