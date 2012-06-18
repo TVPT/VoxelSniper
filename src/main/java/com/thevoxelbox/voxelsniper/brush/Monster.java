@@ -7,6 +7,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
@@ -64,9 +65,10 @@ public class Monster extends Brush {
     protected void spawn(vData v) {
         for (int x = 0; x < v.brushSize; x++) {
             try {
-                w.spawnCreature(lb.getLocation(), ct);
+            	Class<? extends Entity> ent = ct.getEntityClass();
+                w.spawn(lb.getLocation(), ent);
             } catch (ClassCastException ex) {
-                /* v.sendMessage(ChatColor.RED + "Invalid living entity"); */
+                v.sendMessage(ChatColor.RED + "Invalid entity");
             }
         }
     }
