@@ -20,7 +20,7 @@ public class Monster extends Brush {
     protected EntityType ct = EntityType.ZOMBIE;
 
     public Monster() {
-        name = "Monster";
+        name = "Entity";
     }
 
     @Override
@@ -35,14 +35,14 @@ public class Monster extends Brush {
 
     @Override
     public void info(vMessage vm) {
-        vm.brushMessage(ChatColor.LIGHT_PURPLE + "Monster brush" + " (" + ct.getName() + ")");
+        vm.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + ct.getName() + ")");
         vm.size();
     }
 
     @Override
     public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.BLUE + "The aviable creature types are as follows:");
+            v.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
             String names = "";
             for (EntityType cre : EntityType.values()) {
 
@@ -54,9 +54,9 @@ public class Monster extends Brush {
             EntityType cre = EntityType.fromName(par[1]);
             if (cre != null) {
                 ct = cre;
-                v.sendMessage(ChatColor.GREEN + "Creature type set to " + ct.getName());
+                v.sendMessage(ChatColor.GREEN + "Entity type set to " + ct.getName());
             } else {
-                v.sendMessage(ChatColor.RED + "This is not a valid creature!");
+                v.sendMessage(ChatColor.RED + "This is not a valid entity!");
             }
         }
     }
@@ -66,7 +66,7 @@ public class Monster extends Brush {
             try {
                 w.spawnCreature(lb.getLocation(), ct);
             } catch (ClassCastException ex) {
-                v.sendMessage(ChatColor.RED + "Invalid living entity");
+                /* v.sendMessage(ChatColor.RED + "Invalid living entity"); */
             }
         }
     }
