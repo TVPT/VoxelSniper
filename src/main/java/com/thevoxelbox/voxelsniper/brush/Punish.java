@@ -27,6 +27,8 @@ public class Punish extends PerformBrush {
 
 	private Punishment punishment = Punishment.FIRE;
 	private boolean passCorrect = false;
+	private int potionLevel = 10;
+	private int potionDuration = 60;
 
 	public Punish() {
 		name = "Punish";
@@ -39,6 +41,8 @@ public class Punish extends PerformBrush {
 			v.sendMessage("Y U don't know how to use this brush?!");
 			return;
 		}
+		
+		potionDuration = v.voxelId;
 		
 		int _brushSizeSquare = v.brushSize * v.brushSize;
 		Location targetLocation = new Location(v.getWorld(), tb.getX(), tb.getY(), tb.getZ());
@@ -62,6 +66,8 @@ public class Punish extends PerformBrush {
 			return;
 		}
 		
+		potionDuration = v.voxelId;
+		
 		int _brushSizeSquare = v.brushSize * v.brushSize;
 		Location targetLocation = new Location(v.getWorld(), tb.getX(), tb.getY(), tb.getZ());
 
@@ -84,6 +90,8 @@ public class Punish extends PerformBrush {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Punish brush parameters:");
 			v.sendMessage(ChatColor.WHITE + "Type of punishment: fire, lightning, blind, drunk");
+			v.sendMessage(ChatColor.WHITE + "blind and drunk accept a level paramter: /b punish blind:[levelHere]");
+			v.sendMessage(ChatColor.WHITE + "The ID of your voxel material will be used for potion/fire effect duration (seconds).");
 			return;
 		}
 		for (int x = 1; x < par.length; x++) {
@@ -97,14 +105,34 @@ public class Punish extends PerformBrush {
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
 				continue;
 			}
-			if (par[x].equalsIgnoreCase("blind")) {
-				punishment = Punishment.BLINDNESS;
+			if (par[x].toLowerCase().startsWith("blind")) {
+				punishment = Punishment.BLINDNESS;		
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
+				
+				if(par[x].contains(":")) {
+					try {
+					potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
+					v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
+					}
+					catch (Exception _e) {
+						v.sendMessage(ChatColor.RED + "Unable to set potion level. (punishment:potionLevel)");
+					}
+				}				
 				continue;
 			}
-			if (par[x].equalsIgnoreCase("drunk")) {
+			if (par[x].toLowerCase().startsWith("drunk")) {
 				punishment = Punishment.DRUNK;
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
+				
+				if(par[x].contains(":")) {
+					try {
+					potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
+					v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
+					}
+					catch (Exception _e) {
+						v.sendMessage(ChatColor.RED + "Unable to set potion level. (punishment:potionLevel)");
+					}
+				}		
 				continue;
 			}
 			if(par[x].equalsIgnoreCase("kill")) {
@@ -133,16 +161,16 @@ public class Punish extends PerformBrush {
 	private void applyPunishment(LivingEntity e) {		
 		switch (punishment) {
 		case FIRE:
-			e.setFireTicks(20 * 60);
+			e.setFireTicks(20 * potionDuration);			
 			break;
 		case LIGHTNING:
 			e.getWorld().strikeLightning(e.getLocation());
 			break;
 		case BLINDNESS:
-			e.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 60, 10), true);
+			e.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * potionDuration, potionLevel), true);
 			break;
 		case DRUNK:
-			e.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 60, 10), true);
+			e.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * potionDuration, potionLevel), true);
 			break;
 		case KILL:
 			e.damage(5000000);
