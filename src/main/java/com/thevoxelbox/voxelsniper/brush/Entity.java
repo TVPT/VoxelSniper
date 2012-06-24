@@ -4,23 +4,22 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.EntityType;
+
 import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
  *
  * @author Piotr
  */
-public class Monster extends Brush {
+public class Entity extends Brush {
 
     protected EntityType ct = EntityType.ZOMBIE;
 
-    public Monster() {
+    public Entity() {
         name = "Entity";
     }
 
@@ -65,7 +64,7 @@ public class Monster extends Brush {
     protected void spawn(vData v) {
         for (int x = 0; x < v.brushSize; x++) {
             try {
-            	Class<? extends Entity> ent = ct.getEntityClass();
+            	Class<? extends org.bukkit.entity.Entity> ent = ct.getEntityClass();
                 w.spawn(lb.getLocation(), ent);
             } catch (IllegalArgumentException ex) {
                 v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
