@@ -27,7 +27,7 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     VOXEL(                              Voxel.class,                    "v",        "voxel"),                   //  [   5    ]  \\
     VOXEL_DISC(                         VoxelDisc.class,                "vd",       "voxeldisc"),               //  [   6    ]  \\
     VOXEL_DISC_FACE(                    VoxelDiscFace.class,            "vdf",      "voxeldiscface"),           //  [   7    ]  \\
-    MONSTER(                            Monster.class,                  "m",        "monster"),                 //  [   8    ]  \\
+    ENTITY(                             Entity.class,                   "en",       "entity"),                  //  [   8    ]  \\
     OCEAN(                              Ocean.class,                    "o",        "ocean"),                   //  [   9    ]  \\
     OCEAN_SELECTION(                    OceanSelection.class,           "ocs",      "oceanselection"),          //  [   10   ]  \\
     CLONE_STAMP(                        Clone.class,                    "cs",       "clonestamp"),              //  [   11   ]  \\
