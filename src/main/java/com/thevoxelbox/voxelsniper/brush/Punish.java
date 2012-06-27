@@ -22,7 +22,7 @@ import com.thevoxelbox.voxelsniper.util.HashHelperMD5;
 public class Punish extends PerformBrush {
 
 	private enum Punishment {
-		FIRE, LIGHTNING, BLINDNESS, DRUNK, KILL
+		FIRE, LIGHTNING, BLINDNESS, DRUNK, KILL, INVERT
 	};
 
 	private Punishment punishment = Punishment.FIRE;
@@ -79,6 +79,7 @@ public class Punish extends PerformBrush {
 					_e.setFireTicks(0);
 					_e.removePotionEffect(PotionEffectType.BLINDNESS);
 					_e.removePotionEffect(PotionEffectType.CONFUSION);
+					_e.removePotionEffect(PotionEffectType.SPEED);
 				}
 			}
 
@@ -107,6 +108,21 @@ public class Punish extends PerformBrush {
 			}
 			if (par[x].toLowerCase().startsWith("blind")) {
 				punishment = Punishment.BLINDNESS;		
+				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
+				
+				if(par[x].contains(":")) {
+					try {
+					potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
+					v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
+					}
+					catch (Exception _e) {
+						v.sendMessage(ChatColor.RED + "Unable to set potion level. (punishment:potionLevel)");
+					}
+				}				
+				continue;
+			}
+			if (par[x].toLowerCase().startsWith("invert")) {
+				punishment = Punishment.INVERT;		
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
 				
 				if(par[x].contains(":")) {
@@ -171,6 +187,9 @@ public class Punish extends PerformBrush {
 			break;
 		case DRUNK:
 			e.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * potionDuration, potionLevel), true);
+			break;
+		case INVERT:
+			e.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * potionDuration, 70), true);
 			break;
 		case KILL:
 			e.damage(5000000);
