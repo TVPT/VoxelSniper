@@ -48,14 +48,16 @@ public class Punish extends PerformBrush {
 		Location targetLocation = new Location(v.getWorld(), tb.getX(), tb.getY(), tb.getZ());
 
 		List<LivingEntity> _entities = v.getWorld().getLivingEntities();
-
+		int tmp = 0;
 		for (LivingEntity _e : _entities) {
 			if (v.owner().p != _e) {
 				if (_e.getLocation().distanceSquared(targetLocation) < _brushSizeSquare) {
+					tmp++;
 					applyPunishment(_e);
 				}
 			}
 		}
+		v.owner().p.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + tmp + " player(s)");
 	}
 
 	// gunpowder removes all the punishments
@@ -79,7 +81,7 @@ public class Punish extends PerformBrush {
 					_e.setFireTicks(0);
 					_e.removePotionEffect(PotionEffectType.BLINDNESS);
 					_e.removePotionEffect(PotionEffectType.CONFUSION);
-					_e.removePotionEffect(PotionEffectType.SPEED);
+					_e.removePotionEffect(PotionEffectType.SLOW);
 				}
 			}
 
@@ -90,7 +92,7 @@ public class Punish extends PerformBrush {
 	public void parameters(String[] par, vData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Punish brush parameters:");
-			v.sendMessage(ChatColor.WHITE + "Type of punishment: fire, lightning, blind, drunk");
+			v.sendMessage(ChatColor.WHITE + "Type of punishment: fire, lightning, blind, drunk and invert");
 			v.sendMessage(ChatColor.WHITE + "blind and drunk accept a level paramter: /b punish blind:[levelHere]");
 			v.sendMessage(ChatColor.WHITE + "The ID of your voxel material will be used for potion/fire effect duration (seconds).");
 			return;
@@ -189,7 +191,7 @@ public class Punish extends PerformBrush {
 			e.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * potionDuration, potionLevel), true);
 			break;
 		case INVERT:
-			e.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * potionDuration, 70), true);
+			e.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * potionDuration, potionLevel), true);
 			break;
 		case KILL:
 			e.damage(5000000);
