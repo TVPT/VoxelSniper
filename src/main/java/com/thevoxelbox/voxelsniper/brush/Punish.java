@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -30,6 +31,9 @@ public class Punish extends PerformBrush {
 	private int potionLevel = 10;
 	private int potionDuration = 60;
 
+	private boolean specificPlayer = false;
+	private String punishPlayerName = "";
+
 	public Punish() {
 		name = "Punish";
 	}
@@ -37,13 +41,24 @@ public class Punish extends PerformBrush {
 	// arrow applies a punishment
 	@Override
 	protected void arrow(vData v) {
-		if(!passCorrect) {
+		if (!passCorrect) {
 			v.sendMessage("Y U don't know how to use this brush?!");
 			return;
 		}
-		
+
 		potionDuration = v.voxelId;
-		
+
+		if (specificPlayer) {
+			Player _punPlay = Bukkit.getPlayer(punishPlayerName);
+			if (_punPlay == null) {
+				v.sendMessage("No player " + punishPlayerName + " found.");
+				return;
+			}
+
+			applyPunishment(_punPlay);
+			return;
+		}
+
 		int _brushSizeSquare = v.brushSize * v.brushSize;
 		Location targetLocation = new Location(v.getWorld(), tb.getX(), tb.getY(), tb.getZ());
 
@@ -63,13 +78,24 @@ public class Punish extends PerformBrush {
 	// gunpowder removes all the punishments
 	@Override
 	protected void powder(vData v) {
-		if(!passCorrect) {
+		if (!passCorrect) {
 			v.sendMessage("Y U don't know how to use this brush?!");
 			return;
 		}
-		
+
 		potionDuration = v.voxelId;
-		
+
+		if (specificPlayer) {
+			Player _punPlay = Bukkit.getPlayer(punishPlayerName);
+			if (_punPlay == null) {
+				v.sendMessage("No player " + punishPlayerName + " found.");
+				return;
+			}
+
+			applyPunishment(_punPlay);
+			return;
+		}
+
 		int _brushSizeSquare = v.brushSize * v.brushSize;
 		Location targetLocation = new Location(v.getWorld(), tb.getX(), tb.getY(), tb.getZ());
 
@@ -109,51 +135,48 @@ public class Punish extends PerformBrush {
 				continue;
 			}
 			if (par[x].toLowerCase().startsWith("blind")) {
-				punishment = Punishment.BLINDNESS;		
+				punishment = Punishment.BLINDNESS;
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
-				
-				if(par[x].contains(":")) {
+
+				if (par[x].contains(":")) {
 					try {
-					potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
-					v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
-					}
-					catch (Exception _e) {
+						potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
+						v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
+					} catch (Exception _e) {
 						v.sendMessage(ChatColor.RED + "Unable to set potion level. (punishment:potionLevel)");
 					}
-				}				
+				}
 				continue;
 			}
 			if (par[x].toLowerCase().startsWith("invert")) {
-				punishment = Punishment.INVERT;		
+				punishment = Punishment.INVERT;
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
-				
-				if(par[x].contains(":")) {
+
+				if (par[x].contains(":")) {
 					try {
-					potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
-					v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
-					}
-					catch (Exception _e) {
+						potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
+						v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
+					} catch (Exception _e) {
 						v.sendMessage(ChatColor.RED + "Unable to set potion level. (punishment:potionLevel)");
 					}
-				}				
+				}
 				continue;
 			}
 			if (par[x].toLowerCase().startsWith("drunk")) {
 				punishment = Punishment.DRUNK;
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
-				
-				if(par[x].contains(":")) {
+
+				if (par[x].contains(":")) {
 					try {
-					potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
-					v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
-					}
-					catch (Exception _e) {
+						potionLevel = Integer.valueOf(par[x].substring(par[x].indexOf(":") + 1));
+						v.sendMessage(ChatColor.GREEN + "Potion level was set to " + String.valueOf(potionLevel));
+					} catch (Exception _e) {
 						v.sendMessage(ChatColor.RED + "Unable to set potion level. (punishment:potionLevel)");
 					}
-				}		
+				}
 				continue;
 			}
-			if(par[x].equalsIgnoreCase("kill")) {
+			if (par[x].equalsIgnoreCase("kill")) {
 				punishment = Punishment.KILL;
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
 				continue;
@@ -164,7 +187,19 @@ public class Punish extends PerformBrush {
 					passCorrect = true;
 					v.sendMessage("Punish brush enabled!");
 				}
-				continue;		
+				// do not continue, since U*** could also be a name for SM mode
+				//continue;
+			}
+			if (par[x].equalsIgnoreCase("-toggleSM")) {
+				specificPlayer = !specificPlayer;
+
+				if (specificPlayer) {
+					try {
+						punishPlayerName = par[++x];
+					} catch (IndexOutOfBoundsException ex) {
+						v.sendMessage("You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
+					}
+				}
 			}
 		}
 	}
@@ -176,10 +211,10 @@ public class Punish extends PerformBrush {
 		vm.size();
 	}
 
-	private void applyPunishment(LivingEntity e) {		
+	private void applyPunishment(LivingEntity e) {
 		switch (punishment) {
 		case FIRE:
-			e.setFireTicks(20 * potionDuration);			
+			e.setFireTicks(20 * potionDuration);
 			break;
 		case LIGHTNING:
 			e.getWorld().strikeLightning(e.getLocation());
