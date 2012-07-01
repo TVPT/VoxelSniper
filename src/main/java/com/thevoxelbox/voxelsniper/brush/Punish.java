@@ -71,14 +71,15 @@ public class Punish extends PerformBrush {
 		int _numPunishApps = 0;
 		for (LivingEntity _e : _entities) {
 			if (v.owner().p != _e) {
-				if(v.brushSize >= 0) {
-					try{
+				if (v.brushSize >= 0) {
+					try {
 						if (_e.getLocation().distanceSquared(_targetLocation) <= _brushSizeSquare) {
 							_numPunishApps++;
 							applyPunishment(_e);
 						}
-					}catch(Exception e) {}
-				} else if(v.brushSize == -3){
+					} catch (Exception e) {
+					}
+				} else if (v.brushSize == -3) {
 					_numPunishApps++;
 					applyPunishment(_e);
 				}
@@ -101,13 +102,13 @@ public class Punish extends PerformBrush {
 		List<LivingEntity> _entities = v.getWorld().getLivingEntities();
 
 		for (LivingEntity _e : _entities) {
-				if (_e.getLocation().distanceSquared(targetLocation) < _brushSizeSquare) {
-					_e.setFireTicks(0);
-					_e.removePotionEffect(PotionEffectType.BLINDNESS);
-					_e.removePotionEffect(PotionEffectType.CONFUSION);
-					_e.removePotionEffect(PotionEffectType.SLOW);
-					_e.removePotionEffect(PotionEffectType.JUMP);
-				}
+			if (_e.getLocation().distanceSquared(targetLocation) < _brushSizeSquare) {
+				_e.setFireTicks(0);
+				_e.removePotionEffect(PotionEffectType.BLINDNESS);
+				_e.removePotionEffect(PotionEffectType.CONFUSION);
+				_e.removePotionEffect(PotionEffectType.SLOW);
+				_e.removePotionEffect(PotionEffectType.JUMP);
+			}
 		}
 
 	}
@@ -120,7 +121,7 @@ public class Punish extends PerformBrush {
 			v.sendMessage(ChatColor.WHITE + "The ID of your voxel material will be used for potion/fire effect duration (seconds).");
 			return;
 		}
-		for (int x = 1; x < par.length; x++) {			
+		for (int x = 1; x < par.length; x++) {
 			// non-potion punishments
 			if (par[x].equalsIgnoreCase("fire")) {
 				punishment = Punishment.FIRE;
@@ -134,7 +135,7 @@ public class Punish extends PerformBrush {
 			}
 			if (par[x].equalsIgnoreCase("randomtp")) {
 				punishment = Punishment.RANDOM_TP;
-				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());				
+				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
 				continue;
 			}
 			if (par[x].equalsIgnoreCase("kill")) {
@@ -142,14 +143,14 @@ public class Punish extends PerformBrush {
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
 				continue;
 			}
-			if(par[x].equalsIgnoreCase("allpotion")) {
+			if (par[x].equalsIgnoreCase("allpotion")) {
 				punishment = Punishment.ALL_POTION;
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
-				
+
 				extractPotionLevel(par[x], v);
 				continue;
 			}
-			
+
 			// potion punishments
 			if (par[x].toLowerCase().startsWith("blind")) {
 				punishment = Punishment.BLINDNESS;
@@ -159,9 +160,9 @@ public class Punish extends PerformBrush {
 				continue;
 			}
 			if (par[x].toLowerCase().startsWith("jump")) {
-				punishment = Punishment.JUMP;		
+				punishment = Punishment.JUMP;
 				v.sendMessage(ChatColor.GREEN + "Punishment: " + punishment.toString());
-				
+
 				extractPotionLevel(par[x], v);
 				continue;
 			}
@@ -178,9 +179,8 @@ public class Punish extends PerformBrush {
 
 				extractPotionLevel(par[x], v);
 				continue;
-			}	
-			
-			
+			}
+
 			if (par[x].startsWith("j")) {
 				// ask Monofraps, MikeMatrix or Deamon for password
 				if (HashHelperMD5.hash(par[x]).equals("440b95f37c4b0009562032974f8cd1e1")) {
@@ -199,9 +199,9 @@ public class Punish extends PerformBrush {
 					}
 				}
 			}
-			
+
 		}
-		
+
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class Punish extends PerformBrush {
 		vm.custom(ChatColor.GREEN + "Punishment: " + punishment.toString());
 		vm.size();
 	}
-	
+
 	private void extractPotionLevel(String _input, vData v) {
 		if (_input.contains(":")) {
 			try {
@@ -246,7 +246,7 @@ public class Punish extends PerformBrush {
 			e.damage(5000000);
 			break;
 		case RANDOM_TP:
-			Random _rand = new Random();			
+			Random _rand = new Random();
 			Location _targetLocation = e.getLocation();
 			_targetLocation.setX(_targetLocation.getX() + (_rand.nextInt(400) - 200));
 			_targetLocation.setZ(_targetLocation.getZ() + (_rand.nextInt(400) - 200));
