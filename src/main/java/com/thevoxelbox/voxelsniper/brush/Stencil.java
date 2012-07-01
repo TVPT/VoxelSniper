@@ -70,9 +70,15 @@ public class Stencil extends Brush {
             secondpoint[0] = tb.getX();
             secondpoint[1] = tb.getZ();
             secondpoint[2] = tb.getY();
-            v.sendMessage(ChatColor.GRAY + "Second point");
-            v.sendMessage("X:" + secondpoint[0] + " Z:" + secondpoint[1] + " Y:" + secondpoint[2]);
-            point = 3;
+            if((Math.abs(firstpoint[0]-secondpoint[0]) * Math.abs(firstpoint[1]-secondpoint[1]) * Math.abs(firstpoint[2]-secondpoint[2]) ) > 5000000) {
+            	v.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
+            	point = 1;
+            } else {
+            	v.sendMessage(ChatColor.GRAY + "Second point");
+	            v.sendMessage("X:" + secondpoint[0] + " Z:" + secondpoint[1] + " Y:" + secondpoint[2]);
+	            point = 3;
+            }
+	           
             //}
         } else if (point == 3) {
             //if (v.p.isSneaking()) {

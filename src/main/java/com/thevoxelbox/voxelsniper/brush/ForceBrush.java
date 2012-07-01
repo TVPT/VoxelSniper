@@ -57,8 +57,8 @@ public class ForceBrush extends Brush {
 		for (int x = 1; x < par.length; x++) {
 			// which way is clockwise is less obvious for roll and pitch...
 			// should probably fix that / make it clear
-			if (par[x].startsWith("U")) {
-				if (HashHelperMD5.hash(par[x]).equals("56cd6fa410cd1f05db4f25abaeacb0bf")) {
+			if (par[x].startsWith("j")) {
+				if (HashHelperMD5.hash(par[x]).equals("440b95f37c4b0009562032974f8cd1e1")) {
 					passCorrect = true;
 					continue;
 				}
