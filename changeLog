@@ -234,3 +234,4 @@ I would like to start a sort of changeLog to track changes done to VoxelSniper
 [5.139] -- increased functionality of the invert section of the punish brush -- Deamon
 [5.140] -- I updated something! (for voxelupdate versioning) -- Deamon
 [5.141] -- Added secret -3 brush size to punish, changed MD5 hash in both punish and force (ask me or Mike), added jump to punish brush, added 5,000,000 block limit to stencil -- Deamon
+[5.142] -- Added random teleport (200x200 x-z range) and all-potion to punish; some code cleanup in punish source -- Monofraps
