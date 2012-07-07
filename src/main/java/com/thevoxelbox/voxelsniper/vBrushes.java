@@ -123,7 +123,9 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     PUNISH(								Punish.class,                   "p",        "punish"),                 //  [   1    ]  \\
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVE(                               Move.class,                     "mv",       "move");
+    MOVE(                               Move.class,                     "mv",       "move"),
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BlockCat~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    POLE(                               Pole.class,                      "pl",      "pole");
            
     private static final Map<String, vBrushes> brushes;
     private Class<? extends Brush> brush;
