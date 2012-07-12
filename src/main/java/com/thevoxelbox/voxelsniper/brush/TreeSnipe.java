@@ -8,7 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.TreeType;
 
 /**
- *
+ * 
  * @author Mick
  */
 public class TreeSnipe extends Brush {
@@ -51,77 +51,47 @@ public class TreeSnipe extends Brush {
             return;
         }
         for (int x = 1; x < par.length; x++) {
-            if (par[x].equals("bigtree")) {
-                treeType = TreeType.BIG_TREE;
+            try {
+                this.treeType = TreeType.valueOf(par[x].toUpperCase());
                 printTreeType(v.vm);
-                break;
-            }
-            if (par[x].equals("birch")) {
-                treeType = TreeType.BIRCH;
-                printTreeType(v.vm);
-                break;
-            }
-            if (par[x].equals("redwood")) {
-                treeType = TreeType.REDWOOD;
-                printTreeType(v.vm);
-                break;
-            }
-            if (par[x].equals("tallredwood")) {
-                treeType = TreeType.TALL_REDWOOD;
-                printTreeType(v.vm);
-                break;
-            }
-            if (par[x].equals("tree")) {
-                treeType = TreeType.TREE;
-                printTreeType(v.vm);
-                break;
+            } catch (IllegalArgumentException _ex) {
+                v.vm.brushMessage("No such tree type.");
             }
         }
     }
 
     public void single(vData v) {
         try {
-            //int id = clampY(bx,by,bz).getTypeId();
-            if (clampY(bx, tb.getY(), bz).getTypeId() != 18) {
-                clampY(bx, tb.getY(), bz).setTypeId(3);
-            } //makes its own dirt so it can go anywhere
             w.generateTree(new Location(w, (double) bx, (double) by, (double) bz), treeType);
-            //s.getBlockAt(bx,by,bz).setTypeId(id); //replace the original block that was there.
         } catch (Exception e) {
-            v.sendMessage("Nope");
+            v.sendMessage("Tree placement unexpectedly failed.");
         }
     }
 
     private int getLocation(vData v) {
-        for (int i = 1; i < (127 - by); i++) {
-            if (clampY(bx, by + i, bz).getType() == Material.AIR) { // Dont you mean != AIR ?  -- prz
-                return by + i;                                            // But why are you even grabbing the highest Y ?
+        for (int i = 1; i < (255 - by); i++) {
+            if (clampY(bx, by + i, bz).getType() == Material.AIR) {
+                return by + i;
             }
         }
         return by;
     }
 
     private void printTreeType(vMessage vm) {
-        switch (treeType) {
-            case BIG_TREE:
-                vm.custom(ChatColor.GRAY + "bigtree " + ChatColor.DARK_GRAY + "birch " + "redwood " + "tallredwood " + "tree");
-                break;
+        String _printout = "";
 
-            case BIRCH:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + ChatColor.GRAY + "birch " + ChatColor.DARK_GRAY + "redwood " + "tallredwood " + "tree");
-                break;
-
-            case REDWOOD:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + ChatColor.GRAY + "redwood " + ChatColor.DARK_GRAY + "tallredwood " + "tree");
-                break;
-
-            case TALL_REDWOOD:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + ChatColor.GRAY + "tallredwood " + ChatColor.DARK_GRAY + "tree");
-                break;
-
-            case TREE:
-                vm.custom(ChatColor.DARK_GRAY + "bigtree " + "birch " + "redwood " + "tallredwood " + ChatColor.GRAY + "tree");
-                break;
+        boolean _delimiterHelper = true;
+        for (TreeType _treeType : TreeType.values()) {
+            if (_delimiterHelper) {
+                _delimiterHelper = false;
+            } else {
+                _printout += ", ";
+            }
+            _printout += ((_treeType.equals(this.treeType)) ? ChatColor.GRAY + _treeType.name().toLowerCase() : ChatColor.DARK_GRAY
+                    + _treeType.name().toLowerCase())
+                    + ChatColor.WHITE;
         }
+
+        vm.custom(_printout);
     }
 }
