@@ -70,6 +70,7 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     COPYPASTA(                          CopyPasta.class,                "cp",       "copypasta"),               //  [   22   ]  \\
     COMET(                              Comet.class,                    "com",      "comet"),                   //  [   23   ]  \\
     JAGGED(                             Jagged.class,                   "j",        "jagged"),                  //  [   24   ]  \\
+    THREEPOINTCIRCLE(                   ThreePointCircle.class,         "tpc",      "threepointcircle"),        //  [   25   ]  \\
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Ghost8700~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  \\
     GENERATE_TREE(                      GenerateTree.class,             "gt",       "generatetree"),            //  [   1    ]  \\
