@@ -237,3 +237,4 @@ I would like to start a sort of changeLog to track changes done to VoxelSniper
 [5.142] -- Added random teleport (200x200 x-z range) and all-potion to punish; some code cleanup in punish source -- Monofraps
 [5.143] -- Changed TreeSniper to automaticly recognize all TreeTypes, Added automatic plugin.yml version replacement with Maven. -- MikeMatrix
 [5.144] -- Changed Heatray by recoding it and fixed undo bug. -- MikeMatrix
+[5.146] -- Changed Heatray to now support parameters and to make it faster. Cleaned up ThreePointCircle's code a little. -- MikeMatrix
