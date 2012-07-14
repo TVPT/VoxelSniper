@@ -11,10 +11,12 @@ import com.thevoxelbox.voxelsniper.vMessage;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
+import org.bukkit.util.noise.PerlinNoiseGenerator;
 import org.bukkit.util.noise.SimplexNoiseGenerator;
 
 /**
@@ -30,6 +32,9 @@ public class HeatRay extends Brush {
     private static final double REQUIRED_AIR_DENSITY = 0;
 
     private static final ArrayList<Material> FLAMABLE_BLOCKS = new ArrayList<Material>();
+    private int octaves = 5;
+    private double frequency = 1;
+    private double amplitude = 0.3;
 
     private enum FlameableBlock {
 
@@ -76,16 +81,14 @@ public class HeatRay extends Brush {
     @Override
     public void info(vMessage vm) {
         vm.brushName(name);
+        vm.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
+        vm.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+        vm.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
         vm.size();
     }
 
     public void heatRay(vData v) {
-        SimplexNoiseGenerator _airGenerator = new SimplexNoiseGenerator(new Random());
-        SimplexNoiseGenerator _fireGenerator = new SimplexNoiseGenerator(new Random());
-        SimplexNoiseGenerator _cobbleGenerator = new SimplexNoiseGenerator(new Random());
-        SimplexNoiseGenerator _obsidianGenerator = new SimplexNoiseGenerator(new Random());
-
-        double _bSquare = (v.brushSize + 0.5) * (v.brushSize + 0.5);
+        PerlinNoiseGenerator _generator = new PerlinNoiseGenerator(new Random());
 
         Vector _targetLocation = tb.getLocation().toVector();
         Location _currentLocation = new Location(tb.getWorld(), 0, 0, 0);
@@ -118,29 +121,33 @@ public class HeatRay extends Brush {
                         }
 
                         if (!_currentBlock.getType().equals(Material.AIR)) {
-                            double _airDensity = _airGenerator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ());
-                            double _fireDensity = _fireGenerator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ());
-                            double _cobbleDensity = _cobbleGenerator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ());
-                            double _obsidianDensity = _obsidianGenerator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ());
+                            double _airDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), octaves,
+                                    frequency, amplitude);
+                            double _fireDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), octaves,
+                                    frequency, amplitude);
+                            double _cobbleDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), octaves,
+                                    frequency, amplitude);
+                            double _obsidianDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), octaves,
+                                    frequency, amplitude);
 
                             if (_obsidianDensity >= REQUIRED_OBSIDIAN_DENSITY) {
+                                _undo.put(_currentBlock);
                                 if (_currentBlock.getType() != Material.OBSIDIAN) {
-                                    _undo.put(_currentBlock);
                                     _currentBlock.setType(Material.OBSIDIAN);
                                 }
                             } else if (_cobbleDensity >= REQUIRED_COBBLE_DENSITY) {
+                                _undo.put(_currentBlock);
                                 if (_currentBlock.getType() != Material.COBBLESTONE) {
-                                    _undo.put(_currentBlock);
                                     _currentBlock.setType(Material.COBBLESTONE);
                                 }
                             } else if (_fireDensity >= REQUIRED_FIRE_DENSITY) {
+                                _undo.put(_currentBlock);
                                 if (_currentBlock.getType() != Material.FIRE) {
-                                    _undo.put(_currentBlock);
                                     _currentBlock.setType(Material.FIRE);
                                 }
                             } else if (_airDensity >= REQUIRED_AIR_DENSITY) {
+                                _undo.put(_currentBlock);
                                 if (_currentBlock.getType() != Material.AIR) {
-                                    _undo.put(_currentBlock);
                                     _currentBlock.setType(Material.AIR);
                                 }
                             }
@@ -152,5 +159,28 @@ public class HeatRay extends Brush {
         }
 
         v.storeUndo(_undo);
+    }
+
+    @Override
+    public void parameters(String[] par, vData v) {
+        if (par.length > 1 && par[1].equalsIgnoreCase("info")) {
+            v.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
+            v.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
+            v.sendMessage(ChatColor.AQUA + "/b sb amp[float] -- Amplitude parameter for the noise generator.");
+            v.sendMessage(ChatColor.AQUA + "/b sb freq[float] -- Frequency parameter for the noise generator.");
+        }
+        for (int _i = 1; _i < par.length; _i++) {
+            String _string = par[_i].toLowerCase();
+            if (_string.startsWith("oct")) {
+                this.octaves = Integer.valueOf(_string.substring(3));
+                v.vm.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
+            } else if (_string.startsWith("amp")) {
+                this.amplitude = Double.valueOf(_string.substring(3));
+                v.vm.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+            } else if (_string.startsWith("freq")) {
+                this.frequency = Double.valueOf(_string.substring(4));
+                v.vm.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
+            }
+        }
     }
 }

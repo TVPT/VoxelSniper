@@ -4,10 +4,10 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
 import org.bukkit.ChatColor;
+
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
  * @author Giltwist
