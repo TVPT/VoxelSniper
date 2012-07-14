@@ -97,6 +97,7 @@ public enum vBrushes { // DO NOTE: PSANKER IS REWRITING BRUSH LOADING FOR VS6
     SAVANNAH(                           Savannah.class,                 "savannah", "savannah"),                //  [   22   ]  \\
     STENCIL(                            Stencil.class,                  "st",       "stencil"),                 //  [   23   ]  \\
     STENCILLIST(                        StencilList.class,              "sl",       "stencillist"),             //  [   24   ]  \\
+    FLAT_OCEAN(                         FlatOcean.class,                "fo",       "flatocean"),               //  [   25   ]  \\
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~psanker~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ELLIPSE(                            Ellipse.class,                  "el",       "ellipse"    ),             //  [   1    ]  \\
