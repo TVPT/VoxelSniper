@@ -26,7 +26,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     @Override
     protected void arrow(com.thevoxelbox.voxelsniper.vData v) { // Derp
         if (set(tb)) {
-            v.owner().p.sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(h);
         }
@@ -35,7 +35,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     @Override
     protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         if (set(lb)) {
-            v.owner().p.sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(h);
         }

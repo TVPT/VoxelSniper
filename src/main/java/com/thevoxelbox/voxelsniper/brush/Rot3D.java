@@ -44,7 +44,7 @@ public class Rot3D extends Brush {
                 break;
 
             default:
-                v.owner().p.sendMessage(ChatColor.RED + "Something went wrong.");
+                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
                 break;
         }
     }

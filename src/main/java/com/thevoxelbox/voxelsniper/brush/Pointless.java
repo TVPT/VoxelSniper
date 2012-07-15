@@ -1,21 +1,22 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 
 /**
- *
+ * 
  * @author Mick
  */
 public class Pointless extends Brush {
 
-    Server server = VoxelSniper.s;
+    Server server = Bukkit.getServer();
     private boolean broadcastIt = false;
     private boolean loadedPrintouts = false;
     public static HashMap<String, String[]> printouts = new HashMap();
@@ -32,7 +33,7 @@ public class Pointless extends Brush {
 
             if (!loadedPrintouts) {
                 addToPrintouts();
-                //readPrintouts();
+                // readPrintouts();
                 loadedPrintouts = true;
             }
 
@@ -71,7 +72,7 @@ public class Pointless extends Brush {
     }
 
     /**
-     *
+     * 
      * @param v
      */
     public void printIt(vData v) {
@@ -81,9 +82,9 @@ public class Pointless extends Brush {
             }
         } else {
             v.sendMessage(ChatColor.RED + "Sorry, this printout does not exist.");
-//            for(String i : printouts.get(selection)) {
-//                server.broadcastMessage("- " + i);
-//            }
+            // for(String i : printouts.get(selection)) {
+            // server.broadcastMessage("- " + i);
+            // }
             for (String i : printouts.keySet()) {
                 server.broadcastMessage("--- " + i);
             }
@@ -99,37 +100,24 @@ public class Pointless extends Brush {
         }
     }
 
-//    !NameDerpLowercase
-//    @      .( * .
-//    @    . *  .  ) .
-//    @   . . &6POOF&9 .* .
-//    @  ' * . (  .) '
-//    @     ` ( . *
-//    #
+    // !NameDerpLowercase
+    // @ .( * .
+    // @ . * . ) .
+    // @ . . &6POOF&9 .* .
+    // @ ' * . ( .) '
+    // @ ` ( . *
+    // #
     public void addToPrintouts() {
-        printouts.put("dachshund", new String[]{"             .--.",
-                    " (_______(]6 `-,",
-                    " (   ____    /''\"`",
-                    " //\\\\   //\\\\",
-                    " \"\"  \"\"  \"\"  \"\""});
-        printouts.put("sunset", new String[]{"                           ~,  ^^                       |          ",
-                    "                           /|    ^^                  \\ _ /        ",
-                    "                          / |\\                    -=  ( )  =-     ",
-                    " ~^~ ^ ^~^~ ~^~ ~=====^~^~-~^~~^~^-=~=~=-~^~^~^~"});
-        printouts.put("poof", new String[]{"      .( * .",
-                    "    . *  .  ) .",
-                    "   . . POOF .* .",
-                    "    ' * . (  .) '",
-                    "     ` ( . *"});
-        printouts.put("dog", new String[]{"   |\\_/|", "   |^ ^|      /}",
-                    "   ( 0 )\"\"\"\\'",
-                    "  8===8     |",
-                    "   ||_/=\\\\__|"});
-        printouts.put("voxelbox", new String[]{"                             §c_ _               ",
-                    "§a /\\   /\\§b___§6__  __§c___| | |__   _____  __",
-                    "§a \\ \\ / /§b  _ \\§6 \\/ /§c _ \\ | '_ \\ / _ \\ \\/ /",
-                    "§a  \\ V /§b  (_) §6>   <§c  __/ |   |_) | (_)  >   < ",
-                    "§a   \\_/ §b\\___/§6_/\\_\\§c__|_|_.__/ \\___/_/\\_\\"});
+        printouts.put("dachshund",
+                new String[] { "             .--.", " (_______(]6 `-,", " (   ____    /''\"`", " //\\\\   //\\\\", " \"\"  \"\"  \"\"  \"\"" });
+        printouts.put("sunset", new String[] { "                           ~,  ^^                       |          ",
+                "                           /|    ^^                  \\ _ /        ", "                          / |\\                    -=  ( )  =-     ",
+                " ~^~ ^ ^~^~ ~^~ ~=====^~^~-~^~~^~^-=~=~=-~^~^~^~" });
+        printouts.put("poof", new String[] { "      .( * .", "    . *  .  ) .", "   . . POOF .* .", "    ' * . (  .) '", "     ` ( . *" });
+        printouts.put("dog", new String[] { "   |\\_/|", "   |^ ^|      /}", "   ( 0 )\"\"\"\\'", "  8===8     |", "   ||_/=\\\\__|" });
+        printouts.put("voxelbox", new String[] { "                             §c_ _               ", "§a /\\   /\\§b___§6__  __§c___| | |__   _____  __",
+                "§a \\ \\ / /§b  _ \\§6 \\/ /§c _ \\ | '_ \\ / _ \\ \\/ /", "§a  \\ V /§b  (_) §6>   <§c  __/ |   |_) | (_)  >   < ",
+                "§a   \\_/ §b\\___/§6_/\\_\\§c__|_|_.__/ \\___/_/\\_\\" });
     }
 
     public void readPrintouts() {
@@ -142,9 +130,8 @@ public class Pointless extends Brush {
             Scanner scnnr = new Scanner(f);
 
             String curPrintout = new String();
-            //ArrayList curLines = new ArrayList(2);
+            // ArrayList curLines = new ArrayList(2);
             String[] curLines = new String[1];
-
 
             while (scnnr.hasNext()) {
                 String nextLine = scnnr.nextLine();
@@ -161,7 +148,7 @@ public class Pointless extends Brush {
                     continue;
                 } else if (nextLine.startsWith("@")) {
                     // Printout lines
-                    //curLines.add(nextLine.substring(1));
+                    // curLines.add(nextLine.substring(1));
                     server.broadcastMessage("curLines[0]" + curLines[0]);
                     if (curLines[0] != null) {
                         server.broadcastMessage("if null - " + curPrintout);
@@ -173,14 +160,13 @@ public class Pointless extends Brush {
                         curLines[0] = nextLine.substring(1);
                     }
                     continue;
-                    //} else if (nextLine.startsWith("#")) {
+                    // } else if (nextLine.startsWith("#")) {
                 } else {
                     // Close
                     server.broadcastMessage("derp - " + curPrintout);
                     for (String i : curLines) {
                         server.broadcastMessage("derpus - " + i);
                     }
-
 
                     printouts.put(curPrintout, (String[]) curLines);
                     curPrintout = "";

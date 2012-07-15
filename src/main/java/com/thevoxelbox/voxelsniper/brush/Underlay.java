@@ -51,9 +51,9 @@ public class Underlay extends PerformBrush {
     @Override
     public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v){
     if(par[1].equalsIgnoreCase("info")){
-    v.owner().p.sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
-    v.owner().p.sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
-    v.owner().p.sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
+    v.owner().getPlayer().sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
+    v.owner().getPlayer().sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
+    v.owner().getPlayer().sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
     if(depth < 1){
         depth = 1;
     }
@@ -62,19 +62,19 @@ public class Underlay extends PerformBrush {
     for(int x=1; x < par.length;x++){
     if (par[x].startsWith("d")){
         depth = Integer.parseInt(par[x].replace("d", ""));
-                v.owner().p.sendMessage(ChatColor.AQUA + "Depth set to " + depth);
+                v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Depth set to " + depth);
               
                 continue;
             } else if (par[x].startsWith("all")) {
                 allBlocks = true;
-                v.owner().p.sendMessage(ChatColor.BLUE + "Will underlay over any block." + depth);
+                v.owner().getPlayer().sendMessage(ChatColor.BLUE + "Will underlay over any block." + depth);
                 continue;
             }else if (par[x].startsWith("some")) {
                 allBlocks = false;
-                v.owner().p.sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + depth);
+                v.owner().getPlayer().sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + depth);
                 continue;
             }else {
-                v.owner().p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.owner().getPlayer().sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         
     }

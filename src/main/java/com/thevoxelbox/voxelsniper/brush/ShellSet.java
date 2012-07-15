@@ -26,14 +26,14 @@ public class ShellSet extends Brush {
     @Override
     protected void arrow(com.thevoxelbox.voxelsniper.vData v) { // Derp
         if (set(tb, v)) {
-            v.owner().p.sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }
 
     @Override
     protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         if (set(lb, v)) {
-            v.owner().p.sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }
 

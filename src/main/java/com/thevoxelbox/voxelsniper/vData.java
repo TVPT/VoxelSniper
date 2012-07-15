@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper;
 
 import org.bukkit.World;
@@ -65,7 +61,7 @@ public class vData {
      * @return World
      */
     public final World getWorld() {
-        return this.owner.p.getWorld();
+        return this.owner.getPlayer().getWorld();
     }
 
     /**
@@ -92,7 +88,7 @@ public class vData {
      * @param message
      */
     public final void sendMessage(final String message) {
-        this.owner.p.sendMessage(message);
+        this.owner.getPlayer().sendMessage(message);
     }
 
     /**

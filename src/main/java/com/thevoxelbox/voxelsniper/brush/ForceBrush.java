@@ -73,7 +73,7 @@ public class ForceBrush extends Brush {
 			if (RADIUS > 500 || RADIUS < -500) {
 				RADIUS = 500;
 				v.brushSize = 500;
-				v.owner().p.sendMessage(ChatColor.AQUA + "Maximum 500 radius.  Brush size changed for you.");
+				v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Maximum 500 radius.  Brush size changed for you.");
 			}
 			if (RADIUS != -3) {
 				List nearbyEnts = w.getLivingEntities();

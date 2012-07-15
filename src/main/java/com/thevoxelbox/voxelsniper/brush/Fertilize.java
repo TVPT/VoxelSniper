@@ -6,6 +6,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.vMessage;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -16,7 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- *
+ * 
  * @author geekygenius
  */
 public class Fertilize extends Brush {
@@ -47,10 +49,10 @@ public class Fertilize extends Brush {
                 double xpow = Math.pow(x, 2);
                 for (int y = bsize; y >= 0; y--) {
                     if ((xpow + Math.pow(y, 2)) <= bpow) {
-                        boneMeal(world.getBlockAt(bx + x, vert + by, bz + y), s.owner().p);
-                        boneMeal(world.getBlockAt(bx + x, vert + by, bz - y), s.owner().p);
-                        boneMeal(world.getBlockAt(bx - x, vert + by, bz + y), s.owner().p);
-                        boneMeal(world.getBlockAt(bx - x, vert + by, bz - y), s.owner().p);
+                        boneMeal(world.getBlockAt(bx + x, vert + by, bz + y), s.owner().getPlayer());
+                        boneMeal(world.getBlockAt(bx + x, vert + by, bz - y), s.owner().getPlayer());
+                        boneMeal(world.getBlockAt(bx - x, vert + by, bz + y), s.owner().getPlayer());
+                        boneMeal(world.getBlockAt(bx - x, vert + by, bz - y), s.owner().getPlayer());
                     }
                 }
             }
@@ -61,17 +63,17 @@ public class Fertilize extends Brush {
     protected void powder(com.thevoxelbox.voxelsniper.vData s) {
     }
 
-    private void boneMeal(Block b, Player p) {//I think I need to make a legit bonemeal player.
-        dummy = p;//Make a dummy referance so we don't modify the origional
-        VoxelSniper.s.getPluginManager().callEvent(
-                new PlayerInteractEvent(p, Action.RIGHT_CLICK_BLOCK, new ItemStack(351, 1, (short) 0, (byte) 15), b, BlockFace.UP));
+    private void boneMeal(Block b, Player p) {// I think I need to make a legit bonemeal player.
+        dummy = p;// Make a dummy referance so we don't modify the origional
+        Bukkit.getPluginManager().callEvent(new PlayerInteractEvent(p, Action.RIGHT_CLICK_BLOCK, new ItemStack(351, 1, (short) 0, (byte) 15), b, BlockFace.UP));
     }
 
     @Override
     public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Fertilize Brush Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b fert true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b vg false will switch back. (false is default)");
+            v.sendMessage(ChatColor.AQUA
+                    + "/b fert true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b vg false will switch back. (false is default)");
             return;
         }
         for (int x = 1; x < par.length; x++) {

@@ -42,12 +42,12 @@ public class Jockey extends Brush {
 
     @Override
     protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        v.owner().p.eject();
-        v.owner().p.sendMessage(ChatColor.GOLD + "You have been ejected!");
+        v.owner().getPlayer().eject();
+        v.owner().getPlayer().sendMessage(ChatColor.GOLD + "You have been ejected!");
     }
 
     private void sitOn(vData v) {
-        Location l = v.owner().p.getLocation();
+        Location l = v.owner().getPlayer().getLocation();
         double px = l.getX();
         double py = l.getY();
         double pz = l.getZ();
@@ -64,7 +64,7 @@ public class Jockey extends Brush {
                 c = w.getChunkAt(x, y);
                 Entity[] toCheck = c.getEntities();
                 for (Entity e : toCheck) {
-                    if (e.getEntityId() == v.owner().p.getEntityId()) {
+                    if (e.getEntityId() == v.owner().getPlayer().getEntityId()) {
                         continue;
                     }
                     Location el = e.getLocation();
@@ -83,7 +83,7 @@ public class Jockey extends Brush {
             boolean teleport = false;
             PlayerTeleportEvent teleEvent = null;
 
-            Player player = v.owner().p;
+            Player player = v.owner().getPlayer();
             teleport = player.isOnline();
 
             if (teleport) {
@@ -93,7 +93,7 @@ public class Jockey extends Brush {
             }
 
             if (teleport) {
-                ((CraftEntity) v.owner().p).getHandle().setPassengerOf(((CraftEntity) closest).getHandle());
+                ((CraftEntity) v.owner().getPlayer()).getHandle().setPassengerOf(((CraftEntity) closest).getHandle());
                 v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
             }
         } else {

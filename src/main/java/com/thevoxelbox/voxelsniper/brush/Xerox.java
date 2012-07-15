@@ -95,7 +95,7 @@ public class Xerox extends PerformBrush {
             case PHYSICAL:
                 return false;
             default:
-                v.owner().p.sendMessage(ChatColor.RED + "Something went wrong! Please report this to PandaNati0n or any other sniper dev! (Action Error)");
+                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong! Please report this to PandaNati0n or any other sniper dev! (Action Error)");
 
         }
         return false;

@@ -126,24 +126,24 @@ public class Sneak extends Brush {
     }
 
     protected boolean getSilentTarget(vSniper v, Block clickedBlock, BlockFace clickedFace) {
-        w = v.p.getWorld();
+        w = v.getPlayer().getWorld();
         if (clickedBlock != null) {
             tb = clickedBlock;
             lb = clickedBlock.getRelative(clickedFace);
             if (lb == null) {
                 return false;
             }
-            if (v.lightning) {
+            if (v.isLightning()) {
                 w.strikeLightning(tb.getLocation());
             }
             return true;
         } else {
             HitBlox hb = null;
-            if (v.distRestrict) {
-                hb = new HitBlox(v.p, w, v.range);
+            if (v.isDistRestrict()) {
+                hb = new HitBlox(v.getPlayer(), w, v.getRange());
                 tb = hb.getRangeBlock();
             } else {
-                hb = new HitBlox(v.p, w);
+                hb = new HitBlox(v.getPlayer(), w);
                 tb = hb.getTargetBlock();
             }
             if (tb != null) {
@@ -151,7 +151,7 @@ public class Sneak extends Brush {
                 if (lb == null) {
                     return false;
                 }
-                if (v.lightning) {
+                if (v.isLightning()) {
                     w.strikeLightning(tb.getLocation());
                 }
                 return true;

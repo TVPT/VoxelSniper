@@ -45,7 +45,7 @@ public class Glow extends Brush {
 
     public void doglow(vData v) {
 
-        CraftWorld cWorld = (CraftWorld) v.owner().p.getWorld();
+        CraftWorld cWorld = (CraftWorld) v.owner().getPlayer().getWorld();
 //cWorld.getHandle().b(EnumSkyBlock.BLOCK, bx, by, bz. glevel); //not sure why this is throwing an error. - Giltwist
 
     }

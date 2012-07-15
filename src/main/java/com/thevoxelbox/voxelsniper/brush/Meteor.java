@@ -36,7 +36,7 @@ public class Meteor extends Brush {
 
     @Override
     protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        player_loc = v.owner().p.getLocation();
+        player_loc = v.owner().getPlayer().getLocation();
 
         origincoords[0] = player_loc.getX();
         origincoords[1] = player_loc.getY();
@@ -81,13 +81,13 @@ public class Meteor extends Brush {
         }
 
         //Hadoken!
-        EntityFireball entityfireball = new EntityFireball(((CraftWorld) v.owner().p.getWorld()).getHandle(), ((CraftPlayer) v.owner().p).getHandle(), slopevector[0] * linelength, slopevector[1] * linelength, slopevector[2] * linelength);
-        CraftFireball craftfireball = new CraftFireball((CraftServer) v.owner().p.getServer(), entityfireball);
+        EntityFireball entityfireball = new EntityFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), slopevector[0] * linelength, slopevector[1] * linelength, slopevector[2] * linelength);
+        CraftFireball craftfireball = new CraftFireball((CraftServer) v.owner().getPlayer().getServer(), entityfireball);
         Vector velocity = new Vector();
         velocity.setX(slopevector[0]);
         velocity.setY(slopevector[1]);
         velocity.setZ(slopevector[2]);
         craftfireball.setVelocity(velocity);
-        ((CraftWorld) v.owner().p.getWorld()).getHandle().addEntity(entityfireball);
+        ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(entityfireball);
     }
 }

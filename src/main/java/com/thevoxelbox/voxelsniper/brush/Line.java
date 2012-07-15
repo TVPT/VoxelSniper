@@ -39,7 +39,7 @@ public class Line extends PerformBrush {
     @Override
     protected void powder(com.thevoxelbox.voxelsniper.vData v) {
         if (origincoords[0] == 0 && origincoords[1] == 0 && origincoords[2] == 0) {
-            v.owner().p.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
         } else {
             targetcoords[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX());
             targetcoords[1] = tb.getY() + .5;
@@ -62,11 +62,11 @@ public class Line extends PerformBrush {
     }
 
     public void LineA(vData v) {
-        v.owner().p.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+        v.owner().getPlayer().sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
     }
 
     public void LineP(vData v) {
-        w = v.owner().p.getWorld();
+        w = v.owner().getPlayer().getWorld();
         int bId = v.voxelId;
         double linelength = 0;
 

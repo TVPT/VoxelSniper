@@ -26,7 +26,7 @@ public class Painting extends Brush {
      */
     @Override
     protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        vPainting.paint(v.owner().p, true, false, 0);
+        vPainting.paint(v.owner().getPlayer(), true, false, 0);
     }
 
     /**
@@ -36,7 +36,7 @@ public class Painting extends Brush {
      */
     @Override
     protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        vPainting.paint(v.owner().p, true, true, 0);
+        vPainting.paint(v.owner().getPlayer(), true, true, 0);
     }
 
     @Override

@@ -124,6 +124,6 @@ public class ShellBall extends Brush {
         }
         v.storeUndo(h);
 
-        v.owner().p.sendMessage(ChatColor.AQUA + "Shell complete.");  //This is needed because most uses of this brush will not be sible to the sniper.
+        v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Shell complete.");  //This is needed because most uses of this brush will not be sible to the sniper.
     }
 }

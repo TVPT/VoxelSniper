@@ -52,7 +52,7 @@ public class GenerateChunk extends Brush {
         v.storeUndo(h);
 
         // !!! Very dangerous! Do not touch! It will melt your spleen and sell your kidneys.  <- disregard DivineRage he knows not what he speaks of... -prz
-        v.owner().p.sendMessage("Generate that chunk! " + ch.getX() + " " + ch.getZ());
+        v.owner().getPlayer().sendMessage("Generate that chunk! " + ch.getX() + " " + ch.getZ());
         w.regenerateChunk(ch.getX(), ch.getZ());
         w.refreshChunk(ch.getX(), ch.getZ());
         //s.regenerateChunk((int) Math.floor(ch.getX() / 16), (int) Math.floor(ch.getZ() / 16));

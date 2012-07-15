@@ -11,10 +11,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
 /**
- *
+ * 
  * @author Gavjenks, hack job from the other 2d rotation brush by piotr
  */
-//The X Y and Z variable names in this file do NOT MAKE ANY SENSE.  Do not attempt to actually figure out what on earth is going on here.  Just go to the original 2d horizontal brush if you wish to make anything similar to this, and start there.  I didn't bother renaming everything.
+// The X Y and Z variable names in this file do NOT MAKE ANY SENSE. Do not attempt to actually figure out what on earth is going on here. Just go to the
+// original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 public class Rot2Dvert extends Brush {
 
     protected int mode = 0;
@@ -36,14 +37,14 @@ public class Rot2Dvert extends Brush {
         bsize = v.brushSize;
 
         switch (mode) {
-            case 0:
-                getMatrix();
-                rotate(v);
-                break;
+        case 0:
+            getMatrix();
+            rotate(v);
+            break;
 
-            default:
-                v.owner().p.sendMessage(ChatColor.RED + "Something went wrong.");
-                break;
+        default:
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
+            break;
         }
     }
 
@@ -72,9 +73,9 @@ public class Rot2Dvert extends Brush {
         double cos = Math.cos(se);
         double sin = Math.sin(se);
         boolean[][] doNotFill = new boolean[snap.length][snap.length];
-        //I put y in the inside loop, since it doesn't have any power functions, should be much faster.
-        //Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
-        //do a targeted filling of only those columns later that were left out.
+        // I put y in the inside loop, since it doesn't have any power functions, should be much faster.
+        // Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
+        // do a targeted filling of only those columns later that were left out.
 
         for (int x = 0; x < snap.length; x++) {
             xx = x - bsize;
@@ -114,7 +115,7 @@ public class Rot2Dvert extends Brush {
                 if (xpow + Math.pow(z - bsize, 2) <= bpow) {
                     fz = z + bz - bsize;
                     if (!doNotFill[x][z]) {
-                        //smart fill stuff
+                        // smart fill stuff
 
                         for (int y = 0; y < snap.length; y++) {
                             fy = y + by - bsize;
@@ -122,7 +123,8 @@ public class Rot2Dvert extends Brush {
                             D = getBlockIdAt(fy, fx - 1, fz);
                             C = getBlockIdAt(fy, fx, fz + 1);
                             B = getBlockIdAt(fy, fx, fz - 1);
-                            if (A == B || A == C || A == D) {   //I figure that since we are already narrowing it down to ONLY the holes left behind, it should be fine to do all 5 checks needed to be legit about it.
+                            if (A == B || A == C || A == D) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it should
+                                                              // be fine to do all 5 checks needed to be legit about it.
                                 winner = A;
                             } else if (B == D || C == D) {
                                 winner = D;
@@ -147,20 +149,20 @@ public class Rot2Dvert extends Brush {
         int sx = bx - bsize;
         int sy = by - bsize;
         int sz = bz - bsize;
-        //double bpow = Math.pow(bsize + 0.5, 2);
+        // double bpow = Math.pow(bsize + 0.5, 2);
         for (int x = 0; x < snap.length; x++) {
             sz = bz - derp;
-            //double xpow = Math.pow(x - bsize, 2);
+            // double xpow = Math.pow(x - bsize, 2);
             for (int z = 0; z < snap.length; z++) {
                 sy = by - derp;
-                //if (xpow + Math.pow(z - bsize, 2) <= bpow) {
+                // if (xpow + Math.pow(z - bsize, 2) <= bpow) {
                 for (int y = 0; y < snap.length; y++) {
-                    Block b = clampY(sx, sy, sz);  //why is this not sx + x, sy + y sz + z?
+                    Block b = clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
                     snap[x][y][z] = new vBlock(b);
                     b.setTypeId(0);
                     sy++;
                 }
-                //}
+                // }
                 sz++;
             }
             sx++;

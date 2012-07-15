@@ -4,7 +4,7 @@
 
 	<groupId>com.thevoxelbox</groupId>
 	<artifactId>VoxelSniper</artifactId>
-	<version>5.146</version>
+	<version>5.147</version>
 	<packaging>jar</packaging>
 
 	<name>VoxelSniper</name>
@@ -31,25 +31,6 @@
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>${basedir}/src/main/resources/</directory>
-				<includes>
-					<include>plugin.yml</include>
-				</includes>
-			</resource>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>changeLog</include>
-					<include>LICENSE</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

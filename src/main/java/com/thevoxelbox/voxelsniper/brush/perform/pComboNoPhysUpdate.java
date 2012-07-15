@@ -47,7 +47,7 @@ public class pComboNoPhysUpdate extends vPerformer {
         if (b.getTypeId() != i) {
             h.put(b);
             b.setTypeIdAndData(i, d, false);
-            ((CraftPlayer) s.p).getHandle().netServerHandler.sendPacket(new Packet53BlockChange(b.getX(), b.getY(), b.getZ(), ((CraftWorld) s.p.getWorld()).getHandle()));
+            ((CraftPlayer) s.getPlayer()).getHandle().netServerHandler.sendPacket(new Packet53BlockChange(b.getX(), b.getY(), b.getZ(), ((CraftWorld) s.getPlayer().getWorld()).getHandle()));
         }
     }
 }

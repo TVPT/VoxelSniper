@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * 
  * @author Voxel
  */
 public class WarpInStyle extends Brush {
@@ -23,16 +23,19 @@ public class WarpInStyle extends Brush {
 
     @Override
     protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        tp(v.owner().p, v.owner().p.getLocation()); //arrow just warps you, which is still useful and not annoying.  Powder does the effects.  -GJ
-    }                               //Ah, nice touch --prz
+        tp(v.owner().getPlayer(), v.owner().getPlayer().getLocation()); // arrow just warps you, which is still useful and not annoying. Powder does the
+                                                                        // effects. -GJ
+    } // Ah, nice touch --prz
 
     @Override
     protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        Location l = v.owner().p.getLocation();
-        Explosion e = new Explosion(((CraftWorld) v.owner().p.getWorld()).getHandle(), ((CraftPlayer) v.owner().p).getHandle(), 0.0D, -300.0D, 0.0D, 0.1F);
-        // ((CraftWorld) v.p.getWorld()).getHandle().server.serverConfigurationManager.a(l.getX(), l.getY(), l.getZ(), 64.0D, new Packet60Explosion(l.getX(), l.getY(), l.getZ(), v.brushSize, e.g));//.createExplosion(( (CraftPlayer)v.p).getHandle(), l.getX(), l.getY(), l.getZ(), v.brushSize, false);
+        Location l = v.owner().getPlayer().getLocation();
+        Explosion e = new Explosion(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), 0.0D,
+                -300.0D, 0.0D, 0.1F);
+        // ((CraftWorld) v.p.getWorld()).getHandle().server.serverConfigurationManager.a(l.getX(), l.getY(), l.getZ(), 64.0D, new Packet60Explosion(l.getX(),
+        // l.getY(), l.getZ(), v.brushSize, e.g));//.createExplosion(( (CraftPlayer)v.p).getHandle(), l.getX(), l.getY(), l.getZ(), v.brushSize, false);
         w.strikeLightning(l);
-        tp(v.owner().p, v.owner().p.getLocation());
+        tp(v.owner().getPlayer(), v.owner().getPlayer().getLocation());
         w.strikeLightning(tb.getLocation());
     }
 

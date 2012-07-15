@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 /**
- *
+ * 
  * @author Voxel
  */
 public class pComboUpdate extends vPerformer {
@@ -46,6 +46,7 @@ public class pComboUpdate extends vPerformer {
     public void perform(Block b) {
         h.put(b);
         b.setTypeIdAndData(i, d, true);
-        ((CraftPlayer) s.p).getHandle().netServerHandler.sendPacket(new Packet53BlockChange(b.getX(), b.getY(), b.getZ(), ((CraftWorld) s.p.getWorld()).getHandle()));
+        ((CraftPlayer) s.getPlayer()).getHandle().netServerHandler.sendPacket(new Packet53BlockChange(b.getX(), b.getY(), b.getZ(), ((CraftWorld) s.getPlayer()
+                .getWorld()).getHandle()));
     }
 }

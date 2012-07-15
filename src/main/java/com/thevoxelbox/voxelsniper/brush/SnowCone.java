@@ -39,7 +39,7 @@ public class SnowCone extends Brush {
                     by++;
                     addsnow(v);
                 } else {
-                    v.owner().p.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
+                    v.owner().getPlayer().sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
                 }
                 break;
         }

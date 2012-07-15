@@ -39,7 +39,7 @@ public class LoadChunk extends Brush {
 //        int j = v.owner().p.getWorld().getChunkAt(v.owner().p.getLocation()).getX();
 //        int k = v.owner().p.getWorld().getChunkAt(v.owner().p.getLocation()).getZ();
         //byte[] data = new byte[81920];
-        ((CraftPlayer) v.owner().p).getHandle().netServerHandler.sendPacket(new Packet51MapChunk(((CraftChunk) v.owner().p.getWorld().getChunkAt(v.owner().p.getLocation().getBlock())).getHandle(), true, 0));
+        ((CraftPlayer) v.owner().getPlayer()).getHandle().netServerHandler.sendPacket(new Packet51MapChunk(((CraftChunk) v.owner().getPlayer().getWorld().getChunkAt(v.owner().getPlayer().getLocation().getBlock())).getHandle(), true, 0));
 
         // ... why the hack method when there is a built-in Bukkit protocol for this? That I added? -psa
     }

@@ -127,6 +127,6 @@ public class ShellVoxel extends Brush {
         }
         v.storeUndo(h);
 
-        v.owner().p.sendMessage(ChatColor.AQUA + "Shell complete.");
+        v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Shell complete.");
     }
 }

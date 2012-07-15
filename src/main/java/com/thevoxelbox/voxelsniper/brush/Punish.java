@@ -70,7 +70,7 @@ public class Punish extends PerformBrush {
 		List<LivingEntity> _entities = v.getWorld().getLivingEntities();
 		int _numPunishApps = 0;
 		for (LivingEntity _e : _entities) {
-			if (v.owner().p != _e) {
+			if (v.owner().getPlayer() != _e) {
 				if (v.brushSize >= 0) {
 					try {
 						if (_e.getLocation().distanceSquared(_targetLocation) <= _brushSizeSquare) {

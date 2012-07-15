@@ -111,15 +111,15 @@ public class SplatterBall extends PerformBrush {
 
     public void splatterball(vData v) {
         if (seedpercent < 1 || seedpercent > 9999) {
-            v.owner().p.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
+            v.owner().getPlayer().sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
             seedpercent = 1000;
         }
         if (growpercent < 1 || growpercent > 9999) {
-            v.owner().p.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            v.owner().getPlayer().sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
             growpercent = 1000;
         }
         if (splatterrecursions < 1 || splatterrecursions > 10) {
-            v.owner().p.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
+            v.owner().getPlayer().sendMessage(ChatColor.BLUE + "Recursions set to: 3");
             splatterrecursions = 3;
         }
 

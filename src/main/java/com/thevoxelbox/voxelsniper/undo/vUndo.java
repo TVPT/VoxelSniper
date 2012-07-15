@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.undo;
 
 import com.thevoxelbox.voxelsniper.VoxelSniper;
+
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -77,7 +79,7 @@ public class vUndo {
      * collection
      */
     public void undo() {
-        w = VoxelSniper.s.getWorld(worldName);
+        w = Bukkit.getServer().getWorld(worldName);
         if(all.getSize() == 0) {
             return;
         }

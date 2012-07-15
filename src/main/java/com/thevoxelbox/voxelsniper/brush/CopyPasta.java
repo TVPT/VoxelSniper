@@ -117,7 +117,7 @@ public class CopyPasta extends Brush {
     }
 
     public void docopy(vData v) {
-        w = v.owner().p.getWorld();
+        w = v.owner().getPlayer().getWorld();
         for (int i = 0; i < 3; i++) {
             arraysize[i] = Math.abs(firstpoint[i] - secondpoint[i]) + 1;
             minpoint[i] = Math.min(firstpoint[i], secondpoint[i]);
@@ -145,7 +145,7 @@ public class CopyPasta extends Brush {
     }
 
     public void dopasta(vData v) {
-        w = v.owner().p.getWorld();
+        w = v.owner().getPlayer().getWorld();
         vUndo h = new vUndo(tb.getWorld().getName());
         Block b;
 

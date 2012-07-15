@@ -87,7 +87,7 @@ public class Triangle extends PerformBrush {
     }
 
     public void TriangleP(vData v) {
-        w = v.owner().p.getWorld();
+        w = v.owner().getPlayer().getWorld();
         int bId = v.voxelId;
         double lengthone = 0;
         double lengthtwo = 0;
