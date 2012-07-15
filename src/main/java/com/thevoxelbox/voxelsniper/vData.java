@@ -4,53 +4,101 @@
  */
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.util.VoxelList;
 import org.bukkit.World;
 
+import com.thevoxelbox.voxelsniper.util.VoxelList;
+
 /**
- *
+ * 
  * @author Piotr
  */
 public class vData {
 
-    private vSniper owner;
+    public static final int DEFAULT_REPLACE_DATA_VALUE = 0;
+    public static final int DEFAULT_CYLINDER_CENTER = 0;
+    public static final int DEFAULT_VOXEL_HEIGHT = 1;
+    public static final int DEFAULT_BRUSH_SIZE = 3;
+    public static final int DEFAULT_DATA_VALUE = 0;
+    public static final int DEFAULT_REPLACE_ID = 0;
+    public static final int DEFAULT_VOXEL_ID = 0;
+
+    private final vSniper owner;
     public vMessage vm;
-    public int brushSize = 3;                       // Brush size  --  set by /b #
-    public int voxelId;                             // Voxel Id   --   set by /v (#,name)
-    public int replaceId;                           // Voxel Replace Id   --   set by /vr #
-    public byte data;                               // Voxel 'ink'  --   set by /vi #
-    public byte replaceData;                        // Voxel 'ink' Replace -- set by /vir #
-    public VoxelList voxelList = new VoxelList();   // Voxel List of ID's -- set by /vl # # # -#
-    public int voxelHeight;                         // Voxel 'heigth'   --  set by /vh #
-    public int cCen;
+    /**
+     * Brush size -- set by /b #.
+     */
+    public int brushSize = DEFAULT_BRUSH_SIZE;
+    /**
+     * Voxel Id -- set by /v (#,name).
+     */
+    public int voxelId = DEFAULT_VOXEL_ID;
+    /**
+     * Voxel Replace Id -- set by /vr #.
+     */
+    public int replaceId = DEFAULT_REPLACE_ID;
+    /**
+     * Voxel 'ink' -- set by /vi #.
+     */
+    public byte data = DEFAULT_DATA_VALUE;
+    /**
+     * Voxel 'ink' Replace -- set by /vir #.
+     */
+    public byte replaceData = DEFAULT_REPLACE_DATA_VALUE;
+    /**
+     * Voxel List of ID's -- set by /vl # # # -#.
+     */
+    public VoxelList voxelList = new VoxelList();
+    /**
+     * Voxel 'heigth' -- set by /vh #.
+     */
+    public int voxelHeight = DEFAULT_VOXEL_HEIGHT;
+    public int cCen = DEFAULT_CYLINDER_CENTER;
 
-    public vData(vSniper vs) {
-        owner = vs;
+    /**
+     * @param vs
+     */
+    public vData(final vSniper vs) {
+        this.owner = vs;
     }
 
-    public vSniper owner() {
-        return owner;
+    /**
+     * @return World
+     */
+    public final World getWorld() {
+        return this.owner.p.getWorld();
     }
 
-    public void reset() {
-        voxelId = 0;
-        replaceId = 0;
-        data = 0;
-        brushSize = 3;
-        voxelHeight = 1;
-        cCen = 0;
-        replaceData = 0;
+    /**
+     * @return vSniper
+     */
+    public final vSniper owner() {
+        return this.owner;
     }
 
-    public void storeUndo(com.thevoxelbox.voxelsniper.undo.vUndo vundo) {
-        owner.storeUndo(vundo);
+    /**
+     * Reset to default values.
+     */
+    public final void reset() {
+        this.voxelId = vData.DEFAULT_VOXEL_ID;
+        this.replaceId = vData.DEFAULT_REPLACE_ID;
+        this.data = vData.DEFAULT_DATA_VALUE;
+        this.brushSize = vData.DEFAULT_BRUSH_SIZE;
+        this.voxelHeight = vData.DEFAULT_VOXEL_HEIGHT;
+        this.cCen = vData.DEFAULT_CYLINDER_CENTER;
+        this.replaceData = vData.DEFAULT_REPLACE_DATA_VALUE;
     }
 
-    public void sendMessage(String message) {
-        owner.p.sendMessage(message);
+    /**
+     * @param message
+     */
+    public final void sendMessage(final String message) {
+        this.owner.p.sendMessage(message);
     }
-    
-    public World getWorld() {
-        return owner.p.getWorld();
+
+    /**
+     * @param vundo
+     */
+    public final void storeUndo(final com.thevoxelbox.voxelsniper.undo.vUndo vundo) {
+        this.owner.storeUndo(vundo);
     }
 }
