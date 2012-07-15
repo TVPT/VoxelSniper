@@ -1,39 +1,46 @@
-
 package com.thevoxelbox.voxelsniper;
-import com.thevoxelbox.voxelsniper.brush.Brush;
+
 import org.bukkit.Bukkit;
 
+import com.thevoxelbox.voxelsniper.brush.Brush;
+
 /**
- *
+ * 
  * @author Gavin
  */
 
 public class ThrottleTimer implements Runnable {
 
-    Brush b;
-    int[] pieceNumbers;
-    vData v;
+    private final Brush brush;
+    private int[] pieceNumbers;
+    private final vData v;
 
-    public ThrottleTimer(vData vs, Brush br, int numPieces) {
-        b = br;
-        v = vs;
+    /**
+     * @param vs
+     * @param br
+     * @param numPieces
+     */
+    public ThrottleTimer(final vData vs, final Brush br, final int numPieces) {
+        this.brush = br;
+        this.v = vs;
     }
 
-    public void run() {
-        VoxelSniper vsPlugin = (VoxelSniper)Bukkit.getPluginManager().getPlugin("VoxelSniper");
-        if (b.throttleQueue.peek() == null) {
-            Bukkit.getScheduler().cancelTask(b.currentTimerID); //this timer, kill it.
+    @Override
+    public final void run() {
+        final VoxelSniper _vsPlugin = (VoxelSniper) Bukkit.getPluginManager().getPlugin("VoxelSniper");
+        if (this.brush.throttleQueue.peek() == null) {
+            // this timer, kill it.
+            Bukkit.getScheduler().cancelTask(this.brush.currentTimerID);
         } else {
             try {
-                if (Bukkit.getScheduler().isQueued(b.currentOneOffID) || Bukkit.getScheduler().isCurrentlyRunning(b.currentOneOffID)) {
-                    //nothing
-                } else {
-                    pieceNumbers = b.throttleQueue.poll();
-                    b.currentTimerID = Bukkit.getScheduler().scheduleSyncDelayedTask(vsPlugin, new ThrottlingTask(v, b, pieceNumbers));
+                if (!(Bukkit.getScheduler().isQueued(this.brush.currentOneOffID) || Bukkit.getScheduler().isCurrentlyRunning(this.brush.currentOneOffID))) {
+                    this.pieceNumbers = this.brush.throttleQueue.poll();
+                    this.brush.currentTimerID = Bukkit.getScheduler().scheduleSyncDelayedTask(_vsPlugin,
+                            new ThrottlingTask(this.v, this.brush, this.pieceNumbers));
                 }
-            } catch (Exception e) {
-                pieceNumbers = b.throttleQueue.poll();
-                b.currentTimerID = Bukkit.getScheduler().scheduleSyncDelayedTask(vsPlugin, new ThrottlingTask(v, b, pieceNumbers));
+            } catch (final Exception _e) {
+                this.pieceNumbers = this.brush.throttleQueue.poll();
+                this.brush.currentTimerID = Bukkit.getScheduler().scheduleSyncDelayedTask(_vsPlugin, new ThrottlingTask(this.v, this.brush, this.pieceNumbers));
             }
         }
     }
