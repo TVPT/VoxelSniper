@@ -1,26 +1,30 @@
-
 package com.thevoxelbox.voxelsniper;
+
 import com.thevoxelbox.voxelsniper.brush.Brush;
 
 /**
- *
+ * 
  * @author Gavin
  */
-
 public class ThrottlingTask implements Runnable {
 
-    Brush b;
-    int[] pn;
-    vData v;
+    private Brush brush;
+    private int[] pieceNumbers;
+    private vData v;
 
-    public ThrottlingTask(vData vs, Brush br, int[] pieceNumbers) {
-        b = br;
-        v = vs;
-        pn = pieceNumbers;
+    /**
+     * @param vs
+     * @param br
+     * @param pieceNumbers
+     */
+    public ThrottlingTask(final vData vs, final Brush br, final int[] pieceNumbers) {
+        this.brush = br;
+        this.v = vs;
+        this.pieceNumbers = pieceNumbers;
     }
 
     @Override
-    public void run() {
-        b.ThrottledRun(v, pn);
+    public final void run() {
+        this.brush.ThrottledRun(this.v, this.pieceNumbers);
     }
 }
