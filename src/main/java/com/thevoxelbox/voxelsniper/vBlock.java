@@ -2,6 +2,10 @@ package com.thevoxelbox.voxelsniper;
 
 import org.bukkit.block.Block;
 
+/**
+ * @author Voxel
+ * 
+ */
 public class vBlock {
 
     public int id;
@@ -10,7 +14,10 @@ public class vBlock {
     public int z;
     public byte d;
 
-    public vBlock(Block b) {
+    /**
+     * @param b
+     */
+    public vBlock(final Block b) {
         this.id = b.getTypeId();
         this.x = b.getX();
         this.y = b.getY();
@@ -18,7 +25,11 @@ public class vBlock {
         this.d = b.getData();
     }
 
-    public vBlock(Block b, int i) {
+    /**
+     * @param b
+     * @param i
+     */
+    public vBlock(final Block b, final int i) {
         this.id = i;
         this.x = b.getX();
         this.y = b.getY();
