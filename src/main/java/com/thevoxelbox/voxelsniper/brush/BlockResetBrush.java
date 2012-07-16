@@ -2,8 +2,10 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
 
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.CraftChunk;
 
 import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
@@ -18,6 +20,10 @@ public class BlockResetBrush extends Brush {
 
     static {
         DENIED_UPDATES.add(Material.SIGN);
+        DENIED_UPDATES.add(Material.SIGN_POST);
+        DENIED_UPDATES.add(Material.WALL_SIGN);
+        DENIED_UPDATES.add(Material.CHEST);
+        DENIED_UPDATES.add(Material.FURNACE);
         DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
         DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
         DENIED_UPDATES.add(Material.REDSTONE_WIRE);
