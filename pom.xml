@@ -4,7 +4,7 @@
 
 	<groupId>com.thevoxelbox</groupId>
 	<artifactId>VoxelSniper</artifactId>
-	<version>5.148</version>
+	<version>5.149</version>
 	<packaging>jar</packaging>
 
 	<name>VoxelSniper</name>

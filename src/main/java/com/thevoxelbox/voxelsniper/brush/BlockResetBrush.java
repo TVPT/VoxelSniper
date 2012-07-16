@@ -27,7 +27,7 @@ public class BlockResetBrush extends Brush {
             for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
                 for (int _y = -v.brushSize; _y <= v.brushSize; _y++) {
                     Block _block = w.getBlockAt(bx + _x, by + _y, bz + _z);
-                    _block.setType(_block.getType());
+                    _block.setTypeIdAndData(_block.getTypeId(), _block.getData(), true);
                 }
             }
         }
@@ -35,6 +35,18 @@ public class BlockResetBrush extends Brush {
 
     @Override
     protected final void powder(final vData v) {
-        this.arrow(v);
+        w = tb.getWorld();
+        bx = tb.getX();
+        by = tb.getY();
+        bz = tb.getZ();
+
+        for (int _z = -v.brushSize; _z <= v.brushSize; _z++) {
+            for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
+                for (int _y = -v.brushSize; _y <= v.brushSize; _y++) {
+                    Block _block = w.getBlockAt(bx + _x, by + _y, bz + _z);
+                    _block.getState().update(true);
+                }
+            }
+        }
     }
 }
