@@ -18,6 +18,11 @@ public class BlockResetBrush extends Brush {
 
     static {
         DENIED_UPDATES.add(Material.SIGN);
+        DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
+        DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
+        DENIED_UPDATES.add(Material.REDSTONE_WIRE);
+        DENIED_UPDATES.add(Material.DIODE_BLOCK_OFF);
+        DENIED_UPDATES.add(Material.DIODE_BLOCK_ON);
     }
 
     /**
