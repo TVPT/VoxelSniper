@@ -15,6 +15,7 @@ import com.thevoxelbox.voxelsniper.brush.BlendDisc;
 import com.thevoxelbox.voxelsniper.brush.BlendVoxel;
 import com.thevoxelbox.voxelsniper.brush.BlendVoxelDisc;
 import com.thevoxelbox.voxelsniper.brush.Blob;
+import com.thevoxelbox.voxelsniper.brush.BlockResetBrush;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.Canyon;
 import com.thevoxelbox.voxelsniper.brush.CanyonSelection;
@@ -202,7 +203,8 @@ public enum vBrushes {
     PUNISH(Punish.class, "p", "punish"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    MOVE(Move.class, "mv", "move");
+    MOVE(Move.class, "mv", "move"), // [1] \\
+    BLOCK_RESET(BlockResetBrush.class, "brb", "blockresetbrush"); // [1] \\
 
     private static final Map<String, vBrushes> BRUSHES;
 
