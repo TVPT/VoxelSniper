@@ -11,6 +11,13 @@ import com.thevoxelbox.voxelsniper.vMessage;
  */
 public class BlockResetBrush extends Brush {
 
+    /**
+     * 
+     */
+    public BlockResetBrush() {
+        this.name = "Block Reset Brush";
+    }
+
     @Override
     public final void info(final vMessage vm) {
         vm.brushName(this.name);
@@ -27,7 +34,9 @@ public class BlockResetBrush extends Brush {
             for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
                 for (int _y = -v.brushSize; _y <= v.brushSize; _y++) {
                     Block _block = w.getBlockAt(bx + _x, by + _y, bz + _z);
-                    _block.setTypeIdAndData(_block.getTypeId(), _block.getData(), true);
+                    byte _oldData = _block.getData();
+                    _block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
+                    _block.setTypeIdAndData(_block.getTypeId(), _oldData, false);
                 }
             }
         }
@@ -44,7 +53,9 @@ public class BlockResetBrush extends Brush {
             for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
                 for (int _y = -v.brushSize; _y <= v.brushSize; _y++) {
                     Block _block = w.getBlockAt(bx + _x, by + _y, bz + _z);
-                    _block.getState().update(true);
+                    byte _oldData = _block.getData();
+                    _block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
+                    _block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
                 }
             }
         }
