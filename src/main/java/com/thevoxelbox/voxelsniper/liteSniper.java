@@ -54,7 +54,7 @@ public class liteSniper extends vSniper {
     public final void setRange(final double rng) {
         if (rng > -1) {
             if (rng <= 40) {
-                this.setRange(rng);
+                super.setRange(rng);
                 this.setDistRestrict(true);
                 this.getVoxelMessage().toggleRange();
             } else {

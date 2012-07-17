@@ -24,11 +24,17 @@ public class BlockResetBrush extends Brush {
         DENIED_UPDATES.add(Material.WALL_SIGN);
         DENIED_UPDATES.add(Material.CHEST);
         DENIED_UPDATES.add(Material.FURNACE);
+        DENIED_UPDATES.add(Material.BURNING_FURNACE);
         DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
         DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
         DENIED_UPDATES.add(Material.REDSTONE_WIRE);
         DENIED_UPDATES.add(Material.DIODE_BLOCK_OFF);
         DENIED_UPDATES.add(Material.DIODE_BLOCK_ON);
+        DENIED_UPDATES.add(Material.WOODEN_DOOR);
+        DENIED_UPDATES.add(Material.WOOD_DOOR);
+        DENIED_UPDATES.add(Material.IRON_DOOR);
+        DENIED_UPDATES.add(Material.IRON_DOOR_BLOCK);
+        DENIED_UPDATES.add(Material.FENCE_GATE);
     }
 
     /**
