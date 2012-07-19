@@ -17,9 +17,9 @@ public class ThreePointCircle extends PerformBrush {
 	private boolean first = true;
 	// ALL COORDINATES AND VECTORS ARE ORDERED TRIPLES (X,Y,Z)
 	// Player provided points and a status tracker
-	private double[] coordsone = new double[3];
-	private double[] coordstwo = new double[3];
-	private double[] coordsthree = new double[3];
+	private double[] coordsOne = new double[3];
+	private double[] coordsTwo = new double[3];
+	private double[] coordsThree = new double[3];
 	private int cornernumber = 1;
 
 	public ThreePointCircle() {
@@ -31,23 +31,23 @@ public class ThreePointCircle extends PerformBrush {
 		// Add a point
 		switch (cornernumber) {
 		case 1:
-			coordsone[0] = tb.getX(); // .5 * tb.getX() / Math.abs(tb.getX()) 
-			coordsone[1] = tb.getY(); // +.5
-			coordsone[2] = tb.getZ(); // + .5 * tb.getZ() / Math.abs(tb.getZ())
+			coordsOne[0] = tb.getX(); // .5 * tb.getX() / Math.abs(tb.getX())
+			coordsOne[1] = tb.getY(); // +.5
+			coordsOne[2] = tb.getZ(); // + .5 * tb.getZ() / Math.abs(tb.getZ())
 			cornernumber = 2;
 			v.sendMessage(ChatColor.GRAY + "First Corner set.");
 			break;
 		case 2:
-			coordstwo[0] = tb.getX(); // OFFSET NEEDED?
-			coordstwo[1] = tb.getY();
-			coordstwo[2] = tb.getZ();
+			coordsTwo[0] = tb.getX(); // OFFSET NEEDED?
+			coordsTwo[1] = tb.getY();
+			coordsTwo[2] = tb.getZ();
 			cornernumber = 3;
 			v.sendMessage(ChatColor.GRAY + "Second Corner set.");
 			break;
 		case 3:
-			coordsthree[0] = tb.getX(); // OFFSET NEEDED?
-			coordsthree[1] = tb.getY();
-			coordsthree[2] = tb.getZ();
+			coordsThree[0] = tb.getX(); // OFFSET NEEDED?
+			coordsThree[1] = tb.getY();
+			coordsThree[2] = tb.getZ();
 			cornernumber = 1;
 			v.sendMessage(ChatColor.GRAY + "Third Corner set.");
 			break;
@@ -64,20 +64,20 @@ public class ThreePointCircle extends PerformBrush {
 
 		// Initialization
 
-		double[] vectorone = new double[3]; // Point 1 to 2
-		double[] vectortwo = new double[3]; // Point 1 to 3
-		double[] vectorthree = new double[3]; // Point 2 to 3
-		double[] normalvector = new double[3]; // normal vector of plane
+		double[] vectorOne = new double[3]; // Point 1 to 2
+		double[] vectorTwo = new double[3]; // Point 1 to 3
+		double[] vectorThree = new double[3]; // Point 2 to 3
+		double[] normalVector = new double[3]; // normal vector of plane
 
-		double sidelengthone = 0;// Point 1 to 2
-		double sidelengthtwo = 0;// Point 1 to 3
-		double sidelengththree = 0; // Point 2 to 3
+		double sidelengthOne = 0;// Point 1 to 2
+		double sidelengthTwo = 0;// Point 1 to 3
+		double sidelengthThree = 0; // Point 2 to 3
 
-		double[] midpointone = new double[3]; // Point 1 to 2
-		double[] midpointtwo = new double[3]; // Point 1 to 3
+		double[] midpointOne = new double[3]; // Point 1 to 2
+		double[] midpointTwo = new double[3]; // Point 1 to 3
 
-		double[] perpendicularone = new double[3];// Point 1 to 2
-		double[] perpendiculartwo = new double[3];// Point 1 to 3
+		double[] perpendicularOne = new double[3];// Point 1 to 2
+		double[] perpendicularTwo = new double[3];// Point 1 to 3
 
 		double[] circumcenter = new double[3]; // Defined by three points
 		int[] brushcenter = new int[3]; // Rounded circumcenter
@@ -88,37 +88,33 @@ public class ThreePointCircle extends PerformBrush {
 
 		// Calculate slope vectors for the plane defined by three points
 		for (int i = 0; i < 3; i++) {
-			vectorone[i] = coordstwo[i] - coordsone[i];
-			vectortwo[i] = coordsthree[i] - coordsone[i];
-			vectorthree[i] = coordsthree[i] - coordstwo[i];
+			vectorOne[i] = coordsTwo[i] - coordsOne[i];
+			vectorTwo[i] = coordsThree[i] - coordsOne[i];
+			vectorThree[i] = coordsThree[i] - coordsTwo[i];
 		}
 
 		// Calculate magnitude of slope vectors
-		sidelengthone = Math.pow(Math.pow(vectorone[0], 2) + Math.pow(vectorone[1], 2) + Math.pow(vectorone[2], 2), .5);
-		sidelengthtwo = Math.pow(Math.pow(vectortwo[0], 2) + Math.pow(vectortwo[1], 2) + Math.pow(vectortwo[2], 2), .5);
-		sidelengththree = Math.pow(Math.pow(vectorthree[0], 2) + Math.pow(vectorthree[1], 2) + Math.pow(vectorthree[2], 2), .5);
+		sidelengthOne = Math.pow(Math.pow(vectorOne[0], 2) + Math.pow(vectorOne[1], 2) + Math.pow(vectorOne[2], 2), .5);
+		sidelengthTwo = Math.pow(Math.pow(vectorTwo[0], 2) + Math.pow(vectorTwo[1], 2) + Math.pow(vectorTwo[2], 2), .5);
+		sidelengthThree = Math.pow(Math.pow(vectorThree[0], 2) + Math.pow(vectorThree[1], 2) + Math.pow(vectorThree[2], 2), .5);
 
 		// END TRIANGLE
 
 		// Confirm triangle is not degenerate before proceeding
-//|| coordsone[0] * (coordstwo[1] - coordsthree[1]) + coordstwo[0] * (coordsthree[1] - coordsone[1]) + coordsthree[0]* (coordsone[1] - coordstwo[1]) == 0)
-		
-		if (sidelengthone == 0
-				|| sidelengthtwo == 0
-				|| sidelengththree == 0)
-				 {
+
+		if (sidelengthOne == 0 || sidelengthTwo == 0 || sidelengthThree == 0) {
 			v.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
 		} else {
 
 			// BEGIN DETERMINATION OF PLANE IDENTITY
 
 			// Calculate the cross product of vectorone and vectortwo
-			normalvector[0] = vectorone[1] * vectortwo[2] - vectorone[2] * vectortwo[1];
-			normalvector[1] = vectorone[2] * vectortwo[0] - vectorone[0] * vectortwo[2];
-			normalvector[2] = vectorone[0] * vectortwo[1] - vectorone[1] * vectortwo[0];
+			normalVector[0] = vectorOne[1] * vectorTwo[2] - vectorOne[2] * vectorTwo[1];
+			normalVector[1] = vectorOne[2] * vectorTwo[0] - vectorOne[0] * vectorTwo[2];
+			normalVector[2] = vectorOne[0] * vectorTwo[1] - vectorOne[1] * vectorTwo[0];
 
 			// Calculate constant term of plane
-			double planeconstant = normalvector[0] * coordsone[0] + normalvector[1] * coordsone[1] + normalvector[2] * coordsone[2];
+			double planeconstant = normalVector[0] * coordsOne[0] + normalVector[1] * coordsOne[1] + normalVector[2] * coordsOne[2];
 
 			// END PLANE IDENTITY
 
@@ -127,47 +123,75 @@ public class ThreePointCircle extends PerformBrush {
 			// Find Midpoints of two sides
 			for (int i = 0; i < 3; i++) {
 				// Midpoint from point 1 to point 2 (vectorone)
-				midpointone[i] = (coordstwo[i] + coordsone[i]) / 2;
+				midpointOne[i] = (coordsTwo[i] + coordsOne[i]) / 2;
 				// Midpoint from point 1 to point 3 (vectortwo)
-				midpointtwo[i] = (coordsthree[i] + coordsone[i]) / 2;
+				midpointTwo[i] = (coordsThree[i] + coordsOne[i]) / 2;
 			}
-			
-			//DEBUG CHECK: Correctly finding midpoints?
-			//current.perform(clampY((int) Math.round(midpointone[0]), (int) Math.round(midpointone[1]), (int) Math.round(midpointone[2])));
-			//current.perform(clampY((int) Math.round(midpointtwo[0]), (int) Math.round(midpointtwo[1]), (int) Math.round(midpointtwo[2])));
-			//Yep!
-			
-			
+
+			// DEBUG CHECK: Correctly finding midpoints?
+			// current.perform(clampY((int) Math.round(midpointOne[0]), (int) Math.round(midpointOne[1]), (int) Math.round(midpointOne[2])));
+			// current.perform(clampY((int) Math.round(midpointTwo[0]), (int) Math.round(midpointTwo[1]), (int) Math.round(midpointTwo[2])));
+			// Always works, within rounding error
+
 			// Find perpendicular vectors to two sides in the plane
 
 			// Calculate the cross product of normalvector and vectorone
-			perpendicularone[0] = normalvector[1] * vectorone[2] - normalvector[2] * vectorone[1];
-			perpendicularone[1] = normalvector[2] * vectorone[0] - normalvector[0] * vectorone[2];
-			perpendicularone[2] = normalvector[0] * vectorone[1] - normalvector[1] * vectorone[0];
+			perpendicularOne[0] = normalVector[1] * vectorOne[2] - normalVector[2] * vectorOne[1];
+			perpendicularOne[1] = normalVector[2] * vectorOne[0] - normalVector[0] * vectorOne[2];
+			perpendicularOne[2] = normalVector[0] * vectorOne[1] - normalVector[1] * vectorOne[0];
 
 			// Calculate the cross product of normalvector and vectortwo
-			perpendiculartwo[0] = normalvector[1] * vectortwo[2] - normalvector[2] * vectortwo[1];
-			perpendiculartwo[1] = normalvector[2] * vectortwo[0] - normalvector[0] * vectortwo[2];
-			perpendiculartwo[2] = normalvector[0] * vectortwo[1] - normalvector[1] * vectorone[0];
+			perpendicularTwo[0] = normalVector[1] * vectorTwo[2] - normalVector[2] * vectorTwo[1];
+			perpendicularTwo[1] = normalVector[2] * vectorTwo[0] - normalVector[0] * vectorTwo[2];
+			perpendicularTwo[2] = normalVector[0] * vectorTwo[1] - normalVector[1] * vectorTwo[0]; // derp, can't believe I forgot to change a "one" into a
+																									// "two" here.
+
+			// DEBUG CHECK: Correctly finding perpendicular?
+			v.sendMessage(ChatColor.YELLOW + "<" + perpendicularOne[0] + ", " + perpendicularOne[1] + ", " + perpendicularOne[2] + ">");
+			v.sendMessage(ChatColor.YELLOW + "<" + perpendicularTwo[0] + ", " + perpendicularTwo[1] + ", " + perpendicularTwo[2] + ">");
+			// Looks like it, except direction seems to not be constant? Right hand rule being problematic?
+
+			double t = 0;
 
 			// determine value of parametric variable at intersection of two perpendicular bisectors
-			double t = (midpointtwo[0] - midpointone[0]) / (perpendicularone[0] - perpendiculartwo[0]);
+			if (perpendicularOne[0] == perpendicularTwo[0] || midpointOne[0] == midpointTwo[0]) {
+				if (perpendicularOne[1] == perpendicularTwo[1] || midpointOne[1] == midpointTwo[1]) {
+					t = Math.abs((midpointTwo[2] - midpointOne[2]) / (perpendicularOne[2] - perpendicularTwo[2]));
+
+				} else {
+
+					t = Math.abs((midpointTwo[1] - midpointOne[1]) / (perpendicularOne[1] - perpendicularTwo[1]));
+
+				}
+			} else {
+				t = Math.abs((midpointTwo[0] - midpointOne[0]) / (perpendicularOne[0] - perpendicularTwo[0]));
+
+			}
+
+			// DEBUG: What the heck is t?
+			// v.sendMessage(ChatColor.GOLD+"t: "+t);
+			// Positive t's seem to always work. negative t's always seem to fail
 
 			// Calculate Circumcenter and Brushcenter
 			for (int i = 0; i < 3; i++) {
-				circumcenter[i] = midpointone[i] + perpendicularone[i] * t;
+				circumcenter[i] = midpointOne[i] + perpendicularOne[i] * t;
 				brushcenter[i] = (int) Math.round(circumcenter[i]);
+
+				// DEBUG CHECK: Correctly determining t?
+				// v.sendMessage(ChatColor.YELLOW+"CC: "+circumcenter[i]+" DBG: "+ (midpointTwo[i]+perpendicularTwo[i]*t));
+				// Fixed.
+
 			}
 			// END CIRCUMCENTER
-			
-			//DEBUG CHECK: Correctly finding circumcenter?
-			//current.perform(clampY(brushcenter[0], brushcenter[1], brushcenter[2]));
-			//Yep!
-			
+
+			// DEBUG CHECK: Correctly finding circumcenter?
+			// current.perform(clampY(brushcenter[0], brushcenter[1], brushcenter[2]));
+			// Should be working now
+
 			// Calculate radius of circumcircle and determine brushsize
 			radius = Math.pow(
-					Math.pow((coordsone[0] - circumcenter[0]), 2) + Math.pow((coordsone[1] - circumcenter[1]), 2)
-							+ Math.pow((coordsone[2] - circumcenter[2]), 2), .5);
+					Math.pow((coordsOne[0] - circumcenter[0]), 2) + Math.pow((coordsOne[1] - circumcenter[1]), 2)
+							+ Math.pow((coordsOne[2] - circumcenter[2]), 2), .5);
 			bsize = (int) (Math.ceil(radius) + 1);
 
 			// BEGIN DETERMINING BLOCKS TO CHANGE
@@ -177,12 +201,12 @@ public class ThreePointCircle extends PerformBrush {
 					for (int z = -bsize; z <= bsize; z++) {
 						// Calculate distance from center
 						double tempdistance = Math.pow(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2), .5);
-						double tempconstant = normalvector[0] * (circumcenter[0] + x) + normalvector[1] * (circumcenter[1] + y) + normalvector[2]
+						double tempconstant = normalVector[0] * (circumcenter[0] + x) + normalVector[1] * (circumcenter[1] + y) + normalVector[2]
 								* (circumcenter[2] + z);
 
 						// Check if point is within sphere and on plane
-																
-						if (tempdistance <= radius && tempconstant==planeconstant) {
+
+						if (tempdistance <= radius && tempconstant == planeconstant) {
 
 							// Make the changes
 
@@ -196,19 +220,24 @@ public class ThreePointCircle extends PerformBrush {
 			// END BLOCKS
 
 		}
+
 		// Finalize Undo
 		v.storeUndo(current.getUndo());
 
+		// Notify player
+		// v.sendMessage(ChatColor.AQUA+"Radius " + (int) (Math.round(radius)) +
+		// "circle created at ("+brushcenter[0]+","+brushcenter[1]+","+brushcenter[2]+")");
+
 		// RESET BRUSH
-		coordsone[0] = 0;
-		coordsone[1] = 0; 
-		coordsone[2] = 0;
-		coordstwo[0] = 0;
-		coordstwo[1] = 0;
-		coordstwo[2] = 0;
-		coordsthree[0] = 0;
-		coordsthree[1] = 0;
-		coordsthree[2] = 0;
+		coordsOne[0] = 0;
+		coordsOne[1] = 0;
+		coordsOne[2] = 0;
+		coordsTwo[0] = 0;
+		coordsTwo[1] = 0;
+		coordsTwo[2] = 0;
+		coordsThree[0] = 0;
+		coordsThree[1] = 0;
+		coordsThree[2] = 0;
 
 		cornernumber = 1;
 
