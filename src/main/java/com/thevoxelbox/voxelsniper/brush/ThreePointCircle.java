@@ -31,23 +31,23 @@ public class ThreePointCircle extends PerformBrush {
 		// Add a point
 		switch (cornernumber) {
 		case 1:
-			coordsone[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is different?
-			coordsone[1] = tb.getY() + .5;
-			coordsone[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
+			coordsone[0] = tb.getX(); // .5 * tb.getX() / Math.abs(tb.getX()) 
+			coordsone[1] = tb.getY(); // +.5
+			coordsone[2] = tb.getZ(); // + .5 * tb.getZ() / Math.abs(tb.getZ())
 			cornernumber = 2;
 			v.sendMessage(ChatColor.GRAY + "First Corner set.");
 			break;
 		case 2:
-			coordstwo[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is different?
-			coordstwo[1] = tb.getY() + .5;
-			coordstwo[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
+			coordstwo[0] = tb.getX(); // OFFSET NEEDED?
+			coordstwo[1] = tb.getY();
+			coordstwo[2] = tb.getZ();
 			cornernumber = 3;
 			v.sendMessage(ChatColor.GRAY + "Second Corner set.");
 			break;
 		case 3:
-			coordsthree[0] = tb.getX() + .5 * tb.getX() / Math.abs(tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is different?
-			coordsthree[1] = tb.getY() + .5;
-			coordsthree[2] = tb.getZ() + .5 * tb.getZ() / Math.abs(tb.getZ());
+			coordsthree[0] = tb.getX(); // OFFSET NEEDED?
+			coordsthree[1] = tb.getY();
+			coordsthree[2] = tb.getZ();
 			cornernumber = 1;
 			v.sendMessage(ChatColor.GRAY + "Third Corner set.");
 			break;
@@ -101,11 +101,12 @@ public class ThreePointCircle extends PerformBrush {
 		// END TRIANGLE
 
 		// Confirm triangle is not degenerate before proceeding
+//|| coordsone[0] * (coordstwo[1] - coordsthree[1]) + coordstwo[0] * (coordsthree[1] - coordsone[1]) + coordsthree[0]* (coordsone[1] - coordstwo[1]) == 0)
+		
 		if (sidelengthone == 0
 				|| sidelengthtwo == 0
-				|| sidelengththree == 0
-				|| coordsone[0] * (coordstwo[1] - coordsthree[1]) + coordstwo[0] * (coordsthree[1] - coordsone[1]) + coordsthree[0]
-						* (coordsone[1] - coordstwo[1]) == 0) {
+				|| sidelengththree == 0)
+				 {
 			v.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
 		} else {
 
@@ -130,7 +131,13 @@ public class ThreePointCircle extends PerformBrush {
 				// Midpoint from point 1 to point 3 (vectortwo)
 				midpointtwo[i] = (coordsthree[i] + coordsone[i]) / 2;
 			}
-
+			
+			//DEBUG CHECK: Correctly finding midpoints?
+			//current.perform(clampY((int) Math.round(midpointone[0]), (int) Math.round(midpointone[1]), (int) Math.round(midpointone[2])));
+			//current.perform(clampY((int) Math.round(midpointtwo[0]), (int) Math.round(midpointtwo[1]), (int) Math.round(midpointtwo[2])));
+			//Yep!
+			
+			
 			// Find perpendicular vectors to two sides in the plane
 
 			// Calculate the cross product of normalvector and vectorone
@@ -152,7 +159,11 @@ public class ThreePointCircle extends PerformBrush {
 				brushcenter[i] = (int) Math.round(circumcenter[i]);
 			}
 			// END CIRCUMCENTER
-
+			
+			//DEBUG CHECK: Correctly finding circumcenter?
+			//current.perform(clampY(brushcenter[0], brushcenter[1], brushcenter[2]));
+			//Yep!
+			
 			// Calculate radius of circumcircle and determine brushsize
 			radius = Math.pow(
 					Math.pow((coordsone[0] - circumcenter[0]), 2) + Math.pow((coordsone[1] - circumcenter[1]), 2)
@@ -164,13 +175,14 @@ public class ThreePointCircle extends PerformBrush {
 			for (int x = -bsize; x <= bsize; x++) {
 				for (int y = -bsize; y <= bsize; y++) {
 					for (int z = -bsize; z <= bsize; z++) {
-						// Calculate distance from center, offset .5 to get "center" of block rather than corner
-						double tempdistance = Math.pow(Math.pow(x + .5, 2) + Math.pow(y + .5, 2) + Math.pow(z + .5, 2), .5);
-						double tempconstant = normalvector[0] * (circumcenter[0] + x + .5) + normalvector[1] * (circumcenter[1] + y + .5) + normalvector[2]
-								* (circumcenter[2] + z + .5);
+						// Calculate distance from center
+						double tempdistance = Math.pow(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2), .5);
+						double tempconstant = normalvector[0] * (circumcenter[0] + x) + normalvector[1] * (circumcenter[1] + y) + normalvector[2]
+								* (circumcenter[2] + z);
 
 						// Check if point is within sphere and on plane
-						if (tempdistance <= radius && tempconstant == planeconstant) {
+																
+						if (tempdistance <= radius && tempconstant==planeconstant) {
 
 							// Make the changes
 
