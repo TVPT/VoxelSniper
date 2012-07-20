@@ -248,3 +248,4 @@ I would like to start a sort of changeLog to track changes done to VoxelSniper
 [5.154] -- Fixed unwanted recursion in liteSniper after refactoring. Added some Blocks to the BlockResetBrush that should not be affected. -- MikeMatrix
 [5.155] -- Three point circle ready for actions - giltwist
 [5.156] -- Three point circle code cleanup and optimization -- MikeMatrix
+[5.157] -- Fixed typo in Heat Ray. -- MikeMatrix
