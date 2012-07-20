@@ -22,6 +22,7 @@ public class ThreePointCircle extends PerformBrush {
 	private double[] coordsTwo = new double[3];
 	private double[] coordsThree = new double[3];
 	private int cornernumber = 1;
+	private int tolerance = 1000; //reasonable default 
 
 	public ThreePointCircle() {
 		name = "3-Point Circle";
@@ -160,7 +161,7 @@ public class ThreePointCircle extends PerformBrush {
 			  
 			  // Check if point is within sphere and on plane (some tolerance given)
 			  
-			  if (tempdistance <= radius && (Math.abs(cornerconstant-planeconstant)<.05||Math.abs(centerconstant-planeconstant)<.05)) {
+			  if (tempdistance <= radius && (Math.abs(cornerconstant-planeconstant)<tolerance||Math.abs(centerconstant-planeconstant)<tolerance)) {
 			 
 			  // Make the changes
 			  
@@ -168,10 +169,13 @@ public class ThreePointCircle extends PerformBrush {
 			  
 			  } } }
 			 
+
 			// END BLOCKS
 
+				v.sendMessage(ChatColor.GREEN+"Done.");
 		}
 
+		
 		// Finalize Undo
 		v.storeUndo(current.getUndo());
 
@@ -193,14 +197,45 @@ public class ThreePointCircle extends PerformBrush {
 	@Override
 	public final void info(final vMessage vm) {
 		vm.brushName(name);
+		switch (tolerance){
+		case 10:
+			vm.custom(ChatColor.GOLD+"Mode: Accurate");
+			break;
+		case 1000:
+			vm.custom(ChatColor.GOLD+"Mode: Default");
+			break;
+		case 2000:
+			vm.custom(ChatColor.GOLD+"Mode: Smooth");
+			break;
+		
+		}
 
 	}
 
 	@Override
 	public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
 		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD
+			v.sendMessage(ChatColor.YELLOW
 					+ "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
+			v.sendMessage(ChatColor.GOLD+"/b tpc accurate|default|smooth -- Toggle the calculations to emphasize accuracy or smoothness");
+			return;
+		}
+		if (par[1].equalsIgnoreCase("default")) {
+			tolerance=1000;
+			v.sendMessage(ChatColor.AQUA
+					+ "Brush set to default tolerances.");
+			return;
+		}
+		if (par[1].equalsIgnoreCase("accurate")) {
+			tolerance=10;
+			v.sendMessage(ChatColor.AQUA
+					+ "Brush set to emphasize accuracy over smoothness");
+			return;
+		}
+		if (par[1].equalsIgnoreCase("smooth")) {
+			tolerance=2000;
+			v.sendMessage(ChatColor.AQUA
+					+ "Brush set to emphasize smoothness over accuracy");
 			return;
 		}
 
