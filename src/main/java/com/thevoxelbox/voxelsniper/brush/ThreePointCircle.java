@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
+import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
 import com.thevoxelbox.voxelsniper.vMessage;
@@ -15,229 +12,201 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  */
 public class ThreePointCircle extends PerformBrush {
 
-	private boolean first = true;
-	// ALL COORDINATES AND VECTORS ARE ORDERED TRIPLES (X,Y,Z)
-	// Player provided points and a status tracker
-	private double[] coordsOne = new double[3];
-	private double[] coordsTwo = new double[3];
-	private double[] coordsThree = new double[3];
-	private int cornernumber = 1;
-	private int tolerance = 1000; //reasonable default 
+    /**
+     * Enumeration on Tolerance values.
+     * 
+     * @author MikeMatrix
+     * 
+     */
+    private enum Tolerance {
+        DEFAULT(1000), ACCURATE(10), SMOOTH(2000);
 
-	public ThreePointCircle() {
-		name = "3-Point Circle";
-	}
+        private int value;
 
-	@Override
-	public final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-		// Add a point
-		switch (cornernumber) {
-		case 1:
-			coordsOne[0] = tb.getX(); // .5 * tb.getX() / Math.abs(tb.getX())
-			coordsOne[1] = tb.getY(); // +.5
-			coordsOne[2] = tb.getZ(); // + .5 * tb.getZ() / Math.abs(tb.getZ())
-			cornernumber = 2;
-			v.sendMessage(ChatColor.GRAY + "First Corner set.");
-			break;
-		case 2:
-			coordsTwo[0] = tb.getX(); // OFFSET NEEDED?
-			coordsTwo[1] = tb.getY();
-			coordsTwo[2] = tb.getZ();
-			cornernumber = 3;
-			v.sendMessage(ChatColor.GRAY + "Second Corner set.");
-			break;
-		case 3:
-			coordsThree[0] = tb.getX(); // OFFSET NEEDED?
-			coordsThree[1] = tb.getY();
-			coordsThree[2] = tb.getZ();
-			cornernumber = 1;
-			v.sendMessage(ChatColor.GRAY + "Third Corner set.");
-			break;
-		default:
-			break;
+        Tolerance(final int value) {
+            this.value = value;
+        }
 
-		}
+        public int getValue() {
+            return this.value;
+        }
+    }
 
-	}
+    private Vector coordsOne;
+    private Vector coordsTwo;
+    private Vector coordsThree;
+    private Tolerance tolerance = Tolerance.DEFAULT;
 
-	@Override
-	public final void powder(final com.thevoxelbox.voxelsniper.vData v) { // Make the circle
-		w = v.getWorld();
+    /**
+     * Default Constructor.
+     */
+    public ThreePointCircle() {
+        this.name = "3-Point Circle";
+    }
 
-		// BEGIN DEFINING TRIANGLE
+    @Override
+    public final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        if (this.coordsOne == null) {
+            this.coordsOne = this.tb.getLocation().toVector();
+            v.sendMessage(ChatColor.GRAY + "First Corner set.");
+        } else if (this.coordsTwo == null) {
+            this.coordsTwo = this.tb.getLocation().toVector();
+            v.sendMessage(ChatColor.GRAY + "Second Corner set.");
+        } else if (this.coordsThree == null) {
+            this.coordsThree = this.tb.getLocation().toVector();
+            v.sendMessage(ChatColor.GRAY + "Third Corner set.");
+        } else {
+            this.coordsOne = this.tb.getLocation().toVector();
+            this.coordsTwo = null;
+            this.coordsThree = null;
+            v.sendMessage(ChatColor.GRAY + "First Corner set.");
+        }
+    }
 
-		// Calculate slope vectors for the plane defined by three points
+    @Override
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
+        switch (this.tolerance) {
+        case ACCURATE:
+            vm.custom(ChatColor.GOLD + "Mode: Accurate");
+            break;
+        case DEFAULT:
+            vm.custom(ChatColor.GOLD + "Mode: Default");
+            break;
+        case SMOOTH:
+            vm.custom(ChatColor.GOLD + "Mode: Smooth");
+            break;
+        default:
+            vm.custom(ChatColor.GOLD + "Mode: Unknown");
+            break;
+        }
 
-		Vector vectorOne = new Vector(coordsTwo[0] - coordsOne[0], coordsTwo[1] - coordsOne[1], coordsTwo[2] - coordsOne[2]); // Point 1 to 2
-		Vector vectorTwo = new Vector(coordsThree[0] - coordsOne[0], coordsThree[1] - coordsOne[1], coordsThree[2] - coordsOne[2]); // Point 1 to 3
-		Vector vectorThree = new Vector(coordsThree[0] - coordsTwo[0], coordsThree[1] - coordsTwo[1], coordsThree[2] - coordsTwo[2]); // Point 2 to 3
+    }
 
-		// Calculate magnitude of slope vectors
+    @Override
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+        if (par[1].equalsIgnoreCase("info")) {
+            v.sendMessage(ChatColor.YELLOW
+                    + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
+            String _toleranceOptions = "";
+            for (final Tolerance _tolerance : Tolerance.values()) {
+                if (!_toleranceOptions.isEmpty()) {
+                    _toleranceOptions += "|";
+                }
+                _toleranceOptions += _tolerance.name().toLowerCase();
+            }
+            v.sendMessage(ChatColor.GOLD + "/b tpc " + _toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
+            return;
+        }
 
-		double sidelengthOne = vectorOne.length();// Point 1 to 2
-		double sidelengthTwo = vectorTwo.length();// Point 1 to 3
-		double sidelengthThree = vectorThree.length(); // Point 2 to 3
+        for (int _i = 1; _i < par.length; _i++) {
+            final String _string = par[_i].toUpperCase();
+            try {
+                this.tolerance = Tolerance.valueOf(_string);
+                v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
+                return;
+            } catch (final IllegalArgumentException _e) {
+                v.vm.brushMessage("No such tolerance.");
+            }
+        }
+    }
 
-		// END TRIANGLE
+    @Override
+    public final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.w = v.getWorld();
 
-		// Confirm triangle is not degenerate before proceeding
+        if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
+            return;
+        }
 
-		if (sidelengthOne == 0 || sidelengthTwo == 0 || sidelengthThree == 0 || vectorOne.angle(vectorTwo) == 0 || vectorOne.angle(vectorThree) == 0
-				|| vectorThree.angle(vectorTwo) == 0) {
+        // Calculate triangle defining vectors
+        final Vector _vectorOne = this.coordsTwo.clone();
+        _vectorOne.subtract(this.coordsOne);
+        final Vector _vectorTwo = this.coordsThree.clone();
+        _vectorTwo.subtract(this.coordsOne);
+        final Vector _vectorThree = this.coordsThree.clone();
+        _vectorThree.subtract(_vectorTwo);
 
-			v.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
-		} else {
+        // Redundant data check
+        if (_vectorOne.length() == 0 || _vectorTwo.length() == 0 || _vectorThree.length() == 0 || _vectorOne.angle(_vectorTwo) == 0
+                || _vectorOne.angle(_vectorThree) == 0 || _vectorThree.angle(_vectorTwo) == 0) {
 
-			// BEGIN DETERMINATION OF PLANE IDENTITY
+            v.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
+            this.coordsOne = null;
+            this.coordsTwo = null;
+            this.coordsThree = null;
+            return;
+        }
 
-			// Calculate the cross product of vectorone and vectortwo
-			Vector normalVector = new Vector();
-			normalVector.copy(vectorOne);
-			normalVector.crossProduct(vectorTwo); // normal vector of plane
+        // Calculate normal vector of the plane.
+        final Vector _normalVector = _vectorOne.clone();
+        _normalVector.crossProduct(_vectorTwo);
 
-			// Calculate constant term of plane
-			double planeconstant = normalVector.getX() * coordsOne[0] + normalVector.getY() * coordsOne[1] + normalVector.getZ() * coordsOne[2];
+        // Calculate constant term of the plane.
+        final double _planeConstant = _normalVector.getX() * this.coordsOne.getX() + _normalVector.getY() * this.coordsOne.getY() + _normalVector.getZ()
+                * this.coordsOne.getZ();
 
-			// END PLANE IDENTITY
+        final Vector _midpointOne = this.coordsOne.getMidpoint(this.coordsTwo);
+        final Vector _midpointTwo = this.coordsOne.getMidpoint(this.coordsThree);
 
-			// BEGIN DETERMINATION OF CIRCUMCENTER
+        // Find perpendicular vectors to two sides in the plane
+        final Vector _perpendicularOne = _normalVector.clone();
+        _perpendicularOne.crossProduct(_vectorOne);
+        final Vector _perpendicularTwo = _normalVector.clone();
+        _perpendicularTwo.crossProduct(_vectorTwo);
 
-			// Find Midpoints of two sides
-			Vector midpointOne = new Vector((coordsOne[0] + coordsTwo[0]) / 2, (coordsOne[1] + coordsTwo[1]) / 2, (coordsOne[2] + coordsTwo[2]) / 2); // Point 1
-																																						// to 2
-			Vector midpointTwo = new Vector((coordsOne[0] + coordsThree[0]) / 2, (coordsOne[1] + coordsThree[1]) / 2, (coordsOne[2] + coordsThree[2]) / 2); // Point
-																																							// 1
-			// to
-			// 3
+        // determine value of parametric variable at intersection of two perpendicular bisectors
+        final Vector _tNumerator = _midpointTwo.clone();
+        _tNumerator.subtract(_midpointOne);
+        _tNumerator.crossProduct(_perpendicularTwo);
+        final Vector _tDenominator = _perpendicularOne.clone();
+        _tDenominator.crossProduct(_perpendicularTwo);
+        final double _t = _tNumerator.length() / _tDenominator.length();
 
-			// Find perpendicular vectors to two sides in the plane
-			Vector perpendicularOne = new Vector();
-			perpendicularOne.copy(normalVector);
-			perpendicularOne.crossProduct(vectorOne);// Point 1 to 2
-			Vector perpendicularTwo = new Vector();
-			perpendicularTwo.copy(normalVector);
-			perpendicularTwo.crossProduct(vectorTwo);// Point 1 to 3
+        // Calculate Circumcenter and Brushcenter.
+        final Vector _circumcenter = new Vector();
+        _circumcenter.copy(_perpendicularOne);
+        _circumcenter.multiply(_t);
+        _circumcenter.add(_midpointOne);
 
-			// determine value of parametric variable at intersection of two perpendicular bisectors
-			Vector tNumerator=new Vector();
-			tNumerator.copy(midpointTwo);
-			tNumerator.subtract(midpointOne);
-			tNumerator.crossProduct(perpendicularTwo);
-			Vector tDenominator=new Vector();
-			tDenominator.copy(perpendicularOne);
-			tDenominator.crossProduct(perpendicularTwo);
-			double t = tNumerator.length() / tDenominator.length();
+        final Vector _brushcenter = new Vector(Math.round(_circumcenter.getX()), Math.round(_circumcenter.getY()), Math.round(_circumcenter.getZ()));
 
-			// Calculate Circumcenter and Brushcenter
-			Vector circumcenter = new Vector();
-			circumcenter.copy(perpendicularOne);
-			circumcenter.multiply(t);
-			circumcenter.add(midpointOne);
-			int[] brushcenter = new int[3]; // Rounded circumcenter
-			brushcenter[0]=(int) Math.round(circumcenter.getX());
-			brushcenter[1]=(int) Math.round(circumcenter.getY());
-			brushcenter[2]=(int) Math.round(circumcenter.getZ());
-			
+        // Calculate radius of circumcircle and determine brushsize
+        final double _radius = _circumcenter.distance(new Vector(this.coordsOne.getX(), this.coordsOne.getY(), this.coordsOne.getZ()));
+        final int _bSize = NumberConversions.ceil(_radius) + 1;
 
-			// END CIRCUMCENTER
+        for (int _x = -_bSize; _x <= _bSize; _x++) {
+            for (int _y = -_bSize; _y <= _bSize; _y++) {
+                for (int _z = -_bSize; _z <= _bSize; _z++) {
+                    // Calculate distance from center
+                    final double _tempDistance = Math.pow(Math.pow(_x, 2) + Math.pow(_y, 2) + Math.pow(_z, 2), .5);
 
-			// Calculate radius of circumcircle and determine brushsize
-			double radius = circumcenter.distance(new Vector(coordsOne[0], coordsOne[1], coordsOne[2]));
-			int bsize = (int) Math.ceil(radius) + 1;
+                    // gets corner-on blocks
+                    final double _cornerConstant = _normalVector.getX() * (_circumcenter.getX() + _x) + _normalVector.getY() * (_circumcenter.getY() + _y)
+                            + _normalVector.getZ() * (_circumcenter.getZ() + _z);
 
-			// BEGIN DETERMINING BLOCKS TO CHANGE
-			
-			  for (int x = -bsize; x <= bsize; x++) {
-				  for (int y = -bsize; y <= bsize; y++) { 
-					  for (int z = -bsize; z <= bsize; z++) {
-						  // Calculate distance from center 
-					  double tempdistance = Math.pow(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2), .5); 
-					  
-					  //gets corner-on blocks
-					  double cornerconstant = normalVector.getX() * (circumcenter.getX() + x) + normalVector.getY() * (circumcenter.getY() + y) + normalVector.getZ()*(circumcenter.getZ() + z);
-					  
-					  //gets center-on blocks
-					  double centerconstant = normalVector.getX() * (circumcenter.getX() + x +.5) + normalVector.getY() * (circumcenter.getY() + y+.5) + normalVector.getZ()*(circumcenter.getZ() + z+.5);
-			  
-			  // Check if point is within sphere and on plane (some tolerance given)
-			  
-			  if (tempdistance <= radius && (Math.abs(cornerconstant-planeconstant)<tolerance||Math.abs(centerconstant-planeconstant)<tolerance)) {
-			 
-			  // Make the changes
-			  
-			  current.perform(clampY(brushcenter[0] + x, brushcenter[1] + y, brushcenter[2] + z)); }
-			  
-			  } } }
-			 
+                    // gets center-on blocks
+                    final double _centerConstant = _normalVector.getX() * (_circumcenter.getX() + _x + .5) + _normalVector.getY()
+                            * (_circumcenter.getY() + _y + .5) + _normalVector.getZ() * (_circumcenter.getZ() + _z + .5);
 
-			// END BLOCKS
+                    // Check if point is within sphere and on plane (some tolerance given)
+                    if (_tempDistance <= _radius
+                            && (Math.abs(_cornerConstant - _planeConstant) < this.tolerance.getValue() || Math.abs(_centerConstant - _planeConstant) < this.tolerance
+                                    .getValue())) {
+                        this.current.perform(this.clampY(_brushcenter.getBlockX() + _x, _brushcenter.getBlockY() + _y, _brushcenter.getBlockZ() + _z));
+                    }
 
-				v.sendMessage(ChatColor.GREEN+"Done.");
-		}
+                }
+            }
+        }
 
-		
-		// Finalize Undo
-		v.storeUndo(current.getUndo());
+        v.sendMessage(ChatColor.GREEN + "Done.");
+        v.storeUndo(this.current.getUndo());
 
-		// RESET BRUSH
-		coordsOne[0] = 0;
-		coordsOne[1] = 0;
-		coordsOne[2] = 0;
-		coordsTwo[0] = 0;
-		coordsTwo[1] = 0;
-		coordsTwo[2] = 0;
-		coordsThree[0] = 0;
-		coordsThree[1] = 0;
-		coordsThree[2] = 0;
+        // Reset Brush
+        this.coordsOne = null;
+        this.coordsTwo = null;
+        this.coordsThree = null;
 
-		cornernumber = 1;
-
-	}
-
-	@Override
-	public final void info(final vMessage vm) {
-		vm.brushName(name);
-		switch (tolerance){
-		case 10:
-			vm.custom(ChatColor.GOLD+"Mode: Accurate");
-			break;
-		case 1000:
-			vm.custom(ChatColor.GOLD+"Mode: Default");
-			break;
-		case 2000:
-			vm.custom(ChatColor.GOLD+"Mode: Smooth");
-			break;
-		
-		}
-
-	}
-
-	@Override
-	public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.YELLOW
-					+ "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
-			v.sendMessage(ChatColor.GOLD+"/b tpc accurate|default|smooth -- Toggle the calculations to emphasize accuracy or smoothness");
-			return;
-		}
-		if (par[1].equalsIgnoreCase("default")) {
-			tolerance=1000;
-			v.sendMessage(ChatColor.AQUA
-					+ "Brush set to default tolerances.");
-			return;
-		}
-		if (par[1].equalsIgnoreCase("accurate")) {
-			tolerance=10;
-			v.sendMessage(ChatColor.AQUA
-					+ "Brush set to emphasize accuracy over smoothness");
-			return;
-		}
-		if (par[1].equalsIgnoreCase("smooth")) {
-			tolerance=2000;
-			v.sendMessage(ChatColor.AQUA
-					+ "Brush set to emphasize smoothness over accuracy");
-			return;
-		}
-
-	}
+    }
 }
