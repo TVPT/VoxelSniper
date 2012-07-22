@@ -16,6 +16,7 @@ import com.thevoxelbox.voxelsniper.brush.BlendVoxel;
 import com.thevoxelbox.voxelsniper.brush.BlendVoxelDisc;
 import com.thevoxelbox.voxelsniper.brush.Blob;
 import com.thevoxelbox.voxelsniper.brush.BlockResetBrush;
+import com.thevoxelbox.voxelsniper.brush.BlockResetBrushSurface;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.Canyon;
 import com.thevoxelbox.voxelsniper.brush.CanyonSelection;
@@ -176,8 +177,9 @@ public enum vBrushes {
     SAVANNAH(Savannah.class, "savannah", "savannah"), // [ 22 ] \\
     STENCIL(Stencil.class, "st", "stencil"), // [ 23 ] \\
     STENCILLIST(StencilList.class, "sl", "stencillist"), // [ 24 ] \\
-    FLAT_OCEAN(FlatOcean.class, "fo", "flatocean"), // [ 25 ] \\
-
+    BLOCK_RESET_SURFACE(BlockResetBrushSurface.class, "brbs", "blockresetbrushsurface"), // [25] \\
+    FLAT_OCEAN(FlatOcean.class, "fo", "flatocean"), // [ 26 ] \\
+    
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~psanker~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     ELLIPSE(Ellipse.class, "el", "ellipse"), // [ 1 ] \\
     SPLINE(Spline.class, "sp", "spline"), // [ 2 ] \\
