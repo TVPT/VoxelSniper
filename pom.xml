@@ -4,7 +4,7 @@
 
 	<groupId>com.thevoxelbox</groupId>
 	<artifactId>VoxelSniper</artifactId>
-	<version>5.160</version>
+	<version>5.161</version>
 	<packaging>jar</packaging>
 
 	<name>VoxelSniper</name>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.2.5-R5.0</version>
+			<version>1.3.1-R1.0</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>

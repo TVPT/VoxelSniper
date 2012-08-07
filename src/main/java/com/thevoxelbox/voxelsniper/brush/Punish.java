@@ -101,7 +101,7 @@ public class Punish extends PerformBrush {
                 }
             } else {
                 try {
-                    this.punishment = Punishment.valueOf(_string);
+                    this.punishment = Punishment.valueOf(_string.toUpperCase());
                     v.sendMessage(this.punishment.name() + " punishment selected.");
                     continue;
                 } catch (final IllegalArgumentException _e) {
