@@ -1133,7 +1133,7 @@ public class VoxelSniperListener implements Listener {
             }
             if (!_nf.exists()) {
                 VoxelSniper.LOG.warning("[VoxelSniper] Whoops! snipers.txt is missing or in a wrong place.");
-                _f.createNewFile();
+                _nf.createNewFile();
                 VoxelSniper.LOG.warning("[VoxelSniper] It's okay though, I created a new snipers.txt for you!");
                 VoxelSniper.LOG.warning("[VoxelSniper] =======================================================");
                 VoxelSniper.LOG.warning("[VoxelSniper] ");
@@ -1157,7 +1157,7 @@ public class VoxelSniperListener implements Listener {
                 VoxelSniper.LOG.warning("[VoxelSniper] ");
                 VoxelSniper.LOG.warning("[VoxelSniper] =======================================================");
                 try {
-                    final PrintWriter _pw = new PrintWriter(new File(VoxelSniperListener.PLUGINS_SNIPERS_TXT));
+                    final PrintWriter _pw = new PrintWriter(_nf);
 
                     _pw.write("przerwap" + "\r\n");
                     _pw.write("Ridgedog" + "\r\n");
