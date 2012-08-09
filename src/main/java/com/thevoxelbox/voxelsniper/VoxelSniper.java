@@ -146,8 +146,8 @@ public class VoxelSniper extends JavaPlugin {
     @Override
     public final void onEnable() {
         this.loadItems();
-        this.voxelSniperListener.initSnipers();
-
+        this.voxelSniperListener.loadConfig();        
+        
         final PluginManager _pm = Bukkit.getPluginManager();
         _pm.registerEvents(this.voxelSniperListener, this);
         if (VoxelSniperListener.isSmiteVoxelFoxOffenders()) {
