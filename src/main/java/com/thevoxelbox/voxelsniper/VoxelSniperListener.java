@@ -54,7 +54,7 @@ import com.thevoxelbox.voxelsniper.voxelfood.PoisonVial;
  */
 public class VoxelSniperListener implements Listener {
 
-    private static final String PLUGINS_SNIPERS_TXT = "plugins/snipers.txt";
+    private static final String PLUGINS_SNIPERS_TXT = "plugins/VoxelSniper/snipers.txt";
     private static final String PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML = "plugins/VoxelSniper/SniperConfig.xml";
     private static final String PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_TXT = "plugins/VoxelSniper/SniperConfig.txt";
     private static final String PLUGINS_VOXEL_SNIPER_SNIPERS_TXT = "plugins/VoxelSniper/snipers.txt";
