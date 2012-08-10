@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 import com.thevoxelbox.voxelsniper.vData;
@@ -27,9 +28,9 @@ public class Disc extends PerformBrush {
      * 
      * @param v
      */
-    public final void disc(final vData v) {
+    public final void disc(final vData v, final Block targetBlock) {
         final double _radiusSquared = (v.brushSize + this.trueCircle) * (v.brushSize + this.trueCircle);
-        final Vector _centerPoint = this.tb.getLocation().toVector();
+        final Vector _centerPoint = targetBlock.getLocation().toVector();
         final Vector _currentPoint = _centerPoint.clone();
 
         for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
@@ -80,7 +81,7 @@ public class Disc extends PerformBrush {
         this.bx = this.tb.getX();
         this.by = this.tb.getY();
         this.bz = this.tb.getZ();
-        this.disc(v);
+        this.disc(v, this.tb);
     }
 
     @Override
@@ -88,6 +89,6 @@ public class Disc extends PerformBrush {
         this.bx = this.lb.getX();
         this.by = this.lb.getY();
         this.bz = this.lb.getZ();
-        this.disc(v);
+        this.disc(v, this.lb);
     }
 }
