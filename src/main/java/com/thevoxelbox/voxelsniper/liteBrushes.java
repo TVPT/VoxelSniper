@@ -14,6 +14,7 @@ import com.thevoxelbox.voxelsniper.brush.BlendVoxel;
 import com.thevoxelbox.voxelsniper.brush.BlendVoxelDisc;
 import com.thevoxelbox.voxelsniper.brush.Blob;
 import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDisc;
 import com.thevoxelbox.voxelsniper.brush.ChunkCoords;
 import com.thevoxelbox.voxelsniper.brush.Clone;
 import com.thevoxelbox.voxelsniper.brush.CopyPasta;
@@ -87,7 +88,7 @@ public enum liteBrushes {
     SCANNER(Scanner.class, "sc", "scanner"), // [ 5 ] \\
     GENERATE_TREE(TreeSnipe.class, "t", "treesnipe"), // [ 2 ] \\
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     DRAIN(Drain.class, "drain", "drain"), // [ 10 ] \\
     DOME(Dome.class, "dome", "domebrush"), // [ 6 ] \\
     CHUNK_COORDS(ChunkCoords.class, "chc", "chunkcoords"), // [ 15 ] \\
@@ -98,7 +99,10 @@ public enum liteBrushes {
     STENCILLIST(StencilList.class, "sl", "stencillist"), // [ 24 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Jmck95~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    UNDERLAY(Underlay.class, "under", "underlay"); // [ 1 ] \\
+    UNDERLAY(Underlay.class, "under", "underlay"), // [ 1 ] \\
+    
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
+    CHECKER_VOXEL_DISC(CheckerVoxelDisc.class, "cvd", "checkervoxeldisc"); // [ 1 ] \\
 
     private static final Map<String, liteBrushes> BRUSHES;
 

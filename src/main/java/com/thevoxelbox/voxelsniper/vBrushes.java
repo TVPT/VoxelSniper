@@ -20,6 +20,7 @@ import com.thevoxelbox.voxelsniper.brush.BlockResetBrushSurface;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.Canyon;
 import com.thevoxelbox.voxelsniper.brush.CanyonSelection;
+import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDisc;
 import com.thevoxelbox.voxelsniper.brush.ChunkCoords;
 import com.thevoxelbox.voxelsniper.brush.CleanSnow;
 import com.thevoxelbox.voxelsniper.brush.Clone;
@@ -206,7 +207,8 @@ public enum vBrushes {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     MOVE(Move.class, "mv", "move"), // [1] \\
-    BLOCK_RESET(BlockResetBrush.class, "brb", "blockresetbrush"); // [1] \\
+    BLOCK_RESET(BlockResetBrush.class, "brb", "blockresetbrush"), // [1] \\
+    CHECKER_VOXEL_DISC(CheckerVoxelDisc.class, "cvd", "checkervoxeldisc"); // [1] \\
 
     private static final Map<String, vBrushes> BRUSHES;
 
