@@ -230,7 +230,7 @@ public class Ellipse extends PerformBrush {
                                 break;
                         }
 
-                        if (t == (2 * Math.PI)) {
+                        if (t >= (2 * Math.PI)) {
                             break;
                         }
                     }
