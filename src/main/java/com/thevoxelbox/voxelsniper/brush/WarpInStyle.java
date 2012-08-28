@@ -29,12 +29,7 @@ public class WarpInStyle extends Brush {
 
     @Override
     protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        Location l = v.owner().getPlayer().getLocation();
-        Explosion e = new Explosion(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), 0.0D,
-                -300.0D, 0.0D, 0.1F);
-        // ((CraftWorld) v.p.getWorld()).getHandle().server.serverConfigurationManager.a(l.getX(), l.getY(), l.getZ(), 64.0D, new Packet60Explosion(l.getX(),
-        // l.getY(), l.getZ(), v.brushSize, e.g));//.createExplosion(( (CraftPlayer)v.p).getHandle(), l.getX(), l.getY(), l.getZ(), v.brushSize, false);
-        w.strikeLightning(l);
+        w.strikeLightning(v.owner().getPlayer().getLocation());
         tp(v.owner().getPlayer(), v.owner().getPlayer().getLocation());
         w.strikeLightning(tb.getLocation());
     }

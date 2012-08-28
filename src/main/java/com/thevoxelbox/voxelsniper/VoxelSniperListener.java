@@ -60,7 +60,7 @@ public class VoxelSniperListener implements Listener {
     private static int liteMaxBrush = 5;
     private static boolean smiteVoxelFoxOffenders = false;
     private static boolean voxelFoodEnabled = false;
-    private static VoxelSniper plugin;
+    private VoxelSniper plugin;
 
     /**
      * @return int
@@ -79,8 +79,8 @@ public class VoxelSniperListener implements Listener {
     /**
      * @return VoxelSniper
      */
-    public static VoxelSniper getPlugin() {
-        return VoxelSniperListener.plugin;
+    public final VoxelSniper getPlugin() {
+        return this.plugin;
     }
 
     /**
@@ -736,10 +736,10 @@ public class VoxelSniperListener implements Listener {
     }
 
     /**
-     * @param instance
+     * @param plugin
      */
-    public VoxelSniperListener(final VoxelSniper instance) {
-        VoxelSniperListener.plugin = instance;
+    public VoxelSniperListener(final VoxelSniper plugin) {
+        this.plugin = plugin;
     }
 
     /**
@@ -932,7 +932,7 @@ public class VoxelSniperListener implements Listener {
      * @param player
      */
     public final void runFoodTimer(final Player player) {
-        Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(VoxelSniperListener.plugin, new Runnable() {
+        Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(this.plugin, new Runnable() {
 
             @Override
             public void run() {

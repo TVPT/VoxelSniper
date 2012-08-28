@@ -495,7 +495,7 @@ public class GenerateTree extends Brush {
             }
 
             //50% chance to increase elevation every second block.
-            if (r % 2 == 1) {
+            if (Math.abs(r % 2) == 1) {
                 by += generate.nextInt(2);
             }
 
