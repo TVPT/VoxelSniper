@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -13,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
 
 /**
  * @author Voxel
@@ -153,6 +155,13 @@ public class VoxelSniper extends JavaPlugin {
         if (VoxelSniperListener.isSmiteVoxelFoxOffenders()) {
             _pm.registerEvents(this.voxelSniperEntity, this);
             VoxelSniper.LOG.info("[VoxelSniper] Entity Damage Event registered.");
+        }
+        
+        try {
+            MetricsLite _metrics = new MetricsLite(this);
+            _metrics.start();
+        } catch (IOException _e) {
+            // Failed to submit the stats :-(
         }
     }
 }
