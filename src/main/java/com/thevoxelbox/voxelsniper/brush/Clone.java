@@ -147,4 +147,16 @@ public class Clone extends Stamp {
         }
         v.sendMessage("" + ChatColor.GREEN + clone.size() + ChatColor.AQUA + " blocks copied sucessfully.");
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

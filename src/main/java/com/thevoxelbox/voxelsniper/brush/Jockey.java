@@ -100,4 +100,16 @@ public class Jockey extends Brush {
             v.sendMessage(ChatColor.RED + "Could not find any entities");
         }
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

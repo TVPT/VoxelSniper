@@ -37,4 +37,16 @@ public class Relax extends Brush {
     public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

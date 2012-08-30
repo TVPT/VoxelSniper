@@ -276,4 +276,16 @@ public class Vegetation extends Brush {
     private void degenerate(vData v) {
         //Remove forest\//TODO make this do something :P
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

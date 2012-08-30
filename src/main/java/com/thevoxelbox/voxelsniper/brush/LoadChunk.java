@@ -43,4 +43,16 @@ public class LoadChunk extends Brush {
 
         // ... why the hack method when there is a built-in Bukkit protocol for this? That I added? -psa
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

@@ -30,7 +30,8 @@ public class VoxelSniper extends JavaPlugin {
     public static final Logger LOG = Logger.getLogger("Minecraft");
     protected static final Object ITEM_LOCK = new Object();
     private static HashMap<String, Integer> items;
-
+    private static VoxelSniper instance;
+    
     /**
      * Get Item name from id.
      * 
@@ -148,6 +149,10 @@ public class VoxelSniper extends JavaPlugin {
 
     @Override
     public final void onEnable() {
+    	instance = this;
+    	
+    	MetricsManager.getInstance().start();
+    	
         this.loadItems();
         this.voxelSniperListener.loadConfig();        
         
@@ -157,54 +162,9 @@ public class VoxelSniper extends JavaPlugin {
             _pm.registerEvents(this.voxelSniperEntity, this);
             VoxelSniper.LOG.info("[VoxelSniper] Entity Damage Event registered.");
         }
-        
-        try {
-            Metrics _metrics = new Metrics(this);
-            
-            _metrics.addCustomData(new Metrics.Plotter("Snipers Online") {
-                
-                @Override
-                public int getValue() {
-                    int _count = 0;
-                    for (Player _player : Bukkit.getOnlinePlayers()) {
-                        if (VoxelSniperListener.getSniperPermissionHelper().isSniper(_player)) {
-                            _count++;
-                        }
-                    }
-                    return _count;
-                }
-            });
-            
-            _metrics.addCustomData(new Metrics.Plotter("Litesnipers Online") {
-                
-                @Override
-                public int getValue() {
-                    int _count = 0;
-                    for (Player _player : Bukkit.getOnlinePlayers()) {
-                        if (VoxelSniperListener.getSniperPermissionHelper().isLiteSniper(_player)) {
-                            _count++;
-                        }
-                    }
-                    return _count;
-                }
-            });
-            
-            _metrics.addCustomData(new Metrics.Plotter("Average Snipes per Minute") {
-                
-                @Override
-                public int getValue() {
-                    int _currentSnipes = voxelSniperListener.getSnipesDone();
-                    long _initializationTimeStamp = voxelSniperListener.getInitializationTimeStamp();
-                    double _timeRunning = (System.currentTimeMillis() - _initializationTimeStamp) / 60000;
-                    double _avg = _currentSnipes / _timeRunning;
-                    
-                    return NumberConversions.floor(_avg);
-                }
-            });
-            
-            _metrics.start();
-        } catch (IOException _e) {
-            // Failed to submit the stats :-(
-        }
     }
+    
+    public static VoxelSniper getInstance() {
+		return instance;
+	}
 }

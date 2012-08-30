@@ -121,4 +121,16 @@ public class Ruler extends Brush {
         java.text.DecimalFormat twoDForm = new java.text.DecimalFormat("#.##");
         return Double.valueOf(twoDForm.format(d));
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

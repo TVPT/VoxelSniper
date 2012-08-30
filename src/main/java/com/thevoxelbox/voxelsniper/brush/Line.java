@@ -107,4 +107,16 @@ public class Line extends PerformBrush {
         //origincoords[1] = 0;
         //origincoords[2] = 0;
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

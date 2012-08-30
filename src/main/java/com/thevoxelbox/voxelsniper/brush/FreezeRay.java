@@ -249,4 +249,16 @@ public class FreezeRay extends Brush {
             v.storeUndo(h);
         }//Z
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

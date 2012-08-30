@@ -109,4 +109,16 @@ public class Comet extends Brush {
         craftfireball.setVelocity(velocity);
         ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(entityfireball);
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

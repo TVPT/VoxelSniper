@@ -236,4 +236,16 @@ public class Spline extends PerformBrush {
             return new Point(this.x * scalar, this.y * scalar, this.z * scalar);
         }
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

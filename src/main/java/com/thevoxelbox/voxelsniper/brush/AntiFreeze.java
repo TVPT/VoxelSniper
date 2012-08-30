@@ -14,7 +14,7 @@ import org.bukkit.ChatColor;
  * Gavjenks
  */
 public class AntiFreeze extends Brush {
-
+	 
     boolean bool = true;
 
     public AntiFreeze() {
@@ -121,4 +121,16 @@ public class AntiFreeze extends Brush {
             }
         }
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }
