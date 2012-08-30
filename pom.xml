@@ -4,7 +4,7 @@
 
 	<groupId>com.thevoxelbox</groupId>
 	<artifactId>VoxelSniper</artifactId>
-	<version>5.166.0</version>
+	<version>5.166.1</version>
 	<packaging>jar</packaging>
 
 	<name>VoxelSniper</name>
@@ -57,7 +57,7 @@
 		</dependency>
 	    <dependency>
 	        <groupId>org.mcstats</groupId>
-	        <artifactId>metrics-lite</artifactId>
+	        <artifactId>metrics</artifactId>
 	        <version>1.0-SNAPSHOT</version>
 	        <scope>compile</scope>
 	    </dependency>

@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.MetricsLite;
+import org.mcstats.Metrics;
 
 /**
  * @author Voxel
@@ -158,7 +158,36 @@ public class VoxelSniper extends JavaPlugin {
         }
         
         try {
-            MetricsLite _metrics = new MetricsLite(this);
+            Metrics _metrics = new Metrics(this);
+            
+            _metrics.addCustomData(new Metrics.Plotter("Snipers Online") {
+                
+                @Override
+                public int getValue() {
+                    int _count = 0;
+                    for (Player _player : Bukkit.getOnlinePlayers()) {
+                        if (VoxelSniperListener.getSniperPermissionHelper().isSniper(_player)) {
+                            _count++;
+                        }
+                    }
+                    return _count;
+                }
+            });
+            
+            _metrics.addCustomData(new Metrics.Plotter("Litesnipers Online") {
+                
+                @Override
+                public int getValue() {
+                    int _count = 0;
+                    for (Player _player : Bukkit.getOnlinePlayers()) {
+                        if (VoxelSniperListener.getSniperPermissionHelper().isLiteSniper(_player)) {
+                            _count++;
+                        }
+                    }
+                    return _count;
+                }
+            });
+            
             _metrics.start();
         } catch (IOException _e) {
             // Failed to submit the stats :-(

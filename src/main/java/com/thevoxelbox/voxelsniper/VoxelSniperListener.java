@@ -60,7 +60,6 @@ public class VoxelSniperListener implements Listener {
     private static int liteMaxBrush = 5;
     private static boolean smiteVoxelFoxOffenders = false;
     private static boolean voxelFoodEnabled = false;
-    private VoxelSniper plugin;
 
     /**
      * @return int
@@ -77,10 +76,10 @@ public class VoxelSniperListener implements Listener {
     }
 
     /**
-     * @return VoxelSniper
+     * @return {@link VoxelSniperPermissionHelper}
      */
-    public final VoxelSniper getPlugin() {
-        return this.plugin;
+    public static VoxelSniperPermissionHelper getSniperPermissionHelper() {
+        return VoxelSniperListener.SNIPER_PERMISSION_HELPER;
     }
 
     /**
@@ -735,11 +734,20 @@ public class VoxelSniperListener implements Listener {
         }
     }
 
+    private final VoxelSniper plugin;
+
     /**
      * @param plugin
      */
     public VoxelSniperListener(final VoxelSniper plugin) {
         this.plugin = plugin;
+    }
+
+    /**
+     * @return VoxelSniper
+     */
+    public final VoxelSniper getPlugin() {
+        return this.plugin;
     }
 
     /**
