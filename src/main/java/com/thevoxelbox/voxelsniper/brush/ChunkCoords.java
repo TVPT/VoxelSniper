@@ -32,4 +32,16 @@ public class ChunkCoords extends Brush {
     @Override
     public void info(vMessage vm) {
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

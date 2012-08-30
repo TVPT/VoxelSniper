@@ -289,5 +289,17 @@ public class Move extends Brush {
             v.sendMessage(_ex.getMessage());
         }
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 
 }

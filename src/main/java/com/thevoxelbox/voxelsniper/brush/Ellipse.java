@@ -243,4 +243,16 @@ public class Ellipse extends PerformBrush {
 
         v.storeUndo(current.getUndo());
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

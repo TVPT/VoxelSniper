@@ -25,8 +25,9 @@ import org.bukkit.World;
 public abstract class Brush {
 
     protected int currentPiece; // for throttled execution of large brushes so as not to crash the server, holds info about which piece is currently in need of
-                                // processing.
-    public int currentTimerID = -1;
+                                // processing.        
+
+	public int currentTimerID = -1;
     public int currentOneOffID = -1;
     public Queue<int[]> throttleQueue;
     /**
@@ -192,6 +193,7 @@ public abstract class Brush {
         case RIGHT_CLICK_BLOCK:
             switch (heldItem) {
             case ARROW:
+            	setTimesUsed(getTimesUsed() + 1);
                 if (getTarget(v, clickedBlock, clickedFace)) {
                     updateScale();
                     if (this instanceof PerformBrush) {
@@ -203,6 +205,7 @@ public abstract class Brush {
                 break;
 
             case SULPHUR:
+            	setTimesUsed(getTimesUsed() + 1);
                 if (getTarget(v, clickedBlock, clickedFace)) {
                     updateScale();
                     if (this instanceof PerformBrush) {
@@ -294,4 +297,7 @@ public abstract class Brush {
     public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
         v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
     }
+    
+    public abstract int getTimesUsed();
+	public abstract void setTimesUsed(int timesUsed);
 }

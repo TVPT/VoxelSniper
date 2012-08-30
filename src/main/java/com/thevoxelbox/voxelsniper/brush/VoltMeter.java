@@ -103,4 +103,16 @@ public class VoltMeter extends Brush {
         byte data = block.getData();
         v.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + data);
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

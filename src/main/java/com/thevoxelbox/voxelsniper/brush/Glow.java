@@ -49,4 +49,16 @@ public class Glow extends Brush {
 //cWorld.getHandle().b(EnumSkyBlock.BLOCK, bx, by, bz. glevel); //not sure why this is throwing an error. - Giltwist
 
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

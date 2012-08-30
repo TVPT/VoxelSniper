@@ -14,7 +14,7 @@ import org.bukkit.Material;
  *
  * BLEND BRUSHES SHOULD NOT USE PERFORMERS
  */
-public class BlendDisc extends Brush {
+public class BlendDisc extends Brush {;
 
     protected String ablendmode = "exclude";
     protected String wblendmode = "exclude";
@@ -171,4 +171,16 @@ public class BlendDisc extends Brush {
         }
         v.storeUndo(h);
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

@@ -57,4 +57,16 @@ public class GenerateChunk extends Brush {
         w.refreshChunk(ch.getX(), ch.getZ());
         //s.regenerateChunk((int) Math.floor(ch.getX() / 16), (int) Math.floor(ch.getZ() / 16));
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

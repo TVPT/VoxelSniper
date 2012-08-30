@@ -770,4 +770,16 @@ public class StencilList extends Brush {
         int choice = (int) (rand);
         return stencilList.get(choice);
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }
