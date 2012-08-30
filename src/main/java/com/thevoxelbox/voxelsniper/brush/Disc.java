@@ -13,7 +13,6 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Voxel
  */
 public class Disc extends PerformBrush {
-
     private double trueCircle = 0;
 
     /**
@@ -91,4 +90,16 @@ public class Disc extends PerformBrush {
         this.bz = this.lb.getZ();
         this.disc(v, this.lb);
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

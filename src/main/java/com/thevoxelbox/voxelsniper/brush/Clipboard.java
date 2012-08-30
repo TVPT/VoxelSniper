@@ -30,4 +30,16 @@ public class Clipboard extends Brush {
     public void info(vMessage vm) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

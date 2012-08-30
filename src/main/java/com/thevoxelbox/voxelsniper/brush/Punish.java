@@ -41,7 +41,9 @@ public class Punish extends PerformBrush {
     private static final int MAXIMAL_RANDOM_TELEPORTATION_RANGE = 400;
 
     private static final int TICKS_PER_SECOND = 20;
-    private static final int INFINIPUNISH_SIZE = -3;;
+    private static final int INFINIPUNISH_SIZE = -3;
+    
+    private static int timesUsed = 0;
 
     private Punishment punishment = Punishment.FIRE;
     private int punishLevel = 10;
@@ -164,11 +166,6 @@ public class Punish extends PerformBrush {
 
     @Override
     protected final void arrow(final vData v) {
-        if (!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
-            v.sendMessage("Y U don't have permission to use this brush?!");
-            return;
-        }
-
         this.punishDuration = v.voxelHeight;
         this.punishLevel = v.cCen;
 
@@ -230,4 +227,14 @@ public class Punish extends PerformBrush {
         }
 
     }
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

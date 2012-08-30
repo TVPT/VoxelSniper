@@ -84,4 +84,16 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
             //System.out.println(bl.getData());
         }
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

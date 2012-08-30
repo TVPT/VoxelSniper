@@ -28,6 +28,7 @@ import com.thevoxelbox.voxelsniper.vMessage;
  * 
  */
 public class BlockResetBrushSurface extends Brush {
+	 private static int timesUsed = 0;
 
     private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
 
@@ -136,4 +137,14 @@ public class BlockResetBrushSurface extends Brush {
     protected final void powder(final vData v) {
         this.arrow(v);
     }
+    
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

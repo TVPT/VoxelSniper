@@ -126,4 +126,16 @@ public class ShellBall extends Brush {
 
         v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Shell complete.");  //This is needed because most uses of this brush will not be sible to the sniper.
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }

@@ -43,4 +43,16 @@ public class Painting extends Brush {
     public void info(vMessage vm) {
         vm.brushName(name);
     }
+    
+    private static int timesUsed = 0;
+	
+    @Override
+	public int getTimesUsed() {
+		return timesUsed;
+	}
+
+	@Override
+	public void setTimesUsed(int tUsed) {
+		timesUsed = tUsed; 
+	}
 }
