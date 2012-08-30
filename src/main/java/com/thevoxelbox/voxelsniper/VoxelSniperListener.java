@@ -734,6 +734,9 @@ public class VoxelSniperListener implements Listener {
         }
     }
 
+    private volatile int snipesDone = 0;
+    private volatile long initializationTimeStamp = 0;
+
     private final VoxelSniper plugin;
 
     /**
@@ -741,6 +744,14 @@ public class VoxelSniperListener implements Listener {
      */
     public VoxelSniperListener(final VoxelSniper plugin) {
         this.plugin = plugin;
+        this.initializationTimeStamp = System.currentTimeMillis();
+    }
+
+    /**
+     * @return long
+     */
+    public final long getInitializationTimeStamp() {
+        return this.initializationTimeStamp;
     }
 
     /**
@@ -748,6 +759,13 @@ public class VoxelSniperListener implements Listener {
      */
     public final VoxelSniper getPlugin() {
         return this.plugin;
+    }
+
+    /**
+     * @return int
+     */
+    public final int getSnipesDone() {
+        return this.snipesDone;
     }
 
     /**
@@ -896,6 +914,7 @@ public class VoxelSniperListener implements Listener {
             if (_vs == null) {
                 return;
             } else if (_vs.snipe(_player, event.getAction(), event.getMaterial(), event.getClickedBlock(), event.getBlockFace())) {
+                this.snipesDone++;
                 event.setCancelled(true);
             }
         } catch (final Exception _ex) {

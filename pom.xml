@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>VoxelSniper</name>
-	<url>http://voxelbox.github.com/</url>
+	<url>http://tvpt.github.com/</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -74,6 +74,7 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
 				<artifactId>replacer</artifactId>
@@ -96,6 +97,7 @@
 					</replacements>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -119,6 +121,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<executions>
 					<execution>
@@ -136,6 +139,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		
 		<pluginManagement>
 			<plugins>
 				<!--

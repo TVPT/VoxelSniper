@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.NumberConversions;
 import org.mcstats.Metrics;
 
 /**
@@ -185,6 +186,19 @@ public class VoxelSniper extends JavaPlugin {
                         }
                     }
                     return _count;
+                }
+            });
+            
+            _metrics.addCustomData(new Metrics.Plotter("Average Snipes per Minute") {
+                
+                @Override
+                public int getValue() {
+                    int _currentSnipes = voxelSniperListener.getSnipesDone();
+                    long _initializationTimeStamp = voxelSniperListener.getInitializationTimeStamp();
+                    double _timeRunning = (System.currentTimeMillis() - _initializationTimeStamp) / 60000;
+                    double _avg = _currentSnipes / _timeRunning;
+                    
+                    return NumberConversions.floor(_avg);
                 }
             });
             
