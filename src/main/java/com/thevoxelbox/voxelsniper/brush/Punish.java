@@ -53,6 +53,8 @@ public class Punish extends PerformBrush {
 
     private boolean specificPlayer = false;
     private String punishPlayerName = "";
+    
+    private boolean hypnoAffectLandscape = false;
 
     /**
      * Default Constructor.
@@ -76,6 +78,8 @@ public class Punish extends PerformBrush {
             v.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
             v.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
             v.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
+            v.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
+            v.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
             v.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
             final StringBuilder _punishmentOptions = new StringBuilder();
             for (final Punishment _punishment : Punishment.values()) {
@@ -84,7 +88,7 @@ public class Punish extends PerformBrush {
                 }
                 _punishmentOptions.append(_punishment.name());
             }
-            v.sendMessage(ChatColor.AQUA + _punishmentOptions.toString());
+            v.sendMessage(ChatColor.GOLD + _punishmentOptions.toString());
             return;
         }
         for (int _x = 1; _x < par.length; _x++) {
@@ -100,6 +104,8 @@ public class Punish extends PerformBrush {
                         v.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
                     }
                 }
+            } else if(_string.equalsIgnoreCase("-toggleHypnoLandscape")) {
+                this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
             } else {
                 try {
                     this.punishment = Punishment.valueOf(_string.toUpperCase());
@@ -163,10 +169,16 @@ public class Punish extends PerformBrush {
         case HYPNO:
             if (entity instanceof Player) {
                 Location _loc = entity.getLocation();
-                Location _target = null;
+                Location _target = _loc.clone();
                 for (int z = this.punishLevel; z >= -this.punishLevel; z--) {
                     for (int x = this.punishLevel; x >= -this.punishLevel; x--) {
                         for (int y = this.punishLevel; y >= -this.punishLevel; y--) {
+                            _target.setX(_loc.getX() + x);
+                            _target.setY(_loc.getY() + y);
+                            _target.setZ(_loc.getZ() + z);
+                            if(hypnoAffectLandscape && _target.getBlock().getType() == Material.AIR) {
+                                continue;
+                            }
                             _target = _loc.clone();
                             _target.add(x, y, z);
                             ((Player) entity).sendBlockChange(_target, v.voxelId, v.data);
