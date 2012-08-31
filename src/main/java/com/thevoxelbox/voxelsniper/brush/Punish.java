@@ -5,7 +5,9 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.EntityEffect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -35,7 +37,7 @@ public class Punish extends PerformBrush {
         // Deamon
         INVERT, JUMP,
         // MikeMatrix
-        FORCE
+        FORCE, BLOCKS
     }
 
     private static final int MAXIMAL_RANDOM_TELEPORTATION_RANGE = 400;
@@ -157,6 +159,21 @@ public class Punish extends PerformBrush {
             _direction.normalize();
             _direction.multiply(_stregth);
             entity.setVelocity(_direction);
+            break;
+        case BLOCKS:
+            if (entity instanceof Player) {
+                Location _loc = entity.getLocation();
+                Location _target = null;
+                for (int z = this.punishLevel; z >= -this.punishLevel; z--) {
+                    for (int x = this.punishLevel; x >= -this.punishLevel; x--) {
+                        for (int y = this.punishLevel; y >= -this.punishLevel; y--) {
+                            _target = _loc.clone();
+                            _target.add(x, y, z);
+                            ((Player) entity).sendBlockChange(_target, v.voxelId, v.data);
+                        }
+                    }
+                }
+            }
             break;
         default:
             Bukkit.getLogger().warning("Could not determine the punishment of punish brush!");
