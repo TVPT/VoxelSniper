@@ -37,7 +37,7 @@ public class Punish extends PerformBrush {
         // Deamon
         INVERT, JUMP,
         // MikeMatrix
-        FORCE, BLOCKS
+        FORCE, HYPNO
     }
 
     private static final int MAXIMAL_RANDOM_TELEPORTATION_RANGE = 400;
@@ -160,7 +160,7 @@ public class Punish extends PerformBrush {
             _direction.multiply(_stregth);
             entity.setVelocity(_direction);
             break;
-        case BLOCKS:
+        case HYPNO:
             if (entity instanceof Player) {
                 Location _loc = entity.getLocation();
                 Location _target = null;
