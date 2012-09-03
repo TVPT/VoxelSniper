@@ -57,7 +57,7 @@ public class Stamp extends Brush {
     private static int timesUsed = 0;
 
     public Stamp() {
-        this.name = "Stamp";
+        this.setName("Stamp");
     }
 
     @Override
@@ -175,7 +175,7 @@ public class Stamp extends Brush {
             return true;
 
         case (78):
-            return true; // Does snow drop snowballs when destroyed by the game instead of the player?
+            return true; // Does snow drop snowballs when destroyed blockPositionY the game instead of the player?
 
         case (83):
             return true;
@@ -197,14 +197,14 @@ public class Stamp extends Brush {
     }
 
     protected final void setBlock(final cBlock cb) {
-        final Block b = this.clampY(this.bx + cb.x, this.by + cb.y, this.bz + cb.z);
+        final Block b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
         this.h.put(b);
         b.setTypeId(cb.id);
         b.setData(cb.d);
     }
 
     protected final void setBlockFill(final cBlock cb) {
-        final Block b = this.clampY(this.bx + cb.x, this.by + cb.y, this.bz + cb.z);
+        final Block b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
         if (b.getTypeId() == 0) {
             this.h.put(b);
             b.setTypeId(cb.id);
@@ -218,11 +218,11 @@ public class Stamp extends Brush {
 
     protected final void stamp(final vData v) {
 
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY() + v.cCen;
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY() + v.cCen);
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new vUndo(this.tb.getWorld().getName());
+        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {
@@ -262,11 +262,11 @@ public class Stamp extends Brush {
 
     protected final void stampFill(final vData v) {
 
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY() + v.cCen;
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY() + v.cCen);
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new vUndo(this.tb.getWorld().getName());
+        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {
@@ -306,11 +306,11 @@ public class Stamp extends Brush {
 
     protected final void stampNoAir(final vData v) {
 
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY() + v.cCen;
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY() + v.cCen);
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new vUndo(this.tb.getWorld().getName());
+        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {

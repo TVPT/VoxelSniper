@@ -30,11 +30,11 @@ public class CopyPasta extends Brush {
     private static int timesUsed = 0;
 
     public CopyPasta() {
-        this.name = "CopyPasta";
+        this.setName("CopyPasta");
     }
 
     public final void docopy(final vData v) {
-        this.w = v.owner().getPlayer().getWorld();
+        this.setWorld(v.owner().getPlayer().getWorld());
         for (int i = 0; i < 3; i++) {
             this.arraysize[i] = Math.abs(this.firstpoint[i] - this.secondpoint[i]) + 1;
             this.minpoint[i] = Math.min(this.firstpoint[i], this.secondpoint[i]);
@@ -49,7 +49,7 @@ public class CopyPasta extends Brush {
                 for (int j = 0; j < this.arraysize[1]; j++) {
                     for (int k = 0; k < this.arraysize[2]; k++) {
                         final int curpos = i + this.arraysize[0] * j + this.arraysize[0] * this.arraysize[1] * k;
-                        this.blockarray[curpos] = this.w.getBlockTypeIdAt(this.minpoint[0] + i, this.minpoint[1] + j, this.minpoint[2] + k);
+                        this.blockarray[curpos] = this.getWorld().getBlockTypeIdAt(this.minpoint[0] + i, this.minpoint[1] + j, this.minpoint[2] + k);
                         this.dataarray[curpos] = this.clampY(this.minpoint[0] + i, this.minpoint[1] + j, this.minpoint[2] + k).getData();
                     }
                 }
@@ -62,8 +62,8 @@ public class CopyPasta extends Brush {
     }
 
     public final void dopasta(final vData v) {
-        this.w = v.owner().getPlayer().getWorld();
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        this.setWorld(v.owner().getPlayer().getWorld());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         Block b;
 
         for (int i = 0; i < this.arraysize[0]; i++) {
@@ -110,7 +110,7 @@ public class CopyPasta extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom(ChatColor.GOLD + "Paste air: " + this.airmode);
         vm.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
     }
@@ -151,16 +151,16 @@ public class CopyPasta extends Brush {
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
         switch (this.points) {
         case 0:
-            this.firstpoint[0] = this.tb.getX();
-            this.firstpoint[1] = this.tb.getY();
-            this.firstpoint[2] = this.tb.getZ();
+            this.firstpoint[0] = this.getTargetBlock().getX();
+            this.firstpoint[1] = this.getTargetBlock().getY();
+            this.firstpoint[2] = this.getTargetBlock().getZ();
             v.sendMessage(ChatColor.GRAY + "First point");
             this.points = 1;
             break;
         case 1:
-            this.secondpoint[0] = this.tb.getX();
-            this.secondpoint[1] = this.tb.getY();
-            this.secondpoint[2] = this.tb.getZ();
+            this.secondpoint[0] = this.getTargetBlock().getX();
+            this.secondpoint[1] = this.getTargetBlock().getY();
+            this.secondpoint[2] = this.getTargetBlock().getZ();
             v.sendMessage(ChatColor.GRAY + "Second point");
             this.points = 2;
             break;
@@ -182,9 +182,9 @@ public class CopyPasta extends Brush {
             if (this.numblocks == 0) {
                 this.docopy(v);
             } else if (this.numblocks > 0 && this.numblocks < this.blocklimit) {
-                this.pastepoint[0] = this.tb.getX();
-                this.pastepoint[1] = this.tb.getY();
-                this.pastepoint[2] = this.tb.getZ();
+                this.pastepoint[0] = this.getTargetBlock().getX();
+                this.pastepoint[1] = this.getTargetBlock().getY();
+                this.pastepoint[2] = this.getTargetBlock().getZ();
                 this.dopasta(v);
             } else {
                 v.sendMessage(ChatColor.RED + "C");

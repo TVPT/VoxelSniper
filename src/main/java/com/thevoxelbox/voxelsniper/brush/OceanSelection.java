@@ -17,7 +17,7 @@ public class OceanSelection extends Ocean {
     private static int timesUsed = 0;
 
     public OceanSelection() {
-        this.name = "Ocean Selection";
+        this.setName("Ocean Selection");
     }
 
     @Override
@@ -27,15 +27,15 @@ public class OceanSelection extends Ocean {
 
     @Override
     public void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     public void oceanate(final vData v, final int lowx, final int highx, final int lowz, final int highz) {
-        this.h = new vUndo(this.tb.getWorld().getName());
+        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
         for (int x = lowx; x <= highx; x += 16) {
-            this.tb = this.setX(this.tb, x);
+            this.setTargetBlock(this.setX(this.getTargetBlock(), x));
             for (int z = lowz; z <= highz; z += 16) {
-                this.tb = this.setZ(this.tb, z);
+                this.setTargetBlock(this.setZ(this.getTargetBlock(), z));
                 this.oceanator(v);
             }
         }
@@ -44,20 +44,20 @@ public class OceanSelection extends Ocean {
 
     public void oceanSelection(final vData v) {
         if (this.sel) {
-            this.h = new vUndo(this.tb.getWorld().getName());
+            this.h = new vUndo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
             v.storeUndo(this.h);
-            this.s1x = this.tb.getX();
-            this.s1z = this.tb.getZ();
+            this.s1x = this.getTargetBlock().getX();
+            this.s1z = this.getTargetBlock().getZ();
             v.sendMessage(ChatColor.DARK_PURPLE + "Chunk one selected");
             this.sel = !this.sel;
         } else {
             v.sendMessage(ChatColor.DARK_PURPLE + "Chunk two selected");
-            this.h = new vUndo(this.tb.getWorld().getName());
+            this.h = new vUndo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
             v.storeUndo(this.h);
-            this.s2x = this.tb.getX();
-            this.s2z = this.tb.getZ();
+            this.s2x = this.getTargetBlock().getX();
+            this.s2z = this.getTargetBlock().getZ();
             this.oceanate(v, ((this.s1x <= this.s2x) ? this.s1x : this.s2x), ((this.s2x >= this.s1x) ? this.s2x : this.s1x), ((this.s1z <= this.s2z) ? this.s1z
                     : this.s2z), ((this.s2z >= this.s1z) ? this.s2z : this.s1z));
             this.sel = !this.sel;

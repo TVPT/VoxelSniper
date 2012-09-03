@@ -10,7 +10,7 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
  * 
- * @author Gavjenks Splatterized by Giltwist
+ * @author Gavjenks Splatterized blockPositionY Giltwist
  */
 public class SplatterOverlay extends PerformBrush {
 
@@ -26,7 +26,7 @@ public class SplatterOverlay extends PerformBrush {
     private static int timesUsed = 0;
 
     public SplatterOverlay() {
-        this.name = "Splatter Overlay";
+        this.setName("Splatter Overlay");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SplatterOverlay extends PerformBrush {
         if (this.splatterrecursions < 1 || this.splatterrecursions > 10) {
             this.splatterrecursions = 3;
         }
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         // vm.voxel();
         vm.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedpercent / 100 + "%");
@@ -185,14 +185,14 @@ public class SplatterOverlay extends PerformBrush {
         final double bpow = Math.pow(bsize + 0.5, 2);
         for (int z = bsize; z >= -bsize; z--) {
             for (int x = bsize; x >= -bsize; x--) {
-                for (int y = this.by; y > 0; y--) { // start scanning from the height you clicked at
+                for (int y = this.getBlockPositionY(); y > 0; y--) { // start scanning from the height you clicked at
                     if (memory[x + bsize][z + bsize] != 1) { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= bpow && splat[x + bsize][z + bsize] == 1) { // if inside of the column && if to be splattered
-                            final int check = this.getBlockIdAt(this.bx + x, y + 1, this.bz + z);
+                            final int check = this.getBlockIdAt(this.getBlockPositionX() + x, y + 1, this.getBlockPositionZ() + z);
                             if (check == 0 || check == 8 || check == 9) { // must start at surface... this prevents it filling stuff in if you click in a wall
                                                                           // and it starts out below surface.
                                 if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                    switch (this.getBlockIdAt(this.bx + x, y, this.bz + z)) {
+                                    switch (this.getBlockIdAt(this.getBlockPositionX() + x, y, this.getBlockPositionZ() + z)) {
                                     case 1:
                                     case 2:
                                     case 3:
@@ -208,8 +208,8 @@ public class SplatterOverlay extends PerformBrush {
                                     case 49:
                                     case 78:
                                         for (int d = 0; (d < this.depth); d++) {
-                                            if (this.clampY(this.bx + x, y - d, this.bz + z).getTypeId() != 0) {
-                                                this.current.perform(this.clampY(this.bx + x, y - d, this.bz + z)); // fills down as many layers as you specify
+                                            if (this.clampY(this.getBlockPositionX() + x, y - d, this.getBlockPositionZ() + z).getTypeId() != 0) {
+                                                this.current.perform(this.clampY(this.getBlockPositionX() + x, y - d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify
                                                                                                                     // in parameters
                                                 memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                             }
@@ -221,8 +221,8 @@ public class SplatterOverlay extends PerformBrush {
                                     }
                                 } else {
                                     for (int d = 0; (d < this.depth); d++) {
-                                        if (this.clampY(this.bx + x, y - d, this.bz + z).getTypeId() != 0) {
-                                            this.current.perform(this.clampY(this.bx + x, y - d, this.bz + z)); // fills down as many layers as you specify in
+                                        if (this.clampY(this.getBlockPositionX() + x, y - d, this.getBlockPositionZ() + z).getTypeId() != 0) {
+                                            this.current.perform(this.clampY(this.getBlockPositionX() + x, y - d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify in
                                                                                                                 // parameters
                                             memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                         }
@@ -304,15 +304,15 @@ public class SplatterOverlay extends PerformBrush {
         final double bpow = Math.pow(bsize + 0.5, 2);
         for (int z = bsize; z >= -bsize; z--) {
             for (int x = bsize; x >= -bsize; x--) {
-                for (int y = this.by; y > 0; y--) { // start scanning from the height you clicked at
+                for (int y = this.getBlockPositionY(); y > 0; y--) { // start scanning from the height you clicked at
                     if (memory[x + bsize][z + bsize] != 1) { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= bpow && splat[x + bsize][z + bsize] == 1) { // if inside of the column...&& if to be splattered
-                            if (this.getBlockIdAt(this.bx + x, y - 1, this.bz + z) != 0) { // if not a floating block (like one of Notch'w pools)
-                                if (this.getBlockIdAt(this.bx + x, y + 1, this.bz + z) == 0) { // must start at surface... this prevents it filling stuff in if
+                            if (this.getBlockIdAt(this.getBlockPositionX() + x, y - 1, this.getBlockPositionZ() + z) != 0) { // if not a floating block (like one of Notch'world pools)
+                                if (this.getBlockIdAt(this.getBlockPositionX() + x, y + 1, this.getBlockPositionZ() + z) == 0) { // must start at surface... this prevents it filling stuff in if
                                                                                                // you click in a wall and it starts out below surface.
                                     if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                        switch (this.getBlockIdAt(this.bx + x, y, this.bz + z)) {
+                                        switch (this.getBlockIdAt(this.getBlockPositionX() + x, y, this.getBlockPositionZ() + z)) {
                                         case 1:
                                         case 2:
                                         case 3:
@@ -328,7 +328,7 @@ public class SplatterOverlay extends PerformBrush {
                                         case 49:
                                         case 78:
                                             for (int d = 1; (d < this.depth + 1); d++) {
-                                                this.current.perform(this.clampY(this.bx + x, y + d, this.bz + z)); // fills down as many layers as you specify
+                                                this.current.perform(this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify
                                                                                                                     // in parameters
                                                 memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                             }
@@ -339,7 +339,7 @@ public class SplatterOverlay extends PerformBrush {
                                         }
                                     } else {
                                         for (int d = 1; (d < this.depth + 1); d++) {
-                                            this.current.perform(this.clampY(this.bx + x, y + d, this.bz + z)); // fills down as many layers as you specify in
+                                            this.current.perform(this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify in
                                                                                                                 // parameters
                                             memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                         }
@@ -358,17 +358,17 @@ public class SplatterOverlay extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.soverlay(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.soverlayTwo(v);
     }
 }

@@ -41,7 +41,7 @@ public abstract class PerformBrush extends Brush implements Performer {
 
     public void initP(com.thevoxelbox.voxelsniper.vData v) {
         current.init(v);
-        current.setUndo(undoScale);
+        current.setUndo();
     }
 
     @Override

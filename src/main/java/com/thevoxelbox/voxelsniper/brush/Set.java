@@ -19,7 +19,7 @@ public class Set extends PerformBrush {
     private static int timesUsed = 0;
 
     public Set() {
-        this.name = "Set";
+        this.setName("Set");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Set extends PerformBrush {
     @Override
     public final void info(final vMessage vm) {
         this.b = null;
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Set extends PerformBrush {
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
         this.i = v.voxelId;
-        if (this.set(this.tb, v)) {
+        if (this.set(this.getTargetBlock(), v)) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(this.current.getUndo());
@@ -89,7 +89,7 @@ public class Set extends PerformBrush {
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
         this.i = v.voxelId;
-        if (this.set(this.lb, v)) {
+        if (this.set(this.getLastBlock(), v)) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(this.current.getUndo());

@@ -28,14 +28,14 @@ public class Dome extends Brush {
     private static int timesUsed = 0;
 
     public Dome() {
-        this.name = "Dome";
+        this.setName("Dome");
     }
 
     public final void dome(final vData v) {
         final int bsize = v.brushSize;
         final int bId = v.voxelId;
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + 0.5, 2);
         // double curvature = 1; //actually not necessary if base is circular.
@@ -64,43 +64,43 @@ public class Dome extends Brush {
                     if ((xpow + (ypowminus / Math.pow(curvature, 2)) + zpow) <= bpow) { // If within the ellipse
                         final double ypowplus = Math.pow(y + yManip + centerRef, 2);
                         if ((xpow + (ypowplus / Math.pow(curvature, 2)) + zpow) > bpow) { // If nothing else further out (i.e. if on the surface)
-                            h.put(this.clampY(this.bx + x, this.by + y, this.bz + z));
-                            h.put(this.clampY(this.bx + x, this.by + y, this.bz - z));
-                            h.put(this.clampY(this.bx - x, this.by + y, this.bz + z)); // only want top of dome. So only 4 of these.
-                            h.put(this.clampY(this.bx - x, this.by + y, this.bz - z));
+                            h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z));
+                            h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z));
+                            h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z)); // only want top of dome. So only 4 of these.
+                            h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z));
 
-                            h.put(this.clampY(this.bx + x, this.by + y - 1, this.bz + z));
-                            h.put(this.clampY(this.bx + x, this.by + y - 1, this.bz - z)); // blocks right underneath each
-                            h.put(this.clampY(this.bx - x, this.by + y - 1, this.bz + z));
-                            h.put(this.clampY(this.bx - x, this.by + y - 1, this.bz - z));
+                            h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z));
+                            h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() - z)); // blocks right underneath each
+                            h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z));
+                            h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() - z));
 
                             if (!this.fsa && ((xpow + (ypow / Math.pow(curvature, 2)) + zpow) > bpow)) { // if half block accuracy is being used AND this is a
                                                                                                          // portion of the curve that is closer to matching a
                                                                                                          // half block than a full block...
-                                this.setBlockIdAt(44, this.bx + x, this.by + y, this.bz + z); // set to a half block
-                                this.setBlockIdAt(44, this.bx + x, this.by + y, this.bz - z);
-                                this.setBlockIdAt(44, this.bx - x, this.by + y, this.bz + z);
-                                this.setBlockIdAt(44, this.bx - x, this.by + y, this.bz - z);
+                                this.setBlockIdAt(44, this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z); // set to a half block
+                                this.setBlockIdAt(44, this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z);
+                                this.setBlockIdAt(44, this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                                this.setBlockIdAt(44, this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z);
                                 // AND place a full double step underneath to prevent gaps (might be slightly bulkier than could be possible... but much simpler
                                 // to code)
                                 heightmap[x][z] = y - 1;
-                                this.setBlockIdAt(43, this.bx + x, this.by + y - 1, this.bz + z);
-                                this.setBlockIdAt(43, this.bx + x, this.by + y - 1, this.bz - z);
-                                this.setBlockIdAt(43, this.bx - x, this.by + y - 1, this.bz + z);
-                                this.setBlockIdAt(43, this.bx - x, this.by + y - 1, this.bz - z);
+                                this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z);
+                                this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() - z);
+                                this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z);
+                                this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() - z);
                             } else {
                                 if (bId == 44) { // if half block accuracy, but this particular position conforms better to a full block
                                     heightmap[x][z] = y;
-                                    this.setBlockIdAt(43, this.bx + x, this.by + y, this.bz + z); // set to a full double step
-                                    this.setBlockIdAt(43, this.bx + x, this.by + y, this.bz - z);
-                                    this.setBlockIdAt(43, this.bx - x, this.by + y, this.bz + z);
-                                    this.setBlockIdAt(43, this.bx - x, this.by + y, this.bz - z);
+                                    this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z); // set to a full double step
+                                    this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z);
+                                    this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                                    this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z);
                                 } else { // if full block accuracy
                                     heightmap[x][z] = y;
-                                    this.setBlockIdAt(bId, this.bx + x, this.by + y, this.bz + z); // set to a full block of whatever /v is.
-                                    this.setBlockIdAt(bId, this.bx + x, this.by + y, this.bz - z);
-                                    this.setBlockIdAt(bId, this.bx - x, this.by + y, this.bz + z);
-                                    this.setBlockIdAt(bId, this.bx - x, this.by + y, this.bz - z);
+                                    this.setBlockIdAt(bId, this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z); // set to a full block of whatever /v is.
+                                    this.setBlockIdAt(bId, this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z);
+                                    this.setBlockIdAt(bId, this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                                    this.setBlockIdAt(bId, this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - z);
                                 }
                             }
                         }
@@ -112,39 +112,39 @@ public class Dome extends Brush {
             for (int z = 0; z <= bsize; z++) {
                 for (int i = heightmap[x][z] - 1; i >= 0; i--) {
                     if (!this.powder && heightmap[x][z + 1] < i || heightmap[x + 1][z] < i) { // if annoying air gap in wall in x or z direction
-                        h.put(this.clampY(this.bx + x, this.by + i, this.bz + z));
-                        h.put(this.clampY(this.bx + x, this.by + i, this.bz - z));
-                        h.put(this.clampY(this.bx - x, this.by + i, this.bz + z));
-                        h.put(this.clampY(this.bx - x, this.by + i, this.bz - z));
+                        h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z));
+                        h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z));
+                        h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z));
+                        h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z));
 
                         if (bId == 44) {
-                            this.setBlockIdAt(43, this.bx + x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(43, this.bx + x, this.by + i, this.bz - z);
-                            this.setBlockIdAt(43, this.bx - x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(43, this.bx - x, this.by + i, this.bz - z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
                         } else {
-                            this.setBlockIdAt(bId, this.bx + x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(bId, this.bx + x, this.by + i, this.bz - z);
-                            this.setBlockIdAt(bId, this.bx - x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(bId, this.bx - x, this.by + i, this.bz - z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
                         }
                     }
                     if (this.powder) { // fill in solid.
-                        h.put(this.clampY(this.bx + x, this.by + i, this.bz + z));
-                        h.put(this.clampY(this.bx + x, this.by + i, this.bz - z));
-                        h.put(this.clampY(this.bx - x, this.by + i, this.bz + z));
-                        h.put(this.clampY(this.bx - x, this.by + i, this.bz - z));
+                        h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z));
+                        h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z));
+                        h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z));
+                        h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z));
 
                         if (bId == 44) {
-                            this.setBlockIdAt(43, this.bx + x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(43, this.bx + x, this.by + i, this.bz - z);
-                            this.setBlockIdAt(43, this.bx - x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(43, this.bx - x, this.by + i, this.bz - z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(43, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
                         } else {
-                            this.setBlockIdAt(bId, this.bx + x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(bId, this.bx + x, this.by + i, this.bz - z);
-                            this.setBlockIdAt(bId, this.bx - x, this.by + i, this.bz + z);
-                            this.setBlockIdAt(bId, this.bx - x, this.by + i, this.bz - z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - z);
                         }
                     }
                 }
@@ -154,13 +154,13 @@ public class Dome extends Brush {
         v.storeUndo(h);
     }
 
-    // ###### nothing below here fixed yet. Copy above code, but switch out all the y'w for whatever other axis... BUT complication: the checks for half block
+    // ###### nothing below here fixed yet. Copy above code, but switch out all the y'world for whatever other axis... BUT complication: the checks for half block
     // accuracy must always still be y-oriented... harder.
     /*
-     * public void domeNS(vSniper v) { int bsize = v.brushSize; int bId = v.voxelId; w = w;
+     * public void domeNS(vSniper v) { int bsize = v.brushSize; int bId = v.voxelId; world = world;
      * 
      * 
-     * vUndo h = new vUndo(tb.getWorld().getName());
+     * vUndo h = new vUndo(targetBlock.getWorld().getName());
      * 
      * double bpow = Math.pow(bsize +0.5, 2); //double curvature = 1; //actually not necessary if base is circular. if (height == 1024) { height = bsize + 0.5;
      * } double curvature = height / (bsize + 0.5); double yManip = 0.5; double centerRef = 0; if (fsa || bId != 44) { //override half block accuracy if /v not
@@ -171,49 +171,49 @@ public class Dome extends Brush {
      * z--) { double zpow = Math.pow(z, 2); for (int y = bsize; y >= 0; y--) { double ypowminus = Math.pow(y - yManip + centerRef, 2); double ypow = Math.pow(y
      * + centerRef,2); if ((xpow/Math.pow(curvature, 2) + ypowminus + zpow) <= bpow) { //If within the ellipse double ypowplus = Math.pow(y + yManip +
      * centerRef, 2); if ((xpow/Math.pow(curvature, 2) + ypowplus + zpow) > bpow) { //If nothing else further out (i.e. if on the surface) #### or nothing below
-     * (surface on bottom) h.put(clampY(bx + x, by + y, bz + z)); h.put(clampY(bx + x, by + y, bz - z)); h.put(clampY(bx + x, by - y+1, bz + z)); //only want
-     * top of dome. So only 4 of these. h.put(clampY(bx + x, by - y+1, bz - z));
+     * (surface on bottom) h.put(clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z)); h.put(clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z)); h.put(clampY(blockPositionX + x, blockPositionY - y+1, blockPositionZ + z)); //only want
+     * top of dome. So only 4 of these. h.put(clampY(blockPositionX + x, blockPositionY - y+1, blockPositionZ - z));
      * 
-     * h.put(clampY(bx + x, by + y -1, bz + z)); h.put(clampY(bx + x, by + y -1, bz - z)); //blocks right underneath each h.put(clampY(bx + x, by - y , bz +
-     * z)); h.put(clampY(bx + x, by - y , bz - z));
+     * h.put(clampY(blockPositionX + x, blockPositionY + y -1, blockPositionZ + z)); h.put(clampY(blockPositionX + x, blockPositionY + y -1, blockPositionZ - z)); //blocks right underneath each h.put(clampY(blockPositionX + x, blockPositionY - y , blockPositionZ +
+     * z)); h.put(clampY(blockPositionX + x, blockPositionY - y , blockPositionZ - z));
      * 
      * 
      * if (!fsa && ((xpow + (ypow / Math.pow(curvature, 2)) + zpow) > bpow)) { //if half block accuracy is being used AND this is a portion of the curve that is
-     * closer to matching a half block than a full block... setBlockIdAt(44, bx + x, by + y, bz + z); //set to a half block setBlockIdAt(44, bx + x, by + y, bz
-     * - z); setBlockIdAt(44, bx + x, by - y+1, bz + z); setBlockIdAt(44, bx + x, by - y+1, bz - z); //AND place a full double step underneath to prevent gaps
-     * (might be slightly bulkier than could be possible... but much simpler to code) heightmap[x][z] = y - 1; setBlockIdAt(43, bx + x, by + y - 1, bz + z);
-     * setBlockIdAt(43, bx + x, by + y - 1, bz - z); setBlockIdAt(43, bx + x, by - y , bz + z); setBlockIdAt(43, bx + x, by - y , bz - z); } else { if (bId ==
-     * 44) { //if half block accuracy, but this particular position conforms better to a full block heightmap[x][z] = y; setBlockIdAt(43, bx + x, by + y, bz +
-     * z); //set to a full double step setBlockIdAt(43, bx + x, by + y, bz - z); setBlockIdAt(43, bx + x, by - y+1, bz + z); setBlockIdAt(43, bx + x, by - y+1,
-     * bz - z); } else { //if full block accuracy heightmap[x][z] = y; setBlockIdAt(bId, bx + x, by + y, bz + z); //set to a full block of whatever /v is.
-     * setBlockIdAt(bId, bx + x, by + y, bz - z); setBlockIdAt(bId, bx + x, by - y+1, bz + z); setBlockIdAt(bId, bx + x, by - y+1, bz - z); } } } } } } } for
+     * closer to matching a half block than a full block... setBlockIdAt(44, blockPositionX + x, blockPositionY + y, blockPositionZ + z); //set to a half block setBlockIdAt(44, blockPositionX + x, blockPositionY + y, blockPositionZ
+     * - z); setBlockIdAt(44, blockPositionX + x, blockPositionY - y+1, blockPositionZ + z); setBlockIdAt(44, blockPositionX + x, blockPositionY - y+1, blockPositionZ - z); //AND place a full double step underneath to prevent gaps
+     * (might be slightly bulkier than could be possible... but much simpler to code) heightmap[x][z] = y - 1; setBlockIdAt(43, blockPositionX + x, blockPositionY + y - 1, blockPositionZ + z);
+     * setBlockIdAt(43, blockPositionX + x, blockPositionY + y - 1, blockPositionZ - z); setBlockIdAt(43, blockPositionX + x, blockPositionY - y , blockPositionZ + z); setBlockIdAt(43, blockPositionX + x, blockPositionY - y , blockPositionZ - z); } else { if (bId ==
+     * 44) { //if half block accuracy, but this particular position conforms better to a full block heightmap[x][z] = y; setBlockIdAt(43, blockPositionX + x, blockPositionY + y, blockPositionZ +
+     * z); //set to a full double step setBlockIdAt(43, blockPositionX + x, blockPositionY + y, blockPositionZ - z); setBlockIdAt(43, blockPositionX + x, blockPositionY - y+1, blockPositionZ + z); setBlockIdAt(43, blockPositionX + x, blockPositionY - y+1,
+     * blockPositionZ - z); } else { //if full block accuracy heightmap[x][z] = y; setBlockIdAt(bId, blockPositionX + x, blockPositionY + y, blockPositionZ + z); //set to a full block of whatever /v is.
+     * setBlockIdAt(bId, blockPositionX + x, blockPositionY + y, blockPositionZ - z); setBlockIdAt(bId, blockPositionX + x, blockPositionY - y+1, blockPositionZ + z); setBlockIdAt(bId, blockPositionX + x, blockPositionY - y+1, blockPositionZ - z); } } } } } } } for
      * (int x = 0; x <= bsize; x++) { for (int z = 0; z <= bsize; z++) { for (int i = heightmap[x][z]-1; i >= 0; i--) { // zero should be bottom of curve for
      * top blocks, and top of curve with reverse counting up for the bottom if (!powder && heightmap[x][z + 1] < i || heightmap[x + 1][z] < i) { //if annoying
-     * air gap in wall in x or z direction h.put(clampY(bx + x, by + i, bz + z)); h.put(clampY(bx + x, by + i, bz - z)); h.put(clampY(bx + x, by + i, bz + z));
-     * h.put(clampY(bx + x, by + i, bz - z));
+     * air gap in wall in x or z direction h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ + z)); h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ - z)); h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ + z));
+     * h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ - z));
      * 
-     * if (bId == 44) { setBlockIdAt(43, bx + x, by + i, bz + z); setBlockIdAt(43, bx + x, by + i, bz - z); setBlockIdAt(43, bx + x, by + i, bz + z);
-     * setBlockIdAt(43, bx + x, by + i, bz - z); } else { setBlockIdAt(bId, bx + x, by + i, bz + z); setBlockIdAt(bId, bx + x, by + i, bz - z);
-     * setBlockIdAt(bId, bx + x, by + i, bz + z); setBlockIdAt(bId, bx + x, by + i, bz - z); } } if (powder) { //fill in solid. h.put(clampY(bx + x, by + i, bz
-     * + z)); h.put(clampY(bx + x, by + i, bz - z)); h.put(clampY(bx + x, by + i, bz + z)); h.put(clampY(bx + x, by + i, bz - z));
+     * if (bId == 44) { setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ + z); setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ - z); setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ + z);
+     * setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ - z); } else { setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ + z); setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ - z);
+     * setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ + z); setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ - z); } } if (powder) { //fill in solid. h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ
+     * + z)); h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ - z)); h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ + z)); h.put(clampY(blockPositionX + x, blockPositionY + i, blockPositionZ - z));
      * 
-     * if (bId == 44) { setBlockIdAt(43, bx + x, by + i, bz + z); setBlockIdAt(43, bx + x, by + i, bz - z); setBlockIdAt(43, bx + x, by + i, bz + z);
-     * setBlockIdAt(43, bx + x, by + i, bz - z); } else { setBlockIdAt(bId, bx + x, by + i, bz + z); setBlockIdAt(bId, bx + x, by + i, bz - z);
-     * setBlockIdAt(bId, bx + x, by + i, bz + z); setBlockIdAt(bId, bx + x, by + i, bz - z); } }
+     * if (bId == 44) { setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ + z); setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ - z); setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ + z);
+     * setBlockIdAt(43, blockPositionX + x, blockPositionY + i, blockPositionZ - z); } else { setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ + z); setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ - z);
+     * setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ + z); setBlockIdAt(bId, blockPositionX + x, blockPositionY + i, blockPositionZ - z); } }
      * 
      * } } }
      * 
      * v.hashUndo.put(v.hashEn, h); v.hashEn++; }
      * 
-     * public void domeEW(vSniper v) { int bsize = v.brushSize; int bId = v.voxelId; w = w;
+     * public void domeEW(vSniper v) { int bsize = v.brushSize; int bId = v.voxelId; world = world;
      * 
-     * vUndo h = new vUndo(tb.getWorld().getName());
+     * vUndo h = new vUndo(targetBlock.getWorld().getName());
      * 
      * double bpow = Math.pow(bsize+0.5, 2); for (int x = bsize; x >= 0; x--) { double xpow = Math.pow(x, 2); for (int y = bsize; y >= 0; y--) { if ((xpow +
-     * Math.pow(y, 2)) <= bpow) { if (getBlockIdAt(bx, by + x, bz + y) != bId) { h.put(clampY(bx, by + x, bz + y)); } if (getBlockIdAt(bx, by + x, bz - y) !=
-     * bId) { h.put(clampY(bx, by + x, bz - y)); } if (getBlockIdAt(bx, by - x, bz + y) != bId) { h.put(clampY(bx, by - x, bz + y)); } if (getBlockIdAt(bx, by -
-     * x, bz - y) != bId) { h.put(clampY(bx, by - x, bz - y)); } setBlockIdAt(bId, bx, by + x, bz + y); setBlockIdAt(bId, bx, by + x, bz - y); setBlockIdAt(bId,
-     * bx, by - x, bz + y); setBlockIdAt(bId, bx, by - x, bz - y); } } } v.hashUndo.put(v.hashEn, h); v.hashEn++; }
+     * Math.pow(y, 2)) <= bpow) { if (getBlockIdAt(blockPositionX, blockPositionY + x, blockPositionZ + y) != bId) { h.put(clampY(blockPositionX, blockPositionY + x, blockPositionZ + y)); } if (getBlockIdAt(blockPositionX, blockPositionY + x, blockPositionZ - y) !=
+     * bId) { h.put(clampY(blockPositionX, blockPositionY + x, blockPositionZ - y)); } if (getBlockIdAt(blockPositionX, blockPositionY - x, blockPositionZ + y) != bId) { h.put(clampY(blockPositionX, blockPositionY - x, blockPositionZ + y)); } if (getBlockIdAt(blockPositionX, blockPositionY -
+     * x, blockPositionZ - y) != bId) { h.put(clampY(blockPositionX, blockPositionY - x, blockPositionZ - y)); } setBlockIdAt(bId, blockPositionX, blockPositionY + x, blockPositionZ + y); setBlockIdAt(bId, blockPositionX, blockPositionY + x, blockPositionZ - y); setBlockIdAt(bId,
+     * blockPositionX, blockPositionY - x, blockPositionZ + y); setBlockIdAt(bId, blockPositionX, blockPositionY - x, blockPositionZ - y); } } } v.hashUndo.put(v.hashEn, h); v.hashEn++; }
      */
     @Override
     public final int getTimesUsed() {
@@ -222,7 +222,7 @@ public class Dome extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.voxel();
         vm.height();
@@ -294,19 +294,19 @@ public class Dome extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.powder = false;
-        this.pre(v, this.tb.getFace(this.lb));
+        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.powder = true;
-        this.pre(v, this.tb.getFace(this.lb));
+        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 }

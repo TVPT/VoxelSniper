@@ -26,12 +26,12 @@ public class Cylinder extends PerformBrush {
     private static int timesUsed = 0;
 
     public Cylinder() {
-        this.name = "Cylinder";
+        this.setName("Cylinder");
     }
 
     public final void cylinder(final vData v) {
-        this.st = this.by + v.cCen;
-        this.en = this.by + v.voxelHeight + v.cCen;
+        this.st = this.getBlockPositionY() + v.cCen;
+        this.en = this.getBlockPositionY() + v.voxelHeight + v.cCen;
         if (this.en < this.st) {
             this.en = this.st;
         }
@@ -58,10 +58,10 @@ public class Cylinder extends PerformBrush {
                 final double xpow = Math.pow(x, 2);
                 for (int y = bsize; y >= 0; y--) {
                     if ((xpow + Math.pow(y, 2)) <= bpow) {
-                        this.current.perform(this.clampY(this.bx + x, this.by, this.bz + y));
-                        this.current.perform(this.clampY(this.bx + x, this.by, this.bz - y));
-                        this.current.perform(this.clampY(this.bx - x, this.by, this.bz + y));
-                        this.current.perform(this.clampY(this.bx - x, this.by, this.bz - y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y));
                     }
                 }
             }
@@ -76,7 +76,7 @@ public class Cylinder extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.height();
         vm.center();
@@ -124,17 +124,17 @@ public class Cylinder extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.cylinder(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.cylinder(v);
     }
 }

@@ -13,7 +13,7 @@ public class Voxel extends PerformBrush {
     private static int timesUsed = 0;
 
     public Voxel() {
-        this.name = "Voxel";
+        this.setName("Voxel");
     }
 
     @Override
@@ -23,7 +23,7 @@ public class Voxel extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
     }
 
@@ -38,7 +38,7 @@ public class Voxel extends PerformBrush {
         for (int z = bsize; z >= -bsize; z--) {
             for (int x = bsize; x >= -bsize; x--) {
                 for (int y = bsize; y >= -bsize; y--) {
-                    this.current.perform(this.clampY(this.bx + x, this.by + z, this.bz + y));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + z, this.getBlockPositionZ() + y));
                 }
             }
         }
@@ -47,9 +47,9 @@ public class Voxel extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.voxel(v);
     }
 

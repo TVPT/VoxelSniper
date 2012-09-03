@@ -59,7 +59,7 @@ public class Punish extends PerformBrush {
      * Default Constructor.
      */
     public Punish() {
-        this.name = "Punish";
+        this.setName("Punish");
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Punish extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Punishment: " + this.punishment.toString());
         vm.size();
         vm.center();
@@ -166,7 +166,7 @@ public class Punish extends PerformBrush {
             entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Punish.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
             break;
         case FORCE:
-            final Vector _playerVector = this.tb.getLocation().toVector();
+            final Vector _playerVector = this.getTargetBlock().getLocation().toVector();
             final Vector _direction = entity.getLocation().toVector().clone();
             _direction.subtract(_playerVector);
             final double _length = _direction.length();
@@ -219,7 +219,7 @@ public class Punish extends PerformBrush {
         }
 
         final int _brushSizeSquare = v.brushSize * v.brushSize;
-        final Location _targetLocation = new Location(v.getWorld(), this.tb.getX(), this.tb.getY(), this.tb.getZ());
+        final Location _targetLocation = new Location(v.getWorld(), this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
 
         final List<LivingEntity> _entities = v.getWorld().getLivingEntities();
         int _numPunishApps = 0;
@@ -250,7 +250,7 @@ public class Punish extends PerformBrush {
         }
 
         final int _brushSizeSquare = v.brushSize * v.brushSize;
-        final Location _targetLocation = new Location(v.getWorld(), this.tb.getX(), this.tb.getY(), this.tb.getZ());
+        final Location _targetLocation = new Location(v.getWorld(), this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
 
         final List<LivingEntity> _entities = v.getWorld().getLivingEntities();
 

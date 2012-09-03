@@ -12,7 +12,7 @@ public class Snipe extends PerformBrush {
     private static int timesUsed = 0;
 
     public Snipe() {
-        this.name = "Snipe";
+        this.setName("Snipe");
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Snipe extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -32,13 +32,13 @@ public class Snipe extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.current.perform(this.tb);
+        this.current.perform(this.getTargetBlock());
         v.storeUndo(this.current.getUndo());
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.current.perform(this.lb);
+        this.current.perform(this.getLastBlock());
         v.storeUndo(this.current.getUndo());
     }
 }

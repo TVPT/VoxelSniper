@@ -20,14 +20,14 @@ public class Underlay extends PerformBrush {
     private static int timesUsed = 0;
 
     public Underlay() {
-        this.name = "Underlay (Reverse Overlay)";
+        this.setName("Underlay (Reverse Overlay)");
     }
 
     @Override
     public final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.Underlay(v);
     }
 
@@ -38,7 +38,7 @@ public class Underlay extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
     }
 
@@ -76,9 +76,9 @@ public class Underlay extends PerformBrush {
 
     @Override
     public final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.Underlaytwo(v);
 
     }
@@ -95,11 +95,11 @@ public class Underlay extends PerformBrush {
         final double bpow = Math.pow(bsize + 0.5, 2);
         for (int z = bsize; z >= -bsize; z--) {
             for (int x = bsize; x >= -bsize; x--) {
-                for (int y = this.by; y < this.by + this.depth; y++) { // start scanning from the height you clicked at
+                for (int y = this.getBlockPositionY(); y < this.getBlockPositionY() + this.depth; y++) { // start scanning from the height you clicked at
                     if (memory[x + bsize][z + bsize] != 1) { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= bpow) { // if inside of the column...
                             if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                switch (this.getBlockIdAt(this.bx + x, y, this.bz + z)) {
+                                switch (this.getBlockIdAt(this.getBlockPositionX() + x, y, this.getBlockPositionZ() + z)) {
                                 case 1:
                                 case 2:
                                 case 3:
@@ -114,8 +114,8 @@ public class Underlay extends PerformBrush {
                                 case 49:
                                 case 78:
                                     for (int d = 0; (d < this.depth); d++) {
-                                        if (this.clampY(this.bx + x, y + d, this.bz + z).getTypeId() != 0) {
-                                            this.current.perform(this.clampY(this.bx + x, y + d, this.bz + z)); // fills down as many layers as you specify in
+                                        if (this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z).getTypeId() != 0) {
+                                            this.current.perform(this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify in
                                                                                                                 // parameters
                                             memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                         }
@@ -127,8 +127,8 @@ public class Underlay extends PerformBrush {
                                 }
                             } else {
                                 for (int d = 0; (d < this.depth); d++) {
-                                    if (this.clampY(this.bx + x, y + d, this.bz + z).getTypeId() != 0) {
-                                        this.current.perform(this.clampY(this.bx + x, y + d, this.bz + z)); // fills down as many layers as you specify in
+                                    if (this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z).getTypeId() != 0) {
+                                        this.current.perform(this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify in
                                                                                                             // parameters
                                         memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                     }
@@ -151,13 +151,13 @@ public class Underlay extends PerformBrush {
         final double bpow = Math.pow(bsize + 0.5, 2);
         for (int z = bsize; z >= -bsize; z--) {
             for (int x = bsize; x >= -bsize; x--) {
-                for (int y = this.by; y < this.by + this.depth; y++) { // start scanning from the height you clicked at
+                for (int y = this.getBlockPositionY(); y < this.getBlockPositionY() + this.depth; y++) { // start scanning from the height you clicked at
                     if (memory[x + bsize][z + bsize] != 1) { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= bpow) { // if inside of the column...
 
                             if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                switch (this.getBlockIdAt(this.bx + x, y, this.bz + z)) {
+                                switch (this.getBlockIdAt(this.getBlockPositionX() + x, y, this.getBlockPositionZ() + z)) {
                                 case 1:
                                 case 2:
                                 case 3:
@@ -173,7 +173,7 @@ public class Underlay extends PerformBrush {
                                 case 49:
                                 case 78:
                                     for (int d = -1; (d < this.depth - 1); d++) {
-                                        this.current.perform(this.clampY(this.bx + x, y - d, this.bz + z)); // fills down as many layers as you specify in
+                                        this.current.perform(this.clampY(this.getBlockPositionX() + x, y - d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify in
                                                                                                             // parameters
                                         memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                     }
@@ -184,7 +184,7 @@ public class Underlay extends PerformBrush {
                                 }
                             } else {
                                 for (int d = -1; (d < this.depth - 1); d++) {
-                                    this.current.perform(this.clampY(this.bx + x, y - d, this.bz + z)); // fills down as many layers as you specify in
+                                    this.current.perform(this.clampY(this.getBlockPositionX() + x, y - d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify in
                                                                                                         // parameters
                                     memory[x + bsize][z + bsize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                 }

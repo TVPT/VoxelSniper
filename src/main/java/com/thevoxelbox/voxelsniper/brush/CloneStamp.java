@@ -24,7 +24,7 @@ public class CloneStamp extends Stamp {
     private static int timesUsed = 0;
 
     public CloneStamp() {
-        this.name = "Clone";
+        this.setName("Clone");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CloneStamp extends Stamp {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.height();
         vm.center();
@@ -89,10 +89,10 @@ public class CloneStamp extends Stamp {
     }
 
     /**
-     * The clone method is used to grab a snapshot of the selected area dictated by tb.x y z v.brushSize v.voxelHeight and v.cCen
+     * The clone method is used to grab a snapshot of the selected area dictated blockPositionY targetBlock.x y z v.brushSize v.voxelHeight and v.cCen
      * 
      * x y z -- initial center of the selection v.brushSize -- the radius of the cylinder v.voxelHeight -- the heigth of the cylinder c.cCen -- the offset on
-     * the Y axis of the selection ( bottom of the cylinder ) as by: Bottom_Y = tb.y + v.cCen;
+     * the Y axis of the selection ( bottom of the cylinder ) as blockPositionY: Bottom_Y = targetBlock.y + v.cCen;
      * 
      * @param v
      *            the caller
@@ -105,12 +105,12 @@ public class CloneStamp extends Stamp {
         final int bsize = v.brushSize;
         this.sorted = false;
 
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.st = this.by + v.cCen;
-        this.en = this.by + v.voxelHeight + v.cCen;
+        this.st = this.getBlockPositionY() + v.cCen;
+        this.en = this.getBlockPositionY() + v.voxelHeight + v.cCen;
         if (this.st < 0) {
             this.st = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
@@ -127,21 +127,21 @@ public class CloneStamp extends Stamp {
         }
         final double bpow = Math.pow(bsize, 2);
         for (int z = this.st; z < this.en; z++) {
-            this.clone.add(new cBlock(this.clampY(this.bx, z, this.bz), 0, z - this.st, 0));
+            this.clone.add(new cBlock(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ()), 0, z - this.st, 0));
             for (int y2 = 1; y2 <= bsize; y2++) {
-                this.clone.add(new cBlock(this.clampY(this.bx, z, this.bz + y2), 0, z - this.st, y2));
-                this.clone.add(new cBlock(this.clampY(this.bx, z, this.bz - y2), 0, z - this.st, -y2));
-                this.clone.add(new cBlock(this.clampY(this.bx + y2, z, this.bz), y2, z - this.st, 0));
-                this.clone.add(new cBlock(this.clampY(this.bx - y2, z, this.bz), -y2, z - this.st, 0));
+                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ() + y2), 0, z - this.st, y2));
+                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ() - y2), 0, z - this.st, -y2));
+                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() + y2, z, this.getBlockPositionZ()), y2, z - this.st, 0));
+                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() - y2, z, this.getBlockPositionZ()), -y2, z - this.st, 0));
             }
             for (int x = 1; x <= bsize; x++) {
                 final double xpow = Math.pow(x, 2);
                 for (int y = 1; y <= bsize; y++) {
                     if ((xpow + Math.pow(y, 2)) <= bpow) {
-                        this.clone.add(new cBlock(this.clampY(this.bx + x, z, this.bz + y), x, z - this.st, y));
-                        this.clone.add(new cBlock(this.clampY(this.bx + x, z, this.bz - y), x, z - this.st, -y));
-                        this.clone.add(new cBlock(this.clampY(this.bx - x, z, this.bz + y), -x, z - this.st, y));
-                        this.clone.add(new cBlock(this.clampY(this.bx - x, z, this.bz - y), -x, z - this.st, -y));
+                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() + x, z, this.getBlockPositionZ() + y), x, z - this.st, y));
+                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() + x, z, this.getBlockPositionZ() - y), x, z - this.st, -y));
+                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() - x, z, this.getBlockPositionZ() + y), -x, z - this.st, y));
+                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() - x, z, this.getBlockPositionZ() - y), -x, z - this.st, -y));
                     }
                 }
             }

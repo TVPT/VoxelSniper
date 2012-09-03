@@ -63,7 +63,7 @@ public class HeatRay extends Brush {
      * Default Constructor.
      */
     public HeatRay() {
-        this.name = "Heat Ray";
+        this.setName("Heat Ray");
     }
 
     @Override
@@ -79,17 +79,17 @@ public class HeatRay extends Brush {
     public final void heatRay(final vData v) {
         final PerlinNoiseGenerator _generator = new PerlinNoiseGenerator(new Random());
 
-        final Vector _targetLocation = this.tb.getLocation().toVector();
-        final Location _currentLocation = new Location(this.tb.getWorld(), 0, 0, 0);
+        final Vector _targetLocation = this.getTargetBlock().getLocation().toVector();
+        final Location _currentLocation = new Location(this.getTargetBlock().getWorld(), 0, 0, 0);
         Block _currentBlock = null;
-        final vUndo _undo = new vUndo(this.tb.getWorld().getName());
+        final vUndo _undo = new vUndo(this.getTargetBlock().getWorld().getName());
 
         for (int _z = v.brushSize; _z >= -v.brushSize; _z--) {
             for (int _x = v.brushSize; _x >= -v.brushSize; _x--) {
                 for (int _y = v.brushSize; _y >= -v.brushSize; _y--) {
-                    _currentLocation.setX(this.bx + _x);
-                    _currentLocation.setY(this.by + _y);
-                    _currentLocation.setZ(this.bz + _z);
+                    _currentLocation.setX(this.getBlockPositionX() + _x);
+                    _currentLocation.setY(this.getBlockPositionY() + _y);
+                    _currentLocation.setZ(this.getBlockPositionZ() + _z);
 
                     if (_currentLocation.toVector().isInSphere(_targetLocation, v.brushSize)) {
                         _currentBlock = _currentLocation.getBlock();
@@ -152,7 +152,7 @@ public class HeatRay extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
         vm.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
         vm.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
@@ -189,9 +189,9 @@ public class HeatRay extends Brush {
 
     @Override
     protected final void arrow(final vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.heatRay(v);
     }
 

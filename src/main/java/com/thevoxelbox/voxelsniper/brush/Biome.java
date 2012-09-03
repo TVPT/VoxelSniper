@@ -17,7 +17,7 @@ public class Biome extends Brush {
     private static int timesUsed = 0;
 
     public Biome() {
-        this.name = "Biome";
+        this.setName("Biome");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Biome extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selected.name());
     }
@@ -75,13 +75,13 @@ public class Biome extends Brush {
             final double xpow = Math.pow(x, 2);
             for (int z = -bsize; z <= bsize; z++) {
                 if ((xpow + Math.pow(z, 2)) <= bpow) {
-                    this.w.setBiome(this.bx + x, this.bz + z, this.selected);
+                    this.getWorld().setBiome(this.getBlockPositionX() + x, this.getBlockPositionZ() + z, this.selected);
                 }
             }
         }
 
-        final Block b = this.w.getBlockAt(this.bx - bsize, 0, this.bz - bsize);
-        final Block bl = this.w.getBlockAt(this.bx + bsize, 0, this.bz + bsize);
+        final Block b = this.getWorld().getBlockAt(this.getBlockPositionX() - bsize, 0, this.getBlockPositionZ() - bsize);
+        final Block bl = this.getWorld().getBlockAt(this.getBlockPositionX() + bsize, 0, this.getBlockPositionZ() + bsize);
 
         final int lowx = (b.getX() <= bl.getX()) ? b.getChunk().getX() : bl.getChunk().getX();
         final int lowz = (b.getZ() <= bl.getZ()) ? b.getChunk().getX() : bl.getChunk().getX();
@@ -90,7 +90,7 @@ public class Biome extends Brush {
 
         for (int x = lowx; x <= highx; x++) {
             for (int z = lowz; z <= highz; z++) {
-                this.w.refreshChunk(x, z);
+                this.getWorld().refreshChunk(x, z);
             }
         }
     }

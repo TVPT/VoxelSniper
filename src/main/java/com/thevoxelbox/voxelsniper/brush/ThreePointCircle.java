@@ -43,22 +43,22 @@ public class ThreePointCircle extends PerformBrush {
      * Default Constructor.
      */
     public ThreePointCircle() {
-        this.name = "3-Point Circle";
+        this.setName("3-Point Circle");
     }
 
     @Override
     public final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
         if (this.coordsOne == null) {
-            this.coordsOne = this.tb.getLocation().toVector();
+            this.coordsOne = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "First Corner set.");
         } else if (this.coordsTwo == null) {
-            this.coordsTwo = this.tb.getLocation().toVector();
+            this.coordsTwo = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "Second Corner set.");
         } else if (this.coordsThree == null) {
-            this.coordsThree = this.tb.getLocation().toVector();
+            this.coordsThree = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "Third Corner set.");
         } else {
-            this.coordsOne = this.tb.getLocation().toVector();
+            this.coordsOne = this.getTargetBlock().getLocation().toVector();
             this.coordsTwo = null;
             this.coordsThree = null;
             v.sendMessage(ChatColor.GRAY + "First Corner set.");
@@ -72,7 +72,7 @@ public class ThreePointCircle extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         switch (this.tolerance) {
         case ACCURATE:
             vm.custom(ChatColor.GOLD + "Mode: Accurate");
@@ -120,7 +120,7 @@ public class ThreePointCircle extends PerformBrush {
 
     @Override
     public final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.w = v.getWorld();
+        this.setWorld(v.getWorld());
 
         if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
             return;

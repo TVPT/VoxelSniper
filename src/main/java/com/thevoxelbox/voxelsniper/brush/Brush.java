@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.Queue;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,101 +8,74 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 
 import com.thevoxelbox.voxelsniper.HitBlox;
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.undo.vBlock;
 
 /**
- * The abstract class Brush Base of all the brushes
+ * The abstract class Brush Base of all the brushes.
  * 
  * @author Piotr
  */
 public abstract class Brush {
 
-    protected int currentPiece; // for throttled execution of large brushes so as not to crash the server, holds info about which piece is currently in need of
-                                // processing.
+    /**
+     * Pointer to the world the current action is being executed.
+     */
+    private World world;
+    /**
+     * Targeted reference point X.
+     */
+    private int blockPositionX;
+    /**
+     * Targeted reference point Y.
+     */
+    private int blockPositionY;
+    /**
+     * Targeted reference point Z.
+     */
+    private int blockPositionZ;
+    /**
+     * Brush'world Target Block Derived from getTarget().
+     */
+    private Block targetBlock;
+    /**
+     * Brush'world Target 'Last' Block Block at the face of the block clicked ColDerived from getTarget().
+     */
+    private Block lastBlock;
+    /**
+     * Brush'world private name.
+     */
+    private String name = "Undefined";
 
-    public int currentTimerID = -1;
-    public int currentOneOffID = -1;
-    public Queue<int[]> throttleQueue;
     /**
-     * Pointer to the world the current action is being executed
+     * @param x
+     * @param y
+     * @param z
+     * @return {@link Block}
      */
-    protected World w;
-    /**
-     * Targeted reference point X
-     */
-    protected int bx;
-    /**
-     * Targeted reference point Y
-     */
-    protected int by;
-    /**
-     * Targeted reference point Z
-     */
-    protected int bz;
-    /**
-     * Brush'w Target Block Derived from getTarget()
-     */
-    protected Block tb;
-    /**
-     * Brush'w Target 'Last' Block Block at the face of the block clicked ColDerived from getTarget()
-     */
-    protected Block lb;
-    /**
-     * Brush'w private name.
-     */
-    public String name = "Undefined";
-    protected int undoScale = 1000;
-
-    public final Block clampY(final int x, int y, final int z) {
-        if (y < 0) {
-            y = 0;
-        } else if (y > this.w.getMaxHeight()) {
-            y = this.w.getMaxHeight();
+    public final Block clampY(final int x, final int y, final int z) {
+        int _y = y;
+        if (_y < 0) {
+            _y = 0;
+        } else if (y > this.getWorld().getMaxHeight()) {
+            _y = this.getWorld().getMaxHeight();
         }
 
-        return this.w.getBlockAt(x, y, z);
+        return this.getWorld().getBlockAt(x, y, z);
     }
 
-    public final int getPiece() {
-        return this.currentPiece;
+    /**
+     * @return the name
+     */
+    public final String getName() {
+        return this.name;
     }
 
-    public final int[] getPieceNumbers(final com.thevoxelbox.voxelsniper.vData v, final int piece, final int numPieces) { // method for determinine the loop
-                                                                                                                          // starting
-        // and stoppping
-        // numbers for partial pieces of a 3d snipe. Currently only 3d
-        // brush shapes supported (discs can be hundreds in size and
-        // still solve without crashing, aside from shadows)
-        final int bsize = v.brushSize;
-        final int pieceSize = v.owner().pieceSize;
-        final int nextBlock = (piece - 1) * pieceSize + 1;
-
-        final int innerLoop = (nextBlock % (bsize * bsize)) % bsize; // hmm, + 1 or something?
-        final int middleLoop = ((nextBlock % (bsize * bsize)) - innerLoop) / bsize + 1;
-        final int outerLoop = (nextBlock - innerLoop - middleLoop * bsize) / (bsize * bsize) + 1;
-
-        double endBlock;
-        if (piece < numPieces) {
-            endBlock = nextBlock + pieceSize;
-        } else {
-            endBlock = bsize * bsize * bsize;
-        }
-        final double innerDone = (endBlock % (bsize * bsize)) % bsize; // hmm, + 1 or something?
-        final double middleDone = ((endBlock % (bsize * bsize)) - innerLoop) / bsize + 1;
-        final double outerDone = (endBlock - innerLoop - middleLoop * bsize) / (bsize * bsize) + 1;
-
-        final int[] returnNumbers = new int[6];
-        returnNumbers[0] = innerLoop;
-        returnNumbers[1] = middleLoop;
-        returnNumbers[2] = outerLoop;
-        returnNumbers[3] = (int) innerDone;
-        returnNumbers[4] = (int) middleDone;
-        returnNumbers[5] = (int) outerDone;
-        return returnNumbers;
-    }
-
+    /**
+     * @return int
+     */
     public abstract int getTimesUsed();
 
     /**
@@ -121,7 +92,7 @@ public abstract class Brush {
      * @param v
      *            vSniper caller
      */
-    public void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public void parameters(final String[] par, final vData v) {
         v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
     }
 
@@ -132,9 +103,9 @@ public abstract class Brush {
      * @param heldItem
      * @param clickedBlock
      * @param clickedFace
+     * @return boolean
      */
-    public boolean perform(final Action action, final com.thevoxelbox.voxelsniper.vData v, final Material heldItem, final Block clickedBlock,
-            final BlockFace clickedFace) {
+    public boolean perform(final Action action, final vData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
         switch (action) {
         case RIGHT_CLICK_AIR:
         case RIGHT_CLICK_BLOCK:
@@ -186,15 +157,22 @@ public abstract class Brush {
         return false;
     }
 
-    public final void setPiece(final int piece) {
-        this.currentPiece = piece;
+    /**
+     * @param name
+     *            the name to set
+     */
+    public final void setName(final String name) {
+        this.name = name;
     }
 
+    /**
+     * @param timesUsed
+     */
     public abstract void setTimesUsed(int timesUsed);
 
-    public void ThrottledRun(final com.thevoxelbox.voxelsniper.vData v, final int[] pieceNumbers) { // to be overriden by individual brushes
-    }
-
+    /**
+     * 
+     */
     public void updateScale() {
     }
 
@@ -204,11 +182,11 @@ public abstract class Brush {
      * @param v
      *            vSniper caller
      */
-    protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void arrow(final vData v) {
     }
 
     /**
-     * Returns the block at the passed coordinates
+     * Returns the block at the passed coordinates.
      * 
      * @param ax
      *            X coordinate
@@ -216,10 +194,17 @@ public abstract class Brush {
      *            Y coordinate
      * @param az
      *            Z coordinate
-     * @return
+     * @return int
      */
     protected final int getBlockIdAt(final int ax, final int ay, final int az) {
-        return this.w.getBlockAt(ax, ay, az).getTypeId();
+        return this.getWorld().getBlockAt(ax, ay, az).getTypeId();
+    }
+
+    /**
+     * @return the lastBlock
+     */
+    protected final Block getLastBlock() {
+        return this.lastBlock;
     }
 
     /**
@@ -228,38 +213,38 @@ public abstract class Brush {
      * @param v
      * @param clickedBlock
      * @param clickedFace
-     * @return
+     * @return boolean
      */
-    protected final boolean getTarget(final com.thevoxelbox.voxelsniper.vData v, final Block clickedBlock, final BlockFace clickedFace) {
-        this.w = v.getWorld();
+    protected final boolean getTarget(final vData v, final Block clickedBlock, final BlockFace clickedFace) {
+        this.setWorld(v.getWorld());
         if (clickedBlock != null) {
-            this.tb = clickedBlock;
-            this.lb = clickedBlock.getRelative(clickedFace);
-            if (this.lb == null) {
+            this.setTargetBlock(clickedBlock);
+            this.setLastBlock(clickedBlock.getRelative(clickedFace));
+            if (this.getLastBlock() == null) {
                 v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
                 return false;
             }
             if (v.owner().isLightning()) {
-                this.w.strikeLightning(this.tb.getLocation());
+                this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
             }
             return true;
         } else {
             HitBlox hb = null;
             if (v.owner().isDistRestrict()) {
-                hb = new HitBlox(v.owner().getPlayer(), this.w, v.owner().getRange());
-                this.tb = hb.getRangeBlock();
+                hb = new HitBlox(v.owner().getPlayer(), this.getWorld(), v.owner().getRange());
+                this.setTargetBlock(hb.getRangeBlock());
             } else {
-                hb = new HitBlox(v.owner().getPlayer(), this.w);
-                this.tb = hb.getTargetBlock();
+                hb = new HitBlox(v.owner().getPlayer(), this.getWorld());
+                this.setTargetBlock(hb.getTargetBlock());
             }
-            if (this.tb != null) {
-                this.lb = hb.getLastBlock();
-                if (this.lb == null) {
+            if (this.getTargetBlock() != null) {
+                this.setLastBlock(hb.getLastBlock());
+                if (this.getLastBlock() == null) {
                     v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
                     return false;
                 }
                 if (v.owner().isLightning()) {
-                    this.w.strikeLightning(this.tb.getLocation());
+                    this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
                 }
                 return true;
             } else {
@@ -270,12 +255,26 @@ public abstract class Brush {
     }
 
     /**
+     * @return the targetBlock
+     */
+    protected final Block getTargetBlock() {
+        return this.targetBlock;
+    }
+
+    /**
+     * @return the world
+     */
+    protected final World getWorld() {
+        return this.world;
+    }
+
+    /**
      * The powder action. Executed when a player RightClicks with Gunpowder
      * 
      * @param v
      *            vSniper caller
      */
-    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void powder(final vData v) {
     }
 
     /**
@@ -283,11 +282,11 @@ public abstract class Brush {
      * @param v
      */
     protected final void setBlock(final vBlock v) {
-        this.w.getBlockAt(v.x, v.y, v.z).setTypeId(v.id);
+        this.getWorld().getBlockAt(v.x, v.y, v.z).setTypeId(v.id);
     }
 
     /**
-     * Sets the Id of the block at the passed coordinate
+     * Sets the Id of the block at the passed coordinate.
      * 
      * @param t
      *            The id the block will be set to
@@ -299,6 +298,72 @@ public abstract class Brush {
      *            Z coordinate
      */
     protected final void setBlockIdAt(final int t, final int ax, final int ay, final int az) {
-        this.w.getBlockAt(ax, ay, az).setTypeId(t);
+        this.getWorld().getBlockAt(ax, ay, az).setTypeId(t);
+    }
+
+    /**
+     * @param lastBlock
+     *            the lastBlock to set
+     */
+    protected final void setLastBlock(final Block lastBlock) {
+        this.lastBlock = lastBlock;
+    }
+
+    /**
+     * @param targetBlock
+     *            the targetBlock to set
+     */
+    protected final void setTargetBlock(final Block targetBlock) {
+        this.targetBlock = targetBlock;
+    }
+
+    /**
+     * @param world
+     *            the world to set
+     */
+    protected final void setWorld(final World world) {
+        this.world = world;
+    }
+
+    /**
+     * @return the blockPositionX
+     */
+    protected int getBlockPositionX() {
+        return blockPositionX;
+    }
+
+    /**
+     * @param blockPositionX the blockPositionX to set
+     */
+    protected void setBlockPositionX(int blockPositionX) {
+        this.blockPositionX = blockPositionX;
+    }
+
+    /**
+     * @return the blockPositionY
+     */
+    protected int getBlockPositionY() {
+        return blockPositionY;
+    }
+
+    /**
+     * @param blockPositionY the blockPositionY to set
+     */
+    protected void setBlockPositionY(int blockPositionY) {
+        this.blockPositionY = blockPositionY;
+    }
+
+    /**
+     * @return the blockPositionZ
+     */
+    protected int getBlockPositionZ() {
+        return blockPositionZ;
+    }
+
+    /**
+     * @param blockPositionZ the blockPositionZ to set
+     */
+    protected void setBlockPositionZ(int blockPositionZ) {
+        this.blockPositionZ = blockPositionZ;
     }
 }

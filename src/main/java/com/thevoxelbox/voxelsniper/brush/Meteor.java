@@ -30,7 +30,7 @@ public class Meteor extends Brush {
     private static int timesUsed = 0;
 
     public Meteor() {
-        this.name = "Meteor";
+        this.setName("Meteor");
     }
 
     public final void dofireball(final vData v) {
@@ -67,7 +67,7 @@ public class Meteor extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.voxel();
     }
 
@@ -84,10 +84,10 @@ public class Meteor extends Brush {
         this.origincoords[1] = this.player_loc.getY();
         this.origincoords[2] = this.player_loc.getZ();
 
-        this.targetcoords[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is
+        this.targetcoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                 // different?
-        this.targetcoords[1] = this.tb.getY() + .5;
-        this.targetcoords[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+        this.targetcoords[1] = this.getTargetBlock().getY() + .5;
+        this.targetcoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
 
         // didn't work. I guess I don't understand where the origin of the fireball is determined in this code. shrug. -Gav
         // origincoords[0] = origincoords[0] + (int)(targetcoords[0] - origincoords[0])*0.1; //attempting to make fireballs not blow up in your face anymore.

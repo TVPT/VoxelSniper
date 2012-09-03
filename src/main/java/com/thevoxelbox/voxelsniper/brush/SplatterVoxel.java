@@ -22,7 +22,7 @@ public class SplatterVoxel extends PerformBrush {
     private static int timesUsed = 0;
 
     public SplatterVoxel() {
-        this.name = "Splatter Voxel";
+        this.setName("Splatter Voxel");
     }
 
     @Override
@@ -198,7 +198,7 @@ public class SplatterVoxel extends PerformBrush {
                 for (int z = 2 * bsize; z >= 0; z--) {
                     if (splat[x][y][z] == 1) {
 
-                        this.current.perform(this.clampY(this.bx - bsize + x, this.by - bsize + z, this.bz - bsize + y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + z, this.getBlockPositionZ() - bsize + y));
 
                     }
                 }
@@ -209,17 +209,17 @@ public class SplatterVoxel extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.vsplatterball(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.vsplatterball(v);
     }
 }

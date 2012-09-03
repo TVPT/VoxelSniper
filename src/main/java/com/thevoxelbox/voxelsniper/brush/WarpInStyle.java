@@ -14,7 +14,7 @@ public class WarpInStyle extends Brush {
     private static int timesUsed = 0;
 
     public WarpInStyle() {
-        this.name = "Warp Like a Boss";
+        this.setName("Warp Like a Boss");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class WarpInStyle extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -40,12 +40,12 @@ public class WarpInStyle extends Brush {
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.w.strikeLightning(v.owner().getPlayer().getLocation());
+        this.getWorld().strikeLightning(v.owner().getPlayer().getLocation());
         this.tp(v.owner().getPlayer(), v.owner().getPlayer().getLocation());
-        this.w.strikeLightning(this.tb.getLocation());
+        this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
     }
 
     protected final void tp(final Player p, final Location l) {
-        p.teleport(new Location(p.getWorld(), this.lb.getX(), this.lb.getY(), this.lb.getZ(), l.getYaw(), l.getPitch()));
+        p.teleport(new Location(p.getWorld(), this.getLastBlock().getX(), this.getLastBlock().getY(), this.getLastBlock().getZ(), l.getYaw(), l.getPitch()));
     }
 }

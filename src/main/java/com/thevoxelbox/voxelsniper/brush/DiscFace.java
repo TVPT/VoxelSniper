@@ -18,7 +18,7 @@ public class DiscFace extends PerformBrush {
     private static int timesUsed = 0;
 
     public DiscFace() {
-        this.name = "Disc Face";
+        this.setName("Disc Face");
     }
 
     public final void disc(final vData v) {
@@ -29,10 +29,10 @@ public class DiscFace extends PerformBrush {
             final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    this.current.perform(this.clampY(this.bx + x, this.by, this.bz + y));
-                    this.current.perform(this.clampY(this.bx + x, this.by, this.bz - y));
-                    this.current.perform(this.clampY(this.bx - x, this.by, this.bz + y));
-                    this.current.perform(this.clampY(this.bx - x, this.by, this.bz - y));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y));
+                    this.current.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
+                    this.current.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y));
                 }
             }
         }
@@ -48,10 +48,10 @@ public class DiscFace extends PerformBrush {
             final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    this.current.perform(this.clampY(this.bx + x, this.by + y, this.bz));
-                    this.current.perform(this.clampY(this.bx + x, this.by - y, this.bz));
-                    this.current.perform(this.clampY(this.bx - x, this.by + y, this.bz));
-                    this.current.perform(this.clampY(this.bx - x, this.by - y, this.bz));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ()));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ()));
+                    this.current.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ()));
+                    this.current.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ()));
                 }
             }
         }
@@ -67,10 +67,10 @@ public class DiscFace extends PerformBrush {
             final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    this.current.perform(this.clampY(this.bx, this.by + x, this.bz + y));
-                    this.current.perform(this.clampY(this.bx, this.by + x, this.bz - y));
-                    this.current.perform(this.clampY(this.bx, this.by - x, this.bz + y));
-                    this.current.perform(this.clampY(this.bx, this.by - x, this.bz - y));
+                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + x, this.getBlockPositionZ() + y));
+                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + x, this.getBlockPositionZ() - y));
+                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - x, this.getBlockPositionZ() + y));
+                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - x, this.getBlockPositionZ() - y));
                 }
             }
         }
@@ -85,7 +85,7 @@ public class DiscFace extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         // vm.voxel();
     }
@@ -145,17 +145,17 @@ public class DiscFace extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
-        this.pre(v, this.tb.getFace(this.lb));
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
+        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
-        this.pre(v, this.tb.getFace(this.lb));
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
+        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 }

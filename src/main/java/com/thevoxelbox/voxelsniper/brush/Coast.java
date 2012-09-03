@@ -29,7 +29,7 @@ public class Coast extends Brush {
     private static int timesUsed = 0;
 
     public Coast() {
-        this.name = "Coast Creation";
+        this.setName("Coast Creation");
     }
 
     public final void coast(final vData v) {
@@ -77,7 +77,7 @@ public class Coast extends Brush {
         final int maxZ = centers[2][this.numBlobs];
         final byte[][] mask = new byte[maxX - minX + 4][maxZ - minZ + 4]; // +1 just so that both ends of the range are inclusive. +2 more to give a border
                                                                           // around the mask which is needed later, and +1 more to make it so I don't have to
-                                                                          // remember to type in annoying -1'w all the time to access arrays.
+                                                                          // remember to type in annoying -1'world all the time to access arrays.
         centers = backupCenters;
 
         this.makeblob(mask, 0, 0, this.bsize); // the original disc is included in the mask
@@ -85,7 +85,7 @@ public class Coast extends Brush {
             this.makeblob(mask, centers[1][n], centers[2][n], centers[3][n]);
         }
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         // kill trees and store top four other block types in memory
         v.sendMessage(ChatColor.LIGHT_PURPLE + "maxX" + maxX);
@@ -121,7 +121,7 @@ public class Coast extends Brush {
 
                     // top four layers of natural ground types other than liquids
                     if (memory[x][z][5] == 0) { // if column hasn't been memorized already
-                        if (this.getBlockIdAt(x, y - 1, z) != 0) { // if not a floating block (like one of Notch'w pools)
+                        if (this.getBlockIdAt(x, y - 1, z) != 0) { // if not a floating block (like one of Notch'world pools)
                             switch (this.getBlockIdAt(x, y, z)) {
                             case 1:
                             case 2:
@@ -143,7 +143,7 @@ public class Coast extends Brush {
                                 break;
 
                             default:
-                                h.put(this.clampY(x, y, z)); // destroy anything above the top four layers that isn't natural or is floating by itself
+                                h.put(this.clampY(x, y, z)); // destroy anything above the top four layers that isn't natural or is floating blockPositionY itself
                                 this.setBlockIdAt(0, x, y, z);
                                 break;
                             }
@@ -156,14 +156,14 @@ public class Coast extends Brush {
         // 7) figure out topographic sub masks
         // current idea, pending testing and resion: First calculate how many steps I need based on strength the user wants and size of brush. Will be an
         // estimate at first, I guess.
-        // Then accrete two steps' worth of pixels to the mask from the outside, and then erode one step'w worth. Should result in a smooth-ish next layer. If
+        // Then accrete two steps' worth of pixels to the mask from the outside, and then erode one step'world worth. Should result in a smooth-ish next layer. If
         // not, figure out a better smoothing method.
-        // Keep track of layer by adding a 1 to each point in the mask array that is no longer part of this layer.
+        // Keep track of layer blockPositionY adding a 1 to each point in the mask array that is no longer part of this layer.
         // Repeat until the accretion fills in the entire mask.
         // End result should be a mask with zeros on the outside, then the outermost layer will be [# of layers], e.g. 16, the next layer in will be 15s, etc.
         // The innermost layer = 1s.
 
-        // 7.5) figure out how much to scrape off of each topographic layer by applying it to a curve function (sigmoid, bezier, whatever)
+        // 7.5) figure out how much to scrape off of each topographic layer blockPositionY applying it to a curve function (sigmoid, bezier, whatever)
 
         // 8) scrape, but not more than 8 below sea level
         // 9) fix topsoil using the undo (but not the same Y values obviously)
@@ -240,17 +240,17 @@ public class Coast extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.coast(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.coast(v);
     }
 }

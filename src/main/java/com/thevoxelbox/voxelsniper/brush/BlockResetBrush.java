@@ -41,7 +41,7 @@ public class BlockResetBrush extends Brush {
      * 
      */
     public BlockResetBrush() {
-        this.name = "Block Reset Brush";
+        this.setName("Block Reset Brush");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BlockResetBrush extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -61,15 +61,15 @@ public class BlockResetBrush extends Brush {
 
     @Override
     protected final void arrow(final vData v) {
-        this.w = this.tb.getWorld();
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setWorld(this.getTargetBlock().getWorld());
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         for (int _z = -v.brushSize; _z <= v.brushSize; _z++) {
             for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
                 for (int _y = -v.brushSize; _y <= v.brushSize; _y++) {
-                    final Block _block = this.w.getBlockAt(this.bx + _x, this.by + _y, this.bz + _z);
+                    final Block _block = this.getWorld().getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
                     if (BlockResetBrush.DENIED_UPDATES.contains(_block.getType())) {
                         continue;
                     }

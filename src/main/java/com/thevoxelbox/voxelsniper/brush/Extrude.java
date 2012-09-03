@@ -21,7 +21,7 @@ public class Extrude extends Brush {
     private static int timesUsed = 0;
 
     public Extrude() {
-        this.name = "Extrude";
+        this.setName("Extrude");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Extrude extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.height();
         vm.voxelList();
@@ -79,7 +79,7 @@ public class Extrude extends Brush {
     private void extrudeD(final vData v) {
         final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(this.tb.getWorld().getName());
+        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -88,17 +88,17 @@ public class Extrude extends Brush {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
                     if (this.awto) {
                         for (int i = 0; i <= this.level - 1; i++) {
-                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz + y), this.clampY(this.bx + x, this.by - i - 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz - y), this.clampY(this.bx + x, this.by - i - 1, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz + y), this.clampY(this.bx - x, this.by - i - 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz - y), this.clampY(this.bx - x, this.by - i - 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i - 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i - 1, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i - 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i - 1, this.getBlockPositionZ() - y), v, h);
                         }
                     } else {
                         for (int i = 0; i >= this.level + 1; i--) {
-                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz + y), this.clampY(this.bx + x, this.by - i + 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz - y), this.clampY(this.bx + x, this.by - i + 1, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz + y), this.clampY(this.bx - x, this.by - i + 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz - y), this.clampY(this.bx - x, this.by - i + 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i + 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - i + 1, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i + 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - i + 1, this.getBlockPositionZ() - y), v, h);
                         }
                     }
                 }
@@ -111,7 +111,7 @@ public class Extrude extends Brush {
     private void extrudeE(final vData v) {
         final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(this.tb.getWorld().getName());
+        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -120,17 +120,17 @@ public class Extrude extends Brush {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
                     if (this.awto) {
                         for (int i = 0; i <= this.level - 1; i++) {
-                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz - i), this.clampY(this.bx + x, this.by + y, this.bz - i - 1), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz - i), this.clampY(this.bx + x, this.by - y, this.bz - i - 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz - i), this.clampY(this.bx - x, this.by + y, this.bz - i - 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz - i), this.clampY(this.bx - x, this.by - y, this.bz - i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i - 1), v, h);
                         }
                     } else {
                         for (int i = 0; i >= this.level + 1; i--) {
-                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz - i), this.clampY(this.bx + x, this.by + y, this.bz - i + 1), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz - i), this.clampY(this.bx + x, this.by - y, this.bz - i + 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz - i), this.clampY(this.bx - x, this.by + y, this.bz - i + 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz - i), this.clampY(this.bx - x, this.by - y, this.bz - i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() - i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() - i + 1), v, h);
                         }
                     }
                 }
@@ -143,7 +143,7 @@ public class Extrude extends Brush {
     private void extrudeN(final vData v) {
         final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(this.tb.getWorld().getName());
+        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -152,17 +152,17 @@ public class Extrude extends Brush {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
                     if (this.awto) {
                         for (int i = 0; i <= this.level - 1; i++) {
-                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz + y), this.clampY(this.bx - i - 1, this.by + x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz - y), this.clampY(this.bx - i - 1, this.by + x, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz + y), this.clampY(this.bx - i - 1, this.by - x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz - y), this.clampY(this.bx - i - 1, this.by - x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - i - 1, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - i - 1, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - i - 1, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - i - 1, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), v, h);
                         }
                     } else {
                         for (int i = 0; i >= this.level + 1; i--) {
-                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz + y), this.clampY(this.bx - i + 1, this.by + x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz - y), this.clampY(this.bx - i + 1, this.by + x, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz + y), this.clampY(this.bx - i + 1, this.by - x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz - y), this.clampY(this.bx - i + 1, this.by - x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - i + 1, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - i + 1, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - i + 1, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - i + 1, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), v, h);
                         }
                     }
                 }
@@ -175,7 +175,7 @@ public class Extrude extends Brush {
     private void extrudeS(final vData v) {
         final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(this.tb.getWorld().getName());
+        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -184,17 +184,17 @@ public class Extrude extends Brush {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
                     if (this.awto) {
                         for (int i = 0; i <= this.level - 1; i++) {
-                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz + y), this.clampY(this.bx + i + 1, this.by + x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz - y), this.clampY(this.bx + i + 1, this.by + x, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz + y), this.clampY(this.bx + i + 1, this.by - x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz - y), this.clampY(this.bx + i + 1, this.by - x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + i + 1, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + i + 1, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + i + 1, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + i + 1, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), v, h);
                         }
                     } else {
                         for (int i = 0; i >= this.level + 1; i--) {
-                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz + y), this.clampY(this.bx + i - 1, this.by + x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz - y), this.clampY(this.bx + i - 1, this.by + x, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz + y), this.clampY(this.bx + i - 1, this.by - x, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz - y), this.clampY(this.bx + i - 1, this.by - x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + i - 1, this.getBlockPositionY() + x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + i - 1, this.getBlockPositionY() + x, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + i - 1, this.getBlockPositionY() - x, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + i - 1, this.getBlockPositionY() - x, this.getBlockPositionZ() - y), v, h);
                         }
                     }
                 }
@@ -207,7 +207,7 @@ public class Extrude extends Brush {
     private void extrudeU(final vData v) {
         final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(this.tb.getWorld().getName());
+        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -216,17 +216,17 @@ public class Extrude extends Brush {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
                     if (this.awto) {
                         for (int i = 0; i <= this.level - 1; i++) {
-                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz + y), this.clampY(this.bx + x, this.by + i + 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz - y), this.clampY(this.bx + x, this.by + i + 1, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz + y), this.clampY(this.bx - x, this.by + i + 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz - y), this.clampY(this.bx - x, this.by + i + 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i + 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i + 1, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i + 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i + 1, this.getBlockPositionZ() - y), v, h);
                         }
                     } else {
                         for (int i = 0; i >= this.level + 1; i--) {
-                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz + y), this.clampY(this.bx + x, this.by + i - 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz - y), this.clampY(this.bx + x, this.by + i - 1, this.bz - y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz + y), this.clampY(this.bx - x, this.by + i - 1, this.bz + y), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz - y), this.clampY(this.bx - x, this.by + i - 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() - y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() + y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() + y), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - y), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() - y), v, h);
                         }
                     }
                 }
@@ -239,7 +239,7 @@ public class Extrude extends Brush {
     private void extrudeW(final vData v) {
         final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(this.tb.getWorld().getName());
+        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -248,17 +248,17 @@ public class Extrude extends Brush {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
                     if (this.awto) {
                         for (int i = 0; i <= this.level - 1; i++) {
-                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz + i), this.clampY(this.bx + x, this.by + y, this.bz + i + 1), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz + i), this.clampY(this.bx + x, this.by - y, this.bz + i + 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz + i), this.clampY(this.bx - x, this.by + y, this.bz + i + 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz + i), this.clampY(this.bx - x, this.by - y, this.bz + i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i + 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i + 1), v, h);
                         }
                     } else {
                         for (int i = 0; i >= this.level + 1; i--) {
-                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz + i), this.clampY(this.bx + x, this.by + y, this.bz + i - 1), v, h);
-                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz + i), this.clampY(this.bx + x, this.by - y, this.bz + i - 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz + i), this.clampY(this.bx - x, this.by + y, this.bz + i - 1), v, h);
-                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz + i), this.clampY(this.bx - x, this.by - y, this.bz + i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() + y, this.getBlockPositionZ() + i - 1), v, h);
+                            h = this.perform(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i), this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY() - y, this.getBlockPositionZ() + i - 1), v, h);
                         }
                     }
                 }
@@ -333,21 +333,21 @@ public class Extrude extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.awto = false;
 
-        this.pre(v, this.tb.getFace(this.lb));
+        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.awto = true;
 
-        this.pre(v, this.tb.getFace(this.lb));
+        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 }

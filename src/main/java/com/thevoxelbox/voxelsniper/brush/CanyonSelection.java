@@ -20,7 +20,7 @@ public class CanyonSelection extends Canyon {
     private static int timesUsed = 0;
 
     public CanyonSelection() {
-        this.name = "Canyon Selection";
+        this.setName("Canyon Selection");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CanyonSelection extends Canyon {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
     }
 
@@ -40,11 +40,11 @@ public class CanyonSelection extends Canyon {
     }
 
     private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final vData v) {
-        this.m = new vUndo(this.w.getChunkAt(this.tb).getWorld().getName());
+        this.m = new vUndo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
 
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
-                this.multiCanyon(this.w.getChunkAt(x, z), v);
+                this.multiCanyon(this.getWorld().getChunkAt(x, z), v);
             }
         }
 
@@ -59,18 +59,18 @@ public class CanyonSelection extends Canyon {
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
         if (this.first) {
-            final Chunk c = this.w.getChunkAt(this.tb);
+            final Chunk c = this.getWorld().getChunkAt(this.getTargetBlock());
             this.fx = c.getX();
             this.fz = c.getZ();
             v.sendMessage(ChatColor.YELLOW + "First point selected!");
             this.first = !this.first;
         } else {
-            final Chunk c = this.w.getChunkAt(this.tb);
-            this.bx = c.getX();
-            this.bz = c.getZ();
+            final Chunk c = this.getWorld().getChunkAt(this.getTargetBlock());
+            this.setBlockPositionX(c.getX());
+            this.setBlockPositionZ(c.getZ());
             v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-            this.selection(this.fx < this.bx ? this.fx : this.bx, this.fz < this.bz ? this.fz : this.bz, this.fx > this.bx ? this.fx : this.bx,
-                    this.fz > this.bz ? this.fz : this.bz, v);
+            this.selection(this.fx < this.getBlockPositionX() ? this.fx : this.getBlockPositionX(), this.fz < this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), this.fx > this.getBlockPositionX() ? this.fx : this.getBlockPositionX(),
+                    this.fz > this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), v);
             this.first = !this.first;
         }
     }

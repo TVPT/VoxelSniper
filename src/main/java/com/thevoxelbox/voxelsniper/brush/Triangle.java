@@ -25,7 +25,7 @@ public class Triangle extends PerformBrush {
     private static int timesUsed = 0;
 
     public Triangle() {
-        this.name = "Triangle";
+        this.setName("Triangle");
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Triangle extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) { // Make the triangle
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         // vm.voxel();
         // vm.custom(ChatColor.GRAY + "First Corner: " + coordsone[0] + ", " + coordsone[1] + ", " + coordsone[2] + ")");
         // vm.custom(ChatColor.GRAY + "Second Corner: " + coordstwo[0] + ", " + coordstwo[1] + ", " + coordstwo[2] + ")");
@@ -58,26 +58,26 @@ public class Triangle extends PerformBrush {
     public final void TriangleA(final vData v) {
         switch (this.cornernumber) {
         case 1:
-            this.coordsone[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is
+            this.coordsone[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                  // different?
-            this.coordsone[1] = this.tb.getY() + .5;
-            this.coordsone[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+            this.coordsone[1] = this.getTargetBlock().getY() + .5;
+            this.coordsone[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
             this.cornernumber = 2;
             v.sendMessage(ChatColor.GRAY + "First Corner set.");
             break;
         case 2:
-            this.coordstwo[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is
+            this.coordstwo[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                  // different?
-            this.coordstwo[1] = this.tb.getY() + .5;
-            this.coordstwo[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+            this.coordstwo[1] = this.getTargetBlock().getY() + .5;
+            this.coordstwo[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
             this.cornernumber = 3;
             v.sendMessage(ChatColor.GRAY + "Second Corner set.");
             break;
         case 3:
-            this.coordsthree[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is
+            this.coordsthree[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                    // different?
-            this.coordsthree[1] = this.tb.getY() + .5;
-            this.coordsthree[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+            this.coordsthree[1] = this.getTargetBlock().getY() + .5;
+            this.coordsthree[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
             this.cornernumber = 1;
             v.sendMessage(ChatColor.GRAY + "Third Corner set.");
             break;
@@ -89,7 +89,7 @@ public class Triangle extends PerformBrush {
     }
 
     public final void TriangleP(final vData v) {
-        this.w = v.owner().getPlayer().getWorld();
+        this.setWorld(v.owner().getPlayer().getWorld());
         double lengthone = 0;
         double lengthtwo = 0;
         double lengththree = 0;

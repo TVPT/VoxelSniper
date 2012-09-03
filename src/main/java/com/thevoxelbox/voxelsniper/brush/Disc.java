@@ -21,7 +21,7 @@ public class Disc extends PerformBrush {
      * Default Constructor.
      */
     public Disc() {
-        this.name = "Disc";
+        this.setName("Disc");
     }
 
     /**
@@ -53,7 +53,7 @@ public class Disc extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         // vm.voxel();
     }
@@ -89,17 +89,17 @@ public class Disc extends PerformBrush {
 
     @Override
     protected final void arrow(final vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
-        this.disc(v, this.tb);
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
+        this.disc(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
-        this.disc(v, this.lb);
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
+        this.disc(v, this.getLastBlock());
     }
 }

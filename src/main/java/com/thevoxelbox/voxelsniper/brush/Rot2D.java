@@ -22,7 +22,7 @@ public class Rot2D extends Brush {
     private static int timesUsed = 0;
 
     public Rot2D() {
-        this.name = "2D Rotation";
+        this.setName("2D Rotation");
     }
 
     @Override
@@ -32,7 +32,7 @@ public class Rot2D extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -52,15 +52,15 @@ public class Rot2D extends Brush {
         this.snap = new vBlock[this.brushSize][this.brushSize][this.brushSize];
 
         final int derp = this.bsize;
-        int sx = this.bx - this.bsize;
-        int sy = this.by - this.bsize;
-        int sz = this.bz - this.bsize;
+        int sx = this.getBlockPositionX() - this.bsize;
+        int sy = this.getBlockPositionY() - this.bsize;
+        int sz = this.getBlockPositionZ() - this.bsize;
         final double bpow = Math.pow(this.bsize + 0.5, 2);
         for (int x = 0; x < this.snap.length; x++) {
-            sz = this.bz - derp;
+            sz = this.getBlockPositionZ() - derp;
             final double xpow = Math.pow(x - this.bsize, 2);
             for (int z = 0; z < this.snap.length; z++) {
-                sy = this.by - derp;
+                sy = this.getBlockPositionY() - derp;
                 if (xpow + Math.pow(z - this.bsize, 2) <= bpow) {
                     for (int y = 0; y < this.snap.length; y++) {
                         final Block b = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
@@ -107,7 +107,7 @@ public class Rot2D extends Brush {
                         if (vb.id == 0) {
                             continue;
                         }
-                        this.setBlockIdAt(vb.id, this.bx + (int) newx, this.by + yy, this.bz + (int) newz);
+                        this.setBlockIdAt(vb.id, this.getBlockPositionX() + (int) newx, this.getBlockPositionY() + yy, this.getBlockPositionZ() + (int) newz);
                     }
                 }
             }
@@ -122,15 +122,15 @@ public class Rot2D extends Brush {
         int winner;
         for (int x = 0; x < this.snap.length; x++) {
             final double xpow = Math.pow(x - this.bsize, 2);
-            fx = x + this.bx - this.bsize;
+            fx = x + this.getBlockPositionX() - this.bsize;
             for (int z = 0; z < this.snap.length; z++) {
                 if (xpow + Math.pow(z - this.bsize, 2) <= bpow) {
-                    fz = z + this.bz - this.bsize;
+                    fz = z + this.getBlockPositionZ() - this.bsize;
                     if (!doNotFill[x][z]) {
                         // smart fill stuff
 
                         for (int y = 0; y < this.snap.length; y++) {
-                            fy = y + this.by - this.bsize;
+                            fy = y + this.getBlockPositionY() - this.bsize;
                             A = this.getBlockIdAt(fx + 1, fy, fz);
                             D = this.getBlockIdAt(fx - 1, fy, fz);
                             C = this.getBlockIdAt(fx, fy, fz + 1);
@@ -141,7 +141,7 @@ public class Rot2D extends Brush {
                             } else if (B == D || C == D) {
                                 winner = D;
                             } else {
-                                winner = B; // by making this default, it will also automatically cover situations where B = C;
+                                winner = B; // blockPositionY making this default, it will also automatically cover situations where B = C;
                             }
 
                             this.setBlockIdAt(winner, fx, fy, fz);
@@ -154,9 +154,9 @@ public class Rot2D extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.bsize = v.brushSize;
 

@@ -24,7 +24,7 @@ public class Ruler extends Brush {
     private static int timesUsed = 0;
 
     public Ruler() {
-        this.name = "Ruler";
+        this.setName("Ruler");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Ruler extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.voxel();
     }
 
@@ -77,20 +77,20 @@ public class Ruler extends Brush {
 
     public final void rulerA(final vData v) {
         final int bId = v.voxelId;
-        // tb = tb;
+        // targetBlock = targetBlock;
         if (this.xOff == 0 && this.yOff == 0 && this.zOff == 0) {
 
-            this.coords[0] = this.tb.getX();
-            this.coords[1] = this.tb.getY();
-            this.coords[2] = this.tb.getZ();
+            this.coords[0] = this.getTargetBlock().getX();
+            this.coords[1] = this.getTargetBlock().getY();
+            this.coords[2] = this.getTargetBlock().getZ();
             v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
             this.first = !this.first;
 
         } else {
-            final vUndo h = new vUndo(this.tb.getWorld().getName());
+            final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
-            h.put(this.clampY(this.bx + this.xOff, this.by + this.yOff, this.bz + this.zOff));
-            this.setBlockIdAt(bId, this.bx + this.xOff, this.by + this.yOff, this.bz + this.zOff);
+            h.put(this.clampY(this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff));
+            this.setBlockIdAt(bId, this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff);
             v.storeUndo(h);
         }
     }
@@ -101,14 +101,14 @@ public class Ruler extends Brush {
         }
 
         v.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
-        v.sendMessage(ChatColor.AQUA + "X change: " + (this.tb.getX() - this.coords[0]));
-        v.sendMessage(ChatColor.AQUA + "Y change: " + (this.tb.getY() - this.coords[1]));
-        v.sendMessage(ChatColor.AQUA + "Z change: " + (this.tb.getZ() - this.coords[2]));
-        double distance = Math.sqrt(Math.pow((this.coords[0] - this.tb.getX()), 2) + Math.pow((this.coords[1] - this.tb.getY()), 2)
-                + Math.pow((this.coords[2] - this.tb.getZ()), 2));
+        v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock().getX() - this.coords[0]));
+        v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock().getY() - this.coords[1]));
+        v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock().getZ() - this.coords[2]));
+        double distance = Math.sqrt(Math.pow((this.coords[0] - this.getTargetBlock().getX()), 2) + Math.pow((this.coords[1] - this.getTargetBlock().getY()), 2)
+                + Math.pow((this.coords[2] - this.getTargetBlock().getZ()), 2));
         distance = this.roundTwoDecimals(distance);
-        double blockdistance = Math.abs(Math.max(Math.max(Math.abs(this.tb.getX() - this.coords[0]), Math.abs(this.tb.getY() - this.coords[1])),
-                Math.abs(this.tb.getZ() - this.coords[2]))) + 1;
+        double blockdistance = Math.abs(Math.max(Math.max(Math.abs(this.getTargetBlock().getX() - this.coords[0]), Math.abs(this.getTargetBlock().getY() - this.coords[1])),
+                Math.abs(this.getTargetBlock().getZ() - this.coords[2]))) + 1;
         blockdistance = this.roundTwoDecimals(blockdistance);
         v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance);
         v.sendMessage(ChatColor.AQUA + "Block distance = " + blockdistance); // more what people would expect - Gilt
@@ -122,9 +122,9 @@ public class Ruler extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.rulerA(v);
     }
 

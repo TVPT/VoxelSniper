@@ -25,7 +25,7 @@ public class Line extends PerformBrush {
     private static int timesUsed = 0;
 
     public Line() {
-        this.name = "Line";
+        this.setName("Line");
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Line extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         // vm.voxel();
     }
 
@@ -44,7 +44,7 @@ public class Line extends PerformBrush {
     }
 
     public final void LineP(final vData v) {
-        this.w = v.owner().getPlayer().getWorld();
+        this.setWorld(v.owner().getPlayer().getWorld());
         double linelength = 0;
 
         // Calculate slope vector
@@ -102,10 +102,10 @@ public class Line extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.origincoords[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is
+        this.origincoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                 // different?
-        this.origincoords[1] = this.tb.getY() + .5;
-        this.origincoords[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+        this.origincoords[1] = this.getTargetBlock().getY() + .5;
+        this.origincoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
         this.LineA(v);
     }
 
@@ -114,9 +114,9 @@ public class Line extends PerformBrush {
         if (this.origincoords[0] == 0 && this.origincoords[1] == 0 && this.origincoords[2] == 0) {
             v.owner().getPlayer().sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
         } else {
-            this.targetcoords[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX());
-            this.targetcoords[1] = this.tb.getY() + .5;
-            this.targetcoords[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+            this.targetcoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX());
+            this.targetcoords[1] = this.getTargetBlock().getY() + .5;
+            this.targetcoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
             this.LineP(v);
         }
     }

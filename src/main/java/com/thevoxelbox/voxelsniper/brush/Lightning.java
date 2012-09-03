@@ -14,7 +14,7 @@ public class Lightning extends Brush {
     private static int timesUsed = 0;
 
     public Lightning() {
-        this.name = "Lightning";
+        this.setName("Lightning");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class Lightning extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.brushMessage("Lightning Brush!  Please use in moderation.");
     }
 
@@ -35,8 +35,8 @@ public class Lightning extends Brush {
 
     public final void Strike(final vData v) {
 
-        final Location loc = this.clampY(this.bx, this.by, this.bz).getLocation();
-        this.w.strikeLightning(loc);
+        final Location loc = this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getLocation();
+        this.getWorld().strikeLightning(loc);
     }
 
     public final void StrikeDestructive(final vData v) { // more to be added
@@ -45,23 +45,23 @@ public class Lightning extends Brush {
      * continue; } else if (par[x].startsWith("false")) { trueCircle = 0; v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF."); continue; } else {
      * v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info."); } }
      */
-        final Location loc = this.clampY(this.bx, this.by, this.bz).getLocation();
-        this.w.strikeLightning(loc);
+        final Location loc = this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getLocation();
+        this.getWorld().strikeLightning(loc);
     }
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.Strike(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.StrikeDestructive(v);
     }
 }

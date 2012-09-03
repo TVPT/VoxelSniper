@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 
+import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
@@ -26,7 +27,7 @@ public class Xerox extends PerformBrush {
     private static int timesUsed = 0;
 
     public Xerox() {
-        this.name = "Xerox";
+        this.setName("Xerox");
     }
 
     @Override
@@ -37,7 +38,7 @@ public class Xerox extends PerformBrush {
     @Override
     public final void info(final vMessage vm) {
         this.block = null;
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -82,9 +83,9 @@ public class Xerox extends PerformBrush {
             switch (heldItem) {
             case ARROW:
                 if (this.stack) {
-                    this.bx = this.tb.getX();
-                    this.by = this.tb.getY();
-                    this.bz = this.tb.getZ();
+                    this.setBlockPositionX(this.getTargetBlock().getX());
+                    this.setBlockPositionY(this.getTargetBlock().getY());
+                    this.setBlockPositionZ(this.getTargetBlock().getZ());
 
                 } else if (this.cp) {
                 } else {

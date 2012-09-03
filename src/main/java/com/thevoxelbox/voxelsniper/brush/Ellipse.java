@@ -20,7 +20,7 @@ public class Ellipse extends PerformBrush {
     private static int timesUsed = 0;
 
     public Ellipse() {
-        this.name = "Ellipse";
+        this.setName("Ellipse");
     }
 
     public final void ellipse(final vData v) {
@@ -39,18 +39,18 @@ public class Ellipse extends PerformBrush {
                 final int x = (int) Math.round(_x);
                 final int y = (int) Math.round(_y);
 
-                switch (this.tb.getFace(this.lb)) {
+                switch (this.getTargetBlock().getFace(this.getLastBlock())) {
                 case NORTH:
                 case SOUTH:
-                    this.current.perform(this.clampY(this.bx, this.by + x, this.bz + y));
+                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + x, this.getBlockPositionZ() + y));
                     break;
                 case EAST:
                 case WEST:
-                    this.current.perform(this.clampY(this.bx + x, this.by + y, this.bz));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ()));
                     break;
                 case UP:
                 case DOWN:
-                    this.current.perform(this.clampY(this.bx + x, this.by, this.bz + y));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
                 default:
                     break;
                 }
@@ -67,7 +67,7 @@ public class Ellipse extends PerformBrush {
     }
 
     public final void ellipsefill(final vData v) {
-        this.current.perform(this.clampY(this.bx, this.by, this.bz));
+        this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
 
         final double stepsize = ((2 * Math.PI) / this.steps);
         int ix = this.xscl;
@@ -88,18 +88,18 @@ public class Ellipse extends PerformBrush {
                         final int x = (int) Math.round(_x);
                         final int y = (int) Math.round(_y);
 
-                        switch (this.tb.getFace(this.lb)) {
+                        switch (this.getTargetBlock().getFace(this.getLastBlock())) {
                         case NORTH:
                         case SOUTH:
-                            this.current.perform(this.clampY(this.bx, this.by + x, this.bz + y));
+                            this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + x, this.getBlockPositionZ() + y));
                             break;
                         case EAST:
                         case WEST:
-                            this.current.perform(this.clampY(this.bx + x, this.by + y, this.bz));
+                            this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ()));
                             break;
                         case UP:
                         case DOWN:
-                            this.current.perform(this.clampY(this.bx + x, this.by, this.bz + y));
+                            this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
                         default:
                             break;
                         }
@@ -119,18 +119,18 @@ public class Ellipse extends PerformBrush {
                         final int x = (int) Math.round(_x);
                         final int y = (int) Math.round(_y);
 
-                        switch (this.tb.getFace(this.lb)) {
+                        switch (this.getTargetBlock().getFace(this.getLastBlock())) {
                         case NORTH:
                         case SOUTH:
-                            this.current.perform(this.clampY(this.bx, this.by + x, this.bz + y));
+                            this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + x, this.getBlockPositionZ() + y));
                             break;
                         case EAST:
                         case WEST:
-                            this.current.perform(this.clampY(this.bx + x, this.by + y, this.bz));
+                            this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ()));
                             break;
                         case UP:
                         case DOWN:
-                            this.current.perform(this.clampY(this.bx + x, this.by, this.bz + y));
+                            this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
                         default:
                             break;
                         }
@@ -168,7 +168,7 @@ public class Ellipse extends PerformBrush {
             this.steps = 200;
         }
 
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl);
         vm.custom(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl);
         vm.custom(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps);
@@ -239,17 +239,17 @@ public class Ellipse extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.sort(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.sort(v);
     }
 }

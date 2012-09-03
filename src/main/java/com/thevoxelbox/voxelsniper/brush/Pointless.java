@@ -27,7 +27,7 @@ public class Pointless extends Brush {
     private static int timesUsed = 0;
 
     public Pointless() {
-        this.name = "Mind-Numbingly Pointless";
+        this.setName("Mind-Numbingly Pointless");
     }
 
     // !NameDerpLowercase
@@ -57,7 +57,7 @@ public class Pointless extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override

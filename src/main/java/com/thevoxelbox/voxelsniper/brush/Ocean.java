@@ -22,7 +22,7 @@ public class Ocean extends Brush {
     private static int timesUsed = 0;
 
     public Ocean() {
-        this.name = "OCEANATOR 5000(tm)";
+        this.setName("OCEANATOR 5000(tm)");
     }
 
     @Override
@@ -32,7 +32,7 @@ public class Ocean extends Brush {
 
     @Override
     public void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Ocean extends Brush {
 
     @Override
     protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.h = new vUndo(this.tb.getWorld().getName());
+        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
         this.oceanator(v);
         v.storeUndo(this.h);
     }
@@ -119,12 +119,12 @@ public class Ocean extends Brush {
     }
 
     protected final void oceanator(final vData v) {
-        int sx = (int) Math.floor((double) this.tb.getX() / 16) * 16;
-        int sz = (int) Math.floor((double) this.tb.getZ() / 16) * 16;
+        int sx = (int) Math.floor((double) this.getTargetBlock().getX() / 16) * 16;
+        int sz = (int) Math.floor((double) this.getTargetBlock().getZ() / 16) * 16;
 
         int y;
         int dif;
-        if (this.tb.getX() >= 0 && this.tb.getZ() >= 0) {
+        if (this.getTargetBlock().getX() >= 0 && this.getTargetBlock().getZ() >= 0) {
             for (int x = sx; x < sx + 16; x++) {
                 for (int z = sz; z < sz + 16; z++) {
                     this.h.put(this.clampY(x, 63, z));
@@ -156,9 +156,9 @@ public class Ocean extends Brush {
                     }
                 }
             }
-            this.tb = this.clampY(sx + 8, this.tb.getY(), sz + 8);
-        } else if (this.tb.getX() < 0 && this.tb.getZ() > 0) {
-            sx = (int) Math.floor((this.tb.getX() - 1) / 16) * 16;
+            this.setTargetBlock(this.clampY(sx + 8, this.getTargetBlock().getY(), sz + 8));
+        } else if (this.getTargetBlock().getX() < 0 && this.getTargetBlock().getZ() > 0) {
+            sx = (int) Math.floor((this.getTargetBlock().getX() - 1) / 16) * 16;
             for (int x = sx - 16; x < sx; x++) {
                 for (int z = sz; z < sz + 16; z++) {
                     this.h.put(this.clampY(x, 63, z));
@@ -190,9 +190,9 @@ public class Ocean extends Brush {
                     }
                 }
             }
-            this.tb = this.clampY(sx - 8, this.tb.getY(), sz + 8);
-        } else if (this.tb.getX() > 0 && this.tb.getZ() < 0) {
-            sz = (int) Math.floor((this.tb.getZ() - 1) / 16) * 16;
+            this.setTargetBlock(this.clampY(sx - 8, this.getTargetBlock().getY(), sz + 8));
+        } else if (this.getTargetBlock().getX() > 0 && this.getTargetBlock().getZ() < 0) {
+            sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / 16) * 16;
             for (int x = sx; x < sx + 16; x++) {
                 for (int z = sz - 16; z < sz; z++) {
                     this.h.put(this.clampY(x, 63, z));
@@ -224,10 +224,10 @@ public class Ocean extends Brush {
                     }
                 }
             }
-            this.tb = this.clampY(sx + 8, this.tb.getY(), sz - 8);
-        } else if (this.tb.getX() < 0 && this.tb.getZ() < 0) {
-            sx = (int) Math.floor((this.tb.getX() - 1) / 16) * 16;
-            sz = (int) Math.floor((this.tb.getZ() - 1) / 16) * 16;
+            this.setTargetBlock(this.clampY(sx + 8, this.getTargetBlock().getY(), sz - 8));
+        } else if (this.getTargetBlock().getX() < 0 && this.getTargetBlock().getZ() < 0) {
+            sx = (int) Math.floor((this.getTargetBlock().getX() - 1) / 16) * 16;
+            sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / 16) * 16;
             for (int x = sx - 16; x < sx; x++) {
                 for (int z = sz - 16; z < sz; z++) {
                     this.h.put(this.clampY(x, 63, z));
@@ -259,33 +259,33 @@ public class Ocean extends Brush {
                     }
                 }
             }
-            this.tb = this.clampY(sx - 8, this.tb.getY(), sz - 8);
+            this.setTargetBlock(this.clampY(sx - 8, this.getTargetBlock().getY(), sz - 8));
         }
     }
 
     protected final void oceanatorBig(final vData v) {
         this.oceanator(v); // center
-        this.tb = this.setX(this.tb, this.tb.getX() + 16);
+        this.setTargetBlock(this.setX(this.getTargetBlock(), this.getTargetBlock().getX() + 16));
         this.oceanator(v); // right
-        this.tb = this.setZ(this.tb, this.tb.getZ() + 16);
+        this.setTargetBlock(this.setZ(this.getTargetBlock(), this.getTargetBlock().getZ() + 16));
         this.oceanator(v); // top right
-        this.tb = this.setX(this.tb, this.tb.getX() - 16);
+        this.setTargetBlock(this.setX(this.getTargetBlock(), this.getTargetBlock().getX() - 16));
         this.oceanator(v); // top
-        this.tb = this.setX(this.tb, this.tb.getX() - 16);
+        this.setTargetBlock(this.setX(this.getTargetBlock(), this.getTargetBlock().getX() - 16));
         this.oceanator(v); // top left
-        this.tb = this.setZ(this.tb, this.tb.getZ() - 16);
+        this.setTargetBlock(this.setZ(this.getTargetBlock(), this.getTargetBlock().getZ() - 16));
         this.oceanator(v); // left
-        this.tb = this.setZ(this.tb, this.tb.getZ() - 16);
+        this.setTargetBlock(this.setZ(this.getTargetBlock(), this.getTargetBlock().getZ() - 16));
         this.oceanator(v); // bottom left
-        this.tb = this.setX(this.tb, this.tb.getX() + 16);
+        this.setTargetBlock(this.setX(this.getTargetBlock(), this.getTargetBlock().getX() + 16));
         this.oceanator(v); // bottom
-        this.tb = this.setX(this.tb, this.tb.getX() + 16);
+        this.setTargetBlock(this.setX(this.getTargetBlock(), this.getTargetBlock().getX() + 16));
         this.oceanator(v); // bottom right
     }
 
     @Override
     protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.h = new vUndo(this.tb.getWorld().getName());
+        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
         this.oceanatorBig(v);
         v.storeUndo(this.h);
     }

@@ -13,7 +13,7 @@ public class Painting extends Brush {
     private static int timesUsed = 0;
 
     public Painting() {
-        this.name = "Painting";
+        this.setName("Painting");
     }
 
     @Override
@@ -23,7 +23,7 @@ public class Painting extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override

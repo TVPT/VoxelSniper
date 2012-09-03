@@ -53,7 +53,7 @@ public class vSniper {
     private String readingString;
 
     /**
-     * For CPU throttling purposes. Needs to be set by the config file later (NOT the sniper himself), but just testing for now.
+     * For CPU throttling purposes. Needs to be set blockPositionY the config file later (NOT the sniper himself), but just testing for now.
      */
     public int pieceSize = 5000;
     private Player player;
@@ -564,7 +564,7 @@ public class vSniper {
             if (!this.brushPresets.isEmpty()) {
                 while (_it.hasNext()) {
                     final int _i = (Integer) _it.next();
-                    _writer.write(_i + "\r\n" + this.brushPresets.get(_i).name + "\r\n");
+                    _writer.write(_i + "\r\n" + this.brushPresets.get(_i).getName() + "\r\n");
                     _presetsHolder = this.brushPresetsParams.get(_i);
                     _writer.write(_presetsHolder[vSniper.SAVE_ARRAY_VOXEL_ID] + "\r\n");
                     _writer.write(_presetsHolder[vSniper.SAVE_ARRAY_REPLACE_VOXEL_ID] + "\r\n");
@@ -581,7 +581,7 @@ public class vSniper {
                 while (_it.hasNext()) {
                     final String _key = (String) _it.next();
                     if (!_key.startsWith("current") && !_key.startsWith("previous") && !_key.startsWith("twoBack")) {
-                        _writer.write(_key + "\r\n" + this.brushPresetsS.get(_key).name + "\r\n");
+                        _writer.write(_key + "\r\n" + this.brushPresetsS.get(_key).getName() + "\r\n");
                         _presetsHolder = this.brushPresetsParamsS.get(_key);
                         _writer.write(_presetsHolder[vSniper.SAVE_ARRAY_VOXEL_ID] + "\r\n");
                         _writer.write(_presetsHolder[vSniper.SAVE_ARRAY_REPLACE_VOXEL_ID] + "\r\n");
@@ -682,7 +682,7 @@ public class vSniper {
                     this.player.sendMessage(ChatColor.DARK_PURPLE + "" + this.fromArgs(_argsParsed));
                     this.player.sendMessage(ChatColor.RED + "Is not a valid statement");
                     this.player.sendMessage(ChatColor.DARK_BLUE + "" + _e.getMessage());
-                    VoxelSniper.LOG.warning("[VoxelSniper] Exception while receiving parameters: \n(" + this.player.getName() + " " + this.current.name
+                    VoxelSniper.LOG.warning("[VoxelSniper] Exception while receiving parameters: \n(" + this.player.getName() + " " + this.current.getName()
                             + ") par[ " + this.fromArgs(_argsParsed) + "]");
                     VoxelSniper.LOG.log(Level.SEVERE, null, _e);
                     return false;
@@ -922,7 +922,7 @@ public class vSniper {
             for (final StackTraceElement _se : _ste) {
                 this.player.sendMessage(ChatColor.DARK_GRAY + _se.getClassName() + ChatColor.DARK_GREEN + " : " + ChatColor.DARK_GRAY + _se.getLineNumber());
             }
-            VoxelSniper.LOG.warning("[VoxelSniper] Exception while sniping: (" + this.player.getName() + " " + this.current.name + ")");
+            VoxelSniper.LOG.warning("[VoxelSniper] Exception while sniping: (" + this.player.getName() + " " + this.current.getName() + ")");
             VoxelSniper.LOG.log(Level.SEVERE, null, _e);
             return false;
         }

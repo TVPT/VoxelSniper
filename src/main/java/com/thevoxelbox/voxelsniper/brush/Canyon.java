@@ -20,7 +20,7 @@ public class Canyon extends Brush {
     private static int timesUsed = 0;
 
     public Canyon() {
-        this.name = "Canyon";
+        this.setName("Canyon");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Canyon extends Brush {
 
     @Override
     public void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
     }
 
@@ -89,10 +89,10 @@ public class Canyon extends Brush {
 
     @Override
     protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.canyon(this.w.getChunkAt(this.tb), v);
+        this.canyon(this.getWorld().getChunkAt(this.getTargetBlock()), v);
     }
 
     protected final void multiCanyon(final Chunk c, final vData v) {
@@ -124,20 +124,20 @@ public class Canyon extends Brush {
 
     @Override
     protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.m = new vUndo(this.w.getChunkAt(this.tb).getWorld().getName());
+        this.m = new vUndo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
 
-        this.multiCanyon(this.w.getChunkAt(this.tb), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx + 16, 63, this.bz)), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx + 16, 63, this.bz + 16)), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx, 63, this.bz + 16)), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx - 16, 63, this.bz + 16)), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx - 16, 63, this.bz)), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx - 16, 63, this.bz - 16)), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx, 63, this.bz - 16)), v);
-        this.multiCanyon(this.w.getChunkAt(this.clampY(this.bx + 16, 63, this.bz - 16)), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.getTargetBlock()), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + 16, 63, this.getBlockPositionZ())), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + 16, 63, this.getBlockPositionZ() + 16)), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() + 16)), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - 16, 63, this.getBlockPositionZ() + 16)), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - 16, 63, this.getBlockPositionZ())), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - 16, 63, this.getBlockPositionZ() - 16)), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() - 16)), v);
+        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + 16, 63, this.getBlockPositionZ() - 16)), v);
 
         v.storeUndo(this.m);
     }

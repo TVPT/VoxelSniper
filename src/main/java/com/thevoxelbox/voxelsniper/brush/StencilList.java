@@ -41,7 +41,7 @@ public class StencilList extends Brush {
     private static int timesUsed = 0;
 
     public StencilList() {
-        this.name = "StencilList";
+        this.setName("StencilList");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class StencilList extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom("File loaded: " + this.Filename);
     }
 
@@ -126,7 +126,7 @@ public class StencilList extends Brush {
         final String stencilName = this.readRandomStencil(v);
         v.sendMessage(stencilName);
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -142,7 +142,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'w thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -159,8 +159,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 currX++;
                                 if (currX == this.X - this.Xref) {
                                     currX = -this.Xref;
@@ -172,8 +172,8 @@ public class StencilList extends Brush {
                                 }
                             }
                         } else {
-                            h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                            this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData((in.readByte() + 128),
+                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
                                     (byte) (in.readByte() + 128), false);
                             currX++;
                             if (currX == this.X - this.Xref) {
@@ -193,13 +193,13 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                                   // air, and it prevents us
                                                                                                                                   // most of the time from
                                                                                                                                   // having to even check the
                                                                                                                                   // block.
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                                 }
                                 currX++;
                                 if (currX == this.X - this.Xref) {
@@ -214,13 +214,13 @@ public class StencilList extends Brush {
                         } else {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                               // air, and it prevents us most of
                                                                                                                               // the time from having to even
                                                                                                                               // check the block.
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
                                 // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                             }
                             currX++;
                             if (currX == this.X - this.Xref) {
@@ -241,8 +241,8 @@ public class StencilList extends Brush {
                             data = (in.readByte() + 128);
                             for (int j = 0; j < (numLoops); j++) {
                                 if (id != 0) {
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 }
                                 currX++;
                                 if (currX == this.X - this.Xref) {
@@ -258,8 +258,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             if (id != 0) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                             }
                             currX++;
                             if (currX == this.X) {
@@ -294,7 +294,7 @@ public class StencilList extends Brush {
 
         final String stencilName = this.readRandomStencil(v);
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -310,7 +310,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'w thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -327,8 +327,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 currX--;
                                 if (currX == -this.X + this.Xref) {
                                     currX = this.Xref;
@@ -340,8 +340,8 @@ public class StencilList extends Brush {
                                 }
                             }
                         } else {
-                            h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                            this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData((in.readByte() + 128),
+                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
                                     (byte) (in.readByte() + 128), false);
                             currX--;
                             if (currX == -this.X + this.Xref) {
@@ -361,13 +361,13 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                                   // air, and it prevents us
                                                                                                                                   // most of the time from
                                                                                                                                   // having to even check the
                                                                                                                                   // block.
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                                 }
                                 currX--;
                                 if (currX == -this.X + this.Xref) {
@@ -382,13 +382,13 @@ public class StencilList extends Brush {
                         } else {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                               // air, and it prevents us most of
                                                                                                                               // the time from having to even
                                                                                                                               // check the block.
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
                                 // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                             }
                             currX--;
                             if (currX == -this.X + this.Xref) {
@@ -409,8 +409,8 @@ public class StencilList extends Brush {
                             data = (in.readByte() + 128);
                             for (int j = 0; j < (numLoops); j++) {
                                 if (id != 0) {
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 }
                                 currX--;
                                 if (currX == -this.X + this.Xref) {
@@ -426,8 +426,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             if (id != 0) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                             }
                             currX--;
                             if (currX == -this.X + this.Xref) {
@@ -462,7 +462,7 @@ public class StencilList extends Brush {
 
         final String stencilName = this.readRandomStencil(v);
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -478,7 +478,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'w thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -495,8 +495,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 currZ++;
                                 if (currZ == this.X - this.Xref) {
                                     currZ = -this.Xref;
@@ -508,8 +508,8 @@ public class StencilList extends Brush {
                                 }
                             }
                         } else {
-                            h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                            this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData((in.readByte() + 128),
+                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
                                     (byte) (in.readByte() + 128), false);
                             currZ++;
                             currZ++;
@@ -530,13 +530,13 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                                   // air, and it prevents us
                                                                                                                                   // most of the time from
                                                                                                                                   // having to even check the
                                                                                                                                   // block.
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                                 }
                                 currZ++;
                                 if (currZ == this.X - this.Xref) {
@@ -551,13 +551,13 @@ public class StencilList extends Brush {
                         } else {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                               // air, and it prevents us most of
                                                                                                                               // the time from having to even
                                                                                                                               // check the block.
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
                                 // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                             }
                             currZ++;
                             if (currZ == this.X - this.Xref) {
@@ -578,8 +578,8 @@ public class StencilList extends Brush {
                             data = (in.readByte() + 128);
                             for (int j = 0; j < (numLoops); j++) {
                                 if (id != 0) {
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 }
                                 currZ++;
                                 if (currZ == this.X - this.Xref) {
@@ -595,8 +595,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             if (id != 0) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                             }
                             currZ++;
                             if (currZ == this.X - this.Xref) {
@@ -631,7 +631,7 @@ public class StencilList extends Brush {
 
         final String stencilName = this.readRandomStencil(v);
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -647,7 +647,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'w thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -664,8 +664,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 currZ--;
                                 if (currZ == -this.X + this.Xref) {
                                     currZ = this.Xref;
@@ -677,8 +677,8 @@ public class StencilList extends Brush {
                                 }
                             }
                         } else {
-                            h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                            this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData((in.readByte() + 128),
+                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
                                     (byte) (in.readByte() + 128), false);
                             currZ--;
                             if (currZ == -this.X + this.Xref) {
@@ -698,13 +698,13 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                                   // air, and it prevents us
                                                                                                                                   // most of the time from
                                                                                                                                   // having to even check the
                                                                                                                                   // block.
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                                 }
                                 currZ--;
                                 if (currZ == -this.X + this.Xref) {
@@ -719,13 +719,13 @@ public class StencilList extends Brush {
                         } else {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).getTypeId() == 0) { // no reason to paste air over
+                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
                                                                                                                               // air, and it prevents us most of
                                                                                                                               // the time from having to even
                                                                                                                               // check the block.
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
                                 // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) (data), false);
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
                             }
                             currZ--;
                             if (currZ == -this.X + this.Xref) {
@@ -746,8 +746,8 @@ public class StencilList extends Brush {
                             data = (in.readByte() + 128);
                             for (int j = 0; j < (numLoops); j++) {
                                 if (id != 0) {
-                                    h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                    this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                                 }
                                 currZ--;
                                 if (currZ == -this.X + this.Xref) {
@@ -763,8 +763,8 @@ public class StencilList extends Brush {
                             id = (in.readByte() + 128);
                             data = (in.readByte() + 128);
                             if (id != 0) {
-                                h.put(this.clampY(this.bx + currX, this.by + currY, this.bz + currZ));
-                                this.clampY(this.bx + currX, this.by + currY, this.bz + currZ).setTypeIdAndData(id, (byte) data, false);
+                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
+                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
                             }
                             currZ--;
                             if (currZ == -this.X + this.Xref) {
@@ -809,17 +809,17 @@ public class StencilList extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // will be used to copy/save later on?
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.stencilPaste(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) { // will be used to paste later on
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.stencilPasteRotation(v);
     }
 }

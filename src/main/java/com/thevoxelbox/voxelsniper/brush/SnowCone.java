@@ -19,10 +19,10 @@ public class SnowCone extends Brush {
     public final void addsnow(final vData v) {
         int bsize;
 
-        if (this.getBlockIdAt(this.bx, this.by, this.bz) == 0) {
+        if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()) == 0) {
             bsize = 0;
         } else {
-            bsize = this.clampY(this.bx, this.by, this.bz).getData() + 1;
+            bsize = this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getData() + 1;
         }
         final int[][] snowcone = new int[2 * bsize + 1][2 * bsize + 1]; // Will hold block IDs
         final int[][] snowconedata = new int[2 * bsize + 1][2 * bsize + 1]; // Will hold data values for snowcone
@@ -34,17 +34,17 @@ public class SnowCone extends Brush {
                 boolean flag = true;
                 for (int i = 0; i < 10; i++) { // overlay
                     if (flag) {
-                        if ((this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) == 0 || this.getBlockIdAt(this.bx - bsize + x, this.by
-                                - i, this.bz - bsize + z) == 78)
-                                && this.getBlockIdAt(this.bx - bsize + x, this.by - i - 1, this.bz - bsize + z) != 0
-                                && this.getBlockIdAt(this.bx - bsize + x, this.by - i - 1, this.bz - bsize + z) != 78) {
+                        if ((this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) == 0 || this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY()
+                                - i, this.getBlockPositionZ() - bsize + z) == 78)
+                                && this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i - 1, this.getBlockPositionZ() - bsize + z) != 0
+                                && this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i - 1, this.getBlockPositionZ() - bsize + z) != 78) {
                             flag = false;
                             yoffset[x][z] = i;
                         }
                     }
                 }
-                snowcone[x][z] = this.getBlockIdAt(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z);
-                snowconedata[x][z] = this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z).getData();
+                snowcone[x][z] = this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - yoffset[x][z], this.getBlockPositionZ() - bsize + z);
+                snowconedata[x][z] = this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - yoffset[x][z], this.getBlockPositionZ() - bsize + z).getData();
             }
         }
 
@@ -99,17 +99,17 @@ public class SnowCone extends Brush {
                 }
             }
         }
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         for (int x = 0; x <= 2 * bsize; x++) {
             for (int z = 0; z <= 2 * bsize; z++) {
 
-                if (this.getBlockIdAt(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z) != snowcone[x][z]
-                        || this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z).getData() != snowconedata[x][z]) {
-                    h.put(this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z));
+                if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - yoffset[x][z], this.getBlockPositionZ() - bsize + z) != snowcone[x][z]
+                        || this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - yoffset[x][z], this.getBlockPositionZ() - bsize + z).getData() != snowconedata[x][z]) {
+                    h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - yoffset[x][z], this.getBlockPositionZ() - bsize + z));
                 }
-                this.setBlockIdAt(snowcone[x][z], this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z);
-                this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z).setData((byte) snowconedata[x][z]);
+                this.setBlockIdAt(snowcone[x][z], this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - yoffset[x][z], this.getBlockPositionZ() - bsize + z);
+                this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - yoffset[x][z], this.getBlockPositionZ() - bsize + z).setData((byte) snowconedata[x][z]);
 
             }
         }
@@ -140,25 +140,25 @@ public class SnowCone extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         // delsnow(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
-        switch (this.getBlockIdAt(this.bx, this.by, this.bz)) {
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
+        switch (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ())) {
         case 78:
             this.addsnow(v);
             break;
         default:
             // Move up one if target is not snowtile
-            if (this.getBlockIdAt(this.bx, this.by + 1, this.bz) == 0) {
-                this.by++;
+            if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY() + 1, this.getBlockPositionZ()) == 0) {
+                this.setBlockPositionY(this.getBlockPositionY() + 1);
                 this.addsnow(v);
             } else {
                 v.owner().getPlayer().sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");

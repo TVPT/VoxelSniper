@@ -17,7 +17,7 @@ public class PullTest extends SoftSelection {
     private static int timesUsed = 0;
 
     public PullTest() {
-        this.name = "Soft Selection";
+        this.setName("Soft Selection");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class PullTest extends SoftSelection {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.height();
         vm.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
@@ -76,9 +76,9 @@ public class PullTest extends SoftSelection {
 
         this.vh = v.voxelHeight;
 
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.surface.clear();
 
@@ -97,13 +97,13 @@ public class PullTest extends SoftSelection {
             for (int z = -bsize; z <= bsize; z++) {
 
                 final int zpow = z * z;
-                final int zz = this.bz + z;
+                final int zz = this.getBlockPositionZ() + z;
 
                 // X - Axis
                 for (int x = -bsize; x <= bsize; x++) {
 
                     final int xpow = x * x;
-                    final int xx = this.bx + x;
+                    final int xx = this.getBlockPositionX() + x;
 
                     // Down the Y - Axis
                     for (int y = bsize; y >= -bsize; y--) {
@@ -111,28 +111,28 @@ public class PullTest extends SoftSelection {
                         final double pow = zpow + xpow + (y * y);
 
                         // Is this in the range of the brush?
-                        if (pow <= bpow && this.w.getBlockTypeIdAt(xx, this.by + y, zz) != 0) {
+                        if (pow <= bpow && this.getWorld().getBlockTypeIdAt(xx, this.getBlockPositionY() + y, zz) != 0) {
 
-                            int yy = this.by + y;
+                            int yy = this.getBlockPositionY() + y;
 
                             // Starting strength and new Position
                             str = this.getStr(pow / bpow);
                             laststr = (int) (this.vh * str);
                             lasty = yy + laststr;
 
-                            this.clampY(xx, lasty, zz).setTypeId(this.w.getBlockTypeIdAt(xx, yy, zz));
+                            this.clampY(xx, lasty, zz).setTypeId(this.getWorld().getBlockTypeIdAt(xx, yy, zz));
 
                             if (str == 1) {
                                 str = 0.8;
                             }
 
                             while (laststr > 0) {
-                                if (yy < this.by) {
+                                if (yy < this.getBlockPositionY()) {
                                     str = str * str;
                                 }
                                 laststr = (int) (this.vh * str);
                                 newy = yy + laststr;
-                                id = this.w.getBlockTypeIdAt(xx, yy, zz);
+                                id = this.getWorld().getBlockTypeIdAt(xx, yy, zz);
                                 for (int i = newy; i < lasty; i++) {
                                     this.clampY(xx, i, zz).setTypeId(id);
                                 }
@@ -146,18 +146,18 @@ public class PullTest extends SoftSelection {
                     // double pow = (Math.pow(x, 2) + zpow);
                     // if (pow <= bpow) {
                     //
-                    // int xx = bx + x;
+                    // int xx = blockPositionX + x;
                     //
                     // for (int y = max; y >= low; y--) {
-                    // if (w.getBlockTypeIdAt(xx, y, zz) != 0) {
+                    // if (world.getBlockTypeIdAt(xx, y, zz) != 0) {
                     //
                     // //lasty = y + (int) (vh * getStr(pow / bpow));
-                    // clampY(xx, y + (int) (vh * getStr(pow / bpow)), zz).setTypeId(w.getBlockTypeIdAt(xx, y, zz));
+                    // clampY(xx, y + (int) (vh * getStr(pow / bpow)), zz).setTypeId(world.getBlockTypeIdAt(xx, y, zz));
                     // y--;
                     //
                     // while (y >= low) {
                     // //lasty = y + (int) (vh * getStr(pow / bpow));
-                    // clampY(xx, y + (int) (vh * getStr(pow / bpow)), zz).setTypeId(w.getBlockTypeIdAt(xx, y, zz));
+                    // clampY(xx, y + (int) (vh * getStr(pow / bpow)), zz).setTypeId(world.getBlockTypeIdAt(xx, y, zz));
                     // y--;
                     // }
                     // break;
@@ -168,15 +168,15 @@ public class PullTest extends SoftSelection {
                     //
                     // for (int y = bsize; y >= -bsize; y--) {
                     // double pow = (xpow + Math.pow(y, 2) + zpow);
-                    // if (pow <= bpow && w.getBlockTypeIdAt(xx, by + y, zz) != 0) {
-                    // int byy = by + y;
+                    // if (pow <= bpow && world.getBlockTypeIdAt(xx, blockPositionY + y, zz) != 0) {
+                    // int byy = blockPositionY + y;
                     // lasty = byy + (int) (vh * getStr(pow / bpow));
-                    // clampY(xx, lasty, zz).setTypeId(w.getBlockTypeIdAt(xx, byy, zz));
+                    // clampY(xx, lasty, zz).setTypeId(world.getBlockTypeIdAt(xx, byy, zz));
                     // y--;
                     // pow = (xpow + Math.pow(y, 2) + zpow);
                     // while (pow <= bpow) {
-                    // int blY = by + y + (int) (vh * getStr(pow / bpow));
-                    // int blId = w.getBlockTypeIdAt(xx, by + y, zz);
+                    // int blY = blockPositionY + y + (int) (vh * getStr(pow / bpow));
+                    // int blId = world.getBlockTypeIdAt(xx, blockPositionY + y, zz);
                     // for (int i = blY; i < lasty; i++) {
                     // clampY(xx, i, zz).setTypeId(blId);
                     // }
@@ -193,22 +193,22 @@ public class PullTest extends SoftSelection {
             // double bpow = Math.pow(bsize, 2);
             for (int z = -bsize; z <= bsize; z++) {
                 final double zpow = Math.pow(z, 2);
-                final int zz = this.bz + z;
+                final int zz = this.getBlockPositionZ() + z;
                 for (int x = -bsize; x <= bsize; x++) {
                     final double xpow = Math.pow(x, 2);
-                    final int xx = this.bx + x;
+                    final int xx = this.getBlockPositionX() + x;
                     for (int y = -bsize; y <= bsize; y++) {
                         double pow = (xpow + Math.pow(y, 2) + zpow);
-                        if (pow <= bpow && this.w.getBlockTypeIdAt(xx, this.by + y, zz) != 0) {
-                            final int byy = this.by + y;
+                        if (pow <= bpow && this.getWorld().getBlockTypeIdAt(xx, this.getBlockPositionY() + y, zz) != 0) {
+                            final int byy = this.getBlockPositionY() + y;
                             // int firsty = byy + (int) (vh * getStr(pow / bpow));
                             lasty = byy + (int) (this.vh * this.getStr(pow / bpow));
-                            this.clampY(xx, lasty, zz).setTypeId(this.w.getBlockTypeIdAt(xx, byy, zz));
+                            this.clampY(xx, lasty, zz).setTypeId(this.getWorld().getBlockTypeIdAt(xx, byy, zz));
                             y++;
                             pow = (xpow + Math.pow(y, 2) + zpow);
                             while (pow <= bpow) {
-                                final int blY = this.by + y + (int) (this.vh * this.getStr(pow / bpow));
-                                final int blId = this.w.getBlockTypeIdAt(xx, this.by + y, zz);
+                                final int blY = this.getBlockPositionY() + y + (int) (this.vh * this.getStr(pow / bpow));
+                                final int blId = this.getWorld().getBlockTypeIdAt(xx, this.getBlockPositionY() + y, zz);
                                 for (int i = blY; i < lasty; i++) {
                                     this.clampY(xx, i, zz).setTypeId(blId);
                                 }

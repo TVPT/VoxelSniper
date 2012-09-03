@@ -24,7 +24,7 @@ public class FreezeRay extends Brush {
     private static int timesUsed = 0;
 
     public FreezeRay() {
-        this.name = "Freeze Ray";
+        this.setName("Freeze Ray");
     }
 
     public final void FreezeRay(final vData v) {
@@ -35,7 +35,7 @@ public class FreezeRay extends Brush {
 
         final int bsize = v.brushSize;
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         int octant = 0;
         int octX = 0;
         int octY = 0;
@@ -43,8 +43,8 @@ public class FreezeRay extends Brush {
         final int r = 0;
         /*
          * byte[][][] crystallized = new byte [bsize+1][bsize+1][bsize+1]; //will make it so that new crystals will not form over one another, thus not storing
-         * ice into the undo memory for (int q = 0; q < bsize + 1; q++) { for (int w = 0; w < bsize + 1; w++) { for (int e = 0; e < bsize + 1; e++) {
-         * crystallized[q][w][e] = 0; } } }
+         * ice into the undo memory for (int q = 0; q < bsize + 1; q++) { for (int world = 0; world < bsize + 1; world++) { for (int e = 0; e < bsize + 1; e++) {
+         * crystallized[q][world][e] = 0; } } }
          */
 
         final Random generator = new Random();
@@ -56,44 +56,44 @@ public class FreezeRay extends Brush {
                         for (int i = 1; i < 9; i++) { // this just avoids me copying and pasting all those huge bits of code below 8 times. More compact to look
                                                       // at.
                             if (i == 1) {
-                                octX = this.bx + x;
-                                octY = this.by + z;
-                                octZ = this.bz + y;
+                                octX = this.getBlockPositionX() + x;
+                                octY = this.getBlockPositionY() + z;
+                                octZ = this.getBlockPositionZ() + y;
                             }
                             if (i == 2) {
-                                octX = this.bx + x;
-                                octY = this.by + z;
-                                octZ = this.bz - y;
+                                octX = this.getBlockPositionX() + x;
+                                octY = this.getBlockPositionY() + z;
+                                octZ = this.getBlockPositionZ() - y;
                             }
                             if (i == 3) {
-                                octX = this.bx + x;
-                                octY = this.by - z;
-                                octZ = this.bz + y;
+                                octX = this.getBlockPositionX() + x;
+                                octY = this.getBlockPositionY() - z;
+                                octZ = this.getBlockPositionZ() + y;
                             }
                             if (i == 4) {
-                                octX = this.bx + x;
-                                octY = this.by - z;
-                                octZ = this.bz - y;
+                                octX = this.getBlockPositionX() + x;
+                                octY = this.getBlockPositionY() - z;
+                                octZ = this.getBlockPositionZ() - y;
                             }
                             if (i == 5) {
-                                octX = this.bx - x;
-                                octY = this.by + z;
-                                octZ = this.bz + y;
+                                octX = this.getBlockPositionX() - x;
+                                octY = this.getBlockPositionY() + z;
+                                octZ = this.getBlockPositionZ() + y;
                             }
                             if (i == 6) {
-                                octX = this.bx - x;
-                                octY = this.by + z;
-                                octZ = this.bz - y;
+                                octX = this.getBlockPositionX() - x;
+                                octY = this.getBlockPositionY() + z;
+                                octZ = this.getBlockPositionZ() - y;
                             }
                             if (i == 7) {
-                                octX = this.bx - x;
-                                octY = this.by - z;
-                                octZ = this.bz + y;
+                                octX = this.getBlockPositionX() - x;
+                                octY = this.getBlockPositionY() - z;
+                                octZ = this.getBlockPositionZ() + y;
                             }
                             if (i == 8) {
-                                octX = this.bx - x;
-                                octY = this.by - z;
-                                octZ = this.bz - y;
+                                octX = this.getBlockPositionX() - x;
+                                octY = this.getBlockPositionY() - z;
+                                octZ = this.getBlockPositionZ() - y;
                             }
 
                             octant = this.getBlockIdAt(octX, octY, octZ);
@@ -120,7 +120,7 @@ public class FreezeRay extends Brush {
                             // Add destructive random ice crystals
                             if (r == 1 && octant != 0) {
                                 // if (r == 1 && crystallized[octX][octY][octZ] == 0) { //0.5%% chance per block to make a small vertical elliptical sort of ice
-                                // crystal centered at that point, which overwrites other stuff, if not other crystals too near by
+                                // crystal centered at that point, which overwrites other stuff, if not other crystals too near blockPositionY
                                 // for (int a = octX-2; a < octX+3; a++) {
                                 // for (int b = octZ-2; b < octZ+3; b++) {
                                 // for (int c = octY-4; c < octY+5; c++) {
@@ -196,7 +196,7 @@ public class FreezeRay extends Brush {
                                 this.setBlockIdAt(78, octX, octY, octZ);
                             }
                         } // end for loop for 8 octants
-                    }// end if for whether it'w in the brush or not.
+                    }// end if for whether it'world in the brush or not.
                 }// Y
             }// X
             v.storeUndo(h);
@@ -210,7 +210,7 @@ public class FreezeRay extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
     }
 
@@ -254,17 +254,17 @@ public class FreezeRay extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.FreezeRay(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.FreezeRay(v);
     }
 }

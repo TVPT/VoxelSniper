@@ -24,7 +24,7 @@ public class EntityRemoval extends Brush {
     private static int timesUsed = 0;
 
     public EntityRemoval() {
-        this.name = "Entity Removal";
+        this.setName("Entity Removal");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class EntityRemoval extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
     }
 
@@ -56,11 +56,11 @@ public class EntityRemoval extends Brush {
     protected final void radialRemoval(final vData v) {
         this.entcount = 0;
         this.chunkcount = 0;
-        final Chunk ch = this.tb.getChunk();
+        final Chunk ch = this.getTargetBlock().getChunk();
         this.removeEntities(ch);
         for (int x = ch.getX() - v.brushSize; x <= ch.getX() + v.brushSize; x++) {
             for (int z = ch.getZ() - v.brushSize; z <= ch.getZ() + v.brushSize; z++) {
-                this.removeEntities(this.w.getChunkAt(x, z));
+                this.removeEntities(this.getWorld().getChunkAt(x, z));
                 this.chunkcount++;
             }
         }

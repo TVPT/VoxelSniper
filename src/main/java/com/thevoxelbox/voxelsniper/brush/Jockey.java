@@ -22,7 +22,7 @@ public class Jockey extends Brush {
     private static int timesUsed = 0;
 
     public Jockey() {
-        this.name = "Jockey";
+        this.setName("Jockey");
     }
 
     @Override
@@ -32,7 +32,7 @@ public class Jockey extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -49,13 +49,13 @@ public class Jockey extends Brush {
         Entity closest = null;
         double range = 99999999;
 
-        Chunk c = this.w.getChunkAt(this.tb.getLocation());
+        Chunk c = this.getWorld().getChunkAt(this.getTargetBlock().getLocation());
         final int chunkx = c.getX();
         final int chunkz = c.getZ();
 
         for (int x = chunkx - 1; x <= chunkx + 1; x++) {
             for (int y = chunkz - 1; y <= chunkz + 1; y++) {
-                c = this.w.getChunkAt(x, y);
+                c = this.getWorld().getChunkAt(x, y);
                 final Entity[] toCheck = c.getEntities();
                 for (final Entity e : toCheck) {
                     if (e.getEntityId() == v.owner().getPlayer().getEntityId()) {
@@ -63,7 +63,7 @@ public class Jockey extends Brush {
                     }
                     final Location el = e.getLocation();
 
-                    final double erange = Math.pow(this.bx - el.getX(), 2) + Math.pow(this.by - el.getY(), 2) + Math.pow(this.bz - el.getZ(), 2);
+                    final double erange = Math.pow(this.getBlockPositionX() - el.getX(), 2) + Math.pow(this.getBlockPositionY() - el.getY(), 2) + Math.pow(this.getBlockPositionZ() - el.getZ(), 2);
 
                     if (erange < range) {
                         range = erange;
@@ -97,9 +97,9 @@ public class Jockey extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.sitOn(v);
     }

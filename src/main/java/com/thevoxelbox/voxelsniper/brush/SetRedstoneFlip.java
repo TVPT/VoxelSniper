@@ -20,7 +20,7 @@ public class SetRedstoneFlip extends Brush {
     private static int timesUsed = 0;
 
     public SetRedstoneFlip() {
-        this.name = "Set Redstone Flip";
+        this.setName("Set Redstone Flip");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SetRedstoneFlip extends Brush {
     @Override
     public final void info(final vMessage vm) {
         this.b = null;
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SetRedstoneFlip extends Brush {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
             v.sendMessage(ChatColor.AQUA
-                    + "/b setrf <direction> -- valid direction inputs are(n,s,e,w), Set the direction that you wish to flip your repeaters, defaults to north/south.");
+                    + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
             return;
         }
         for (int x = 1; x < par.length; x++) {
@@ -47,7 +47,7 @@ public class SetRedstoneFlip extends Brush {
                 this.northSouth = true;
                 v.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
                 continue;
-            } else if (par[x].startsWith("e") || par[x].startsWith("w") || par[x].startsWith("ew")) {
+            } else if (par[x].startsWith("e") || par[x].startsWith("world") || par[x].startsWith("ew")) {
                 this.northSouth = false;
                 v.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
                 continue;
@@ -88,7 +88,7 @@ public class SetRedstoneFlip extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
-        if (this.set(this.tb)) {
+        if (this.set(this.getTargetBlock())) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(this.h);
@@ -119,7 +119,7 @@ public class SetRedstoneFlip extends Brush {
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        if (this.set(this.lb)) {
+        if (this.set(this.getLastBlock())) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(this.h);

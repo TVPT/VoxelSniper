@@ -19,13 +19,13 @@ public class Drain extends Brush {
     private static int timesUsed = 0;
 
     public Drain() {
-        this.name = "Drain";
+        this.setName("Drain");
     }
 
     public final void drain(final vData v) {
         final int bsize = v.brushSize;
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
 
@@ -34,28 +34,28 @@ public class Drain extends Brush {
                 final double xpow = Math.pow(x, 2);
                 for (int y = bsize; y >= 0; y--) {
                     if ((xpow + Math.pow(y, 2)) <= bpow) {
-                        if (this.getBlockIdAt(this.bx + x, this.by, this.bz + y) == 8 || this.getBlockIdAt(this.bx + x, this.by, this.bz + y) == 9
-                                || this.getBlockIdAt(this.bx + x, this.by, this.bz + y) == 10 || this.getBlockIdAt(this.bx + x, this.by, this.bz + y) == 11) {
-                            h.put(this.clampY(this.bx + x, this.by, this.bz + y));
-                            this.setBlockIdAt(0, this.bx + x, this.by, this.bz + y);
+                        if (this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 8 || this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 9
+                                || this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 10 || this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 11) {
+                            h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
+                            this.setBlockIdAt(0, this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y);
                         }
 
-                        if (this.getBlockIdAt(this.bx + x, this.by, this.bz - y) == 8 || this.getBlockIdAt(this.bx + x, this.by, this.bz - y) == 9
-                                || this.getBlockIdAt(this.bx + x, this.by, this.bz - y) == 10 || this.getBlockIdAt(this.bx + x, this.by, this.bz - y) == 11) {
-                            h.put(this.clampY(this.bx + x, this.by, this.bz - y));
-                            this.setBlockIdAt(0, this.bx + x, this.by, this.bz - y);
+                        if (this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 8 || this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 9
+                                || this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 10 || this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 11) {
+                            h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y));
+                            this.setBlockIdAt(0, this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() - y);
                         }
 
-                        if (this.getBlockIdAt(this.bx - x, this.by, this.bz + y) == 8 || this.getBlockIdAt(this.bx - x, this.by, this.bz + y) == 9
-                                || this.getBlockIdAt(this.bx - x, this.by, this.bz + y) == 10 || this.getBlockIdAt(this.bx - x, this.by, this.bz + y) == 11) {
-                            h.put(this.clampY(this.bx - x, this.by, this.bz + y));
-                            this.setBlockIdAt(0, this.bx - x, this.by, this.bz + y);
+                        if (this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 8 || this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 9
+                                || this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 10 || this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y) == 11) {
+                            h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
+                            this.setBlockIdAt(0, this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() + y);
                         }
 
-                        if (this.getBlockIdAt(this.bx - x, this.by, this.bz - y) == 8 || this.getBlockIdAt(this.bx - x, this.by, this.bz - y) == 9
-                                || this.getBlockIdAt(this.bx - x, this.by, this.bz - y) == 10 || this.getBlockIdAt(this.bx - x, this.by, this.bz - y) == 11) {
-                            h.put(this.clampY(this.bx - x, this.by, this.bz - y));
-                            this.setBlockIdAt(0, this.bx - x, this.by, this.bz - y);
+                        if (this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 8 || this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 9
+                                || this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 10 || this.getBlockIdAt(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y) == 11) {
+                            h.put(this.clampY(this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y));
+                            this.setBlockIdAt(0, this.getBlockPositionX() - x, this.getBlockPositionY(), this.getBlockPositionZ() - y);
                         }
                     }
                 }
@@ -67,12 +67,12 @@ public class Drain extends Brush {
                     final double xpow = Math.pow(x - bsize, 2);
                     for (int z = (bsize + 1) * 2; z >= 0; z--) {
                         if ((xpow + Math.pow(z - bsize, 2) + ypow) <= bpow) {
-                            if (this.getBlockIdAt(this.bx + x - bsize, this.by + z - bsize, this.bz + y - bsize) == 8
-                                    || this.getBlockIdAt(this.bx + x - bsize, this.by + z - bsize, this.bz + y - bsize) == 9
-                                    || this.getBlockIdAt(this.bx + x - bsize, this.by + z - bsize, this.bz + y - bsize) == 10
-                                    || this.getBlockIdAt(this.bx + x - bsize, this.by + z - bsize, this.bz + y - bsize) == 11) {
-                                h.put(this.clampY(this.bx + x, this.by + z, this.bz + y));
-                                this.setBlockIdAt(0, this.bx + x - bsize, this.by + z - bsize, this.bz + y - bsize);
+                            if (this.getBlockIdAt(this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize, this.getBlockPositionZ() + y - bsize) == 8
+                                    || this.getBlockIdAt(this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize, this.getBlockPositionZ() + y - bsize) == 9
+                                    || this.getBlockIdAt(this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize, this.getBlockPositionZ() + y - bsize) == 10
+                                    || this.getBlockIdAt(this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize, this.getBlockPositionZ() + y - bsize) == 11) {
+                                h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + z, this.getBlockPositionZ() + y));
+                                this.setBlockIdAt(0, this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize, this.getBlockPositionZ() + y - bsize);
                             }
                         }
                     }
@@ -90,7 +90,7 @@ public class Drain extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
 
         if (this.trueCircle == 0.5) {
@@ -145,9 +145,9 @@ public class Drain extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.drain(v);
     }
 

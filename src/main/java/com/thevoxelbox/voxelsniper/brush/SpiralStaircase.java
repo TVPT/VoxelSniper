@@ -15,12 +15,12 @@ public class SpiralStaircase extends Brush {
 
     protected String stairtype = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
     protected String sdirect = "c"; // "c" clockwise (default), "cc" counter-clockwise
-    protected String sopen = "n"; // "n" north (default), "e" east, "w" south, "w" west
+    protected String sopen = "n"; // "n" north (default), "e" east, "world" south, "world" west
 
     private static int timesUsed = 0;
 
     public SpiralStaircase() {
-        this.name = "Spiral Staircase";
+        this.setName("Spiral Staircase");
     }
 
     public final void buildstairwell(final vData v) {
@@ -202,7 +202,7 @@ public class SpiralStaircase extends Brush {
                 }
             }
         }
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         // Make the changes
 
         for (int x = 2 * bsize; x >= 0; x--) {
@@ -212,74 +212,74 @@ public class SpiralStaircase extends Brush {
                     case 0:
                         if (i != height - 1) {
                             if (!((this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair")) && spiral[x][i + 1][z] == 1)) {
-                                if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 0) {
-                                    h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                                if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 0) {
+                                    h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                                 }
-                                this.setBlockIdAt(0, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
+                                this.setBlockIdAt(0, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
                             }
 
                         } else {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 0) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 0) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(0, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
+                            this.setBlockIdAt(0, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
                         }
 
                         break;
                     case 1:
                         if (this.stairtype.equalsIgnoreCase("block")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != bId) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != bId) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(bId, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
                         } else if (this.stairtype.equalsIgnoreCase("step")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 44) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 44) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(44, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z).setData(v.data);
+                            this.setBlockIdAt(44, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData(v.data);
                         } else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i - 1, this.bz - bsize + z) != bId) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i - 1, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() - bsize + z) != bId) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(bId, this.bx - bsize + x, this.by + i - 1, this.bz - bsize + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() - bsize + z);
 
                         }
                         break;
                     case 2:
                         if (this.stairtype.equalsIgnoreCase("step")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 43) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 43) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(43, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z).setData(v.data);
+                            this.setBlockIdAt(43, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData(v.data);
                         } else if (this.stairtype.equalsIgnoreCase("woodstair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 53) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 53) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(53, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z).setData((byte) 0);
+                            this.setBlockIdAt(53, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData((byte) 0);
                         } else if (this.stairtype.equalsIgnoreCase("cobblestair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 67) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 67) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(67, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z).setData((byte) 0);
+                            this.setBlockIdAt(67, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData((byte) 0);
                         }
                         break;
                     default:
                         if (this.stairtype.equalsIgnoreCase("woodstair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 53) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 53) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(53, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z).setData((byte) (spiral[x][i][z] - 2));
+                            this.setBlockIdAt(53, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData((byte) (spiral[x][i][z] - 2));
                         } else if (this.stairtype.equalsIgnoreCase("cobblestair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by + i, this.bz - bsize + z) != 67) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 67) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(67, this.bx - bsize + x, this.by + i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by + i, this.bz - bsize + z).setData((byte) (spiral[x][i][z] - 2));
+                            this.setBlockIdAt(67, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData((byte) (spiral[x][i][z] - 2));
                         }
                         break;
                     }
@@ -472,7 +472,7 @@ public class SpiralStaircase extends Brush {
 
         }
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         // Make the changes
 
         for (int x = 2 * bsize; x >= 0; x--) {
@@ -483,65 +483,65 @@ public class SpiralStaircase extends Brush {
 
                     switch (spiral[x][i][z]) {
                     case 0:
-                        if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != 0) {
-                            h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                        if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 0) {
+                            h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                         }
-                        this.setBlockIdAt(0, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
+                        this.setBlockIdAt(0, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
                         break;
                     case 1:
                         if (this.stairtype.equalsIgnoreCase("block")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != bId) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != bId) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(bId, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
                         } else if (this.stairtype.equalsIgnoreCase("step")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != 44) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 44) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(44, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z).setData(v.data);
+                            this.setBlockIdAt(44, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData(v.data);
                         } else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != bId) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != bId) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(bId, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
+                            this.setBlockIdAt(bId, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
 
                         }
                         break;
                     case 2:
                         if (this.stairtype.equalsIgnoreCase("step")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != 43) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 43) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(43, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z).setData(v.data);
+                            this.setBlockIdAt(43, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData(v.data);
                         } else if (this.stairtype.equalsIgnoreCase("woodstair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != 53) {
-                                h.put(this.clampY(this.bx - bsize - x, this.by + i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 53) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(53, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z).setData((byte) 0);
+                            this.setBlockIdAt(53, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData((byte) 0);
                         } else if (this.stairtype.equalsIgnoreCase("cobblestair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != 67) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 67) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(67, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z).setData((byte) 0);
+                            this.setBlockIdAt(67, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData((byte) 0);
                         }
                         break;
                     default:
                         if (this.stairtype.equalsIgnoreCase("woodstair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != 53) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 53) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(53, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z).setData((byte) (spiral[x][i][z] - 2));
+                            this.setBlockIdAt(53, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData((byte) (spiral[x][i][z] - 2));
                         } else if (this.stairtype.equalsIgnoreCase("cobblestair")) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) != 67) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 67) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(67, this.bx - bsize + x, this.by - i, this.bz - bsize + z);
-                            this.clampY(this.bx - bsize + x, this.by - i, this.bz - bsize + z).setData((byte) (spiral[x][i][z] - 2));
+                            this.setBlockIdAt(67, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData((byte) (spiral[x][i][z] - 2));
                         }
                         break;
 
@@ -577,7 +577,7 @@ public class SpiralStaircase extends Brush {
             v.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
             v.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
-            v.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'w' -- set the opening direction of staircase");
+            v.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
             return;
         }
 
@@ -591,7 +591,7 @@ public class SpiralStaircase extends Brush {
                 this.sdirect = par[x];
                 v.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
                 continue;
-            } else if (par[x].equalsIgnoreCase("n") || par[x].equalsIgnoreCase("e") || par[x].equalsIgnoreCase("s") || par[x].equalsIgnoreCase("w")) {
+            } else if (par[x].equalsIgnoreCase("n") || par[x].equalsIgnoreCase("e") || par[x].equalsIgnoreCase("s") || par[x].equalsIgnoreCase("world")) {
                 this.sopen = par[x];
                 v.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
                 continue;
@@ -608,17 +608,17 @@ public class SpiralStaircase extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.digstairwell(v); // make stairwell below target
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.buildstairwell(v); // make stairwell above target
     }
 }

@@ -23,7 +23,7 @@ public class Parabola extends Brush {
     private static int timesUsed = 0;
 
     public Parabola() {
-        this.name = "Parabola";
+        this.setName("Parabola");
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Parabola extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.voxel();
     }
 
@@ -58,7 +58,7 @@ public class Parabola extends Brush {
         if (par[1].equalsIgnoreCase("info2")) {
             v.sendMessage(ChatColor.GOLD + "Parabola Brush Gunpowder Parameters:");
             v.sendMessage(ChatColor.BLUE + "/b p h[number] -- sets the height of the parabola. Default 2.");
-            v.sendMessage(ChatColor.LIGHT_PURPLE + "/b p w[number] -- sets the width of the parabola. Default 2.");
+            v.sendMessage(ChatColor.LIGHT_PURPLE + "/b p world[number] -- sets the width of the parabola. Default 2.");
             v.sendMessage(ChatColor.GOLD
                     + "To use, set your height and click the apex of the parabola.  It will orient itself based on which face you click.  If an even width, the apex is considered the middle block to your right.");
             return;
@@ -70,7 +70,7 @@ public class Parabola extends Brush {
                 continue;
             } else if (par[x].startsWith("half")) {
                 this.full = 0;
-                if (this.getBlockIdAt(this.bx, this.by, this.bz) != 44) {
+                if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()) != 44) {
                     v.sendMessage(ChatColor.RED + "Half step accuracy not available for this block type. /v must be 44.");
                     this.full = 1;
                 } else {
@@ -95,8 +95,8 @@ public class Parabola extends Brush {
                 this.up = 0;
                 v.sendMessage(ChatColor.AQUA + "Middle will be lower than feet.");
                 continue;
-            } else if (par[x].startsWith("w")) {
-                this.width = Integer.parseInt(par[x].replace("w", ""));
+            } else if (par[x].startsWith("world")) {
+                this.width = Integer.parseInt(par[x].replace("world", ""));
                 if (this.width < 0) {
                     this.width = 1;
                 }
@@ -118,11 +118,11 @@ public class Parabola extends Brush {
         if (bId == 44) {
         }
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         // Desired features:
         // arrow allows a parameter of angle and of height and apex versus feet. Click both feet (or the apex, depending on param) of the parabola, and it
-        // measures height from the lower one (or from apex to both feet). Then makes a parabola between those feet skewed by the angle (default = 0, 90 = a
+        // measures height from the lower one (or from apex to both feet). Then makes a parabola between those feet skewed blockPositionY the angle (default = 0, 90 = a
         // horizontal parabola, 180 = downward arch), for weird slanty parabolas if you want.
         // powder makes a doubly parabolic dome or saddle roofing. This one requires you to click the apex / zero point. You input: height, x width, and z
         // width. It will make half of a paraboloid with all the relevant values and fill in the surface in half or full step accuracy. Thus, you can make domes
@@ -137,13 +137,13 @@ public class Parabola extends Brush {
          * if (xOff == 0 && yOff == 0 && zOff == 0) {
          * 
          * //if (sel) { //commented out - I am making arrow select first point always and powder report back distances from it as many times as you want.
-         * coords[0] = tb.getX(); coords[1] = tb.getY(); coords[2] = tb.getZ(); v.sendMessage(ChatColor.DARK_PURPLE + "First point selected."); sel = !sel; //}
-         * //else { // double distance = Math.sqrt(Math.pow((coords[0] - tb.getX()), 2) + Math.pow((coords[1] - tb.getY()), 2) + Math.pow((coords[2] -
-         * tb.getZ()), 2)); // distance = roundTwoDecimals(distance); // v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance); // sel = !sel; //}
-         * } else { vUndo h = new vUndo(tb.getWorld().getName()); v.sendMessage(ChatColor.AQUA + "xyz tb xyz offset: " + bx + " " + by + " " + bz + " " + xOff +
+         * coords[0] = targetBlock.getX(); coords[1] = targetBlock.getY(); coords[2] = targetBlock.getZ(); v.sendMessage(ChatColor.DARK_PURPLE + "First point selected."); sel = !sel; //}
+         * //else { // double distance = Math.sqrt(Math.pow((coords[0] - targetBlock.getX()), 2) + Math.pow((coords[1] - targetBlock.getY()), 2) + Math.pow((coords[2] -
+         * targetBlock.getZ()), 2)); // distance = roundTwoDecimals(distance); // v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance); // sel = !sel; //}
+         * } else { vUndo h = new vUndo(targetBlock.getWorld().getName()); v.sendMessage(ChatColor.AQUA + "xyz targetBlock xyz offset: " + blockPositionX + " " + blockPositionY + " " + blockPositionZ + " " + xOff +
          * " " + yOff + " " + zOff);
          * 
-         * h.put(clampY(bx + xOff, by + yOff, bz + zOff)); setBlockIdAt(bId, bx + xOff, by + yOff, bz + zOff); v.hashUndo.put(v.hashEn, h); v.hashEn++; }
+         * h.put(clampY(blockPositionX + xOff, blockPositionY + yOff, blockPositionZ + zOff)); setBlockIdAt(bId, blockPositionX + xOff, blockPositionY + yOff, blockPositionZ + zOff); v.hashUndo.put(v.hashEn, h); v.hashEn++; }
          */
 
         v.storeUndo(h);
@@ -151,9 +151,9 @@ public class Parabola extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.vParabola(v);
     }
 

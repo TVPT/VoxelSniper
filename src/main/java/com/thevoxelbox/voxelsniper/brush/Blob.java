@@ -20,7 +20,7 @@ public class Blob extends PerformBrush {
     private static int timesUsed = 0;
 
     public Blob() {
-        this.name = "Blob";
+        this.setName("Blob");
     }
 
     public final void digblob(final vData v) {
@@ -102,7 +102,7 @@ public class Blob extends PerformBrush {
                 final double ypow = Math.pow(y - bsize - 1, 2);
                 for (int z = 2 * bsize; z >= 0; z--) {
                     if (splat[x][y][z] == 1 && xpow + ypow + Math.pow(z - bsize - 1, 2) <= rpow) {
-                        this.current.perform(this.clampY(this.bx - bsize + x, this.by - bsize + z, this.bz - bsize + y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + z, this.getBlockPositionZ() - bsize + y));
                     }
                 }
             }
@@ -183,7 +183,7 @@ public class Blob extends PerformBrush {
                 final double ypow = Math.pow(y - bsize - 1, 2);
                 for (int z = 2 * bsize; z >= 0; z--) {
                     if (splat[x][y][z] == 1 && xpow + ypow + Math.pow(z - bsize - 1, 2) <= rpow) {
-                        this.current.perform(this.clampY(this.bx - bsize + x, this.by - bsize + z, this.bz - bsize + y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + z, this.getBlockPositionZ() - bsize + y));
                     }
                 }
             }
@@ -197,7 +197,7 @@ public class Blob extends PerformBrush {
         if (this.growpercent < 1 || this.growpercent > 9999) {
             this.growpercent = 1500;
         }
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         // vm.voxel();
         vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growpercent / 100 + "%");
@@ -233,17 +233,17 @@ public class Blob extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.growblob(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.digblob(v);
     }
 }

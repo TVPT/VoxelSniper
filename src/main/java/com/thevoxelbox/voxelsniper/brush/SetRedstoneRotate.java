@@ -19,7 +19,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     private static int timesUsed = 0;
 
     public SetRedstoneRotate() {
-        this.name = "Set Redstone Rotate";
+        this.setName("Set Redstone Rotate");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     @Override
     public final void info(final vMessage vm) {
         this.b = null;
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
-        if (this.set(this.tb)) {
+        if (this.set(this.getTargetBlock())) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(this.h);
@@ -87,7 +87,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        if (this.set(this.lb)) {
+        if (this.set(this.getLastBlock())) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         } else {
             v.storeUndo(this.h);

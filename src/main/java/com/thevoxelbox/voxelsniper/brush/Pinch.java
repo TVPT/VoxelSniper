@@ -28,7 +28,7 @@ public class Pinch extends Brush {
     private static int timesUsed = 0;
 
     public Pinch() {
-        this.name = "Pinch";
+        this.setName("Pinch");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class Pinch extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
     }
 
     @Override

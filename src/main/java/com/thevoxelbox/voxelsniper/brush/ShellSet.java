@@ -20,7 +20,7 @@ public class ShellSet extends Brush {
     private static int timesUsed = 0;
 
     public ShellSet() {
-        this.name = "Shell Set";
+        this.setName("Shell Set");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ShellSet extends Brush {
     @Override
     public final void info(final vMessage vm) {
         this.b = null;
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.voxel();
         vm.replace();
@@ -67,28 +67,28 @@ public class ShellSet extends Brush {
                 for (int y = lowy; y <= highy; y++) {
                     for (int x = lowx; x <= highx; x++) {
                         for (int z = lowz; z <= highz; z++) {
-                            if (this.w.getBlockTypeIdAt(x, y, z) == brId) {
+                            if (this.getWorld().getBlockTypeIdAt(x, y, z) == brId) {
                                 continue;
-                            } else if (this.w.getBlockTypeIdAt(x + 1, y, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(x + 1, y, z) == brId) {
                                 continue;
-                            } else if (this.w.getBlockTypeIdAt(x - 1, y, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(x - 1, y, z) == brId) {
                                 continue;
-                            } else if (this.w.getBlockTypeIdAt(x, y, z + 1) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(x, y, z + 1) == brId) {
                                 continue;
-                            } else if (this.w.getBlockTypeIdAt(x, y, z - 1) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(x, y, z - 1) == brId) {
                                 continue;
-                            } else if (this.w.getBlockTypeIdAt(x, y + 1, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(x, y + 1, z) == brId) {
                                 continue;
-                            } else if (this.w.getBlockTypeIdAt(x, y - 1, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(x, y - 1, z) == brId) {
                                 continue;
                             } else {
-                                blocks.add(this.w.getBlockAt(x, y, z));
+                                blocks.add(this.getWorld().getBlockAt(x, y, z));
                             }
                         }
                     }
                 }
 
-                final vUndo h = new vUndo(this.tb.getWorld().getName());
+                final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
                 for (final Block blo : blocks) {
                     if (blo.getTypeId() != bId) {
                         h.put(blo);
@@ -106,14 +106,14 @@ public class ShellSet extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
-        if (this.set(this.tb, v)) {
+        if (this.set(this.getTargetBlock(), v)) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        if (this.set(this.lb, v)) {
+        if (this.set(this.getLastBlock(), v)) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }

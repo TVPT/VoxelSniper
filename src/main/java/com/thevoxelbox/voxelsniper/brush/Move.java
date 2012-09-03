@@ -17,7 +17,7 @@ import com.thevoxelbox.voxelsniper.vMessage;
 import com.thevoxelbox.voxelsniper.undo.vUndo;
 
 /**
- * Moves a selection by a certain amount.
+ * Moves a selection blockPositionY a certain amount.
  * 
  * @author MikeMatrix
  * 
@@ -32,7 +32,7 @@ public class Move extends Brush {
      */
     private class Selection {
         /**
-         * Maximum amount of Blocks allowed by the Selection.
+         * Maximum amount of Blocks allowed blockPositionY the Selection.
          */
         private static final int MAX_BLOCK_COUNT = 5000000;
         /**
@@ -179,7 +179,7 @@ public class Move extends Brush {
      * 
      */
     public Move() {
-        this.name = "Move";
+        this.setName("Move");
     }
 
     @Override
@@ -189,15 +189,15 @@ public class Move extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
-        vm.custom(ChatColor.BLUE + "Move selection by " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:"
+        vm.brushName(this.getName());
+        vm.custom(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:"
                 + this.moveDirections[2]);
     }
 
     @Override
     public final void parameters(final String[] par, final vData v) {
         if (par[1].equalsIgnoreCase("info")) {
-            v.vm.custom(ChatColor.GOLD + this.name + " Parameters:");
+            v.vm.custom(ChatColor.GOLD + this.getName() + " Parameters:");
             v.vm.custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
             v.vm.custom(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
             v.vm.custom(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
@@ -233,7 +233,7 @@ public class Move extends Brush {
     }
 
     /**
-     * Moves the given selection by the amount given in direction and saves an undo for the player.
+     * Moves the given selection blockPositionY the amount given in direction and saves an undo for the player.
      * 
      * @param v
      * @param selection
@@ -288,7 +288,7 @@ public class Move extends Brush {
         if (this.selection == null) {
             this.selection = new Selection();
         }
-        this.selection.setLocation1(this.tb.getLocation());
+        this.selection.setLocation1(this.getTargetBlock().getLocation());
         v.vm.brushMessage("Point 1 set.");
 
         try {
@@ -306,7 +306,7 @@ public class Move extends Brush {
         if (this.selection == null) {
             this.selection = new Selection();
         }
-        this.selection.setLocation2(this.tb.getLocation());
+        this.selection.setLocation2(this.getTargetBlock().getLocation());
         v.vm.brushMessage("Point 2 set.");
 
         try {

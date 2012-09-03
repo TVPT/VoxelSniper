@@ -19,7 +19,7 @@ public class TreeSnipe extends Brush {
     private static int timesUsed = 0;
 
     public TreeSnipe() {
-        this.name = "Tree Snipe";
+        this.setName("Tree Snipe");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class TreeSnipe extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         this.printTreeType(vm);
     }
 
@@ -58,19 +58,19 @@ public class TreeSnipe extends Brush {
 
     public final void single(final vData v) {
         try {
-            this.w.generateTree(new Location(this.w, this.bx, this.by, this.bz), this.treeType);
+            this.getWorld().generateTree(new Location(this.getWorld(), this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()), this.treeType);
         } catch (final Exception e) {
             v.sendMessage("Tree placement unexpectedly failed.");
         }
     }
 
     private int getLocation(final vData v) {
-        for (int i = 1; i < (255 - this.by); i++) {
-            if (this.clampY(this.bx, this.by + i, this.bz).getType() == Material.AIR) {
-                return this.by + i;
+        for (int i = 1; i < (255 - this.getBlockPositionY()); i++) {
+            if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + i, this.getBlockPositionZ()).getType() == Material.AIR) {
+                return this.getBlockPositionY() + i;
             }
         }
-        return this.by;
+        return this.getBlockPositionY();
     }
 
     private void printTreeType(final vMessage vm) {
@@ -93,18 +93,18 @@ public class TreeSnipe extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
-        this.by = this.getLocation(v);
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
+        this.setBlockPositionY(this.getLocation(v));
         this.single(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.single(v);
     }
 }

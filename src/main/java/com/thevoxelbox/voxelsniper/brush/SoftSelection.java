@@ -44,7 +44,7 @@ public class SoftSelection extends Brush {
     private static int timesUsed = 0;
 
     public SoftSelection() {
-        this.name = "SoftSelection";
+        this.setName("SoftSelection");
     }
 
     @Override
@@ -80,24 +80,24 @@ public class SoftSelection extends Brush {
     protected final void getSurface(final vData v) {
         final int bsize = v.brushSize;
 
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.surface.clear();
 
         final double bpow = Math.pow(bsize + 0.5, 2);
         for (int z = -bsize; z <= bsize; z++) {
             final double zpow = Math.pow(z, 2);
-            final int zz = this.bz + z;
+            final int zz = this.getBlockPositionZ() + z;
             for (int x = -bsize; x <= bsize; x++) {
                 final double xpow = Math.pow(x, 2);
-                final int xx = this.bx + x;
+                final int xx = this.getBlockPositionX() + x;
                 for (int y = -bsize; y <= bsize; y++) {
                     final double pow = (xpow + Math.pow(y, 2) + zpow);
                     if (pow <= bpow) {
-                        if (this.isSurface(xx, this.by + y, zz)) {
-                            this.surface.add(new sBlock(this.clampY(xx, this.by + y, zz), this.getStr(((pow / bpow)))));
+                        if (this.isSurface(xx, this.getBlockPositionY() + y, zz)) {
+                            this.surface.add(new sBlock(this.clampY(xx, this.getBlockPositionY() + y, zz), this.getStr(((pow / bpow)))));
                         }
                     }
                 }

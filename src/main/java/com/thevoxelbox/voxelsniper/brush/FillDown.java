@@ -19,7 +19,7 @@ public class FillDown extends PerformBrush {
     private static int timesUsed = 0;
 
     public FillDown() {
-        this.name = "Fill Down";
+        this.setName("Fill Down");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FillDown extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         // vm.voxel();
     }
@@ -63,26 +63,26 @@ public class FillDown extends PerformBrush {
     }
 
     private void fillDown(final Block b) {
-        this.bx = b.getX();
-        this.by = b.getY();
-        this.bz = b.getZ();
+        this.setBlockPositionX(b.getX());
+        this.setBlockPositionY(b.getY());
+        this.setBlockPositionZ(b.getZ());
 
         final double bpow = Math.pow(this.bsize + this.trueCircle, 2);
         for (int x = 0 - this.bsize; x <= this.bsize; x++) {
             final double xpow = Math.pow(x, 2);
             for (int z = 0 - this.bsize; z <= this.bsize; z++) {
                 if (xpow + Math.pow(z, 2) <= bpow) {
-                    if (this.w.getBlockTypeIdAt(this.bx + x, this.by, this.bz + z) == 0) { // why is this if statement here? You don't want to fill anything in
+                    if (this.getWorld().getBlockTypeIdAt(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + z) == 0) { // why is this if statement here? You don't want to fill anything in
                                                                                            // the whole column if there is a single block at the level of your
                                                                                            // disc? Are you sure? -gavjenks
-                        int y = this.by;
+                        int y = this.getBlockPositionY();
                         while (--y >= 0) {
-                            if (this.w.getBlockTypeIdAt(this.bx + x, y, this.bz + z) != 0) {
+                            if (this.getWorld().getBlockTypeIdAt(this.getBlockPositionX() + x, y, this.getBlockPositionZ() + z) != 0) {
                                 break;
                             }
                         }
-                        for (int yy = y; yy <= this.by; yy++) {
-                            final Block bl = this.clampY(this.bx + x, yy, this.bz + z);
+                        for (int yy = y; yy <= this.getBlockPositionY(); yy++) {
+                            final Block bl = this.clampY(this.getBlockPositionX() + x, yy, this.getBlockPositionZ() + z);
                             this.current.perform(bl);
                         }
                     }
@@ -94,14 +94,14 @@ public class FillDown extends PerformBrush {
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
         this.bsize = v.brushSize;
-        this.fillDown(this.tb);
+        this.fillDown(this.getTargetBlock());
         v.storeUndo(this.current.getUndo());
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
         this.bsize = v.brushSize;
-        this.fillDown(this.lb);
+        this.fillDown(this.getLastBlock());
         v.storeUndo(this.current.getUndo());
     }
 }

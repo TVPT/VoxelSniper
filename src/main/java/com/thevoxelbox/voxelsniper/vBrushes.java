@@ -110,7 +110,7 @@ public enum vBrushes {
     CANYON(Canyon.class, "ca", "canyon"), // [ 15 ] \\
     CANYON_SELECTION(CanyonSelection.class, "cas", "canyonselection"), // [ 16 ] \\
     TWO_D_ROTATION(Rot2D.class, "rot2", "rotation2D"), // [ 17 ] \\
-    WARP_IN_STYLE(WarpInStyle.class, "w", "warpinstyle"), // [ 18 ] \\
+    WARP_IN_STYLE(WarpInStyle.class, "world", "warpinstyle"), // [ 18 ] \\
     FILL_DOWN(FillDown.class, "fd", "filldown"), // [ 19 ] \\
     SET(Set.class, "set", "set"), // [ 20 ] \\
     JOCKEY(Jockey.class, "jockey", "jockey"), // [ 21 ] \\

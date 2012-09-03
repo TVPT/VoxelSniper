@@ -19,7 +19,7 @@ public class Sneak extends Brush {
     private static int timesUsed = 0;
 
     public Sneak() {
-        this.name = "Sneak";
+        this.setName("Sneak");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Sneak extends Brush {
             switch (heldItem) {
             case ARROW:
                 if (this.getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
-                    v.owner().setReplace(this.tb.getTypeId());
+                    v.owner().setReplace(this.getTargetBlock().getTypeId());
                     return true;
                 } else { // Changed due to an excellent member suggestion: when crouch clicking the sky or void, it should just set material or replace material
                          // to air. Just added this and the else{} for left click. -Gavjenks
@@ -51,7 +51,7 @@ public class Sneak extends Brush {
 
             case SULPHUR:
                 if (this.getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
-                    v.owner().setReplaceData(this.tb.getData());
+                    v.owner().setReplaceData(this.getTargetBlock().getData());
                     return true;
                 } else {
                     v.owner().setReplaceData((byte) 0);
@@ -77,7 +77,7 @@ public class Sneak extends Brush {
             switch (heldItem) {
             case ARROW:
                 if (this.getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
-                    v.owner().setVoxel(this.tb.getTypeId());
+                    v.owner().setVoxel(this.getTargetBlock().getTypeId());
                     return true;
                 } else { // See above comment for right click -Gavjenks
                     v.owner().setVoxel(0);
@@ -86,7 +86,7 @@ public class Sneak extends Brush {
 
             case SULPHUR:
                 if (this.getSilentTarget(v.owner(), clickedBlock, clickedFace)) {
-                    v.owner().setData(this.tb.getData());
+                    v.owner().setData(this.getTargetBlock().getData());
                     return true;
                 } else {
                     v.owner().setData((byte) 0);
@@ -100,8 +100,8 @@ public class Sneak extends Brush {
 
             case STONE_AXE:
                 if (this.getTarget(v, clickedBlock, clickedFace)) {
-                    v.owner().setVoxel(this.tb.getTypeId());
-                    v.owner().setData(this.tb.getData());
+                    v.owner().setVoxel(this.getTargetBlock().getTypeId());
+                    v.owner().setData(this.getTargetBlock().getData());
                     return true;
                 }
                 break;
@@ -132,33 +132,33 @@ public class Sneak extends Brush {
     }
 
     protected final boolean getSilentTarget(final vSniper v, final Block clickedBlock, final BlockFace clickedFace) {
-        this.w = v.getPlayer().getWorld();
+        this.setWorld(v.getPlayer().getWorld());
         if (clickedBlock != null) {
-            this.tb = clickedBlock;
-            this.lb = clickedBlock.getRelative(clickedFace);
-            if (this.lb == null) {
+            this.setTargetBlock(clickedBlock);
+            this.setLastBlock(clickedBlock.getRelative(clickedFace));
+            if (this.getLastBlock() == null) {
                 return false;
             }
             if (v.isLightning()) {
-                this.w.strikeLightning(this.tb.getLocation());
+                this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
             }
             return true;
         } else {
             HitBlox hb = null;
             if (v.isDistRestrict()) {
-                hb = new HitBlox(v.getPlayer(), this.w, v.getRange());
-                this.tb = hb.getRangeBlock();
+                hb = new HitBlox(v.getPlayer(), this.getWorld(), v.getRange());
+                this.setTargetBlock(hb.getRangeBlock());
             } else {
-                hb = new HitBlox(v.getPlayer(), this.w);
-                this.tb = hb.getTargetBlock();
+                hb = new HitBlox(v.getPlayer(), this.getWorld());
+                this.setTargetBlock(hb.getTargetBlock());
             }
-            if (this.tb != null) {
-                this.lb = hb.getLastBlock();
-                if (this.lb == null) {
+            if (this.getTargetBlock() != null) {
+                this.setLastBlock(hb.getLastBlock());
+                if (this.getLastBlock() == null) {
                     return false;
                 }
                 if (v.isLightning()) {
-                    this.w.strikeLightning(this.tb.getLocation());
+                    this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
                 }
                 return true;
             } else {

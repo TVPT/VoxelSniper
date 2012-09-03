@@ -18,7 +18,7 @@ public class BlendBall extends Brush {
     private static int timesUsed = 0;
 
     public BlendBall() {
-        this.name = "Blend Ball";
+        this.setName("Blend Ball");
     }
 
     public final void bblend(final vData v) {
@@ -32,7 +32,7 @@ public class BlendBall extends Brush {
         for (int x = 0; x <= 2 * (bsize + 1); x++) {
             for (int y = 0; y <= 2 * (bsize + 1); y++) {
                 for (int z = 0; z <= 2 * (bsize + 1); z++) {
-                    oldmats[x][y][z] = this.getBlockIdAt(this.bx - bsize - 1 + x, this.by - bsize - 1 + y, this.bz - bsize - 1 + z);
+                    oldmats[x][y][z] = this.getBlockIdAt(this.getBlockPositionX() - bsize - 1 + x, this.getBlockPositionY() - bsize - 1 + y, this.getBlockPositionZ() - bsize - 1 + z);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class BlendBall extends Brush {
                             modematid = i;
                         }
                     }
-                    // Make sure there'w not a tie for most common
+                    // Make sure there'world not a tie for most common
                     for (int i = 0; i < modematid; i++) {
                         if (matfreq[i] == modematcount && !(this.ablendmode.equalsIgnoreCase("exclude") && i == 0)
                                 && !(this.wblendmode.equalsIgnoreCase("exclude") && (i == 8 || i == 9))) {
@@ -97,7 +97,7 @@ public class BlendBall extends Brush {
         }
 
         // Make the changes
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         final double rpow = Math.pow(bsize + 1, 2);
         for (int x = 2 * bsize; x >= 0; x--) {
             final double xpow = Math.pow(x - bsize - 1, 2);
@@ -107,10 +107,10 @@ public class BlendBall extends Brush {
                     if (xpow + ypow + Math.pow(z - bsize - 1, 2) <= rpow) {
                         if (!(this.ablendmode.equalsIgnoreCase("exclude") && newmats[x][y][z] == 0)
                                 && !(this.wblendmode.equalsIgnoreCase("exclude") && (newmats[x][y][z] == 8 || newmats[x][y][z] == 9))) {
-                            if (this.getBlockIdAt(this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z) != newmats[x][y][z]) {
-                                h.put(this.clampY(this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z));
+                            if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z) != newmats[x][y][z]) {
+                                h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z));
                             }
-                            this.setBlockIdAt(newmats[x][y][z], this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z);
+                            this.setBlockIdAt(newmats[x][y][z], this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z);
                         }
                     }
                 }
@@ -132,7 +132,7 @@ public class BlendBall extends Brush {
         if (!this.wblendmode.equalsIgnoreCase("exclude") && !this.wblendmode.equalsIgnoreCase("include")) {
             this.wblendmode = "exclude";
         }
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.voxel();
         // vm.custom(ChatColor.BLUE + "Air Mode: " + ablendmode);
@@ -170,9 +170,9 @@ public class BlendBall extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.ablendmode = "include";
         this.bblend(v);
@@ -180,9 +180,9 @@ public class BlendBall extends Brush {
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.ablendmode = "exclude";
         this.bblend(v);

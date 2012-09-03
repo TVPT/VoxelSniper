@@ -19,13 +19,13 @@ public class VoltMeter extends Brush {
     private static int timesUsed = 0;
 
     public VoltMeter() {
-        this.name = "VoltMeter";
+        this.setName("VoltMeter");
     }
 
     public final void data(final vData v) {
-        final int x = this.tb.getX();
-        final int y = this.tb.getY();
-        final int z = this.tb.getZ();
+        final int x = this.getTargetBlock().getX();
+        final int y = this.getTargetBlock().getY();
+        final int z = this.getTargetBlock().getZ();
 
         final Block block = this.clampY(x, y, z);
         final byte data = block.getData();
@@ -39,7 +39,7 @@ public class VoltMeter extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
     }
 
@@ -49,9 +49,9 @@ public class VoltMeter extends Brush {
     }
 
     public final void volt(final vData v) {
-        final int x = this.tb.getX();
-        final int y = this.tb.getY();
-        final int z = this.tb.getZ();
+        final int x = this.getTargetBlock().getX();
+        final int y = this.getTargetBlock().getY();
+        final int z = this.getTargetBlock().getZ();
 
         final Block block = this.clampY(x, y, z);
         final boolean indirect = block.isBlockIndirectlyPowered();
@@ -104,9 +104,9 @@ public class VoltMeter extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.volt(v);
     }
 

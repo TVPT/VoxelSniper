@@ -32,15 +32,15 @@ public class Jagged extends PerformBrush {
     private static int timesUsed = 0;
 
     public Jagged() {
-        this.name = "Jagged Line";
+        this.setName("Jagged Line");
     }
 
     @Override
     public final void arrow(final vData v) {
-        this.origincoords[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX()); // I hate you sometimes, Notch. Really? Every quadrant is
+        this.origincoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                 // different?
-        this.origincoords[1] = this.tb.getY() + .5;
-        this.origincoords[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+        this.origincoords[1] = this.getTargetBlock().getY() + .5;
+        this.origincoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
         this.JaggedA(v);
     }
 
@@ -51,7 +51,7 @@ public class Jagged extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         // vm.voxel();
     }
 
@@ -60,7 +60,7 @@ public class Jagged extends PerformBrush {
     }
 
     public final void JaggedP(final vData v) {
-        this.w = v.getWorld();
+        this.setWorld(v.getWorld());
         double linelength = 0;
 
         // Calculate slope vector
@@ -138,9 +138,9 @@ public class Jagged extends PerformBrush {
             v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 
         } else {
-            this.targetcoords[0] = this.tb.getX() + .5 * this.tb.getX() / Math.abs(this.tb.getX());
-            this.targetcoords[1] = this.tb.getY() + .5;
-            this.targetcoords[2] = this.tb.getZ() + .5 * this.tb.getZ() / Math.abs(this.tb.getZ());
+            this.targetcoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX());
+            this.targetcoords[1] = this.getTargetBlock().getY() + .5;
+            this.targetcoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
             this.JaggedP(v);
         }
 

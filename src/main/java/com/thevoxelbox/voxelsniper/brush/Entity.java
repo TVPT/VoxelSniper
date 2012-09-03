@@ -17,7 +17,7 @@ public class Entity extends Brush {
     private static int timesUsed = 0;
 
     public Entity() {
-        this.name = "Entity";
+        this.setName("Entity");
     }
 
     @Override
@@ -72,7 +72,7 @@ public class Entity extends Brush {
         for (int x = 0; x < v.brushSize; x++) {
             try {
                 final Class<? extends org.bukkit.entity.Entity> ent = this.ct.getEntityClass();
-                this.w.spawn(this.lb.getLocation(), ent);
+                this.getWorld().spawn(this.getLastBlock().getLocation(), ent);
             } catch (final IllegalArgumentException ex) {
                 v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
             }

@@ -18,13 +18,13 @@ public class CleanSnow extends Brush {
     private static int timesUsed = 0;
 
     public CleanSnow() {
-        this.name = "Clean Snow";
+        this.setName("Clean Snow");
     }
 
     public final void cleanSnow(final vData v) {
         final int bsize = v.brushSize;
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
 
@@ -34,11 +34,11 @@ public class CleanSnow extends Brush {
                 final double xpow = Math.pow(x - bsize, 2);
                 for (int z = (bsize + 1) * 2; z >= 0; z--) {
                     if ((xpow + Math.pow(z - bsize, 2) + ypow) <= bpow) {
-                        if ((this.clampY(this.bx + x - bsize, this.by + z - bsize, this.bz + y - bsize).getType() == Material.SNOW)
-                                && ((this.clampY(this.bx + x - bsize, this.by + z - bsize - 1, this.bz + y - bsize).getType() == Material.SNOW) || (this
-                                        .clampY(this.bx + x - bsize, this.by + z - bsize - 1, this.bz + y - bsize).getType() == Material.AIR))) {
-                            h.put(this.clampY(this.bx + x, this.by + z, this.bz + y));
-                            this.setBlockIdAt(0, this.bx + x - bsize, this.by + z - bsize, this.bz + y - bsize);
+                        if ((this.clampY(this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize, this.getBlockPositionZ() + y - bsize).getType() == Material.SNOW)
+                                && ((this.clampY(this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize - 1, this.getBlockPositionZ() + y - bsize).getType() == Material.SNOW) || (this
+                                        .clampY(this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize - 1, this.getBlockPositionZ() + y - bsize).getType() == Material.AIR))) {
+                            h.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + z, this.getBlockPositionZ() + y));
+                            this.setBlockIdAt(0, this.getBlockPositionX() + x - bsize, this.getBlockPositionY() + z - bsize, this.getBlockPositionZ() + y - bsize);
                         }
 
                     }
@@ -56,7 +56,7 @@ public class CleanSnow extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
     }
 
@@ -90,9 +90,9 @@ public class CleanSnow extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.cleanSnow(v);
     }
 

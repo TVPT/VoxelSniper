@@ -16,7 +16,7 @@ public class ShellVoxel extends Brush {
     private static int timesUsed = 0;
 
     public ShellVoxel() {
-        this.name = "Shell Voxel";
+        this.setName("Shell Voxel");
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ShellVoxel extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
         vm.voxel();
         vm.replace();
@@ -58,7 +58,7 @@ public class ShellVoxel extends Brush {
         for (int x = 0; x <= 2 * (bsize + 1); x++) {
             for (int y = 0; y <= 2 * (bsize + 1); y++) {
                 for (int z = 0; z <= 2 * (bsize + 1); z++) {
-                    oldmats[x][y][z] = this.getBlockIdAt(this.bx - bsize - 1 + x, this.by - bsize - 1 + y, this.bz - bsize - 1 + z);
+                    oldmats[x][y][z] = this.getBlockIdAt(this.getBlockPositionX() - bsize - 1 + x, this.getBlockPositionY() - bsize - 1 + y, this.getBlockPositionZ() - bsize - 1 + z);
                 }
             }
         }
@@ -106,16 +106,16 @@ public class ShellVoxel extends Brush {
         }
 
         // Make the changes
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         for (int x = 2 * bsize; x >= 0; x--) {
             for (int y = 0; y <= 2 * bsize; y++) {
                 for (int z = 2 * bsize; z >= 0; z--) {
 
-                    if (this.getBlockIdAt(this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z) != newmats[x][y][z]) {
-                        h.put(this.clampY(this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z));
+                    if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z) != newmats[x][y][z]) {
+                        h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z));
                     }
-                    this.setBlockIdAt(newmats[x][y][z], this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z);
+                    this.setBlockIdAt(newmats[x][y][z], this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z);
                 }
             }
         }
@@ -126,17 +126,17 @@ public class ShellVoxel extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.vshell(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.lb.getX();
-        this.by = this.lb.getY();
-        this.bz = this.lb.getZ();
+        this.setBlockPositionX(this.getLastBlock().getX());
+        this.setBlockPositionY(this.getLastBlock().getY());
+        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.vshell(v);
     }
 }

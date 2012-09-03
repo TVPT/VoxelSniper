@@ -21,31 +21,31 @@ public class vData {
     private final vSniper owner;
     public vMessage vm;
     /**
-     * Brush size -- set by /b #.
+     * Brush size -- set blockPositionY /b #.
      */
     public int brushSize = DEFAULT_BRUSH_SIZE;
     /**
-     * Voxel Id -- set by /v (#,name).
+     * Voxel Id -- set blockPositionY /v (#,name).
      */
     public int voxelId = DEFAULT_VOXEL_ID;
     /**
-     * Voxel Replace Id -- set by /vr #.
+     * Voxel Replace Id -- set blockPositionY /vr #.
      */
     public int replaceId = DEFAULT_REPLACE_ID;
     /**
-     * Voxel 'ink' -- set by /vi #.
+     * Voxel 'ink' -- set blockPositionY /vi #.
      */
     public byte data = DEFAULT_DATA_VALUE;
     /**
-     * Voxel 'ink' Replace -- set by /vir #.
+     * Voxel 'ink' Replace -- set blockPositionY /vir #.
      */
     public byte replaceData = DEFAULT_REPLACE_DATA_VALUE;
     /**
-     * Voxel List of ID's -- set by /vl # # # -#.
+     * Voxel List of ID's -- set blockPositionY /vl # # # -#.
      */
     public VoxelList voxelList = new VoxelList();
     /**
-     * Voxel 'heigth' -- set by /vh #.
+     * Voxel 'heigth' -- set blockPositionY /vh #.
      */
     public int voxelHeight = DEFAULT_VOXEL_HEIGHT;
     public int cCen = DEFAULT_CYLINDER_CENTER;

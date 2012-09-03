@@ -17,7 +17,7 @@ public class FlatOcean extends Brush {
     private static int timesUsed = 0;
 
     public FlatOcean() {
-        this.name = "FlatOcean";
+        this.setName("FlatOcean");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class FlatOcean extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
         vm.custom(ChatColor.GREEN + "Water level set to " + this.yoLevel);
         vm.custom(ChatColor.GREEN + "Ocean floor level set to " + this.ylLevel);
@@ -89,25 +89,25 @@ public class FlatOcean extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.flatOcean(this.w.getChunkAt(this.tb));
+        this.flatOcean(this.getWorld().getChunkAt(this.getTargetBlock()));
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.flatOcean(this.w.getChunkAt(this.tb));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx + 16, 63, this.bz)));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx + 16, 63, this.bz + 16)));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx, 63, this.bz + 16)));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx - 16, 63, this.bz + 16)));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx - 16, 63, this.bz)));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx - 16, 63, this.bz - 16)));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx, 63, this.bz - 16)));
-        this.flatOcean(this.w.getChunkAt(this.clampY(this.bx + 16, 63, this.bz - 16)));
+        this.flatOcean(this.getWorld().getChunkAt(this.getTargetBlock()));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + 16, 63, this.getBlockPositionZ())));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + 16, 63, this.getBlockPositionZ() + 16)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() + 16)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - 16, 63, this.getBlockPositionZ() + 16)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - 16, 63, this.getBlockPositionZ())));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - 16, 63, this.getBlockPositionZ() - 16)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() - 16)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + 16, 63, this.getBlockPositionZ() - 16)));
     }
 }

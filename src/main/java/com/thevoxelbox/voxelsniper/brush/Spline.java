@@ -60,27 +60,27 @@ public class Spline extends PerformBrush {
     private static int timesUsed = 0;
 
     public Spline() {
-        this.name = "Spline";
+        this.setName("Spline");
     }
 
     public final void addToSet(final vData v, final boolean ep) {
         if (ep) {
-            if (this.endPts.contains(this.tb) || this.endPts.size() == 2) {
+            if (this.endPts.contains(this.getTargetBlock()) || this.endPts.size() == 2) {
                 return;
             }
 
-            this.endPts.add(this.tb);
-            v.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + this.bx + ", " + this.by + ", " + this.bz + ") " + ChatColor.GRAY
+            this.endPts.add(this.getTargetBlock());
+            v.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + this.getBlockPositionX() + ", " + this.getBlockPositionY() + ", " + this.getBlockPositionZ() + ") " + ChatColor.GRAY
                     + "to endpoint selection");
             return;
         }
 
-        if (this.ctrlPts.contains(this.tb) || this.ctrlPts.size() == 2) {
+        if (this.ctrlPts.contains(this.getTargetBlock()) || this.ctrlPts.size() == 2) {
             return;
         }
 
-        this.ctrlPts.add(this.tb);
-        v.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + this.bx + ", " + this.by + ", " + this.bz + ") " + ChatColor.GRAY
+        this.ctrlPts.add(this.getTargetBlock());
+        v.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + this.getBlockPositionX() + ", " + this.getBlockPositionY() + ", " + this.getBlockPositionZ() + ") " + ChatColor.GRAY
                 + "to control point selection");
     }
 
@@ -91,7 +91,7 @@ public class Spline extends PerformBrush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
 
         if (this.set) {
             vm.custom(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
@@ -153,24 +153,24 @@ public class Spline extends PerformBrush {
 
     public final void removeFromSet(final vData v, final boolean ep) {
         if (ep) {
-            if (this.endPts.contains(this.tb) == false) {
+            if (this.endPts.contains(this.getTargetBlock()) == false) {
                 v.sendMessage(ChatColor.RED + "That block is not in the endpoint selection set.");
                 return;
             }
 
-            this.endPts.add(this.tb);
-            v.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + this.bx + ", " + this.by + ", " + this.bz + ") " + ChatColor.GRAY
+            this.endPts.add(this.getTargetBlock());
+            v.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + this.getBlockPositionX() + ", " + this.getBlockPositionY() + ", " + this.getBlockPositionZ() + ") " + ChatColor.GRAY
                     + "from endpoint selection");
             return;
         }
 
-        if (this.ctrlPts.contains(this.tb) == false) {
+        if (this.ctrlPts.contains(this.getTargetBlock()) == false) {
             v.sendMessage(ChatColor.RED + "That block is not in the control point selection set.");
             return;
         }
 
-        this.ctrlPts.remove(this.tb);
-        v.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + this.bx + ", " + this.by + ", " + this.bz + ") " + ChatColor.GRAY
+        this.ctrlPts.remove(this.getTargetBlock());
+        v.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + this.getBlockPositionX() + ", " + this.getBlockPositionY() + ", " + this.getBlockPositionZ() + ") " + ChatColor.GRAY
                 + "from control point selection");
     }
 
@@ -206,9 +206,9 @@ public class Spline extends PerformBrush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         if (this.set) {
             this.removeFromSet(v, true);
@@ -226,9 +226,9 @@ public class Spline extends PerformBrush {
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         if (this.set) {
             this.addToSet(v, true);

@@ -11,7 +11,7 @@ import com.thevoxelbox.voxelsniper.undo.vUndo;
 
 /**
  * 
- * @author Piotr Randomized by Giltwist
+ * @author Piotr Randomized blockPositionY Giltwist
  */
 public class RandomErode extends Brush {
 
@@ -66,7 +66,7 @@ public class RandomErode extends Brush {
     private static int timesUsed = 0;
 
     public RandomErode() {
-        this.name = "RandomErode";
+        this.setName("RandomErode");
     }
 
     @Override
@@ -76,7 +76,7 @@ public class RandomErode extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
 
     }
@@ -161,13 +161,13 @@ public class RandomErode extends Brush {
             this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
             final int derp = (this.bsize + 1);
-            int sx = this.bx - (this.bsize + 1);
-            int sy = this.by - (this.bsize + 1);
-            int sz = this.bz - (this.bsize + 1);
+            int sx = this.getBlockPositionX() - (this.bsize + 1);
+            int sy = this.getBlockPositionY() - (this.bsize + 1);
+            int sz = this.getBlockPositionZ() - (this.bsize + 1);
             for (int x = 0; x < this.snap.length; x++) {
-                sz = this.bz - derp;
+                sz = this.getBlockPositionZ() - derp;
                 for (int z = 0; z < this.snap.length; z++) {
-                    sy = this.by - derp;
+                    sy = this.getBlockPositionY() - derp;
                     for (int y = 0; y < this.snap.length; y++) {
                         this.snap[x][y][z] = new eBlock(this.clampY(sx, sy, sz));
                         sy++;
@@ -181,13 +181,13 @@ public class RandomErode extends Brush {
             this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
             final int derp = (this.bsize + 1);
-            int sx = this.bx - (this.bsize + 1);
-            int sy = this.by - (this.bsize + 1);
-            int sz = this.bz - (this.bsize + 1);
+            int sx = this.getBlockPositionX() - (this.bsize + 1);
+            int sy = this.getBlockPositionY() - (this.bsize + 1);
+            int sz = this.getBlockPositionZ() - (this.bsize + 1);
             for (int x = 0; x < this.snap.length; x++) {
-                sz = this.bz - derp;
+                sz = this.getBlockPositionZ() - derp;
                 for (int z = 0; z < this.snap.length; z++) {
-                    sy = this.by - derp;
+                    sy = this.getBlockPositionY() - derp;
                     for (int y = 0; y < this.snap.length; y++) {
                         this.snap[x][y][z] = new eBlock(this.clampY(sx, sy, sz));
                         sy++;
@@ -200,7 +200,7 @@ public class RandomErode extends Brush {
     }
 
     private void rerosion(final vData v) {
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         if (this.erodeFace >= 0 && this.erodeFace <= 6) {
             for (int er = 0; er < this.erodeRecursion; er++) {
@@ -268,7 +268,7 @@ public class RandomErode extends Brush {
     }
 
     private void rfilling(final vData v) {
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
 
         if (this.fillFace >= 0 && this.fillFace <= 6) {
             for (int fr = 0; fr < this.fillRecursion; fr++) {
@@ -337,9 +337,9 @@ public class RandomErode extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.bsize = v.brushSize;
 
@@ -361,9 +361,9 @@ public class RandomErode extends Brush {
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.bsize = v.brushSize;
 

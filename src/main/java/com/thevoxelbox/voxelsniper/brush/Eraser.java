@@ -15,22 +15,22 @@ public class Eraser extends Brush {
     private static int timesUsed = 0;
 
     public Eraser() {
-        this.name = "Eraser";
+        this.setName("Eraser");
     }
 
     public final void doerase(final vData v) {
         final int bsize = v.brushSize;
 
-        final vUndo h = new vUndo(this.tb.getWorld().getName());
+        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
         int temp;
         for (int x = 2 * bsize; x >= 0; x--) {
             for (int y = 0; y <= 2 * bsize; y++) {
                 for (int z = 2 * bsize; z >= 0; z--) {
-                    temp = this.getBlockIdAt(this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z);
+                    temp = this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z);
                     if (temp > 3 && temp != 12 && temp != 13) {
                         if (!(this.werasemode.equalsIgnoreCase("keep") && (temp == 8 || temp == 9))) {
-                            h.put(this.clampY(this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z));
-                            this.setBlockIdAt(0, this.bx - bsize + x, this.by - bsize + y, this.bz - bsize + z);
+                            h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z));
+                            this.setBlockIdAt(0, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + y, this.getBlockPositionZ() - bsize + z);
                         }
                     }
                 }
@@ -46,7 +46,7 @@ public class Eraser extends Brush {
 
     @Override
     public final void info(final vMessage vm) {
-        vm.brushName(this.name);
+        vm.brushName(this.getName());
         vm.size();
     }
 
@@ -57,18 +57,18 @@ public class Eraser extends Brush {
 
     @Override
     protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.werasemode = "nuke";
         this.doerase(v);
     }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bx = this.tb.getX();
-        this.by = this.tb.getY();
-        this.bz = this.tb.getZ();
+        this.setBlockPositionX(this.getTargetBlock().getX());
+        this.setBlockPositionY(this.getTargetBlock().getY());
+        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.werasemode = "keep";
         this.doerase(v);
     }
