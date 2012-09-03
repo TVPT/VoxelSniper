@@ -49,7 +49,7 @@ import com.thevoxelbox.voxelsniper.brush.VoxelDiscFace;
  * 
  * @author Voxel
  */
-public enum LiteSnipeBrushes {
+public enum LiteSniperBrushes {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~przerwap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     SNIPE(Snipe.class, "s", "snipe"), // [ 1 ] \\
     DISC(Disc.class, "d", "disc"), // [ 2 ] \\
@@ -98,7 +98,7 @@ public enum LiteSnipeBrushes {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     CHECKER_VOXEL_DISC(CheckerVoxelDisc.class, "cvd", "checkervoxeldisc"); // [ 1 ] \\
 
-    private static final Map<String, LiteSnipeBrushes> BRUSHES;
+    private static final Map<String, LiteSniperBrushes> BRUSHES;
 
     /**
      * @return HashMap<String, Brush>
@@ -106,7 +106,7 @@ public enum LiteSnipeBrushes {
     public static HashMap<String, String> getBrushAlternates() {
         final HashMap<String, String> _temp = new HashMap<String, String>();
 
-        for (final LiteSnipeBrushes _vb : LiteSnipeBrushes.BRUSHES.values()) {
+        for (final LiteSniperBrushes _vb : LiteSniperBrushes.BRUSHES.values()) {
             _temp.put(_vb.getLong(), _vb.getShort());
         }
 
@@ -119,7 +119,7 @@ public enum LiteSnipeBrushes {
     public static HashMap<String, Brush> getSniperBrushes() {
         final HashMap<String, Brush> _temp = new HashMap<String, Brush>();
 
-        for (final Entry<String, LiteSnipeBrushes> _set : LiteSnipeBrushes.BRUSHES.entrySet()) {
+        for (final Entry<String, LiteSniperBrushes> _set : LiteSniperBrushes.BRUSHES.entrySet()) {
             _temp.put(_set.getKey(), _set.getValue().getBrush());
         }
 
@@ -133,14 +133,14 @@ public enum LiteSnipeBrushes {
     private String longName;
 
     static {
-        BRUSHES = new HashMap<String, LiteSnipeBrushes>();
+        BRUSHES = new HashMap<String, LiteSniperBrushes>();
 
-        for (final LiteSnipeBrushes _vb : LiteSnipeBrushes.values()) {
-            LiteSnipeBrushes.BRUSHES.put(_vb.getShort(), _vb);
+        for (final LiteSniperBrushes _vb : LiteSniperBrushes.values()) {
+            LiteSniperBrushes.BRUSHES.put(_vb.getShort(), _vb);
         }
     }
 
-    private LiteSnipeBrushes(final Class<? extends Brush> brush, final String shortName, final String longName) {
+    private LiteSniperBrushes(final Class<? extends Brush> brush, final String shortName, final String longName) {
         this.brush = brush;
         this.shortName = shortName;
         this.longName = longName;

@@ -12,8 +12,8 @@ public class LiteSniper extends Sniper {
      * Default Constructor.
      */
     public LiteSniper() {
-        this.setMyBrushes(LiteSnipeBrushes.getSniperBrushes());
-        this.setBrushAlt(LiteSnipeBrushes.getBrushAlternates());
+        this.setMyBrushes(LiteSniperBrushes.getSniperBrushes());
+        this.setBrushAlt(LiteSniperBrushes.getBrushAlternates());
         this.setVoxelMessage(new Message(this.getData()));
         this.getData().setVoxelMessage(this.getVoxelMessage());
         // defaults

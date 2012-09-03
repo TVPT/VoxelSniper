@@ -514,7 +514,7 @@ public class Sniper {
      */
     public final void reset() {
         if (this instanceof LiteSniper) {
-            this.myBrushes = LiteSnipeBrushes.getSniperBrushes();
+            this.myBrushes = LiteSniperBrushes.getSniperBrushes();
         } else {
             this.myBrushes = SniperBrushes.getSniperBrushes();
         }
