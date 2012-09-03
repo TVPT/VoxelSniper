@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
+
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
 
 /**
  * 
@@ -15,73 +16,68 @@ public class TreeSnipe extends Brush {
 
     private TreeType treeType = TreeType.TREE;
 
+    private static int timesUsed = 0;
+
     public TreeSnipe() {
-        name = "Tree Snipe";
+        this.name = "Tree Snipe";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        by = getLocation(v);
-        single(v);
+    public final int getTimesUsed() {
+        return TreeSnipe.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        single(v);
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
+        this.printTreeType(vm);
     }
 
     @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
-        printTreeType(vm);
-    }
-
-    @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
             v.sendMessage(ChatColor.AQUA + "/b t treetype");
-            printTreeType(v.vm);
+            this.printTreeType(v.vm);
             return;
         }
         for (int x = 1; x < par.length; x++) {
             try {
                 this.treeType = TreeType.valueOf(par[x].toUpperCase());
-                printTreeType(v.vm);
-            } catch (IllegalArgumentException _ex) {
+                this.printTreeType(v.vm);
+            } catch (final IllegalArgumentException _ex) {
                 v.vm.brushMessage("No such tree type.");
             }
         }
     }
 
-    public void single(vData v) {
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        TreeSnipe.timesUsed = tUsed;
+    }
+
+    public final void single(final vData v) {
         try {
-            w.generateTree(new Location(w, (double) bx, (double) by, (double) bz), treeType);
-        } catch (Exception e) {
+            this.w.generateTree(new Location(this.w, this.bx, this.by, this.bz), this.treeType);
+        } catch (final Exception e) {
             v.sendMessage("Tree placement unexpectedly failed.");
         }
     }
 
-    private int getLocation(vData v) {
-        for (int i = 1; i < (255 - by); i++) {
-            if (clampY(bx, by + i, bz).getType() == Material.AIR) {
-                return by + i;
+    private int getLocation(final vData v) {
+        for (int i = 1; i < (255 - this.by); i++) {
+            if (this.clampY(this.bx, this.by + i, this.bz).getType() == Material.AIR) {
+                return this.by + i;
             }
         }
-        return by;
+        return this.by;
     }
 
-    private void printTreeType(vMessage vm) {
+    private void printTreeType(final vMessage vm) {
         String _printout = "";
 
         boolean _delimiterHelper = true;
-        for (TreeType _treeType : TreeType.values()) {
+        for (final TreeType _treeType : TreeType.values()) {
             if (_delimiterHelper) {
                 _delimiterHelper = false;
             } else {
@@ -94,16 +90,21 @@ public class TreeSnipe extends Brush {
 
         vm.custom(_printout);
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.by = this.getLocation(v);
+        this.single(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.single(v);
+    }
 }

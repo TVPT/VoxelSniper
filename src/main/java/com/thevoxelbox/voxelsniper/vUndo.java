@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -13,7 +15,7 @@ import org.bukkit.block.Block;
  */
 public class vUndo {
 
-    private static final HashSet<Integer> FALL_OFF_LIST = new HashSet<Integer>();
+    private static Set<Integer> FALL_OFF_LIST;
 
     /**
      * Checks whether a block falls. Water, lava, sand, gravel etc.
@@ -38,25 +40,27 @@ public class vUndo {
     private World w;
 
     static {
-        vUndo.FALL_OFF_LIST.add(6);
-        vUndo.FALL_OFF_LIST.add(37);
-        vUndo.FALL_OFF_LIST.add(37);
-        vUndo.FALL_OFF_LIST.add(39);
-        vUndo.FALL_OFF_LIST.add(40);
-        vUndo.FALL_OFF_LIST.add(50);
-        vUndo.FALL_OFF_LIST.add(51);
-        vUndo.FALL_OFF_LIST.add(55);
-        vUndo.FALL_OFF_LIST.add(59);
-        vUndo.FALL_OFF_LIST.add(63);
-        vUndo.FALL_OFF_LIST.add(64);
-        vUndo.FALL_OFF_LIST.add(69);
-        vUndo.FALL_OFF_LIST.add(70);
-        vUndo.FALL_OFF_LIST.add(71);
-        vUndo.FALL_OFF_LIST.add(72);
-        vUndo.FALL_OFF_LIST.add(75);
-        vUndo.FALL_OFF_LIST.add(76);
-        vUndo.FALL_OFF_LIST.add(77);
-        vUndo.FALL_OFF_LIST.add(83);
+        HashSet<Integer> _temporarySet = new HashSet<Integer>();
+        _temporarySet.add(6);
+        _temporarySet.add(37);
+        _temporarySet.add(37);
+        _temporarySet.add(39);
+        _temporarySet.add(40);
+        _temporarySet.add(50);
+        _temporarySet.add(51);
+        _temporarySet.add(55);
+        _temporarySet.add(59);
+        _temporarySet.add(63);
+        _temporarySet.add(64);
+        _temporarySet.add(69);
+        _temporarySet.add(70);
+        _temporarySet.add(71);
+        _temporarySet.add(72);
+        _temporarySet.add(75);
+        _temporarySet.add(76);
+        _temporarySet.add(77);
+        _temporarySet.add(83);
+        vUndo.FALL_OFF_LIST = Collections.unmodifiableSet(_temporarySet);
     }
 
     /**

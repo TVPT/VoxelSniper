@@ -5,7 +5,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -44,7 +43,7 @@ public class Punish extends PerformBrush {
 
     private static final int TICKS_PER_SECOND = 20;
     private static final int INFINIPUNISH_SIZE = -3;
-    
+
     private static int timesUsed = 0;
 
     private Punishment punishment = Punishment.FIRE;
@@ -53,7 +52,7 @@ public class Punish extends PerformBrush {
 
     private boolean specificPlayer = false;
     private String punishPlayerName = "";
-    
+
     private boolean hypnoAffectLandscape = false;
 
     /**
@@ -61,6 +60,11 @@ public class Punish extends PerformBrush {
      */
     public Punish() {
         this.name = "Punish";
+    }
+
+    @Override
+    public final int getTimesUsed() {
+        return Punish.timesUsed;
     }
 
     @Override
@@ -104,7 +108,7 @@ public class Punish extends PerformBrush {
                         v.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
                     }
                 }
-            } else if(_string.equalsIgnoreCase("-toggleHypnoLandscape")) {
+            } else if (_string.equalsIgnoreCase("-toggleHypnoLandscape")) {
                 this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
             } else {
                 try {
@@ -117,6 +121,11 @@ public class Punish extends PerformBrush {
             }
         }
 
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Punish.timesUsed = tUsed;
     }
 
     private void applyPunishment(final LivingEntity entity, final vData v) {
@@ -168,7 +177,7 @@ public class Punish extends PerformBrush {
             break;
         case HYPNO:
             if (entity instanceof Player) {
-                Location _loc = entity.getLocation();
+                final Location _loc = entity.getLocation();
                 Location _target = _loc.clone();
                 for (int z = this.punishLevel; z >= -this.punishLevel; z--) {
                     for (int x = this.punishLevel; x >= -this.punishLevel; x--) {
@@ -176,7 +185,7 @@ public class Punish extends PerformBrush {
                             _target.setX(_loc.getX() + x);
                             _target.setY(_loc.getY() + y);
                             _target.setZ(_loc.getZ() + z);
-                            if(hypnoAffectLandscape && _target.getBlock().getType() == Material.AIR) {
+                            if (this.hypnoAffectLandscape && _target.getBlock().getType() == Material.AIR) {
                                 continue;
                             }
                             _target = _loc.clone();
@@ -256,14 +265,4 @@ public class Punish extends PerformBrush {
         }
 
     }
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
-
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
 }

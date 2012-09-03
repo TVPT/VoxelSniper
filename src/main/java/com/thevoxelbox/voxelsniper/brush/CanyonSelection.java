@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class CanyonSelection extends Canyon {
@@ -20,60 +17,61 @@ public class CanyonSelection extends Canyon {
     private int fx;
     private int fz;
 
+    private static int timesUsed = 0;
+
     public CanyonSelection() {
-        name = "Canyon Selection";
+        this.name = "Canyon Selection";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        powder(v);
+    public final int getTimesUsed() {
+        return CanyonSelection.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        if (first) {
-            Chunk c = w.getChunkAt(tb);
-            fx = c.getX();
-            fz = c.getZ();
-            v.sendMessage(ChatColor.YELLOW + "First point selected!");
-            first = !first;
-        } else {
-            Chunk c = w.getChunkAt(tb);
-            bx = c.getX();
-            bz = c.getZ();
-            v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-            selection(fx < bx ? fx : bx, fz < bz ? fz : bz, fx > bx ? fx : bx, fz > bz ? fz : bz, v);
-            first = !first;
-        }
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
+        vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
     }
 
     @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
-        vm.custom(ChatColor.GREEN + "Shift Level set to " + yLevel);
+    public final void setTimesUsed(final int tUsed) {
+        CanyonSelection.timesUsed = tUsed;
     }
 
-    private void selection(int lowX, int lowZ, int highX, int highZ, vData v) {
-        m = new vUndo(w.getChunkAt(tb).getWorld().getName());
+    private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final vData v) {
+        this.m = new vUndo(this.w.getChunkAt(this.tb).getWorld().getName());
 
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
-                multiCanyon(w.getChunkAt(x, z), v);
+                this.multiCanyon(this.w.getChunkAt(x, z), v);
             }
         }
 
-        v.storeUndo(m);
+        v.storeUndo(this.m);
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.powder(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        if (this.first) {
+            final Chunk c = this.w.getChunkAt(this.tb);
+            this.fx = c.getX();
+            this.fz = c.getZ();
+            v.sendMessage(ChatColor.YELLOW + "First point selected!");
+            this.first = !this.first;
+        } else {
+            final Chunk c = this.w.getChunkAt(this.tb);
+            this.bx = c.getX();
+            this.bz = c.getZ();
+            v.sendMessage(ChatColor.YELLOW + "Second point selected!");
+            this.selection(this.fx < this.bx ? this.fx : this.bx, this.fz < this.bz ? this.fz : this.bz, this.fx > this.bx ? this.fx : this.bx,
+                    this.fz > this.bz ? this.fz : this.bz, v);
+            this.first = !this.first;
+        }
+    }
 }

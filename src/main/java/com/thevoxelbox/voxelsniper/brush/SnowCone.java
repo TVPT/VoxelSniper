@@ -1,168 +1,169 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+
 /**
- * THIS BRUSH SHOULD NOT USE PERFORMERS
- *
+ * 
  * @author Voxel
  */
 public class SnowCone extends Brush {
 
-    @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        //delsnow(v);
-    }
-
-    @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        switch (getBlockIdAt(bx, by, bz)) {
-            case 78:
-                addsnow(v);
-                break;
-            default:
-                //Move up one if target is not snowtile
-                if (getBlockIdAt(bx, by + 1, bz) == 0) {
-                    by++;
-                    addsnow(v);
-                } else {
-                    v.owner().getPlayer().sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName("Snow Cone");
-    }
     double trueCircle = 0;
 
-    @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
-        }
-    }
+    private static int timesUsed = 0;
 
-    public void addsnow(vData v) {
+    public final void addsnow(final vData v) {
         int bsize;
 
-        if (getBlockIdAt(bx, by, bz) == 0) {
+        if (this.getBlockIdAt(this.bx, this.by, this.bz) == 0) {
             bsize = 0;
         } else {
-            bsize = clampY(bx, by, bz).getData() + 1;
+            bsize = this.clampY(this.bx, this.by, this.bz).getData() + 1;
         }
-        int[][] snowcone = new int[2 * bsize + 1][2 * bsize + 1]; //Will hold block IDs
-        int[][] snowconedata = new int[2 * bsize + 1][2 * bsize + 1]; // Will hold data values for snowcone
-        int[][] yoffset = new int[bsize * 2 + 1][bsize * 2 + 1];
-        //prime the arrays
+        final int[][] snowcone = new int[2 * bsize + 1][2 * bsize + 1]; // Will hold block IDs
+        final int[][] snowconedata = new int[2 * bsize + 1][2 * bsize + 1]; // Will hold data values for snowcone
+        final int[][] yoffset = new int[bsize * 2 + 1][bsize * 2 + 1];
+        // prime the arrays
 
         for (int x = 0; x <= 2 * bsize; x++) {
             for (int z = 0; z <= 2 * bsize; z++) {
                 boolean flag = true;
-                for (int i = 0; i < 10; i++) { //overlay
+                for (int i = 0; i < 10; i++) { // overlay
                     if (flag) {
-                        if ((getBlockIdAt(bx - bsize + x, by - i, bz - bsize + z) == 0 || getBlockIdAt(bx - bsize + x, by - i, bz - bsize + z) == 78) && getBlockIdAt(bx - bsize + x, by - i - 1, bz - bsize + z) != 0 && getBlockIdAt(bx - bsize + x, by - i - 1, bz - bsize + z) != 78) {
+                        if ((this.getBlockIdAt(this.bx - bsize + x, this.by - i, this.bz - bsize + z) == 0 || this.getBlockIdAt(this.bx - bsize + x, this.by
+                                - i, this.bz - bsize + z) == 78)
+                                && this.getBlockIdAt(this.bx - bsize + x, this.by - i - 1, this.bz - bsize + z) != 0
+                                && this.getBlockIdAt(this.bx - bsize + x, this.by - i - 1, this.bz - bsize + z) != 78) {
                             flag = false;
                             yoffset[x][z] = i;
                         }
                     }
                 }
-                snowcone[x][z] = getBlockIdAt(bx - bsize + x, by - yoffset[x][z], bz - bsize + z);
-                snowconedata[x][z] = clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z).getData();
+                snowcone[x][z] = this.getBlockIdAt(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z);
+                snowconedata[x][z] = this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z).getData();
             }
         }
 
-        //figure out new snowheights
+        // figure out new snowheights
         for (int x = 0; x <= 2 * bsize; x++) {
-            double xpow = Math.pow(x - bsize, 2);
+            final double xpow = Math.pow(x - bsize, 2);
             for (int z = 0; z <= 2 * bsize; z++) {
-                double zpow = Math.pow(z - bsize, 2);
-                double dist = Math.pow(xpow + zpow, .5); //distance from center of array
-                int snowdata = bsize - (int) Math.ceil(dist);
+                final double zpow = Math.pow(z - bsize, 2);
+                final double dist = Math.pow(xpow + zpow, .5); // distance from center of array
+                final int snowdata = bsize - (int) Math.ceil(dist);
 
-                if (snowdata >= 0) { //no funny business
+                if (snowdata >= 0) { // no funny business
                     switch (snowdata) {
-                        case 0:
-                            if (snowcone[x][z] == 78) {
-                                //snowconedata[x][z] = 1;
-                            } else if (snowcone[x][z] == 0) {
+                    case 0:
+                        if (snowcone[x][z] == 78) {
+                            // snowconedata[x][z] = 1;
+                        } else if (snowcone[x][z] == 0) {
+                            snowcone[x][z] = 78;
+                            snowconedata[x][z] = 0;
+                        }
+                        break;
+                    case 7: // Turn largest snowtile into snowblock
+                        if (snowcone[x][z] == 78) {
+                            snowcone[x][z] = 80;
+                            snowconedata[x][z] = 0;
+                        }
+                        break;
+                    default: // Increase snowtile size, if smaller than target
+
+                        if (snowdata > snowconedata[x][z]) {
+                            switch (snowcone[x][z]) {
+                            case 0:
+                                snowconedata[x][z] = snowdata;
                                 snowcone[x][z] = 78;
-                                snowconedata[x][z] = 0;
+                            case 78:
+                                snowconedata[x][z] = snowdata;
+                                break;
+                            default:
+                                // v.sendMessage(ChatColor.RED+"Case: "+snowcone[x][z]);
+                                break;
+
                             }
-                            break;
-                        case 7: // Turn largest snowtile into snowblock
-                            if (snowcone[x][z] == 78) {
+                        } else if (yoffset[x][z] > 0 && snowcone[x][z] == 78) {
+                            snowconedata[x][z]++;
+                            if (snowconedata[x][z] == 7) {
+                                snowconedata[x][z] = 0;
                                 snowcone[x][z] = 80;
-                                snowconedata[x][z] = 0;
                             }
-                            break;
-                        default: // Increase snowtile size, if smaller than target
-
-                            if (snowdata > snowconedata[x][z]) {
-                                switch (snowcone[x][z]) {
-                                    case 0:
-                                        snowconedata[x][z] = snowdata;
-                                        snowcone[x][z] = 78;
-                                    case 78:
-                                        snowconedata[x][z] = snowdata;
-                                        break;
-                                    default:
-                                        //v.sendMessage(ChatColor.RED+"Case: "+snowcone[x][z]);
-                                        break;
-
-                                }
-                            } else if (yoffset[x][z] > 0 && snowcone[x][z] == 78) {
-                                snowconedata[x][z]++;
-                                if (snowconedata[x][z] == 7) {
-                                    snowconedata[x][z] = 0;
-                                    snowcone[x][z] = 80;
-                                }
-                            }
-                            break;
+                        }
+                        break;
                     }
                 }
             }
         }
-        vUndo h = new vUndo(tb.getWorld().getName());
+        final vUndo h = new vUndo(this.tb.getWorld().getName());
 
         for (int x = 0; x <= 2 * bsize; x++) {
             for (int z = 0; z <= 2 * bsize; z++) {
 
-                if (getBlockIdAt(bx - bsize + x, by - yoffset[x][z], bz - bsize + z) != snowcone[x][z] || clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z).getData() != snowconedata[x][z]) {
-                    h.put(clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z));
+                if (this.getBlockIdAt(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z) != snowcone[x][z]
+                        || this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z).getData() != snowconedata[x][z]) {
+                    h.put(this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z));
                 }
-                setBlockIdAt(snowcone[x][z], bx - bsize + x, by - yoffset[x][z], bz - bsize + z);
-                clampY(bx - bsize + x, by - yoffset[x][z], bz - bsize + z).setData((byte) snowconedata[x][z]);
+                this.setBlockIdAt(snowcone[x][z], this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z);
+                this.clampY(this.bx - bsize + x, this.by - yoffset[x][z], this.bz - bsize + z).setData((byte) snowconedata[x][z]);
 
             }
         }
         v.storeUndo(h);
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    public final int getTimesUsed() {
+        return SnowCone.timesUsed;
+    }
+
+    @Override
+    public final void info(final vMessage vm) {
+        vm.brushName("Snow Cone");
+    }
+
+    @Override
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+        if (par[1].equalsIgnoreCase("info")) {
+            v.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
+        }
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        SnowCone.timesUsed = tUsed;
+    }
+
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        // delsnow(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        switch (this.getBlockIdAt(this.bx, this.by, this.bz)) {
+        case 78:
+            this.addsnow(v);
+            break;
+        default:
+            // Move up one if target is not snowtile
+            if (this.getBlockIdAt(this.bx, this.by + 1, this.bz) == 0) {
+                this.by++;
+                this.addsnow(v);
+            } else {
+                v.owner().getPlayer().sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
+            }
+            break;
+        }
+    }
 }

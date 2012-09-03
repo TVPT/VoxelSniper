@@ -167,18 +167,7 @@ public class vSniper {
      * 
      */
     public final void doUndo() {
-        if (this.undoList.isEmpty()) {
-            this.player.sendMessage(ChatColor.GREEN + "Nothing to undo");
-        } else {
-            final vUndo _undo = this.undoList.pollLast();
-            if (_undo != null) {
-                _undo.undo();
-                this.player.sendMessage(ChatColor.GREEN + "Undo succesfull!  " + ChatColor.RED + _undo.getSize() + ChatColor.GREEN
-                        + "  Blocks have been replaced.");
-            } else {
-                this.player.sendMessage(ChatColor.GREEN + "Nothing to undo");
-            }
-        }
+        this.doUndo(1);
     }
 
     /**

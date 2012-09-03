@@ -1,81 +1,67 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
+
+import org.bukkit.Location;
 
 import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import org.bukkit.Location;
 
 /**
- *
+ * 
  * @author Gavjenks
  */
 public class Lightning extends Brush {
 
+    private static int timesUsed = 0;
+
     public Lightning() {
-        name = "Lightning";
+        this.name = "Lightning";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        Strike(v);
+    public final int getTimesUsed() {
+        return Lightning.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        StrikeDestructive(v);
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.brushMessage("Lightning Brush!  Please use in moderation.");
     }
 
-    public void Strike(vData v) {
-
-        Location loc = clampY(bx, by, bz).getLocation();
-        w.strikeLightning(loc);
-    }
-
-    public void StrikeDestructive(vData v) { //more to be added
-/*
-         * for (int x = 1; x < par.length; x++) {
-         * if (par[x].startsWith("true")) {
-         * trueCircle = 0.5;
-         * v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-         * continue;
-         * } else if (par[x].startsWith("false")) {
-         * trueCircle = 0;
-         * v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-         * continue;
-         * } else {
-         * v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-         * }
-         * }
-         *
-         */
-        Location loc = clampY(bx, by, bz).getLocation();
-        w.strikeLightning(loc);
-    }
-    
-    private static int timesUsed = 0;
-	
     @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
+    public final void setTimesUsed(final int tUsed) {
+        Lightning.timesUsed = tUsed;
+    }
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    public final void Strike(final vData v) {
+
+        final Location loc = this.clampY(this.bx, this.by, this.bz).getLocation();
+        this.w.strikeLightning(loc);
+    }
+
+    public final void StrikeDestructive(final vData v) { // more to be added
+    /*
+     * for (int x = 1; x < par.length; x++) { if (par[x].startsWith("true")) { trueCircle = 0.5; v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+     * continue; } else if (par[x].startsWith("false")) { trueCircle = 0; v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF."); continue; } else {
+     * v.p.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info."); } }
+     */
+        final Location loc = this.clampY(this.bx, this.by, this.bz).getLocation();
+        this.w.strikeLightning(loc);
+    }
+
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.Strike(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.StrikeDestructive(v);
+    }
 }

@@ -21,9 +21,8 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.Canyon;
 import com.thevoxelbox.voxelsniper.brush.CanyonSelection;
 import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDisc;
-import com.thevoxelbox.voxelsniper.brush.ChunkCoords;
 import com.thevoxelbox.voxelsniper.brush.CleanSnow;
-import com.thevoxelbox.voxelsniper.brush.Clone;
+import com.thevoxelbox.voxelsniper.brush.CloneStamp;
 import com.thevoxelbox.voxelsniper.brush.Comet;
 import com.thevoxelbox.voxelsniper.brush.CopyPasta;
 import com.thevoxelbox.voxelsniper.brush.Cylinder;
@@ -37,11 +36,8 @@ import com.thevoxelbox.voxelsniper.brush.EntityRemoval;
 import com.thevoxelbox.voxelsniper.brush.Eraser;
 import com.thevoxelbox.voxelsniper.brush.Erode;
 import com.thevoxelbox.voxelsniper.brush.Extrude;
-import com.thevoxelbox.voxelsniper.brush.Fertilize;
 import com.thevoxelbox.voxelsniper.brush.FillDown;
 import com.thevoxelbox.voxelsniper.brush.FlatOcean;
-import com.thevoxelbox.voxelsniper.brush.ForceBrush;
-import com.thevoxelbox.voxelsniper.brush.GavinSecret;
 import com.thevoxelbox.voxelsniper.brush.GenerateChunk;
 import com.thevoxelbox.voxelsniper.brush.GenerateTree;
 import com.thevoxelbox.voxelsniper.brush.HeatRay;
@@ -49,7 +45,6 @@ import com.thevoxelbox.voxelsniper.brush.Jagged;
 import com.thevoxelbox.voxelsniper.brush.Jockey;
 import com.thevoxelbox.voxelsniper.brush.Lightning;
 import com.thevoxelbox.voxelsniper.brush.Line;
-import com.thevoxelbox.voxelsniper.brush.LoadChunk;
 import com.thevoxelbox.voxelsniper.brush.Meteor;
 import com.thevoxelbox.voxelsniper.brush.Move;
 import com.thevoxelbox.voxelsniper.brush.Ocean;
@@ -65,7 +60,6 @@ import com.thevoxelbox.voxelsniper.brush.Rot2D;
 import com.thevoxelbox.voxelsniper.brush.Rot2Dvert;
 import com.thevoxelbox.voxelsniper.brush.Rot3D;
 import com.thevoxelbox.voxelsniper.brush.Ruler;
-import com.thevoxelbox.voxelsniper.brush.Savannah;
 import com.thevoxelbox.voxelsniper.brush.Scanner;
 import com.thevoxelbox.voxelsniper.brush.Set;
 import com.thevoxelbox.voxelsniper.brush.SetRedstoneFlip;
@@ -84,7 +78,6 @@ import com.thevoxelbox.voxelsniper.brush.Spline;
 import com.thevoxelbox.voxelsniper.brush.Stencil;
 import com.thevoxelbox.voxelsniper.brush.StencilList;
 import com.thevoxelbox.voxelsniper.brush.ThreePointCircle;
-import com.thevoxelbox.voxelsniper.brush.TreeRemover;
 import com.thevoxelbox.voxelsniper.brush.TreeSnipe;
 import com.thevoxelbox.voxelsniper.brush.Triangle;
 import com.thevoxelbox.voxelsniper.brush.Underlay;
@@ -110,7 +103,7 @@ public enum vBrushes {
     ENTITY(Entity.class, "en", "entity"), // [ 8 ] \\
     OCEAN(Ocean.class, "o", "ocean"), // [ 9 ] \\
     OCEAN_SELECTION(OceanSelection.class, "ocs", "oceanselection"), // [ 10 ] \\
-    CLONE_STAMP(Clone.class, "cs", "clonestamp"), // [ 11 ] \\
+    CLONE_STAMP(CloneStamp.class, "cs", "clonestamp"), // [ 11 ] \\
     ERODE(Erode.class, "e", "erode"), // [ 12 ] \\
     SOFT_SELECT_TEST(PullTest.class, "pull", "pull"), // [ 13 ] \\
     PAINTING(Painting.class, "paint", "painting"), // [ 14 ] \\
@@ -144,7 +137,6 @@ public enum vBrushes {
     SHELL_VOXEL(ShellVoxel.class, "shv", "shellvoxel"), // [ 15 ] \\
     RANDOM_ERODE(RandomErode.class, "re", "randomerode"), // [ 16 ] \\
     METEOR(Meteor.class, "met", "meteor"), // [ 17 ] \\
-    LOAD_CHUNK(LoadChunk.class, "lc", "loadchunk"), // [ 18 ] \\
     TRIANGLE(Triangle.class, "tri", "triangle"), // [ 19 ] \\
     ERASER(Eraser.class, "erase", "eraser"), // [ 20 ] \\
     COPYPASTA(CopyPasta.class, "cp", "copypasta"), // [ 22 ] \\
@@ -170,12 +162,8 @@ public enum vBrushes {
     LIGHTNING(Lightning.class, "light", "lightning"), // [ 9 ] \\
     DRAIN(Drain.class, "drain", "drain"), // [ 10 ] \\
     THREE_D_ROTATION(Rot3D.class, "rot3", "rotation3D"), // [ 11 ] \\
-    FORCE(ForceBrush.class, "force", "force"), // [ 12 ] \\
     ANTI_FREEZE(AntiFreeze.class, "af", "antifreeze"), // [ 13 ] \\
-    CHUNK_COORDS(ChunkCoords.class, "chc", "chunkcoords"), // [ 15 ] \\
-    GAVIN_SECRET(GavinSecret.class, "gavsec", "gavinsecret"), // [ 20 ] \\
     TWO_D_ROTATION_EXP(Rot2Dvert.class, "rot2v", "rotation2Dvertical"), // [ 21 ] \\
-    SAVANNAH(Savannah.class, "savannah", "savannah"), // [ 22 ] \\
     STENCIL(Stencil.class, "st", "stencil"), // [ 23 ] \\
     STENCILLIST(StencilList.class, "sl", "stencillist"), // [ 24 ] \\
     BLOCK_RESET_SURFACE(BlockResetBrushSurface.class, "brbs", "blockresetbrushsurface"), // [25] \\
@@ -195,12 +183,6 @@ public enum vBrushes {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Kavukamari~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     CYLINDER(Cylinder.class, "c", "cylinder"),
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Baseball435~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    TREE_REMOVER(TreeRemover.class, "tr", "treeremover"),
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~geekygenius~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    FERTILIZE(Fertilize.class, "fert", "fertilize"), // [ 3 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Monofraps~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     PUNISH(Punish.class, "p", "punish"), // [ 1 ] \\

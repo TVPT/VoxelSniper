@@ -15,6 +15,8 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 public class Disc extends PerformBrush {
     private double trueCircle = 0;
 
+    private static int timesUsed = 0;
+
     /**
      * Default Constructor.
      */
@@ -42,6 +44,11 @@ public class Disc extends PerformBrush {
             }
         }
         v.storeUndo(this.current.getUndo());
+    }
+
+    @Override
+    public final int getTimesUsed() {
+        return Disc.timesUsed;
     }
 
     @Override
@@ -76,6 +83,11 @@ public class Disc extends PerformBrush {
     }
 
     @Override
+    public final void setTimesUsed(final int tUsed) {
+        Disc.timesUsed = tUsed;
+    }
+
+    @Override
     protected final void arrow(final vData v) {
         this.bx = this.tb.getX();
         this.by = this.tb.getY();
@@ -90,16 +102,4 @@ public class Disc extends PerformBrush {
         this.bz = this.lb.getZ();
         this.disc(v, this.lb);
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
-
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
 }

@@ -15,11 +15,18 @@ public class CheckerVoxelDisc extends PerformBrush {
 
     private boolean useWorldCoordinates = true;
 
+    private static int timesUsed = 0;
+
     /**
      * Default constructor.
      */
     public CheckerVoxelDisc() {
         this.name = "Checker Voxel Disc";
+    }
+
+    @Override
+    public final int getTimesUsed() {
+        return CheckerVoxelDisc.timesUsed;
     }
 
     @Override
@@ -51,6 +58,11 @@ public class CheckerVoxelDisc extends PerformBrush {
                 break;
             }
         }
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        CheckerVoxelDisc.timesUsed = tUsed;
     }
 
     /**
@@ -86,16 +98,4 @@ public class CheckerVoxelDisc extends PerformBrush {
         final Block _target = this.lb;
         this.applyBrush(v, _target);
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
-
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
 }

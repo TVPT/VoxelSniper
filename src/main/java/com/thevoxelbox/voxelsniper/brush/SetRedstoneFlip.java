@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class SetRedstoneFlip extends Brush {
@@ -20,48 +17,38 @@ public class SetRedstoneFlip extends Brush {
     protected vUndo h;
     private boolean northSouth = true;
 
+    private static int timesUsed = 0;
+
     public SetRedstoneFlip() {
-        name = "Set Redstone Flip";
+        this.name = "Set Redstone Flip";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) { // Derp
-        if (set(tb)) {
-            v.sendMessage(ChatColor.GRAY + "Point one");
-        } else {
-            v.storeUndo(h);
-        }
+    public final int getTimesUsed() {
+        return SetRedstoneFlip.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        if (set(lb)) {
-            v.sendMessage(ChatColor.GRAY + "Point one");
-        } else {
-            v.storeUndo(h);
-        }
+    public final void info(final vMessage vm) {
+        this.b = null;
+        vm.brushName(this.name);
     }
 
     @Override
-    public void info(vMessage vm) {
-        b = null;
-        vm.brushName(name);
-    }
-
-    @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,w), Set the direction that you wish to flip your repeaters, defaults to north/south.");
+            v.sendMessage(ChatColor.AQUA
+                    + "/b setrf <direction> -- valid direction inputs are(n,s,e,w), Set the direction that you wish to flip your repeaters, defaults to north/south.");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("n") || par[x].startsWith("s") || par[x].startsWith("ns")) {
-                northSouth = true;
+                this.northSouth = true;
                 v.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
                 continue;
             } else if (par[x].startsWith("e") || par[x].startsWith("w") || par[x].startsWith("ew")) {
-                northSouth = false;
+                this.northSouth = false;
                 v.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
                 continue;
             } else {
@@ -70,61 +57,72 @@ public class SetRedstoneFlip extends Brush {
         }
     }
 
-    private boolean set(Block bl) {
-        if (b == null) {
-            b = bl;
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        SetRedstoneFlip.timesUsed = tUsed;
+    }
+
+    private boolean set(final Block bl) {
+        if (this.b == null) {
+            this.b = bl;
             return true;
         } else {
-            h = new vUndo(b.getWorld().getName());
-            int lowx = (b.getX() <= bl.getX()) ? b.getX() : bl.getX();
-            int lowy = (b.getY() <= bl.getY()) ? b.getY() : bl.getY();
-            int lowz = (b.getZ() <= bl.getZ()) ? b.getZ() : bl.getZ();
-            int highx = (b.getX() >= bl.getX()) ? b.getX() : bl.getX();
-            int highy = (b.getY() >= bl.getY()) ? b.getY() : bl.getY();
-            int highz = (b.getZ() >= bl.getZ()) ? b.getZ() : bl.getZ();
+            this.h = new vUndo(this.b.getWorld().getName());
+            final int lowx = (this.b.getX() <= bl.getX()) ? this.b.getX() : bl.getX();
+            final int lowy = (this.b.getY() <= bl.getY()) ? this.b.getY() : bl.getY();
+            final int lowz = (this.b.getZ() <= bl.getZ()) ? this.b.getZ() : bl.getZ();
+            final int highx = (this.b.getX() >= bl.getX()) ? this.b.getX() : bl.getX();
+            final int highy = (this.b.getY() >= bl.getY()) ? this.b.getY() : bl.getY();
+            final int highz = (this.b.getZ() >= bl.getZ()) ? this.b.getZ() : bl.getZ();
             for (int y = lowy; y <= highy; y++) {
                 for (int x = lowx; x <= highx; x++) {
                     for (int z = lowz; z <= highz; z++) {
-                        perform(clampY(x, y, z));
+                        this.perform(this.clampY(x, y, z));
                     }
                 }
             }
-            b = null;
+            this.b = null;
             return false;
         }
     }
 
-    protected void perform(Block bl) {
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
+        if (this.set(this.tb)) {
+            v.sendMessage(ChatColor.GRAY + "Point one");
+        } else {
+            v.storeUndo(this.h);
+        }
+    }
+
+    protected final void perform(final Block bl) {
         if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
-            if (northSouth) {
+            if (this.northSouth) {
                 if ((bl.getData() % 4) == 1) {
-                    h.put(bl);
+                    this.h.put(bl);
                     bl.setData((byte) (bl.getData() + 2));
                 } else if ((bl.getData() % 4) == 3) {
-                    h.put(bl);
+                    this.h.put(bl);
                     bl.setData((byte) (bl.getData() - 2));
                 }
             } else {
                 if ((bl.getData() % 4) == 2) {
-                    h.put(bl);
+                    this.h.put(bl);
                     bl.setData((byte) (bl.getData() - 2));
                 } else if ((bl.getData() % 4) == 0) {
-                    h.put(bl);
+                    this.h.put(bl);
                     bl.setData((byte) (bl.getData() + 2));
                 }
             }
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        if (this.set(this.lb)) {
+            v.sendMessage(ChatColor.GRAY + "Point one");
+        } else {
+            v.storeUndo(this.h);
+        }
+    }
 }

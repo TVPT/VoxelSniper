@@ -1,116 +1,113 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.block.BlockFace;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class VoxelDiscFace extends PerformBrush {
 
+    private static int timesUsed = 0;
+
     public VoxelDiscFace() {
-        name = "Voxel Disc Face";
+        this.name = "Voxel Disc Face";
+    }
+
+    public final void disc(final vData v) {
+        final int bsize = v.brushSize;
+
+        for (int x = bsize; x >= -bsize; x--) {
+            for (int y = bsize; y >= -bsize; y--) {
+                this.current.perform(this.clampY(this.bx + x, this.by, this.bz + y));
+            }
+        }
+
+        v.storeUndo(this.current.getUndo());
+    }
+
+    public final void discEW(final vData v) {
+        final int bsize = v.brushSize;
+
+        for (int x = bsize; x >= -bsize; x--) {
+            for (int y = bsize; y >= -bsize; y--) {
+                this.current.perform(this.clampY(this.bx + x, this.by + y, this.bz));
+            }
+        }
+
+        v.storeUndo(this.current.getUndo());
+    }
+
+    public final void discNS(final vData v) {
+        final int bsize = v.brushSize;
+
+        for (int x = bsize; x >= -bsize; x--) {
+            for (int y = bsize; y >= -bsize; y--) {
+                this.current.perform(this.clampY(this.bx, this.by + x, this.bz + y));
+            }
+        }
+
+        v.storeUndo(this.current.getUndo());
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        pre(v, tb.getFace(lb));
+    public final int getTimesUsed() {
+        return VoxelDiscFace.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = lb.getX();
-        by = lb.getY();
-        bz = lb.getZ();
-        pre(v, tb.getFace(lb));
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.size();
     }
 
-    private void pre(vData v, BlockFace bf) {
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        VoxelDiscFace.timesUsed = tUsed;
+    }
+
+    private void pre(final vData v, final BlockFace bf) {
         if (bf == null) {
             return;
         }
         switch (bf) {
-            case NORTH:
-            case SOUTH:
-                discNS(v);
-                break;
+        case NORTH:
+        case SOUTH:
+            this.discNS(v);
+            break;
 
-            case EAST:
-            case WEST:
-                discEW(v);
-                break;
+        case EAST:
+        case WEST:
+            this.discEW(v);
+            break;
 
-            case UP:
-            case DOWN:
-                disc(v);
-                break;
+        case UP:
+        case DOWN:
+            this.disc(v);
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
     }
 
-    public void disc(vData v) {
-        int bsize = v.brushSize;
-
-        for (int x = bsize; x >= -bsize; x--) {
-            for (int y = bsize; y >= -bsize; y--) {
-                current.perform(clampY(bx + x, by, bz + y));
-            }
-        }
-
-        v.storeUndo(current.getUndo());
-    }
-
-    public void discEW(vData v) {
-        int bsize = v.brushSize;
-
-        for (int x = bsize; x >= -bsize; x--) {
-            for (int y = bsize; y >= -bsize; y--) {
-                current.perform(clampY(bx + x, by + y, bz));
-            }
-        }
-
-        v.storeUndo(current.getUndo());
-    }
-
-    public void discNS(vData v) {
-        int bsize = v.brushSize;
-
-        for (int x = bsize; x >= -bsize; x--) {
-            for (int y = bsize; y >= -bsize; y--) {
-                current.perform(clampY(bx, by + x, bz + y));
-            }
-        }
-
-        v.storeUndo(current.getUndo());
-    }
-    
-    private static int timesUsed = 0;
-	
     @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.pre(v, this.tb.getFace(this.lb));
+    }
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.lb.getX();
+        this.by = this.lb.getY();
+        this.bz = this.lb.getZ();
+        this.pre(v, this.tb.getFace(this.lb));
+    }
 }

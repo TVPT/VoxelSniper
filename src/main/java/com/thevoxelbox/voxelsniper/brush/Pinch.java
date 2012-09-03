@@ -1,28 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.block.Block;
 
+import com.thevoxelbox.voxelsniper.vMessage;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class Pinch extends Brush {
-
-    private boolean[][][] area;
-
-    public Pinch() {
-        name = "Pinch";
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
-    }
 
     private class pBlock {
 
@@ -30,22 +16,33 @@ public class Pinch extends Brush {
         public int i;
         public byte d;
 
-        public pBlock(Block bl) {
-            b = bl;
-            i = bl.getTypeId();
-            d = bl.getData();
+        public pBlock(final Block bl) {
+            this.b = bl;
+            this.i = bl.getTypeId();
+            this.d = bl.getData();
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    private boolean[][][] area;
+
+    private static int timesUsed = 0;
+
+    public Pinch() {
+        this.name = "Pinch";
+    }
+
+    @Override
+    public final int getTimesUsed() {
+        return Pinch.timesUsed;
+    }
+
+    @Override
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Pinch.timesUsed = tUsed;
+    }
 }

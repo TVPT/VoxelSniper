@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.vBlock;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.vBlock;
+
 /**
- *
+ * 
  * @author Piotr
  */
 public class Rot2D extends Brush {
@@ -22,78 +19,95 @@ public class Rot2D extends Brush {
     private vBlock[][][] snap;
     private double se;
 
+    private static int timesUsed = 0;
+
     public Rot2D() {
-        name = "2D Rotation";
+        this.name = "2D Rotation";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
+    public final int getTimesUsed() {
+        return Rot2D.timesUsed;
+    }
 
-        bsize = v.brushSize;
+    @Override
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
+    }
 
-        switch (mode) {
-            case 0:
-                getMatrix();
-                rotate(v);
-                break;
+    @Override
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+        this.se = Math.toRadians(Double.parseDouble(par[1]));
+        v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
+    }
 
-            default:
-                v.sendMessage(ChatColor.RED + "Something went wrong.");
-                break;
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Rot2D.timesUsed = tUsed;
+    }
+
+    private void getMatrix() {
+        this.brushSize = (this.bsize * 2) + 1;
+
+        this.snap = new vBlock[this.brushSize][this.brushSize][this.brushSize];
+
+        final int derp = this.bsize;
+        int sx = this.bx - this.bsize;
+        int sy = this.by - this.bsize;
+        int sz = this.bz - this.bsize;
+        final double bpow = Math.pow(this.bsize + 0.5, 2);
+        for (int x = 0; x < this.snap.length; x++) {
+            sz = this.bz - derp;
+            final double xpow = Math.pow(x - this.bsize, 2);
+            for (int z = 0; z < this.snap.length; z++) {
+                sy = this.by - derp;
+                if (xpow + Math.pow(z - this.bsize, 2) <= bpow) {
+                    for (int y = 0; y < this.snap.length; y++) {
+                        final Block b = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
+                        this.snap[x][y][z] = new vBlock(b);
+                        b.setTypeId(0);
+                        sy++;
+                    }
+                }
+                sz++;
+            }
+            sx++;
         }
     }
 
-    @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
-    }
-
-    @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
-        se = Math.toRadians(Double.parseDouble(par[1]));
-        v.sendMessage(ChatColor.GREEN + "Angle set to " + se);
-    }
-
-    private void rotate(vData v) {
+    private void rotate(final vData v) {
         int xx;
         int zz;
         int yy;
         double newx;
         double newz;
-        double bpow = Math.pow(bsize + 0.5, 2);
-        double cos = Math.cos(se);
-        double sin = Math.sin(se);
-        boolean[][] doNotFill = new boolean[snap.length][snap.length];
-        //I put y in the inside loop, since it doesn't have any power functions, should be much faster.
-        //Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
-        //do a targeted filling of only those columns later that were left out.
+        final double bpow = Math.pow(this.bsize + 0.5, 2);
+        final double cos = Math.cos(this.se);
+        final double sin = Math.sin(this.se);
+        final boolean[][] doNotFill = new boolean[this.snap.length][this.snap.length];
+        // I put y in the inside loop, since it doesn't have any power functions, should be much faster.
+        // Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
+        // do a targeted filling of only those columns later that were left out.
 
-        for (int x = 0; x < snap.length; x++) {
-            xx = x - bsize;
-            double xpow = Math.pow(xx, 2);
-            for (int z = 0; z < snap.length; z++) {
-                zz = z - bsize;
+        for (int x = 0; x < this.snap.length; x++) {
+            xx = x - this.bsize;
+            final double xpow = Math.pow(xx, 2);
+            for (int z = 0; z < this.snap.length; z++) {
+                zz = z - this.bsize;
                 if (xpow + Math.pow(zz, 2) <= bpow) {
                     newx = (xx * cos) - (zz * sin);
                     newz = (xx * sin) + (zz * cos);
 
-                    doNotFill[(int) newx + bsize][(int) newz + bsize] = true;
+                    doNotFill[(int) newx + this.bsize][(int) newz + this.bsize] = true;
 
-                    for (int y = 0; y < snap.length; y++) {
-                        yy = y - bsize;
+                    for (int y = 0; y < this.snap.length; y++) {
+                        yy = y - this.bsize;
 
-                        vBlock vb = snap[x][y][z];
+                        final vBlock vb = this.snap[x][y][z];
                         if (vb.id == 0) {
                             continue;
                         }
-                        setBlockIdAt(vb.id, bx + (int) newx, by + yy, bz + (int) newz);
+                        this.setBlockIdAt(vb.id, this.bx + (int) newx, this.by + yy, this.bz + (int) newz);
                     }
                 }
             }
@@ -106,22 +120,23 @@ public class Rot2D extends Brush {
         int fy;
         int fz;
         int winner;
-        for (int x = 0; x < snap.length; x++) {
-            double xpow = Math.pow(x - bsize, 2);
-            fx = x + bx - bsize;
-            for (int z = 0; z < snap.length; z++) {
-                if (xpow + Math.pow(z - bsize, 2) <= bpow) {
-                    fz = z + bz - bsize;
+        for (int x = 0; x < this.snap.length; x++) {
+            final double xpow = Math.pow(x - this.bsize, 2);
+            fx = x + this.bx - this.bsize;
+            for (int z = 0; z < this.snap.length; z++) {
+                if (xpow + Math.pow(z - this.bsize, 2) <= bpow) {
+                    fz = z + this.bz - this.bsize;
                     if (!doNotFill[x][z]) {
-                        //smart fill stuff
+                        // smart fill stuff
 
-                        for (int y = 0; y < snap.length; y++) {
-                            fy = y + by - bsize;
-                            A = getBlockIdAt(fx + 1, fy, fz);
-                            D = getBlockIdAt(fx - 1, fy, fz);
-                            C = getBlockIdAt(fx, fy, fz + 1);
-                            B = getBlockIdAt(fx, fy, fz - 1);
-                            if (A == B || A == C || A == D) {   //I figure that since we are already narrowing it down to ONLY the holes left behind, it should be fine to do all 5 checks needed to be legit about it.
+                        for (int y = 0; y < this.snap.length; y++) {
+                            fy = y + this.by - this.bsize;
+                            A = this.getBlockIdAt(fx + 1, fy, fz);
+                            D = this.getBlockIdAt(fx - 1, fy, fz);
+                            C = this.getBlockIdAt(fx, fy, fz + 1);
+                            B = this.getBlockIdAt(fx, fy, fz - 1);
+                            if (A == B || A == C || A == D) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it should
+                                                              // be fine to do all 5 checks needed to be legit about it.
                                 winner = A;
                             } else if (B == D || C == D) {
                                 winner = D;
@@ -129,7 +144,7 @@ public class Rot2D extends Brush {
                                 winner = B; // by making this default, it will also automatically cover situations where B = C;
                             }
 
-                            setBlockIdAt(winner, fx, fy, fz);
+                            this.setBlockIdAt(winner, fx, fy, fz);
                         }
                     }
                 }
@@ -137,44 +152,27 @@ public class Rot2D extends Brush {
         }
     }
 
-    private void getMatrix() {
-        brushSize = (bsize * 2) + 1;
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
 
-        snap = new vBlock[brushSize][brushSize][brushSize];
+        this.bsize = v.brushSize;
 
-        int derp = bsize;
-        int sx = bx - bsize;
-        int sy = by - bsize;
-        int sz = bz - bsize;
-        double bpow = Math.pow(bsize + 0.5, 2);
-        for (int x = 0; x < snap.length; x++) {
-            sz = bz - derp;
-            double xpow = Math.pow(x - bsize, 2);
-            for (int z = 0; z < snap.length; z++) {
-                sy = by - derp;
-                if (xpow + Math.pow(z - bsize, 2) <= bpow) {
-                    for (int y = 0; y < snap.length; y++) {
-                        Block b = clampY(sx, sy, sz);  //why is this not sx + x, sy + y sz + z?
-                        snap[x][y][z] = new vBlock(b);
-                        b.setTypeId(0);
-                        sy++;
-                    }
-                }
-                sz++;
-            }
-            sx++;
+        switch (this.mode) {
+        case 0:
+            this.getMatrix();
+            this.rotate(v);
+            break;
+
+        default:
+            v.sendMessage(ChatColor.RED + "Something went wrong.");
+            break;
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    }
 }

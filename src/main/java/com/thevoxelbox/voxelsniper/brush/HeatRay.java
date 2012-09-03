@@ -57,11 +57,18 @@ public class HeatRay extends Brush {
         }
     }
 
+    private static int timesUsed = 0;
+
     /**
      * Default Constructor.
      */
     public HeatRay() {
         this.name = "Heat Ray";
+    }
+
+    @Override
+    public final int getTimesUsed() {
+        return HeatRay.timesUsed;
     }
 
     /**
@@ -176,6 +183,11 @@ public class HeatRay extends Brush {
     }
 
     @Override
+    public final void setTimesUsed(final int tUsed) {
+        HeatRay.timesUsed = tUsed;
+    }
+
+    @Override
     protected final void arrow(final vData v) {
         this.bx = this.tb.getX();
         this.by = this.tb.getY();
@@ -187,16 +199,4 @@ public class HeatRay extends Brush {
     protected final void powder(final vData v) {
         this.arrow(v);
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
-
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
 }

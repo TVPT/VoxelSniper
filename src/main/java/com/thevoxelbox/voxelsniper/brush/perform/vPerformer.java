@@ -24,7 +24,7 @@ public abstract class vPerformer {
     public abstract void init(com.thevoxelbox.voxelsniper.vData v);
 
     public void setUndo(int scale) {
-        h = new vUndo(w.getName(), scale);
+        h = new vUndo(w.getName());
     }
 
     public abstract void perform(Block b);

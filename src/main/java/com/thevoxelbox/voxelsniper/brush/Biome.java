@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
+
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 /**
  * 
@@ -15,91 +12,91 @@ import org.bukkit.block.Block;
  */
 public class Biome extends Brush {
 
-	protected org.bukkit.block.Biome selected = org.bukkit.block.Biome.PLAINS;
+    protected org.bukkit.block.Biome selected = org.bukkit.block.Biome.PLAINS;
 
-	public Biome() {
-		name = "Biome";
-	}
+    private static int timesUsed = 0;
 
-	@Override
-	protected void arrow(vData v) {
-		bio(v);
-	}
+    public Biome() {
+        this.name = "Biome";
+    }
 
-	@Override
-	protected void powder(vData v) {
-		bio(v);
-	}
+    @Override
+    public final int getTimesUsed() {
+        return Biome.timesUsed;
+    }
 
-	@Override
-	public void parameters(String[] par, vData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
-			String biomes = "";
-			boolean first = true;
-			for (org.bukkit.block.Biome bio : org.bukkit.block.Biome.values()) {
-				if (first) {
-					first = false;
-					biomes = ChatColor.DARK_GREEN + bio.name();
-				} else {
-					biomes += ChatColor.RED + ", " + ChatColor.DARK_GREEN + bio.name();
-				}
-			}
-			v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + biomes);
-		} else {
-			for (org.bukkit.block.Biome bio : org.bukkit.block.Biome.values()) {
-				if (bio.name().equals(par[1])) {
-					selected = bio;
-					break;
-				}
-			}
-			v.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + selected.name());
-		}
-	}
+    @Override
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
+        vm.size();
+        vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selected.name());
+    }
 
-	@Override
-	public void info(vMessage vm) {
-		vm.brushName(name);
-		vm.size();
-		vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + selected.name());
-	}
+    @Override
+    public final void parameters(final String[] par, final vData v) {
+        if (par[1].equalsIgnoreCase("info")) {
+            v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
+            String biomes = "";
+            boolean first = true;
+            for (final org.bukkit.block.Biome bio : org.bukkit.block.Biome.values()) {
+                if (first) {
+                    first = false;
+                    biomes = ChatColor.DARK_GREEN + bio.name();
+                } else {
+                    biomes += ChatColor.RED + ", " + ChatColor.DARK_GREEN + bio.name();
+                }
+            }
+            v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + biomes);
+        } else {
+            for (final org.bukkit.block.Biome bio : org.bukkit.block.Biome.values()) {
+                if (bio.name().equals(par[1])) {
+                    this.selected = bio;
+                    break;
+                }
+            }
+            v.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selected.name());
+        }
+    }
 
-	protected void bio(vData v) {
-		int bsize = v.brushSize;
-		double bpow = Math.pow(bsize, 2);
-		for (int x = -bsize; x <= bsize; x++) {
-			double xpow = Math.pow(x, 2);
-			for (int z = -bsize; z <= bsize; z++) {
-				if ((xpow + Math.pow(z, 2)) <= bpow) {
-					w.setBiome(bx + x, bz + z, selected);
-				}
-			}
-		}
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Biome.timesUsed = tUsed;
+    }
 
-		Block b = w.getBlockAt(bx - bsize, 0, bz - bsize);
-		Block bl = w.getBlockAt(bx + bsize, 0, bz + bsize);
+    @Override
+    protected final void arrow(final vData v) {
+        this.bio(v);
+    }
 
-		int lowx = (b.getX() <= bl.getX()) ? b.getChunk().getX() : bl.getChunk().getX();
-		int lowz = (b.getZ() <= bl.getZ()) ? b.getChunk().getX() : bl.getChunk().getX();
-		int highx = (b.getX() >= bl.getX()) ? b.getChunk().getX() : bl.getChunk().getX();
-		int highz = (b.getZ() >= bl.getZ()) ? b.getChunk().getX() : bl.getChunk().getX();
+    protected final void bio(final vData v) {
+        final int bsize = v.brushSize;
+        final double bpow = Math.pow(bsize, 2);
+        for (int x = -bsize; x <= bsize; x++) {
+            final double xpow = Math.pow(x, 2);
+            for (int z = -bsize; z <= bsize; z++) {
+                if ((xpow + Math.pow(z, 2)) <= bpow) {
+                    this.w.setBiome(this.bx + x, this.bz + z, this.selected);
+                }
+            }
+        }
 
-		for (int x = lowx; x <= highx; x++) {
-			for (int z = lowz; z <= highz; z++) {
-				w.refreshChunk(x, z);
-			}
-		}
-	}
+        final Block b = this.w.getBlockAt(this.bx - bsize, 0, this.bz - bsize);
+        final Block bl = this.w.getBlockAt(this.bx + bsize, 0, this.bz + bsize);
 
-	private static int timesUsed = 0;
+        final int lowx = (b.getX() <= bl.getX()) ? b.getChunk().getX() : bl.getChunk().getX();
+        final int lowz = (b.getZ() <= bl.getZ()) ? b.getChunk().getX() : bl.getChunk().getX();
+        final int highx = (b.getX() >= bl.getX()) ? b.getChunk().getX() : bl.getChunk().getX();
+        final int highz = (b.getZ() >= bl.getZ()) ? b.getChunk().getX() : bl.getChunk().getX();
 
-	@Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
+        for (int x = lowx; x <= highx; x++) {
+            for (int z = lowz; z <= highz; z++) {
+                this.w.refreshChunk(x, z);
+            }
+        }
+    }
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed;
-	}
+    @Override
+    protected final void powder(final vData v) {
+        this.bio(v);
+    }
 }

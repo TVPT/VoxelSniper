@@ -1,18 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+
 /**
- *
+ * 
  * @author psanker
  */
 public class Extrude extends Brush {
@@ -21,17 +18,24 @@ public class Extrude extends Brush {
     double trueCircle;
     boolean awto;
 
+    private static int timesUsed = 0;
+
     public Extrude() {
-        name = "Extrude";
+        this.name = "Extrude";
     }
 
     @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final int getTimesUsed() {
+        return Extrude.timesUsed;
+    }
+
+    @Override
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.size();
         vm.height();
         vm.voxelList();
-        if (trueCircle == 0.5) {
+        if (this.trueCircle == 0.5) {
             vm.custom(ChatColor.AQUA + "True circle mode ON.");
         } else {
             vm.custom(ChatColor.AQUA + "True circle mode OFF.");
@@ -39,125 +43,62 @@ public class Extrude extends Brush {
     }
 
     @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
+            v.sendMessage(ChatColor.AQUA
+                    + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
             return;
         }
 
         for (int i = 1; i < par.length; i++) {
             try {
                 if (par[i].startsWith("true")) {
-                    trueCircle = 0.5;
+                    this.trueCircle = 0.5;
                     v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                     continue;
                 } else if (par[i].startsWith("false")) {
-                    trueCircle = 0;
+                    this.trueCircle = 0;
                     v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                     continue;
                 } else {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                     return;
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + par[i] + "\"; use the \"info\" parameter.");
             }
         }
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        awto = false;
-
-        pre(v, tb.getFace(lb));
+    public final void setTimesUsed(final int tUsed) {
+        Extrude.timesUsed = tUsed;
     }
 
-    @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        awto = true;
+    private void extrudeD(final vData v) {
+        final int bsize = v.brushSize;
 
-        pre(v, tb.getFace(lb));
-    }
+        vUndo h = new vUndo(this.tb.getWorld().getName());
 
-    private void pre(vData v, BlockFace bf) {
-        if (bf == null) {
-            return;
-        }
-
-        level = v.voxelHeight;
-
-        if (level == 0) {
-            return;
-        } else if (!awto) {
-            if (level > 0) {
-                level = -1 * level;
-            }
-        } else if (awto) {
-            if (level < 0) {
-                level = -1 * level;
-            }
-        }
-
-        switch (bf) {
-            case NORTH:
-                extrudeN(v);
-                break;
-
-            case SOUTH:
-                extrudeS(v);
-                break;
-
-            case EAST:
-                extrudeE(v);
-                break;
-
-            case WEST:
-                extrudeW(v);
-                break;
-
-            case UP:
-                extrudeU(v);
-                break;
-
-            case DOWN:
-                extrudeD(v);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private void extrudeS(vData v) {
-        int bsize = v.brushSize;
-
-        vUndo h = new vUndo(tb.getWorld().getName());
-
-        double bpow = Math.pow(bsize + trueCircle, 2);
+        final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
-            double xpow = Math.pow(x, 2);
+            final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    if (awto) {
-                        for (int i = 0; i <= level - 1; i++) {
-                            h = perform(clampY(bx + i, by + x, bz + y), clampY(bx + i + 1, by + x, bz + y), v, h);
-                            h = perform(clampY(bx + i, by + x, bz - y), clampY(bx + i + 1, by + x, bz - y), v, h);
-                            h = perform(clampY(bx + i, by - x, bz + y), clampY(bx + i + 1, by - x, bz + y), v, h);
-                            h = perform(clampY(bx + i, by - x, bz - y), clampY(bx + i + 1, by - x, bz - y), v, h);
+                    if (this.awto) {
+                        for (int i = 0; i <= this.level - 1; i++) {
+                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz + y), this.clampY(this.bx + x, this.by - i - 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz - y), this.clampY(this.bx + x, this.by - i - 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz + y), this.clampY(this.bx - x, this.by - i - 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz - y), this.clampY(this.bx - x, this.by - i - 1, this.bz - y), v, h);
                         }
                     } else {
-                        for (int i = 0; i >= level + 1; i--) {
-                            h = perform(clampY(bx + i, by + x, bz + y), clampY(bx + i - 1, by + x, bz + y), v, h);
-                            h = perform(clampY(bx + i, by + x, bz - y), clampY(bx + i - 1, by + x, bz - y), v, h);
-                            h = perform(clampY(bx + i, by - x, bz + y), clampY(bx + i - 1, by - x, bz + y), v, h);
-                            h = perform(clampY(bx + i, by - x, bz - y), clampY(bx + i - 1, by - x, bz - y), v, h);
+                        for (int i = 0; i >= this.level + 1; i--) {
+                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz + y), this.clampY(this.bx + x, this.by - i + 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by - i, this.bz - y), this.clampY(this.bx + x, this.by - i + 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz + y), this.clampY(this.bx - x, this.by - i + 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - i, this.bz - y), this.clampY(this.bx - x, this.by - i + 1, this.bz - y), v, h);
                         }
                     }
                 }
@@ -167,29 +108,29 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeN(vData v) {
-        int bsize = v.brushSize;
+    private void extrudeE(final vData v) {
+        final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(tb.getWorld().getName());
+        vUndo h = new vUndo(this.tb.getWorld().getName());
 
-        double bpow = Math.pow(bsize + trueCircle, 2);
+        final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
-            double xpow = Math.pow(x, 2);
+            final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    if (awto) {
-                        for (int i = 0; i <= level - 1; i++) {
-                            h = perform(clampY(bx - i, by + x, bz + y), clampY(bx - i - 1, by + x, bz + y), v, h);
-                            h = perform(clampY(bx - i, by + x, bz - y), clampY(bx - i - 1, by + x, bz - y), v, h);
-                            h = perform(clampY(bx - i, by - x, bz + y), clampY(bx - i - 1, by - x, bz + y), v, h);
-                            h = perform(clampY(bx - i, by - x, bz - y), clampY(bx - i - 1, by - x, bz - y), v, h);
+                    if (this.awto) {
+                        for (int i = 0; i <= this.level - 1; i++) {
+                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz - i), this.clampY(this.bx + x, this.by + y, this.bz - i - 1), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz - i), this.clampY(this.bx + x, this.by - y, this.bz - i - 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz - i), this.clampY(this.bx - x, this.by + y, this.bz - i - 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz - i), this.clampY(this.bx - x, this.by - y, this.bz - i - 1), v, h);
                         }
                     } else {
-                        for (int i = 0; i >= level + 1; i--) {
-                            h = perform(clampY(bx - i, by + x, bz + y), clampY(bx - i + 1, by + x, bz + y), v, h);
-                            h = perform(clampY(bx - i, by + x, bz - y), clampY(bx - i + 1, by + x, bz - y), v, h);
-                            h = perform(clampY(bx - i, by - x, bz + y), clampY(bx - i + 1, by - x, bz + y), v, h);
-                            h = perform(clampY(bx - i, by - x, bz - y), clampY(bx - i + 1, by - x, bz - y), v, h);
+                        for (int i = 0; i >= this.level + 1; i--) {
+                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz - i), this.clampY(this.bx + x, this.by + y, this.bz - i + 1), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz - i), this.clampY(this.bx + x, this.by - y, this.bz - i + 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz - i), this.clampY(this.bx - x, this.by + y, this.bz - i + 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz - i), this.clampY(this.bx - x, this.by - y, this.bz - i + 1), v, h);
                         }
                     }
                 }
@@ -199,29 +140,29 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeW(vData v) {
-        int bsize = v.brushSize;
+    private void extrudeN(final vData v) {
+        final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(tb.getWorld().getName());
+        vUndo h = new vUndo(this.tb.getWorld().getName());
 
-        double bpow = Math.pow(bsize + trueCircle, 2);
+        final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
-            double xpow = Math.pow(x, 2);
+            final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    if (awto) {
-                        for (int i = 0; i <= level - 1; i++) {
-                            h = perform(clampY(bx + x, by + y, bz + i), clampY(bx + x, by + y, bz + i + 1), v, h);
-                            h = perform(clampY(bx + x, by - y, bz + i), clampY(bx + x, by - y, bz + i + 1), v, h);
-                            h = perform(clampY(bx - x, by + y, bz + i), clampY(bx - x, by + y, bz + i + 1), v, h);
-                            h = perform(clampY(bx - x, by - y, bz + i), clampY(bx - x, by - y, bz + i + 1), v, h);
+                    if (this.awto) {
+                        for (int i = 0; i <= this.level - 1; i++) {
+                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz + y), this.clampY(this.bx - i - 1, this.by + x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz - y), this.clampY(this.bx - i - 1, this.by + x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz + y), this.clampY(this.bx - i - 1, this.by - x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz - y), this.clampY(this.bx - i - 1, this.by - x, this.bz - y), v, h);
                         }
                     } else {
-                        for (int i = 0; i >= level + 1; i--) {
-                            h = perform(clampY(bx + x, by + y, bz + i), clampY(bx + x, by + y, bz + i - 1), v, h);
-                            h = perform(clampY(bx + x, by - y, bz + i), clampY(bx + x, by - y, bz + i - 1), v, h);
-                            h = perform(clampY(bx - x, by + y, bz + i), clampY(bx - x, by + y, bz + i - 1), v, h);
-                            h = perform(clampY(bx - x, by - y, bz + i), clampY(bx - x, by - y, bz + i - 1), v, h);
+                        for (int i = 0; i >= this.level + 1; i--) {
+                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz + y), this.clampY(this.bx - i + 1, this.by + x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - i, this.by + x, this.bz - y), this.clampY(this.bx - i + 1, this.by + x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz + y), this.clampY(this.bx - i + 1, this.by - x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - i, this.by - x, this.bz - y), this.clampY(this.bx - i + 1, this.by - x, this.bz - y), v, h);
                         }
                     }
                 }
@@ -231,29 +172,29 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeE(vData v) {
-        int bsize = v.brushSize;
+    private void extrudeS(final vData v) {
+        final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(tb.getWorld().getName());
+        vUndo h = new vUndo(this.tb.getWorld().getName());
 
-        double bpow = Math.pow(bsize + trueCircle, 2);
+        final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
-            double xpow = Math.pow(x, 2);
+            final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    if (awto) {
-                        for (int i = 0; i <= level - 1; i++) {
-                            h = perform(clampY(bx + x, by + y, bz - i), clampY(bx + x, by + y, bz - i - 1), v, h);
-                            h = perform(clampY(bx + x, by - y, bz - i), clampY(bx + x, by - y, bz - i - 1), v, h);
-                            h = perform(clampY(bx - x, by + y, bz - i), clampY(bx - x, by + y, bz - i - 1), v, h);
-                            h = perform(clampY(bx - x, by - y, bz - i), clampY(bx - x, by - y, bz - i - 1), v, h);
+                    if (this.awto) {
+                        for (int i = 0; i <= this.level - 1; i++) {
+                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz + y), this.clampY(this.bx + i + 1, this.by + x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz - y), this.clampY(this.bx + i + 1, this.by + x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz + y), this.clampY(this.bx + i + 1, this.by - x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz - y), this.clampY(this.bx + i + 1, this.by - x, this.bz - y), v, h);
                         }
                     } else {
-                        for (int i = 0; i >= level + 1; i--) {
-                            h = perform(clampY(bx + x, by + y, bz - i), clampY(bx + x, by + y, bz - i + 1), v, h);
-                            h = perform(clampY(bx + x, by - y, bz - i), clampY(bx + x, by - y, bz - i + 1), v, h);
-                            h = perform(clampY(bx - x, by + y, bz - i), clampY(bx - x, by + y, bz - i + 1), v, h);
-                            h = perform(clampY(bx - x, by - y, bz - i), clampY(bx - x, by - y, bz - i + 1), v, h);
+                        for (int i = 0; i >= this.level + 1; i--) {
+                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz + y), this.clampY(this.bx + i - 1, this.by + x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + i, this.by + x, this.bz - y), this.clampY(this.bx + i - 1, this.by + x, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz + y), this.clampY(this.bx + i - 1, this.by - x, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + i, this.by - x, this.bz - y), this.clampY(this.bx + i - 1, this.by - x, this.bz - y), v, h);
                         }
                     }
                 }
@@ -263,29 +204,29 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeU(vData v) {
-        int bsize = v.brushSize;
+    private void extrudeU(final vData v) {
+        final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(tb.getWorld().getName());
+        vUndo h = new vUndo(this.tb.getWorld().getName());
 
-        double bpow = Math.pow(bsize + trueCircle, 2);
+        final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
-            double xpow = Math.pow(x, 2);
+            final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    if (awto) {
-                        for (int i = 0; i <= level - 1; i++) {
-                            h = perform(clampY(bx + x, by + i, bz + y), clampY(bx + x, by + i + 1, bz + y), v, h);
-                            h = perform(clampY(bx + x, by + i, bz - y), clampY(bx + x, by + i + 1, bz - y), v, h);
-                            h = perform(clampY(bx - x, by + i, bz + y), clampY(bx - x, by + i + 1, bz + y), v, h);
-                            h = perform(clampY(bx - x, by + i, bz - y), clampY(bx - x, by + i + 1, bz - y), v, h);
+                    if (this.awto) {
+                        for (int i = 0; i <= this.level - 1; i++) {
+                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz + y), this.clampY(this.bx + x, this.by + i + 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz - y), this.clampY(this.bx + x, this.by + i + 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz + y), this.clampY(this.bx - x, this.by + i + 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz - y), this.clampY(this.bx - x, this.by + i + 1, this.bz - y), v, h);
                         }
                     } else {
-                        for (int i = 0; i >= level + 1; i--) {
-                            h = perform(clampY(bx + x, by + i, bz + y), clampY(bx + x, by + i - 1, bz + y), v, h);
-                            h = perform(clampY(bx + x, by + i, bz - y), clampY(bx + x, by + i - 1, bz - y), v, h);
-                            h = perform(clampY(bx - x, by + i, bz + y), clampY(bx - x, by + i - 1, bz + y), v, h);
-                            h = perform(clampY(bx - x, by + i, bz - y), clampY(bx - x, by + i - 1, bz - y), v, h);
+                        for (int i = 0; i >= this.level + 1; i--) {
+                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz + y), this.clampY(this.bx + x, this.by + i - 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by + i, this.bz - y), this.clampY(this.bx + x, this.by + i - 1, this.bz - y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz + y), this.clampY(this.bx - x, this.by + i - 1, this.bz + y), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + i, this.bz - y), this.clampY(this.bx - x, this.by + i - 1, this.bz - y), v, h);
                         }
                     }
                 }
@@ -295,29 +236,29 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeD(vData v) {
-        int bsize = v.brushSize;
+    private void extrudeW(final vData v) {
+        final int bsize = v.brushSize;
 
-        vUndo h = new vUndo(tb.getWorld().getName());
+        vUndo h = new vUndo(this.tb.getWorld().getName());
 
-        double bpow = Math.pow(bsize + trueCircle, 2);
+        final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
-            double xpow = Math.pow(x, 2);
+            final double xpow = Math.pow(x, 2);
             for (int y = bsize; y >= 0; y--) {
                 if ((xpow + Math.pow(y, 2)) <= bpow) {
-                    if (awto) {
-                        for (int i = 0; i <= level - 1; i++) {
-                            h = perform(clampY(bx + x, by - i, bz + y), clampY(bx + x, by - i - 1, bz + y), v, h);
-                            h = perform(clampY(bx + x, by - i, bz - y), clampY(bx + x, by - i - 1, bz - y), v, h);
-                            h = perform(clampY(bx - x, by - i, bz + y), clampY(bx - x, by - i - 1, bz + y), v, h);
-                            h = perform(clampY(bx - x, by - i, bz - y), clampY(bx - x, by - i - 1, bz - y), v, h);
+                    if (this.awto) {
+                        for (int i = 0; i <= this.level - 1; i++) {
+                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz + i), this.clampY(this.bx + x, this.by + y, this.bz + i + 1), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz + i), this.clampY(this.bx + x, this.by - y, this.bz + i + 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz + i), this.clampY(this.bx - x, this.by + y, this.bz + i + 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz + i), this.clampY(this.bx - x, this.by - y, this.bz + i + 1), v, h);
                         }
                     } else {
-                        for (int i = 0; i >= level + 1; i--) {
-                            h = perform(clampY(bx + x, by - i, bz + y), clampY(bx + x, by - i + 1, bz + y), v, h);
-                            h = perform(clampY(bx + x, by - i, bz - y), clampY(bx + x, by - i + 1, bz - y), v, h);
-                            h = perform(clampY(bx - x, by - i, bz + y), clampY(bx - x, by - i + 1, bz + y), v, h);
-                            h = perform(clampY(bx - x, by - i, bz - y), clampY(bx - x, by - i + 1, bz - y), v, h);
+                        for (int i = 0; i >= this.level + 1; i--) {
+                            h = this.perform(this.clampY(this.bx + x, this.by + y, this.bz + i), this.clampY(this.bx + x, this.by + y, this.bz + i - 1), v, h);
+                            h = this.perform(this.clampY(this.bx + x, this.by - y, this.bz + i), this.clampY(this.bx + x, this.by - y, this.bz + i - 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by + y, this.bz + i), this.clampY(this.bx - x, this.by + y, this.bz + i - 1), v, h);
+                            h = this.perform(this.clampY(this.bx - x, this.by - y, this.bz + i), this.clampY(this.bx - x, this.by - y, this.bz + i - 1), v, h);
                         }
                     }
                 }
@@ -327,29 +268,86 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private vUndo perform(Block b1, Block b2, vData v, vUndo h) {
+    private vUndo perform(final Block b1, final Block b2, final vData v, final vUndo h) {
         if ((b2.getY() > 128) || (b2.getY() < 0)) {
             return h;
         }
 
-        if (v.voxelList.contains(getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()))) {
+        if (v.voxelList.contains(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()))) {
             h.put(b2);
-            setBlockIdAt(getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), b2.getX(), b2.getY(), b2.getZ());
-            clampY(b2.getX(), b2.getY(), b2.getZ()).setData(clampY(b1.getX(), b1.getY(), b1.getZ()).getData());
+            this.setBlockIdAt(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), b2.getX(), b2.getY(), b2.getZ());
+            this.clampY(b2.getX(), b2.getY(), b2.getZ()).setData(this.clampY(b1.getX(), b1.getY(), b1.getZ()).getData());
         }
 
         return h;
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    private void pre(final vData v, final BlockFace bf) {
+        if (bf == null) {
+            return;
+        }
+
+        this.level = v.voxelHeight;
+
+        if (this.level == 0) {
+            return;
+        } else if (!this.awto) {
+            if (this.level > 0) {
+                this.level = -1 * this.level;
+            }
+        } else if (this.awto) {
+            if (this.level < 0) {
+                this.level = -1 * this.level;
+            }
+        }
+
+        switch (bf) {
+        case NORTH:
+            this.extrudeN(v);
+            break;
+
+        case SOUTH:
+            this.extrudeS(v);
+            break;
+
+        case EAST:
+            this.extrudeE(v);
+            break;
+
+        case WEST:
+            this.extrudeW(v);
+            break;
+
+        case UP:
+            this.extrudeU(v);
+            break;
+
+        case DOWN:
+            this.extrudeD(v);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.awto = false;
+
+        this.pre(v, this.tb.getFace(this.lb));
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.awto = true;
+
+        this.pre(v, this.tb.getFace(this.lb));
+    }
 }

@@ -1,17 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import java.util.Random;
+
 import org.bukkit.ChatColor;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class SplatterVoxelDisc extends PerformBrush {
@@ -21,28 +19,39 @@ public class SplatterVoxelDisc extends PerformBrush {
     protected int splatterrecursions; // How many times you grow the seeds
     protected Random generator = new Random();
 
+    private static int timesUsed = 0;
+
     public SplatterVoxelDisc() {
-        name = "Splatter Voxel Disc";
+        this.name = "Splatter Voxel Disc";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        vsplatterdisc(v);
+    public final int getTimesUsed() {
+        return SplatterVoxelDisc.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = lb.getX();
-        by = lb.getY();
-        bz = lb.getZ();
-        vsplatterdisc(v);
+    public final void info(final vMessage vm) {
+        if (this.seedpercent < 1 || this.seedpercent > 9999) {
+            this.seedpercent = 1000;
+        }
+        if (this.growpercent < 1 || this.growpercent > 9999) {
+            this.growpercent = 1000;
+        }
+        if (this.splatterrecursions < 1 || this.splatterrecursions > 10) {
+            this.splatterrecursions = 3;
+        }
+        vm.brushName("Splatter Voxel Disc");
+        vm.size();
+        // vm.voxel();
+        vm.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedpercent / 100 + "%");
+        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growpercent / 100 + "%");
+        vm.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterrecursions);
+
     }
 
     @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Splatter Voxel Disc brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b svd s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
@@ -52,28 +61,28 @@ public class SplatterVoxelDisc extends PerformBrush {
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("s")) {
-                double temp = Integer.parseInt(par[x].replace("s", ""));
+                final double temp = Integer.parseInt(par[x].replace("s", ""));
                 if (temp >= 1 && temp <= 9999) {
                     v.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
-                    seedpercent = (int) temp;
+                    this.seedpercent = (int) temp;
                 } else {
                     v.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
                 }
                 continue;
             } else if (par[x].startsWith("g")) {
-                double temp = Integer.parseInt(par[x].replace("g", ""));
+                final double temp = Integer.parseInt(par[x].replace("g", ""));
                 if (temp >= 1 && temp <= 9999) {
                     v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
-                    growpercent = (int) temp;
+                    this.growpercent = (int) temp;
                 } else {
                     v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
                 }
                 continue;
             } else if (par[x].startsWith("r")) {
-                int temp = Integer.parseInt(par[x].replace("r", ""));
+                final int temp = Integer.parseInt(par[x].replace("r", ""));
                 if (temp >= 1 && temp <= 10) {
                     v.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
-                    splatterrecursions = temp;
+                    this.splatterrecursions = temp;
                 } else {
                     v.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
                 }
@@ -87,63 +96,47 @@ public class SplatterVoxelDisc extends PerformBrush {
     }
 
     @Override
-    public void info(vMessage vm) {
-        if (seedpercent < 1 || seedpercent > 9999) {
-            seedpercent = 1000;
-        }
-        if (growpercent < 1 || growpercent > 9999) {
-            growpercent = 1000;
-        }
-        if (splatterrecursions < 1 || splatterrecursions > 10) {
-            splatterrecursions = 3;
-        }
-        vm.brushName("Splatter Voxel Disc");
-        vm.size();
-        //vm.voxel();
-        vm.custom(ChatColor.BLUE + "Seed percent set to: " + seedpercent / 100 + "%");
-        vm.custom(ChatColor.BLUE + "Growth percent set to: " + growpercent / 100 + "%");
-        vm.custom(ChatColor.BLUE + "Recursions set to: " + splatterrecursions);
-
+    public final void setTimesUsed(final int tUsed) {
+        SplatterVoxelDisc.timesUsed = tUsed;
     }
 
-    public void vsplatterdisc(vData v) {
-        if (seedpercent < 1 || seedpercent > 9999) {
+    public final void vsplatterdisc(final vData v) {
+        if (this.seedpercent < 1 || this.seedpercent > 9999) {
             v.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
-            seedpercent = 1000;
+            this.seedpercent = 1000;
         }
-        if (growpercent < 1 || growpercent > 9999) {
+        if (this.growpercent < 1 || this.growpercent > 9999) {
             v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
-            growpercent = 1000;
+            this.growpercent = 1000;
         }
-        if (splatterrecursions < 1 || splatterrecursions > 10) {
+        if (this.splatterrecursions < 1 || this.splatterrecursions > 10) {
             v.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
-            splatterrecursions = 3;
+            this.splatterrecursions = 3;
         }
-        int bsize = v.brushSize;
-        int bId = v.voxelId;
-        int[][] splat = new int[2 * bsize + 1][2 * bsize + 1];
+        final int bsize = v.brushSize;
+        final int[][] splat = new int[2 * bsize + 1][2 * bsize + 1];
 
         // Seed the array
         for (int x = 2 * bsize; x >= 0; x--) {
             for (int y = 2 * bsize; y >= 0; y--) {
 
-                if (generator.nextInt(10000) <= seedpercent) {
+                if (this.generator.nextInt(10000) <= this.seedpercent) {
                     splat[x][y] = 1;
 
                 }
             }
         }
         // Grow the seeds
-        int gref = growpercent;
+        final int gref = this.growpercent;
         int growcheck;
-        int[][] tempsplat = new int[2 * bsize + 1][2 * bsize + 1];
-        for (int r = 0; r < splatterrecursions; r++) {
+        final int[][] tempsplat = new int[2 * bsize + 1][2 * bsize + 1];
+        for (int r = 0; r < this.splatterrecursions; r++) {
 
-            growpercent = (int) (gref - ((gref / splatterrecursions) * (r)));
+            this.growpercent = gref - ((gref / this.splatterrecursions) * (r));
             for (int x = 2 * bsize; x >= 0; x--) {
                 for (int y = 2 * bsize; y >= 0; y--) {
 
-                    tempsplat[x][y] = splat[x][y]; //prime tempsplat
+                    tempsplat[x][y] = splat[x][y]; // prime tempsplat
 
                     growcheck = 0;
                     if (splat[x][y] == 0) {
@@ -162,14 +155,14 @@ public class SplatterVoxelDisc extends PerformBrush {
 
                     }
 
-                    if (growcheck >= 1 && generator.nextInt(10000) <= growpercent) {
-                        tempsplat[x][y] = 1; //prevent bleed into splat
+                    if (growcheck >= 1 && this.generator.nextInt(10000) <= this.growpercent) {
+                        tempsplat[x][y] = 1; // prevent bleed into splat
                     }
 
                 }
 
             }
-            //integrate tempsplat back into splat at end of iteration
+            // integrate tempsplat back into splat at end of iteration
             for (int x = 2 * bsize; x >= 0; x--) {
                 for (int y = 2 * bsize; y >= 0; y--) {
 
@@ -178,19 +171,18 @@ public class SplatterVoxelDisc extends PerformBrush {
                 }
             }
         }
-        growpercent = gref;
+        this.growpercent = gref;
         // Fill 1x1 holes
         for (int x = 2 * bsize; x >= 0; x--) {
             for (int y = 2 * bsize; y >= 0; y--) {
 
-                if (splat[Math.max(x - 1, 0)][y] == 1 && splat[Math.min(x + 1, 2 * bsize)][y] == 1 && splat[x][Math.max(0, y - 1)] == 1 && splat[x][Math.min(2 * bsize, y + 1)] == 1) {
+                if (splat[Math.max(x - 1, 0)][y] == 1 && splat[Math.min(x + 1, 2 * bsize)][y] == 1 && splat[x][Math.max(0, y - 1)] == 1
+                        && splat[x][Math.min(2 * bsize, y + 1)] == 1) {
                     splat[x][y] = 1;
                 }
 
             }
         }
-
-
 
         // Make the changes
 
@@ -198,27 +190,29 @@ public class SplatterVoxelDisc extends PerformBrush {
 
             for (int y = 2 * bsize; y >= 0; y--) {
 
-
                 if (splat[x][y] == 1) {
 
-                    current.perform(clampY(bx - bsize + x, by, bz - bsize + y));
-
+                    this.current.perform(this.clampY(this.bx - bsize + x, this.by, this.bz - bsize + y));
 
                 }
             }
         }
-        v.storeUndo(current.getUndo());
+        v.storeUndo(this.current.getUndo());
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.vsplatterdisc(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.lb.getX();
+        this.by = this.lb.getY();
+        this.bz = this.lb.getZ();
+        this.vsplatterdisc(v);
+    }
 }

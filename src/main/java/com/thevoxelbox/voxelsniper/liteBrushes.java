@@ -15,8 +15,7 @@ import com.thevoxelbox.voxelsniper.brush.BlendVoxelDisc;
 import com.thevoxelbox.voxelsniper.brush.Blob;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDisc;
-import com.thevoxelbox.voxelsniper.brush.ChunkCoords;
-import com.thevoxelbox.voxelsniper.brush.Clone;
+import com.thevoxelbox.voxelsniper.brush.CloneStamp;
 import com.thevoxelbox.voxelsniper.brush.CopyPasta;
 import com.thevoxelbox.voxelsniper.brush.Disc;
 import com.thevoxelbox.voxelsniper.brush.DiscFace;
@@ -25,13 +24,11 @@ import com.thevoxelbox.voxelsniper.brush.Drain;
 import com.thevoxelbox.voxelsniper.brush.Eraser;
 import com.thevoxelbox.voxelsniper.brush.Erode;
 import com.thevoxelbox.voxelsniper.brush.Line;
-import com.thevoxelbox.voxelsniper.brush.LoadChunk;
 import com.thevoxelbox.voxelsniper.brush.Overlay;
 import com.thevoxelbox.voxelsniper.brush.Painting;
 import com.thevoxelbox.voxelsniper.brush.RandomErode;
 import com.thevoxelbox.voxelsniper.brush.Ring;
 import com.thevoxelbox.voxelsniper.brush.Ruler;
-import com.thevoxelbox.voxelsniper.brush.Savannah;
 import com.thevoxelbox.voxelsniper.brush.Scanner;
 import com.thevoxelbox.voxelsniper.brush.Snipe;
 import com.thevoxelbox.voxelsniper.brush.SplatterBall;
@@ -61,7 +58,7 @@ public enum liteBrushes {
     VOXEL(Voxel.class, "v", "voxel"), // [ 8 ] \\
     VOXEL_DISC(VoxelDisc.class, "vd", "voxeldisc"), // [ 9 ] \\
     VOXEL_DISC_FACE(VoxelDiscFace.class, "vdf", "voxeldiscface"), // [ 11 ] \\
-    CLONE_STAMP(Clone.class, "cs", "clonestamp"), // [ 22 ] \\
+    CLONE_STAMP(CloneStamp.class, "cs", "clonestamp"), // [ 22 ] \\
     ERODE(Erode.class, "e", "erode"), // [ 23 ] \\
     PAINTING(Painting.class, "paint", "painting"), // [ 25 ] \\
     RING(Ring.class, "ri", "ring"), // [ 41 ] \\
@@ -79,23 +76,20 @@ public enum liteBrushes {
     BLEND_BALL(BlendBall.class, "bb", "blendball"), // [ 11 ] \\
     LINE(Line.class, "l", "line"), // [ 12 ] \\
     RANDOM_ERODE(RandomErode.class, "re", "randomerode"), // [ 16 ] \\
-    LOAD_CHUNK(LoadChunk.class, "lc", "loadchunk"), // [ 18 ] \\
     ERASER(Eraser.class, "erase", "eraser"), // [ 20 ] \\
     COPYPASTA(CopyPasta.class, "cp", "copypasta"), // [ 22 ] \\
     TRIANGLE(Triangle.class, "tri", "triangle"), // [ 19 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DivineRage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     SCANNER(Scanner.class, "sc", "scanner"), // [ 5 ] \\
-    GENERATE_TREE(TreeSnipe.class, "t", "treesnipe"), // [ 2 ] \\
+    GENERATE_TREE(TreeSnipe.class, "t", "treesnipe"),   // [ 2 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     DRAIN(Drain.class, "drain", "drain"), // [ 10 ] \\
     DOME(Dome.class, "dome", "domebrush"), // [ 6 ] \\
-    CHUNK_COORDS(ChunkCoords.class, "chc", "chunkcoords"), // [ 15 ] \\
     OVERLAY(Overlay.class, "over", "overlay"), // [ 4 ] \\
     RULER(Ruler.class, "r", "ruler"), // [ 7 ] \\
     VOLT_METER(VoltMeter.class, "volt", "voltmeter"), // [ 8 ] \\
-    SAVANNAH(Savannah.class, "savannah", "savannah"), // [ 9 ]
     STENCILLIST(StencilList.class, "sl", "stencillist"), // [ 24 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Jmck95~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\

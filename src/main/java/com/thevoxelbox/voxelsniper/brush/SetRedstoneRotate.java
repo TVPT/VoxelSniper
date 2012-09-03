@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No worldEdit rotates properly, although it still doesn't flip -Deamon
@@ -19,81 +16,81 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     protected Block b = null;
     protected vUndo h;
 
+    private static int timesUsed = 0;
+
     public SetRedstoneRotate() {
-        name = "Set Redstone Rotate";
+        this.name = "Set Redstone Rotate";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) { // Derp
-        if (set(tb)) {
-            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
-        } else {
-            v.storeUndo(h);
-        }
+    public final int getTimesUsed() {
+        return SetRedstoneRotate.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        if (set(lb)) {
-            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
-        } else {
-            v.storeUndo(h);
-        }
+    public final void info(final vMessage vm) {
+        this.b = null;
+        vm.brushName(this.name);
     }
 
     @Override
-    public void info(vMessage vm) {
-        b = null;
-        vm.brushName(name);
-    }
-
-    @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         super.parameters(par, v);
     }
 
-    private boolean set(Block bl) {
-        if (b == null) {
-            b = bl;
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        SetRedstoneRotate.timesUsed = tUsed;
+    }
+
+    private boolean set(final Block bl) {
+        if (this.b == null) {
+            this.b = bl;
             return true;
         } else {
-            h = new vUndo(b.getWorld().getName());
-            int lowx = (b.getX() <= bl.getX()) ? b.getX() : bl.getX();
-            int lowy = (b.getY() <= bl.getY()) ? b.getY() : bl.getY();
-            int lowz = (b.getZ() <= bl.getZ()) ? b.getZ() : bl.getZ();
-            int highx = (b.getX() >= bl.getX()) ? b.getX() : bl.getX();
-            int highy = (b.getY() >= bl.getY()) ? b.getY() : bl.getY();
-            int highz = (b.getZ() >= bl.getZ()) ? b.getZ() : bl.getZ();
+            this.h = new vUndo(this.b.getWorld().getName());
+            final int lowx = (this.b.getX() <= bl.getX()) ? this.b.getX() : bl.getX();
+            final int lowy = (this.b.getY() <= bl.getY()) ? this.b.getY() : bl.getY();
+            final int lowz = (this.b.getZ() <= bl.getZ()) ? this.b.getZ() : bl.getZ();
+            final int highx = (this.b.getX() >= bl.getX()) ? this.b.getX() : bl.getX();
+            final int highy = (this.b.getY() >= bl.getY()) ? this.b.getY() : bl.getY();
+            final int highz = (this.b.getZ() >= bl.getZ()) ? this.b.getZ() : bl.getZ();
             for (int y = lowy; y <= highy; y++) {
                 for (int x = lowx; x <= highx; x++) {
                     for (int z = lowz; z <= highz; z++) {
-                        perform(clampY(x, y, z));
+                        this.perform(this.clampY(x, y, z));
                     }
                 }
             }
-            b = null;
+            this.b = null;
             return false;
         }
     }
 
-    protected void perform(Block bl) {
-        if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
-            h.put(bl);
-            //System.out.println(bl.getData());
-            bl.setData((((bl.getData() % 4) + 1 < 5) ? (byte) (bl.getData() + 1) : (byte) (bl.getData() - 4)));
-            //System.out.println(bl.getData());
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
+        if (this.set(this.tb)) {
+            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
+        } else {
+            v.storeUndo(this.h);
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    protected final void perform(final Block bl) {
+        if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
+            this.h.put(bl);
+            // System.out.println(bl.getData());
+            bl.setData((((bl.getData() % 4) + 1 < 5) ? (byte) (bl.getData() + 1) : (byte) (bl.getData() - 4)));
+            // System.out.println(bl.getData());
+        }
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        if (this.set(this.lb)) {
+            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
+        } else {
+            v.storeUndo(this.h);
+        }
+    }
 }

@@ -37,6 +37,8 @@ public class ThreePointCircle extends PerformBrush {
     private Vector coordsThree;
     private Tolerance tolerance = Tolerance.DEFAULT;
 
+    private static int timesUsed = 0;
+
     /**
      * Default Constructor.
      */
@@ -61,6 +63,11 @@ public class ThreePointCircle extends PerformBrush {
             this.coordsThree = null;
             v.sendMessage(ChatColor.GRAY + "First Corner set.");
         }
+    }
+
+    @Override
+    public final int getTimesUsed() {
+        return ThreePointCircle.timesUsed;
     }
 
     @Override
@@ -209,16 +216,9 @@ public class ThreePointCircle extends PerformBrush {
         this.coordsThree = null;
 
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        ThreePointCircle.timesUsed = tUsed;
+    }
 }

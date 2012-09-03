@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
+
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
 
 /**
  * Xerox is a Copy/Paste and Stack brush
@@ -26,18 +23,25 @@ public class Xerox extends PerformBrush {
     protected double[] firstCoords = new double[3], secondCoords = new double[3];
     protected vUndo h;
 
+    private static int timesUsed = 0;
+
     public Xerox() {
-        name = "Xerox";
+        this.name = "Xerox";
     }
 
     @Override
-    public void info(vMessage vm) {
-        block = null;
-        vm.brushName(name);
+    public final int getTimesUsed() {
+        return Xerox.timesUsed;
     }
 
     @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void info(final vMessage vm) {
+        this.block = null;
+        vm.brushName(this.name);
+    }
+
+    @Override
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.LIGHT_PURPLE + "Xerox Brush Instructions: ");
             v.sendMessage(ChatColor.LIGHT_PURPLE
@@ -51,7 +55,7 @@ public class Xerox extends PerformBrush {
             return;
         }
         if (par[1].equalsIgnoreCase("stack")) {
-            stack = true;
+            this.stack = true;
             if (par[2].equalsIgnoreCase("info")) {
                 v.sendMessage(ChatColor.BLUE + "Detailed Information on Stack:");
                 v.sendMessage(ChatColor.LIGHT_PURPLE + "  To use Stack type /b xr stack [direction] [ammount]");
@@ -63,29 +67,32 @@ public class Xerox extends PerformBrush {
             }
         }
         if (par[1].equalsIgnoreCase("cp")) {
-            cp = true;
+            this.cp = true;
             // TODO: Write detailed information on Coopy/Paste
             // TODO: Write the copy/paste code >.<
         }
     }
 
     @Override
-    public boolean perform(Action action, com.thevoxelbox.voxelsniper.vData v, Material heldItem, Block clickedBlock, BlockFace clickedFace) {
+    public final boolean perform(final Action action, final com.thevoxelbox.voxelsniper.vData v, final Material heldItem, final Block clickedBlock,
+            final BlockFace clickedFace) {
         switch (action) {
         case RIGHT_CLICK_AIR:
         case RIGHT_CLICK_BLOCK:
             switch (heldItem) {
             case ARROW:
-                if (stack) {
-                    bx = tb.getX();
-                    by = tb.getY();
-                    bz = tb.getZ();
+                if (this.stack) {
+                    this.bx = this.tb.getX();
+                    this.by = this.tb.getY();
+                    this.bz = this.tb.getZ();
 
-                } else if (cp) {
+                } else if (this.cp) {
                 } else {
                     return false;
                 }
             case SULPHUR:
+            default:
+                break;
             }
         case LEFT_CLICK_AIR:
         case LEFT_CLICK_BLOCK:
@@ -99,27 +106,18 @@ public class Xerox extends PerformBrush {
         return false;
     }
 
-    private boolean XeroxA(Block block1) {
-        if (block == null) {
-            block = block1;
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Xerox.timesUsed = tUsed;
+    }
+
+    private boolean XeroxA(final Block block1) {
+        if (this.block == null) {
+            this.block = block1;
             return true;
         } else {
-            int lowx = (block.getX() <= block1.getX()) ? block.getX() : block1.getX();
-
-            block = null;
+            this.block = null;
             return false;
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
-
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
 }

@@ -1,21 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import net.minecraft.server.EntityCreature;
 import net.minecraft.server.NPC;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class EntityRemoval extends Brush {
@@ -23,42 +21,55 @@ public class EntityRemoval extends Brush {
     private int entcount = 0;
     private int chunkcount = 0;
 
+    private static int timesUsed = 0;
+
     public EntityRemoval() {
-        name = "Entity Removal";
+        this.name = "Entity Removal";
     }
 
     @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final int getTimesUsed() {
+        return EntityRemoval.timesUsed;
+    }
+
+    @Override
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.size();
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        radialRemoval(v);
+    public final void setTimesUsed(final int tUsed) {
+        EntityRemoval.timesUsed = tUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        radialRemoval(v);
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.radialRemoval(v);
     }
 
-    protected void radialRemoval(vData v) {
-        entcount = 0;
-        chunkcount = 0;
-        Chunk ch = tb.getChunk();
-        removeEntities(ch);
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.radialRemoval(v);
+    }
+
+    protected final void radialRemoval(final vData v) {
+        this.entcount = 0;
+        this.chunkcount = 0;
+        final Chunk ch = this.tb.getChunk();
+        this.removeEntities(ch);
         for (int x = ch.getX() - v.brushSize; x <= ch.getX() + v.brushSize; x++) {
             for (int z = ch.getZ() - v.brushSize; z <= ch.getZ() + v.brushSize; z++) {
-                removeEntities(w.getChunkAt(x, z));
-                chunkcount++;
+                this.removeEntities(this.w.getChunkAt(x, z));
+                this.chunkcount++;
             }
         }
-        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entcount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkcount + ChatColor.GREEN + " chunks.");
+        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + this.entcount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + this.chunkcount
+                + ChatColor.GREEN + " chunks.");
     }
 
-    protected void removeEntities(Chunk c) {
-        for (Entity e : c.getEntities()) {
+    protected final void removeEntities(final Chunk c) {
+        for (final Entity e : c.getEntities()) {
             if (e instanceof Player) {
                 continue;
             } else if (e instanceof org.bukkit.entity.Painting) {
@@ -70,20 +81,8 @@ public class EntityRemoval extends Brush {
                     }
                 }
                 e.remove();
-                entcount++;
+                this.entcount++;
             }
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
-
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
 }

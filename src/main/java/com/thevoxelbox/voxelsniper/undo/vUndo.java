@@ -1,261 +1,151 @@
 package com.thevoxelbox.voxelsniper.undo;
 
-import com.thevoxelbox.voxelsniper.VoxelSniper;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
 /**
  * VoxelUndo class holds block data in form of vBlock objects
- *
+ * 
  * @author Voxel
  */
 public class vUndo {
 
-    private uCollection all;
-    private uCollection falloff;
-    private uCollection dropdown;
-    private String worldName;
-    private World w;
+    private static final Set<Material> FALLING_MATERIALS = new TreeSet<Material>();
+    private static final Set<Material> FALLOFF_MATERIALS = new TreeSet<Material>();
+
+    static {
+        vUndo.FALLING_MATERIALS.add(Material.WATER);
+        vUndo.FALLING_MATERIALS.add(Material.STATIONARY_WATER);
+        vUndo.FALLING_MATERIALS.add(Material.LAVA);
+        vUndo.FALLING_MATERIALS.add(Material.STATIONARY_LAVA);
+
+        vUndo.FALLOFF_MATERIALS.add(Material.SAPLING);
+        vUndo.FALLOFF_MATERIALS.add(Material.BED_BLOCK);
+        vUndo.FALLOFF_MATERIALS.add(Material.POWERED_RAIL);
+        vUndo.FALLOFF_MATERIALS.add(Material.DETECTOR_RAIL);
+        vUndo.FALLOFF_MATERIALS.add(Material.LONG_GRASS);
+        vUndo.FALLOFF_MATERIALS.add(Material.DEAD_BUSH);
+        vUndo.FALLOFF_MATERIALS.add(Material.PISTON_EXTENSION);
+        vUndo.FALLOFF_MATERIALS.add(Material.YELLOW_FLOWER);
+        vUndo.FALLOFF_MATERIALS.add(Material.RED_ROSE);
+        vUndo.FALLOFF_MATERIALS.add(Material.BROWN_MUSHROOM);
+        vUndo.FALLOFF_MATERIALS.add(Material.RED_MUSHROOM);
+        vUndo.FALLOFF_MATERIALS.add(Material.TORCH);
+        vUndo.FALLOFF_MATERIALS.add(Material.FIRE);
+        vUndo.FALLOFF_MATERIALS.add(Material.CROPS);
+        vUndo.FALLOFF_MATERIALS.add(Material.SIGN_POST);
+        vUndo.FALLOFF_MATERIALS.add(Material.WOODEN_DOOR);
+        vUndo.FALLOFF_MATERIALS.add(Material.LADDER);
+        vUndo.FALLOFF_MATERIALS.add(Material.RAILS);
+        vUndo.FALLOFF_MATERIALS.add(Material.WALL_SIGN);
+        vUndo.FALLOFF_MATERIALS.add(Material.LEVER);
+        vUndo.FALLOFF_MATERIALS.add(Material.STONE_PLATE);
+        vUndo.FALLOFF_MATERIALS.add(Material.IRON_DOOR_BLOCK);
+        vUndo.FALLOFF_MATERIALS.add(Material.WOOD_PLATE);
+        vUndo.FALLOFF_MATERIALS.add(Material.REDSTONE_TORCH_OFF);
+        vUndo.FALLOFF_MATERIALS.add(Material.REDSTONE_TORCH_ON);
+        vUndo.FALLOFF_MATERIALS.add(Material.STONE_BUTTON);
+        vUndo.FALLOFF_MATERIALS.add(Material.SNOW);
+        vUndo.FALLOFF_MATERIALS.add(Material.CACTUS);
+        vUndo.FALLOFF_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
+        vUndo.FALLOFF_MATERIALS.add(Material.CAKE_BLOCK);
+        vUndo.FALLOFF_MATERIALS.add(Material.DIODE_BLOCK_OFF);
+        vUndo.FALLOFF_MATERIALS.add(Material.DIODE_BLOCK_ON);
+        vUndo.FALLOFF_MATERIALS.add(Material.TRAP_DOOR);
+        vUndo.FALLOFF_MATERIALS.add(Material.PUMPKIN_STEM);
+        vUndo.FALLOFF_MATERIALS.add(Material.MELON_STEM);
+        vUndo.FALLOFF_MATERIALS.add(Material.VINE);
+        vUndo.FALLOFF_MATERIALS.add(Material.WATER_LILY);
+        vUndo.FALLOFF_MATERIALS.add(Material.NETHER_WARTS);
+    }
+
+    private final List<uBlock> all;
+    private final List<uBlock> falloff;
+    private final List<uBlock> dropdown;
+
+    private final String worldName;
+
+    private final World world;
 
     /**
      * Default constructor of a vUndo container
-     *
-     * @param wName name of the world the blocks reside in
+     * 
+     * @param wName
+     *            name of the world the blocks reside in
      */
-    public vUndo(String wName) {
-        worldName = wName;
-        all = new uCollection();
-        falloff = new uCollection();
-        dropdown = new uCollection();
+    public vUndo(final String wName) {
+        this.worldName = wName;
+        this.world = Bukkit.getServer().getWorld(this.worldName);
+        this.all = new LinkedList<uBlock>();
+        this.falloff = new LinkedList<uBlock>();
+        this.dropdown = new LinkedList<uBlock>();
     }
 
-    public vUndo(String wName, int scale) {
-        worldName = wName;
-        all = new uCollection(scale);
-        falloff = new uCollection(scale);
-        dropdown = new uCollection(scale);
+    /**
+     * Get the number of blocks in the collection
+     * 
+     * @return size of the vUndo collection
+     */
+    public int getSize() {
+        return this.all.size();
     }
 
     /**
      * Adds a Block to the collection
-     *
-     * @param b Block to be added
+     * 
+     * @param b
+     *            Block to be added
      */
-    public void put(Block b) { // 63 68 
+    public void put(final Block b) { // 63 68
         if (b.getTypeId() == 63 || b.getTypeId() == 68) {
-            all.add(new uBlockSign(b));
+            this.put(new uBlockSign(b));
         } else if (b.getTypeId() == 25) {
-            all.add(new uBlockNote(b));
+            this.put(new uBlockNote(b));
         } else {
-            all.add(new uBlock(b));
+            this.put(new uBlock(b));
         }
     }
 
     /**
      * Adds a vBlock to the collection
-     *
-     * @param b vBlock to be added
+     * 
+     * @param b
+     *            vBlock to be added
      */
-//    public void put(vBlock b) {
-//        hm.add(b);
-//    }
-    public void put(uBlock b) {
-        all.add(b);
+    public void put(final uBlock b) {
+        this.all.add(b);
+        if (vUndo.FALLOFF_MATERIALS.contains(Material.getMaterial(b.id))) {
+            this.falloff.add(b);
+        } else if (vUndo.FALLING_MATERIALS.contains(Material.getMaterial(b.id))) {
+            this.dropdown.add(b);
+        }
     }
 
     /**
-     * Get the number of blocks in the collection
-     *
-     * @return size of the vUndo collection
-     */
-    public int getSize() {
-        return all.getSize();
-    }
-
-    /**
-     * This method begins the process of replacing the blocks stored in this
-     * collection
+     * This method begins the process of replacing the blocks stored in this collection
      */
     public void undo() {
-        w = Bukkit.getServer().getWorld(worldName);
-        if(all.getSize() == 0) {
-            return;
-        }
-        uIterator itr = all.getIterator();
-        do {
-            sort(itr.getNext());
-        } while (itr.hasNext());
 
-        falloff.setAll(w);
-        dropdown.setAll(w);
-    }
-
-    private void sort(uBlock b) {
-        if (fallsOff(b.id)) {
-            falloff.add(b);
-        } else if (falling(b.id)) {
-            dropdown.add(b);
-        } else {
-            b.set(w);
-        }
-    }
-
-    private void setBlock(vBlock vb) {
-        w.getBlockAt(vb.x, vb.y, vb.z).setTypeIdAndData(vb.id, vb.d, false);
-    }
-
-    /**
-     * Checks whether a block falls off. Doesn't stay in mid air.
-     * 
-     * @param id The id to be checked.
-     * @return true if the block falls off. Otherwise false
-     */
-    public static boolean fallsOff(int id) {  // Converted to binary tree. Will really only make a difference when Undo'ing things 100+'ish (But will make ClonePaint faster)
-
-        // 6-
-        // 26  27  28-
-        // 31  32-
-        // 34-
-        // 37  38  39  40-
-        // 50  51-
-        // 59-
-        // 63  64  65  66-
-        // 68  69  70  71  72-
-        // 75  76  77  78-
-        // 81-
-        // 83-
-        // 92  93  94-
-        // 96-
-        // 104 105 106-
-        // 111-
-        // 115-
-
-        if (id > 5) {
-            if (id < 59) {
-                if (id < 34) {
-                    if (id < 26) {
-                        if (id == 6) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        if (id < 29) {
-                            return true;
-                        } else {
-                            if (id < 33 && id > 30) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    }
-                } else if (id > 34) {
-                    if (id > 40) {
-                        if (id > 49 && id < 52) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else if (id > 38) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return true;
-                }
-            } else if (id > 59) {
-                if (id < 83) {
-                    if (id < 68) {
-                        if (id > 62 && id < 67) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        if (id < 73) {
-                            return true;
-                        } else {
-                            if (id > 74) {
-                                if (id < 79 || id == 81) {
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            } else {
-                                return false;
-                            }
-                        }
-                    }
-                } else if (id > 83) {
-                    if (id < 96) {
-                        if (id > 91 && id < 95) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else if (id > 96) {
-                        if (id < 111) {
-                            if (id > 103 && id < 107) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        } else if (id > 111) {
-                            if (id == 115) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
-            } else {
-                return true;
+        for (final uBlock _block : this.all) {
+            if (this.falloff.contains(_block) || this.dropdown.contains(_block)) {
+                continue;
             }
-        } else {
-            return false;
+            _block.set(this.world);
         }
 
-        // 6-
-        // 26  27  28-
-        // 31  32-
-        // 34-
-        // 37  38  39  40-
-        // 50  51-
-        // 59-
-        // 63  64  65  66-
-        // 68  69  70  71  72-
-        // 75  76  77  78-
-        // 81-
-        // 83-
-        // 92  93  94-
-        // 96-
-        // 104 105 106-
-        // 111-
-        // 115-
-    }
+        for (final uBlock _block : this.falloff) {
+            _block.set(this.world);
+        }
 
-    /**
-     * Checks whether a block falls. Water, lava, sand, gravel etc.
-     * 
-     * @param id The id to be checked.
-     * @return true if the block falls. Otherwise false
-     */
-    public static boolean falling(int id) {
-        if ((id > 7 && id < 14) || id == 122) {
-            return true;
-        } else {
-            return false;
+        for (final uBlock _block : this.dropdown) {
+            _block.set(this.world);
         }
     }
 }

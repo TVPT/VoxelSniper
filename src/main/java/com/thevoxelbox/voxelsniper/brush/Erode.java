@@ -1,22 +1,54 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.uBlock;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.uBlock;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+
 /**
- * THIS BRUSH SHOULD NOT USE PERFORMERS
- *
+ * 
  * @author Piotr
  */
 public class Erode extends Brush {
+
+    private class eBlock {
+
+        public boolean solid;
+        Block b;
+        public int id;
+        public int i;
+
+        public eBlock(final Block bl) {
+            this.b = bl;
+            this.i = bl.getTypeId();
+            switch (bl.getType()) {
+            case AIR:
+                this.solid = false;
+                break;
+
+            case WATER:
+                this.solid = false;
+                break;
+
+            case STATIONARY_WATER:
+                this.solid = false;
+                break;
+
+            case STATIONARY_LAVA:
+                this.solid = false;
+                break;
+            case LAVA:
+                this.solid = false;
+                break;
+
+            default:
+                this.solid = true;
+            }
+        }
+    }
 
     private eBlock[][][] snap;
     private eBlock[][][] firstSnap;
@@ -27,53 +59,33 @@ public class Erode extends Brush {
     private int erodeRecursion = 1;
     private int fillRecursion = 1;
     private double trueCircle = 0.5;
+
     private boolean reverse = false;
 
+    private static int timesUsed = 0;
+
     public Erode() {
-        name = "Erode";
+        this.name = "Erode";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-
-        bsize = v.brushSize;
-
-        snap = new eBlock[0][0][0];
-        reverse = false;
-
-        erosion(v);
+    public final int getTimesUsed() {
+        return Erode.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-
-        bsize = v.brushSize;
-
-        snap = new eBlock[0][0][0];
-        reverse = true;
-
-        erosion(v);
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.size();
         vm.custom(ChatColor.RED + "Litesnipers: This is a slow brush.  DO NOT SPAM it too much or hold down the mouse. ");
-        vm.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + erodeFace);
-        vm.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + fillFace);
-        vm.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + erodeRecursion);
-        vm.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + fillRecursion);
+        vm.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.erodeFace);
+        vm.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.fillFace);
+        vm.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.erodeRecursion);
+        vm.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.fillRecursion);
     }
 
     @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Erode brush parameters");
             v.sendMessage(ChatColor.RED + "NOT for litesnipers:");
@@ -87,115 +99,154 @@ public class Erode extends Brush {
             return;
         }
         if (par[1].equalsIgnoreCase("info2")) {
-            v.sendMessage(ChatColor.GOLD + "User-friendly Preset Options.  These are for the arrow.  Powder will do reverse for the first two (for fast switching):");
+            v.sendMessage(ChatColor.GOLD
+                    + "User-friendly Preset Options.  These are for the arrow.  Powder will do reverse for the first two (for fast switching):");
             v.sendMessage(ChatColor.BLUE + "OK for litesnipers:");
             v.sendMessage(ChatColor.GREEN + "/b e melt -- for melting away protruding corners and edges.");
             v.sendMessage(ChatColor.AQUA + "/b e fill -- for building up inside corners");
-            v.sendMessage(ChatColor.AQUA + "/b e smooth -- For the most part, does not change total number of blocks, but smooths the shape nicely.  Use as a finishing touch for the most part, before overlaying grass and trees, etc.");
-            v.sendMessage(ChatColor.BLUE + "/b e lift-- More or less raises each block in the brush area by one");  // Giltwist
+            v.sendMessage(ChatColor.AQUA
+                    + "/b e smooth -- For the most part, does not change total number of blocks, but smooths the shape nicely.  Use as a finishing touch for the most part, before overlaying grass and trees, etc.");
+            v.sendMessage(ChatColor.BLUE + "/b e lift-- More or less raises each block in the brush area by one"); // Giltwist
             return;
         }
         for (int x = 1; x < par.length; x++) {
             try {
                 if (par[x].startsWith("melt")) {
-                    fillRecursion = 1;
-                    erodeRecursion = 1;
-                    fillFace = 5;
-                    erodeFace = 2;
+                    this.fillRecursion = 1;
+                    this.erodeRecursion = 1;
+                    this.fillFace = 5;
+                    this.erodeFace = 2;
                     v.owner().setBrushSize(10);
                     v.sendMessage(ChatColor.AQUA + "Melt mode. (/b e e2 f5 re1 rf1 b10)");
                     continue;
                 } else if (par[x].startsWith("fill")) {
-                    fillRecursion = 1;
-                    erodeRecursion = 1;
-                    fillFace = 2;
-                    erodeFace = 5;
+                    this.fillRecursion = 1;
+                    this.erodeRecursion = 1;
+                    this.fillFace = 2;
+                    this.erodeFace = 5;
                     v.owner().setBrushSize(8);
                     v.sendMessage(ChatColor.AQUA + "Fill mode. (/b e e5 f2 re1 rf1 b8)");
                     continue;
                 } else if (par[x].startsWith("smooth")) {
-                    fillRecursion = 1;
-                    erodeRecursion = 1;
-                    fillFace = 3;
-                    erodeFace = 3;
+                    this.fillRecursion = 1;
+                    this.erodeRecursion = 1;
+                    this.fillFace = 3;
+                    this.erodeFace = 3;
                     v.owner().setBrushSize(16);
                     v.sendMessage(ChatColor.AQUA + "Smooth mode. (/b e e3 f3 re1 rf1 b16)");
                     continue;
-                } else if (par[x].startsWith("lift")) { //Giltwist
-                    fillRecursion = 1;
-                    erodeRecursion = 0;
-                    fillFace = 1;
-                    erodeFace = 6;
+                } else if (par[x].startsWith("lift")) { // Giltwist
+                    this.fillRecursion = 1;
+                    this.erodeRecursion = 0;
+                    this.fillFace = 1;
+                    this.erodeFace = 6;
                     v.owner().setBrushSize(10);
                     v.sendMessage(ChatColor.AQUA + "Lift mode. (/b e e6 f1 re0 rf1 b10)");
                     continue;
                 } else if (par[x].startsWith("true")) {
-                    trueCircle = 0.5;
-                    v.sendMessage(ChatColor.AQUA + "True circle mode ON." + erodeRecursion);
+                    this.trueCircle = 0.5;
+                    v.sendMessage(ChatColor.AQUA + "True circle mode ON." + this.erodeRecursion);
                     continue;
                 } else if (par[x].startsWith("false")) {
-                    trueCircle = 0;
-                    v.sendMessage(ChatColor.AQUA + "True circle mode OFF." + erodeRecursion);
+                    this.trueCircle = 0;
+                    v.sendMessage(ChatColor.AQUA + "True circle mode OFF." + this.erodeRecursion);
                     continue;
                 } else if (par[x].startsWith("rf")) {
-                    fillRecursion = Integer.parseInt(par[x].replace("rf", ""));
-                    v.sendMessage(ChatColor.BLUE + "Fill recursion amount set to " + fillRecursion);
+                    this.fillRecursion = Integer.parseInt(par[x].replace("rf", ""));
+                    v.sendMessage(ChatColor.BLUE + "Fill recursion amount set to " + this.fillRecursion);
                     continue;
                 } else if (par[x].startsWith("re")) {
-                    erodeRecursion = Integer.parseInt(par[x].replace("re", ""));
-                    v.sendMessage(ChatColor.AQUA + "Erosion recursion amount set to " + erodeRecursion);
+                    this.erodeRecursion = Integer.parseInt(par[x].replace("re", ""));
+                    v.sendMessage(ChatColor.AQUA + "Erosion recursion amount set to " + this.erodeRecursion);
                     continue;
 
                 } else if (par[x].startsWith("f")) {
-                    fillFace = Integer.parseInt(par[x].replace("f", ""));
-                    v.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + fillFace);
+                    this.fillFace = Integer.parseInt(par[x].replace("f", ""));
+                    v.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + this.fillFace);
                     continue;
                 } else if (par[x].startsWith("b")) {
                     v.owner().setBrushSize(Integer.parseInt(par[x].replace("b", "")));
-                    //v.sendMessage(ChatColor.GREEN + "Brush size set to " + v.brushSize);  // - setBrushSize(#) already prints info
+                    // v.sendMessage(ChatColor.GREEN + "Brush size set to " + v.brushSize); // - setBrushSize(#) already prints info
                     continue;
                 } else if (par[x].startsWith("e")) {
-                    erodeFace = Integer.parseInt(par[x].replace("e", ""));
-                    v.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + erodeFace);
+                    this.erodeFace = Integer.parseInt(par[x].replace("e", ""));
+                    v.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.erodeFace);
                     continue;
                 } else {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
                 }
-            } catch (Exception e) {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + par[x] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
+            } catch (final Exception e) {
+                v.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + par[x]
+                        + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
             }
         }
     }
 
-    private void erosion(vData v) {
-        if (reverse) {
-            int temp = erodeFace;
-            erodeFace = fillFace;
-            fillFace = temp;
-            temp = erodeRecursion;
-            erodeRecursion = fillRecursion;
-            fillRecursion = temp;
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Erode.timesUsed = tUsed;
+    }
+
+    private boolean erode(final int x, final int y, final int z) {
+        if (this.snap[x][y][z].solid) {
+            int d = 0;
+            if (!this.snap[x + 1][y][z].solid) {
+                d++;
+            }
+            if (!this.snap[x - 1][y][z].solid) {
+                d++;
+            }
+            if (!this.snap[x][y + 1][z].solid) {
+                d++;
+            }
+            if (!this.snap[x][y - 1][z].solid) {
+                d++;
+            }
+            if (!this.snap[x][y][z + 1].solid) {
+                d++;
+            }
+            if (!this.snap[x][y][z - 1].solid) {
+                d++;
+            }
+            if (d >= this.erodeFace) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
-        vUndo h = new vUndo(tb.getWorld().getName());
+    }
 
-        if (erodeFace >= 0 && erodeFace <= 6) {
-            for (int er = 0; er < erodeRecursion; er++) {
-                getMatrix();
+    private void erosion(final vData v) {
+        if (this.reverse) {
+            int temp = this.erodeFace;
+            this.erodeFace = this.fillFace;
+            this.fillFace = temp;
+            temp = this.erodeRecursion;
+            this.erodeRecursion = this.fillRecursion;
+            this.fillRecursion = temp;
+        }
+        final vUndo h = new vUndo(this.tb.getWorld().getName());
 
-                int derp = bsize + 1;
+        if (this.erodeFace >= 0 && this.erodeFace <= 6) {
+            for (int er = 0; er < this.erodeRecursion; er++) {
+                this.getMatrix();
 
-                double bpow = Math.pow(bsize + trueCircle, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
+                final int derp = this.bsize + 1;
 
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
+                final double bpow = Math.pow(this.bsize + this.trueCircle, 2);
+                for (int z = 1; z < this.snap.length - 1; z++) {
 
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
+                    final double zpow = Math.pow(z - derp, 2);
+                    for (int x = 1; x < this.snap.length - 1; x++) {
+
+                        final double xpow = Math.pow(x - derp, 2);
+                        for (int y = 1; y < this.snap.length - 1; y++) {
 
                             if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (erode(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(0);
+                                if (this.erode(x, y, z)) {
+                                    this.snap[x][y][z].b.setTypeId(0);
                                 }
                             }
                         }
@@ -203,24 +254,24 @@ public class Erode extends Brush {
                 }
             }
         }
-        if (fillFace >= 0 && fillFace <= 6) {
-            for (int fr = 0; fr < fillRecursion; fr++) {
-                getMatrix();
+        if (this.fillFace >= 0 && this.fillFace <= 6) {
+            for (int fr = 0; fr < this.fillRecursion; fr++) {
+                this.getMatrix();
 
-                int derp = bsize + 1;
+                final int derp = this.bsize + 1;
 
-                double bpow = Math.pow(bsize + 0.5, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
+                final double bpow = Math.pow(this.bsize + 0.5, 2);
+                for (int z = 1; z < this.snap.length - 1; z++) {
 
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
+                    final double zpow = Math.pow(z - derp, 2);
+                    for (int x = 1; x < this.snap.length - 1; x++) {
 
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
+                        final double xpow = Math.pow(x - derp, 2);
+                        for (int y = 1; y < this.snap.length - 1; y++) {
 
                             if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (fill(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(snap[x][y][z].id);
+                                if (this.fill(x, y, z)) {
+                                    this.snap[x][y][z].b.setTypeId(this.snap[x][y][z].id);
                                 }
                             }
                         }
@@ -229,10 +280,10 @@ public class Erode extends Brush {
             }
         }
 
-        for (int x = 0; x < firstSnap.length; x++) {
-            for (int y = 0; y < firstSnap.length; y++) {
-                for (int z = 0; z < firstSnap.length; z++) {
-                    eBlock e = firstSnap[x][y][z];
+        for (int x = 0; x < this.firstSnap.length; x++) {
+            for (int y = 0; y < this.firstSnap.length; y++) {
+                for (int z = 0; z < this.firstSnap.length; z++) {
+                    final eBlock e = this.firstSnap[x][y][z];
                     if (e.i != e.b.getTypeId()) {
                         h.put(new uBlock(e.b, e.i));
                     }
@@ -241,122 +292,120 @@ public class Erode extends Brush {
         }
 
         v.storeUndo(h);
-        if (reverse) { //if you dont put it back where it was, powder flips back and forth from fill to erode each time
-            int temp = erodeFace;
-            erodeFace = fillFace;
-            fillFace = temp;
-            temp = erodeRecursion;
-            erodeRecursion = fillRecursion;
-            fillRecursion = temp;
+        if (this.reverse) { // if you dont put it back where it was, powder flips back and forth from fill to erode each time
+            int temp = this.erodeFace;
+            this.erodeFace = this.fillFace;
+            this.fillFace = temp;
+            temp = this.erodeRecursion;
+            this.erodeRecursion = this.fillRecursion;
+            this.fillRecursion = temp;
         }
     }
 
-    /* private void filling(vSniper v) {
-     * vUndo h = new vUndo(tb.getWorld().getName());
-     *
-     * if (fillFace >= 0 && fillFace <= 6) {
-     * for (int fr = 0; fr < fillRecursion; fr++) {
-     * getMatrix();
-     *
+    private boolean fill(final int x, final int y, final int z) {
+        if (this.snap[x][y][z].solid) {
+            return false;
+        } else {
+            int d = 0;
+            if (this.snap[x + 1][y][z].solid) {
+                this.snap[x][y][z].id = this.snap[x + 1][y][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x - 1][y][z].solid) {
+                this.snap[x][y][z].id = this.snap[x - 1][y][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y + 1][z].solid) {
+                this.snap[x][y][z].id = this.snap[x][y + 1][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y - 1][z].solid) {
+                this.snap[x][y][z].id = this.snap[x][y - 1][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y][z + 1].solid) {
+                this.snap[x][y][z].id = this.snap[x][y][z + 1].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y][z - 1].solid) {
+                this.snap[x][y][z].id = this.snap[x][y][z - 1].b.getTypeId();
+                d++;
+            }
+            if (d >= this.fillFace) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /*
+     * private void filling(vSniper v) { vUndo h = new vUndo(tb.getWorld().getName());
+     * 
+     * if (fillFace >= 0 && fillFace <= 6) { for (int fr = 0; fr < fillRecursion; fr++) { getMatrix();
+     * 
      * int derp = bsize + 1;
-     *
-     * double bpow = Math.pow(bsize + 0.5, 2);
-     * for (int z = 1; z < snap.length - 1; z++) {
-     *
-     * double zpow = Math.pow(z - derp, 2);
-     * for (int x = 1; x < snap.length - 1; x++) {
-     *
-     * double xpow = Math.pow(x - derp, 2);
-     * for (int y = 1; y < snap.length - 1; y++) {
-     *
-     * if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-     * if (fill(x, y, z)) {
-     * snap[x][y][z].b.setTypeId(snap[x][y][z].id);
-     * }
-     * }
-     * }
-     * }
-     * }
-     * }
-     * }
-     * if (erodeFace >= 0 && erodeFace <= 6) {
-     * for (int er = 0; er < erodeRecursion; er++) {
-     * getMatrix();
-     *
+     * 
+     * double bpow = Math.pow(bsize + 0.5, 2); for (int z = 1; z < snap.length - 1; z++) {
+     * 
+     * double zpow = Math.pow(z - derp, 2); for (int x = 1; x < snap.length - 1; x++) {
+     * 
+     * double xpow = Math.pow(x - derp, 2); for (int y = 1; y < snap.length - 1; y++) {
+     * 
+     * if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) { if (fill(x, y, z)) { snap[x][y][z].b.setTypeId(snap[x][y][z].id); } } } } } } } if (erodeFace >= 0
+     * && erodeFace <= 6) { for (int er = 0; er < erodeRecursion; er++) { getMatrix();
+     * 
      * int derp = bsize + 1;
-     *
-     * double bpow = Math.pow(bsize + trueCircle, 2);
-     * for (int z = 1; z < snap.length - 1; z++) {
-     *
-     * double zpow = Math.pow(z - derp, 2);
-     * for (int x = 1; x < snap.length - 1; x++) {
-     *
-     * double xpow = Math.pow(x - derp, 2);
-     * for (int y = 1; y < snap.length - 1; y++) {
-     *
-     * if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-     * if (erode(x, y, z)) {
-     * snap[x][y][z].b.setTypeId(0);
-     * }
-     * }
-     * }
-     * }
-     * }
-     * }
-     * }
-     *
-     * for (int x = 0; x < firstSnap.length; x++) {
-     * for (int y = 0; y < firstSnap.length; y++) {
-     * for (int z = 0; z < firstSnap.length; z++) {
-     * eBlock e = firstSnap[x][y][z];
-     * if (e.i != e.b.getTypeId()) {
-     * h.put(new vBlock(e.b, e.i));
-     * }
-     * }
-     * }
-     * }
-     *
-     * v.hashUndo.put(v.hashEn, h);
-     * v.hashEn++;
-     * }
-     *
+     * 
+     * double bpow = Math.pow(bsize + trueCircle, 2); for (int z = 1; z < snap.length - 1; z++) {
+     * 
+     * double zpow = Math.pow(z - derp, 2); for (int x = 1; x < snap.length - 1; x++) {
+     * 
+     * double xpow = Math.pow(x - derp, 2); for (int y = 1; y < snap.length - 1; y++) {
+     * 
+     * if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) { if (erode(x, y, z)) { snap[x][y][z].b.setTypeId(0); } } } } } } }
+     * 
+     * for (int x = 0; x < firstSnap.length; x++) { for (int y = 0; y < firstSnap.length; y++) { for (int z = 0; z < firstSnap.length; z++) { eBlock e =
+     * firstSnap[x][y][z]; if (e.i != e.b.getTypeId()) { h.put(new vBlock(e.b, e.i)); } } } }
+     * 
+     * v.hashUndo.put(v.hashEn, h); v.hashEn++; }
      */
     private void getMatrix() {
-        brushSize = ((bsize + 1) * 2) + 1;
+        this.brushSize = ((this.bsize + 1) * 2) + 1;
 
-        if (snap.length == 0) {
-            snap = new eBlock[brushSize][brushSize][brushSize];
+        if (this.snap.length == 0) {
+            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
-            int derp = (bsize + 1);
-            int sx = bx - (bsize + 1);
-            int sy = by - (bsize + 1);
-            int sz = bz - (bsize + 1);
-            for (int x = 0; x < snap.length; x++) {
-                sz = bz - derp;
-                for (int z = 0; z < snap.length; z++) {
-                    sy = by - derp;
-                    for (int y = 0; y < snap.length; y++) {
-                        snap[x][y][z] = new eBlock(clampY(sx, sy, sz));
+            final int derp = (this.bsize + 1);
+            int sx = this.bx - (this.bsize + 1);
+            int sy = this.by - (this.bsize + 1);
+            int sz = this.bz - (this.bsize + 1);
+            for (int x = 0; x < this.snap.length; x++) {
+                sz = this.bz - derp;
+                for (int z = 0; z < this.snap.length; z++) {
+                    sy = this.by - derp;
+                    for (int y = 0; y < this.snap.length; y++) {
+                        this.snap[x][y][z] = new eBlock(this.clampY(sx, sy, sz));
                         sy++;
                     }
                     sz++;
                 }
                 sx++;
             }
-            firstSnap = snap.clone();
+            this.firstSnap = this.snap.clone();
         } else {
-            snap = new eBlock[brushSize][brushSize][brushSize];
+            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
-            int derp = (bsize + 1);
-            int sx = bx - (bsize + 1);
-            int sy = by - (bsize + 1);
-            int sz = bz - (bsize + 1);
-            for (int x = 0; x < snap.length; x++) {
-                sz = bz - derp;
-                for (int z = 0; z < snap.length; z++) {
-                    sy = by - derp;
-                    for (int y = 0; y < snap.length; y++) {
-                        snap[x][y][z] = new eBlock(clampY(sx, sy, sz));
+            final int derp = (this.bsize + 1);
+            int sx = this.bx - (this.bsize + 1);
+            int sy = this.by - (this.bsize + 1);
+            int sz = this.bz - (this.bsize + 1);
+            for (int x = 0; x < this.snap.length; x++) {
+                sz = this.bz - derp;
+                for (int z = 0; z < this.snap.length; z++) {
+                    sy = this.by - derp;
+                    for (int y = 0; y < this.snap.length; y++) {
+                        this.snap[x][y][z] = new eBlock(this.clampY(sx, sy, sz));
                         sy++;
                     }
                     sz++;
@@ -366,119 +415,31 @@ public class Erode extends Brush {
         }
     }
 
-    private boolean erode(int x, int y, int z) {
-        if (snap[x][y][z].solid) {
-            int d = 0;
-            if (!snap[x + 1][y][z].solid) {
-                d++;
-            }
-            if (!snap[x - 1][y][z].solid) {
-                d++;
-            }
-            if (!snap[x][y + 1][z].solid) {
-                d++;
-            }
-            if (!snap[x][y - 1][z].solid) {
-                d++;
-            }
-            if (!snap[x][y][z + 1].solid) {
-                d++;
-            }
-            if (!snap[x][y][z - 1].solid) {
-                d++;
-            }
-            if (d >= erodeFace) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    private boolean fill(int x, int y, int z) {
-        if (snap[x][y][z].solid) {
-            return false;
-        } else {
-            int d = 0;
-            if (snap[x + 1][y][z].solid) {
-                snap[x][y][z].id = snap[x + 1][y][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x - 1][y][z].solid) {
-                snap[x][y][z].id = snap[x - 1][y][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y + 1][z].solid) {
-                snap[x][y][z].id = snap[x][y + 1][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y - 1][z].solid) {
-                snap[x][y][z].id = snap[x][y - 1][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y][z + 1].solid) {
-                snap[x][y][z].id = snap[x][y][z + 1].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y][z - 1].solid) {
-                snap[x][y][z].id = snap[x][y][z - 1].b.getTypeId();
-                d++;
-            }
-            if (d >= fillFace) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    private class eBlock {
-
-        public boolean solid;
-        Block b;
-        public int id;
-        public int i;
-
-        public eBlock(Block bl) {
-            b = bl;
-            i = bl.getTypeId();
-            switch (bl.getType()) {
-                case AIR:
-                    solid = false;
-                    break;
-
-                case WATER:
-                    solid = false;
-                    break;
-
-                case STATIONARY_WATER:
-                    solid = false;
-                    break;
-
-                case STATIONARY_LAVA:
-                    solid = false;
-                    break;
-                case LAVA:
-                    solid = false;
-                    break;
-
-                default:
-                    solid = true;
-            }
-        }
-    }
-    
-    private static int timesUsed = 0;
-	
     @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+        this.bsize = v.brushSize;
+
+        this.snap = new eBlock[0][0][0];
+        this.reverse = false;
+
+        this.erosion(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+
+        this.bsize = v.brushSize;
+
+        this.snap = new eBlock[0][0][0];
+        this.reverse = true;
+
+        this.erosion(v);
+    }
 }

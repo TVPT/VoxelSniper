@@ -1,22 +1,55 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.undo.uBlock;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import java.util.Random;
+
 import org.bukkit.block.Block;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.undo.uBlock;
+import com.thevoxelbox.voxelsniper.undo.vUndo;
+
 /**
- *
- * @author Piotr
- * Randomized by Giltwist
+ * 
+ * @author Piotr Randomized by Giltwist
  */
 public class RandomErode extends Brush {
+
+    private class eBlock {
+
+        public boolean solid;
+        Block b;
+        public int id;
+        public int i;
+
+        public eBlock(final Block bl) {
+            this.b = bl;
+            this.i = bl.getTypeId();
+            switch (bl.getType()) {
+            case AIR:
+                this.solid = false;
+                break;
+
+            case WATER:
+                this.solid = false;
+                break;
+
+            case STATIONARY_WATER:
+                this.solid = false;
+                break;
+
+            case STATIONARY_LAVA:
+                this.solid = false;
+                break;
+            case LAVA:
+                this.solid = false;
+                break;
+
+            default:
+                this.solid = true;
+            }
+        }
+    }
 
     private eBlock[][][] snap;
     private eBlock[][][] firstSnap;
@@ -26,237 +59,137 @@ public class RandomErode extends Brush {
     private int brushSize;
     private int erodeRecursion = 1;
     private int fillRecursion = 1;
-    private double trueCircle = 0.5;
+    private final double trueCircle = 0.5;
+
     protected Random generator = new Random();
 
+    private static int timesUsed = 0;
+
     public RandomErode() {
-        name = "RandomErode";
+        this.name = "RandomErode";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-
-        bsize = v.brushSize;
-
-        snap = new eBlock[0][0][0];
-
-        erodeFace = generator.nextInt(5) + 1;
-        fillFace = generator.nextInt(3) + 3;
-        erodeRecursion = generator.nextInt(3);
-        fillRecursion = generator.nextInt(3);
-
-        if (fillRecursion == 0 && erodeRecursion == 0) { //if they are both zero, it will lead to a null pointer exception.  Still want to give them a chance to be zero though, for more interestingness -Gav
-            erodeRecursion = generator.nextInt(2) + 1;
-            fillRecursion = generator.nextInt(2) + 1;
-        }
-
-        rerosion(v);
+    public final int getTimesUsed() {
+        return RandomErode.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-
-        bsize = v.brushSize;
-
-        snap = new eBlock[0][0][0];
-
-        erodeFace = generator.nextInt(3) + 3;
-        fillFace = generator.nextInt(5) + 1;
-        erodeRecursion = generator.nextInt(3);
-        fillRecursion = generator.nextInt(3);
-        if (fillRecursion == 0 && erodeRecursion == 0) { //if they are both zero, it will lead to a null pointer exception.  Still want to give them a chance to be zero though, for more interestingness -Gav
-            erodeRecursion = generator.nextInt(2) + 1;
-            fillRecursion = generator.nextInt(2) + 1;
-        }
-
-        rfilling(v);
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.size();
 
     }
 
-    private void rerosion(vData v) {
-        vUndo h = new vUndo(tb.getWorld().getName());
-
-        if (erodeFace >= 0 && erodeFace <= 6) {
-            for (int er = 0; er < erodeRecursion; er++) {
-                getMatrix();
-
-                int derp = bsize + 1;
-
-                double bpow = Math.pow(bsize + trueCircle, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
-
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
-
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
-
-                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (erode(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (fillFace >= 0 && fillFace <= 6) {
-            for (int fr = 0; fr < fillRecursion; fr++) {
-                getMatrix();
-
-                int derp = bsize + 1;
-
-                double bpow = Math.pow(bsize + 0.5, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
-
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
-
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
-
-                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (fill(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(snap[x][y][z].id);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int x = 0; x < firstSnap.length; x++) {
-            for (int y = 0; y < firstSnap.length; y++) {
-                for (int z = 0; z < firstSnap.length; z++) {
-                    eBlock e = firstSnap[x][y][z];
-                    if (e.i != e.b.getTypeId()) {
-                        h.put(new uBlock(e.b, e.i));
-                    }
-                }
-            }
-        }
-
-        v.storeUndo(h);
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        RandomErode.timesUsed = tUsed;
     }
 
-    private void rfilling(vData v) {
-        vUndo h = new vUndo(tb.getWorld().getName());
+    private boolean erode(final int x, final int y, final int z) {
+        if (this.snap[x][y][z].solid) {
+            int d = 0;
+            if (!this.snap[x + 1][y][z].solid) {
+                d++;
+            }
+            if (!this.snap[x - 1][y][z].solid) {
+                d++;
+            }
+            if (!this.snap[x][y + 1][z].solid) {
+                d++;
+            }
+            if (!this.snap[x][y - 1][z].solid) {
+                d++;
+            }
+            if (!this.snap[x][y][z + 1].solid) {
+                d++;
+            }
+            if (!this.snap[x][y][z - 1].solid) {
+                d++;
+            }
+            if (d >= this.erodeFace) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
-        if (fillFace >= 0 && fillFace <= 6) {
-            for (int fr = 0; fr < fillRecursion; fr++) {
-                getMatrix();
-
-                int derp = bsize + 1;
-
-                double bpow = Math.pow(bsize + 0.5, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
-
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
-
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
-
-                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (fill(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(snap[x][y][z].id);
-                                }
-                            }
-                        }
-                    }
-                }
+    private boolean fill(final int x, final int y, final int z) {
+        if (this.snap[x][y][z].solid) {
+            return false;
+        } else {
+            int d = 0;
+            if (this.snap[x + 1][y][z].solid) {
+                this.snap[x][y][z].id = this.snap[x + 1][y][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x - 1][y][z].solid) {
+                this.snap[x][y][z].id = this.snap[x - 1][y][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y + 1][z].solid) {
+                this.snap[x][y][z].id = this.snap[x][y + 1][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y - 1][z].solid) {
+                this.snap[x][y][z].id = this.snap[x][y - 1][z].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y][z + 1].solid) {
+                this.snap[x][y][z].id = this.snap[x][y][z + 1].b.getTypeId();
+                d++;
+            }
+            if (this.snap[x][y][z - 1].solid) {
+                this.snap[x][y][z].id = this.snap[x][y][z - 1].b.getTypeId();
+                d++;
+            }
+            if (d >= this.fillFace) {
+                return true;
+            } else {
+                return false;
             }
         }
-        if (erodeFace >= 0 && erodeFace <= 6) {
-            for (int er = 0; er < erodeRecursion; er++) {
-                getMatrix();
-
-                int derp = bsize + 1;
-
-                double bpow = Math.pow(bsize + trueCircle, 2);
-                for (int z = 1; z < snap.length - 1; z++) {
-
-                    double zpow = Math.pow(z - derp, 2);
-                    for (int x = 1; x < snap.length - 1; x++) {
-
-                        double xpow = Math.pow(x - derp, 2);
-                        for (int y = 1; y < snap.length - 1; y++) {
-
-                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
-                                if (erode(x, y, z)) {
-                                    snap[x][y][z].b.setTypeId(0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int x = 0; x < firstSnap.length; x++) {
-            for (int y = 0; y < firstSnap.length; y++) {
-                for (int z = 0; z < firstSnap.length; z++) {
-                    eBlock e = firstSnap[x][y][z];
-                    if (e.i != e.b.getTypeId()) {
-                        h.put(new uBlock(e.b, e.i));
-                    }
-                }
-            }
-        }
-
-        v.storeUndo(h);
     }
 
     private void getMatrix() {
-        brushSize = ((bsize + 1) * 2) + 1;
+        this.brushSize = ((this.bsize + 1) * 2) + 1;
 
-        if (snap.length == 0) {
-            snap = new eBlock[brushSize][brushSize][brushSize];
+        if (this.snap.length == 0) {
+            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
-            int derp = (bsize + 1);
-            int sx = bx - (bsize + 1);
-            int sy = by - (bsize + 1);
-            int sz = bz - (bsize + 1);
-            for (int x = 0; x < snap.length; x++) {
-                sz = bz - derp;
-                for (int z = 0; z < snap.length; z++) {
-                    sy = by - derp;
-                    for (int y = 0; y < snap.length; y++) {
-                        snap[x][y][z] = new eBlock(clampY(sx, sy, sz));
+            final int derp = (this.bsize + 1);
+            int sx = this.bx - (this.bsize + 1);
+            int sy = this.by - (this.bsize + 1);
+            int sz = this.bz - (this.bsize + 1);
+            for (int x = 0; x < this.snap.length; x++) {
+                sz = this.bz - derp;
+                for (int z = 0; z < this.snap.length; z++) {
+                    sy = this.by - derp;
+                    for (int y = 0; y < this.snap.length; y++) {
+                        this.snap[x][y][z] = new eBlock(this.clampY(sx, sy, sz));
                         sy++;
                     }
                     sz++;
                 }
                 sx++;
             }
-            firstSnap = snap.clone();
+            this.firstSnap = this.snap.clone();
         } else {
-            snap = new eBlock[brushSize][brushSize][brushSize];
+            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
-            int derp = (bsize + 1);
-            int sx = bx - (bsize + 1);
-            int sy = by - (bsize + 1);
-            int sz = bz - (bsize + 1);
-            for (int x = 0; x < snap.length; x++) {
-                sz = bz - derp;
-                for (int z = 0; z < snap.length; z++) {
-                    sy = by - derp;
-                    for (int y = 0; y < snap.length; y++) {
-                        snap[x][y][z] = new eBlock(clampY(sx, sy, sz));
+            final int derp = (this.bsize + 1);
+            int sx = this.bx - (this.bsize + 1);
+            int sy = this.by - (this.bsize + 1);
+            int sz = this.bz - (this.bsize + 1);
+            for (int x = 0; x < this.snap.length; x++) {
+                sz = this.bz - derp;
+                for (int z = 0; z < this.snap.length; z++) {
+                    sy = this.by - derp;
+                    for (int y = 0; y < this.snap.length; y++) {
+                        this.snap[x][y][z] = new eBlock(this.clampY(sx, sy, sz));
                         sy++;
                     }
                     sz++;
@@ -266,119 +199,186 @@ public class RandomErode extends Brush {
         }
     }
 
-    private boolean erode(int x, int y, int z) {
-        if (snap[x][y][z].solid) {
-            int d = 0;
-            if (!snap[x + 1][y][z].solid) {
-                d++;
-            }
-            if (!snap[x - 1][y][z].solid) {
-                d++;
-            }
-            if (!snap[x][y + 1][z].solid) {
-                d++;
-            }
-            if (!snap[x][y - 1][z].solid) {
-                d++;
-            }
-            if (!snap[x][y][z + 1].solid) {
-                d++;
-            }
-            if (!snap[x][y][z - 1].solid) {
-                d++;
-            }
-            if (d >= erodeFace) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+    private void rerosion(final vData v) {
+        final vUndo h = new vUndo(this.tb.getWorld().getName());
 
-    private boolean fill(int x, int y, int z) {
-        if (snap[x][y][z].solid) {
-            return false;
-        } else {
-            int d = 0;
-            if (snap[x + 1][y][z].solid) {
-                snap[x][y][z].id = snap[x + 1][y][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x - 1][y][z].solid) {
-                snap[x][y][z].id = snap[x - 1][y][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y + 1][z].solid) {
-                snap[x][y][z].id = snap[x][y + 1][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y - 1][z].solid) {
-                snap[x][y][z].id = snap[x][y - 1][z].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y][z + 1].solid) {
-                snap[x][y][z].id = snap[x][y][z + 1].b.getTypeId();
-                d++;
-            }
-            if (snap[x][y][z - 1].solid) {
-                snap[x][y][z].id = snap[x][y][z - 1].b.getTypeId();
-                d++;
-            }
-            if (d >= fillFace) {
-                return true;
-            } else {
-                return false;
+        if (this.erodeFace >= 0 && this.erodeFace <= 6) {
+            for (int er = 0; er < this.erodeRecursion; er++) {
+                this.getMatrix();
+
+                final int derp = this.bsize + 1;
+
+                final double bpow = Math.pow(this.bsize + this.trueCircle, 2);
+                for (int z = 1; z < this.snap.length - 1; z++) {
+
+                    final double zpow = Math.pow(z - derp, 2);
+                    for (int x = 1; x < this.snap.length - 1; x++) {
+
+                        final double xpow = Math.pow(x - derp, 2);
+                        for (int y = 1; y < this.snap.length - 1; y++) {
+
+                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
+                                if (this.erode(x, y, z)) {
+                                    this.snap[x][y][z].b.setTypeId(0);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-    }
+        if (this.fillFace >= 0 && this.fillFace <= 6) {
+            for (int fr = 0; fr < this.fillRecursion; fr++) {
+                this.getMatrix();
 
-    private class eBlock {
+                final int derp = this.bsize + 1;
 
-        public boolean solid;
-        Block b;
-        public int id;
-        public int i;
+                final double bpow = Math.pow(this.bsize + 0.5, 2);
+                for (int z = 1; z < this.snap.length - 1; z++) {
 
-        public eBlock(Block bl) {
-            b = bl;
-            i = bl.getTypeId();
-            switch (bl.getType()) {
-                case AIR:
-                    solid = false;
-                    break;
+                    final double zpow = Math.pow(z - derp, 2);
+                    for (int x = 1; x < this.snap.length - 1; x++) {
 
-                case WATER:
-                    solid = false;
-                    break;
+                        final double xpow = Math.pow(x - derp, 2);
+                        for (int y = 1; y < this.snap.length - 1; y++) {
 
-                case STATIONARY_WATER:
-                    solid = false;
-                    break;
-
-                case STATIONARY_LAVA:
-                    solid = false;
-                    break;
-                case LAVA:
-                    solid = false;
-                    break;
-
-                default:
-                    solid = true;
+                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
+                                if (this.fill(x, y, z)) {
+                                    this.snap[x][y][z].b.setTypeId(this.snap[x][y][z].id);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
+
+        for (int x = 0; x < this.firstSnap.length; x++) {
+            for (int y = 0; y < this.firstSnap.length; y++) {
+                for (int z = 0; z < this.firstSnap.length; z++) {
+                    final eBlock e = this.firstSnap[x][y][z];
+                    if (e.i != e.b.getTypeId()) {
+                        h.put(new uBlock(e.b, e.i));
+                    }
+                }
+            }
+        }
+
+        v.storeUndo(h);
     }
-    
-    private static int timesUsed = 0;
-	
+
+    private void rfilling(final vData v) {
+        final vUndo h = new vUndo(this.tb.getWorld().getName());
+
+        if (this.fillFace >= 0 && this.fillFace <= 6) {
+            for (int fr = 0; fr < this.fillRecursion; fr++) {
+                this.getMatrix();
+
+                final int derp = this.bsize + 1;
+
+                final double bpow = Math.pow(this.bsize + 0.5, 2);
+                for (int z = 1; z < this.snap.length - 1; z++) {
+
+                    final double zpow = Math.pow(z - derp, 2);
+                    for (int x = 1; x < this.snap.length - 1; x++) {
+
+                        final double xpow = Math.pow(x - derp, 2);
+                        for (int y = 1; y < this.snap.length - 1; y++) {
+
+                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
+                                if (this.fill(x, y, z)) {
+                                    this.snap[x][y][z].b.setTypeId(this.snap[x][y][z].id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (this.erodeFace >= 0 && this.erodeFace <= 6) {
+            for (int er = 0; er < this.erodeRecursion; er++) {
+                this.getMatrix();
+
+                final int derp = this.bsize + 1;
+
+                final double bpow = Math.pow(this.bsize + this.trueCircle, 2);
+                for (int z = 1; z < this.snap.length - 1; z++) {
+
+                    final double zpow = Math.pow(z - derp, 2);
+                    for (int x = 1; x < this.snap.length - 1; x++) {
+
+                        final double xpow = Math.pow(x - derp, 2);
+                        for (int y = 1; y < this.snap.length - 1; y++) {
+
+                            if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) {
+                                if (this.erode(x, y, z)) {
+                                    this.snap[x][y][z].b.setTypeId(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int x = 0; x < this.firstSnap.length; x++) {
+            for (int y = 0; y < this.firstSnap.length; y++) {
+                for (int z = 0; z < this.firstSnap.length; z++) {
+                    final eBlock e = this.firstSnap[x][y][z];
+                    if (e.i != e.b.getTypeId()) {
+                        h.put(new uBlock(e.b, e.i));
+                    }
+                }
+            }
+        }
+
+        v.storeUndo(h);
+    }
+
     @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+        this.bsize = v.brushSize;
+
+        this.snap = new eBlock[0][0][0];
+
+        this.erodeFace = this.generator.nextInt(5) + 1;
+        this.fillFace = this.generator.nextInt(3) + 3;
+        this.erodeRecursion = this.generator.nextInt(3);
+        this.fillRecursion = this.generator.nextInt(3);
+
+        if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
+                                                                   // chance to be zero though, for more interestingness -Gav
+            this.erodeRecursion = this.generator.nextInt(2) + 1;
+            this.fillRecursion = this.generator.nextInt(2) + 1;
+        }
+
+        this.rerosion(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+
+        this.bsize = v.brushSize;
+
+        this.snap = new eBlock[0][0][0];
+
+        this.erodeFace = this.generator.nextInt(3) + 3;
+        this.fillFace = this.generator.nextInt(5) + 1;
+        this.erodeRecursion = this.generator.nextInt(3);
+        this.fillRecursion = this.generator.nextInt(3);
+        if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
+                                                                   // chance to be zero though, for more interestingness -Gav
+            this.erodeRecursion = this.generator.nextInt(2) + 1;
+            this.fillRecursion = this.generator.nextInt(2) + 1;
+        }
+
+        this.rfilling(v);
+    }
 }

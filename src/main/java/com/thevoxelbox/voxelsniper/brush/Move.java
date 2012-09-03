@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -45,7 +47,7 @@ public class Move extends Brush {
         /**
          * Calculated BlockStates of the selection.
          */
-        private ArrayList<BlockState> blockStates = new ArrayList<BlockState>();
+        private final ArrayList<BlockState> blockStates = new ArrayList<BlockState>();
 
         /**
          * Calculates region, then saves all Blocks as BlockState.
@@ -63,7 +65,7 @@ public class Move extends Brush {
                     final int _highx = (this.location1.getBlockX() >= this.location2.getBlockX()) ? this.location1.getBlockX() : this.location2.getBlockX();
                     final int _highy = (this.location1.getBlockY() >= this.location2.getBlockY()) ? this.location1.getBlockY() : this.location2.getBlockY();
                     final int _highz = (this.location1.getBlockZ() >= this.location2.getBlockZ()) ? this.location1.getBlockZ() : this.location2.getBlockZ();
-                    if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > MAX_BLOCK_COUNT) {
+                    if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > Selection.MAX_BLOCK_COUNT) {
                         throw new Exception(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
                     }
                     final World _world = this.location1.getWorld();
@@ -124,43 +126,65 @@ public class Move extends Brush {
     /**
      * Saved direction.
      */
-    private int[] moveDirections = { 0, 0, 0 };
+    private final int[] moveDirections = { 0, 0, 0 };
     /**
      * Breakable Blocks to determine if no-physics should be used.
      */
-    private static final ArrayList<Material> breakableMaterials = new ArrayList<Material>();
+    private static final Set<Material> breakableMaterials = new TreeSet<Material>();
 
     static {
-        breakableMaterials.add(Material.WOOD_DOOR);
-        breakableMaterials.add(Material.WOODEN_DOOR);
-        breakableMaterials.add(Material.PAINTING);
-        breakableMaterials.add(Material.BED);
-        breakableMaterials.add(Material.CROPS);
-        breakableMaterials.add(Material.DETECTOR_RAIL);
-        breakableMaterials.add(Material.LADDER);
-        breakableMaterials.add(Material.LEVER);
-        breakableMaterials.add(Material.LOCKED_CHEST);
-        breakableMaterials.add(Material.CHEST);
-        breakableMaterials.add(Material.DIODE);
-        breakableMaterials.add(Material.DIODE_BLOCK_OFF);
-        breakableMaterials.add(Material.DIODE_BLOCK_ON);
-        breakableMaterials.add(Material.REDSTONE);
-        breakableMaterials.add(Material.REDSTONE_TORCH_OFF);
-        breakableMaterials.add(Material.REDSTONE_TORCH_ON);
-        breakableMaterials.add(Material.REDSTONE_WIRE);
-        breakableMaterials.add(Material.PORTAL);
-        breakableMaterials.add(Material.POWERED_RAIL);
-        breakableMaterials.add(Material.RAILS);
-        breakableMaterials.add(Material.SUGAR_CANE_BLOCK);
-        breakableMaterials.add(Material.IRON_DOOR);
-        breakableMaterials.add(Material.IRON_DOOR_BLOCK);
+        Move.breakableMaterials.add(Material.SAPLING);
+        Move.breakableMaterials.add(Material.BED_BLOCK);
+        Move.breakableMaterials.add(Material.POWERED_RAIL);
+        Move.breakableMaterials.add(Material.DETECTOR_RAIL);
+        Move.breakableMaterials.add(Material.LONG_GRASS);
+        Move.breakableMaterials.add(Material.DEAD_BUSH);
+        Move.breakableMaterials.add(Material.PISTON_EXTENSION);
+        Move.breakableMaterials.add(Material.YELLOW_FLOWER);
+        Move.breakableMaterials.add(Material.RED_ROSE);
+        Move.breakableMaterials.add(Material.BROWN_MUSHROOM);
+        Move.breakableMaterials.add(Material.RED_MUSHROOM);
+        Move.breakableMaterials.add(Material.TORCH);
+        Move.breakableMaterials.add(Material.FIRE);
+        Move.breakableMaterials.add(Material.CROPS);
+        Move.breakableMaterials.add(Material.SIGN_POST);
+        Move.breakableMaterials.add(Material.WOODEN_DOOR);
+        Move.breakableMaterials.add(Material.LADDER);
+        Move.breakableMaterials.add(Material.RAILS);
+        Move.breakableMaterials.add(Material.WALL_SIGN);
+        Move.breakableMaterials.add(Material.LEVER);
+        Move.breakableMaterials.add(Material.STONE_PLATE);
+        Move.breakableMaterials.add(Material.IRON_DOOR_BLOCK);
+        Move.breakableMaterials.add(Material.WOOD_PLATE);
+        Move.breakableMaterials.add(Material.REDSTONE_TORCH_OFF);
+        Move.breakableMaterials.add(Material.REDSTONE_TORCH_ON);
+        Move.breakableMaterials.add(Material.STONE_BUTTON);
+        Move.breakableMaterials.add(Material.SNOW);
+        Move.breakableMaterials.add(Material.CACTUS);
+        Move.breakableMaterials.add(Material.SUGAR_CANE_BLOCK);
+        Move.breakableMaterials.add(Material.CAKE_BLOCK);
+        Move.breakableMaterials.add(Material.DIODE_BLOCK_OFF);
+        Move.breakableMaterials.add(Material.DIODE_BLOCK_ON);
+        Move.breakableMaterials.add(Material.TRAP_DOOR);
+        Move.breakableMaterials.add(Material.PUMPKIN_STEM);
+        Move.breakableMaterials.add(Material.MELON_STEM);
+        Move.breakableMaterials.add(Material.VINE);
+        Move.breakableMaterials.add(Material.WATER_LILY);
+        Move.breakableMaterials.add(Material.NETHER_WARTS);
     }
+
+    private static int timesUsed = 0;
 
     /**
      * 
      */
     public Move() {
-        this.name = "Move Brush";
+        this.name = "Move";
+    }
+
+    @Override
+    public final int getTimesUsed() {
+        return Move.timesUsed;
     }
 
     @Override
@@ -201,6 +225,11 @@ public class Move extends Brush {
                 v.vm.custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
             }
         }
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Move.timesUsed = tUsed;
     }
 
     /**
@@ -246,9 +275,9 @@ public class Move extends Brush {
                 _blockState.getBlock().setType(Material.AIR);
             }
             for (final BlockState _blockState : selection.getBlockStates()) {
-                Block _affectedBlock = _world.getBlockAt(_blockState.getX() + direction[0], _blockState.getY() + direction[1], _blockState.getZ()
+                final Block _affectedBlock = _world.getBlockAt(_blockState.getX() + direction[0], _blockState.getY() + direction[1], _blockState.getZ()
                         + direction[2]);
-                _affectedBlock.setTypeId(_blockState.getTypeId(), !breakableMaterials.contains(_blockState.getType()));
+                _affectedBlock.setTypeId(_blockState.getTypeId(), !Move.breakableMaterials.contains(_blockState.getType()));
                 _affectedBlock.setData(_blockState.getRawData());
             }
         }
@@ -289,17 +318,5 @@ public class Move extends Brush {
             v.sendMessage(_ex.getMessage());
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
-
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
 
 }

@@ -1,64 +1,60 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.vData;
 import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- *
+ * 
  * @author Piotr
  */
 public class Voxel extends PerformBrush {
 
+    private static int timesUsed = 0;
+
     public Voxel() {
-        name = "Voxel";
+        this.name = "Voxel";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        voxel(v);
+    public final int getTimesUsed() {
+        return Voxel.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        arrow(v);
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.size();
     }
 
-    public void voxel(vData v) {
-        int bsize = v.brushSize;
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Voxel.timesUsed = tUsed;
+    }
+
+    public final void voxel(final vData v) {
+        final int bsize = v.brushSize;
 
         for (int z = bsize; z >= -bsize; z--) {
             for (int x = bsize; x >= -bsize; x--) {
                 for (int y = bsize; y >= -bsize; y--) {
-                    current.perform(clampY(bx + x, by + z, bz + y));
+                    this.current.perform(this.clampY(this.bx + x, this.by + z, this.bz + y));
                 }
             }
         }
-        v.storeUndo(current.getUndo());
+        v.storeUndo(this.current.getUndo());
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.voxel(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.arrow(v);
+    }
 }

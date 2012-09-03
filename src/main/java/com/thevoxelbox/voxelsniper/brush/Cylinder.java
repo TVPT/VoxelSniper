@@ -1,77 +1,106 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+
 /**
- *
- * @author Kavutop with exerpts frankenpasted from other brushes
+ * 
+ * @author Kavutop
  */
 public class Cylinder extends PerformBrush {
 
     /**
-     * The starring Y position
-     * At the bottom of the cylinder
+     * The starring Y position At the bottom of the cylinder
      */
     protected int st;
     /**
-     * End Y position
-     * At the top of the cylinder
+     * End Y position At the top of the cylinder
      */
     protected int en;
 
+    double trueCircle = 0;
+
+    private static int timesUsed = 0;
+
     public Cylinder() {
-        name = "Cylinder";
+        this.name = "Cylinder";
+    }
+
+    public final void cylinder(final vData v) {
+        this.st = this.by + v.cCen;
+        this.en = this.by + v.voxelHeight + v.cCen;
+        if (this.en < this.st) {
+            this.en = this.st;
+        }
+        if (this.st < 0) {
+            this.st = 0;
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+        } else if (this.st > 127) {
+            this.st = 127;
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+        }
+        if (this.en < 0) {
+            this.en = 0;
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+        } else if (this.en > 127) {
+            this.en = 127;
+            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+        }
+        final int bsize = v.brushSize;
+
+        final double bpow = Math.pow(bsize + this.trueCircle, 2);
+
+        for (int z = this.en; z >= this.st; z--) {
+            for (int x = bsize; x >= 0; x--) {
+                final double xpow = Math.pow(x, 2);
+                for (int y = bsize; y >= 0; y--) {
+                    if ((xpow + Math.pow(y, 2)) <= bpow) {
+                        this.current.perform(this.clampY(this.bx + x, this.by, this.bz + y));
+                        this.current.perform(this.clampY(this.bx + x, this.by, this.bz - y));
+                        this.current.perform(this.clampY(this.bx - x, this.by, this.bz + y));
+                        this.current.perform(this.clampY(this.bx - x, this.by, this.bz - y));
+                    }
+                }
+            }
+        }
+        v.storeUndo(this.current.getUndo());
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) {
-        bx = tb.getX();
-        by = tb.getY();
-        bz = tb.getZ();
-        cylinder(v);
+    public final int getTimesUsed() {
+        return Cylinder.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        bx = lb.getX();
-        by = lb.getY();
-        bz = lb.getZ();
-        cylinder(v);
-    }
-
-    @Override
-    public void info(vMessage vm) {
-        vm.brushName(name);
+    public final void info(final vMessage vm) {
+        vm.brushName(this.name);
         vm.size();
         vm.height();
         vm.center();
-        //vm.voxel();
+        // vm.voxel();
     }
-    double trueCircle = 0;
 
     @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
-            v.sendMessage(ChatColor.DARK_AQUA + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-            v.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
+            v.sendMessage(ChatColor.DARK_AQUA
+                    + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+            v.sendMessage(ChatColor.DARK_BLUE
+                    + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
             return;
         }
         for (int x = 1; x < par.length; x++) {
             if (par[x].startsWith("true")) {
-                trueCircle = 0.5;
+                this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                 continue;
             } else if (par[x].startsWith("false")) {
-                trueCircle = 0;
+                this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                 continue;
             } else if (par[x].startsWith("h")) {
@@ -88,55 +117,24 @@ public class Cylinder extends PerformBrush {
         }
     }
 
-    public void cylinder(vData v) {
-        st = by + (int) v.cCen;
-        en = by + (int) v.voxelHeight + (int) v.cCen;
-        if (en < st) {
-            en = st;
-        }
-        if (st < 0) {
-            st = 0;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-        } else if (st > 127) {
-            st = 127;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-        }
-        if (en < 0) {
-            en = 0;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-        } else if (en > 127) {
-            en = 127;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-        }
-        int bsize = v.brushSize;
-
-        double bpow = Math.pow(bsize + trueCircle, 2);
-
-        for (int z = en; z >= st; z--) {
-            for (int x = bsize; x >= 0; x--) {
-                double xpow = Math.pow(x, 2);
-                for (int y = bsize; y >= 0; y--) {
-                    if ((xpow + Math.pow(y, 2)) <= bpow) {
-                        current.perform(clampY(bx + x, by, bz + y));
-                        current.perform(clampY(bx + x, by, bz - y));
-                        current.perform(clampY(bx - x, by, bz + y));
-                        current.perform(clampY(bx - x, by, bz - y));
-                    }
-                }
-            }
-        }
-        v.storeUndo(current.getUndo());
-    }
-    
-    private static int timesUsed = 0;
-	
     @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
+    public final void setTimesUsed(final int tUsed) {
+        Cylinder.timesUsed = tUsed;
+    }
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.tb.getX();
+        this.by = this.tb.getY();
+        this.bz = this.tb.getZ();
+        this.cylinder(v);
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.bx = this.lb.getX();
+        this.by = this.lb.getY();
+        this.bz = this.lb.getZ();
+        this.cylinder(v);
+    }
 }

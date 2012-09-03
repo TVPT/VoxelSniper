@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
+import com.thevoxelbox.voxelsniper.vData;
+import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+
 /**
- *
+ * 
  * @author Voxel
  */
 public class Set extends PerformBrush {
@@ -19,83 +16,83 @@ public class Set extends PerformBrush {
     protected int i;
     protected Block b = null;
 
+    private static int timesUsed = 0;
+
     public Set() {
-        name = "Set";
+        this.name = "Set";
     }
 
     @Override
-    protected void arrow(com.thevoxelbox.voxelsniper.vData v) { // Derp
-        i = v.voxelId;
-        if (set(tb, v)) {
-            v.sendMessage(ChatColor.GRAY + "Point one");
-        } else {
-            v.storeUndo(current.getUndo());
-        }
+    public final int getTimesUsed() {
+        return Set.timesUsed;
     }
 
     @Override
-    protected void powder(com.thevoxelbox.voxelsniper.vData v) {
-        i = v.voxelId;
-        if (set(lb, v)) {
-            v.sendMessage(ChatColor.GRAY + "Point one");
-        } else {
-            v.storeUndo(current.getUndo());
-        }
+    public final void info(final vMessage vm) {
+        this.b = null;
+        vm.brushName(this.name);
     }
 
     @Override
-    public void info(vMessage vm) {
-        b = null;
-        vm.brushName(name);
-    }
-
-    @Override
-    public void parameters(String[] par, com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
         super.parameters(par, v);
     }
 
-    private boolean set(Block bl, vData v) {
-        if (b == null) {
-            b = bl;
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Set.timesUsed = tUsed;
+    }
+
+    private boolean set(final Block bl, final vData v) {
+        if (this.b == null) {
+            this.b = bl;
             return true;
         } else {
-            if (!b.getWorld().getName().equals(bl.getWorld().getName())) {
+            if (!this.b.getWorld().getName().equals(bl.getWorld().getName())) {
                 v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
-                b = null;
+                this.b = null;
                 return true;
             }
-            int lowx = (b.getX() <= bl.getX()) ? b.getX() : bl.getX();
-            int lowy = (b.getY() <= bl.getY()) ? b.getY() : bl.getY();
-            int lowz = (b.getZ() <= bl.getZ()) ? b.getZ() : bl.getZ();
-            int highx = (b.getX() >= bl.getX()) ? b.getX() : bl.getX();
-            int highy = (b.getY() >= bl.getY()) ? b.getY() : bl.getY();
-            int highz = (b.getZ() >= bl.getZ()) ? b.getZ() : bl.getZ();
+            final int lowx = (this.b.getX() <= bl.getX()) ? this.b.getX() : bl.getX();
+            final int lowy = (this.b.getY() <= bl.getY()) ? this.b.getY() : bl.getY();
+            final int lowz = (this.b.getZ() <= bl.getZ()) ? this.b.getZ() : bl.getZ();
+            final int highx = (this.b.getX() >= bl.getX()) ? this.b.getX() : bl.getX();
+            final int highy = (this.b.getY() >= bl.getY()) ? this.b.getY() : bl.getY();
+            final int highz = (this.b.getZ() >= bl.getZ()) ? this.b.getZ() : bl.getZ();
             if (Math.abs(highx - lowx) * Math.abs(highz - lowz) * Math.abs(highy - lowy) > 5000000) {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
                 for (int y = lowy; y <= highy; y++) {
                     for (int x = lowx; x <= highx; x++) {
                         for (int z = lowz; z <= highz; z++) {
-                            current.perform(clampY(x, y, z));
+                            this.current.perform(this.clampY(x, y, z));
                         }
                     }
                 }
             }
 
-            b = null;
+            this.b = null;
             return false;
         }
     }
-    
-    private static int timesUsed = 0;
-	
-    @Override
-	public int getTimesUsed() {
-		return timesUsed;
-	}
 
-	@Override
-	public void setTimesUsed(int tUsed) {
-		timesUsed = tUsed; 
-	}
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
+        this.i = v.voxelId;
+        if (this.set(this.tb, v)) {
+            v.sendMessage(ChatColor.GRAY + "Point one");
+        } else {
+            v.storeUndo(this.current.getUndo());
+        }
+    }
+
+    @Override
+    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+        this.i = v.voxelId;
+        if (this.set(this.lb, v)) {
+            v.sendMessage(ChatColor.GRAY + "Point one");
+        } else {
+            v.storeUndo(this.current.getUndo());
+        }
+    }
 }
