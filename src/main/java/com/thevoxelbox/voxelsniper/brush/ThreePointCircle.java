@@ -5,6 +5,7 @@ import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -47,7 +48,7 @@ public class ThreePointCircle extends PerformBrush {
     }
 
     @Override
-    public final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+    protected final void arrow(final SnipeData v) {
         if (this.coordsOne == null) {
             this.coordsOne = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "First Corner set.");
@@ -66,62 +67,7 @@ public class ThreePointCircle extends PerformBrush {
     }
 
     @Override
-    public final int getTimesUsed() {
-        return ThreePointCircle.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        switch (this.tolerance) {
-        case ACCURATE:
-            vm.custom(ChatColor.GOLD + "Mode: Accurate");
-            break;
-        case DEFAULT:
-            vm.custom(ChatColor.GOLD + "Mode: Default");
-            break;
-        case SMOOTH:
-            vm.custom(ChatColor.GOLD + "Mode: Smooth");
-            break;
-        default:
-            vm.custom(ChatColor.GOLD + "Mode: Unknown");
-            break;
-        }
-
-    }
-
-    @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.YELLOW
-                    + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
-            String _toleranceOptions = "";
-            for (final Tolerance _tolerance : Tolerance.values()) {
-                if (!_toleranceOptions.isEmpty()) {
-                    _toleranceOptions += "|";
-                }
-                _toleranceOptions += _tolerance.name().toLowerCase();
-            }
-            v.sendMessage(ChatColor.GOLD + "/b tpc " + _toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
-            return;
-        }
-
-        for (int _i = 1; _i < par.length; _i++) {
-            final String _string = par[_i].toUpperCase();
-            try {
-                this.tolerance = Tolerance.valueOf(_string);
-                v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
-                return;
-            } catch (final IllegalArgumentException _e) {
-                v.getVoxelMessage().brushMessage("No such tolerance.");
-            }
-        }
-    }
-
-    @Override
-    public final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setWorld(v.getWorld());
-
+    protected final void powder(final SnipeData v) {
         if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
             return;
         }
@@ -215,6 +161,59 @@ public class ThreePointCircle extends PerformBrush {
         this.coordsTwo = null;
         this.coordsThree = null;
 
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	switch (this.tolerance) {
+    	case ACCURATE:
+    		vm.custom(ChatColor.GOLD + "Mode: Accurate");
+    		break;
+    	case DEFAULT:
+    		vm.custom(ChatColor.GOLD + "Mode: Default");
+    		break;
+    	case SMOOTH:
+    		vm.custom(ChatColor.GOLD + "Mode: Smooth");
+    		break;
+    	default:
+    		vm.custom(ChatColor.GOLD + "Mode: Unknown");
+    		break;
+    	}
+    	
+    }
+    
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+    	if (par[1].equalsIgnoreCase("info")) {
+    		v.sendMessage(ChatColor.YELLOW
+    				+ "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
+    		String _toleranceOptions = "";
+    		for (final Tolerance _tolerance : Tolerance.values()) {
+    			if (!_toleranceOptions.isEmpty()) {
+    				_toleranceOptions += "|";
+    			}
+    			_toleranceOptions += _tolerance.name().toLowerCase();
+    		}
+    		v.sendMessage(ChatColor.GOLD + "/b tpc " + _toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
+    		return;
+    	}
+    	
+    	for (int _i = 1; _i < par.length; _i++) {
+    		final String _string = par[_i].toUpperCase();
+    		try {
+    			this.tolerance = Tolerance.valueOf(_string);
+    			v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
+    			return;
+    		} catch (final IllegalArgumentException _e) {
+    			v.getVoxelMessage().brushMessage("No such tolerance.");
+    		}
+    	}
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return ThreePointCircle.timesUsed;
     }
 
     @Override

@@ -24,16 +24,6 @@ public class Sneak extends Brush {
     }
 
     @Override
-    public final int getTimesUsed() {
-        return Sneak.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public final boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
         switch (action) {
         case RIGHT_CLICK_AIR:
@@ -121,16 +111,6 @@ public class Sneak extends Brush {
         return false;
     }
 
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        Sneak.timesUsed = tUsed;
-    }
-
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     protected final boolean getSilentTarget(final Sniper v, final Block clickedBlock, final BlockFace clickedFace) {
         this.setWorld(v.getPlayer().getWorld());
         if (clickedBlock != null) {
@@ -166,9 +146,30 @@ public class Sneak extends Brush {
             }
         }
     }
+    
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }       
+
+    @Override
+    public final void info(final Message vm) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Sneak.timesUsed = tUsed;
+    }
+
+
+    @Override
+    public final int getTimesUsed() {
+        return Sneak.timesUsed;
     }
 }

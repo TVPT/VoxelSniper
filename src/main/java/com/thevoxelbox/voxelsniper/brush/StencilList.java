@@ -43,11 +43,726 @@ public class StencilList extends Brush {
     public StencilList() {
         this.setName("StencilList");
     }
+    
+    protected final String readRandomStencil(final SnipeData v) {
+        double _rand = Math.random();
+        _rand = _rand * (this.stencilList.size());
+        final int _choice = (int) (_rand);
+        return this.stencilList.get(_choice);
+    }
+
+    protected final void readStencilList(final String listname, final SnipeData v) {
+        final File _file = new File("plugins/VoxelSniper/stencilLists/" + this.Filename + ".txt");
+        if (_file.exists()) {
+            try {
+                final Scanner _snr = new Scanner(_file);
+                int _counter = 0;
+                while (_snr.hasNext()) {
+                    this.stencilList.put(_counter, _snr.nextLine());
+                    _counter++;
+                }
+                _snr.close();
+            } catch (final Exception _e) {
+                _e.printStackTrace();
+            }
+        }
+    }
+
+    protected final void stencilPaste(final SnipeData v) {
+        if (this.Filename.matches("NoFileLoaded")) {
+            v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
+            return;
+        }
+
+        final String _stencilName = this.readRandomStencil(v);
+        v.sendMessage(_stencilName);
+
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final File _file = new File("plugins/VoxelSniper/stencils/" + _stencilName + ".vstencil");
+
+        if (_file.exists()) {
+            try {
+                final DataInputStream _in = new DataInputStream(new BufferedInputStream(new FileInputStream(_file)));
+
+                this.X = _in.readShort();
+                this.Z = _in.readShort();
+                this.Y = _in.readShort();
+
+                this.Xref = _in.readShort();
+                this.Zref = _in.readShort();
+                this.Yref = _in.readShort();
+
+                final int _numRuns = _in.readInt();
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
+                final int _volume = this.X * this.Y * this.Z;
+                v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + _volume + " blocks.");
+
+                int _currX = -this.Xref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
+                                        // corner, for example.
+                int _currZ = -this.Zref;
+                int _currY = -this.Yref;
+                int _id;
+                int _data;
+                if (this.pasteoption == 0) {
+                    for (int i = 1; i < _numRuns + 1; i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int j = 0; j < numLoops; j++) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                _currX++;
+                                if (_currX == this.X - this.Xref) {
+                                    _currX = -this.Xref;
+                                    _currZ++;
+                                    if (_currZ == this.Z - this.Zref) {
+                                        _currZ = -this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                            this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData((_in.readByte() + 128),
+                                    (byte) (_in.readByte() + 128), false);
+                            _currX++;
+                            if (_currX == this.X - this.Xref) {
+                                _currX = -this.Xref;
+                                _currZ++;
+                                if (_currZ == this.Z - this.Zref) {
+                                    _currZ = -this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else if (this.pasteoption == 1) {
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int j = 0; j < numLoops; j++) {
+                                if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                                  // air, and it prevents us
+                                                                                                                                  // most of the time from
+                                                                                                                                  // having to even check the
+                                                                                                                                  // block.
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                                }
+                                _currX++;
+                                if (_currX == this.X - this.Xref) {
+                                    _currX = -this.Xref;
+                                    _currZ++;
+                                    if (_currZ == this.Z - this.Zref) {
+                                        _currZ = -this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                              // air, and it prevents us most of
+                                                                                                                              // the time from having to even
+                                                                                                                              // check the block.
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                            }
+                            _currX++;
+                            if (_currX == this.X - this.Xref) {
+                                _currX = -this.Xref;
+                                _currZ++;
+                                if (_currZ == this.Z - this.Zref) {
+                                    _currZ = -this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else { // replace
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < (numLoops); _j++) {
+                                if (_id != 0) {
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                }
+                                _currX++;
+                                if (_currX == this.X - this.Xref) {
+                                    _currX = -this.Xref;
+                                    _currZ++;
+                                    if (_currZ == this.Z - this.Zref) {
+                                        _currZ = -this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                            }
+                            _currX++;
+                            if (_currX == this.X) {
+                                _currX = 0;
+                                _currZ++;
+                                if (_currZ == this.Z) {
+                                    _currZ = 0;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                }
+                _in.close();
+                v.storeUndo(_undo);
+
+            } catch (final Exception e) {
+                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
+                e.printStackTrace();
+            }
+        } else {
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+        }
+    }
+
+    protected final void stencilPaste180(final SnipeData v) {
+        if (this.Filename.matches("NoFileLoaded")) {
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
+            return;
+        }
+
+        final String _stencilName = this.readRandomStencil(v);
+
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final File _file = new File("plugins/VoxelSniper/stencils/" + _stencilName + ".vstencil");
+
+        if (_file.exists()) {
+            try {
+                final DataInputStream _in = new DataInputStream(new BufferedInputStream(new FileInputStream(_file)));
+
+                this.X = _in.readShort();
+                this.Z = _in.readShort();
+                this.Y = _in.readShort();
+
+                this.Xref = _in.readShort();
+                this.Zref = _in.readShort();
+                this.Yref = _in.readShort();
+
+                final int _numRuns = _in.readInt();
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
+                final int _volume = this.X * this.Y * this.Z;
+                v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + _volume + " blocks.");
+
+                int _currX = +this.Xref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
+                                        // corner, for example.
+                int _currZ = +this.Zref;
+                int _currY = -this.Yref;
+                int _id;
+                int _data;
+                if (this.pasteoption == 0) {
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int _numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < _numLoops; _j++) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                _currX--;
+                                if (_currX == -this.X + this.Xref) {
+                                    _currX = this.Xref;
+                                    _currZ--;
+                                    if (_currZ == -this.Z + this.Zref) {
+                                        _currZ = +this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                            this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData((_in.readByte() + 128),
+                                    (byte) (_in.readByte() + 128), false);
+                            _currX--;
+                            if (_currX == -this.X + this.Xref) {
+                                _currX = this.Xref;
+                                _currZ--;
+                                if (_currZ == -this.Z + this.Zref) {
+                                    _currZ = +this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else if (this.pasteoption == 1) {
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int _numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < _numLoops; _j++) {
+                                if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                                  // air, and it prevents us
+                                                                                                                                  // most of the time from
+                                                                                                                                  // having to even check the
+                                                                                                                                  // block.
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                                }
+                                _currX--;
+                                if (_currX == -this.X + this.Xref) {
+                                    _currX = this.Xref;
+                                    _currZ--;
+                                    if (_currZ == -this.Z + this.Zref) {
+                                        _currZ = +this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                              // air, and it prevents us most of
+                                                                                                                              // the time from having to even
+                                                                                                                              // check the block.
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                            }
+                            _currX--;
+                            if (_currX == -this.X + this.Xref) {
+                                _currX = this.Xref;
+                                _currZ--;
+                                if (_currZ == -this.Z + this.Zref) {
+                                    _currZ = +this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else { // replace
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < (numLoops); _j++) {
+                                if (_id != 0) {
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                }
+                                _currX--;
+                                if (_currX == -this.X + this.Xref) {
+                                    _currX = this.Xref;
+                                    _currZ--;
+                                    if (_currZ == -this.Z + this.Zref) {
+                                        _currZ = +this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                            }
+                            _currX--;
+                            if (_currX == -this.X + this.Xref) {
+                                _currX = this.Xref;
+                                _currZ--;
+                                if (_currZ == -this.Z + this.Zref) {
+                                    _currZ = +this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                }
+                _in.close();
+                v.storeUndo(_undo);
+
+            } catch (final Exception e) {
+                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
+                e.printStackTrace();
+            }
+        } else {
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+        }
+    }
+
+    protected final void stencilPaste270(final SnipeData v) {
+        if (this.Filename.matches("NoFileLoaded")) {
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
+            return;
+        }
+
+        final String _stencilName = this.readRandomStencil(v);
+
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final File _file = new File("plugins/VoxelSniper/stencils/" + _stencilName + ".vstencil");
+
+        if (_file.exists()) {
+            try {
+                final DataInputStream _in = new DataInputStream(new BufferedInputStream(new FileInputStream(_file)));
+
+                this.X = _in.readShort();
+                this.Z = _in.readShort();
+                this.Y = _in.readShort();
+
+                this.Xref = _in.readShort();
+                this.Zref = _in.readShort();
+                this.Yref = _in.readShort();
+
+                final int _numRuns = _in.readInt();
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
+                final int _volume = this.X * this.Y * this.Z;
+                v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + _volume + " blocks.");
+
+                int _currX = +this.Zref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
+                                        // corner, for example.
+                int _currZ = -this.Xref;
+                int _currY = -this.Yref;
+                int _id;
+                int _data;
+                if (this.pasteoption == 0) {
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int j = 0; j < numLoops; j++) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                _currZ++;
+                                if (_currZ == this.X - this.Xref) {
+                                    _currZ = -this.Xref;
+                                    _currX--;
+                                    if (_currX == -this.Z + this.Zref) {
+                                        _currX = +this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                            this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData((_in.readByte() + 128),
+                                    (byte) (_in.readByte() + 128), false);
+                            _currZ++;
+                            _currZ++;
+                            if (_currZ == this.X - this.Xref) {
+                                _currZ = -this.Xref;
+                                _currX--;
+                                if (_currX == -this.Z + this.Zref) {
+                                    _currX = +this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else if (this.pasteoption == 1) {
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < numLoops; _j++) {
+                                if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                                  // air, and it prevents us
+                                                                                                                                  // most of the time from
+                                                                                                                                  // having to even check the
+                                                                                                                                  // block.
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                                }
+                                _currZ++;
+                                if (_currZ == this.X - this.Xref) {
+                                    _currZ = -this.Xref;
+                                    _currX--;
+                                    if (_currX == -this.Z + this.Zref) {
+                                        _currX = +this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                              // air, and it prevents us most of
+                                                                                                                              // the time from having to even
+                                                                                                                              // check the block.
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                            }
+                            _currZ++;
+                            if (_currZ == this.X - this.Xref) {
+                                _currZ = -this.Xref;
+                                _currX--;
+                                if (_currX == -this.Z + this.Zref) {
+                                    _currX = +this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else { // replace
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < (numLoops); _j++) {
+                                if (_id != 0) {
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                }
+                                _currZ++;
+                                if (_currZ == this.X - this.Xref) {
+                                    _currZ = -this.Xref;
+                                    _currX--;
+                                    if (_currX == -this.Z + this.Zref) {
+                                        _currX = +this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                            }
+                            _currZ++;
+                            if (_currZ == this.X - this.Xref) {
+                                _currZ = -this.Xref;
+                                _currX--;
+                                if (_currX == -this.Z + this.Zref) {
+                                    _currX = +this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                }
+                _in.close();
+                v.storeUndo(_undo);
+
+            } catch (final Exception e) {
+                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
+                e.printStackTrace();
+            }
+        } else {
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+        }
+    }
+
+    protected final void stencilPaste90(final SnipeData v) {
+        if (this.Filename.matches("NoFileLoaded")) {
+            v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
+            return;
+        }
+
+        final String _stencilName = this.readRandomStencil(v);
+
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final File _file = new File("plugins/VoxelSniper/stencils/" + _stencilName + ".vstencil");
+
+        if (_file.exists()) {
+            try {
+                final DataInputStream _in = new DataInputStream(new BufferedInputStream(new FileInputStream(_file)));
+
+                this.X = _in.readShort();
+                this.Z = _in.readShort();
+                this.Y = _in.readShort();
+
+                this.Xref = _in.readShort();
+                this.Zref = _in.readShort();
+                this.Yref = _in.readShort();
+
+                final int _numRuns = _in.readInt();
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
+                final int _volume = this.X * this.Y * this.Z;
+                v.sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + _volume + " blocks.");
+
+                int _currX = -this.Zref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
+                                        // corner, for example.
+                int _currZ = +this.Xref;
+                int _currY = -this.Yref;
+                int _id;
+                int _data;
+                if (this.pasteoption == 0) {
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int _numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < _numLoops; _j++) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                _currZ--;
+                                if (_currZ == -this.X + this.Xref) {
+                                    _currZ = this.Xref;
+                                    _currX++;
+                                    if (_currX == this.Z - this.Zref) {
+                                        _currX = -this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                            this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData((_in.readByte() + 128),
+                                    (byte) (_in.readByte() + 128), false);
+                            _currZ--;
+                            if (_currZ == -this.X + this.Xref) {
+                                _currZ = this.Xref;
+                                _currX++;
+                                if (_currX == this.Z - this.Zref) {
+                                    _currX = -this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else if (this.pasteoption == 1) {
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < numLoops; _j++) {
+                                if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                                  // air, and it prevents us
+                                                                                                                                  // most of the time from
+                                                                                                                                  // having to even check the
+                                                                                                                                  // block.
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                                }
+                                _currZ--;
+                                if (_currZ == -this.X + this.Xref) {
+                                    _currZ = this.Xref;
+                                    _currX++;
+                                    if (_currX == this.Z - this.Zref) {
+                                        _currX = -this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) { // no reason to paste air over
+                                                                                                                              // air, and it prevents us most of
+                                                                                                                              // the time from having to even
+                                                                                                                              // check the block.
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                            }
+                            _currZ--;
+                            if (_currZ == -this.X + this.Xref) {
+                                _currZ = this.Xref;
+                                _currX++;
+                                if (_currX == this.Z - this.Zref) {
+                                    _currX = -this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                } else { // replace
+                    for (int _i = 1; _i < _numRuns + 1; _i++) {
+                        if (_in.readBoolean()) {
+                            final int _numLoops = _in.readByte() + 128;
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            for (int _j = 0; _j < (_numLoops); _j++) {
+                                if (_id != 0) {
+                                    _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                    this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                }
+                                _currZ--;
+                                if (_currZ == -this.X + this.Xref) {
+                                    _currZ = this.Xref;
+                                    _currX++;
+                                    if (_currX == this.Z - this.Zref) {
+                                        _currX = -this.Zref;
+                                        _currY++;
+                                    }
+                                }
+                            }
+                        } else {
+                            _id = (_in.readByte() + 128);
+                            _data = (_in.readByte() + 128);
+                            if (_id != 0) {
+                                _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
+                                this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                            }
+                            _currZ--;
+                            if (_currZ == -this.X + this.Xref) {
+                                _currZ = this.Xref;
+                                _currX++;
+                                if (_currX == this.Z - this.Zref) {
+                                    _currX = -this.Zref;
+                                    _currY++;
+                                }
+                            }
+                        }
+                    }
+                }
+                _in.close();
+                v.storeUndo(_undo);
+
+            } catch (final Exception e) {
+                v.sendMessage(ChatColor.RED + "Something went wrong.");
+                e.printStackTrace();
+            }
+        } else {
+            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+        }
+    }
+
+    protected final void stencilPasteRotation(final SnipeData v) {
+        // just randomly chooses a rotation and then calls stencilPaste.
+        this.readStencilList(this.Filename, v);
+        final double _rand = Math.random();
+        if (_rand < 0.26) {
+            this.stencilPaste(v);
+        } else if (_rand < 0.51) {
+            this.stencilPaste90(v);
+        } else if (_rand < 0.76) {
+            this.stencilPaste180(v);
+        } else {
+            this.stencilPaste270(v);
+        }
+
+    }
 
     @Override
-    public final int getTimesUsed() {
-        return StencilList.timesUsed;
+    protected final void arrow(final SnipeData v) {
+        this.stencilPaste(v);
     }
+
+    @Override
+    protected final void powder(final SnipeData v) {
+        this.stencilPasteRotation(v);
+    }
+    
 
     @Override
     public final void info(final Message vm) {
@@ -56,7 +771,7 @@ public class StencilList extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
             v.sendMessage(ChatColor.AQUA
@@ -74,8 +789,8 @@ public class StencilList extends Brush {
         }
         try {
             this.Filename = par[1 + this.pasteparam];
-            final File f = new File("plugins/VoxelSniper/stencilLists/" + this.Filename + ".txt");
-            if (f.exists()) {
+            final File _file = new File("plugins/VoxelSniper/stencilLists/" + this.Filename + ".txt");
+            if (_file.exists()) {
                 v.sendMessage(ChatColor.RED + "Stencil List '" + this.Filename + "' exists and was loaded.");
                 this.readStencilList(this.Filename, v);
             } else {
@@ -86,740 +801,15 @@ public class StencilList extends Brush {
         } catch (final Exception e) {
             v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
         }
-    }
+    }   
 
-    public final String readRandomStencil(final SnipeData v) {
-        double rand = Math.random();
-        rand = rand * (this.stencilList.size());
-        final int choice = (int) (rand);
-        return this.stencilList.get(choice);
-    }
-
-    public final void readStencilList(final String listname, final SnipeData v) {
-        final File f = new File("plugins/VoxelSniper/stencilLists/" + this.Filename + ".txt");
-        if (f.exists()) {
-            try {
-                final Scanner snr = new Scanner(f);
-                int counter = 0;
-                while (snr.hasNext()) {
-                    this.stencilList.put(counter, snr.nextLine());
-                    counter++;
-                }
-                snr.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-        }
+    @Override
+    public final int getTimesUsed() {
+        return StencilList.timesUsed;
     }
 
     @Override
     public final void setTimesUsed(final int tUsed) {
         StencilList.timesUsed = tUsed;
-    }
-
-    public final void stencilPaste(final SnipeData v) {
-        if (this.Filename.matches("NoFileLoaded")) {
-            v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
-            return;
-        }
-
-        final String stencilName = this.readRandomStencil(v);
-        v.sendMessage(stencilName);
-
-        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
-        final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
-
-        if (f.exists()) {
-            try {
-                final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(f)));
-
-                this.X = in.readShort();
-                this.Z = in.readShort();
-                this.Y = in.readShort();
-
-                this.Xref = in.readShort();
-                this.Zref = in.readShort();
-                this.Yref = in.readShort();
-
-                final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-                final int volume = this.X * this.Y * this.Z;
-                v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
-
-                int currX = -this.Xref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
-                                        // corner, for example.
-                int currZ = -this.Zref;
-                int currY = -this.Yref;
-                int id;
-                int data;
-                if (this.pasteoption == 0) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                currX++;
-                                if (currX == this.X - this.Xref) {
-                                    currX = -this.Xref;
-                                    currZ++;
-                                    if (currZ == this.Z - this.Zref) {
-                                        currZ = -this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
-                                    (byte) (in.readByte() + 128), false);
-                            currX++;
-                            if (currX == this.X - this.Xref) {
-                                currX = -this.Xref;
-                                currZ++;
-                                if (currZ == this.Z - this.Zref) {
-                                    currZ = -this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else if (this.pasteoption == 1) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                                  // air, and it prevents us
-                                                                                                                                  // most of the time from
-                                                                                                                                  // having to even check the
-                                                                                                                                  // block.
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                                }
-                                currX++;
-                                if (currX == this.X - this.Xref) {
-                                    currX = -this.Xref;
-                                    currZ++;
-                                    if (currZ == this.Z - this.Zref) {
-                                        currZ = -this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                              // air, and it prevents us most of
-                                                                                                                              // the time from having to even
-                                                                                                                              // check the block.
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                            }
-                            currX++;
-                            if (currX == this.X - this.Xref) {
-                                currX = -this.Xref;
-                                currZ++;
-                                if (currZ == this.Z - this.Zref) {
-                                    currZ = -this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else { // replace
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < (numLoops); j++) {
-                                if (id != 0) {
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                }
-                                currX++;
-                                if (currX == this.X - this.Xref) {
-                                    currX = -this.Xref;
-                                    currZ++;
-                                    if (currZ == this.Z - this.Zref) {
-                                        currZ = -this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                            }
-                            currX++;
-                            if (currX == this.X) {
-                                currX = 0;
-                                currZ++;
-                                if (currZ == this.Z) {
-                                    currZ = 0;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                }
-                in.close();
-                v.storeUndo(h);
-
-            } catch (final Exception e) {
-                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
-                // v.sendMessage("jspecial: " + jspecial);
-                e.printStackTrace();
-            }
-        } else {
-            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
-        }
-    }
-
-    public final void stencilPaste180(final SnipeData v) {
-        if (this.Filename.matches("NoFileLoaded")) {
-            v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
-            return;
-        }
-
-        final String stencilName = this.readRandomStencil(v);
-
-        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
-        final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
-
-        if (f.exists()) {
-            try {
-                final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(f)));
-
-                this.X = in.readShort();
-                this.Z = in.readShort();
-                this.Y = in.readShort();
-
-                this.Xref = in.readShort();
-                this.Zref = in.readShort();
-                this.Yref = in.readShort();
-
-                final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-                final int volume = this.X * this.Y * this.Z;
-                v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
-
-                int currX = +this.Xref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
-                                        // corner, for example.
-                int currZ = +this.Zref;
-                int currY = -this.Yref;
-                int id;
-                int data;
-                if (this.pasteoption == 0) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                currX--;
-                                if (currX == -this.X + this.Xref) {
-                                    currX = this.Xref;
-                                    currZ--;
-                                    if (currZ == -this.Z + this.Zref) {
-                                        currZ = +this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
-                                    (byte) (in.readByte() + 128), false);
-                            currX--;
-                            if (currX == -this.X + this.Xref) {
-                                currX = this.Xref;
-                                currZ--;
-                                if (currZ == -this.Z + this.Zref) {
-                                    currZ = +this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else if (this.pasteoption == 1) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                                  // air, and it prevents us
-                                                                                                                                  // most of the time from
-                                                                                                                                  // having to even check the
-                                                                                                                                  // block.
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                                }
-                                currX--;
-                                if (currX == -this.X + this.Xref) {
-                                    currX = this.Xref;
-                                    currZ--;
-                                    if (currZ == -this.Z + this.Zref) {
-                                        currZ = +this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                              // air, and it prevents us most of
-                                                                                                                              // the time from having to even
-                                                                                                                              // check the block.
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                            }
-                            currX--;
-                            if (currX == -this.X + this.Xref) {
-                                currX = this.Xref;
-                                currZ--;
-                                if (currZ == -this.Z + this.Zref) {
-                                    currZ = +this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else { // replace
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < (numLoops); j++) {
-                                if (id != 0) {
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                }
-                                currX--;
-                                if (currX == -this.X + this.Xref) {
-                                    currX = this.Xref;
-                                    currZ--;
-                                    if (currZ == -this.Z + this.Zref) {
-                                        currZ = +this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                            }
-                            currX--;
-                            if (currX == -this.X + this.Xref) {
-                                currX = this.Xref;
-                                currZ--;
-                                if (currZ == -this.Z + this.Zref) {
-                                    currZ = +this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                }
-                in.close();
-                v.storeUndo(h);
-
-            } catch (final Exception e) {
-                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
-                // v.sendMessage("jspecial: " + jspecial);
-                e.printStackTrace();
-            }
-        } else {
-            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
-        }
-    }
-
-    public final void stencilPaste270(final SnipeData v) {
-        if (this.Filename.matches("NoFileLoaded")) {
-            v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
-            return;
-        }
-
-        final String stencilName = this.readRandomStencil(v);
-
-        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
-        final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
-
-        if (f.exists()) {
-            try {
-                final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(f)));
-
-                this.X = in.readShort();
-                this.Z = in.readShort();
-                this.Y = in.readShort();
-
-                this.Xref = in.readShort();
-                this.Zref = in.readShort();
-                this.Yref = in.readShort();
-
-                final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-                final int volume = this.X * this.Y * this.Z;
-                v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
-
-                int currX = +this.Zref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
-                                        // corner, for example.
-                int currZ = -this.Xref;
-                int currY = -this.Yref;
-                int id;
-                int data;
-                if (this.pasteoption == 0) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                currZ++;
-                                if (currZ == this.X - this.Xref) {
-                                    currZ = -this.Xref;
-                                    currX--;
-                                    if (currX == -this.Z + this.Zref) {
-                                        currX = +this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
-                                    (byte) (in.readByte() + 128), false);
-                            currZ++;
-                            currZ++;
-                            if (currZ == this.X - this.Xref) {
-                                currZ = -this.Xref;
-                                currX--;
-                                if (currX == -this.Z + this.Zref) {
-                                    currX = +this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else if (this.pasteoption == 1) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                                  // air, and it prevents us
-                                                                                                                                  // most of the time from
-                                                                                                                                  // having to even check the
-                                                                                                                                  // block.
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                                }
-                                currZ++;
-                                if (currZ == this.X - this.Xref) {
-                                    currZ = -this.Xref;
-                                    currX--;
-                                    if (currX == -this.Z + this.Zref) {
-                                        currX = +this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                              // air, and it prevents us most of
-                                                                                                                              // the time from having to even
-                                                                                                                              // check the block.
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                            }
-                            currZ++;
-                            if (currZ == this.X - this.Xref) {
-                                currZ = -this.Xref;
-                                currX--;
-                                if (currX == -this.Z + this.Zref) {
-                                    currX = +this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else { // replace
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < (numLoops); j++) {
-                                if (id != 0) {
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                }
-                                currZ++;
-                                if (currZ == this.X - this.Xref) {
-                                    currZ = -this.Xref;
-                                    currX--;
-                                    if (currX == -this.Z + this.Zref) {
-                                        currX = +this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                            }
-                            currZ++;
-                            if (currZ == this.X - this.Xref) {
-                                currZ = -this.Xref;
-                                currX--;
-                                if (currX == -this.Z + this.Zref) {
-                                    currX = +this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                }
-                in.close();
-                v.storeUndo(h);
-
-            } catch (final Exception e) {
-                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
-                // v.sendMessage("jspecial: " + jspecial);
-                e.printStackTrace();
-            }
-        } else {
-            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
-        }
-    }
-
-    public final void stencilPaste90(final SnipeData v) {
-        if (this.Filename.matches("NoFileLoaded")) {
-            v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
-            return;
-        }
-
-        final String stencilName = this.readRandomStencil(v);
-
-        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
-        final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
-
-        if (f.exists()) {
-            try {
-                final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(f)));
-
-                this.X = in.readShort();
-                this.Z = in.readShort();
-                this.Y = in.readShort();
-
-                this.Xref = in.readShort();
-                this.Zref = in.readShort();
-                this.Yref = in.readShort();
-
-                final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-                final int volume = this.X * this.Y * this.Z;
-                v.sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
-
-                int currX = -this.Zref; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
-                                        // corner, for example.
-                int currZ = +this.Xref;
-                int currY = -this.Yref;
-                int id;
-                int data;
-                if (this.pasteoption == 0) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                currZ--;
-                                if (currZ == -this.X + this.Xref) {
-                                    currZ = this.Xref;
-                                    currX++;
-                                    if (currX == this.Z - this.Zref) {
-                                        currX = -this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                            this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData((in.readByte() + 128),
-                                    (byte) (in.readByte() + 128), false);
-                            currZ--;
-                            if (currZ == -this.X + this.Xref) {
-                                currZ = this.Xref;
-                                currX++;
-                                if (currX == this.Z - this.Zref) {
-                                    currX = -this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else if (this.pasteoption == 1) {
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++) {
-                                if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                                  // air, and it prevents us
-                                                                                                                                  // most of the time from
-                                                                                                                                  // having to even check the
-                                                                                                                                  // block.
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                                }
-                                currZ--;
-                                if (currZ == -this.X + this.Xref) {
-                                    currZ = this.Xref;
-                                    currX++;
-                                    if (currX == this.Z - this.Zref) {
-                                        currX = -this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).getTypeId() == 0) { // no reason to paste air over
-                                                                                                                              // air, and it prevents us most of
-                                                                                                                              // the time from having to even
-                                                                                                                              // check the block.
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) (data), false);
-                            }
-                            currZ--;
-                            if (currZ == -this.X + this.Xref) {
-                                currZ = this.Xref;
-                                currX++;
-                                if (currX == this.Z - this.Zref) {
-                                    currX = -this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                } else { // replace
-                    for (int i = 1; i < numRuns + 1; i++) {
-                        if (in.readBoolean()) {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < (numLoops); j++) {
-                                if (id != 0) {
-                                    h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                    this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                                }
-                                currZ--;
-                                if (currZ == -this.X + this.Xref) {
-                                    currZ = this.Xref;
-                                    currX++;
-                                    if (currX == this.Z - this.Zref) {
-                                        currX = -this.Zref;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        } else {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0) {
-                                h.put(this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ));
-                                this.clampY(this.getBlockPositionX() + currX, this.getBlockPositionY() + currY, this.getBlockPositionZ() + currZ).setTypeIdAndData(id, (byte) data, false);
-                            }
-                            currZ--;
-                            if (currZ == -this.X + this.Xref) {
-                                currZ = this.Xref;
-                                currX++;
-                                if (currX == this.Z - this.Zref) {
-                                    currX = -this.Zref;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                }
-                in.close();
-                v.storeUndo(h);
-
-            } catch (final Exception e) {
-                v.sendMessage(ChatColor.RED + "Something went wrong.");
-                // v.sendMessage("jspecial: " + jspecial);
-                e.printStackTrace();
-            }
-        } else {
-            v.owner().getPlayer().sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
-        }
-    }
-
-    public final void stencilPasteRotation(final SnipeData v) {
-        // just randomly chooses a rotation and then calls stencilPaste.
-        this.readStencilList(this.Filename, v);
-        final double rand = Math.random();
-        if (rand < 0.26) {
-            this.stencilPaste(v);
-        } else if (rand < 0.51) {
-            this.stencilPaste90(v);
-        } else if (rand < 0.76) {
-            this.stencilPaste180(v);
-        } else {
-            this.stencilPaste270(v);
-        }
-
-    }
-
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // will be used to copy/save later on?
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.stencilPaste(v);
-    }
-
-    @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) { // will be used to paste later on
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.stencilPasteRotation(v);
     }
 }

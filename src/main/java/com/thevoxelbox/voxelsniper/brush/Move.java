@@ -23,7 +23,6 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  */
 public class Move extends Brush {
-
     /**
      * Selection Helper class.
      * 
@@ -182,55 +181,6 @@ public class Move extends Brush {
         this.setName("Move");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return Move.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.custom(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:"
-                + this.moveDirections[2]);
-    }
-
-    @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.getVoxelMessage().custom(ChatColor.GOLD + this.getName() + " Parameters:");
-            v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
-            v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
-            v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
-            v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
-            v.getVoxelMessage().custom(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
-        }
-
-        for (int _i = 1; _i < par.length; _i++) {
-            if (par[_i].equalsIgnoreCase("reset")) {
-                this.moveDirections[0] = 0;
-                this.moveDirections[1] = 0;
-                this.moveDirections[2] = 0;
-                v.getVoxelMessage().custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-                v.getVoxelMessage().custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-                v.getVoxelMessage().custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
-            }
-            if (par[_i].toLowerCase().startsWith("x")) {
-                this.moveDirections[0] = Integer.valueOf(par[_i].substring(1));
-                v.getVoxelMessage().custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-            } else if (par[_i].toLowerCase().startsWith("y")) {
-                this.moveDirections[1] = Integer.valueOf(par[_i].substring(1));
-                v.getVoxelMessage().custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-            } else if (par[_i].toLowerCase().startsWith("z")) {
-                this.moveDirections[2] = Integer.valueOf(par[_i].substring(1));
-                v.getVoxelMessage().custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
-            }
-        }
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        Move.timesUsed = tUsed;
-    }
 
     /**
      * Moves the given selection blockPositionY the amount given in direction and saves an undo for the player.
@@ -318,5 +268,54 @@ public class Move extends Brush {
             v.sendMessage(_ex.getMessage());
         }
     }
-
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	vm.custom(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:"
+    			+ this.moveDirections[2]);
+    }
+    
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+    	if (par[1].equalsIgnoreCase("info")) {
+    		v.getVoxelMessage().custom(ChatColor.GOLD + this.getName() + " Parameters:");
+    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
+    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
+    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
+    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
+    		v.getVoxelMessage().custom(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
+    	}
+    	
+    	for (int _i = 1; _i < par.length; _i++) {
+    		if (par[_i].equalsIgnoreCase("reset")) {
+    			this.moveDirections[0] = 0;
+    			this.moveDirections[1] = 0;
+    			this.moveDirections[2] = 0;
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
+    		}
+    		if (par[_i].toLowerCase().startsWith("x")) {
+    			this.moveDirections[0] = Integer.valueOf(par[_i].substring(1));
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
+    		} else if (par[_i].toLowerCase().startsWith("y")) {
+    			this.moveDirections[1] = Integer.valueOf(par[_i].substring(1));
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
+    		} else if (par[_i].toLowerCase().startsWith("z")) {
+    			this.moveDirections[2] = Integer.valueOf(par[_i].substring(1));
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
+    		}
+    	}
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return Move.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	Move.timesUsed = tUsed;
+    }
 }

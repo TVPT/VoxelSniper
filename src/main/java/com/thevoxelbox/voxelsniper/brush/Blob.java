@@ -13,9 +13,8 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Giltwist
  */
 public class Blob extends PerformBrush {
-
-    protected int growpercent; // chance block on recursion pass is made active
-    protected Random generator = new Random();
+    private int growPercent; // chance block on recursion pass is made active
+    private Random randomGenerator = new Random();
 
     private static int timesUsed = 0;
 
@@ -23,61 +22,61 @@ public class Blob extends PerformBrush {
         this.setName("Blob");
     }
 
-    public final void digblob(final SnipeData v) {
-        if (this.growpercent < 1 || this.growpercent > 9999) {
+    private final void digBlob(final SnipeData v) {
+        if (this.growPercent < 1 || this.growPercent > 9999) {
             v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
-            this.growpercent = 1000;
+            this.growPercent = 1000;
         }
 
-        final int bsize = v.getBrushSize();
-        final int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
+        final int _bSize = v.getBrushSize();
+        final int[][][] _splat = new int[2 * _bSize + 1][2 * _bSize + 1][2 * _bSize + 1];
 
         // Seed the array
-        for (int x = 2 * bsize; x >= 0; x--) {
-            for (int y = 2 * bsize; y >= 0; y--) {
-                for (int z = 2 * bsize; z >= 0; z--) {
-                    if ((x == 0 || y == 0 | z == 0 || x == 2 * bsize || y == 2 * bsize || z == 2 * bsize) && this.generator.nextInt(10000) <= this.growpercent) {
-                        splat[x][y][z] = 0;
+        for (int _x = 2 * _bSize; _x >= 0; _x--) {
+            for (int _y = 2 * _bSize; _y >= 0; _y--) {
+                for (int _z = 2 * _bSize; _z >= 0; _z--) {
+                    if ((_x == 0 || _y == 0 | _z == 0 || _x == 2 * _bSize || _y == 2 * _bSize || _z == 2 * _bSize) && this.randomGenerator.nextInt(10000) <= this.growPercent) {
+                        _splat[_x][_y][_z] = 0;
                     } else {
-                        splat[x][y][z] = 1;
+                        _splat[_x][_y][_z] = 1;
                     }
                 }
             }
         }
-        final int[][][] tempsplat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
+        final int[][][] _tempSplat = new int[2 * _bSize + 1][2 * _bSize + 1][2 * _bSize + 1];
 
         // Grow the seed
-        int growcheck;
-        for (int r = 0; r < bsize; r++) {
+        int _growCheck = 0;
+        for (int _r = 0; _r < _bSize; _r++) {
 
-            for (int x = 2 * bsize; x >= 0; x--) {
-                for (int y = 2 * bsize; y >= 0; y--) {
-                    for (int z = 2 * bsize; z >= 0; z--) {
-                        tempsplat[x][y][z] = splat[x][y][z]; // prime tempsplat
-                        growcheck = 0;
-                        if (splat[x][y][z] == 1) {
-                            if (x != 0 && splat[x - 1][y][z] == 0) {
-                                growcheck++;
+            for (int _x = 2 * _bSize; _x >= 0; _x--) {
+                for (int _y = 2 * _bSize; _y >= 0; _y--) {
+                    for (int _z = 2 * _bSize; _z >= 0; _z--) {
+                        _tempSplat[_x][_y][_z] = _splat[_x][_y][_z];
+                        _growCheck = 0;
+                        if (_splat[_x][_y][_z] == 1) {
+                            if (_x != 0 && _splat[_x - 1][_y][_z] == 0) {
+                                _growCheck++;
                             }
-                            if (y != 0 && splat[x][y - 1][z] == 0) {
-                                growcheck++;
+                            if (_y != 0 && _splat[_x][_y - 1][_z] == 0) {
+                                _growCheck++;
                             }
-                            if (z != 0 && splat[x][y][z - 1] == 0) {
-                                growcheck++;
+                            if (_z != 0 && _splat[_x][_y][_z - 1] == 0) {
+                                _growCheck++;
                             }
-                            if (x != 2 * bsize && splat[x + 1][y][z] == 0) {
-                                growcheck++;
+                            if (_x != 2 * _bSize && _splat[_x + 1][_y][_z] == 0) {
+                                _growCheck++;
                             }
-                            if (y != 2 * bsize && splat[x][y + 1][z] == 0) {
-                                growcheck++;
+                            if (_y != 2 * _bSize && _splat[_x][_y + 1][_z] == 0) {
+                                _growCheck++;
                             }
-                            if (z != 2 * bsize && splat[x][y][z + 1] == 0) {
-                                growcheck++;
+                            if (_z != 2 * _bSize && _splat[_x][_y][_z + 1] == 0) {
+                                _growCheck++;
                             }
                         }
 
-                        if (growcheck >= 1 && this.generator.nextInt(10000) <= this.growpercent) {
-                            tempsplat[x][y][z] = 0; // prevent bleed into splat
+                        if (_growCheck >= 1 && this.randomGenerator.nextInt(10000) <= this.growPercent) {
+                            _tempSplat[_x][_y][_z] = 0; // prevent bleed into splat
                         }
                     }
                 }
@@ -85,105 +84,100 @@ public class Blob extends PerformBrush {
 
             // shouldn't this just be splat = tempsplat;? -Gavjenks
             // integrate tempsplat back into splat at end of iteration
-            for (int x = 2 * bsize; x >= 0; x--) {
-                for (int y = 2 * bsize; y >= 0; y--) {
-                    for (int z = 2 * bsize; z >= 0; z--) {
-                        splat[x][y][z] = tempsplat[x][y][z];
+            for (int _x = 2 * _bSize; _x >= 0; _x--) {
+                for (int _y = 2 * _bSize; _y >= 0; _y--) {
+                    for (int _z = 2 * _bSize; _z >= 0; _z--) {
+                        _splat[_x][_y][_z] = _tempSplat[_x][_y][_z];
                     }
                 }
             }
         }
 
         // Make the changes
-        final double rpow = Math.pow(bsize + 1, 2);
-        for (int x = 2 * bsize; x >= 0; x--) {
-            final double xpow = Math.pow(x - bsize - 1, 2);
-            for (int y = 2 * bsize; y >= 0; y--) {
-                final double ypow = Math.pow(y - bsize - 1, 2);
-                for (int z = 2 * bsize; z >= 0; z--) {
-                    if (splat[x][y][z] == 1 && xpow + ypow + Math.pow(z - bsize - 1, 2) <= rpow) {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + z, this.getBlockPositionZ() - bsize + y));
+        final double _rPow = Math.pow(_bSize + 1, 2);
+        for (int _x = 2 * _bSize; _x >= 0; _x--) {
+            final double _xPow = Math.pow(_x - _bSize - 1, 2);
+            for (int _y = 2 * _bSize; _y >= 0; _y--) {
+                final double _yPow = Math.pow(_y - _bSize - 1, 2);
+                for (int z = 2 * _bSize; z >= 0; z--) {
+                    if (_splat[_x][_y][z] == 1 && _xPow + _yPow + Math.pow(z - _bSize - 1, 2) <= _rPow) {
+                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + z, this.getBlockPositionZ() - _bSize + _y));
                     }
                 }
             }
         }
 
         v.storeUndo(this.current.getUndo());
-    }
+    }   
 
-    @Override
-    public final int getTimesUsed() {
-        return Blob.timesUsed;
-    }
-
-    public final void growblob(final SnipeData v) {
-        if (this.growpercent < 1 || this.growpercent > 9999) {
+    public final void growBlob(final SnipeData v) {
+        if (this.growPercent < 1 || this.growPercent > 9999) {
             v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
-            this.growpercent = 1500;
+            this.growPercent = 1500;
         }
-        final int bsize = v.getBrushSize();
-        final int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
+        final int _bSize = v.getBrushSize();
+        final int[][][] _splat = new int[2 * _bSize + 1][2 * _bSize + 1][2 * _bSize + 1];
 
         // Seed the array
-        splat[bsize][bsize][bsize] = 1;
-        final int[][][] tempsplat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
+        _splat[_bSize][_bSize][_bSize] = 1;
+        final int[][][] _tempSplat = new int[2 * _bSize + 1][2 * _bSize + 1][2 * _bSize + 1];
 
         // Grow the seed
-        int growcheck;
-        for (int r = 0; r < bsize; r++) {
+        int _growCheck = 0;
+        for (int _r = 0; _r < _bSize; _r++) {
 
-            for (int x = 2 * bsize; x >= 0; x--) {
-                for (int y = 2 * bsize; y >= 0; y--) {
-                    for (int z = 2 * bsize; z >= 0; z--) {
-                        tempsplat[x][y][z] = splat[x][y][z]; // prime tempsplat
-                        growcheck = 0;
-                        if (splat[x][y][z] == 0) {
-                            if (x != 0 && splat[x - 1][y][z] == 1) {
-                                growcheck++;
+            for (int _x = 2 * _bSize; _x >= 0; _x--) {
+                for (int _y = 2 * _bSize; _y >= 0; _y--) {
+                    for (int _z = 2 * _bSize; _z >= 0; _z--) {
+                        _tempSplat[_x][_y][_z] = _splat[_x][_y][_z]; 
+                        _growCheck = 0;
+                        if (_splat[_x][_y][_z] == 0) {
+                            if (_x != 0 && _splat[_x - 1][_y][_z] == 1) {
+                                _growCheck++;
                             }
-                            if (y != 0 && splat[x][y - 1][z] == 1) {
-                                growcheck++;
+                            if (_y != 0 && _splat[_x][_y - 1][_z] == 1) {
+                                _growCheck++;
                             }
-                            if (z != 0 && splat[x][y][z - 1] == 1) {
-                                growcheck++;
+                            if (_z != 0 && _splat[_x][_y][_z - 1] == 1) {
+                                _growCheck++;
                             }
-                            if (x != 2 * bsize && splat[x + 1][y][z] == 1) {
-                                growcheck++;
+                            if (_x != 2 * _bSize && _splat[_x + 1][_y][_z] == 1) {
+                                _growCheck++;
                             }
-                            if (y != 2 * bsize && splat[x][y + 1][z] == 1) {
-                                growcheck++;
+                            if (_y != 2 * _bSize && _splat[_x][_y + 1][_z] == 1) {
+                                _growCheck++;
                             }
-                            if (z != 2 * bsize && splat[x][y][z + 1] == 1) {
-                                growcheck++;
+                            if (_z != 2 * _bSize && _splat[_x][_y][_z + 1] == 1) {
+                                _growCheck++;
                             }
                         }
 
-                        if (growcheck >= 1 && this.generator.nextInt(10000) <= this.growpercent) {
-                            tempsplat[x][y][z] = 1; // prevent bleed into splat
+                        if (_growCheck >= 1 && this.randomGenerator.nextInt(10000) <= this.growPercent) {
+                            _tempSplat[_x][_y][_z] = 1; // prevent bleed into splat
                         }
                     }
                 }
             }
 
             // integrate tempsplat back into splat at end of iteration
-            for (int x = 2 * bsize; x >= 0; x--) {
-                for (int y = 2 * bsize; y >= 0; y--) {
-                    for (int z = 2 * bsize; z >= 0; z--) {
-                        splat[x][y][z] = tempsplat[x][y][z];
+            for (int _x = 2 * _bSize; _x >= 0; _x--) {
+                for (int _y = 2 * _bSize; _y >= 0; _y--) {
+                    for (int _z = 2 * _bSize; _z >= 0; _z--) {
+                        _splat[_x][_y][_z] = _tempSplat[_x][_y][_z];
                     }
                 }
             }
         }
 
         // Make the changes
-        final double rpow = Math.pow(bsize + 1, 2);
-        for (int x = 2 * bsize; x >= 0; x--) {
-            final double xpow = Math.pow(x - bsize - 1, 2);
-            for (int y = 2 * bsize; y >= 0; y--) {
-                final double ypow = Math.pow(y - bsize - 1, 2);
-                for (int z = 2 * bsize; z >= 0; z--) {
-                    if (splat[x][y][z] == 1 && xpow + ypow + Math.pow(z - bsize - 1, 2) <= rpow) {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - bsize + z, this.getBlockPositionZ() - bsize + y));
+        final double _rPow = Math.pow(_bSize + 1, 2);
+        for (int _x = 2 * _bSize; _x >= 0; _x--) {
+            final double _xPow = Math.pow(_x - _bSize - 1, 2);
+            for (int _y = 2 * _bSize; _y >= 0; _y--) {
+                final double _yPow = Math.pow(_y - _bSize - 1, 2);
+                for (int z = 2 * _bSize; z >= 0; z--) {
+                    if (_splat[_x][_y][z] == 1 && _xPow + _yPow + Math.pow(z - _bSize - 1, 2) <= _rPow) {
+                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + z, this.getBlockPositionZ() - _bSize + _y));
                     }
                 }
             }
@@ -191,31 +185,40 @@ public class Blob extends PerformBrush {
 
         v.storeUndo(this.current.getUndo());
     }
-
+    
     @Override
-    public final void info(final Message vm) {
-        if (this.growpercent < 1 || this.growpercent > 9999) {
-            this.growpercent = 1500;
-        }
-        vm.brushName(this.getName());
-        vm.size();
-        // voxelMessage.voxel();
-        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growpercent / 100 + "%");
+    protected final void arrow(final SnipeData v) {
+    	this.growBlob(v);
+    }
+    
+    @Override
+    protected final void powder(final SnipeData v) {
+    	this.digBlob(v);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+    public final void info(final Message vm) {
+        if (this.growPercent < 1 || this.growPercent > 9999) {
+            this.growPercent = 1500;
+        }
+        vm.brushName(this.getName());
+        vm.size();
+        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+    }
+
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (1-9999).  Default is 1500");
             return;
         }
-        for (int x = 1; x < par.length; x++) {
-            if (par[x].startsWith("g")) {
-                final double temp = Integer.parseInt(par[x].replace("g", ""));
-                if (temp >= 1 && temp <= 9999) {
-                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
-                    this.growpercent = (int) temp;
+        for (int _x = 1; _x < par.length; _x++) {
+            if (par[_x].startsWith("g")) {
+                final double _temp = Integer.parseInt(par[_x].replace("g", ""));
+                if (_temp >= 1 && _temp <= 9999) {
+                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + _temp / 100 + "%");
+                    this.growPercent = (int) _temp;
                 } else {
                     v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
                 }
@@ -225,25 +228,14 @@ public class Blob extends PerformBrush {
             }
         }
     }
-
+    
+    @Override
+    public final int getTimesUsed() {
+        return Blob.timesUsed;
+    }
+    
     @Override
     public final void setTimesUsed(final int tUsed) {
         Blob.timesUsed = tUsed;
-    }
-
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.growblob(v);
-    }
-
-    @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.digblob(v);
     }
 }

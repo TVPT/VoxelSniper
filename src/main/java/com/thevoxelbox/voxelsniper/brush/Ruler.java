@@ -11,14 +11,11 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Gavjenks
  */
 public class Ruler extends Brush {
-
-    protected boolean first = true;
-    protected double[] coords = new double[3];
+    private boolean first = true;
+    private double[] coords = new double[3];
 
     private int xOff = 0;
-
     private int yOff = 0;
-
     private int zOff = 0;
 
     private static int timesUsed = 0;
@@ -27,11 +24,59 @@ public class Ruler extends Brush {
         this.setName("Ruler");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return Ruler.timesUsed;
+    private final void rulerA(final SnipeData v) {
+        final int _voxelMaterialId = v.getVoxelId();
+        if (this.xOff == 0 && this.yOff == 0 && this.zOff == 0) {
+
+            this.coords[0] = this.getTargetBlock().getX();
+            this.coords[1] = this.getTargetBlock().getY();
+            this.coords[2] = this.getTargetBlock().getZ();
+            v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+            this.first = !this.first;
+
+        } else {
+            final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+
+            _undo.put(this.clampY(this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff));
+            this.setBlockIdAt(_voxelMaterialId, this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff);
+            v.storeUndo(_undo);
+        }
     }
 
+    private final void rulerP(final SnipeData v) {
+        if (this.coords[0] == 0 && this.coords[1] == 0 && this.coords[2] == 0) {
+            v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow.  Comparing to point 0,0,0 instead.");
+        }
+
+        v.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
+        v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock().getX() - this.coords[0]));
+        v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock().getY() - this.coords[1]));
+        v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock().getZ() - this.coords[2]));
+        double _distance = Math.sqrt(Math.pow((this.coords[0] - this.getTargetBlock().getX()), 2) + Math.pow((this.coords[1] - this.getTargetBlock().getY()), 2)
+                + Math.pow((this.coords[2] - this.getTargetBlock().getZ()), 2));
+        _distance = this.roundTwoDecimals(_distance);
+        double _blockdistance = Math.abs(Math.max(Math.max(Math.abs(this.getTargetBlock().getX() - this.coords[0]), Math.abs(this.getTargetBlock().getY() - this.coords[1])),
+                Math.abs(this.getTargetBlock().getZ() - this.coords[2]))) + 1;
+        _blockdistance = this.roundTwoDecimals(_blockdistance);
+        v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + _distance);
+        v.sendMessage(ChatColor.AQUA + "Block distance = " + _blockdistance); 
+    }
+    
+    private final double roundTwoDecimals(final double d) {
+    	final java.text.DecimalFormat twoDForm = new java.text.DecimalFormat("#.##");
+    	return Double.valueOf(twoDForm.format(d));
+    }
+
+    @Override
+    protected final void arrow(final SnipeData v) {
+        this.rulerA(v);
+    }
+
+    @Override
+    protected final void powder(final SnipeData v) {
+        this.rulerP(v);
+    }
+    
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.getName());
@@ -39,7 +84,7 @@ public class Ruler extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD
                     + "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
@@ -49,20 +94,20 @@ public class Ruler extends Brush {
 
             return;
         }
-        for (int x = 1; x < par.length; x++) {
-            if (par[x].startsWith("x")) {
-                this.xOff = Integer.parseInt(par[x].replace("x", ""));
+        for (int _i = 1; _i < par.length; _i++) {
+            if (par[_i].startsWith("x")) {
+                this.xOff = Integer.parseInt(par[_i].replace("x", ""));
                 v.sendMessage(ChatColor.AQUA + "X offset set to " + this.xOff);
                 continue;
-            } else if (par[x].startsWith("y")) {
-                this.yOff = Integer.parseInt(par[x].replace("y", ""));
+            } else if (par[_i].startsWith("y")) {
+                this.yOff = Integer.parseInt(par[_i].replace("y", ""));
                 v.sendMessage(ChatColor.AQUA + "Y offset set to " + this.yOff);
                 continue;
-            } else if (par[x].startsWith("z")) {
-                this.zOff = Integer.parseInt(par[x].replace("z", ""));
+            } else if (par[_i].startsWith("z")) {
+                this.zOff = Integer.parseInt(par[_i].replace("z", ""));
                 v.sendMessage(ChatColor.AQUA + "Z offset set to " + this.zOff);
                 continue;
-            } else if (par[x].startsWith("ruler")) {
+            } else if (par[_i].startsWith("ruler")) {
                 this.zOff = 0;
                 this.yOff = 0;
                 this.xOff = 0;
@@ -75,66 +120,13 @@ public class Ruler extends Brush {
 
     }
 
-    public final void rulerA(final SnipeData v) {
-        final int bId = v.getVoxelId();
-        // targetBlock = targetBlock;
-        if (this.xOff == 0 && this.yOff == 0 && this.zOff == 0) {
-
-            this.coords[0] = this.getTargetBlock().getX();
-            this.coords[1] = this.getTargetBlock().getY();
-            this.coords[2] = this.getTargetBlock().getZ();
-            v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
-            this.first = !this.first;
-
-        } else {
-            final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
-
-            h.put(this.clampY(this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff));
-            this.setBlockIdAt(bId, this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff);
-            v.storeUndo(h);
-        }
-    }
-
-    public final void rulerP(final SnipeData v) {
-        if (this.coords[0] == 0 && this.coords[1] == 0 && this.coords[2] == 0) {
-            v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow.  Comparing to point 0,0,0 instead.");
-        }
-
-        v.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
-        v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock().getX() - this.coords[0]));
-        v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock().getY() - this.coords[1]));
-        v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock().getZ() - this.coords[2]));
-        double distance = Math.sqrt(Math.pow((this.coords[0] - this.getTargetBlock().getX()), 2) + Math.pow((this.coords[1] - this.getTargetBlock().getY()), 2)
-                + Math.pow((this.coords[2] - this.getTargetBlock().getZ()), 2));
-        distance = this.roundTwoDecimals(distance);
-        double blockdistance = Math.abs(Math.max(Math.max(Math.abs(this.getTargetBlock().getX() - this.coords[0]), Math.abs(this.getTargetBlock().getY() - this.coords[1])),
-                Math.abs(this.getTargetBlock().getZ() - this.coords[2]))) + 1;
-        blockdistance = this.roundTwoDecimals(blockdistance);
-        v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance);
-        v.sendMessage(ChatColor.AQUA + "Block distance = " + blockdistance); // more what people would expect - Gilt
-        // }
+    @Override
+    public final int getTimesUsed() {
+        return Ruler.timesUsed;
     }
 
     @Override
     public final void setTimesUsed(final int tUsed) {
         Ruler.timesUsed = tUsed;
-    }
-
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.rulerA(v);
-    }
-
-    @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.rulerP(v);
-    }
-
-    final double roundTwoDecimals(final double d) {
-        final java.text.DecimalFormat twoDForm = new java.text.DecimalFormat("#.##");
-        return Double.valueOf(twoDForm.format(d));
     }
 }

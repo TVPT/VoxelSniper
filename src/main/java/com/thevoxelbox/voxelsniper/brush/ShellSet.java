@@ -14,107 +14,104 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Piotr
  */
 public class ShellSet extends Brush {
-
-    protected Block b = null;
-
+    private Block block = null;
     private static int timesUsed = 0;
 
     public ShellSet() {
         this.setName("Shell Set");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return ShellSet.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        this.b = null;
-        vm.brushName(this.getName());
-        vm.size();
-        vm.voxel();
-        vm.replace();
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        ShellSet.timesUsed = tUsed;
-    }
-
     private boolean set(final Block bl, final SnipeData v) {
-        if (this.b == null) {
-            this.b = bl;
+        if (this.block == null) {
+            this.block = bl;
             return true;
         } else {
-            if (!this.b.getWorld().getName().equals(bl.getWorld().getName())) {
+            if (!this.block.getWorld().getName().equals(bl.getWorld().getName())) {
                 v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
-                this.b = null;
+                this.block = null;
                 return true;
             }
-            final int lowx = (this.b.getX() <= bl.getX()) ? this.b.getX() : bl.getX();
-            final int lowy = (this.b.getY() <= bl.getY()) ? this.b.getY() : bl.getY();
-            final int lowz = (this.b.getZ() <= bl.getZ()) ? this.b.getZ() : bl.getZ();
-            final int highx = (this.b.getX() >= bl.getX()) ? this.b.getX() : bl.getX();
-            final int highy = (this.b.getY() >= bl.getY()) ? this.b.getY() : bl.getY();
-            final int highz = (this.b.getZ() >= bl.getZ()) ? this.b.getZ() : bl.getZ();
-            if (Math.abs(highx - lowx) * Math.abs(highz - lowz) * Math.abs(highy - lowy) > 5000000) {
+            final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+            final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+            final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+            final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+            final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > 5000000) {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
-                final int bId = v.getVoxelId();
-                final int brId = v.getReplaceId();
-                final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(highx - lowx) * Math.abs(highz - lowz) * Math.abs(highy - lowy)) / 2));
-                for (int y = lowy; y <= highy; y++) {
-                    for (int x = lowx; x <= highx; x++) {
-                        for (int z = lowz; z <= highz; z++) {
-                            if (this.getWorld().getBlockTypeIdAt(x, y, z) == brId) {
+                final int _voxelMaterialId = v.getVoxelId();
+                final int _voxelReplaceMaterialId = v.getReplaceId();
+                final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy)) / 2));
+                for (int _y = _lowy; _y <= _highy; _y++) {
+                    for (int _x = _lowx; _x <= _highx; _x++) {
+                        for (int _z = _lowz; _z <= _highz; _z++) {
+                            if (this.getWorld().getBlockTypeIdAt(_x, _y, _z) == _voxelReplaceMaterialId) {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(x + 1, y, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(_x + 1, _y, _z) == _voxelReplaceMaterialId) {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(x - 1, y, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(_x - 1, _y, _z) == _voxelReplaceMaterialId) {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(x, y, z + 1) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z + 1) == _voxelReplaceMaterialId) {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(x, y, z - 1) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z - 1) == _voxelReplaceMaterialId) {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(x, y + 1, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y + 1, _z) == _voxelReplaceMaterialId) {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(x, y - 1, z) == brId) {
+                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y - 1, _z) == _voxelReplaceMaterialId) {
                                 continue;
                             } else {
-                                blocks.add(this.getWorld().getBlockAt(x, y, z));
+                                blocks.add(this.getWorld().getBlockAt(_x, _y, _z));
                             }
                         }
                     }
                 }
 
-                final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
-                for (final Block blo : blocks) {
-                    if (blo.getTypeId() != bId) {
-                        h.put(blo);
-                        blo.setTypeId(bId);
+                final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+                for (final Block _block : blocks) {
+                    if (_block.getTypeId() != _voxelMaterialId) {
+                        _undo.put(_block);
+                        _block.setTypeId(_voxelMaterialId);
                     }
                 }
-                v.storeUndo(h);
+                v.storeUndo(_undo);
                 v.sendMessage(ChatColor.AQUA + "Shell complete.");
             }
 
-            this.b = null;
+            this.block = null;
             return false;
         }
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // Derp
+    protected final void arrow(final SnipeData v) {
         if (this.set(this.getTargetBlock(), v)) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+    protected final void powder(final SnipeData v) {
         if (this.set(this.getLastBlock(), v)) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	vm.size();
+    	vm.voxel();
+    	vm.replace();
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return ShellSet.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	ShellSet.timesUsed = tUsed;
     }
 }

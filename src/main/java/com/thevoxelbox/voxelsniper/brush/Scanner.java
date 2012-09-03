@@ -12,7 +12,6 @@ import com.thevoxelbox.voxelsniper.Message;
  * @author DivineRage
  */
 public class Scanner extends Brush {
-
     private int depth = 24;
     private Material checkFor = Material.AIR;
 
@@ -20,42 +19,6 @@ public class Scanner extends Brush {
 
     public Scanner() {
         this.setName("Scanner");
-    }
-
-    @Override
-    public final int getTimesUsed() {
-        return Scanner.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
-        vm.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
-    }
-
-    @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
-            return;
-        }
-        for (int x = 1; x < par.length; x++) {
-            if (par[x].startsWith("d")) {
-                this.depth = this.clamp(Integer.parseInt(par[x].substring(1)), 1, 64);
-                v.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.clamp(Integer.parseInt(par[x].substring(1)), 1, 64));
-                continue;
-            } else {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
-
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        Scanner.timesUsed = tUsed;
     }
 
     private int clamp(final int value, final int min, final int max) {
@@ -75,9 +38,9 @@ public class Scanner extends Brush {
         switch (bf) {
         case NORTH:
             // Scan south
-            for (int i = 1; i < this.depth + 1; i++) {
-                if (this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY(), this.getBlockPositionZ()).getType() == this.checkFor) {
-                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+            for (int _i = 1; _i < this.depth + 1; _i++) {
+                if (this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY(), this.getBlockPositionZ()).getType() == this.checkFor) {
+                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + _i + " blocks.");
                     return;
                 }
             }
@@ -86,9 +49,9 @@ public class Scanner extends Brush {
 
         case SOUTH:
             // Scan north
-            for (int i = 1; i < this.depth + 1; i++) {
-                if (this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY(), this.getBlockPositionZ()).getType() == this.checkFor) {
-                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+            for (int _i = 1; _i < this.depth + 1; _i++) {
+                if (this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY(), this.getBlockPositionZ()).getType() == this.checkFor) {
+                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + _i + " blocks.");
                     return;
                 }
             }
@@ -97,9 +60,9 @@ public class Scanner extends Brush {
 
         case EAST:
             // Scan west
-            for (int i = 1; i < this.depth + 1; i++) {
-                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() + i).getType() == this.checkFor) {
-                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+            for (int _i = 1; _i < this.depth + 1; _i++) {
+                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() + _i).getType() == this.checkFor) {
+                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + _i + " blocks.");
                     return;
                 }
             }
@@ -108,9 +71,9 @@ public class Scanner extends Brush {
 
         case WEST:
             // Scan east
-            for (int i = 1; i < this.depth + 1; i++) {
-                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() - i).getType() == this.checkFor) {
-                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+            for (int _i = 1; _i < this.depth + 1; _i++) {
+                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() - _i).getType() == this.checkFor) {
+                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + _i + " blocks.");
                     return;
                 }
             }
@@ -119,12 +82,12 @@ public class Scanner extends Brush {
 
         case UP:
             // Scan down
-            for (int i = 1; i < this.depth + 1; i++) {
-                if ((this.getBlockPositionY() - i) <= 0) {
+            for (int _i = 1; _i < this.depth + 1; _i++) {
+                if ((this.getBlockPositionY() - _i) <= 0) {
                     break;
                 }
-                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - i, this.getBlockPositionZ()).getType() == this.checkFor) {
-                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - _i, this.getBlockPositionZ()).getType() == this.checkFor) {
+                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + _i + " blocks.");
                     return;
                 }
             }
@@ -133,12 +96,12 @@ public class Scanner extends Brush {
 
         case DOWN:
             // Scan up
-            for (int i = 1; i < this.depth + 1; i++) {
-                if ((this.getBlockPositionY() + i) >= 127) {
+            for (int _i = 1; _i < this.depth + 1; _i++) {
+                if ((this.getBlockPositionY() + _i) >= 127) {
                     break;
                 }
-                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + i, this.getBlockPositionZ()).getType() == this.checkFor) {
-                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _i, this.getBlockPositionZ()).getType() == this.checkFor) {
+                    v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + _i + " blocks.");
                     return;
                 }
             }
@@ -151,17 +114,50 @@ public class Scanner extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
+    protected final void arrow(final SnipeData v) {
         this.checkFor = Material.getMaterial(v.getVoxelId());
-
         this.scan(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.arrow(v);
+    protected final void powder(final SnipeData v) {
+    	this.checkFor = Material.getMaterial(v.getVoxelId());
+        this.scan(v, this.getTargetBlock().getFace(this.getLastBlock()));
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	vm.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
+    	vm.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
+    }
+    
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+    	if (par[1].equalsIgnoreCase("info")) {
+    		v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
+    		v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
+    		return;
+    	}
+    	for (int _x = 1; _x < par.length; _x++) {
+    		if (par[_x].startsWith("d")) {
+    			this.depth = this.clamp(Integer.parseInt(par[_x].substring(1)), 1, 64);
+    			v.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.clamp(Integer.parseInt(par[_x].substring(1)), 1, 64));
+    			continue;
+    		} else {
+    			v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+    		}
+    	}
+    	
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return Scanner.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	Scanner.timesUsed = tUsed;
     }
 }

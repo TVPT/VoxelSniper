@@ -16,7 +16,6 @@ import com.thevoxelbox.voxelsniper.Undo;
  *         Would it be possible to make this a performer brush, so people can use the Inclusion and Exclusion performers? -psa
  */
 public class Stamp extends Brush {
-
     protected class cBlock {
 
         public int id;
@@ -32,24 +31,13 @@ public class Stamp extends Brush {
             this.y = bly;
             this.z = blz;
         }
-
-        private boolean holdsData(final int da) {
-            switch (da) {
-
-            case (54):
-                return true;
-
-            default:
-                return false;
-            }
-        }
     }
 
     protected HashSet<cBlock> clone = new HashSet<cBlock>();
     protected HashSet<cBlock> fall = new HashSet<cBlock>();
     protected HashSet<cBlock> drop = new HashSet<cBlock>();
     protected HashSet<cBlock> solid = new HashSet<cBlock>();
-    protected Undo h;
+    protected Undo undo;
     protected boolean sorted = false;
 
     protected byte stamp = 0;
@@ -60,44 +48,8 @@ public class Stamp extends Brush {
         this.setName("Stamp");
     }
 
-    @Override
-    public int getTimesUsed() {
-        return Stamp.timesUsed;
-    }
-
-    @Override
-    public void info(final Message vm) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public final void reSort() {
         this.sorted = false;
-    }
-
-    @Override
-    public void setTimesUsed(final int tUsed) {
-        Stamp.timesUsed = tUsed;
-    }
-
-    @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        switch (this.stamp) {
-        case 0:
-            this.stamp(v);
-            break;
-
-        case 1:
-            this.stampNoAir(v);
-            break;
-
-        case 2:
-            this.stampFill(v);
-            break;
-
-        default:
-            v.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
-            break;
-        }
     }
 
     protected final boolean falling(final int id) {
@@ -191,14 +143,9 @@ public class Stamp extends Brush {
         }
     }
 
-    @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     protected final void setBlock(final cBlock cb) {
         final Block b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
-        this.h.put(b);
+        this.undo.put(b);
         b.setTypeId(cb.id);
         b.setData(cb.d);
     }
@@ -206,7 +153,7 @@ public class Stamp extends Brush {
     protected final void setBlockFill(final cBlock cb) {
         final Block b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
         if (b.getTypeId() == 0) {
-            this.h.put(b);
+            this.undo.put(b);
             b.setTypeId(cb.id);
             b.setData(cb.d);
         }
@@ -222,7 +169,7 @@ public class Stamp extends Brush {
         this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {
@@ -257,7 +204,7 @@ public class Stamp extends Brush {
             this.sorted = true;
         }
 
-        v.storeUndo(this.h);
+        v.storeUndo(this.undo);
     }
 
     protected final void stampFill(final SnipeData v) {
@@ -266,7 +213,7 @@ public class Stamp extends Brush {
         this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {
@@ -301,7 +248,7 @@ public class Stamp extends Brush {
             this.sorted = true;
         }
 
-        v.storeUndo(this.h);
+        v.storeUndo(this.undo);
     }
 
     protected final void stampNoAir(final SnipeData v) {
@@ -310,7 +257,7 @@ public class Stamp extends Brush {
         this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {
@@ -345,6 +292,47 @@ public class Stamp extends Brush {
             this.sorted = true;
         }
 
-        v.storeUndo(this.h);
+        v.storeUndo(this.undo);
+    }    
+
+    @Override
+    protected void arrow(final SnipeData v) {
+        switch (this.stamp) {
+        case 0:
+            this.stamp(v);
+            break;
+
+        case 1:
+            this.stampNoAir(v);
+            break;
+
+        case 2:
+            this.stampFill(v);
+            break;
+
+        default:
+            v.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+            break;
+        }
+    }
+    
+    @Override
+    protected void powder(final SnipeData v) {
+    	throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public void info(final Message vm) {
+    	throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public int getTimesUsed() {
+    	return Stamp.timesUsed;
+    }
+    
+    @Override
+    public void setTimesUsed(final int tUsed) {
+    	Stamp.timesUsed = tUsed;
     }
 }

@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
@@ -12,117 +13,115 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class SetRedstoneFlip extends Brush {
-
-    protected Block b = null;
-    protected Undo h;
+    private Block block = null;
+    private Undo undo;
     private boolean northSouth = true;
-
     private static int timesUsed = 0;
 
     public SetRedstoneFlip() {
         this.setName("Set Redstone Flip");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return SetRedstoneFlip.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        this.b = null;
-        vm.brushName(this.getName());
-    }
-
-    @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
-            v.sendMessage(ChatColor.AQUA
-                    + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
-            return;
-        }
-        for (int x = 1; x < par.length; x++) {
-            if (par[x].startsWith("n") || par[x].startsWith("s") || par[x].startsWith("ns")) {
-                this.northSouth = true;
-                v.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
-                continue;
-            } else if (par[x].startsWith("e") || par[x].startsWith("world") || par[x].startsWith("ew")) {
-                this.northSouth = false;
-                v.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
-                continue;
-            } else {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        SetRedstoneFlip.timesUsed = tUsed;
-    }
-
     private boolean set(final Block bl) {
-        if (this.b == null) {
-            this.b = bl;
+        if (this.block == null) {
+            this.block = bl;
             return true;
         } else {
-            this.h = new Undo(this.b.getWorld().getName());
-            final int lowx = (this.b.getX() <= bl.getX()) ? this.b.getX() : bl.getX();
-            final int lowy = (this.b.getY() <= bl.getY()) ? this.b.getY() : bl.getY();
-            final int lowz = (this.b.getZ() <= bl.getZ()) ? this.b.getZ() : bl.getZ();
-            final int highx = (this.b.getX() >= bl.getX()) ? this.b.getX() : bl.getX();
-            final int highy = (this.b.getY() >= bl.getY()) ? this.b.getY() : bl.getY();
-            final int highz = (this.b.getZ() >= bl.getZ()) ? this.b.getZ() : bl.getZ();
-            for (int y = lowy; y <= highy; y++) {
-                for (int x = lowx; x <= highx; x++) {
-                    for (int z = lowz; z <= highz; z++) {
-                        this.perform(this.clampY(x, y, z));
+            this.undo = new Undo(this.block.getWorld().getName());
+            final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+            final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+            final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+            final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+            final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            for (int _y = _lowy; _y <= _highy; _y++) {
+                for (int _x = _lowx; _x <= _highx; _x++) {
+                    for (int _z = _lowz; _z <= _highz; _z++) {
+                        this.perform(this.clampY(_x, _y, _z));
                     }
                 }
             }
-            this.b = null;
+            this.block = null;
             return false;
         }
     }
+    
+    private final void perform(final Block bl) {
+    	if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
+    		if (this.northSouth) {
+    			if ((bl.getData() % 4) == 1) {
+    				this.undo.put(bl);
+    				bl.setData((byte) (bl.getData() + 2));
+    			} else if ((bl.getData() % 4) == 3) {
+    				this.undo.put(bl);
+    				bl.setData((byte) (bl.getData() - 2));
+    			}
+    		} else {
+    			if ((bl.getData() % 4) == 2) {
+    				this.undo.put(bl);
+    				bl.setData((byte) (bl.getData() - 2));
+    			} else if ((bl.getData() % 4) == 0) {
+    				this.undo.put(bl);
+    				bl.setData((byte) (bl.getData() + 2));
+    			}
+    		}
+    	}
+    }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // Derp
+    protected final void arrow(final SnipeData v) { // Derp
         if (this.set(this.getTargetBlock())) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
-            v.storeUndo(this.h);
-        }
-    }
-
-    protected final void perform(final Block bl) {
-        if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
-            if (this.northSouth) {
-                if ((bl.getData() % 4) == 1) {
-                    this.h.put(bl);
-                    bl.setData((byte) (bl.getData() + 2));
-                } else if ((bl.getData() % 4) == 3) {
-                    this.h.put(bl);
-                    bl.setData((byte) (bl.getData() - 2));
-                }
-            } else {
-                if ((bl.getData() % 4) == 2) {
-                    this.h.put(bl);
-                    bl.setData((byte) (bl.getData() - 2));
-                } else if ((bl.getData() % 4) == 0) {
-                    this.h.put(bl);
-                    bl.setData((byte) (bl.getData() + 2));
-                }
-            }
+            v.storeUndo(this.undo);
         }
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+    protected final void powder(final SnipeData v) {
         if (this.set(this.getLastBlock())) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
-            v.storeUndo(this.h);
+            v.storeUndo(this.undo);
         }
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	this.block = null;
+    	vm.brushName(this.getName());
+    }
+    
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+    	if (par[1].equalsIgnoreCase("info")) {
+    		v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
+    		v.sendMessage(ChatColor.AQUA
+    				+ "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
+    		return;
+    	}
+    	for (int _x = 1; _x < par.length; _x++) {
+    		if (par[_x].startsWith("n") || par[_x].startsWith("s") || par[_x].startsWith("ns")) {
+    			this.northSouth = true;
+    			v.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
+    			continue;
+    		} else if (par[_x].startsWith("e") || par[_x].startsWith("world") || par[_x].startsWith("ew")) {
+    			this.northSouth = false;
+    			v.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
+    			continue;
+    		} else {
+    			v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+    		}
+    	}
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return SetRedstoneFlip.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	SetRedstoneFlip.timesUsed = tUsed;
     }
 }

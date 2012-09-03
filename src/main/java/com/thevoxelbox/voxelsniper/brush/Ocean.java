@@ -1,10 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
@@ -12,12 +11,11 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class Ocean extends Brush {
-
     protected int s1x;
     protected int s1z;
     protected int s2x;
     protected int s2z;
-    protected Undo h;
+    protected Undo undo;
 
     private static int timesUsed = 0;
 
@@ -25,34 +23,12 @@ public class Ocean extends Brush {
         this.setName("OCEANATOR 5000(tm)");
     }
 
-    @Override
-    public int getTimesUsed() {
-        return Ocean.timesUsed;
-    }
-
-    @Override
-    public void info(final Message vm) {
-        vm.brushName(this.getName());
-    }
-
-    @Override
-    public void setTimesUsed(final int tUsed) {
-        Ocean.timesUsed = tUsed;
-    }
-
-    @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.h = new Undo(this.getTargetBlock().getWorld().getName());
-        this.oceanator(v);
-        v.storeUndo(this.h);
-    }
-
-    protected final int getHeight(final int bx, final int bz) {
-        int i;
-        for (int y = 127; y > 0; y--) {
-            i = this.getBlockIdAt(bx, y, bz);
-            if (i != 0) {
-                switch (i) {
+    private final int getHeight(final int maxWorldHeight, final int bx, final int bz) {
+        int _i = 0;
+        for (int _y = 127; _y > 0; _y--) {
+            _i = this.getBlockIdAt(bx, _y, bz);
+            if (_i != 0) {
+                switch (_i) {
                 case 0:
                     break;
 
@@ -108,162 +84,167 @@ public class Ocean extends Brush {
                     break;
 
                 default:
-                    return y;
+                    return _y;
                 }
             }
         }
         return 0;
     }
 
-    protected void ocean(final Chunk c) {
-    }
-
     protected final void oceanator(final SnipeData v) {
-        int sx = (int) Math.floor((double) this.getTargetBlock().getX() / 16) * 16;
-        int sz = (int) Math.floor((double) this.getTargetBlock().getZ() / 16) * 16;
+        int _sx = (int) Math.floor((double) this.getTargetBlock().getX() / 16) * 16;
+        int _sz = (int) Math.floor((double) this.getTargetBlock().getZ() / 16) * 16;
 
-        int y;
-        int dif;
+        int _y = 0;
+        int _dif = 0;
         if (this.getTargetBlock().getX() >= 0 && this.getTargetBlock().getZ() >= 0) {
-            for (int x = sx; x < sx + 16; x++) {
-                for (int z = sz; z < sz + 16; z++) {
-                    this.h.put(this.clampY(x, 63, z));
-                    this.setBlockIdAt(9, x, 63, z);
+            for (int _x = _sx; _x < _sx + 16; _x++) {
+                for (int _z = _sz; _z < _sz + 16; _z++) {
+                    this.undo.put(this.clampY(_x, 63, _z));
+                    this.setBlockIdAt(9, _x, 63, _z);
                 }
             }
-            for (int x = sx; x < sx + 16; x++) {
-                for (int z = sz; z < sz + 16; z++) {
-                    y = this.getHeight(x, z);
-                    if (y > 59) {
-                        dif = 59 - (y - 59);
-                        for (int t = 127; t > dif; t--) {
-                            if (t > 8) {
-                                if (t > 63) {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(0, x, t, z);
+            for (int _x = _sx; _x < _sx + 16; _x++) {
+                for (int _z = _sz; _z < _sz + 16; _z++) {
+                    _y = this.getHeight(v.getWorld().getMaxHeight(), _x, _z);
+                    if (_y > 59) {
+                        _dif = 59 - (_y - 59);
+                        for (int _t = 127; _t > _dif; _t--) {
+                            if (_t > 8) {
+                                if (_t > 63) {
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(9, x, t, z);
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(9, _x, _t, _z);
                                 }
                             }
                         }
-                        for (int r = 63; r > 5; r--) {
-                            if (this.getBlockIdAt(x, r, z) == 0) {
-                                this.h.put(this.clampY(x, r, z));
-                                this.setBlockIdAt(9, x, r, z);
+                        for (int _r = 63; _r > 5; _r--) {
+                            if (this.getBlockIdAt(_x, _r, _z) == 0) {
+                                this.undo.put(this.clampY(_x, _r, _z));
+                                this.setBlockIdAt(9, _x, _r, _z);
                             }
                         }
                     }
                 }
             }
-            this.setTargetBlock(this.clampY(sx + 8, this.getTargetBlock().getY(), sz + 8));
+            this.setTargetBlock(this.clampY(_sx + 8, this.getTargetBlock().getY(), _sz + 8));
         } else if (this.getTargetBlock().getX() < 0 && this.getTargetBlock().getZ() > 0) {
-            sx = (int) Math.floor((this.getTargetBlock().getX() - 1) / 16) * 16;
-            for (int x = sx - 16; x < sx; x++) {
-                for (int z = sz; z < sz + 16; z++) {
-                    this.h.put(this.clampY(x, 63, z));
-                    this.setBlockIdAt(9, x, 63, z);
+            _sx = (int) Math.floor((this.getTargetBlock().getX() - 1) / 16) * 16;
+            for (int _x = _sx - 16; _x < _sx; _x++) {
+                for (int _z = _sz; _z < _sz + 16; _z++) {
+                    this.undo.put(this.clampY(_x, 63, _z));
+                    this.setBlockIdAt(9, _x, 63, _z);
                 }
             }
-            for (int x = sx - 16; x < sx; x++) {
-                for (int z = sz; z < sz + 16; z++) {
-                    y = this.getHeight(x, z);
-                    if (y > 59) {
-                        dif = 59 - (y - 59);
-                        for (int t = 127; t > dif; t--) {
+            for (int _x = _sx - 16; _x < _sx; _x++) {
+                for (int _z = _sz; _z < _sz + 16; _z++) {
+                    _y = this.getHeight(v.getWorld().getMaxHeight(), _x, _z);
+                    if (_y > 59) {
+                        _dif = 59 - (_y - 59);
+                        for (int t = 127; t > _dif; t--) {
                             if (t > 8) {
                                 if (t > 63) {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(0, x, t, z);
+                                    this.undo.put(this.clampY(_x, t, _z));
+                                    this.setBlockIdAt(0, _x, t, _z);
                                 } else {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(9, x, t, z);
+                                    this.undo.put(this.clampY(_x, t, _z));
+                                    this.setBlockIdAt(9, _x, t, _z);
                                 }
                             }
                         }
-                        for (int r = 63; r > 5; r--) {
-                            if (this.getBlockIdAt(x, r, z) == 0) {
-                                this.h.put(this.clampY(x, r, z));
-                                this.setBlockIdAt(9, x, r, z);
+                        for (int _r = 63; _r > 5; _r--) {
+                            if (this.getBlockIdAt(_x, _r, _z) == 0) {
+                                this.undo.put(this.clampY(_x, _r, _z));
+                                this.setBlockIdAt(9, _x, _r, _z);
                             }
                         }
                     }
                 }
             }
-            this.setTargetBlock(this.clampY(sx - 8, this.getTargetBlock().getY(), sz + 8));
+            this.setTargetBlock(this.clampY(_sx - 8, this.getTargetBlock().getY(), _sz + 8));
         } else if (this.getTargetBlock().getX() > 0 && this.getTargetBlock().getZ() < 0) {
-            sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / 16) * 16;
-            for (int x = sx; x < sx + 16; x++) {
-                for (int z = sz - 16; z < sz; z++) {
-                    this.h.put(this.clampY(x, 63, z));
-                    this.setBlockIdAt(9, x, 63, z);
+            _sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / 16) * 16;
+            for (int _x = _sx; _x < _sx + 16; _x++) {
+                for (int _z = _sz - 16; _z < _sz; _z++) {
+                    this.undo.put(this.clampY(_x, 63, _z));
+                    this.setBlockIdAt(9, _x, 63, _z);
                 }
             }
-            for (int x = sx; x < sx + 16; x++) {
-                for (int z = sz - 16; z < sz; z++) {
-                    y = this.getHeight(x, z);
-                    if (y > 59) {
-                        dif = 59 - (y - 59);
-                        for (int t = 127; t > dif; t--) {
-                            if (t > 8) {
-                                if (t > 63) {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(0, x, t, z);
+            for (int _x = _sx; _x < _sx + 16; _x++) {
+                for (int _z = _sz - 16; _z < _sz; _z++) {
+                    _y = this.getHeight(v.getWorld().getMaxHeight(), _x, _z);
+                    if (_y > 59) {
+                        _dif = 59 - (_y - 59);
+                        for (int _t = 127; _t > _dif; _t--) {
+                            if (_t > 8) {
+                                if (_t > 63) {
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(9, x, t, z);
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(9, _x, _t, _z);
                                 }
                             }
                         }
-                        for (int r = 63; r > 5; r--) {
-                            if (this.getBlockIdAt(x, r, z) == 0) {
-                                this.h.put(this.clampY(x, r, z));
-                                this.setBlockIdAt(9, x, r, z);
+                        for (int _r = 63; _r > 5; _r--) {
+                            if (this.getBlockIdAt(_x, _r, _z) == 0) {
+                                this.undo.put(this.clampY(_x, _r, _z));
+                                this.setBlockIdAt(9, _x, _r, _z);
                             }
                         }
                     }
                 }
             }
-            this.setTargetBlock(this.clampY(sx + 8, this.getTargetBlock().getY(), sz - 8));
+            this.setTargetBlock(this.clampY(_sx + 8, this.getTargetBlock().getY(), _sz - 8));
         } else if (this.getTargetBlock().getX() < 0 && this.getTargetBlock().getZ() < 0) {
-            sx = (int) Math.floor((this.getTargetBlock().getX() - 1) / 16) * 16;
-            sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / 16) * 16;
-            for (int x = sx - 16; x < sx; x++) {
-                for (int z = sz - 16; z < sz; z++) {
-                    this.h.put(this.clampY(x, 63, z));
-                    this.setBlockIdAt(9, x, 63, z);
+            _sx = (int) Math.floor((this.getTargetBlock().getX() - 1) / 16) * 16;
+            _sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / 16) * 16;
+            for (int _x = _sx - 16; _x < _sx; _x++) {
+                for (int _z = _sz - 16; _z < _sz; _z++) {
+                    this.undo.put(this.clampY(_x, 63, _z));
+                    this.setBlockIdAt(9, _x, 63, _z);
                 }
             }
-            for (int x = sx - 16; x < sx; x++) {
-                for (int z = sz - 16; z < sz; z++) {
-                    y = this.getHeight(x, z);
-                    if (y > 59) {
-                        dif = 59 - (y - 59);
-                        for (int t = 127; t > dif; t--) {
-                            if (t > 8) {
-                                if (t > 63) {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(0, x, t, z);
+            for (int _x = _sx - 16; _x < _sx; _x++) {
+                for (int _z = _sz - 16; _z < _sz; _z++) {
+                    _y = this.getHeight(v.getWorld().getMaxHeight(), _x, _z);
+                    if (_y > 59) {
+                        _dif = 59 - (_y - 59);
+                        for (int _t = 127; _t > _dif; _t--) {
+                            if (_t > 8) {
+                                if (_t > 63) {
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
-                                    this.h.put(this.clampY(x, t, z));
-                                    this.setBlockIdAt(9, x, t, z);
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(9, _x, _t, _z);
                                 }
                             }
                         }
-                        for (int r = 63; r > 5; r--) {
-                            if (this.getBlockIdAt(x, r, z) == 0) {
-                                this.h.put(this.clampY(x, r, z));
-                                this.setBlockIdAt(9, x, r, z);
+                        for (int _r = 63; _r > 5; _r--) {
+                            if (this.getBlockIdAt(_x, _r, _z) == 0) {
+                                this.undo.put(this.clampY(_x, _r, _z));
+                                this.setBlockIdAt(9, _x, _r, _z);
                             }
                         }
                     }
                 }
             }
-            this.setTargetBlock(this.clampY(sx - 8, this.getTargetBlock().getY(), sz - 8));
+            this.setTargetBlock(this.clampY(_sx - 8, this.getTargetBlock().getY(), _sz - 8));
         }
     }
+    
+    protected final Block setX(final Block bl, final int bx) {
+    	return this.clampY(bx, bl.getY(), bl.getZ());
+    }
+    
+    protected final Block setZ(final Block bl, final int bz) {
+    	return this.clampY(bl.getX(), bl.getY(), bz);
+    }
 
-    protected final void oceanatorBig(final SnipeData v) {
+    private final void oceanatorBig(final SnipeData v) {
         this.oceanator(v); // center
         this.setTargetBlock(this.setX(this.getTargetBlock(), this.getTargetBlock().getX() + 16));
         this.oceanator(v); // right
@@ -284,17 +265,31 @@ public class Ocean extends Brush {
     }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.h = new Undo(this.getTargetBlock().getWorld().getName());
+    protected void arrow(final SnipeData v) {
+        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
+        this.oceanator(v);
+        v.storeUndo(this.undo);
+    }
+
+    @Override
+    protected void powder(final SnipeData v) {
+        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
         this.oceanatorBig(v);
-        v.storeUndo(this.h);
+        v.storeUndo(this.undo);
     }
-
-    protected final Block setX(final Block bl, final int bx) {
-        return this.clampY(bx, bl.getY(), bl.getZ());
+    
+    @Override
+    public void info(final Message vm) {
+    	vm.brushName(this.getName());
     }
-
-    protected final Block setZ(final Block bl, final int bz) {
-        return this.clampY(bl.getX(), bl.getY(), bz);
+    
+    @Override
+    public int getTimesUsed() {
+    	return Ocean.timesUsed;
+    }
+    
+    @Override
+    public void setTimesUsed(final int tUsed) {
+    	Ocean.timesUsed = tUsed;
     }
 }

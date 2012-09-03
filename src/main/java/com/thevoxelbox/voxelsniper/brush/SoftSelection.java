@@ -13,7 +13,6 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class SoftSelection extends Brush {
-
     protected class sBlock {
 
         public int id;
@@ -33,13 +32,11 @@ public class SoftSelection extends Brush {
         }
     }
 
-    // protected final sPoint p1 = new sPoint(0, 1);
-    // protected final sPoint p2 = new sPoint(1, 0);
     protected HashSet<sBlock> surface = new HashSet<sBlock>();
     protected double c1 = 1;
     protected double c2 = 0;
 
-    protected Undo h;
+    protected Undo undo;
 
     private static int timesUsed = 0;
 
@@ -47,38 +44,13 @@ public class SoftSelection extends Brush {
         this.setName("SoftSelection");
     }
 
-    @Override
-    public int getTimesUsed() {
-        return SoftSelection.timesUsed;
-    }
-
-    @Override
-    public void info(final Message vm) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setTimesUsed(final int tUsed) {
-        SoftSelection.timesUsed = tUsed;
-    }
-
-    @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     protected final double getStr(final double t) {
         final double lt = 1 - t;
-        return (lt * lt * lt) + 3 * (lt * lt) * t * this.c1 + 3 * lt * (t * t) * this.c2; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
-        // double Ay = 1 + (t * (c1 - 1));
-        // double By = c1 + (t * (c2 - c1));
-        // double Cy = c2 + (t * (0 - c2));
-        // double My = Ay + (t * (By - Ay));
-        // double Ny = By + (t * (Cy - By));
+        return (lt * lt * lt) + 3 * (lt * lt) * t * this.c1 + 3 * lt * (t * t) * this.c2;
     }
 
     protected final void getSurface(final SnipeData v) {
-        final int bsize = v.getBrushSize();
+        final int _bSize = v.getBrushSize();
 
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
@@ -86,18 +58,18 @@ public class SoftSelection extends Brush {
 
         this.surface.clear();
 
-        final double bpow = Math.pow(bsize + 0.5, 2);
-        for (int z = -bsize; z <= bsize; z++) {
-            final double zpow = Math.pow(z, 2);
-            final int zz = this.getBlockPositionZ() + z;
-            for (int x = -bsize; x <= bsize; x++) {
-                final double xpow = Math.pow(x, 2);
-                final int xx = this.getBlockPositionX() + x;
-                for (int y = -bsize; y <= bsize; y++) {
-                    final double pow = (xpow + Math.pow(y, 2) + zpow);
-                    if (pow <= bpow) {
-                        if (this.isSurface(xx, this.getBlockPositionY() + y, zz)) {
-                            this.surface.add(new sBlock(this.clampY(xx, this.getBlockPositionY() + y, zz), this.getStr(((pow / bpow)))));
+        final double _bPow = Math.pow(_bSize + 0.5, 2);
+        for (int _z = -_bSize; _z <= _bSize; _z++) {
+            final double _zPow = Math.pow(_z, 2);
+            final int _zz = this.getBlockPositionZ() + _z;
+            for (int _x = -_bSize; _x <= _bSize; _x++) {
+                final double _xPow = Math.pow(_x, 2);
+                final int _xx = this.getBlockPositionX() + _x;
+                for (int _y = -_bSize; _y <= _bSize; _y++) {
+                    final double _pow = (_xPow + Math.pow(_y, 2) + _zPow);
+                    if (_pow <= _bPow) {
+                        if (this.isSurface(_xx, this.getBlockPositionY() + _y, _zz)) {
+                            this.surface.add(new sBlock(this.clampY(_xx, this.getBlockPositionY() + _y, _zz), this.getStr(((_pow / _bPow)))));
                         }
                     }
                 }
@@ -125,9 +97,29 @@ public class SoftSelection extends Brush {
             return false;
         }
     }
+    
+    @Override
+    protected void arrow(final SnipeData v) {
+    	throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+    protected void powder(final SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public void info(final Message vm) {
+    	throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public int getTimesUsed() {
+    	return SoftSelection.timesUsed;
+    }
+    
+    @Override
+    public void setTimesUsed(final int tUsed) {
+    	SoftSelection.timesUsed = tUsed;
     }
 }

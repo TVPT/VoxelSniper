@@ -21,29 +21,35 @@ import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 public abstract class Brush implements IBrush {
 
     /**
-     * Pointer to the world the current action is being executed.
+     * Reference to the world the current action is being executed.
      */
     private World world;
+    
     /**
      * Targeted reference point X.
      */
     private int blockPositionX;
+    
     /**
      * Targeted reference point Y.
      */
     private int blockPositionY;
+    
     /**
      * Targeted reference point Z.
      */
     private int blockPositionZ;
+    
     /**
      * Brush'world Target Block Derived from getTarget().
      */
     private Block targetBlock;
+    
     /**
      * Brush'world Target 'Last' Block Block at the face of the block clicked ColDerived from getTarget().
      */
     private Block lastBlock;
+    
     /**
      * Brush'world private name.
      */
@@ -66,21 +72,22 @@ public abstract class Brush implements IBrush {
         return this.getWorld().getBlockAt(x, y, z);
     }
 
-    @Override
-    public final String getName() {
-        return this.name;
-    }
+	private boolean preparePerform(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
+		this.setTimesUsed(this.getTimesUsed() + 1);
+		this.setWorld(this.getTargetBlock().getWorld());
+		this.setBlockPositionX(this.getTargetBlock().getX());
+		this.setBlockPositionY(this.getTargetBlock().getY());
+		this.setBlockPositionZ(this.getTargetBlock().getZ());
+		if (this.getTarget(v, clickedBlock, clickedFace)) {
+			this.updateScale();
+			if (this instanceof PerformBrush) {
+				((PerformBrush) this).initP(v);
+			}
+			return true;
+		}
 
-    @Override
-    public abstract int getTimesUsed();
-
-    @Override
-    public abstract void info(Message vm);
-
-    @Override
-    public void parameters(final String[] par, final SnipeData v) {
-        v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
-    }
+		return false;
+	}
 
     @Override
     public boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
@@ -89,24 +96,14 @@ public abstract class Brush implements IBrush {
         case RIGHT_CLICK_BLOCK:
             switch (heldItem) {
             case ARROW:
-                this.setTimesUsed(this.getTimesUsed() + 1);
-                if (this.getTarget(v, clickedBlock, clickedFace)) {
-                    this.updateScale();
-                    if (this instanceof PerformBrush) {
-                        ((PerformBrush) this).initP(v);
-                    }
+                if (this.preparePerform(v, clickedBlock, clickedFace)) {
                     this.arrow(v);
                     return true;
                 }
                 break;
 
             case SULPHUR:
-                this.setTimesUsed(this.getTimesUsed() + 1);
-                if (this.getTarget(v, clickedBlock, clickedFace)) {
-                    this.updateScale();
-                    if (this instanceof PerformBrush) {
-                        ((PerformBrush) this).initP(v);
-                    }
+            	if (this.preparePerform(v, clickedBlock, clickedFace)) {
                     this.powder(v);
                     return true;
                 }
@@ -136,14 +133,6 @@ public abstract class Brush implements IBrush {
     }
 
     @Override
-    public final void setName(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public abstract void setTimesUsed(int timesUsed);
-
-    @Override
     public void updateScale() {
     }
 
@@ -155,48 +144,22 @@ public abstract class Brush implements IBrush {
      */
     protected void arrow(final SnipeData v) {
     }
-
+    
     /**
-     * Returns the block at the passed coordinates.
+     * The powder action. Executed when a player RightClicks with Gunpowder
      * 
-     * @param ax
-     *            X coordinate
-     * @param ay
-     *            Y coordinate
-     * @param az
-     *            Z coordinate
-     * @return int
+     * @param v
+     *            Sniper caller
      */
-    protected final int getBlockIdAt(final int ax, final int ay, final int az) {
-        return this.getWorld().getBlockAt(ax, ay, az).getTypeId();
+    protected void powder(final SnipeData v) {
     }
+    
+    @Override
+    public abstract void info(Message vm);
 
-    /**
-     * @return the blockPositionX
-     */
-    protected final int getBlockPositionX() {
-        return this.blockPositionX;
-    }
-
-    /**
-     * @return the blockPositionY
-     */
-    protected final int getBlockPositionY() {
-        return this.blockPositionY;
-    }
-
-    /**
-     * @return the blockPositionZ
-     */
-    protected final int getBlockPositionZ() {
-        return this.blockPositionZ;
-    }
-
-    /**
-     * @return the lastBlock
-     */
-    protected final Block getLastBlock() {
-        return this.lastBlock;
+    @Override
+    public void parameters(final String[] par, final SnipeData v) {
+        v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
     }
 
     /**
@@ -245,6 +208,11 @@ public abstract class Brush implements IBrush {
             }
         }
     }
+    
+    @Override
+    public final String getName() {
+        return this.name;
+    }
 
     /**
      * @return the targetBlock
@@ -259,15 +227,53 @@ public abstract class Brush implements IBrush {
     protected final World getWorld() {
         return this.world;
     }
+    
+    /**
+     * Returns the block at the passed coordinates.
+     * 
+     * @param ax
+     *            X coordinate
+     * @param ay
+     *            Y coordinate
+     * @param az
+     *            Z coordinate
+     * @return int
+     */
+    protected final int getBlockIdAt(final int ax, final int ay, final int az) {
+        return this.getWorld().getBlockAt(ax, ay, az).getTypeId();
+    }
 
     /**
-     * The powder action. Executed when a player RightClicks with Gunpowder
-     * 
-     * @param v
-     *            Sniper caller
+     * @return the blockPositionX
      */
-    protected void powder(final SnipeData v) {
+    protected final int getBlockPositionX() {
+        return this.blockPositionX;
     }
+
+    /**
+     * @return the blockPositionY
+     */
+    protected final int getBlockPositionY() {
+        return this.blockPositionY;
+    }
+
+    /**
+     * @return the blockPositionZ
+     */
+    protected final int getBlockPositionZ() {
+        return this.blockPositionZ;
+    }
+
+    /**
+     * @return the lastBlock
+     */
+    protected final Block getLastBlock() {
+        return this.lastBlock;
+    }
+    
+
+    @Override
+    public abstract int getTimesUsed();
 
     /**
      * 
@@ -332,6 +338,14 @@ public abstract class Brush implements IBrush {
     protected final void setTargetBlock(final Block targetBlock) {
         this.targetBlock = targetBlock;
     }
+    
+    @Override
+    public final void setName(final String name) {
+        this.name = name;
+    }
+
+    @Override
+    public abstract void setTimesUsed(int timesUsed);
 
     /**
      * @param world

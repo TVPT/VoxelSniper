@@ -14,13 +14,11 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author giltwist
  */
 public class Line extends PerformBrush {
-
-    protected boolean first = true;
-    protected double[] origincoords = new double[3];
-    protected double[] targetcoords = new double[3];
-    protected int[] currentcoords = new int[3];
-    protected int[] previouscoords = new int[3];
-    protected double[] slopevector = new double[3];
+    private double[] origincoords = new double[3];
+    private double[] targetcoords = new double[3];
+    private int[] currentcoords = new int[3];
+    private int[] previouscoords = new int[3];
+    private double[] slopevector = new double[3];
 
     private static int timesUsed = 0;
 
@@ -28,43 +26,32 @@ public class Line extends PerformBrush {
         this.setName("Line");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return Line.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        // voxelMessage.voxel();
-    }
-
-    public final void LineA(final SnipeData v) {
+    private final void lineArrow(final SnipeData v) {
         v.owner().getPlayer().sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
     }
 
-    public final void LineP(final SnipeData v) {
+    private final void linePowder(final SnipeData v) {
         this.setWorld(v.owner().getPlayer().getWorld());
-        double linelength = 0;
+        double _lineLength = 0;
 
         // Calculate slope vector
-        for (int i = 0; i < 3; i++) {
-            this.slopevector[i] = this.targetcoords[i] - this.origincoords[i];
+        for (int _i = 0; _i < 3; _i++) {
+            this.slopevector[_i] = this.targetcoords[_i] - this.origincoords[_i];
         }
         // Calculate line length in
-        linelength = Math.pow((Math.pow(this.slopevector[0], 2) + Math.pow(this.slopevector[1], 2) + Math.pow(this.slopevector[2], 2)), .5);
+        _lineLength = Math.pow((Math.pow(this.slopevector[0], 2) + Math.pow(this.slopevector[1], 2) + Math.pow(this.slopevector[2], 2)), .5);
 
         // Unitize slope vector
-        for (int i = 0; i < 3; i++) {
-            this.slopevector[i] = this.slopevector[i] / linelength;
+        for (int _i = 0; _i < 3; _i++) {
+            this.slopevector[_i] = this.slopevector[_i] / _lineLength;
         }
         // Make the Changes
 
-        for (int t = 0; t <= linelength; t++) {
+        for (int _t = 0; _t <= _lineLength; _t++) {
 
             // Update current coords
-            for (int i = 0; i < 3; i++) {
-                this.currentcoords[i] = (int) (this.origincoords[i] + t * this.slopevector[i]);
+            for (int _i = 0; _i < 3; _i++) {
+                this.currentcoords[_i] = (int) (this.origincoords[_i] + _t * this.slopevector[_i]);
             }
 
             if (this.currentcoords[0] != this.previouscoords[0] || this.currentcoords[1] != this.previouscoords[1]
@@ -74,50 +61,50 @@ public class Line extends PerformBrush {
 
             this.previouscoords = Arrays.copyOf(this.currentcoords, this.currentcoords.length);
         }
-
-        // Line might be a block short, check target block
-        // current.perform(clampY((int) Math.floor(targetcoords[0] - .5 * targetcoords[0] / Math.abs(targetcoords[0])), (int) Math.floor(targetcoords[1] - .5),
-        // (int) Math.floor(targetcoords[2] - .5 * targetcoords[2] / Math.abs(targetcoords[2]))));
-
+        
         v.storeUndo(this.current.getUndo());
-
-        // RESET BRUSH
-        // origincoords[0] = 0;
-        // origincoords[1] = 0;
-        // origincoords[2] = 0;
+    }
+    
+    @Override
+    protected final void arrow(final SnipeData v) {
+    	this.origincoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX());
+    	this.origincoords[1] = this.getTargetBlock().getY() + .5;
+    	this.origincoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
+    	this.lineArrow(v);
+    }
+    
+    @Override
+    protected final void powder(final SnipeData v) {
+    	if (this.origincoords[0] == 0 && this.origincoords[1] == 0 && this.origincoords[2] == 0) {
+    		v.owner().getPlayer().sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+    	} else {
+    		this.targetcoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX());
+    		this.targetcoords[1] = this.getTargetBlock().getY() + .5;
+    		this.targetcoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
+    		this.linePowder(v);
+    	}
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD
                     + "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
         }
     }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return Line.timesUsed;
+    }
 
     @Override
     public final void setTimesUsed(final int tUsed) {
         Line.timesUsed = tUsed;
-    }
-
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.origincoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
-                                                                                                // different?
-        this.origincoords[1] = this.getTargetBlock().getY() + .5;
-        this.origincoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
-        this.LineA(v);
-    }
-
-    @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (this.origincoords[0] == 0 && this.origincoords[1] == 0 && this.origincoords[2] == 0) {
-            v.owner().getPlayer().sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
-        } else {
-            this.targetcoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX());
-            this.targetcoords[1] = this.getTargetBlock().getY() + .5;
-            this.targetcoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
-            this.LineP(v);
-        }
     }
 }

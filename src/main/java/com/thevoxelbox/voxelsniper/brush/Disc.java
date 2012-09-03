@@ -14,7 +14,6 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  */
 public class Disc extends PerformBrush {
     private double trueCircle = 0;
-
     private static int timesUsed = 0;
 
     /**
@@ -29,7 +28,7 @@ public class Disc extends PerformBrush {
      * 
      * @param v
      */
-    public final void disc(final SnipeData v, final Block targetBlock) {
+    private final void disc(final SnipeData v, final Block targetBlock) {
         final double _radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
         final Vector _centerPoint = targetBlock.getLocation().toVector();
         final Vector _currentPoint = _centerPoint.clone();
@@ -47,59 +46,56 @@ public class Disc extends PerformBrush {
     }
 
     @Override
-    public final int getTimesUsed() {
-        return Disc.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.size();
-        // voxelMessage.voxel();
-    }
-
-    @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b d true|false"
-                    + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
-            return;
-        }
-        for (int _x = 1; _x < par.length; _x++) {
-            final String _string = par[_x].toLowerCase();
-            if (_string.startsWith("true")) {
-                this.trueCircle = 0.5;
-                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
-            } else if (_string.startsWith("false")) {
-                this.trueCircle = 0;
-                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
-            } else {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        Disc.timesUsed = tUsed;
-    }
-
-    @Override
     protected final void arrow(final SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
         this.disc(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
+    	this.setBlockPositionX(this.getLastBlock().getX());
+    	this.setBlockPositionY(this.getLastBlock().getY());
+    	this.setBlockPositionZ(this.getLastBlock().getZ());
         this.disc(v, this.getLastBlock());
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return Disc.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	Disc.timesUsed = tUsed;
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	vm.size();
+    	// voxelMessage.voxel();
+    }
+    
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+    	if (par[1].equalsIgnoreCase("info")) {
+    		v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
+    		v.sendMessage(ChatColor.AQUA + "/b d true|false"
+    				+ " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
+    		return;
+    	}
+    	for (int _x = 1; _x < par.length; _x++) {
+    		final String _string = par[_x].toLowerCase();
+    		if (_string.startsWith("true")) {
+    			this.trueCircle = 0.5;
+    			v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+    			continue;
+    		} else if (_string.startsWith("false")) {
+    			this.trueCircle = 0;
+    			v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+    			continue;
+    		} else {
+    			v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+    		}
+    	}
     }
 }

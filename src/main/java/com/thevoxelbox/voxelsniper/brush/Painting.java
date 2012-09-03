@@ -9,26 +9,10 @@ import com.thevoxelbox.voxelsniper.PaintingWrapper;
  * @author Voxel
  */
 public class Painting extends Brush {
-
     private static int timesUsed = 0;
 
     public Painting() {
         this.setName("Painting");
-    }
-
-    @Override
-    public final int getTimesUsed() {
-        return Painting.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        Painting.timesUsed = tUsed;
     }
 
     /**
@@ -38,7 +22,7 @@ public class Painting extends Brush {
      *            Sniper caller
      */
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+    protected final void arrow(final SnipeData v) {
         PaintingWrapper.paint(v.owner().getPlayer(), true, false, 0);
     }
 
@@ -49,7 +33,22 @@ public class Painting extends Brush {
      *            Sniper caller
      */
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+    protected final void powder(final SnipeData v) {
         PaintingWrapper.paint(v.owner().getPlayer(), true, true, 0);
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return Painting.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	Painting.timesUsed = tUsed;
     }
 }

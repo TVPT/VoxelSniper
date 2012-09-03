@@ -13,7 +13,6 @@ import com.thevoxelbox.voxelsniper.Message;
  * @author Mick
  */
 public class TreeSnipe extends Brush {
-
     private TreeType treeType = TreeType.TREE;
 
     private static int timesUsed = 0;
@@ -22,41 +21,7 @@ public class TreeSnipe extends Brush {
         this.setName("Tree Snipe");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return TreeSnipe.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        this.printTreeType(vm);
-    }
-
-    @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-            v.sendMessage(ChatColor.AQUA + "/b t treetype");
-            this.printTreeType(v.getVoxelMessage());
-            return;
-        }
-        for (int x = 1; x < par.length; x++) {
-            try {
-                this.treeType = TreeType.valueOf(par[x].toUpperCase());
-                this.printTreeType(v.getVoxelMessage());
-            } catch (final IllegalArgumentException _ex) {
-                v.getVoxelMessage().brushMessage("No such tree type.");
-            }
-        }
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        TreeSnipe.timesUsed = tUsed;
-    }
-
-    public final void single(final SnipeData v) {
+    private final void single(final SnipeData v) {
         try {
             this.getWorld().generateTree(new Location(this.getWorld(), this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()), this.treeType);
         } catch (final Exception e) {
@@ -65,9 +30,9 @@ public class TreeSnipe extends Brush {
     }
 
     private int getLocation(final SnipeData v) {
-        for (int i = 1; i < (255 - this.getBlockPositionY()); i++) {
-            if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + i, this.getBlockPositionZ()).getType() == Material.AIR) {
-                return this.getBlockPositionY() + i;
+        for (int _i = 1; _i < (255 - this.getBlockPositionY()); _i++) {
+            if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _i, this.getBlockPositionZ()).getType() == Material.AIR) {
+                return this.getBlockPositionY() + _i;
             }
         }
         return this.getBlockPositionY();
@@ -92,19 +57,47 @@ public class TreeSnipe extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
+    protected final void arrow(final SnipeData v) {
         this.setBlockPositionY(this.getLocation(v));
         this.single(v);
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
+    protected final void powder(final SnipeData v) {
         this.single(v);
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	this.printTreeType(vm);
+    }
+    
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+    	if (par[1].equalsIgnoreCase("info")) {
+    		v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
+    		v.sendMessage(ChatColor.AQUA + "/b t treetype");
+    		this.printTreeType(v.getVoxelMessage());
+    		return;
+    	}
+    	for (int _i = 1; _i < par.length; _i++) {
+    		try {
+    			this.treeType = TreeType.valueOf(par[_i].toUpperCase());
+    			this.printTreeType(v.getVoxelMessage());
+    		} catch (final IllegalArgumentException _ex) {
+    			v.getVoxelMessage().brushMessage("No such tree type.");
+    		}
+    	}
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return TreeSnipe.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	TreeSnipe.timesUsed = tUsed;
     }
 }

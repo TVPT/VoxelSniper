@@ -4,13 +4,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * 
  * @author Voxel
  */
 public class WarpInStyle extends Brush {
-
     private static int timesUsed = 0;
 
     public WarpInStyle() {
@@ -18,8 +18,17 @@ public class WarpInStyle extends Brush {
     }
 
     @Override
-    public final int getTimesUsed() {
-        return WarpInStyle.timesUsed;
+    protected final void arrow(final SnipeData v) {
+    	Player _player = v.owner().getPlayer();
+    	_player.teleport(new Location(_player.getWorld(), this.getLastBlock().getX(), this.getLastBlock().getY(), this.getLastBlock().getZ(), _player.getLocation().getYaw(), _player.getLocation().getPitch()));    
+    }
+
+    @Override
+    protected final void powder(final SnipeData v) {
+    	Player _player = v.owner().getPlayer();
+        this.getWorld().strikeLightning(_player.getLocation());
+        _player.teleport(new Location(_player.getWorld(), this.getLastBlock().getX(), this.getLastBlock().getY(), this.getLastBlock().getZ(), _player.getLocation().getYaw(), _player.getLocation().getPitch()));
+        this.getWorld().strikeLightning(_player.getLocation());
     }
 
     @Override
@@ -28,24 +37,13 @@ public class WarpInStyle extends Brush {
     }
 
     @Override
+    public final int getTimesUsed() {
+        return WarpInStyle.timesUsed;
+    }
+    
+    @Override
     public final void setTimesUsed(final int tUsed) {
         WarpInStyle.timesUsed = tUsed;
     }
 
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.tp(v.owner().getPlayer(), v.owner().getPlayer().getLocation()); // arrow just warps you, which is still useful and not annoying. Powder does the
-        // effects. -GJ
-    } // Ah, nice touch --prz
-
-    @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.getWorld().strikeLightning(v.owner().getPlayer().getLocation());
-        this.tp(v.owner().getPlayer(), v.owner().getPlayer().getLocation());
-        this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
-    }
-
-    protected final void tp(final Player p, final Location l) {
-        p.teleport(new Location(p.getWorld(), this.getLastBlock().getX(), this.getLastBlock().getY(), this.getLastBlock().getZ(), l.getYaw(), l.getPitch()));
-    }
 }

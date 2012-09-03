@@ -62,72 +62,6 @@ public class Punish extends PerformBrush {
         this.setName("Punish");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return Punish.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Punishment: " + this.punishment.toString());
-        vm.size();
-        vm.center();
-    }
-
-    @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
-            v.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
-            v.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
-            v.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
-            v.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
-            v.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
-            v.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
-            final StringBuilder _punishmentOptions = new StringBuilder();
-            for (final Punishment _punishment : Punishment.values()) {
-                if (_punishmentOptions.length() != 0) {
-                    _punishmentOptions.append(" | ");
-                }
-                _punishmentOptions.append(_punishment.name());
-            }
-            v.sendMessage(ChatColor.GOLD + _punishmentOptions.toString());
-            return;
-        }
-        for (int _x = 1; _x < par.length; _x++) {
-            final String _string = par[_x].toLowerCase();
-
-            if (_string.equalsIgnoreCase("-toggleSM")) {
-                this.specificPlayer = !this.specificPlayer;
-                if (this.specificPlayer) {
-                    try {
-                        this.punishPlayerName = par[++_x];
-                        continue;
-                    } catch (final IndexOutOfBoundsException _e) {
-                        v.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
-                    }
-                }
-            } else if (_string.equalsIgnoreCase("-toggleHypnoLandscape")) {
-                this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
-            } else {
-                try {
-                    this.punishment = Punishment.valueOf(_string.toUpperCase());
-                    v.sendMessage(ChatColor.AQUA + this.punishment.name().toLowerCase() + " punishment selected.");
-                    continue;
-                } catch (final IllegalArgumentException _e) {
-                    v.sendMessage(ChatColor.AQUA + "No such Punishment.");
-                }
-            }
-        }
-
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        Punish.timesUsed = tUsed;
-    }
-
     private void applyPunishment(final LivingEntity entity, final SnipeData v) {
         switch (this.punishment) {
         case FIRE:
@@ -264,5 +198,71 @@ public class Punish extends PerformBrush {
             }
         }
 
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	vm.custom(ChatColor.GREEN + "Punishment: " + this.punishment.toString());
+    	vm.size();
+    	vm.center();
+    }
+    
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+    	if (par[1].equalsIgnoreCase("info")) {
+    		v.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
+    		v.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
+    		v.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
+    		v.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
+    		v.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
+    		v.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
+    		v.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
+    		final StringBuilder _punishmentOptions = new StringBuilder();
+    		for (final Punishment _punishment : Punishment.values()) {
+    			if (_punishmentOptions.length() != 0) {
+    				_punishmentOptions.append(" | ");
+    			}
+    			_punishmentOptions.append(_punishment.name());
+    		}
+    		v.sendMessage(ChatColor.GOLD + _punishmentOptions.toString());
+    		return;
+    	}
+    	for (int _x = 1; _x < par.length; _x++) {
+    		final String _string = par[_x].toLowerCase();
+    		
+    		if (_string.equalsIgnoreCase("-toggleSM")) {
+    			this.specificPlayer = !this.specificPlayer;
+    			if (this.specificPlayer) {
+    				try {
+    					this.punishPlayerName = par[++_x];
+    					continue;
+    				} catch (final IndexOutOfBoundsException _e) {
+    					v.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
+    				}
+    			}
+    		} else if (_string.equalsIgnoreCase("-toggleHypnoLandscape")) {
+    			this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
+    		} else {
+    			try {
+    				this.punishment = Punishment.valueOf(_string.toUpperCase());
+    				v.sendMessage(ChatColor.AQUA + this.punishment.name().toLowerCase() + " punishment selected.");
+    				continue;
+    			} catch (final IllegalArgumentException _e) {
+    				v.sendMessage(ChatColor.AQUA + "No such Punishment.");
+    			}
+    		}
+    	}
+    	
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return Punish.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	Punish.timesUsed = tUsed;
     }
 }

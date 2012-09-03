@@ -12,7 +12,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  */
 public class OceanSelection extends Ocean {
 
-    protected boolean sel = true;
+    private boolean sel = true;
 
     private static int timesUsed = 0;
 
@@ -20,42 +20,32 @@ public class OceanSelection extends Ocean {
         this.setName("Ocean Selection");
     }
 
-    @Override
-    public int getTimesUsed() {
-        return OceanSelection.timesUsed;
-    }
-
-    @Override
-    public void info(final Message vm) {
-        vm.brushName(this.getName());
-    }
-
-    public void oceanate(final SnipeData v, final int lowx, final int highx, final int lowz, final int highz) {
-        this.h = new Undo(this.getTargetBlock().getWorld().getName());
-        for (int x = lowx; x <= highx; x += 16) {
-            this.setTargetBlock(this.setX(this.getTargetBlock(), x));
-            for (int z = lowz; z <= highz; z += 16) {
-                this.setTargetBlock(this.setZ(this.getTargetBlock(), z));
+    private void oceanate(final SnipeData v, final int lowx, final int highx, final int lowz, final int highz) {
+        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
+        for (int _x = lowx; _x <= highx; _x += 16) {
+            this.setTargetBlock(this.setX(this.getTargetBlock(), _x));
+            for (int _z = lowz; _z <= highz; _z += 16) {
+                this.setTargetBlock(this.setZ(this.getTargetBlock(), _z));
                 this.oceanator(v);
             }
         }
-        v.storeUndo(this.h);
+        v.storeUndo(this.undo);
     }
 
-    public void oceanSelection(final SnipeData v) {
+    private void oceanSelection(final SnipeData v) {
         if (this.sel) {
-            this.h = new Undo(this.getTargetBlock().getWorld().getName());
+            this.undo = new Undo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
-            v.storeUndo(this.h);
+            v.storeUndo(this.undo);
             this.s1x = this.getTargetBlock().getX();
             this.s1z = this.getTargetBlock().getZ();
             v.sendMessage(ChatColor.DARK_PURPLE + "Chunk one selected");
             this.sel = !this.sel;
         } else {
             v.sendMessage(ChatColor.DARK_PURPLE + "Chunk two selected");
-            this.h = new Undo(this.getTargetBlock().getWorld().getName());
+            this.undo = new Undo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
-            v.storeUndo(this.h);
+            v.storeUndo(this.undo);
             this.s2x = this.getTargetBlock().getX();
             this.s2z = this.getTargetBlock().getZ();
             this.oceanate(v, ((this.s1x <= this.s2x) ? this.s1x : this.s2x), ((this.s2x >= this.s1x) ? this.s2x : this.s1x), ((this.s1z <= this.s2z) ? this.s1z
@@ -65,17 +55,27 @@ public class OceanSelection extends Ocean {
     }
 
     @Override
+    protected void arrow(final SnipeData v) {
+        this.oceanSelection(v);
+    }
+
+    @Override
+    protected void powder(final SnipeData v) {
+        this.oceanSelection(v);
+    }
+    
+    @Override
+    public void info(final Message vm) {
+    	vm.brushName(this.getName());
+    }
+    
+    @Override
+    public int getTimesUsed() {
+    	return OceanSelection.timesUsed;
+    }
+    
+    @Override
     public void setTimesUsed(final int tUsed) {
-        OceanSelection.timesUsed = tUsed;
-    }
-
-    @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.oceanSelection(v);
-    }
-
-    @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.oceanSelection(v);
+    	OceanSelection.timesUsed = tUsed;
     }
 }

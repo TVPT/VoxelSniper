@@ -9,14 +9,13 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Voxel
  */
 public class VoxelDisc extends PerformBrush {
-
     private static int timesUsed = 0;
 
     public VoxelDisc() {
         this.setName("Voxel Disc");
     }
 
-    public final void disc(final SnipeData v) {
+    private final void disc(final SnipeData v) {
         final int bsize = v.getBrushSize();
 
         for (int x = bsize; x >= -bsize; x--) {
@@ -28,35 +27,32 @@ public class VoxelDisc extends PerformBrush {
     }
 
     @Override
-    public final int getTimesUsed() {
-        return VoxelDisc.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.size();
-        // voxelMessage.voxel();
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        VoxelDisc.timesUsed = tUsed;
-    }
-
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
+    protected final void arrow(final SnipeData v) {
         this.disc(v);
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+    protected final void powder(final SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());
         this.disc(v);
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+    	vm.brushName(this.getName());
+    	vm.size();
+    	// voxelMessage.voxel();
+    }
+    
+    @Override
+    public final int getTimesUsed() {
+    	return VoxelDisc.timesUsed;
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+    	VoxelDisc.timesUsed = tUsed;
     }
 }
