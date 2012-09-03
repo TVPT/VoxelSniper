@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -24,7 +24,7 @@ public class Underlay extends PerformBrush {
     }
 
     @Override
-    public final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    public final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -37,13 +37,13 @@ public class Underlay extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.owner().getPlayer().sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
             v.owner().getPlayer().sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
@@ -75,7 +75,7 @@ public class Underlay extends PerformBrush {
     }
 
     @Override
-    public final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    public final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -88,8 +88,8 @@ public class Underlay extends PerformBrush {
         Underlay.timesUsed = tUsed;
     }
 
-    public final void Underlay(final vData v) {
-        final int bsize = v.brushSize;
+    public final void Underlay(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         final int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];
         final double bpow = Math.pow(bsize + 0.5, 2);
@@ -144,8 +144,8 @@ public class Underlay extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    public final void Underlaytwo(final vData v) {
-        final int bsize = v.brushSize;
+    public final void Underlaytwo(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         final int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];
         final double bpow = Math.pow(bsize + 0.5, 2);

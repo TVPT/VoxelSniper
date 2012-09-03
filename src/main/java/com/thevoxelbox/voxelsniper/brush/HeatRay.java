@@ -10,9 +10,9 @@ import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -76,22 +76,22 @@ public class HeatRay extends Brush {
      * 
      * @param v
      */
-    public final void heatRay(final vData v) {
+    public final void heatRay(final SnipeData v) {
         final PerlinNoiseGenerator _generator = new PerlinNoiseGenerator(new Random());
 
         final Vector _targetLocation = this.getTargetBlock().getLocation().toVector();
         final Location _currentLocation = new Location(this.getTargetBlock().getWorld(), 0, 0, 0);
         Block _currentBlock = null;
-        final vUndo _undo = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _z = v.brushSize; _z >= -v.brushSize; _z--) {
-            for (int _x = v.brushSize; _x >= -v.brushSize; _x--) {
-                for (int _y = v.brushSize; _y >= -v.brushSize; _y--) {
+        for (int _z = v.getBrushSize(); _z >= -v.getBrushSize(); _z--) {
+            for (int _x = v.getBrushSize(); _x >= -v.getBrushSize(); _x--) {
+                for (int _y = v.getBrushSize(); _y >= -v.getBrushSize(); _y--) {
                     _currentLocation.setX(this.getBlockPositionX() + _x);
                     _currentLocation.setY(this.getBlockPositionY() + _y);
                     _currentLocation.setZ(this.getBlockPositionZ() + _z);
 
-                    if (_currentLocation.toVector().isInSphere(_targetLocation, v.brushSize)) {
+                    if (_currentLocation.toVector().isInSphere(_targetLocation, v.getBrushSize())) {
                         _currentBlock = _currentLocation.getBlock();
                         if (_currentBlock == null || _currentBlock.getType() == Material.CHEST) {
                             continue;
@@ -151,7 +151,7 @@ public class HeatRay extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
         vm.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
@@ -160,7 +160,7 @@ public class HeatRay extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final vData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par.length > 1 && par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
@@ -171,13 +171,13 @@ public class HeatRay extends Brush {
             final String _string = par[_i].toLowerCase();
             if (_string.startsWith("oct")) {
                 this.octaves = Integer.valueOf(_string.substring(3));
-                v.vm.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
+                v.getVoxelMessage().custom(ChatColor.GREEN + "Octaves: " + this.octaves);
             } else if (_string.startsWith("amp")) {
                 this.amplitude = Double.valueOf(_string.substring(3));
-                v.vm.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+                v.getVoxelMessage().custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
             } else if (_string.startsWith("freq")) {
                 this.frequency = Double.valueOf(_string.substring(4));
-                v.vm.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
+                v.getVoxelMessage().custom(ChatColor.GREEN + "Frequency: " + this.frequency);
             }
         }
     }
@@ -188,7 +188,7 @@ public class HeatRay extends Brush {
     }
 
     @Override
-    protected final void arrow(final vData v) {
+    protected final void arrow(final SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -196,7 +196,7 @@ public class HeatRay extends Brush {
     }
 
     @Override
-    protected final void powder(final vData v) {
+    protected final void powder(final SnipeData v) {
         this.arrow(v);
     }
 }

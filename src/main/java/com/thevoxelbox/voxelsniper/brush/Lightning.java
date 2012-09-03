@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.Location;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -23,7 +23,7 @@ public class Lightning extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.brushMessage("Lightning Brush!  Please use in moderation.");
     }
@@ -33,13 +33,13 @@ public class Lightning extends Brush {
         Lightning.timesUsed = tUsed;
     }
 
-    public final void Strike(final vData v) {
+    public final void Strike(final SnipeData v) {
 
         final Location loc = this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getLocation();
         this.getWorld().strikeLightning(loc);
     }
 
-    public final void StrikeDestructive(final vData v) { // more to be added
+    public final void StrikeDestructive(final SnipeData v) { // more to be added
     /*
      * for (int x = 1; x < par.length; x++) { if (par[x].startsWith("true")) { trueCircle = 0.5; v.p.sendMessage(ChatColor.AQUA + "True circle mode ON.");
      * continue; } else if (par[x].startsWith("false")) { trueCircle = 0; v.p.sendMessage(ChatColor.AQUA + "True circle mode OFF."); continue; } else {
@@ -50,7 +50,7 @@ public class Lightning extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -58,7 +58,7 @@ public class Lightning extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());

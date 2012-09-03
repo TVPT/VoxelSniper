@@ -9,8 +9,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
@@ -31,7 +31,7 @@ public class Jockey extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
@@ -40,7 +40,7 @@ public class Jockey extends Brush {
         Jockey.timesUsed = tUsed;
     }
 
-    private void sitOn(final vData v) {
+    private void sitOn(final SnipeData v) {
         final Location l = v.owner().getPlayer().getLocation();
         l.getX();
         l.getY();
@@ -96,7 +96,7 @@ public class Jockey extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -105,7 +105,7 @@ public class Jockey extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         v.owner().getPlayer().eject();
         v.owner().getPlayer().sendMessage(ChatColor.GOLD + "You have been ejected!");
     }

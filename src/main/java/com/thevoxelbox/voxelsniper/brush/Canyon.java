@@ -4,9 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -15,7 +15,7 @@ import com.thevoxelbox.voxelsniper.undo.vUndo;
 public class Canyon extends Brush {
 
     protected int yLevel = 10;
-    protected vUndo m;
+    protected Undo m;
 
     private static int timesUsed = 0;
 
@@ -29,13 +29,13 @@ public class Canyon extends Brush {
     }
 
     @Override
-    public void info(final vMessage vm) {
+    public void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
         }
@@ -56,10 +56,10 @@ public class Canyon extends Brush {
         Canyon.timesUsed = tUsed;
     }
 
-    private void canyon(final Chunk c, final vData v) {
+    private void canyon(final Chunk c, final SnipeData v) {
         int yy;
 
-        final vUndo h = new vUndo(c.getWorld().getName());
+        final Undo h = new Undo(c.getWorld().getName());
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
@@ -88,14 +88,14 @@ public class Canyon extends Brush {
     }
 
     @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.canyon(this.getWorld().getChunkAt(this.getTargetBlock()), v);
     }
 
-    protected final void multiCanyon(final Chunk c, final vData v) {
+    protected final void multiCanyon(final Chunk c, final SnipeData v) {
         int yy;
 
         for (int x = 0; x < 16; x++) {
@@ -123,11 +123,11 @@ public class Canyon extends Brush {
     }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.m = new vUndo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
+        this.m = new Undo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
 
         this.multiCanyon(this.getWorld().getChunkAt(this.getTargetBlock()), v);
         this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + 16, 63, this.getBlockPositionZ())), v);

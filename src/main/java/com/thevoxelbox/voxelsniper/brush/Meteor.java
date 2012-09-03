@@ -9,8 +9,8 @@ import org.bukkit.craftbukkit.entity.CraftFireball;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class Meteor extends Brush {
         this.setName("Meteor");
     }
 
-    public final void dofireball(final vData v) {
+    public final void dofireball(final SnipeData v) {
         double linelength = 0;
 
         // Calculate slope vector
@@ -66,7 +66,7 @@ public class Meteor extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.voxel();
     }
@@ -77,7 +77,7 @@ public class Meteor extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.player_loc = v.owner().getPlayer().getLocation();
 
         this.origincoords[0] = this.player_loc.getX();
@@ -98,7 +98,7 @@ public class Meteor extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.arrow(v);
     }
 }

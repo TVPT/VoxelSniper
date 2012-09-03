@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -28,25 +28,25 @@ public class TreeSnipe extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         this.printTreeType(vm);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
             v.sendMessage(ChatColor.AQUA + "/b t treetype");
-            this.printTreeType(v.vm);
+            this.printTreeType(v.getVoxelMessage());
             return;
         }
         for (int x = 1; x < par.length; x++) {
             try {
                 this.treeType = TreeType.valueOf(par[x].toUpperCase());
-                this.printTreeType(v.vm);
+                this.printTreeType(v.getVoxelMessage());
             } catch (final IllegalArgumentException _ex) {
-                v.vm.brushMessage("No such tree type.");
+                v.getVoxelMessage().brushMessage("No such tree type.");
             }
         }
     }
@@ -56,7 +56,7 @@ public class TreeSnipe extends Brush {
         TreeSnipe.timesUsed = tUsed;
     }
 
-    public final void single(final vData v) {
+    public final void single(final SnipeData v) {
         try {
             this.getWorld().generateTree(new Location(this.getWorld(), this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()), this.treeType);
         } catch (final Exception e) {
@@ -64,7 +64,7 @@ public class TreeSnipe extends Brush {
         }
     }
 
-    private int getLocation(final vData v) {
+    private int getLocation(final SnipeData v) {
         for (int i = 1; i < (255 - this.getBlockPositionY()); i++) {
             if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + i, this.getBlockPositionZ()).getType() == Material.AIR) {
                 return this.getBlockPositionY() + i;
@@ -73,7 +73,7 @@ public class TreeSnipe extends Brush {
         return this.getBlockPositionY();
     }
 
-    private void printTreeType(final vMessage vm) {
+    private void printTreeType(final Message vm) {
         String _printout = "";
 
         boolean _delimiterHelper = true;
@@ -92,7 +92,7 @@ public class TreeSnipe extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -101,7 +101,7 @@ public class TreeSnipe extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());

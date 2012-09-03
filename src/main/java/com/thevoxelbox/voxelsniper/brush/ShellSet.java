@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class ShellSet extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         this.b = null;
         vm.brushName(this.getName());
         vm.size();
@@ -42,7 +42,7 @@ public class ShellSet extends Brush {
         ShellSet.timesUsed = tUsed;
     }
 
-    private boolean set(final Block bl, final vData v) {
+    private boolean set(final Block bl, final SnipeData v) {
         if (this.b == null) {
             this.b = bl;
             return true;
@@ -61,8 +61,8 @@ public class ShellSet extends Brush {
             if (Math.abs(highx - lowx) * Math.abs(highz - lowz) * Math.abs(highy - lowy) > 5000000) {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
-                final int bId = v.voxelId;
-                final int brId = v.replaceId;
+                final int bId = v.getVoxelId();
+                final int brId = v.getReplaceId();
                 final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(highx - lowx) * Math.abs(highz - lowz) * Math.abs(highy - lowy)) / 2));
                 for (int y = lowy; y <= highy; y++) {
                     for (int x = lowx; x <= highx; x++) {
@@ -88,7 +88,7 @@ public class ShellSet extends Brush {
                     }
                 }
 
-                final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+                final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
                 for (final Block blo : blocks) {
                     if (blo.getTypeId() != bId) {
                         h.put(blo);
@@ -105,14 +105,14 @@ public class ShellSet extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // Derp
         if (this.set(this.getTargetBlock(), v)) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.set(this.getLastBlock(), v)) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }

@@ -3,9 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -17,7 +17,7 @@ public class Ocean extends Brush {
     protected int s1z;
     protected int s2x;
     protected int s2z;
-    protected vUndo h;
+    protected Undo h;
 
     private static int timesUsed = 0;
 
@@ -31,7 +31,7 @@ public class Ocean extends Brush {
     }
 
     @Override
-    public void info(final vMessage vm) {
+    public void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
@@ -41,8 +41,8 @@ public class Ocean extends Brush {
     }
 
     @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        this.h = new Undo(this.getTargetBlock().getWorld().getName());
         this.oceanator(v);
         v.storeUndo(this.h);
     }
@@ -118,7 +118,7 @@ public class Ocean extends Brush {
     protected void ocean(final Chunk c) {
     }
 
-    protected final void oceanator(final vData v) {
+    protected final void oceanator(final SnipeData v) {
         int sx = (int) Math.floor((double) this.getTargetBlock().getX() / 16) * 16;
         int sz = (int) Math.floor((double) this.getTargetBlock().getZ() / 16) * 16;
 
@@ -263,7 +263,7 @@ public class Ocean extends Brush {
         }
     }
 
-    protected final void oceanatorBig(final vData v) {
+    protected final void oceanatorBig(final SnipeData v) {
         this.oceanator(v); // center
         this.setTargetBlock(this.setX(this.getTargetBlock(), this.getTargetBlock().getX() + 16));
         this.oceanator(v); // right
@@ -284,8 +284,8 @@ public class Ocean extends Brush {
     }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        this.h = new Undo(this.getTargetBlock().getWorld().getName());
         this.oceanatorBig(v);
         v.storeUndo(this.h);
     }

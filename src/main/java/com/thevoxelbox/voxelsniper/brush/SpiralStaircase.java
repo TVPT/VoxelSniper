@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
@@ -23,15 +23,15 @@ public class SpiralStaircase extends Brush {
         this.setName("Spiral Staircase");
     }
 
-    public final void buildstairwell(final vData v) {
-        final int bsize = v.brushSize;
-        final int bId = v.voxelId;
+    public final void buildstairwell(final SnipeData v) {
+        final int bsize = v.getBrushSize();
+        final int bId = v.getVoxelId();
 
-        if (v.voxelHeight < 1) {
-            v.voxelHeight = 1;
+        if (v.getVoxelHeight() < 1) {
+            v.setVoxelHeight(1);
             v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
-        final int height = v.voxelHeight;
+        final int height = v.getVoxelHeight();
 
         // initialize array
         final int[][][] spiral = new int[2 * bsize + 1][height][2 * bsize + 1];
@@ -202,7 +202,7 @@ public class SpiralStaircase extends Brush {
                 }
             }
         }
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         // Make the changes
 
         for (int x = 2 * bsize; x >= 0; x--) {
@@ -237,7 +237,7 @@ public class SpiralStaircase extends Brush {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
                             this.setBlockIdAt(44, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
-                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData(v.data);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData(v.getData());
                         } else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair")) {
                             if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() - bsize + z) != bId) {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i - 1, this.getBlockPositionZ() - bsize + z));
@@ -252,7 +252,7 @@ public class SpiralStaircase extends Brush {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
                             }
                             this.setBlockIdAt(43, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z);
-                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData(v.data);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z).setData(v.getData());
                         } else if (this.stairtype.equalsIgnoreCase("woodstair")) {
                             if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z) != 53) {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
@@ -289,15 +289,15 @@ public class SpiralStaircase extends Brush {
         v.storeUndo(h);
     }
 
-    public final void digstairwell(final vData v) {
-        final int bsize = v.brushSize;
-        final int bId = v.voxelId;
+    public final void digstairwell(final SnipeData v) {
+        final int bsize = v.getBrushSize();
+        final int bId = v.getVoxelId();
 
-        if (v.voxelHeight < 1) {
-            v.voxelHeight = 1;
+        if (v.getVoxelHeight() < 1) {
+            v.setVoxelHeight(1);
             v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
-        final int height = v.voxelHeight;
+        final int height = v.getVoxelHeight();
 
         // initialize array
         final int[][][] spiral = new int[2 * bsize + 1][height][2 * bsize + 1];
@@ -472,7 +472,7 @@ public class SpiralStaircase extends Brush {
 
         }
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         // Make the changes
 
         for (int x = 2 * bsize; x >= 0; x--) {
@@ -499,7 +499,7 @@ public class SpiralStaircase extends Brush {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
                             this.setBlockIdAt(44, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
-                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData(v.data);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData(v.getData());
                         } else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair")) {
                             if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != bId) {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
@@ -514,7 +514,7 @@ public class SpiralStaircase extends Brush {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z));
                             }
                             this.setBlockIdAt(43, this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z);
-                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData(v.data);
+                            this.clampY(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z).setData(v.getData());
                         } else if (this.stairtype.equalsIgnoreCase("woodstair")) {
                             if (this.getBlockIdAt(this.getBlockPositionX() - bsize + x, this.getBlockPositionY() - i, this.getBlockPositionZ() - bsize + z) != 53) {
                                 h.put(this.clampY(this.getBlockPositionX() - bsize - x, this.getBlockPositionY() + i, this.getBlockPositionZ() - bsize + z));
@@ -560,7 +560,7 @@ public class SpiralStaircase extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName("Spiral Staircase");
         vm.size();
         vm.voxel();
@@ -572,7 +572,7 @@ public class SpiralStaircase extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
@@ -607,7 +607,7 @@ public class SpiralStaircase extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -615,7 +615,7 @@ public class SpiralStaircase extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

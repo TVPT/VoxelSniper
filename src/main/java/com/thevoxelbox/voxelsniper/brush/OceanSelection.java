@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -26,12 +26,12 @@ public class OceanSelection extends Ocean {
     }
 
     @Override
-    public void info(final vMessage vm) {
+    public void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
-    public void oceanate(final vData v, final int lowx, final int highx, final int lowz, final int highz) {
-        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+    public void oceanate(final SnipeData v, final int lowx, final int highx, final int lowz, final int highz) {
+        this.h = new Undo(this.getTargetBlock().getWorld().getName());
         for (int x = lowx; x <= highx; x += 16) {
             this.setTargetBlock(this.setX(this.getTargetBlock(), x));
             for (int z = lowz; z <= highz; z += 16) {
@@ -42,9 +42,9 @@ public class OceanSelection extends Ocean {
         v.storeUndo(this.h);
     }
 
-    public void oceanSelection(final vData v) {
+    public void oceanSelection(final SnipeData v) {
         if (this.sel) {
-            this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+            this.h = new Undo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
             v.storeUndo(this.h);
             this.s1x = this.getTargetBlock().getX();
@@ -53,7 +53,7 @@ public class OceanSelection extends Ocean {
             this.sel = !this.sel;
         } else {
             v.sendMessage(ChatColor.DARK_PURPLE + "Chunk two selected");
-            this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+            this.h = new Undo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
             v.storeUndo(this.h);
             this.s2x = this.getTargetBlock().getX();
@@ -70,12 +70,12 @@ public class OceanSelection extends Ocean {
     }
 
     @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.oceanSelection(v);
     }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.oceanSelection(v);
     }
 }

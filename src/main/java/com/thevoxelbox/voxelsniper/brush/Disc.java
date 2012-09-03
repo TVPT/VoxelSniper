@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -29,14 +29,14 @@ public class Disc extends PerformBrush {
      * 
      * @param v
      */
-    public final void disc(final vData v, final Block targetBlock) {
-        final double _radiusSquared = (v.brushSize + this.trueCircle) * (v.brushSize + this.trueCircle);
+    public final void disc(final SnipeData v, final Block targetBlock) {
+        final double _radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
         final Vector _centerPoint = targetBlock.getLocation().toVector();
         final Vector _currentPoint = _centerPoint.clone();
 
-        for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
+        for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++) {
             _currentPoint.setX(_centerPoint.getX() + _x);
-            for (int _z = -v.brushSize; _z <= v.brushSize; _z++) {
+            for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
                 _currentPoint.setZ(_centerPoint.getZ() + _z);
                 if (_centerPoint.distanceSquared(_currentPoint) <= _radiusSquared) {
                     this.current.perform(this.clampY(_currentPoint.getBlockX(), _currentPoint.getBlockY(), _currentPoint.getBlockZ()));
@@ -52,14 +52,14 @@ public class Disc extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
-        // vm.voxel();
+        // voxelMessage.voxel();
     }
 
     @Override
-    public final void parameters(final String[] par, final vData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b d true|false"
@@ -88,7 +88,7 @@ public class Disc extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final vData v) {
+    protected final void arrow(final SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -96,7 +96,7 @@ public class Disc extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final vData v) {
+    protected final void powder(final SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class PullTest extends SoftSelection {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.height();
@@ -35,7 +35,7 @@ public class PullTest extends SoftSelection {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         try {
             final double pinch = Double.parseDouble(par[1]);
             final double bubble = Double.parseDouble(par[2]);
@@ -52,8 +52,8 @@ public class PullTest extends SoftSelection {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.vh = v.voxelHeight;
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        this.vh = v.getVoxelHeight();
         this.getSurface(v);
 
         if (this.vh > 0) {
@@ -70,11 +70,11 @@ public class PullTest extends SoftSelection {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        final int bsize = v.brushSize;
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        final int bsize = v.getBrushSize();
         // sel = new sBlock[(int)Math.pow(((bsize*2) + 1), 3)];
 
-        this.vh = v.voxelHeight;
+        this.vh = v.getVoxelHeight();
 
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());

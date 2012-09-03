@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -26,13 +26,13 @@ public class Entity extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.ct.getName() + ")");
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
             String names = "";
@@ -59,17 +59,17 @@ public class Entity extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.spawn(v);
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.spawn(v);
     }
 
-    protected final void spawn(final vData v) {
-        for (int x = 0; x < v.brushSize; x++) {
+    protected final void spawn(final SnipeData v) {
+        for (int x = 0; x < v.getBrushSize(); x++) {
             try {
                 final Class<? extends org.bukkit.entity.Entity> ent = this.ct.getEntityClass();
                 this.getWorld().spawn(this.getLastBlock().getLocation(), ent);

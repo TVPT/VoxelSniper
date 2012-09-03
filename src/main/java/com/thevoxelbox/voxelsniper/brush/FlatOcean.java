@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class FlatOcean extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
         vm.custom(ChatColor.GREEN + "Water level set to " + this.yoLevel);
@@ -34,7 +34,7 @@ public class FlatOcean extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
 
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
@@ -88,7 +88,7 @@ public class FlatOcean extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
@@ -96,7 +96,7 @@ public class FlatOcean extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 

@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.Chunk;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -20,10 +20,10 @@ public class GenerateChunk extends Brush {
         this.setName("Chunk Generator 40k");
     }
 
-    public final void generateChunk(final vData v) {
+    public final void generateChunk(final SnipeData v) {
         this.ch = this.getTargetBlock().getChunk();
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         for (int z = 16; z >= 0; z--) {
             for (int x = 16; x >= 0; x--) {
@@ -47,7 +47,7 @@ public class GenerateChunk extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.brushMessage("Tread lightly.");
         vm.brushMessage("This brush will melt your spleen and sell your kidneys.");
@@ -59,7 +59,7 @@ public class GenerateChunk extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -67,7 +67,7 @@ public class GenerateChunk extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.arrow(v);
     }
 }

@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.block.BlockFace;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -18,8 +18,8 @@ public class VoxelDiscFace extends PerformBrush {
         this.setName("Voxel Disc Face");
     }
 
-    public final void disc(final vData v) {
-        final int bsize = v.brushSize;
+    public final void disc(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         for (int x = bsize; x >= -bsize; x--) {
             for (int y = bsize; y >= -bsize; y--) {
@@ -30,8 +30,8 @@ public class VoxelDiscFace extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    public final void discEW(final vData v) {
-        final int bsize = v.brushSize;
+    public final void discEW(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         for (int x = bsize; x >= -bsize; x--) {
             for (int y = bsize; y >= -bsize; y--) {
@@ -42,8 +42,8 @@ public class VoxelDiscFace extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    public final void discNS(final vData v) {
-        final int bsize = v.brushSize;
+    public final void discNS(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         for (int x = bsize; x >= -bsize; x--) {
             for (int y = bsize; y >= -bsize; y--) {
@@ -60,7 +60,7 @@ public class VoxelDiscFace extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
@@ -70,7 +70,7 @@ public class VoxelDiscFace extends PerformBrush {
         VoxelDiscFace.timesUsed = tUsed;
     }
 
-    private void pre(final vData v, final BlockFace bf) {
+    private void pre(final SnipeData v, final BlockFace bf) {
         if (bf == null) {
             return;
         }
@@ -96,7 +96,7 @@ public class VoxelDiscFace extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -104,7 +104,7 @@ public class VoxelDiscFace extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

@@ -3,9 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class CopyPasta extends Brush {
         this.setName("CopyPasta");
     }
 
-    public final void docopy(final vData v) {
+    public final void docopy(final SnipeData v) {
         this.setWorld(v.owner().getPlayer().getWorld());
         for (int i = 0; i < 3; i++) {
             this.arraysize[i] = Math.abs(this.firstpoint[i] - this.secondpoint[i]) + 1;
@@ -61,9 +61,9 @@ public class CopyPasta extends Brush {
         }
     }
 
-    public final void dopasta(final vData v) {
+    public final void dopasta(final SnipeData v) {
         this.setWorld(v.owner().getPlayer().getWorld());
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         Block b;
 
         for (int i = 0; i < this.arraysize[0]; i++) {
@@ -109,14 +109,14 @@ public class CopyPasta extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(ChatColor.GOLD + "Paste air: " + this.airmode);
         vm.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
@@ -148,7 +148,7 @@ public class CopyPasta extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         switch (this.points) {
         case 0:
             this.firstpoint[0] = this.getTargetBlock().getX();
@@ -177,7 +177,7 @@ public class CopyPasta extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.points == 2) {
             if (this.numblocks == 0) {
                 this.docopy(v);

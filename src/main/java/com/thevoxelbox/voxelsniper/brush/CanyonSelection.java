@@ -3,9 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class CanyonSelection extends Canyon {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
     }
@@ -39,8 +39,8 @@ public class CanyonSelection extends Canyon {
         CanyonSelection.timesUsed = tUsed;
     }
 
-    private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final vData v) {
-        this.m = new vUndo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
+    private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final SnipeData v) {
+        this.m = new Undo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
 
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
@@ -52,12 +52,12 @@ public class CanyonSelection extends Canyon {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.powder(v);
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.first) {
             final Chunk c = this.getWorld().getChunkAt(this.getTargetBlock());
             this.fx = c.getX();

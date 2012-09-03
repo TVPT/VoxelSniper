@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -19,8 +19,8 @@ public class AntiFreeze extends Brush {
         this.setName("AntiFreeze");
     }
 
-    public final void AF(final vData v) {
-        final int bsize = v.brushSize;
+    public final void AF(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         final double bpow = Math.pow(bsize + 0.5, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -106,7 +106,7 @@ public class AntiFreeze extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushMessage(ChatColor.GOLD
                 + "Arrow overlays insible wood stairs, powder is cobble stairs.  Use whichever one you have less of in your build for easier undoing later.  This may ruin builds with ice as a structural component.  DOES NOT UNDO DIRECTLY.");
         vm.brushName(this.getName());
@@ -119,7 +119,7 @@ public class AntiFreeze extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -127,7 +127,7 @@ public class AntiFreeze extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.bool = false;
         this.arrow(v);
         this.bool = true;

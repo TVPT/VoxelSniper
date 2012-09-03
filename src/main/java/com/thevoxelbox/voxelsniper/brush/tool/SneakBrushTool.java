@@ -4,9 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush.tool;
 
-import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.Sneak;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.Sniper;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,10 +19,10 @@ import org.bukkit.event.block.Action;
  */
 public class SneakBrushTool extends BrushTool {
 
-    protected static final Brush sneak = new Sneak();
+    protected static final IBrush sneak = new Sneak();
     protected boolean arrowMode = true;
 
-    public SneakBrushTool(vSniper owner, boolean useArrow) {
+    public SneakBrushTool(Sniper owner, boolean useArrow) {
         super(owner);
         arrowMode = useArrow;
     }

@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -31,18 +31,18 @@ public class Parabola extends Brush {
         return Parabola.timesUsed;
     }
 
-    public void hParabola(final vData v) {
+    public void hParabola(final SnipeData v) {
         // herp derp;
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.voxel();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Parabola Brush Arrow Parameters:");
             v.sendMessage(ChatColor.AQUA
@@ -113,12 +113,12 @@ public class Parabola extends Brush {
         Parabola.timesUsed = tUsed;
     }
 
-    public final void vParabola(final vData v) {
-        final int bId = v.voxelId;
+    public final void vParabola(final SnipeData v) {
+        final int bId = v.getVoxelId();
         if (bId == 44) {
         }
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         // Desired features:
         // arrow allows a parameter of angle and of height and apex versus feet. Click both feet (or the apex, depending on param) of the parabola, and it
@@ -140,7 +140,7 @@ public class Parabola extends Brush {
          * coords[0] = targetBlock.getX(); coords[1] = targetBlock.getY(); coords[2] = targetBlock.getZ(); v.sendMessage(ChatColor.DARK_PURPLE + "First point selected."); sel = !sel; //}
          * //else { // double distance = Math.sqrt(Math.pow((coords[0] - targetBlock.getX()), 2) + Math.pow((coords[1] - targetBlock.getY()), 2) + Math.pow((coords[2] -
          * targetBlock.getZ()), 2)); // distance = roundTwoDecimals(distance); // v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance); // sel = !sel; //}
-         * } else { vUndo h = new vUndo(targetBlock.getWorld().getName()); v.sendMessage(ChatColor.AQUA + "xyz targetBlock xyz offset: " + blockPositionX + " " + blockPositionY + " " + blockPositionZ + " " + xOff +
+         * } else { Undo h = new Undo(targetBlock.getWorld().getName()); v.sendMessage(ChatColor.AQUA + "xyz targetBlock xyz offset: " + blockPositionX + " " + blockPositionY + " " + blockPositionZ + " " + xOff +
          * " " + yOff + " " + zOff);
          * 
          * h.put(clampY(blockPositionX + xOff, blockPositionY + yOff, blockPositionZ + zOff)); setBlockIdAt(bId, blockPositionX + xOff, blockPositionY + yOff, blockPositionZ + zOff); v.hashUndo.put(v.hashEn, h); v.hashEn++; }
@@ -150,7 +150,7 @@ public class Parabola extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -158,7 +158,7 @@ public class Parabola extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.hParabola(v);
     }
 }

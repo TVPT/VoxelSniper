@@ -3,10 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.uBlock;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -74,7 +73,7 @@ public class Erode extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.custom(ChatColor.RED + "Litesnipers: This is a slow brush.  DO NOT SPAM it too much or hold down the mouse. ");
@@ -85,7 +84,7 @@ public class Erode extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Erode brush parameters");
             v.sendMessage(ChatColor.RED + "NOT for litesnipers:");
@@ -218,7 +217,7 @@ public class Erode extends Brush {
         }
     }
 
-    private void erosion(final vData v) {
+    private void erosion(final SnipeData v) {
         if (this.reverse) {
             int temp = this.erodeFace;
             this.erodeFace = this.fillFace;
@@ -227,7 +226,7 @@ public class Erode extends Brush {
             this.erodeRecursion = this.fillRecursion;
             this.fillRecursion = temp;
         }
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.erodeFace >= 0 && this.erodeFace <= 6) {
             for (int er = 0; er < this.erodeRecursion; er++) {
@@ -285,7 +284,7 @@ public class Erode extends Brush {
                 for (int z = 0; z < this.firstSnap.length; z++) {
                     final eBlock e = this.firstSnap[x][y][z];
                     if (e.i != e.b.getTypeId()) {
-                        h.put(new uBlock(e.b, e.i));
+                        h.put(e.b);
                     }
                 }
             }
@@ -340,7 +339,7 @@ public class Erode extends Brush {
     }
 
     /*
-     * private void filling(vSniper v) { vUndo h = new vUndo(targetBlock.getWorld().getName());
+     * private void filling(Sniper v) { Undo h = new Undo(targetBlock.getWorld().getName());
      * 
      * if (fillFace >= 0 && fillFace <= 6) { for (int fr = 0; fr < fillRecursion; fr++) { getMatrix();
      * 
@@ -366,7 +365,7 @@ public class Erode extends Brush {
      * if (((xpow + Math.pow(y - derp, 2) + zpow) <= bpow)) { if (erode(x, y, z)) { snap[x][y][z].b.setTypeId(0); } } } } } } }
      * 
      * for (int x = 0; x < firstSnap.length; x++) { for (int y = 0; y < firstSnap.length; y++) { for (int z = 0; z < firstSnap.length; z++) { eBlock e =
-     * firstSnap[x][y][z]; if (e.i != e.b.getTypeId()) { h.put(new vBlock(e.b, e.i)); } } } }
+     * firstSnap[x][y][z]; if (e.i != e.b.getTypeId()) { h.put(new BlockWrapper(e.b, e.i)); } } } }
      * 
      * v.hashUndo.put(v.hashEn, h); v.hashEn++; }
      */
@@ -416,12 +415,12 @@ public class Erode extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.bsize = v.brushSize;
+        this.bsize = v.getBrushSize();
 
         this.snap = new eBlock[0][0][0];
         this.reverse = false;
@@ -430,12 +429,12 @@ public class Erode extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.bsize = v.brushSize;
+        this.bsize = v.getBrushSize();
 
         this.snap = new eBlock[0][0][0];
         this.reverse = true;

@@ -5,9 +5,9 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class Coast extends Brush {
         this.setName("Coast Creation");
     }
 
-    public final void coast(final vData v) {
+    public final void coast(final SnipeData v) {
 
         // things to declare in general
         // int bsize = v.brushSize;
@@ -85,7 +85,7 @@ public class Coast extends Brush {
             this.makeblob(mask, centers[1][n], centers[2][n], centers[3][n]);
         }
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         // kill trees and store top four other block types in memory
         v.sendMessage(ChatColor.LIGHT_PURPLE + "maxX" + maxX);
@@ -178,7 +178,7 @@ public class Coast extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName("Coast Creation (Different Shape)");
         vm.custom(ChatColor.BLUE + "Eccentricity = 0.75");
         vm.custom(ChatColor.DARK_BLUE + "Blobs = 5");
@@ -204,7 +204,7 @@ public class Coast extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.LIGHT_PURPLE + "Coast Creation brush. Parameters:");
             v.sendMessage(ChatColor.BLUE
@@ -239,7 +239,7 @@ public class Coast extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -247,7 +247,7 @@ public class Coast extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

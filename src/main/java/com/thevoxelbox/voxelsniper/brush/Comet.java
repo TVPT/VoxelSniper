@@ -10,8 +10,8 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.entity.CraftSmallFireball;
 import org.bukkit.util.Vector;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class Comet extends Brush {
         this.setName("Comet");
     }
 
-    public final void dofireball(final vData v) {
+    public final void dofireball(final SnipeData v) {
         double linelength = 0;
 
         // Calculate slope vector
@@ -67,13 +67,13 @@ public class Comet extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.voxel();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) { // borrowed from Force Brush at Ridge'world
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) { // borrowed from Force Brush at Ridge'world
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.AQUA + "This brush requires a password to function.");
             return;
@@ -93,7 +93,7 @@ public class Comet extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.player_loc = v.owner().getPlayer().getLocation();
 
         this.origincoords[0] = this.player_loc.getX();
@@ -114,7 +114,7 @@ public class Comet extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.passCorrect) {
             this.arrow(v);
         }

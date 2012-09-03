@@ -4,10 +4,9 @@ import java.util.Random;
 
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.uBlock;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -75,7 +74,7 @@ public class RandomErode extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
 
@@ -199,8 +198,8 @@ public class RandomErode extends Brush {
         }
     }
 
-    private void rerosion(final vData v) {
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+    private void rerosion(final SnipeData v) {
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.erodeFace >= 0 && this.erodeFace <= 6) {
             for (int er = 0; er < this.erodeRecursion; er++) {
@@ -258,7 +257,7 @@ public class RandomErode extends Brush {
                 for (int z = 0; z < this.firstSnap.length; z++) {
                     final eBlock e = this.firstSnap[x][y][z];
                     if (e.i != e.b.getTypeId()) {
-                        h.put(new uBlock(e.b, e.i));
+                        h.put(e.b);
                     }
                 }
             }
@@ -267,8 +266,8 @@ public class RandomErode extends Brush {
         v.storeUndo(h);
     }
 
-    private void rfilling(final vData v) {
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+    private void rfilling(final SnipeData v) {
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.fillFace >= 0 && this.fillFace <= 6) {
             for (int fr = 0; fr < this.fillRecursion; fr++) {
@@ -326,7 +325,7 @@ public class RandomErode extends Brush {
                 for (int z = 0; z < this.firstSnap.length; z++) {
                     final eBlock e = this.firstSnap[x][y][z];
                     if (e.i != e.b.getTypeId()) {
-                        h.put(new uBlock(e.b, e.i));
+                        h.put(e.b);
                     }
                 }
             }
@@ -336,12 +335,12 @@ public class RandomErode extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.bsize = v.brushSize;
+        this.bsize = v.getBrushSize();
 
         this.snap = new eBlock[0][0][0];
 
@@ -360,12 +359,12 @@ public class RandomErode extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.bsize = v.brushSize;
+        this.bsize = v.getBrushSize();
 
         this.snap = new eBlock[0][0][0];
 

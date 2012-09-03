@@ -6,16 +6,16 @@ import org.bukkit.ChatColor;
  * 
  * @author Voxel
  */
-public class liteSniper extends vSniper {
+public class LiteSniper extends Sniper {
 
     /**
      * Default Constructor.
      */
-    public liteSniper() {
-        this.setMyBrushes(liteBrushes.getSniperBrushes());
-        this.setBrushAlt(liteBrushes.getBrushAlternates());
-        this.setVoxelMessage(new vMessage(this.getData()));
-        this.getData().vm = this.getVoxelMessage();
+    public LiteSniper() {
+        this.setMyBrushes(LiteSnipeBrushes.getSniperBrushes());
+        this.setBrushAlt(LiteSnipeBrushes.getBrushAlternates());
+        this.setVoxelMessage(new Message(this.getData()));
+        this.getData().setVoxelMessage(this.getVoxelMessage());
         // defaults
         final int[] _currentP = new int[8];
         _currentP[0] = 0;
@@ -34,7 +34,7 @@ public class liteSniper extends vSniper {
 
     @Override
     public final void setBrushSize(final int size) {
-        if (size <= VoxelSniperListener.getLiteMaxBrush() && size >= 0) {
+        if (size <= VoxelSniper.getInstance().getLiteMaxBrush() && size >= 0) {
             super.setBrushSize(size);
         } else {
             this.getPlayer().sendMessage(ChatColor.RED + "You cant use this size of brush!");
@@ -43,7 +43,7 @@ public class liteSniper extends vSniper {
 
     @Override
     public final void setHeigth(final int heigth) {
-        if (heigth <= (VoxelSniperListener.getLiteMaxBrush() * 2 + 1) && heigth >= 0) {
+        if (heigth <= (VoxelSniper.getInstance().getLiteMaxBrush() * 2 + 1) && heigth >= 0) {
             super.setHeigth(heigth);
         } else {
             this.getPlayer().sendMessage(ChatColor.RED + "You cant use this size of heigth!");
@@ -68,7 +68,7 @@ public class liteSniper extends vSniper {
 
     @Override
     public final void setReplace(final int replace) {
-        if (!VoxelSniperListener.getLiteRestricted().contains(replace)) {
+        if (!VoxelSniper.getInstance().getLiteRestricted().contains(replace)) {
             super.setReplace(replace);
         } else {
             this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block!");
@@ -77,7 +77,7 @@ public class liteSniper extends vSniper {
 
     @Override
     public final void setVoxel(final int voxel) {
-        if (!VoxelSniperListener.getLiteRestricted().contains(voxel)) {
+        if (!VoxelSniper.getInstance().getLiteRestricted().contains(voxel)) {
             super.setVoxel(voxel);
         } else {
             this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block!");

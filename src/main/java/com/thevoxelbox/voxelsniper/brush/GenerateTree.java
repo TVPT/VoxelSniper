@@ -7,8 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -22,7 +22,7 @@ public class GenerateTree extends Brush {
     //
     protected Random generate = new Random();
     protected ArrayList<Block> branchBlocks = new ArrayList<Block>();
-    protected vUndo h;
+    protected Undo h;
     // If these default values are edited. Remember to change default values in the default preset.
     protected byte leafType = 0;
     protected byte woodType = 0;
@@ -98,7 +98,7 @@ public class GenerateTree extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
@@ -196,7 +196,7 @@ public class GenerateTree extends Brush {
      * Code Concerning Parameters
      */
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
             v.sendMessage(ChatColor.AQUA + "lt# - leaf type (data value)");
@@ -612,9 +612,9 @@ public class GenerateTree extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
 
-        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+        this.h = new Undo(this.getTargetBlock().getWorld().getName());
 
         this.branchBlocks.clear();
 
@@ -644,7 +644,7 @@ public class GenerateTree extends Brush {
 
     // The Powder currently does nothing extra.
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.arrow(v);
     }
 }

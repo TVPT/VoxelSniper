@@ -13,8 +13,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -68,7 +68,7 @@ public class Punish extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Punishment: " + this.punishment.toString());
         vm.size();
@@ -76,7 +76,7 @@ public class Punish extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final vData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
             v.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
@@ -128,7 +128,7 @@ public class Punish extends PerformBrush {
         Punish.timesUsed = tUsed;
     }
 
-    private void applyPunishment(final LivingEntity entity, final vData v) {
+    private void applyPunishment(final LivingEntity entity, final SnipeData v) {
         switch (this.punishment) {
         case FIRE:
             entity.setFireTicks(Punish.TICKS_PER_SECOND * this.punishDuration);
@@ -170,7 +170,7 @@ public class Punish extends PerformBrush {
             final Vector _direction = entity.getLocation().toVector().clone();
             _direction.subtract(_playerVector);
             final double _length = _direction.length();
-            final double _stregth = (1 - (_length / v.brushSize)) * this.punishLevel;
+            final double _stregth = (1 - (_length / v.getBrushSize())) * this.punishLevel;
             _direction.normalize();
             _direction.multiply(_stregth);
             entity.setVelocity(_direction);
@@ -190,7 +190,7 @@ public class Punish extends PerformBrush {
                             }
                             _target = _loc.clone();
                             _target.add(x, y, z);
-                            ((Player) entity).sendBlockChange(_target, v.voxelId, v.data);
+                            ((Player) entity).sendBlockChange(_target, v.getVoxelId(), v.getData());
                         }
                     }
                 }
@@ -203,9 +203,9 @@ public class Punish extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final vData v) {
-        this.punishDuration = v.voxelHeight;
-        this.punishLevel = v.cCen;
+    protected final void arrow(final SnipeData v) {
+        this.punishDuration = v.getVoxelHeight();
+        this.punishLevel = v.getcCen();
 
         if (this.specificPlayer) {
             final Player _punPlay = Bukkit.getPlayer(this.punishPlayerName);
@@ -218,14 +218,14 @@ public class Punish extends PerformBrush {
             return;
         }
 
-        final int _brushSizeSquare = v.brushSize * v.brushSize;
+        final int _brushSizeSquare = v.getBrushSize() * v.getBrushSize();
         final Location _targetLocation = new Location(v.getWorld(), this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
 
         final List<LivingEntity> _entities = v.getWorld().getLivingEntities();
         int _numPunishApps = 0;
         for (final LivingEntity _entity : _entities) {
             if (v.owner().getPlayer() != _entity) {
-                if (v.brushSize >= 0) {
+                if (v.getBrushSize() >= 0) {
                     try {
                         if (_entity.getLocation().distanceSquared(_targetLocation) <= _brushSizeSquare) {
                             _numPunishApps++;
@@ -233,7 +233,7 @@ public class Punish extends PerformBrush {
                         }
                     } catch (final Exception _e) {
                     }
-                } else if (v.brushSize == Punish.INFINIPUNISH_SIZE) {
+                } else if (v.getBrushSize() == Punish.INFINIPUNISH_SIZE) {
                     _numPunishApps++;
                     this.applyPunishment(_entity, v);
                 }
@@ -243,13 +243,13 @@ public class Punish extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final vData v) {
+    protected final void powder(final SnipeData v) {
         if (!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
             v.sendMessage("Y U don't have permission to use this brush?!");
             return;
         }
 
-        final int _brushSizeSquare = v.brushSize * v.brushSize;
+        final int _brushSizeSquare = v.getBrushSize() * v.getBrushSize();
         final Location _targetLocation = new Location(v.getWorld(), this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
 
         final List<LivingEntity> _entities = v.getWorld().getLivingEntities();

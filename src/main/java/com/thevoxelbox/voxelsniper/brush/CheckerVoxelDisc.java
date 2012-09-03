@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -30,13 +30,13 @@ public class CheckerVoxelDisc extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final vData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + this.getName() + " Parameters:");
             v.sendMessage(ChatColor.AQUA + "true  -- Enables using World Coordinates.");
@@ -69,9 +69,9 @@ public class CheckerVoxelDisc extends PerformBrush {
      * @param v
      * @param target
      */
-    private void applyBrush(final vData v, final Block target) {
-        for (int _x = v.brushSize; _x >= -v.brushSize; _x--) {
-            for (int _y = v.brushSize; _y >= -v.brushSize; _y--) {
+    private void applyBrush(final SnipeData v, final Block target) {
+        for (int _x = v.getBrushSize(); _x >= -v.getBrushSize(); _x--) {
+            for (int _y = v.getBrushSize(); _y >= -v.getBrushSize(); _y--) {
                 final int _sum = this.useWorldCoordinates ? target.getX() + _x + target.getZ() + _y : _x + _y;
                 if (_sum % 2 != 0) {
                     this.current.perform(this.clampY(target.getX() + _x, target.getY(), target.getZ() + _y));
@@ -82,7 +82,7 @@ public class CheckerVoxelDisc extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final vData v) {
+    protected final void arrow(final SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -91,7 +91,7 @@ public class CheckerVoxelDisc extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final vData v) {
+    protected final void powder(final SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

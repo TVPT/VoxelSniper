@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -14,7 +14,7 @@ import com.thevoxelbox.voxelsniper.undo.vUndo;
 public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No worldEdit rotates properly, although it still doesn't flip -Deamon
 
     protected Block b = null;
-    protected vUndo h;
+    protected Undo h;
 
     private static int timesUsed = 0;
 
@@ -28,13 +28,13 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         this.b = null;
         vm.brushName(this.getName());
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         super.parameters(par, v);
     }
 
@@ -48,7 +48,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
             this.b = bl;
             return true;
         } else {
-            this.h = new vUndo(this.b.getWorld().getName());
+            this.h = new Undo(this.b.getWorld().getName());
             final int lowx = (this.b.getX() <= bl.getX()) ? this.b.getX() : bl.getX();
             final int lowy = (this.b.getY() <= bl.getY()) ? this.b.getY() : bl.getY();
             final int lowz = (this.b.getZ() <= bl.getZ()) ? this.b.getZ() : bl.getZ();
@@ -68,7 +68,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // Derp
         if (this.set(this.getTargetBlock())) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         } else {
@@ -86,7 +86,7 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.set(this.getLastBlock())) {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         } else {

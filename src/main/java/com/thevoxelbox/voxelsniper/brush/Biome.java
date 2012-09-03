@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -26,14 +26,14 @@ public class Biome extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selected.name());
     }
 
     @Override
-    public final void parameters(final String[] par, final vData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
             String biomes = "";
@@ -64,12 +64,12 @@ public class Biome extends Brush {
     }
 
     @Override
-    protected final void arrow(final vData v) {
+    protected final void arrow(final SnipeData v) {
         this.bio(v);
     }
 
-    protected final void bio(final vData v) {
-        final int bsize = v.brushSize;
+    protected final void bio(final SnipeData v) {
+        final int bsize = v.getBrushSize();
         final double bpow = Math.pow(bsize, 2);
         for (int x = -bsize; x <= bsize; x++) {
             final double xpow = Math.pow(x, 2);
@@ -96,7 +96,7 @@ public class Biome extends Brush {
     }
 
     @Override
-    protected final void powder(final vData v) {
+    protected final void powder(final SnipeData v) {
         this.bio(v);
     }
 }

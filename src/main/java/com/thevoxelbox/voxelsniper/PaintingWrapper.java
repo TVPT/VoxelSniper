@@ -19,9 +19,9 @@ import org.bukkit.entity.Player;
  * 
  * @author Piotr
  */
-public final class vPainting {
+public final class PaintingWrapper {
 
-    private vPainting() {
+    private PaintingWrapper() {
     }
 
     /**
@@ -66,14 +66,14 @@ public final class vPainting {
             _oldPainting.dead = true;
 
             if (_auto) {
-                final int _i = (vPainting.PAINTINGS.indexOf(_newPainting.art) + (back ? -1 : 1) + vPainting.PAINTINGS.size()) % vPainting.PAINTINGS.size();
-                _newPainting.art = (vPainting.PAINTINGS.get(_i));
+                final int _i = (PaintingWrapper.PAINTINGS.indexOf(_newPainting.art) + (back ? -1 : 1) + PaintingWrapper.PAINTINGS.size()) % PaintingWrapper.PAINTINGS.size();
+                _newPainting.art = (PaintingWrapper.PAINTINGS.get(_i));
                 _newPainting.setDirection(_newPainting.direction);
                 _newPainting.world.addEntity(_newPainting);
                 p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (_i));
             } else {
                 try {
-                    _newPainting.art = (vPainting.PAINTINGS.get(choice));
+                    _newPainting.art = (PaintingWrapper.PAINTINGS.get(choice));
                     _newPainting.setDirection(_newPainting.direction);
                     _newPainting.world.addEntity(_newPainting);
                     p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);

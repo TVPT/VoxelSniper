@@ -7,18 +7,18 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 
-import com.thevoxelbox.voxelsniper.HitBlox;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.RangeBlockHelper;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.undo.vBlock;
+import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 
 /**
  * The abstract class Brush Base of all the brushes.
  * 
  * @author Piotr
  */
-public abstract class Brush {
+public abstract class Brush implements IBrush {
 
     /**
      * Pointer to the world the current action is being executed.
@@ -66,46 +66,24 @@ public abstract class Brush {
         return this.getWorld().getBlockAt(x, y, z);
     }
 
-    /**
-     * @return the name
-     */
+    @Override
     public final String getName() {
         return this.name;
     }
 
-    /**
-     * @return int
-     */
+    @Override
     public abstract int getTimesUsed();
 
-    /**
-     * 
-     * @param vm
-     */
-    public abstract void info(vMessage vm);
+    @Override
+    public abstract void info(Message vm);
 
-    /**
-     * A Brush's custom command handler.
-     * 
-     * @param par
-     *            Array of string containing parameters
-     * @param v
-     *            vSniper caller
-     */
-    public void parameters(final String[] par, final vData v) {
+    @Override
+    public void parameters(final String[] par, final SnipeData v) {
         v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
     }
 
-    /**
-     * 
-     * @param action
-     * @param v
-     * @param heldItem
-     * @param clickedBlock
-     * @param clickedFace
-     * @return boolean
-     */
-    public boolean perform(final Action action, final vData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
+    @Override
+    public boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
         switch (action) {
         case RIGHT_CLICK_AIR:
         case RIGHT_CLICK_BLOCK:
@@ -157,22 +135,15 @@ public abstract class Brush {
         return false;
     }
 
-    /**
-     * @param name
-     *            the name to set
-     */
+    @Override
     public final void setName(final String name) {
         this.name = name;
     }
 
-    /**
-     * @param timesUsed
-     */
+    @Override
     public abstract void setTimesUsed(int timesUsed);
 
-    /**
-     * 
-     */
+    @Override
     public void updateScale() {
     }
 
@@ -180,9 +151,9 @@ public abstract class Brush {
      * The arrow action. Executed when a player RightClicks with an Arrow
      * 
      * @param v
-     *            vSniper caller
+     *            Sniper caller
      */
-    protected void arrow(final vData v) {
+    protected void arrow(final SnipeData v) {
     }
 
     /**
@@ -201,6 +172,27 @@ public abstract class Brush {
     }
 
     /**
+     * @return the blockPositionX
+     */
+    protected final int getBlockPositionX() {
+        return this.blockPositionX;
+    }
+
+    /**
+     * @return the blockPositionY
+     */
+    protected final int getBlockPositionY() {
+        return this.blockPositionY;
+    }
+
+    /**
+     * @return the blockPositionZ
+     */
+    protected final int getBlockPositionZ() {
+        return this.blockPositionZ;
+    }
+
+    /**
      * @return the lastBlock
      */
     protected final Block getLastBlock() {
@@ -215,7 +207,7 @@ public abstract class Brush {
      * @param clickedFace
      * @return boolean
      */
-    protected final boolean getTarget(final vData v, final Block clickedBlock, final BlockFace clickedFace) {
+    protected final boolean getTarget(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
         this.setWorld(v.getWorld());
         if (clickedBlock != null) {
             this.setTargetBlock(clickedBlock);
@@ -229,12 +221,12 @@ public abstract class Brush {
             }
             return true;
         } else {
-            HitBlox hb = null;
+            RangeBlockHelper hb = null;
             if (v.owner().isDistRestrict()) {
-                hb = new HitBlox(v.owner().getPlayer(), this.getWorld(), v.owner().getRange());
+                hb = new RangeBlockHelper(v.owner().getPlayer(), this.getWorld(), v.owner().getRange());
                 this.setTargetBlock(hb.getRangeBlock());
             } else {
-                hb = new HitBlox(v.owner().getPlayer(), this.getWorld());
+                hb = new RangeBlockHelper(v.owner().getPlayer(), this.getWorld());
                 this.setTargetBlock(hb.getTargetBlock());
             }
             if (this.getTargetBlock() != null) {
@@ -272,16 +264,16 @@ public abstract class Brush {
      * The powder action. Executed when a player RightClicks with Gunpowder
      * 
      * @param v
-     *            vSniper caller
+     *            Sniper caller
      */
-    protected void powder(final vData v) {
+    protected void powder(final SnipeData v) {
     }
 
     /**
      * 
      * @param v
      */
-    protected final void setBlock(final vBlock v) {
+    protected final void setBlock(final BlockWrapper v) {
         this.getWorld().getBlockAt(v.x, v.y, v.z).setTypeId(v.id);
     }
 
@@ -299,6 +291,30 @@ public abstract class Brush {
      */
     protected final void setBlockIdAt(final int t, final int ax, final int ay, final int az) {
         this.getWorld().getBlockAt(ax, ay, az).setTypeId(t);
+    }
+
+    /**
+     * @param blockPositionX
+     *            the blockPositionX to set
+     */
+    protected final void setBlockPositionX(final int blockPositionX) {
+        this.blockPositionX = blockPositionX;
+    }
+
+    /**
+     * @param blockPositionY
+     *            the blockPositionY to set
+     */
+    protected final void setBlockPositionY(final int blockPositionY) {
+        this.blockPositionY = blockPositionY;
+    }
+
+    /**
+     * @param blockPositionZ
+     *            the blockPositionZ to set
+     */
+    protected final void setBlockPositionZ(final int blockPositionZ) {
+        this.blockPositionZ = blockPositionZ;
     }
 
     /**
@@ -323,47 +339,5 @@ public abstract class Brush {
      */
     protected final void setWorld(final World world) {
         this.world = world;
-    }
-
-    /**
-     * @return the blockPositionX
-     */
-    protected int getBlockPositionX() {
-        return blockPositionX;
-    }
-
-    /**
-     * @param blockPositionX the blockPositionX to set
-     */
-    protected void setBlockPositionX(int blockPositionX) {
-        this.blockPositionX = blockPositionX;
-    }
-
-    /**
-     * @return the blockPositionY
-     */
-    protected int getBlockPositionY() {
-        return blockPositionY;
-    }
-
-    /**
-     * @param blockPositionY the blockPositionY to set
-     */
-    protected void setBlockPositionY(int blockPositionY) {
-        this.blockPositionY = blockPositionY;
-    }
-
-    /**
-     * @return the blockPositionZ
-     */
-    protected int getBlockPositionZ() {
-        return blockPositionZ;
-    }
-
-    /**
-     * @param blockPositionZ the blockPositionZ to set
-     */
-    protected void setBlockPositionZ(int blockPositionZ) {
-        this.blockPositionZ = blockPositionZ;
     }
 }

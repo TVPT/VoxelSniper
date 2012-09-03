@@ -5,7 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  *
@@ -16,13 +16,13 @@ public abstract class PerformBrush extends Brush implements Performer {
     protected vPerformer current = new pMaterial();
 
     @Override
-    public void parse(String[] args, com.thevoxelbox.voxelsniper.vData v) {
+    public void parse(String[] args, com.thevoxelbox.voxelsniper.SnipeData v) {
         if (PerformerE.has(args[1])) {
             vPerformer p = PerformerE.getPerformer(args[1]);
             if (p != null) {
                 current = p;
-                info(v.vm);
-                current.info(v.vm);
+                info(v.getVoxelMessage());
+                current.info(v.getVoxelMessage());
                 if (args.length > 2) {
                     String[] t = new String[args.length - 1];
                     t[0] = args[0];
@@ -39,13 +39,13 @@ public abstract class PerformBrush extends Brush implements Performer {
         }
     }
 
-    public void initP(com.thevoxelbox.voxelsniper.vData v) {
+    public void initP(com.thevoxelbox.voxelsniper.SnipeData v) {
         current.init(v);
         current.setUndo();
     }
 
     @Override
-    public void showInfo(vMessage vm) {
+    public void showInfo(Message vm) {
         current.info(vm);
     }
 }

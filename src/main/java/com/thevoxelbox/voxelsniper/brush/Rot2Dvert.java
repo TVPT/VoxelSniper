@@ -3,9 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vBlock;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 
 /**
  * 
@@ -18,7 +18,7 @@ public class Rot2Dvert extends Brush {
     protected int mode = 0;
     private int bsize;
     private int brushSize;
-    private vBlock[][][] snap;
+    private BlockWrapper[][][] snap;
     private double se;
 
     private static int timesUsed = 0;
@@ -33,12 +33,12 @@ public class Rot2Dvert extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.se = Math.toRadians(Double.parseDouble(par[1]));
         v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
     }
@@ -51,7 +51,7 @@ public class Rot2Dvert extends Brush {
     private void getMatrix() {
         this.brushSize = (this.bsize * 2) + 1;
 
-        this.snap = new vBlock[this.brushSize][this.brushSize][this.brushSize];
+        this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
         final int derp = this.bsize;
         int sx = this.getBlockPositionX() - this.bsize;
@@ -66,7 +66,7 @@ public class Rot2Dvert extends Brush {
                 // if (xpow + Math.pow(z - bsize, 2) <= bpow) {
                 for (int y = 0; y < this.snap.length; y++) {
                     final Block b = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
-                    this.snap[x][y][z] = new vBlock(b);
+                    this.snap[x][y][z] = new BlockWrapper(b);
                     b.setTypeId(0);
                     sy++;
                 }
@@ -77,7 +77,7 @@ public class Rot2Dvert extends Brush {
         }
     }
 
-    private void rotate(final vData v) {
+    private void rotate(final SnipeData v) {
         int xx;
         int zz;
         int yy;
@@ -105,7 +105,7 @@ public class Rot2Dvert extends Brush {
                     for (int y = 0; y < this.snap.length; y++) {
                         yy = y - this.bsize;
 
-                        final vBlock vb = this.snap[y][x][z];
+                        final BlockWrapper vb = this.snap[y][x][z];
                         if (vb.id == 0) {
                             continue;
                         }
@@ -155,12 +155,12 @@ public class Rot2Dvert extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.bsize = v.brushSize;
+        this.bsize = v.getBrushSize();
 
         switch (this.mode) {
         case 0:
@@ -175,6 +175,6 @@ public class Rot2Dvert extends Brush {
     }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
     }
 }

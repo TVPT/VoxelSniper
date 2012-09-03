@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
@@ -25,7 +25,7 @@ public class ShellVoxel extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.voxel();
@@ -33,7 +33,7 @@ public class ShellVoxel extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
         } else {
@@ -46,10 +46,10 @@ public class ShellVoxel extends Brush {
         ShellVoxel.timesUsed = tUsed;
     }
 
-    public final void vshell(final vData v) {
-        final int bsize = v.brushSize;
-        final int bId = v.voxelId;
-        final int brId = v.replaceId;
+    public final void vshell(final SnipeData v) {
+        final int bsize = v.getBrushSize();
+        final int bId = v.getVoxelId();
+        final int brId = v.getReplaceId();
         final int[][][] oldmats = new int[2 * (bsize + 1) + 1][2 * (bsize + 1) + 1][2 * (bsize + 1) + 1]; // Array that holds the original materials plus a
                                                                                                           // buffer
         final int[][][] newmats = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1]; // Array that holds the hollowed materials
@@ -106,7 +106,7 @@ public class ShellVoxel extends Brush {
         }
 
         // Make the changes
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         for (int x = 2 * bsize; x >= 0; x--) {
             for (int y = 0; y <= 2 * bsize; y++) {
@@ -125,7 +125,7 @@ public class ShellVoxel extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -133,7 +133,7 @@ public class ShellVoxel extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

@@ -9,15 +9,15 @@ import com.thevoxelbox.voxelsniper.util.VoxelList.VoxIterator;
  * 
  * @author Voxel
  */
-public class vMessage {
+public class Message {
 
     private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
-    private final vData v;
+    private final SnipeData v;
 
     /**
      * @param vs
      */
-    public vMessage(final vData vs) {
+    public Message(final SnipeData vs) {
         this.v = vs;
     }
 
@@ -46,7 +46,7 @@ public class vMessage {
      */
     public final void center() {
         if (this.v.owner().isPrintout()) {
-            this.v.sendMessage(ChatColor.DARK_BLUE + "Center set to " + ChatColor.DARK_RED + this.v.cCen);
+            this.v.sendMessage(ChatColor.DARK_BLUE + "Center set to " + ChatColor.DARK_RED + this.v.getcCen());
         }
     }
 
@@ -64,7 +64,7 @@ public class vMessage {
      */
     public final void data() {
         if (this.v.owner().isPrintout()) {
-            this.v.sendMessage(ChatColor.BLUE + "Data variable set to " + ChatColor.DARK_RED + this.v.data);
+            this.v.sendMessage(ChatColor.BLUE + "Data variable set to " + ChatColor.DARK_RED + this.v.getData());
         }
     }
 
@@ -73,7 +73,7 @@ public class vMessage {
      */
     public final void height() {
         if (this.v.owner().isPrintout()) {
-            this.v.sendMessage(ChatColor.DARK_AQUA + "Brush height " + ChatColor.DARK_RED + this.v.voxelHeight);
+            this.v.sendMessage(ChatColor.DARK_AQUA + "Brush height " + ChatColor.DARK_RED + this.v.getVoxelHeight());
         }
     }
 
@@ -91,8 +91,8 @@ public class vMessage {
      */
     public final void replace() {
         if (this.v.owner().isPrintout()) {
-            this.v.sendMessage(ChatColor.AQUA + "Replace material set to " + ChatColor.DARK_RED + this.v.replaceId + ChatColor.AQUA + " ("
-                    + Material.getMaterial(this.v.replaceId).toString() + ")");
+            this.v.sendMessage(ChatColor.AQUA + "Replace material set to " + ChatColor.DARK_RED + this.v.getReplaceId() + ChatColor.AQUA + " ("
+                    + Material.getMaterial(this.v.getReplaceId()).toString() + ")");
         }
     }
 
@@ -101,7 +101,7 @@ public class vMessage {
      */
     public final void replaceData() {
         if (this.v.owner().isPrintout()) {
-            this.v.sendMessage(ChatColor.DARK_GRAY + "Replace data variable set to " + ChatColor.DARK_RED + this.v.replaceData);
+            this.v.sendMessage(ChatColor.DARK_GRAY + "Replace data variable set to " + ChatColor.DARK_RED + this.v.getReplaceData());
         }
     }
 
@@ -109,8 +109,8 @@ public class vMessage {
      * Display brush size.
      */
     public final void size() {
-        this.v.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.DARK_RED + this.v.brushSize);
-        if (this.v.brushSize >= BRUSH_SIZE_WARNING_THRESHOLD) {
+        this.v.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.DARK_RED + this.v.getBrushSize());
+        if (this.v.getBrushSize() >= BRUSH_SIZE_WARNING_THRESHOLD) {
             this.v.sendMessage(ChatColor.RED + "WARNING: Large brush size selected!");
         }
     }
@@ -142,8 +142,8 @@ public class vMessage {
      */
     public final void voxel() {
         if (this.v.owner().isPrintout()) {
-            this.v.sendMessage(ChatColor.GOLD + "Voxel set to " + ChatColor.DARK_RED + this.v.voxelId + ChatColor.AQUA + " ("
-                    + Material.getMaterial(this.v.voxelId).toString() + ")");
+            this.v.sendMessage(ChatColor.GOLD + "Voxel set to " + ChatColor.DARK_RED + this.v.getVoxelId() + ChatColor.AQUA + " ("
+                    + Material.getMaterial(this.v.getVoxelId()).toString() + ")");
         }
     }
 
@@ -152,10 +152,10 @@ public class vMessage {
      */
     public final void voxelList() {
         if (this.v.owner().isPrintout()) {
-            if (this.v.voxelList.isEmpty()) {
+            if (this.v.getVoxelList().isEmpty()) {
                 this.v.sendMessage(ChatColor.DARK_GREEN + "No selected blocks!");
             } else {
-                final VoxIterator _it = this.v.voxelList.getIterator();
+                final VoxIterator _it = this.v.getVoxelList().getIterator();
                 String _pre = ChatColor.DARK_GREEN + "Block types selected: " + ChatColor.AQUA;
                 while (_it.hasNext()) {
                     _pre = _pre + _it.next() + " ";

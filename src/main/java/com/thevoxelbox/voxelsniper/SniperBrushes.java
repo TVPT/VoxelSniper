@@ -41,6 +41,7 @@ import com.thevoxelbox.voxelsniper.brush.FlatOcean;
 import com.thevoxelbox.voxelsniper.brush.GenerateChunk;
 import com.thevoxelbox.voxelsniper.brush.GenerateTree;
 import com.thevoxelbox.voxelsniper.brush.HeatRay;
+import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.Jagged;
 import com.thevoxelbox.voxelsniper.brush.Jockey;
 import com.thevoxelbox.voxelsniper.brush.Lightning;
@@ -91,7 +92,7 @@ import com.thevoxelbox.voxelsniper.brush.WarpInStyle;
  * 
  * @author Voxel
  */
-public enum vBrushes {
+public enum SniperBrushes {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~przerwap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     SNIPE(Snipe.class, "s", "snipe"), // [ 1 ] \\
     DISC(Disc.class, "d", "disc"), // [ 2 ] \\
@@ -192,7 +193,7 @@ public enum vBrushes {
     BLOCK_RESET(BlockResetBrush.class, "brb", "blockresetbrush"), // [1] \\
     CHECKER_VOXEL_DISC(CheckerVoxelDisc.class, "cvd", "checkervoxeldisc"); // [1] \\
 
-    private static final Map<String, vBrushes> BRUSHES;
+    private static final Map<String, SniperBrushes> BRUSHES;
 
     /**
      * @return HashMap<String, String>
@@ -200,7 +201,7 @@ public enum vBrushes {
     public static HashMap<String, String> getBrushAlternates() {
         final HashMap<String, String> _temp = new HashMap<String, String>();
 
-        for (final vBrushes _vb : vBrushes.BRUSHES.values()) {
+        for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values()) {
             _temp.put(_vb.getLong(), _vb.getShort());
         }
 
@@ -211,11 +212,11 @@ public enum vBrushes {
      * @param name
      * @return Brush
      */
-    public static Brush getBrushInstance(final String name) {
-        if (vBrushes.BRUSHES.containsKey(name)) {
-            return vBrushes.BRUSHES.get(name).getBrush();
+    public static IBrush getBrushInstance(final String name) {
+        if (SniperBrushes.BRUSHES.containsKey(name)) {
+            return SniperBrushes.BRUSHES.get(name).getBrush();
         } else {
-            for (final vBrushes _vb : vBrushes.BRUSHES.values()) {
+            for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values()) {
                 if (_vb.getLong().equalsIgnoreCase(name)) {
                     return _vb.getBrush();
                 }
@@ -229,7 +230,7 @@ public enum vBrushes {
      * @return String
      */
     public static String getName(final Brush brush) {
-        for (final vBrushes _vbs : vBrushes.BRUSHES.values()) {
+        for (final SniperBrushes _vbs : SniperBrushes.BRUSHES.values()) {
             if (brush.getClass().getName().equals(_vbs.brush.getName())) {
                 return _vbs.longName;
             }
@@ -243,7 +244,7 @@ public enum vBrushes {
     public static HashMap<String, Brush> getSniperBrushes() {
         final HashMap<String, Brush> _temp = new HashMap<String, Brush>();
 
-        for (final Entry<String, vBrushes> _set : vBrushes.BRUSHES.entrySet()) {
+        for (final Entry<String, SniperBrushes> _set : SniperBrushes.BRUSHES.entrySet()) {
             _temp.put(_set.getKey(), _set.getValue().getBrush());
         }
 
@@ -255,10 +256,10 @@ public enum vBrushes {
      * @return boolean
      */
     public static boolean hasBrush(final String name) {
-        if (vBrushes.BRUSHES.containsKey(name)) {
+        if (SniperBrushes.BRUSHES.containsKey(name)) {
             return true;
         } else {
-            for (final vBrushes _vb : vBrushes.BRUSHES.values()) {
+            for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values()) {
                 if (_vb.getLong().equalsIgnoreCase(name)) {
                     return true;
                 }
@@ -274,14 +275,14 @@ public enum vBrushes {
     private String longName;
 
     static {
-        BRUSHES = new HashMap<String, vBrushes>();
+        BRUSHES = new HashMap<String, SniperBrushes>();
 
-        for (final vBrushes _vb : vBrushes.values()) {
-            vBrushes.BRUSHES.put(_vb.getShort(), _vb);
+        for (final SniperBrushes _vb : SniperBrushes.values()) {
+            SniperBrushes.BRUSHES.put(_vb.getShort(), _vb);
         }
     }
 
-    private vBrushes(final Class<? extends Brush> brush, final String shortName, final String longName) {
+    private SniperBrushes(final Class<? extends Brush> brush, final String shortName, final String longName) {
         this.brush = brush;
         this.shortName = shortName;
         this.longName = longName;
@@ -294,18 +295,18 @@ public enum vBrushes {
                 _brush = this.brush.getConstructor().newInstance();
                 return _brush;
             } catch (final InstantiationException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             } catch (final IllegalAccessException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             } catch (final IllegalArgumentException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             } catch (final InvocationTargetException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             }
         } catch (final NoSuchMethodException _ex) {
-            Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+            Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
         } catch (final SecurityException _ex) {
-            Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+            Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
         }
         return null;
     }

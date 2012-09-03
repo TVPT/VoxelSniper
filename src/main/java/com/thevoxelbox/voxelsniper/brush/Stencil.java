@@ -10,9 +10,9 @@ import java.io.FileOutputStream;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -60,13 +60,13 @@ public class Stencil extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom("File loaded: " + this.Filename);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
             v.sendMessage(ChatColor.AQUA
@@ -102,13 +102,13 @@ public class Stencil extends Brush {
         Stencil.timesUsed = tUsed;
     }
 
-    public final void stencilpaste(final vData v) {
+    public final void stencilpaste(final SnipeData v) {
         if (this.Filename.matches("NoFileLoaded")) {
             v.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
             return;
         }
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + this.Filename + ".vstencil");
 
         if (f.exists()) {
@@ -265,7 +265,7 @@ public class Stencil extends Brush {
         }
     }
 
-    public final void stencilsave(final vData v, final boolean reference) {
+    public final void stencilsave(final SnipeData v, final boolean reference) {
 
         final File f = new File("plugins/VoxelSniper/stencils/" + this.Filename + ".vstencil");
         try {
@@ -356,7 +356,7 @@ public class Stencil extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // will be used to copy/save later on?
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // will be used to copy/save later on?
         if (this.point == 1) {
             // if (v.p.isSneaking()) {
             // v.sendMessage(ChatColor.RED + "Must select at least two corners (reference point optional).");
@@ -403,7 +403,7 @@ public class Stencil extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) { // will be used to paste later on
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) { // will be used to paste later on
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());

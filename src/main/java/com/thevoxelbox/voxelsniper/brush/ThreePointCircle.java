@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -47,7 +47,7 @@ public class ThreePointCircle extends PerformBrush {
     }
 
     @Override
-    public final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    public final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.coordsOne == null) {
             this.coordsOne = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "First Corner set.");
@@ -71,7 +71,7 @@ public class ThreePointCircle extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         switch (this.tolerance) {
         case ACCURATE:
@@ -91,7 +91,7 @@ public class ThreePointCircle extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.YELLOW
                     + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
@@ -113,13 +113,13 @@ public class ThreePointCircle extends PerformBrush {
                 v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
                 return;
             } catch (final IllegalArgumentException _e) {
-                v.vm.brushMessage("No such tolerance.");
+                v.getVoxelMessage().brushMessage("No such tolerance.");
             }
         }
     }
 
     @Override
-    public final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    public final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setWorld(v.getWorld());
 
         if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {

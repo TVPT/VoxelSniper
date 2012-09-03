@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -28,14 +28,14 @@ public class Scanner extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
         vm.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
@@ -68,7 +68,7 @@ public class Scanner extends Brush {
         }
     }
 
-    private void scan(final vData v, final BlockFace bf) {
+    private void scan(final SnipeData v, final BlockFace bf) {
         if (bf == null) {
             return;
         }
@@ -151,17 +151,17 @@ public class Scanner extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.checkFor = Material.getMaterial(v.voxelId);
+        this.checkFor = Material.getMaterial(v.getVoxelId());
 
         this.scan(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.arrow(v);
     }
 }

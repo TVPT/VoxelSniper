@@ -6,10 +6,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
 
 /**
  * Xerox is a Copy/Paste and Stack brush
@@ -22,7 +22,7 @@ public class Xerox extends PerformBrush {
     protected Block block = null;
     protected int id;
     protected double[] firstCoords = new double[3], secondCoords = new double[3];
-    protected vUndo h;
+    protected Undo h;
 
     private static int timesUsed = 0;
 
@@ -36,13 +36,13 @@ public class Xerox extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         this.block = null;
         vm.brushName(this.getName());
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.LIGHT_PURPLE + "Xerox Brush Instructions: ");
             v.sendMessage(ChatColor.LIGHT_PURPLE
@@ -75,7 +75,7 @@ public class Xerox extends PerformBrush {
     }
 
     @Override
-    public final boolean perform(final Action action, final com.thevoxelbox.voxelsniper.vData v, final Material heldItem, final Block clickedBlock,
+    public final boolean perform(final Action action, final com.thevoxelbox.voxelsniper.SnipeData v, final Material heldItem, final Block clickedBlock,
             final BlockFace clickedFace) {
         switch (action) {
         case RIGHT_CLICK_AIR:

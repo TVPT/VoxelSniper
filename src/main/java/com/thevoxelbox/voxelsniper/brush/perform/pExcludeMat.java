@@ -5,7 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.util.VoxelList;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 import org.bukkit.block.Block;
 
 /**
@@ -23,7 +23,7 @@ public class pExcludeMat extends vPerformer {
     }
 
     @Override
-    public void info(vMessage vm) {
+    public void info(Message vm) {
         vm.performerName(name);
         vm.voxelList();
         vm.voxel();
@@ -31,10 +31,10 @@ public class pExcludeMat extends vPerformer {
     }
 
     @Override
-    public void init(com.thevoxelbox.voxelsniper.vData v) {
+    public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
         w = v.getWorld();
-        i = v.voxelId;
-        el = v.voxelList;
+        i = v.getVoxelId();
+        el = v.getVoxelList();
     }
 
     @Override

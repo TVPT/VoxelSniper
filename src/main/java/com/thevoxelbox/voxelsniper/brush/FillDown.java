@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -28,14 +28,14 @@ public class FillDown extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
-        // vm.voxel();
+        // voxelMessage.voxel();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
             v.sendMessage(ChatColor.AQUA
@@ -92,15 +92,15 @@ public class FillDown extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bsize = v.brushSize;
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        this.bsize = v.getBrushSize();
         this.fillDown(this.getTargetBlock());
         v.storeUndo(this.current.getUndo());
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.bsize = v.brushSize;
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        this.bsize = v.getBrushSize();
         this.fillDown(this.getLastBlock());
         v.storeUndo(this.current.getUndo());
     }

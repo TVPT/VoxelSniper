@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -34,16 +34,16 @@ public class Triangle extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) { // Make the triangle
+    public final void info(final Message vm) { // Make the triangle
         vm.brushName(this.getName());
-        // vm.voxel();
-        // vm.custom(ChatColor.GRAY + "First Corner: " + coordsone[0] + ", " + coordsone[1] + ", " + coordsone[2] + ")");
-        // vm.custom(ChatColor.GRAY + "Second Corner: " + coordstwo[0] + ", " + coordstwo[1] + ", " + coordstwo[2] + ")");
-        // vm.custom(ChatColor.GRAY + "Third Corner: " + coordsthree[0] + ", " + coordsthree[1] + ", " + coordsthree[2] + ")");
+        // voxelMessage.voxel();
+        // voxelMessage.custom(ChatColor.GRAY + "First Corner: " + coordsone[0] + ", " + coordsone[1] + ", " + coordsone[2] + ")");
+        // voxelMessage.custom(ChatColor.GRAY + "Second Corner: " + coordstwo[0] + ", " + coordstwo[1] + ", " + coordstwo[2] + ")");
+        // voxelMessage.custom(ChatColor.GRAY + "Third Corner: " + coordsthree[0] + ", " + coordsthree[1] + ", " + coordsthree[2] + ")");
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD
                     + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
@@ -55,7 +55,7 @@ public class Triangle extends PerformBrush {
         Triangle.timesUsed = tUsed;
     }
 
-    public final void TriangleA(final vData v) {
+    public final void TriangleA(final SnipeData v) {
         switch (this.cornernumber) {
         case 1:
             this.coordsone[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
@@ -88,7 +88,7 @@ public class Triangle extends PerformBrush {
 
     }
 
-    public final void TriangleP(final vData v) {
+    public final void TriangleP(final SnipeData v) {
         this.setWorld(v.owner().getPlayer().getWorld());
         double lengthone = 0;
         double lengthtwo = 0;
@@ -345,13 +345,13 @@ public class Triangle extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
 
         this.TriangleA(v);
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) { // Add a point
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) { // Add a point
 
         this.TriangleP(v);
 

@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -29,9 +29,9 @@ public class Cylinder extends PerformBrush {
         this.setName("Cylinder");
     }
 
-    public final void cylinder(final vData v) {
-        this.st = this.getBlockPositionY() + v.cCen;
-        this.en = this.getBlockPositionY() + v.voxelHeight + v.cCen;
+    public final void cylinder(final SnipeData v) {
+        this.st = this.getBlockPositionY() + v.getcCen();
+        this.en = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
         if (this.en < this.st) {
             this.en = this.st;
         }
@@ -49,7 +49,7 @@ public class Cylinder extends PerformBrush {
             this.en = 127;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
-        final int bsize = v.brushSize;
+        final int bsize = v.getBrushSize();
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
 
@@ -75,16 +75,16 @@ public class Cylinder extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.height();
         vm.center();
-        // vm.voxel();
+        // voxelMessage.voxel();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
@@ -104,12 +104,12 @@ public class Cylinder extends PerformBrush {
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                 continue;
             } else if (par[x].startsWith("h")) {
-                v.voxelHeight = (int) Double.parseDouble(par[x].replace("h", ""));
-                v.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + v.voxelHeight);
+                v.setVoxelHeight((int) Double.parseDouble(par[x].replace("h", "")));
+                v.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + v.getVoxelHeight());
                 continue;
             } else if (par[x].startsWith("c")) {
-                v.cCen = (int) Double.parseDouble(par[x].replace("c", ""));
-                v.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + v.cCen);
+                v.setcCen((int) Double.parseDouble(par[x].replace("c", "")));
+                v.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + v.getcCen());
                 continue;
             } else {
                 v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
@@ -123,7 +123,7 @@ public class Cylinder extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -131,7 +131,7 @@ public class Cylinder extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

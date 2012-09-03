@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -33,13 +33,13 @@ public class Ruler extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.voxel();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD
                     + "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
@@ -75,8 +75,8 @@ public class Ruler extends Brush {
 
     }
 
-    public final void rulerA(final vData v) {
-        final int bId = v.voxelId;
+    public final void rulerA(final SnipeData v) {
+        final int bId = v.getVoxelId();
         // targetBlock = targetBlock;
         if (this.xOff == 0 && this.yOff == 0 && this.zOff == 0) {
 
@@ -87,7 +87,7 @@ public class Ruler extends Brush {
             this.first = !this.first;
 
         } else {
-            final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+            final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
             h.put(this.clampY(this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff));
             this.setBlockIdAt(bId, this.getBlockPositionX() + this.xOff, this.getBlockPositionY() + this.yOff, this.getBlockPositionZ() + this.zOff);
@@ -95,7 +95,7 @@ public class Ruler extends Brush {
         }
     }
 
-    public final void rulerP(final vData v) {
+    public final void rulerP(final SnipeData v) {
         if (this.coords[0] == 0 && this.coords[1] == 0 && this.coords[2] == 0) {
             v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow.  Comparing to point 0,0,0 instead.");
         }
@@ -121,7 +121,7 @@ public class Ruler extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -129,7 +129,7 @@ public class Ruler extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.rulerP(v);
     }
 

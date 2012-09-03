@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class Pinch extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 

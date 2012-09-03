@@ -4,9 +4,9 @@ import java.util.HashSet;
 
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class SoftSelection extends Brush {
     protected double c1 = 1;
     protected double c2 = 0;
 
-    protected vUndo h;
+    protected Undo h;
 
     private static int timesUsed = 0;
 
@@ -53,7 +53,7 @@ public class SoftSelection extends Brush {
     }
 
     @Override
-    public void info(final vMessage vm) {
+    public void info(final Message vm) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -63,7 +63,7 @@ public class SoftSelection extends Brush {
     }
 
     @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -77,8 +77,8 @@ public class SoftSelection extends Brush {
         // double Ny = By + (t * (Cy - By));
     }
 
-    protected final void getSurface(final vData v) {
-        final int bsize = v.brushSize;
+    protected final void getSurface(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
@@ -127,7 +127,7 @@ public class SoftSelection extends Brush {
     }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

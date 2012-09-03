@@ -12,97 +12,112 @@ import org.mcstats.Metrics.Graph;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
 
-public class MetricsManager {
-	private static int snipesDone = 0;
-	private static long snipeCounterInitTimeStamp = 0;
-	private static MetricsManager instance;
+/**
+ * @author Monofraps
+ */
+public final class MetricsManager {
+    private static int snipesDone = 0;
+    private static long snipeCounterInitTimeStamp = 0;
+    private static MetricsManager instance;
 
-	private MetricsManager() {
+    /**
+     * @return {@link MetricsManager}
+     */
+    public static MetricsManager getInstance() {
+        if (MetricsManager.instance == null) {
+            MetricsManager.instance = new MetricsManager();
+        }
 
-	}
+        return MetricsManager.instance;
+    }
 
-	public void start() {
-		try {
-			Metrics _metrics = new Metrics(VoxelSniper.getInstance());
+    /**
+     * Increase the Snipes Counter.
+     */
+    public static void increaseSnipeCounter() {
+        MetricsManager.snipesDone++;
+    }
 
-			
-			Graph _graph = _metrics.createGraph("Snipers Online");
-			_graph.addPlotter(new Metrics.Plotter("Snipers Online") {
+    /**
+     * Set Initialization time for reference when calculating average Snipes per Minute.
+     * 
+     * @param currentTimeMillis
+     */
+    public static void setSnipeCounterInitTimeStamp(final long currentTimeMillis) {
+        MetricsManager.snipeCounterInitTimeStamp = currentTimeMillis;
+    }
 
-				@Override
-				public int getValue() {
-					int _count = 0;
-					for (Player _player : Bukkit.getOnlinePlayers()) { 
-						if (VoxelSniperListener.getSniperPermissionHelper().isSniper(_player)) {
-							_count++;
-						}
-					}
-					return _count;
-				}
-			});
-			_graph.addPlotter(new Metrics.Plotter("Litesnipers Online") {
+    private MetricsManager() {
+    }
 
-				@Override
-				public int getValue() {
-					int _count = 0;
-					for (Player _player : Bukkit.getOnlinePlayers()) { 
-						if (VoxelSniperListener.getSniperPermissionHelper().isLiteSniper(_player)) {
-							_count++;
-						}
-					}
-					return _count;
-				}
-			});
+    /**
+     * Start sending Metrics.
+     */
+    public void start() {
+        try {
+            final Metrics _metrics = new Metrics(VoxelSniper.getInstance());
 
-			_metrics.addCustomData(new Metrics.Plotter("Average Snipes per Minute") {
+            final Graph _graph = _metrics.createGraph("Snipers Online");
+            _graph.addPlotter(new Metrics.Plotter("Snipers Online") {
 
-				@Override
-				public int getValue() {
-					int _currentSnipes = snipesDone;
-					long _initializationTimeStamp = snipeCounterInitTimeStamp;
-					double _timeRunning = (System.currentTimeMillis() - _initializationTimeStamp) / 60000;
-					double _avg = _currentSnipes / _timeRunning;
+                @Override
+                public int getValue() {
+                    int _count = 0;
+                    for (final Player _player : Bukkit.getOnlinePlayers()) {
+                        if (VoxelSniper.getSniperPermissionHelper().isSniper(_player)) {
+                            _count++;
+                        }
+                    }
+                    return _count;
+                }
+            });
+            _graph.addPlotter(new Metrics.Plotter("Litesnipers Online") {
 
-					return NumberConversions.floor(_avg);
-				}
-			});
+                @Override
+                public int getValue() {
+                    int _count = 0;
+                    for (final Player _player : Bukkit.getOnlinePlayers()) {
+                        if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(_player)) {
+                            _count++;
+                        }
+                    }
+                    return _count;
+                }
+            });
 
-			Graph _graphBrushUsage = _metrics.createGraph("Brush Usage");
-			
-			final HashMap<String, Brush> _temp = vBrushes.getSniperBrushes();
-			for(final Entry<String, Brush> _entry : _temp.entrySet()) {
-				_graphBrushUsage.addPlotter(new Metrics.Plotter(vBrushes.getName(_entry.getValue())) {
-					@Override
-					public int getValue() {
-						return _entry.getValue().getTimesUsed();
-					}
-					
-					@Override
-					public void reset() {
-						_entry.getValue().setTimesUsed(0);
-					}
-				});
-			}			
+            _metrics.addCustomData(new Metrics.Plotter("Average Snipes per Minute") {
 
-			_metrics.start();
-		} catch (IOException _e) {
-			// Failed to submit the stats :-(
-		}
-	}
+                @Override
+                public int getValue() {
+                    final int _currentSnipes = MetricsManager.snipesDone;
+                    final long _initializationTimeStamp = MetricsManager.snipeCounterInitTimeStamp;
+                    final double _timeRunning = (System.currentTimeMillis() - _initializationTimeStamp) / 60000;
+                    final double _avg = _currentSnipes / _timeRunning;
 
-	public static void increaseSnipeCounter() {
-		snipesDone++;
-	}
+                    return NumberConversions.floor(_avg);
+                }
+            });
 
-	public static void setSnipeCounterInitTimeStamp(long currentTimeMillis) {
-		snipeCounterInitTimeStamp = currentTimeMillis;
-	}
+            final Graph _graphBrushUsage = _metrics.createGraph("Brush Usage");
 
-	public static MetricsManager getInstance() {
-		if (instance == null) {
-			instance = new MetricsManager();
-		}
+            final HashMap<String, Brush> _temp = SniperBrushes.getSniperBrushes();
+            for (final Entry<String, Brush> _entry : _temp.entrySet()) {
+                _graphBrushUsage.addPlotter(new Metrics.Plotter(SniperBrushes.getName(_entry.getValue())) {
+                    @Override
+                    public int getValue() {
+                        return _entry.getValue().getTimesUsed();
+                    }
 
-		return instance;
-	}
+                    @Override
+                    public void reset() {
+                        _entry.getValue().setTimesUsed(0);
+                    }
+                });
+            }
+
+            _metrics.start();
+        } catch (final IOException _e) {
+            VoxelSniper.getInstance().getLogger().finest("Failed to submit Metrics Data.");
+        }
+    }
 }

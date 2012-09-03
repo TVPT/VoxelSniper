@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vPainting;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.PaintingWrapper;
 
 /**
  * Painting scrolling Brush
@@ -22,7 +22,7 @@ public class Painting extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
@@ -35,21 +35,21 @@ public class Painting extends Brush {
      * Scroll painting forward
      * 
      * @param v
-     *            vSniper caller
+     *            Sniper caller
      */
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
-        vPainting.paint(v.owner().getPlayer(), true, false, 0);
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        PaintingWrapper.paint(v.owner().getPlayer(), true, false, 0);
     }
 
     /**
      * Scroll painting backwards
      * 
      * @param v
-     *            vSniper caller
+     *            Sniper caller
      */
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        vPainting.paint(v.owner().getPlayer(), true, true, 0);
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        PaintingWrapper.paint(v.owner().getPlayer(), true, true, 0);
     }
 }

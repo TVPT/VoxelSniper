@@ -3,9 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockFace;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -31,11 +31,11 @@ public class Dome extends Brush {
         this.setName("Dome");
     }
 
-    public final void dome(final vData v) {
-        final int bsize = v.brushSize;
-        final int bId = v.voxelId;
+    public final void dome(final SnipeData v) {
+        final int bsize = v.getBrushSize();
+        final int bId = v.getVoxelId();
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + 0.5, 2);
         // double curvature = 1; //actually not necessary if base is circular.
@@ -157,10 +157,10 @@ public class Dome extends Brush {
     // ###### nothing below here fixed yet. Copy above code, but switch out all the y'world for whatever other axis... BUT complication: the checks for half block
     // accuracy must always still be y-oriented... harder.
     /*
-     * public void domeNS(vSniper v) { int bsize = v.brushSize; int bId = v.voxelId; world = world;
+     * public void domeNS(Sniper v) { int bsize = v.brushSize; int bId = v.voxelId; world = world;
      * 
      * 
-     * vUndo h = new vUndo(targetBlock.getWorld().getName());
+     * Undo h = new Undo(targetBlock.getWorld().getName());
      * 
      * double bpow = Math.pow(bsize +0.5, 2); //double curvature = 1; //actually not necessary if base is circular. if (height == 1024) { height = bsize + 0.5;
      * } double curvature = height / (bsize + 0.5); double yManip = 0.5; double centerRef = 0; if (fsa || bId != 44) { //override half block accuracy if /v not
@@ -205,9 +205,9 @@ public class Dome extends Brush {
      * 
      * v.hashUndo.put(v.hashEn, h); v.hashEn++; }
      * 
-     * public void domeEW(vSniper v) { int bsize = v.brushSize; int bId = v.voxelId; world = world;
+     * public void domeEW(Sniper v) { int bsize = v.brushSize; int bId = v.voxelId; world = world;
      * 
-     * vUndo h = new vUndo(targetBlock.getWorld().getName());
+     * Undo h = new Undo(targetBlock.getWorld().getName());
      * 
      * double bpow = Math.pow(bsize+0.5, 2); for (int x = bsize; x >= 0; x--) { double xpow = Math.pow(x, 2); for (int y = bsize; y >= 0; y--) { if ((xpow +
      * Math.pow(y, 2)) <= bpow) { if (getBlockIdAt(blockPositionX, blockPositionY + x, blockPositionZ + y) != bId) { h.put(clampY(blockPositionX, blockPositionY + x, blockPositionZ + y)); } if (getBlockIdAt(blockPositionX, blockPositionY + x, blockPositionZ - y) !=
@@ -221,7 +221,7 @@ public class Dome extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.voxel();
@@ -229,7 +229,7 @@ public class Dome extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Dome brush Parameters:");
             v.sendMessage(ChatColor.AQUA
@@ -248,7 +248,7 @@ public class Dome extends Brush {
                 v.sendMessage(ChatColor.BLUE + "Full step accuracy.");
                 continue;
             } else if (par[x].startsWith("acc")) {
-                if (v.voxelId != 44) {
+                if (v.getVoxelId() != 44) {
                     this.fsa = true;
                     v.sendMessage(ChatColor.BLUE + "Full step accuracy. (overridden since you don't have half steps selected)");
                 } else {
@@ -267,7 +267,7 @@ public class Dome extends Brush {
         Dome.timesUsed = tUsed;
     }
 
-    private void pre(final vData v, final BlockFace bf) {
+    private void pre(final SnipeData v, final BlockFace bf) {
         if (bf == null) {
             return;
         }
@@ -293,7 +293,7 @@ public class Dome extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -302,7 +302,7 @@ public class Dome extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -28,14 +28,14 @@ public class Overlay extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
-        // vm.voxel();
+        // voxelMessage.voxel();
     }
 
-    public final void overlay(final vData v) {
-        final int bsize = v.brushSize;
+    public final void overlay(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         final int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];
         final double bpow = Math.pow(bsize + 0.5, 2);
@@ -95,8 +95,8 @@ public class Overlay extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    public final void overlayTwo(final vData v) {
-        final int bsize = v.brushSize;
+    public final void overlayTwo(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
         final int[][] memory = new int[bsize * 2 + 1][bsize * 2 + 1];
         final double bpow = Math.pow(bsize + 0.5, 2);
@@ -155,7 +155,7 @@ public class Overlay extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
             v.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
@@ -192,7 +192,7 @@ public class Overlay extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -200,7 +200,7 @@ public class Overlay extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());

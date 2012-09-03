@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -23,7 +23,7 @@ public class Ellipse extends PerformBrush {
         this.setName("Ellipse");
     }
 
-    public final void ellipse(final vData v) {
+    public final void ellipse(final SnipeData v) {
         final double stepsize = ((2 * Math.PI) / this.steps);
 
         if (stepsize <= 0) {
@@ -66,7 +66,7 @@ public class Ellipse extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    public final void ellipsefill(final vData v) {
+    public final void ellipsefill(final SnipeData v) {
         this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
 
         final double stepsize = ((2 * Math.PI) / this.steps);
@@ -155,7 +155,7 @@ public class Ellipse extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         if (this.xscl < 1 || this.xscl > 9999) {
             this.xscl = 10;
         }
@@ -180,7 +180,7 @@ public class Ellipse extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
             v.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
@@ -229,7 +229,7 @@ public class Ellipse extends PerformBrush {
         Ellipse.timesUsed = tUsed;
     }
 
-    private void sort(final vData v) {
+    private void sort(final SnipeData v) {
         if (this.fill) {
             this.ellipsefill(v);
         } else {
@@ -238,7 +238,7 @@ public class Ellipse extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -246,7 +246,7 @@ public class Ellipse extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

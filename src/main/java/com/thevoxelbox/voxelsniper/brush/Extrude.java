@@ -4,9 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class Extrude extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.height();
@@ -43,7 +43,7 @@ public class Extrude extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
             v.sendMessage(ChatColor.AQUA
@@ -76,10 +76,10 @@ public class Extrude extends Brush {
         Extrude.timesUsed = tUsed;
     }
 
-    private void extrudeD(final vData v) {
-        final int bsize = v.brushSize;
+    private void extrudeD(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
-        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -108,10 +108,10 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeE(final vData v) {
-        final int bsize = v.brushSize;
+    private void extrudeE(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
-        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -140,10 +140,10 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeN(final vData v) {
-        final int bsize = v.brushSize;
+    private void extrudeN(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
-        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -172,10 +172,10 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeS(final vData v) {
-        final int bsize = v.brushSize;
+    private void extrudeS(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
-        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -204,10 +204,10 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeU(final vData v) {
-        final int bsize = v.brushSize;
+    private void extrudeU(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
-        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -236,10 +236,10 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private void extrudeW(final vData v) {
-        final int bsize = v.brushSize;
+    private void extrudeW(final SnipeData v) {
+        final int bsize = v.getBrushSize();
 
-        vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         final double bpow = Math.pow(bsize + this.trueCircle, 2);
         for (int x = bsize; x >= 0; x--) {
@@ -268,12 +268,12 @@ public class Extrude extends Brush {
         v.storeUndo(h);
     }
 
-    private vUndo perform(final Block b1, final Block b2, final vData v, final vUndo h) {
+    private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo h) {
         if ((b2.getY() > 128) || (b2.getY() < 0)) {
             return h;
         }
 
-        if (v.voxelList.contains(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()))) {
+        if (v.getVoxelList().contains(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()))) {
             h.put(b2);
             this.setBlockIdAt(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), b2.getX(), b2.getY(), b2.getZ());
             this.clampY(b2.getX(), b2.getY(), b2.getZ()).setData(this.clampY(b1.getX(), b1.getY(), b1.getZ()).getData());
@@ -282,12 +282,12 @@ public class Extrude extends Brush {
         return h;
     }
 
-    private void pre(final vData v, final BlockFace bf) {
+    private void pre(final SnipeData v, final BlockFace bf) {
         if (bf == null) {
             return;
         }
 
-        this.level = v.voxelHeight;
+        this.level = v.getVoxelHeight();
 
         if (this.level == 0) {
             return;
@@ -332,7 +332,7 @@ public class Extrude extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -342,7 +342,7 @@ public class Extrude extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());

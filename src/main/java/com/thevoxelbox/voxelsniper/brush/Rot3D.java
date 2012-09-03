@@ -3,10 +3,10 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vBlock;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 
 /**
  * 
@@ -17,7 +17,7 @@ public class Rot3D extends Brush {
     protected int mode = 0;
     private int bsize;
     private int brushSize;
-    private vBlock[][][] snap;
+    private BlockWrapper[][][] snap;
     private double seYaw;
     private double sePitch;
     private double seRoll;
@@ -34,13 +34,13 @@ public class Rot3D extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.brushMessage("Rotates Yaw (XZ), then Pitch(XY), then Roll(ZY), in order.");
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "p[0-359] -- set degrees of pitch rotation (rotation about the Z axis).");
@@ -84,7 +84,7 @@ public class Rot3D extends Brush {
     private void getMatrix() {// only need to do once. But y needs to change + sphere
         this.brushSize = (this.bsize * 2) + 1;
 
-        this.snap = new vBlock[this.brushSize][this.brushSize][this.brushSize];
+        this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
         final int derp = this.bsize;
         int sx = this.getBlockPositionX() - this.bsize;
@@ -100,7 +100,7 @@ public class Rot3D extends Brush {
                 for (int y = 0; y < this.snap.length; y++) {
                     if (xpow + zpow + Math.pow(y - this.bsize, 2) <= bpow) {
                         final Block b = this.clampY(sx, sy, sz);
-                        this.snap[x][y][z] = new vBlock(b);
+                        this.snap[x][y][z] = new BlockWrapper(b);
                         b.setTypeId(0);
                         sy++;
                     }
@@ -113,7 +113,7 @@ public class Rot3D extends Brush {
 
     }
 
-    private void rotate(final vData v) {
+    private void rotate(final SnipeData v) {
         // basically 1) make it a sphere we are rotating in, not a cylinder
         // 2) do three rotations in a row, one in each dimension, unless some dimensions are set to zero or udnefined or whatever, then skip those.
         // --> Why not utilize Sniper'world new oportunities and have arrow rotate all 3, powder rotate x, goldsisc y, otherdisc z. Or something like that. Or we
@@ -138,7 +138,7 @@ public class Rot3D extends Brush {
         final double cosRoll = Math.cos(this.seRoll);
         final double sinRoll = Math.sin(this.seRoll);
         final boolean[][][] doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
 
         for (int x = 0; x < this.snap.length; x++) {
             xx = x - this.bsize;
@@ -164,7 +164,7 @@ public class Rot3D extends Brush {
                         doNotFill[(int) newxyX + this.bsize][(int) newyzY + this.bsize][(int) newyzZ + this.bsize] = true; // only rounds off to nearest block
                                                                                                                            // after all three, though.
 
-                        final vBlock vb = this.snap[x][y][z];
+                        final BlockWrapper vb = this.snap[x][y][z];
                         if (vb.id == 0) {
                             continue;
                         }
@@ -216,15 +216,15 @@ public class Rot3D extends Brush {
 
     // after all rotations, compare snapshot to new state of world, and store changed blocks to undo?
     // --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that
-    // matrix and compare Block.getId with 'id' if different undo.add( new vBlock ( Block, oldId ) )
+    // matrix and compare Block.getId with 'id' if different undo.add( new BlockWrapper ( Block, oldId ) )
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.bsize = v.brushSize;
+        this.bsize = v.getBrushSize();
 
         switch (this.mode) {
         case 0:
@@ -239,7 +239,7 @@ public class Rot3D extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.arrow(v);
     }
 }

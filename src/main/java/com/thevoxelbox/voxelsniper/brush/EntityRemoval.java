@@ -9,8 +9,8 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class EntityRemoval extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
@@ -44,22 +44,22 @@ public class EntityRemoval extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.radialRemoval(v);
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.radialRemoval(v);
     }
 
-    protected final void radialRemoval(final vData v) {
+    protected final void radialRemoval(final SnipeData v) {
         this.entcount = 0;
         this.chunkcount = 0;
         final Chunk ch = this.getTargetBlock().getChunk();
         this.removeEntities(ch);
-        for (int x = ch.getX() - v.brushSize; x <= ch.getX() + v.brushSize; x++) {
-            for (int z = ch.getZ() - v.brushSize; z <= ch.getZ() + v.brushSize; z++) {
+        for (int x = ch.getX() - v.getBrushSize(); x <= ch.getX() + v.getBrushSize(); x++) {
+            for (int z = ch.getZ() - v.getBrushSize(); z <= ch.getZ() + v.getBrushSize(); z++) {
                 this.removeEntities(this.getWorld().getChunkAt(x, z));
                 this.chunkcount++;
             }

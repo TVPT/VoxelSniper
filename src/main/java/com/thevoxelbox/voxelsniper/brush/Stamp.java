@@ -5,9 +5,9 @@ import java.util.HashSet;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -49,7 +49,7 @@ public class Stamp extends Brush {
     protected HashSet<cBlock> fall = new HashSet<cBlock>();
     protected HashSet<cBlock> drop = new HashSet<cBlock>();
     protected HashSet<cBlock> solid = new HashSet<cBlock>();
-    protected vUndo h;
+    protected Undo h;
     protected boolean sorted = false;
 
     protected byte stamp = 0;
@@ -66,7 +66,7 @@ public class Stamp extends Brush {
     }
 
     @Override
-    public void info(final vMessage vm) {
+    public void info(final Message vm) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -80,7 +80,7 @@ public class Stamp extends Brush {
     }
 
     @Override
-    protected void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         switch (this.stamp) {
         case 0:
             this.stamp(v);
@@ -192,7 +192,7 @@ public class Stamp extends Brush {
     }
 
     @Override
-    protected void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -216,13 +216,13 @@ public class Stamp extends Brush {
         this.stamp = by;
     }
 
-    protected final void stamp(final vData v) {
+    protected final void stamp(final SnipeData v) {
 
         this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY() + v.cCen);
+        this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+        this.h = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {
@@ -260,13 +260,13 @@ public class Stamp extends Brush {
         v.storeUndo(this.h);
     }
 
-    protected final void stampFill(final vData v) {
+    protected final void stampFill(final SnipeData v) {
 
         this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY() + v.cCen);
+        this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+        this.h = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {
@@ -304,13 +304,13 @@ public class Stamp extends Brush {
         v.storeUndo(this.h);
     }
 
-    protected final void stampNoAir(final vData v) {
+    protected final void stampNoAir(final SnipeData v) {
 
         this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY() + v.cCen);
+        this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.h = new vUndo(this.getTargetBlock().getWorld().getName());
+        this.h = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
             for (final cBlock cb : this.solid) {

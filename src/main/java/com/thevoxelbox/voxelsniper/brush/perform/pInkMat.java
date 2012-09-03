@@ -4,7 +4,7 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.Message;
 import org.bukkit.block.Block;
 
 /**
@@ -21,14 +21,14 @@ public class pInkMat extends vPerformer {
     }
 
     @Override
-    public void init(com.thevoxelbox.voxelsniper.vData v) {
+    public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
         w = v.getWorld();
-        d = v.data;
-        ir = v.replaceId;
+        d = v.getData();
+        ir = v.getReplaceId();
     }
 
     @Override
-    public void info(vMessage vm) {
+    public void info(Message vm) {
         vm.performerName(name);
         vm.data();
         vm.replace();

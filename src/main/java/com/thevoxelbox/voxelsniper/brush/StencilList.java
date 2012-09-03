@@ -9,9 +9,9 @@ import java.util.Scanner;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -50,13 +50,13 @@ public class StencilList extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom("File loaded: " + this.Filename);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
             v.sendMessage(ChatColor.AQUA
@@ -88,14 +88,14 @@ public class StencilList extends Brush {
         }
     }
 
-    public final String readRandomStencil(final vData v) {
+    public final String readRandomStencil(final SnipeData v) {
         double rand = Math.random();
         rand = rand * (this.stencilList.size());
         final int choice = (int) (rand);
         return this.stencilList.get(choice);
     }
 
-    public final void readStencilList(final String listname, final vData v) {
+    public final void readStencilList(final String listname, final SnipeData v) {
         final File f = new File("plugins/VoxelSniper/stencilLists/" + this.Filename + ".txt");
         if (f.exists()) {
             try {
@@ -117,7 +117,7 @@ public class StencilList extends Brush {
         StencilList.timesUsed = tUsed;
     }
 
-    public final void stencilPaste(final vData v) {
+    public final void stencilPaste(final SnipeData v) {
         if (this.Filename.matches("NoFileLoaded")) {
             v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -126,7 +126,7 @@ public class StencilList extends Brush {
         final String stencilName = this.readRandomStencil(v);
         v.sendMessage(stencilName);
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -142,7 +142,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -286,7 +286,7 @@ public class StencilList extends Brush {
         }
     }
 
-    public final void stencilPaste180(final vData v) {
+    public final void stencilPaste180(final SnipeData v) {
         if (this.Filename.matches("NoFileLoaded")) {
             v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -294,7 +294,7 @@ public class StencilList extends Brush {
 
         final String stencilName = this.readRandomStencil(v);
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -310,7 +310,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -454,7 +454,7 @@ public class StencilList extends Brush {
         }
     }
 
-    public final void stencilPaste270(final vData v) {
+    public final void stencilPaste270(final SnipeData v) {
         if (this.Filename.matches("NoFileLoaded")) {
             v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -462,7 +462,7 @@ public class StencilList extends Brush {
 
         final String stencilName = this.readRandomStencil(v);
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -478,7 +478,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.owner().getPlayer().sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -623,7 +623,7 @@ public class StencilList extends Brush {
         }
     }
 
-    public final void stencilPaste90(final vData v) {
+    public final void stencilPaste90(final SnipeData v) {
         if (this.Filename.matches("NoFileLoaded")) {
             v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -631,7 +631,7 @@ public class StencilList extends Brush {
 
         final String stencilName = this.readRandomStencil(v);
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         final File f = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (f.exists()) {
@@ -647,7 +647,7 @@ public class StencilList extends Brush {
                 this.Yref = in.readShort();
 
                 final int numRuns = in.readInt();
-                // Something here that checks ranks using sanker'world thingie he added to vSniper and boots you out with error message if too big.
+                // Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
                 final int volume = this.X * this.Y * this.Z;
                 v.sendMessage(ChatColor.AQUA + this.Filename + " pasted.  Volume is " + volume + " blocks.");
 
@@ -791,7 +791,7 @@ public class StencilList extends Brush {
         }
     }
 
-    public final void stencilPasteRotation(final vData v) {
+    public final void stencilPasteRotation(final SnipeData v) {
         // just randomly chooses a rotation and then calls stencilPaste.
         this.readStencilList(this.Filename, v);
         final double rand = Math.random();
@@ -808,7 +808,7 @@ public class StencilList extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // will be used to copy/save later on?
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // will be used to copy/save later on?
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -816,7 +816,7 @@ public class StencilList extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) { // will be used to paste later on
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) { // will be used to paste later on
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());

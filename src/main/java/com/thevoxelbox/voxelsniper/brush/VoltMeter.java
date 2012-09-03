@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -22,7 +22,7 @@ public class VoltMeter extends Brush {
         this.setName("VoltMeter");
     }
 
-    public final void data(final vData v) {
+    public final void data(final SnipeData v) {
         final int x = this.getTargetBlock().getX();
         final int y = this.getTargetBlock().getY();
         final int z = this.getTargetBlock().getZ();
@@ -38,7 +38,7 @@ public class VoltMeter extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
     }
@@ -48,7 +48,7 @@ public class VoltMeter extends Brush {
         VoltMeter.timesUsed = tUsed;
     }
 
-    public final void volt(final vData v) {
+    public final void volt(final SnipeData v) {
         final int x = this.getTargetBlock().getX();
         final int y = this.getTargetBlock().getY();
         final int z = this.getTargetBlock().getZ();
@@ -103,7 +103,7 @@ public class VoltMeter extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -111,7 +111,7 @@ public class VoltMeter extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.data(v);
     }
 }

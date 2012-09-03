@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -34,16 +34,16 @@ public class Line extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
-        // vm.voxel();
+        // voxelMessage.voxel();
     }
 
-    public final void LineA(final vData v) {
+    public final void LineA(final SnipeData v) {
         v.owner().getPlayer().sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
     }
 
-    public final void LineP(final vData v) {
+    public final void LineP(final SnipeData v) {
         this.setWorld(v.owner().getPlayer().getWorld());
         double linelength = 0;
 
@@ -88,7 +88,7 @@ public class Line extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD
                     + "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
@@ -101,7 +101,7 @@ public class Line extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.origincoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                 // different?
         this.origincoords[1] = this.getTargetBlock().getY() + .5;
@@ -110,7 +110,7 @@ public class Line extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.origincoords[0] == 0 && this.origincoords[1] == 0 && this.origincoords[2] == 0) {
             v.owner().getPlayer().sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
         } else {

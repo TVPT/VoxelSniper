@@ -4,12 +4,12 @@
  */
 package com.thevoxelbox.voxelsniper.brush.tool;
 
-import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.Snipe;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Sniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,15 +23,15 @@ import org.bukkit.event.block.Action;
  */
 public class BrushTool {
 
-    protected Brush brush = new Snipe();
-    public vData data;
+    protected IBrush brush = new Snipe();
+    public SnipeData data;
 
-    public BrushTool(vSniper owner) {
-        data = new vData(owner);
-        data.vm = new vMessage(data);
+    public BrushTool(Sniper owner) {
+        data = new SnipeData(owner);
+        data.setVoxelMessage(new Message(data));
     }
 
-    public void setBrush(Brush br) {
+    public void setBrush(IBrush br) {
         brush = br;
     }
 
@@ -39,7 +39,7 @@ public class BrushTool {
         if (brush instanceof Performer) {
             ((Performer) brush).parse(args, data);
         } else {
-            data.vm.custom(ChatColor.GOLD + "This brush is not a Performer brush!");
+            data.getVoxelMessage().custom(ChatColor.GOLD + "This brush is not a Performer brush!");
         }
     }
 
@@ -52,9 +52,9 @@ public class BrushTool {
     }
 
     public void info() {
-        brush.info(data.vm);
+        brush.info(data.getVoxelMessage());
         if (brush instanceof Performer) {
-            ((Performer) brush).showInfo(data.vm);
+            ((Performer) brush).showInfo(data.getVoxelMessage());
         }
     }
 

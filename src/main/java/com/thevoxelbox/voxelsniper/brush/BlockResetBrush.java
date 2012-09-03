@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author MikeMatrix
@@ -50,7 +50,7 @@ public class BlockResetBrush extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
@@ -60,15 +60,15 @@ public class BlockResetBrush extends Brush {
     }
 
     @Override
-    protected final void arrow(final vData v) {
+    protected final void arrow(final SnipeData v) {
         this.setWorld(this.getTargetBlock().getWorld());
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        for (int _z = -v.brushSize; _z <= v.brushSize; _z++) {
-            for (int _x = -v.brushSize; _x <= v.brushSize; _x++) {
-                for (int _y = -v.brushSize; _y <= v.brushSize; _y++) {
+        for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
+            for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++) {
+                for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++) {
                     final Block _block = this.getWorld().getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
                     if (BlockResetBrush.DENIED_UPDATES.contains(_block.getType())) {
                         continue;
@@ -82,7 +82,7 @@ public class BlockResetBrush extends Brush {
     }
 
     @Override
-    protected final void powder(final vData v) {
+    protected final void powder(final SnipeData v) {
         this.arrow(v);
     }
 }

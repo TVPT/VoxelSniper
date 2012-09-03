@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -63,7 +63,7 @@ public class Spline extends PerformBrush {
         this.setName("Spline");
     }
 
-    public final void addToSet(final vData v, final boolean ep) {
+    public final void addToSet(final SnipeData v, final boolean ep) {
         if (ep) {
             if (this.endPts.contains(this.getTargetBlock()) || this.endPts.size() == 2) {
                 return;
@@ -90,7 +90,7 @@ public class Spline extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
 
         if (this.set) {
@@ -103,7 +103,7 @@ public class Spline extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Spline brush parameters");
             v.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
@@ -151,7 +151,7 @@ public class Spline extends PerformBrush {
         }
     }
 
-    public final void removeFromSet(final vData v, final boolean ep) {
+    public final void removeFromSet(final SnipeData v, final boolean ep) {
         if (ep) {
             if (this.endPts.contains(this.getTargetBlock()) == false) {
                 v.sendMessage(ChatColor.RED + "That block is not in the endpoint selection set.");
@@ -179,7 +179,7 @@ public class Spline extends PerformBrush {
         Spline.timesUsed = tUsed;
     }
 
-    public final boolean spline(final Point start, final Point end, final Point c1, final Point c2, final vData v) {
+    public final boolean spline(final Point start, final Point end, final Point c1, final Point c2, final SnipeData v) {
         this.spline.clear();
 
         try {
@@ -205,7 +205,7 @@ public class Spline extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -217,7 +217,7 @@ public class Spline extends PerformBrush {
         }
     }
 
-    protected final void clear(final vData v) {
+    protected final void clear(final SnipeData v) {
         this.spline.clear();
         this.ctrlPts.clear();
         this.endPts.clear();
@@ -225,7 +225,7 @@ public class Spline extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -238,7 +238,7 @@ public class Spline extends PerformBrush {
         }
     }
 
-    protected final void render(final vData v) {
+    protected final void render(final SnipeData v) {
         if (this.spline.isEmpty()) {
             return;
         }

@@ -4,8 +4,8 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -23,13 +23,13 @@ public class Blob extends PerformBrush {
         this.setName("Blob");
     }
 
-    public final void digblob(final vData v) {
+    public final void digblob(final SnipeData v) {
         if (this.growpercent < 1 || this.growpercent > 9999) {
             v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
             this.growpercent = 1000;
         }
 
-        final int bsize = v.brushSize;
+        final int bsize = v.getBrushSize();
         final int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
 
         // Seed the array
@@ -116,12 +116,12 @@ public class Blob extends PerformBrush {
         return Blob.timesUsed;
     }
 
-    public final void growblob(final vData v) {
+    public final void growblob(final SnipeData v) {
         if (this.growpercent < 1 || this.growpercent > 9999) {
             v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
             this.growpercent = 1500;
         }
-        final int bsize = v.brushSize;
+        final int bsize = v.getBrushSize();
         final int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
 
         // Seed the array
@@ -193,18 +193,18 @@ public class Blob extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         if (this.growpercent < 1 || this.growpercent > 9999) {
             this.growpercent = 1500;
         }
         vm.brushName(this.getName());
         vm.size();
-        // vm.voxel();
+        // voxelMessage.voxel();
         vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growpercent / 100 + "%");
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (1-9999).  Default is 1500");
@@ -232,7 +232,7 @@ public class Blob extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -240,7 +240,7 @@ public class Blob extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());

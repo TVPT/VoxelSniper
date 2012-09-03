@@ -49,7 +49,7 @@ import com.thevoxelbox.voxelsniper.brush.VoxelDiscFace;
  * 
  * @author Voxel
  */
-public enum liteBrushes {
+public enum LiteSnipeBrushes {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~przerwap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     SNIPE(Snipe.class, "s", "snipe"), // [ 1 ] \\
     DISC(Disc.class, "d", "disc"), // [ 2 ] \\
@@ -82,7 +82,7 @@ public enum liteBrushes {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DivineRage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     SCANNER(Scanner.class, "sc", "scanner"), // [ 5 ] \\
-    GENERATE_TREE(TreeSnipe.class, "t", "treesnipe"),   // [ 2 ] \\
+    GENERATE_TREE(TreeSnipe.class, "t", "treesnipe"), // [ 2 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     DRAIN(Drain.class, "drain", "drain"), // [ 10 ] \\
@@ -94,11 +94,11 @@ public enum liteBrushes {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Jmck95~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     UNDERLAY(Underlay.class, "under", "underlay"), // [ 1 ] \\
-    
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     CHECKER_VOXEL_DISC(CheckerVoxelDisc.class, "cvd", "checkervoxeldisc"); // [ 1 ] \\
 
-    private static final Map<String, liteBrushes> BRUSHES;
+    private static final Map<String, LiteSnipeBrushes> BRUSHES;
 
     /**
      * @return HashMap<String, Brush>
@@ -106,7 +106,7 @@ public enum liteBrushes {
     public static HashMap<String, String> getBrushAlternates() {
         final HashMap<String, String> _temp = new HashMap<String, String>();
 
-        for (final liteBrushes _vb : liteBrushes.BRUSHES.values()) {
+        for (final LiteSnipeBrushes _vb : LiteSnipeBrushes.BRUSHES.values()) {
             _temp.put(_vb.getLong(), _vb.getShort());
         }
 
@@ -119,7 +119,7 @@ public enum liteBrushes {
     public static HashMap<String, Brush> getSniperBrushes() {
         final HashMap<String, Brush> _temp = new HashMap<String, Brush>();
 
-        for (final Entry<String, liteBrushes> _set : liteBrushes.BRUSHES.entrySet()) {
+        for (final Entry<String, LiteSnipeBrushes> _set : LiteSnipeBrushes.BRUSHES.entrySet()) {
             _temp.put(_set.getKey(), _set.getValue().getBrush());
         }
 
@@ -133,14 +133,14 @@ public enum liteBrushes {
     private String longName;
 
     static {
-        BRUSHES = new HashMap<String, liteBrushes>();
+        BRUSHES = new HashMap<String, LiteSnipeBrushes>();
 
-        for (final liteBrushes _vb : liteBrushes.values()) {
-            liteBrushes.BRUSHES.put(_vb.getShort(), _vb);
+        for (final LiteSnipeBrushes _vb : LiteSnipeBrushes.values()) {
+            LiteSnipeBrushes.BRUSHES.put(_vb.getShort(), _vb);
         }
     }
 
-    private liteBrushes(final Class<? extends Brush> brush, final String shortName, final String longName) {
+    private LiteSnipeBrushes(final Class<? extends Brush> brush, final String shortName, final String longName) {
         this.brush = brush;
         this.shortName = shortName;
         this.longName = longName;
@@ -153,18 +153,18 @@ public enum liteBrushes {
                 _b = this.brush.getConstructor().newInstance();
                 return _b;
             } catch (final InstantiationException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             } catch (final IllegalAccessException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             } catch (final IllegalArgumentException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             } catch (final InvocationTargetException _ex) {
-                Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             }
         } catch (final NoSuchMethodException _ex) {
-            Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+            Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
         } catch (final SecurityException _ex) {
-            Logger.getLogger(vBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+            Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
         }
         return null;
     }

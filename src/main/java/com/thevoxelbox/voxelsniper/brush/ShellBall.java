@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS
@@ -20,10 +20,10 @@ public class ShellBall extends Brush {
     }
 
     // parameters isn't an abstract method, gilt. You can just leave it out if there are none.
-    public final void bshell(final vData v) {
-        final int bsize = v.brushSize;
-        final int bId = v.voxelId;
-        final int brId = v.replaceId;
+    public final void bshell(final SnipeData v) {
+        final int bsize = v.getBrushSize();
+        final int bId = v.getVoxelId();
+        final int brId = v.getReplaceId();
         final int[][][] oldmats = new int[2 * (bsize + 1) + 1][2 * (bsize + 1) + 1][2 * (bsize + 1) + 1]; // Array that holds the original materials plus a
                                                                                                           // buffer
         final int[][][] newmats = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1]; // Array that holds the hollowed materials
@@ -80,7 +80,7 @@ public class ShellBall extends Brush {
         }
 
         // Make the changes
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         final double rpow = Math.pow(bsize + 0.5, 2);
         for (int x = 2 * bsize; x >= 0; x--) {
             final double xpow = Math.pow(x - bsize, 2);
@@ -109,7 +109,7 @@ public class ShellBall extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.voxel();
@@ -123,7 +123,7 @@ public class ShellBall extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -131,7 +131,7 @@ public class ShellBall extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

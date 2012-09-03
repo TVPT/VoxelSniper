@@ -7,8 +7,8 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -36,7 +36,7 @@ public class Jagged extends PerformBrush {
     }
 
     @Override
-    public final void arrow(final vData v) {
+    public final void arrow(final SnipeData v) {
         this.origincoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
                                                                                                 // different?
         this.origincoords[1] = this.getTargetBlock().getY() + .5;
@@ -50,16 +50,16 @@ public class Jagged extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
-        // vm.voxel();
+        // voxelMessage.voxel();
     }
 
-    public final void JaggedA(final vData v) {
+    public final void JaggedA(final SnipeData v) {
         v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
     }
 
-    public final void JaggedP(final vData v) {
+    public final void JaggedP(final SnipeData v) {
         this.setWorld(v.getWorld());
         double linelength = 0;
 
@@ -109,7 +109,7 @@ public class Jagged extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final vData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD
                     + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
@@ -132,7 +132,7 @@ public class Jagged extends PerformBrush {
     }
 
     @Override
-    public final void powder(final vData v) {
+    public final void powder(final SnipeData v) {
 
         if (this.origincoords[0] == 0 && this.origincoords[1] == 0 && this.origincoords[2] == 0) {
             v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");

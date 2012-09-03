@@ -6,9 +6,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 
-import com.thevoxelbox.voxelsniper.HitBlox;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.vSniper;
+import com.thevoxelbox.voxelsniper.RangeBlockHelper;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Sniper;
 
 /**
  * 
@@ -28,13 +29,12 @@ public class Sneak extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public final boolean perform(final Action action, final com.thevoxelbox.voxelsniper.vData v, final Material heldItem, final Block clickedBlock,
-            final BlockFace clickedFace) {
+    public final boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
         switch (action) {
         case RIGHT_CLICK_AIR:
         case RIGHT_CLICK_BLOCK:
@@ -127,11 +127,11 @@ public class Sneak extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    protected final boolean getSilentTarget(final vSniper v, final Block clickedBlock, final BlockFace clickedFace) {
+    protected final boolean getSilentTarget(final Sniper v, final Block clickedBlock, final BlockFace clickedFace) {
         this.setWorld(v.getPlayer().getWorld());
         if (clickedBlock != null) {
             this.setTargetBlock(clickedBlock);
@@ -144,12 +144,12 @@ public class Sneak extends Brush {
             }
             return true;
         } else {
-            HitBlox hb = null;
+            RangeBlockHelper hb = null;
             if (v.isDistRestrict()) {
-                hb = new HitBlox(v.getPlayer(), this.getWorld(), v.getRange());
+                hb = new RangeBlockHelper(v.getPlayer(), this.getWorld(), v.getRange());
                 this.setTargetBlock(hb.getRangeBlock());
             } else {
-                hb = new HitBlox(v.getPlayer(), this.getWorld());
+                hb = new RangeBlockHelper(v.getPlayer(), this.getWorld());
                 this.setTargetBlock(hb.getTargetBlock());
             }
             if (this.getTargetBlock() != null) {
@@ -168,7 +168,7 @@ public class Sneak extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

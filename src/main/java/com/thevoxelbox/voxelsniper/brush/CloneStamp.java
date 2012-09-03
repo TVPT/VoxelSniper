@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * The CloneStamp class is used to create a collection of blocks in a cylinder shape according to the selection the player has set
@@ -33,7 +33,7 @@ public class CloneStamp extends Stamp {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.height();
@@ -58,7 +58,7 @@ public class CloneStamp extends Stamp {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
             v.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
@@ -78,8 +78,8 @@ public class CloneStamp extends Stamp {
             this.reSort();
             v.sendMessage(ChatColor.AQUA + "Default stamp brush");
         } else if (par[1].startsWith("c")) {
-            v.cCen = Integer.parseInt(par[1].replace("c", ""));
-            v.sendMessage(ChatColor.BLUE + "Center set to " + v.cCen);
+            v.setcCen(Integer.parseInt(par[1].replace("c", "")));
+            v.sendMessage(ChatColor.BLUE + "Center set to " + v.getcCen());
         }
     }
 
@@ -97,20 +97,20 @@ public class CloneStamp extends Stamp {
      * @param v
      *            the caller
      */
-    protected final void clone(final vData v) {
+    protected final void clone(final SnipeData v) {
         this.clone.clear();
         this.fall.clear();
         this.drop.clear();
         this.solid.clear();
-        final int bsize = v.brushSize;
+        final int bsize = v.getBrushSize();
         this.sorted = false;
 
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
 
-        this.st = this.getBlockPositionY() + v.cCen;
-        this.en = this.getBlockPositionY() + v.voxelHeight + v.cCen;
+        this.st = this.getBlockPositionY() + v.getcCen();
+        this.en = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
         if (this.st < 0) {
             this.st = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
@@ -150,7 +150,7 @@ public class CloneStamp extends Stamp {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.clone(v);
     }
 }

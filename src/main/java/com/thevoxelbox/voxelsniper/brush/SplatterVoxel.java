@@ -4,8 +4,8 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -31,7 +31,7 @@ public class SplatterVoxel extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         if (this.seedpercent < 1 || this.seedpercent > 9999) {
             this.seedpercent = 1000;
         }
@@ -43,7 +43,7 @@ public class SplatterVoxel extends PerformBrush {
         }
         vm.brushName("Splatter Voxel");
         vm.size();
-        // vm.voxel();
+        // voxelMessage.voxel();
         vm.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedpercent / 100 + "%");
         vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growpercent / 100 + "%");
         vm.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterrecursions);
@@ -51,7 +51,7 @@ public class SplatterVoxel extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Splatter Voxel brush Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b sv s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
@@ -100,7 +100,7 @@ public class SplatterVoxel extends PerformBrush {
         SplatterVoxel.timesUsed = tUsed;
     }
 
-    public final void vsplatterball(final vData v) {
+    public final void vsplatterball(final SnipeData v) {
         if (this.seedpercent < 1 || this.seedpercent > 9999) {
             v.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
             this.seedpercent = 1000;
@@ -113,7 +113,7 @@ public class SplatterVoxel extends PerformBrush {
             v.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
             this.splatterrecursions = 3;
         }
-        final int bsize = v.brushSize;
+        final int bsize = v.getBrushSize();
         final int[][][] splat = new int[2 * bsize + 1][2 * bsize + 1][2 * bsize + 1];
 
         // Seed the array
@@ -208,7 +208,7 @@ public class SplatterVoxel extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -216,7 +216,7 @@ public class SplatterVoxel extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());

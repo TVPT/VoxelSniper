@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * 
@@ -56,12 +56,12 @@ public class Pointless extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Pointless brushiness! :D :");
             return;
@@ -84,7 +84,7 @@ public class Pointless extends Brush {
      * 
      * @param v
      */
-    public final void printIt(final vData v) {
+    public final void printIt(final SnipeData v) {
         if (Pointless.printouts.containsKey(this.selection)) {
             for (final String i : Pointless.printouts.get(this.selection)) {
                 this.printLine(v, i);
@@ -100,7 +100,7 @@ public class Pointless extends Brush {
         }
     }
 
-    public final void printLine(final vData v, final String line) {
+    public final void printLine(final SnipeData v, final String line) {
         // This will eventually parse everything for the colors before printing. Now I just want to get it out there.
         if (this.broadcastIt) {
             this.server.broadcastMessage(line);
@@ -175,7 +175,7 @@ public class Pointless extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (this.password) {
 
             if (!this.loadedPrintouts) {
@@ -189,7 +189,7 @@ public class Pointless extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.arrow(v);
     }
 }

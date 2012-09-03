@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Voxel
  */
-public class HitBlox {
+public class RangeBlockHelper {
 
     private static final int MAXIMUM_WORLD_HEIGHT = 255;
     private static final double DEFAULT_PLAYER_VIEW_HEIGHT = 1.65;
@@ -23,15 +23,15 @@ public class HitBlox {
     private double xOffset, yOffset, zOffset;
     private int lastX, lastY, lastZ;
     private int targetX, targetY, targetZ;
-    private World w;
+    private World world;
 
     /**
      * Constructor requiring location, uses default values.
      * 
      * @param location
      */
-    public HitBlox(final Location location) {
-        this.init(location, HitBlox.DEFAULT_RANGE, HitBlox.DEFAULT_STEP, HitBlox.DEFAULT_LOCATION_VIEW_HEIGHT);
+    public RangeBlockHelper(final Location location) {
+        this.init(location, RangeBlockHelper.DEFAULT_RANGE, RangeBlockHelper.DEFAULT_STEP, RangeBlockHelper.DEFAULT_LOCATION_VIEW_HEIGHT);
     }
 
     /**
@@ -41,9 +41,9 @@ public class HitBlox {
      * @param range
      * @param step
      */
-    public HitBlox(final Location location, final int range, final double step) {
-        this.w = location.getWorld();
-        this.init(location, range, step, HitBlox.DEFAULT_LOCATION_VIEW_HEIGHT);
+    public RangeBlockHelper(final Location location, final int range, final double step) {
+        this.world = location.getWorld();
+        this.init(location, range, step, RangeBlockHelper.DEFAULT_LOCATION_VIEW_HEIGHT);
     }
 
     /**
@@ -53,8 +53,8 @@ public class HitBlox {
      * @param range
      * @param step
      */
-    public HitBlox(final Player player, final int range, final double step) {
-        this.init(player.getLocation(), range, step, HitBlox.DEFAULT_PLAYER_VIEW_HEIGHT);
+    public RangeBlockHelper(final Player player, final int range, final double step) {
+        this.init(player.getLocation(), range, step, RangeBlockHelper.DEFAULT_PLAYER_VIEW_HEIGHT);
     }
 
     /**
@@ -62,9 +62,9 @@ public class HitBlox {
      * 
      * @param player
      */
-    public HitBlox(final Player player, final World world) {
-        this.w = world;
-        this.init(player.getLocation(), HitBlox.DEFAULT_RANGE, HitBlox.DEFAULT_STEP, HitBlox.DEFAULT_PLAYER_VIEW_HEIGHT);
+    public RangeBlockHelper(final Player player, final World world) {
+        this.world = world;
+        this.init(player.getLocation(), RangeBlockHelper.DEFAULT_RANGE, RangeBlockHelper.DEFAULT_STEP, RangeBlockHelper.DEFAULT_PLAYER_VIEW_HEIGHT);
         // values
     }
 
@@ -73,9 +73,9 @@ public class HitBlox {
      * @param world
      * @param range
      */
-    public HitBlox(final Player player, final World world, final double range) {
-        this.w = world;
-        this.init(player.getLocation(), range, HitBlox.DEFAULT_STEP, HitBlox.DEFAULT_PLAYER_VIEW_HEIGHT);
+    public RangeBlockHelper(final Player player, final World world, final double range) {
+        this.world = world;
+        this.init(player.getLocation(), range, RangeBlockHelper.DEFAULT_STEP, RangeBlockHelper.DEFAULT_PLAYER_VIEW_HEIGHT);
         this.fromOffworld();
     }
 
@@ -83,8 +83,8 @@ public class HitBlox {
      * 
      */
     public final void fromOffworld() {
-        if (this.targetY > HitBlox.MAXIMUM_WORLD_HEIGHT) {
-            while (this.targetY > HitBlox.MAXIMUM_WORLD_HEIGHT && this.length <= this.range) {
+        if (this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT) {
+            while (this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT && this.length <= this.range) {
                 this.lastX = this.targetX;
                 this.lastY = this.targetY;
                 this.lastZ = this.targetZ;
@@ -134,10 +134,10 @@ public class HitBlox {
      * @return Block
      */
     public final Block getCurBlock() {
-        if (this.length > this.range || this.targetY > HitBlox.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
+        if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
             return null;
         } else {
-            return this.w.getBlockAt(this.targetX, this.targetY, this.targetZ);
+            return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
         }
     }
 
@@ -163,10 +163,10 @@ public class HitBlox {
      * @return Block
      */
     public final Block getLastBlock() {
-        if (this.lastY > HitBlox.MAXIMUM_WORLD_HEIGHT || this.lastY < 0) {
+        if (this.lastY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.lastY < 0) {
             return null;
         }
-        return this.w.getBlockAt(this.lastX, this.lastY, this.lastZ);
+        return this.world.getBlockAt(this.lastX, this.lastY, this.lastZ);
     }
 
     /**
@@ -193,11 +193,11 @@ public class HitBlox {
 
         } while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
 
-        if (this.length > this.range || this.targetY > HitBlox.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
+        if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
             return null;
         }
 
-        return this.w.getBlockAt(this.targetX, this.targetY, this.targetZ);
+        return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
     }
 
     /**
@@ -232,7 +232,7 @@ public class HitBlox {
      */
     public final void setCurBlock(final int type) {
         if (this.getCurBlock() != null) {
-            this.w.getBlockAt(this.targetX, this.targetY, this.targetZ).setTypeId(type);
+            this.world.getBlockAt(this.targetX, this.targetY, this.targetZ).setTypeId(type);
         }
     }
 
@@ -246,7 +246,7 @@ public class HitBlox {
         }
 
         if (this.getCurBlock() != null) {
-            this.w.getBlockAt(this.targetX, this.targetY, this.targetZ).setTypeId(type);
+            this.world.getBlockAt(this.targetX, this.targetY, this.targetZ).setTypeId(type);
         }
     }
 
@@ -257,7 +257,7 @@ public class HitBlox {
      */
     public final void setLastBlock(final int type) {
         if (this.getLastBlock() != null) {
-            this.w.getBlockAt(this.lastX, this.lastY, this.lastZ).setTypeId(type);
+            this.world.getBlockAt(this.lastX, this.lastY, this.lastZ).setTypeId(type);
         }
     }
 
@@ -271,7 +271,7 @@ public class HitBlox {
 
         }
         if (this.getCurBlock() != null) {
-            this.w.getBlockAt(this.targetX, this.targetY, this.targetZ).setTypeId(type);
+            this.world.getBlockAt(this.targetX, this.targetY, this.targetZ).setTypeId(type);
         }
     }
 
@@ -294,12 +294,12 @@ public class HitBlox {
 
         } while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
 
-        if (this.w.getBlockTypeIdAt(this.targetX, this.targetY, this.targetZ) != 0) {
-            return this.w.getBlockAt(this.targetX, this.targetY, this.targetZ);
+        if (this.world.getBlockTypeIdAt(this.targetX, this.targetY, this.targetZ) != 0) {
+            return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
         }
 
-        if (this.length > this.range || this.targetY > HitBlox.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
-            return this.w.getBlockAt(this.lastX, this.lastY, this.lastZ);
+        if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
+            return this.world.getBlockAt(this.lastX, this.lastY, this.lastZ);
         } else {
             return this.getRange();
         }

@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -28,13 +28,13 @@ public class Set extends PerformBrush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         this.b = null;
         vm.brushName(this.getName());
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         super.parameters(par, v);
     }
 
@@ -43,7 +43,7 @@ public class Set extends PerformBrush {
         Set.timesUsed = tUsed;
     }
 
-    private boolean set(final Block bl, final vData v) {
+    private boolean set(final Block bl, final SnipeData v) {
         if (this.b == null) {
             this.b = bl;
             return true;
@@ -77,8 +77,8 @@ public class Set extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) { // Derp
-        this.i = v.voxelId;
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) { // Derp
+        this.i = v.getVoxelId();
         if (this.set(this.getTargetBlock(), v)) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
@@ -87,8 +87,8 @@ public class Set extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
-        this.i = v.voxelId;
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        this.i = v.getVoxelId();
         if (this.set(this.getLastBlock(), v)) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {

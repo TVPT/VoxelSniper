@@ -4,9 +4,9 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 
-import com.thevoxelbox.voxelsniper.vData;
-import com.thevoxelbox.voxelsniper.vMessage;
-import com.thevoxelbox.voxelsniper.undo.vUndo;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * 
@@ -27,15 +27,15 @@ public class FreezeRay extends Brush {
         this.setName("Freeze Ray");
     }
 
-    public final void FreezeRay(final vData v) {
+    public final void FreezeRay(final SnipeData v) {
         // This is designed as a purely entertaining brush to use to destroy things you hate in a dramatic fashion. E.g. Daro builds. Just using a /b br with
         // fire is not nearly as much fun as this:
         // Basically freezes water, quenches lava and torches, encases everything solid with a sheath of ice, generates random ice crystals that destroy
         // anything they intersect with, and then covers everything inside and out with snow.
 
-        final int bsize = v.brushSize;
+        final int bsize = v.getBrushSize();
 
-        final vUndo h = new vUndo(this.getTargetBlock().getWorld().getName());
+        final Undo h = new Undo(this.getTargetBlock().getWorld().getName());
         int octant = 0;
         int octX = 0;
         int octY = 0;
@@ -209,13 +209,13 @@ public class FreezeRay extends Brush {
     }
 
     @Override
-    public final void info(final vMessage vm) {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.vData v) {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.LIGHT_PURPLE + "Freeze Ray Parameters:");
             v.sendMessage(ChatColor.BLUE + "h[number] (ex:  h20) Maximum crystal height");
@@ -253,7 +253,7 @@ public class FreezeRay extends Brush {
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -261,7 +261,7 @@ public class FreezeRay extends Brush {
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.vData v) {
+    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
