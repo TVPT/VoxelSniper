@@ -10,14 +10,14 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * 
  * @author Piotr
  */
-public class Ball extends PerformBrush {
+public class BallBrush extends PerformBrush {
     private static int timesUsed = 0;
     private double trueCircle = 0;
 
     /**
      * 
      */
-    public Ball() {
+    public BallBrush() {
         this.setName("Ball");
     }
 
@@ -117,11 +117,11 @@ public class Ball extends PerformBrush {
     
     @Override
     public final int getTimesUsed() {
-        return Ball.timesUsed;
+        return BallBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-        Ball.timesUsed = tUsed;
+        BallBrush.timesUsed = tUsed;
     }
 }

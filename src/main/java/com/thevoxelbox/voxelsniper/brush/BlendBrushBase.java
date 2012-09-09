@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
-public abstract class BlendBrush extends Brush {
+public abstract class BlendBrushBase extends Brush {
 	protected boolean excludeAir = true;
 	protected boolean excludeWater = true;
 	protected static int maxBlockMaterialID = -1;

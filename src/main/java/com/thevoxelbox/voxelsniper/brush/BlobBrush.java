@@ -12,7 +12,7 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * 
  * @author Giltwist
  */
-public class Blob extends PerformBrush {
+public class BlobBrush extends PerformBrush {
 	private static final int GROW_PERCENT_DEFAULT = 1000;
 	private static final int GROW_PERCENT_MIN = 1;
 	private static final int GROW_PERCENT_MAX = 9999;
@@ -24,7 +24,7 @@ public class Blob extends PerformBrush {
     /**
      * 
      */
-    public Blob() {
+    public BlobBrush() {
         this.setName("Blob");
     }
     
@@ -250,11 +250,11 @@ public class Blob extends PerformBrush {
     
     @Override
     public final int getTimesUsed() {
-        return Blob.timesUsed;
+        return BlobBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-        Blob.timesUsed = tUsed;
+        BlobBrush.timesUsed = tUsed;
     }
 }

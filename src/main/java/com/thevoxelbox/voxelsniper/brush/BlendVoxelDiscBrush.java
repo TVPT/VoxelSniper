@@ -10,13 +10,13 @@ import com.thevoxelbox.voxelsniper.Undo;
 /**
  *
  */
-public class BlendVoxelDisc extends BlendBrush {
+public class BlendVoxelDiscBrush extends BlendBrushBase {
 	private static int timesUsed = 0;
 
 	/**
 	 * 
 	 */
-    public BlendVoxelDisc() {
+    public BlendVoxelDiscBrush() {
         this.setName("Blend Voxel Disc");
     }     
 
@@ -111,11 +111,11 @@ public class BlendVoxelDisc extends BlendBrush {
     
     @Override
     public final int getTimesUsed() {
-        return BlendVoxelDisc.timesUsed;
+        return BlendVoxelDiscBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-        BlendVoxelDisc.timesUsed = tUsed;
+        BlendVoxelDiscBrush.timesUsed = tUsed;
     }
 }

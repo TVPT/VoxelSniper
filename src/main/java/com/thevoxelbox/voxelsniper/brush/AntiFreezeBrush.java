@@ -10,7 +10,7 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  * @author Gavjenks
  */
-public class AntiFreeze extends Brush {
+public class AntiFreezeBrush extends Brush {
 	private static final int INVISIBLE_DATA_VALUE = 6;
 	
     private static int timesUsed = 0;
@@ -18,7 +18,7 @@ public class AntiFreeze extends Brush {
     /**
      * 
      */
-    public AntiFreeze() {
+    public AntiFreezeBrush() {
         this.setName("Anti Freeze");
     }
 
@@ -101,11 +101,11 @@ public class AntiFreeze extends Brush {
     
     @Override
     public final int getTimesUsed() {
-        return AntiFreeze.timesUsed;
+        return AntiFreezeBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	AntiFreeze.timesUsed = tUsed;
+    	AntiFreezeBrush.timesUsed = tUsed;
     }
 }

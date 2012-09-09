@@ -24,34 +24,34 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  * @author GavJenks
  */
-public class BlockResetBrushSurface extends Brush {
+public class BlockResetSurfaceBrush extends Brush {
     private static int timesUsed = 0;
     private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
 
     static {
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.SIGN);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.SIGN_POST);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.WALL_SIGN);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.CHEST);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.FURNACE);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.BURNING_FURNACE);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.REDSTONE_WIRE);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.DIODE_BLOCK_OFF);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.DIODE_BLOCK_ON);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.WOODEN_DOOR);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.WOOD_DOOR);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.IRON_DOOR);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.IRON_DOOR_BLOCK);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.FENCE_GATE);
-        BlockResetBrushSurface.DENIED_UPDATES.add(Material.AIR);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN_POST);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WALL_SIGN);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.CHEST);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FURNACE);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.BURNING_FURNACE);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_WIRE);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_OFF);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_ON);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOODEN_DOOR);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOOD_DOOR);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR_BLOCK);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FENCE_GATE);
+        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.AIR);
     }
 
     /**
      *
      */
-    public BlockResetBrushSurface() {
+    public BlockResetSurfaceBrush() {
         this.setName("Block Reset Brush Surface Only");
     }
     
@@ -66,7 +66,7 @@ public class BlockResetBrushSurface extends Brush {
     			for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++) {
     				
     				_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-    				if (BlockResetBrushSurface.DENIED_UPDATES.contains(_block.getType())) {
+    				if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(_block.getType())) {
     					continue;
     				}
     				
@@ -146,11 +146,11 @@ public class BlockResetBrushSurface extends Brush {
     
     @Override
     public final int getTimesUsed() {
-        return BlockResetBrushSurface.timesUsed;
+        return BlockResetSurfaceBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-        BlockResetBrushSurface.timesUsed = tUsed;
+        BlockResetSurfaceBrush.timesUsed = tUsed;
     }
 }
