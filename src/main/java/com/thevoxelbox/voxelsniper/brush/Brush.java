@@ -115,11 +115,9 @@ public abstract class Brush implements IBrush {
             break;
 
         case LEFT_CLICK_AIR:
-
             break;
 
         case LEFT_CLICK_BLOCK:
-
             break;
 
         case PHYSICAL:
@@ -170,7 +168,7 @@ public abstract class Brush implements IBrush {
      * @param clickedFace
      * @return boolean
      */
-    protected final boolean getTarget(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
+    protected boolean getTarget(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
         this.setWorld(v.getWorld());
         if (clickedBlock != null) {
             this.setTargetBlock(clickedBlock);

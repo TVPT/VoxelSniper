@@ -11,33 +11,38 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  * @author Piotr <przerwap@gmail.com>
  */
 public class Biome extends Brush {
-    private org.bukkit.block.Biome selected = org.bukkit.block.Biome.PLAINS;
+	private static int timesUsed = 0;
+    private org.bukkit.block.Biome selectedBiome = org.bukkit.block.Biome.PLAINS;
 
-    private static int timesUsed = 0;
-
+    /**
+     * 
+     */
     public Biome() {
         this.setName("Biome");
     }   
     
-    private final void bio(final SnipeData v) {
+    private final void biome(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final double _bPow = Math.pow(_bSize, 2);
+        double _xPow = 0;
+        
         for (int _x = -_bSize; _x <= _bSize; _x++) {
-            final double _xPow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
             for (int _z = -_bSize; _z <= _bSize; _z++) {
                 if ((_xPow + Math.pow(_z, 2)) <= _bPow) {
-                    this.getWorld().setBiome(this.getBlockPositionX() + _x, this.getBlockPositionZ() + _z, this.selected);
+                    this.getWorld().setBiome(this.getBlockPositionX() + _x, this.getBlockPositionZ() + _z, this.selectedBiome);
                 }
             }
         }
+        
 
         final Block _b1 = this.getWorld().getBlockAt(this.getBlockPositionX() - _bSize, 0, this.getBlockPositionZ() - _bSize);
         final Block _b2 = this.getWorld().getBlockAt(this.getBlockPositionX() + _bSize, 0, this.getBlockPositionZ() + _bSize);
 
         final int _lowX = (_b1.getX() <= _b2.getX()) ? _b1.getChunk().getX() : _b2.getChunk().getX();
-        final int _lowZ = (_b1.getZ() <= _b2.getZ()) ? _b1.getChunk().getX() : _b2.getChunk().getX();
+        final int _lowZ = (_b1.getZ() <= _b2.getZ()) ? _b1.getChunk().getZ() : _b2.getChunk().getZ();
         final int _highX = (_b1.getX() >= _b2.getX()) ? _b1.getChunk().getX() : _b2.getChunk().getX();
-        final int _highZ = (_b1.getZ() >= _b2.getZ()) ? _b1.getChunk().getX() : _b2.getChunk().getX();
+        final int _highZ = (_b1.getZ() >= _b2.getZ()) ? _b1.getChunk().getZ() : _b2.getChunk().getZ();
         
         for (int x = _lowX; x <= _highX; x++) {
             for (int z = _lowZ; z <= _highZ; z++) {
@@ -45,23 +50,22 @@ public class Biome extends Brush {
             }
         }
     }
-
     
     @Override
     protected final void arrow(final SnipeData v) {
-        this.bio(v);
+        this.biome(v);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.bio(v);
+        this.biome(v);
     }    
     
     @Override
     public final void info(final Message vm) {
     	vm.brushName(this.getName());
     	vm.size();
-    	vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selected.name());
+    	vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
     }
     
     @Override
@@ -83,11 +87,11 @@ public class Biome extends Brush {
     	} else {
     		for (final org.bukkit.block.Biome bio : org.bukkit.block.Biome.values()) {
     			if (bio.name().equals(par[1])) {
-    				this.selected = bio;
+    				this.selectedBiome = bio;
     				break;
     			}
     		}
-    		v.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selected.name());
+    		v.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
     	}
     }
     

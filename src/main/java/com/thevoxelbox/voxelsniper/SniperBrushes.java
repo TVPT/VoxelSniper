@@ -44,7 +44,6 @@ import com.thevoxelbox.voxelsniper.brush.HeatRay;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.Jagged;
 import com.thevoxelbox.voxelsniper.brush.Jockey;
-import com.thevoxelbox.voxelsniper.brush.Lightning;
 import com.thevoxelbox.voxelsniper.brush.Line;
 import com.thevoxelbox.voxelsniper.brush.Meteor;
 import com.thevoxelbox.voxelsniper.brush.Move;
@@ -160,7 +159,6 @@ public enum SniperBrushes {
     DOME(Dome.class, "dome", "domebrush"), // [ 6 ] \\
     RULER(Ruler.class, "r", "ruler"), // [ 7 ] \\
     VOLT_METER(VoltMeter.class, "volt", "voltmeter"), // [ 8 ] \\
-    LIGHTNING(Lightning.class, "light", "lightning"), // [ 9 ] \\
     DRAIN(Drain.class, "drain", "drain"), // [ 10 ] \\
     THREE_D_ROTATION(Rot3D.class, "rot3", "rotation3D"), // [ 11 ] \\
     ANTI_FREEZE(AntiFreeze.class, "af", "antifreeze"), // [ 13 ] \\

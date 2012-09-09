@@ -10,22 +10,27 @@ import com.thevoxelbox.voxelsniper.Undo;
 /**
  *
  */
-public class BlendBall extends Brush {
-    private boolean excludeAir = true;
-    private boolean excludeWater = true;
+public class BlendBall extends BlendBrush {
+	private static int timesUsed = 0;    
 
-    private static int timesUsed = 0;
-
+	/**
+	 * 
+	 */
     public BlendBall() {
         this.setName("Blend Ball");
     }
 
-    private final void bblend(final SnipeData v) {    	
+    @Override
+    protected final void blend(final SnipeData v) {    	
         final int _bSize = v.getBrushSize();
+        final int _twoBrushSize = 2 * _bSize;
+        final Undo _undo = new Undo(this.getWorld().getName());
+        final double _rPow = Math.pow(_bSize + 1, 2);
         final int[][][] _oldMaterials = new int[2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1]; // Array that holds the original materials plus a buffer
-        final int[][][] _newMaterials = new int[2 * _bSize + 1][2 * _bSize + 1][2 * _bSize + 1]; // Array that holds the blended materials
-        int _maxMaterialID = 0; // What is the highest material ID that is a block?
-
+        final int[][][] _newMaterials = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1]; // Array that holds the blended materials
+        double _xPow = 0;
+        double _yPow = 0;
+        
         // Log current materials into oldmats
         for (int _x = 0; _x <= 2 * (_bSize + 1); _x++) {
             for (int _y = 0; _y <= 2 * (_bSize + 1); _y++) {
@@ -36,26 +41,19 @@ public class BlendBall extends Brush {
         }
 
         // Log current materials into newmats
-        for (int _x = 0; _x <= 2 * _bSize; _x++) {
-            for (int _y = 0; _y <= 2 * _bSize; _y++) {
-                for (int _z = 0; _z <= 2 * _bSize; _z++) {
+        for (int _x = 0; _x <= _twoBrushSize; _x++) {
+            for (int _y = 0; _y <= _twoBrushSize; _y++) {
+                for (int _z = 0; _z <= _twoBrushSize; _z++) {
                     _newMaterials[_x][_y][_z] = _oldMaterials[_x + 1][_y + 1][_z + 1];
                 }
             }
         }
 
-        // Find highest placeable block ID
-        for (int _i = 0; _i < Material.values().length; _i++) {
-            if (Material.values()[_i].isBlock() && Material.values()[_i].getId() > _maxMaterialID) {
-                _maxMaterialID = Material.values()[_i].getId();
-            }
-        }
-
         // Blend materials
-        for (int _x = 0; _x <= 2 * _bSize; _x++) {
-            for (int _y = 0; _y <= 2 * _bSize; _y++) {
-                for (int _z = 0; _z <= 2 * _bSize; _z++) {
-                    final int[] _materialFrequency = new int[_maxMaterialID + 1]; // Array that tracks frequency of materials neighboring given block
+        for (int _x = 0; _x <= _twoBrushSize; _x++) {
+            for (int _y = 0; _y <= _twoBrushSize; _y++) {
+                for (int _z = 0; _z <= _twoBrushSize; _z++) {
+                    final int[] _materialFrequency = new int[maxBlockMaterialID + 1]; // Array that tracks frequency of materials neighboring given block
                     int _modeMatCount = 0;
                     int _modeMatId = 0;
                     boolean _tiecheck = true;
@@ -71,19 +69,19 @@ public class BlendBall extends Brush {
                     }
 
                     // Find most common neighboring material.
-                    for (int _i = 0; _i <= _maxMaterialID; _i++) {
-                        if (_materialFrequency[_i] > _modeMatCount && !(this.excludeAir && _i == 0)
-                                && !(this.excludeWater && (_i == 8 || _i == 9))) {
+                    for (int _i = 0; _i <= maxBlockMaterialID; _i++) {
+                        if (_materialFrequency[_i] > _modeMatCount && !(this.excludeAir && _i == Material.AIR.getId())
+                                && !(this.excludeWater && (_i == Material.WATER.getId() || _i == Material.STATIONARY_WATER.getId()))) {
                             _modeMatCount = _materialFrequency[_i];
                             _modeMatId = _i;
                         }
                     }
                     // Make sure there'world not a tie for most common
                     for (int i = 0; i < _modeMatId; i++) {
-                        if (_materialFrequency[i] == _modeMatCount && !(this.excludeAir && i == 0)
-                                && !(this.excludeWater && (i == 8 || i == 9))) {
-                            _tiecheck = false;
-                        }
+                    	if(_materialFrequency[i] == _modeMatCount && !(this.excludeAir && i == Material.AIR.getId())
+                                && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
+                    		_tiecheck = false;
+                    	}
                     }
 
                     // Record most common neighbor material for this block
@@ -94,17 +92,17 @@ public class BlendBall extends Brush {
             }
         }
 
-        // Make the changes
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        final double _rPow = Math.pow(_bSize + 1, 2);
-        for (int _x = 2 * _bSize; _x >= 0; _x--) {
-        	final double _xPow = Math.pow(_x - _bSize - 1, 2);
-            for (int _y = 0; _y <= 2 * _bSize; _y++) {
-                final double yPow = Math.pow(_y - _bSize - 1, 2);
-                for (int _z = 2 * _bSize; _z >= 0; _z--) {
-                    if (_xPow + yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow) {
-                        if (!(this.excludeAir && _newMaterials[_x][_y][_z] == 0)
-                                && !(this.excludeWater && (_newMaterials[_x][_y][_z] == 8 || _newMaterials[_x][_y][_z] == 9))) {
+        // Make the changes  
+        for (int _x = _twoBrushSize; _x >= 0; _x--) {
+        	_xPow = Math.pow(_x - _bSize - 1, 2);
+        	
+            for (int _y = 0; _y <= _twoBrushSize; _y++) {
+                _yPow = Math.pow(_y - _bSize - 1, 2);
+                
+                for (int _z = _twoBrushSize; _z >= 0; _z--) {
+                    if (_xPow + _yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow) {
+                        if (!(this.excludeAir && _newMaterials[_x][_y][_z] == Material.AIR.getId())
+                                && !(this.excludeWater && (_newMaterials[_x][_y][_z] == Material.WATER.getId() || _newMaterials[_x][_y][_z] == Material.STATIONARY_WATER.getId()))) {
                             if (this.getBlockIdAt(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z) != _newMaterials[_x][_y][_z]) {
                                 _undo.put(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z));
                             }
@@ -118,36 +116,14 @@ public class BlendBall extends Brush {
     }   
     
     @Override
-    protected final void arrow(final SnipeData v) {    	
-    	this.excludeAir = false;
-    	this.bblend(v);
-    }
-    
-    @Override
-    protected final void powder(final SnipeData v) {    	
-    	this.excludeAir = true;
-    	this.bblend(v);
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.size();
-        vm.voxel();
-        vm.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
-    }
-
-    @Override
     public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(ChatColor.GOLD + "Blend Ball Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default) water");
+            v.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default: exclude) water");
             return;
         }
-        if (par[1].equalsIgnoreCase("water")) {
-            this.excludeWater = !this.excludeWater;
-            v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
-        }
+       
+        super.parameters(par, v);
     }
     
     @Override

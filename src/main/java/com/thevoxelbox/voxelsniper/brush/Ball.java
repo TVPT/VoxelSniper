@@ -11,14 +11,17 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Piotr
  */
 public class Ball extends PerformBrush {
-    private double trueCircle = 0;
     private static int timesUsed = 0;
+    private double trueCircle = 0;
 
+    /**
+     * 
+     */
     public Ball() {
         this.setName("Ball");
     }
 
-    public final void ball(final SnipeData v) {    	
+    private final void ball(final SnipeData v) {    	
         final int _bSize = v.getBrushSize();
 
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);

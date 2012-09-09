@@ -10,47 +10,42 @@ import com.thevoxelbox.voxelsniper.Undo;
 /**
  *
  */
-public class BlendVoxelDisc extends Brush {
-    private boolean excludeAir = true;
-    private boolean excludeWater = true;
+public class BlendVoxelDisc extends BlendBrush {
+	private static int timesUsed = 0;
 
-    private static int timesUsed = 0;
-
+	/**
+	 * 
+	 */
     public BlendVoxelDisc() {
         this.setName("Blend Voxel Disc");
     }     
 
-    private final void vdblend(final SnipeData v) {
-        final int _brushSize = v.getBrushSize();
-        final int[][] _oldMaterials = new int[2 * (_brushSize + 1) + 1][2 * (_brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
-        final int[][] _newMaterials = new int[2 * _brushSize + 1][2 * _brushSize + 1]; // Array that holds the blended materials
-        int _maxMaterialId = 0; // What is the highest material ID that is a block?
-
+    @Override
+    protected final void blend(final SnipeData v) {
+        final int _bSize = v.getBrushSize();
+        final int _twoBrushSize = 2 * _bSize;
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final int[][] _oldMaterials = new int[2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1]; // Array that holds the original materials plus a buffer
+        final int[][] _newMaterials = new int[_twoBrushSize + 1][_twoBrushSize + 1]; // Array that holds the blended materials
+        
         // Log current materials into oldmats
-        for (int _x = 0; _x <= 2 * (_brushSize + 1); _x++) {
-            for (int _z = 0; _z <= 2 * (_brushSize + 1); _z++) {
-                _oldMaterials[_x][_z] = this.getBlockIdAt(this.getBlockPositionX() - _brushSize - 1 + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _brushSize - 1 + _z);
+        for (int _x = 0; _x <= 2 * (_bSize + 1); _x++) {
+            for (int _z = 0; _z <= 2 * (_bSize + 1); _z++) {
+                _oldMaterials[_x][_z] = this.getBlockIdAt(this.getBlockPositionX() - _bSize - 1 + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _bSize - 1 + _z);
             }
         }
 
         // Log current materials into newmats
-        for (int _x = 0; _x <= 2 * _brushSize; _x++) {
-            for (int _z = 0; _z <= 2 * _brushSize; _z++) {
+        for (int _x = 0; _x <= _twoBrushSize; _x++) {
+            for (int _z = 0; _z <= _twoBrushSize; _z++) {
                 _newMaterials[_x][_z] = _oldMaterials[_x + 1][_z + 1];
             }
         }
 
-        // Find highest placeable block ID
-        for (int _i = 0; _i < Material.values().length; _i++) {
-            if (Material.values()[_i].isBlock() && Material.values()[_i].getId() > _maxMaterialId) {
-                _maxMaterialId = Material.values()[_i].getId();
-            }
-        }
-
         // Blend materials
-        for (int _x = 0; _x <= 2 * _brushSize; _x++) {
-            for (int _z = 0; _z <= 2 * _brushSize; _z++) {
-                final int[] _materialFrequency = new int[_maxMaterialId + 1]; // Array that tracks frequency of materials neighboring given block
+        for (int _x = 0; _x <= _twoBrushSize; _x++) {
+            for (int _z = 0; _z <= _twoBrushSize; _z++) {
+                final int[] _materialFrequency = new int[maxBlockMaterialID + 1]; // Array that tracks frequency of materials neighboring given block
                 int _modeMatCount = 0;
                 int _modeMatId = 0;
                 boolean _tiecheck = true;
@@ -64,17 +59,17 @@ public class BlendVoxelDisc extends Brush {
                 }
 
                 // Find most common neighboring material.
-                for (int _i = 0; _i <= _maxMaterialId; _i++) {
-                    if (_materialFrequency[_i] > _modeMatCount && !(this.excludeAir && _i == 0)
-                            && !(this.excludeWater && (_i == 8 || _i == 9))) {
+                for (int _i = 0; _i <= maxBlockMaterialID; _i++) {
+                    if (_materialFrequency[_i] > _modeMatCount && !(this.excludeAir && _i == Material.AIR.getId())
+                            && !(this.excludeWater && (_i == Material.WATER.getId() || _i == Material.STATIONARY_WATER.getId()))) {
                         _modeMatCount = _materialFrequency[_i];
                         _modeMatId = _i;
                     }
                 }
                 // Make sure there'world not a tie for most common
                 for (int _i = 0; _i < _modeMatId; _i++) {
-                    if (_materialFrequency[_i] == _modeMatCount && !(this.excludeAir && _i == 0)
-                            && !(this.excludeWater && (_i == 8 || _i == 9))) {
+                    if (_materialFrequency[_i] == _modeMatCount && !(this.excludeAir && _i == Material.AIR.getId())
+                            && !(this.excludeWater && (_i == Material.WATER.getId() || _i == Material.STATIONARY_WATER.getId()))) {
                         _tiecheck = false;
                     }
                 }
@@ -87,44 +82,22 @@ public class BlendVoxelDisc extends Brush {
         }
 
         // Make the changes
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
-        for (int _x = 2 * _brushSize; _x >= 0; _x--) {
-            for (int _z = 2 * _brushSize; _z >= 0; _z--) {
-
-                if (!(this.excludeAir && _newMaterials[_x][_z] == 0)
-                        && !(this.excludeWater && (_newMaterials[_x][_z] == 8 || _newMaterials[_x][_z] == 9))) {
-                    if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _brushSize + _z) != _newMaterials[_x][_z]) {
-                        _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _brushSize + _z));
+        for (int _x = _twoBrushSize; _x >= 0; _x--) {
+            for (int _z = _twoBrushSize; _z >= 0; _z--) {
+                if (!(this.excludeAir && _newMaterials[_x][_z] == Material.AIR.getId())
+                        && !(this.excludeWater && (_newMaterials[_x][_z] == Material.WATER.getId() || _newMaterials[_x][_z] == Material.STATIONARY_WATER.getId()))) {
+                    if (this.getBlockIdAt(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _bSize + _z) != _newMaterials[_x][_z]) {
+                        _undo.put(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _bSize + _z));
                     }
-                    this.setBlockIdAt(_newMaterials[_x][_z], this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _brushSize + _z);
+                    this.setBlockIdAt(_newMaterials[_x][_z], this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _bSize + _z);
 
                 }
             }
         }
+        
         v.storeUndo(_undo);
     }
-
-    @Override
-    protected final void arrow(final SnipeData v) {
-        this.excludeAir = false;
-        this.vdblend(v);
-    }
-
-    @Override
-    protected final void powder(final SnipeData v) {
-    	this.excludeAir = true;
-        this.vdblend(v);
-    }
     
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.size();
-        vm.voxel();
-        vm.custom(ChatColor.BLUE + "Water Mode: " + this.excludeWater);
-    }
-
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
@@ -133,10 +106,7 @@ public class BlendVoxelDisc extends Brush {
             return;
         }  
         
-        if (par[1].equalsIgnoreCase("water")) {
-            this.excludeWater = !this.excludeWater;
-            v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
-        }
+        super.parameters(par, v);
     }
     
     @Override

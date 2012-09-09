@@ -13,6 +13,7 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  */
 public class BlockResetBrush extends Brush {
+	private static int timesUsed = 0;
     private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
 
     static {
@@ -33,8 +34,6 @@ public class BlockResetBrush extends Brush {
         BlockResetBrush.DENIED_UPDATES.add(Material.IRON_DOOR_BLOCK);
         BlockResetBrush.DENIED_UPDATES.add(Material.FENCE_GATE);
     }
-
-    private static int timesUsed = 0;
 
     /**
      * 

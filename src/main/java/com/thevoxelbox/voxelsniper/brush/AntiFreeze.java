@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
@@ -10,101 +11,84 @@ import com.thevoxelbox.voxelsniper.Message;
  * @author Gavjenks
  */
 public class AntiFreeze extends Brush {
+	private static final int INVISIBLE_DATA_VALUE = 6;
+	
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public AntiFreeze() {
-        this.setName("AntiFreeze");
+        this.setName("Anti Freeze");
     }
 
-    public final void antiFreeze(final SnipeData v, final boolean bool) {
+    private final void antiFreeze(final SnipeData v, final int invisibleOverlayMaterialId) {
         final int _bSize = v.getBrushSize();
-
         final double _bPow = Math.pow(_bSize + 0.5, 2);
+        double _xPow = 0;
+        double _zPow = 0;
+        
         for (int _x = _bSize; _x >= 0; _x--) {
-            final double _xPow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
+            
             for (int _z = _bSize; _z >= 0; _z--) {
-                final double _zPow = Math.pow(_z, 2);
-                if (_xPow + _zPow <= _bPow) {
-                    for (int _y = 1; _y < 127; _y++) {
-                        if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z) == 79 && this.getBlockIdAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z) == 0) {
-                            if (bool) {
-                                this.setBlockIdAt(53, this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z) == 53) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                                }
-                                this.setBlockIdAt(53, this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() - _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z) == 53) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
-                                }
-                                this.setBlockIdAt(53, this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() + _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z) == 53) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
-                                }
-                                this.setBlockIdAt(53, this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() - _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z) == 53) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
-                                }
-                                this.getWorld().getBlockAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z).setData((byte) 6);
-                                this.getWorld().getBlockAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() - _z).setData((byte) 6);
-                                this.getWorld().getBlockAt(this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() + _z).setData((byte) 6);
-                                this.getWorld().getBlockAt(this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() - _z).setData((byte) 6);
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
-                            } else {
+                _zPow = Math.pow(_z, 2);
 
-                                this.setBlockIdAt(67, this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z) == 67) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                                }
-                                this.setBlockIdAt(67, this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() - _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z) == 67) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
-                                }
-                                this.setBlockIdAt(67, this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() + _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z) == 67) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
-                                }
-                                this.setBlockIdAt(67, this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() - _z);
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z) == 67) {
-                                    this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
-                                }
-                                this.getWorld().getBlockAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z).setData((byte) 6);
-                                this.getWorld().getBlockAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() - _z).setData((byte) 6);
-                                this.getWorld().getBlockAt(this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() + _z).setData((byte) 6);
-                                this.getWorld().getBlockAt(this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() - _z).setData((byte) 6);
-                                
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
-                                
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z); 
-                                this.setBlockIdAt(9, this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(9, this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
+				if (_xPow + _zPow <= _bPow) {
+					for (int _y = 1; _y < v.getWorld().getMaxHeight(); _y++) {
+						if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z) == Material.ICE.getId()
+								&& this.getBlockIdAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z) == Material.AIR.getId()) {
+							
+							this.setBlockIdAt(invisibleOverlayMaterialId, this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z);
+							if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z) == invisibleOverlayMaterialId) {
+								this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
+							}
+							
+							this.setBlockIdAt(invisibleOverlayMaterialId, this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() - _z);
+							if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z) == invisibleOverlayMaterialId) {
+								this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
+							}
+							
+							this.setBlockIdAt(invisibleOverlayMaterialId, this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() + _z);
+							if (this.getBlockIdAt(this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z) == invisibleOverlayMaterialId) {
+								this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
+							}
+							
+							this.setBlockIdAt(invisibleOverlayMaterialId, this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() - _z);
+							if (this.getBlockIdAt(this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z) == invisibleOverlayMaterialId) {
+								this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
+							}
+							
+							this.getWorld().getBlockAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z).setData((byte) INVISIBLE_DATA_VALUE);
+							this.getWorld().getBlockAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() - _z).setData((byte) INVISIBLE_DATA_VALUE);
+							this.getWorld().getBlockAt(this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() + _z).setData((byte) INVISIBLE_DATA_VALUE);
+							this.getWorld().getBlockAt(this.getBlockPositionX() - _x, _y + 1, this.getBlockPositionZ() - _z).setData((byte) INVISIBLE_DATA_VALUE);
 
-                            }
-                        }
-                    }
-                }
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
+
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() - _z);
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() + _z);
+							this.setBlockIdAt(Material.STATIONARY_WATER.getId(), this.getBlockPositionX() - _x, _y, this.getBlockPositionZ() - _z);
+
+						}
+					}
+				}
             }
         }
     }
     
     @Override
     protected final void arrow(final SnipeData v) {
-    	this.antiFreeze(v, true);
+    	this.antiFreeze(v, Material.WOOD_STAIRS.getId());
     }
     
     @Override
     protected final void powder(final SnipeData v) {    	
-    	this.antiFreeze(v, false);
+    	this.antiFreeze(v, Material.COBBLESTONE_STAIRS.getId());
     }
 
     @Override
