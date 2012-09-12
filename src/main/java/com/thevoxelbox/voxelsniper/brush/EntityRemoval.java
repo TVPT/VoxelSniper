@@ -28,7 +28,9 @@ public class EntityRemoval extends Brush {
     	int entityCount = 0;
         int chunkCount = 0;
         final Chunk _targetChunk = this.getTargetBlock().getChunk();
-        this.removeEntities(_targetChunk);
+        
+        entityCount += this.removeEntities(_targetChunk);
+        
         for (int _x = _targetChunk.getX() - v.getBrushSize(); _x <= _targetChunk.getX() + v.getBrushSize(); _x++) {
             for (int _z = _targetChunk.getZ() - v.getBrushSize(); _z <= _targetChunk.getZ() + v.getBrushSize(); _z++) {
             	entityCount += removeEntities(this.getWorld().getChunkAt(_x, _z));
@@ -41,6 +43,7 @@ public class EntityRemoval extends Brush {
 
     private final int removeEntities(final Chunk chunk) {
     	int entityCount = 0;
+    	
         for (final Entity _e : chunk.getEntities()) {
             if ((_e instanceof Player) || (_e instanceof Painting)) {
                 continue;

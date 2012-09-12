@@ -17,7 +17,6 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  * @author Gavjenks Heavily revamped from ruler brush blockPositionY Giltwist
  */
 public class Comet extends Brush {
-
 	private static int timesUsed = 0;
 
 	public Comet() {

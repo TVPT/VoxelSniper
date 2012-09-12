@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
@@ -12,7 +13,8 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Gavjenks
  */
 public class Dome extends Brush {
-
+	private static final int DEFAULT_HEIGHT = 1024;
+	private static int timesUsed = 0;
     private boolean fsa = true;
 
     // should only have the truecircle option this time.
@@ -22,8 +24,7 @@ public class Dome extends Brush {
     // for simplicity for this brush also, arrow will do half block accuracy, powder full block - will work eve for sideways dome, though maybe limited
     // usefulness there. If /v is not a half block, override to full block accuracy. If it is, make full double step stuff for all the blocks underneath the top
     // curve, in same material.
-    private double height = 1024; // just avoiding initiating bsize yet;
-    private static int timesUsed = 0;
+    private double height = DEFAULT_HEIGHT; // just avoiding initiating bsize yet;
 
     public Dome() {
         this.setName("Dome");
@@ -31,19 +32,25 @@ public class Dome extends Brush {
 
     private final void dome(final SnipeData v, final boolean fillSolid) {
         final int _brushSize = v.getBrushSize();
-        final int _voxelId = v.getVoxelId();
-
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
         final double _bPow = Math.pow(_brushSize + 0.5, 2);
-        // double curvature = 1; //actually not necessary if base is circular.
-        if (this.height == 1024) {
-            this.height = _brushSize + 0.5;
-        }
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final int _voxelId = v.getVoxelId();
         final double _curvature = this.height / (_brushSize + 0.5);
+        final double _powCurvature = Math.pow(_curvature, 2);
+        final int[][] _heightMap = new int[_brushSize + 2][_brushSize + 2];
         double _yManip = 0.5;
         double _centerRef = 0;
-        if (this.fsa || _voxelId != 44) { // override half block accuracy if /v not set to a half block.
+        double _xPow = 0;
+        double _zPow = 0;
+        double _yPowMinus = 0;
+        double _yPowPlus = 0;
+        double _yPow = 0;
+        
+        if (this.height == DEFAULT_HEIGHT) {
+            this.height = _brushSize + 0.5;
+        }
+        
+        if (this.fsa || _voxelId != Material.STEP.getId()) { // override half block accuracy if /v not set to a half block.
             _yManip = 0.5; // whole block accuracy
             _centerRef = 0;
         } else {
@@ -51,17 +58,16 @@ public class Dome extends Brush {
             _centerRef = -0.25;
         }
 
-        final int[][] _heightMap = new int[_brushSize + 2][_brushSize + 2];
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xPow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
             for (int _z = _brushSize; _z >= 0; _z--) {
-                final double _zPow = Math.pow(_z, 2);
+                _zPow = Math.pow(_z, 2);
                 for (int _y = (int) this.height; _y >= 0; _y--) {
-                    final double _yPowMinus = Math.pow(_y - _yManip + _centerRef, 2);
-                    final double _yPow = Math.pow(_y + _centerRef, 2);
+                    _yPowMinus = Math.pow(_y - _yManip + _centerRef, 2);
+                    _yPow = Math.pow(_y + _centerRef, 2);
                     if ((_xPow + (_yPowMinus / Math.pow(_curvature, 2)) + _zPow) <= _bPow) { // If within the ellipse
-                        final double _yPowPlus = Math.pow(_y + _yManip + _centerRef, 2);
-                        if ((_xPow + (_yPowPlus / Math.pow(_curvature, 2)) + _zPow) > _bPow) { // If nothing else further out (i.e. if on the surface)
+                        _yPowPlus = Math.pow(_y + _yManip + _centerRef, 2);
+                        if ((_xPow + (_yPowPlus / _powCurvature) + _zPow) > _bPow) { // If nothing else further out (i.e. if on the surface)
                             _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z));
                             _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z));
                             _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z)); // only want top of dome. So only 4 of these.
@@ -72,27 +78,27 @@ public class Dome extends Brush {
                             _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z));
                             _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() - _z));
 
-                            if (!this.fsa && ((_xPow + (_yPow / Math.pow(_curvature, 2)) + _zPow) > _bPow)) { // if half block accuracy is being used AND this is a
+                            if (!this.fsa && ((_xPow + (_yPow / _powCurvature) + _zPow) > _bPow)) { // if half block accuracy is being used AND this is a
                                                                                                          // portion of the curve that is closer to matching a
                                                                                                          // half block than a full block...
-                                this.setBlockIdAt(44, this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z); // set to a half block
-                                this.setBlockIdAt(44, this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
-                                this.setBlockIdAt(44, this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(44, this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
+                                this.setBlockIdAt(Material.STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z); // set to a half block
+                                this.setBlockIdAt(Material.STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
+                                this.setBlockIdAt(Material.STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
+                                this.setBlockIdAt(Material.STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
                                 // AND place a full double step underneath to prevent gaps (might be slightly bulkier than could be possible... but much simpler
                                 // to code)
                                 _heightMap[_x][_z] = _y - 1;
-                                this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() - _z);
-                                this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z);
-                                this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() - _z);
+                                this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z);
+                                this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() - _z);
+                                this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z);
+                                this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() - _z);
                             } else {
-                                if (_voxelId == 44) { // if half block accuracy, but this particular position conforms better to a full block
+                                if (_voxelId == Material.STEP.getId()) { // if half block accuracy, but this particular position conforms better to a full block
                                     _heightMap[_x][_z] = _y;
-                                    this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z); // set to a full double step
-                                    this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
-                                    this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                                    this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
+                                    this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z); // set to a full double step
+                                    this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
+                                    this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
+                                    this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z);
                                 } else { // if full block accuracy
                                     _heightMap[_x][_z] = _y;
                                     this.setBlockIdAt(_voxelId, this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z); // set to a full block of whatever /v is.
@@ -115,11 +121,11 @@ public class Dome extends Brush {
                         _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z));
                         _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z));
 
-                        if (_voxelId == 44) {
-                            this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
-                            this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
-                            this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
-                            this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
+                        if (_voxelId == Material.STEP.getId()) {
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
                         } else {
                             this.setBlockIdAt(_voxelId, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
                             this.setBlockIdAt(_voxelId, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
@@ -133,11 +139,11 @@ public class Dome extends Brush {
                         _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z));
                         _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z));
 
-                        if (_voxelId == 44) {
-                            this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
-                            this.setBlockIdAt(43, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
-                            this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
-                            this.setBlockIdAt(43, this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
+                        if (_voxelId == Material.STEP.getId()) {
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
+                            this.setBlockIdAt(Material.DOUBLE_STEP.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);
                         } else {
                             this.setBlockIdAt(_voxelId, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _z);
                             this.setBlockIdAt(_voxelId, this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _z);

@@ -13,8 +13,8 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Voxel
  */
 public class Disc extends PerformBrush {
+	private static int timesUsed = 0;
     private double trueCircle = 0;
-    private static int timesUsed = 0;
 
     /**
      * Default Constructor.

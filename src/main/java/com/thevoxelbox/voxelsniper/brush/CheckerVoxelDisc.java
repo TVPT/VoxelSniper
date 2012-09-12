@@ -26,7 +26,7 @@ public class CheckerVoxelDisc extends PerformBrush {
      * @param v
      * @param target
      */
-    private void applyBrush(final SnipeData v, final Block target) {
+    private final void applyBrush(final SnipeData v, final Block target) {
         for (int _x = v.getBrushSize(); _x >= -v.getBrushSize(); _x--) {
             for (int _y = v.getBrushSize(); _y >= -v.getBrushSize(); _y--) {
                 final int _sum = this.useWorldCoordinates ? target.getX() + _x + target.getZ() + _y : _x + _y;
@@ -40,14 +40,12 @@ public class CheckerVoxelDisc extends PerformBrush {
 
     @Override
     protected final void arrow(final SnipeData v) {
-        final Block _target = this.getTargetBlock();
-        this.applyBrush(v, _target);
+        this.applyBrush(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        final Block _target = this.getLastBlock();
-        this.applyBrush(v, _target);
+        this.applyBrush(v, this.getLastBlock());
     }
     
     @Override

@@ -12,7 +12,6 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class CanyonSelection extends Canyon {
-
     private boolean first = true;
     private int fx;
     private int fz;

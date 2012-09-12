@@ -12,8 +12,8 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author psanker
  */
 public class CleanSnow extends Brush {
+	private static int timesUsed = 0;
     private double trueCircle = 0;
-    private static int timesUsed = 0;
 
     public CleanSnow() {
         this.setName("Clean Snow");
@@ -22,13 +22,14 @@ public class CleanSnow extends Brush {
     public final void cleanSnow(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
-
+        double _yPow = 0;
+        double _xPow = 0;
+        
         for (int _y = (_bSize + 1) * 2; _y >= 0; _y--) {
-            final double _yPow = Math.pow(_y - _bSize, 2);
+            _yPow = Math.pow(_y - _bSize, 2);
             for (int _x = (_bSize + 1) * 2; _x >= 0; _x--) {
-                final double _xPow = Math.pow(_x - _bSize, 2);
+                _xPow = Math.pow(_x - _bSize, 2);
                 for (int _z = (_bSize + 1) * 2; _z >= 0; _z--) {
                     if ((_xPow + Math.pow(_z - _bSize, 2) + _yPow) <= _bPow) {
                         if ((this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize).getType() == Material.SNOW)
@@ -70,6 +71,7 @@ public class CleanSnow extends Brush {
     				+ "/b cls true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b cls false will switch back. (false is default)");
     		return;
     	}
+    	
     	for (int _i = 1; _i < par.length; _i++) {
     		if (par[_i].startsWith("true")) {
     			this.trueCircle = 0.5;

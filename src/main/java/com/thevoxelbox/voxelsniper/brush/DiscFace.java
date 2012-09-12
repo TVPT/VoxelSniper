@@ -19,12 +19,14 @@ public class DiscFace extends PerformBrush {
         this.setName("Disc Face");
     }
 
-    private final void disc(final SnipeData v) {
+    private final void discUD(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-
+        double _xpow = 0;
+        
         final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xpow = Math.pow(_x, 2);
+            
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
@@ -40,10 +42,11 @@ public class DiscFace extends PerformBrush {
 
     private final void discEW(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
+        double _xpow = 0;
 
         final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xpow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ()));
@@ -58,11 +61,12 @@ public class DiscFace extends PerformBrush {
     }
 
     private final void discNS(final SnipeData v) {
-        final int _brushSize = v.getBrushSize();
+    	final int _brushSize = v.getBrushSize();
+        double _xpow = 0;
 
         final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xpow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
                     this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y));
@@ -76,11 +80,11 @@ public class DiscFace extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private void pre(final SnipeData v, final BlockFace _blockFace) {
-        if (_blockFace == null) {
+    private void pre(final SnipeData v, final BlockFace blockFace) {
+        if (blockFace == null) {
             return;
         }
-        switch (_blockFace) {
+        switch (blockFace) {
         case NORTH:
         case SOUTH:
             this.discNS(v);
@@ -93,7 +97,7 @@ public class DiscFace extends PerformBrush {
 
         case UP:
         case DOWN:
-            this.disc(v);
+            this.discUD(v);
             break;
 
         default:

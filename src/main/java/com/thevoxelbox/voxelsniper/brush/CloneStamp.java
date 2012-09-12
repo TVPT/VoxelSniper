@@ -39,15 +39,15 @@ public class CloneStamp extends Stamp {
         if (_starringPoint < 0) {
             _starringPoint = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-        } else if (_starringPoint > 127) {
-            _starringPoint = 127;
+        } else if (_starringPoint > this.getWorld().getMaxHeight() - 1) {
+            _starringPoint = this.getWorld().getMaxHeight() - 1;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
         }
         if (_yTopEnd < 0) {
             _yTopEnd = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-        } else if (_yTopEnd > 127) {
-            _yTopEnd = 127;
+        } else if (_yTopEnd > this.getWorld().getMaxHeight() - 1) {
+            _yTopEnd = this.getWorld().getMaxHeight() - 1;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
         final double _bpow = Math.pow(_brushSize, 2);

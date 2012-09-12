@@ -19,8 +19,12 @@ public class Cylinder extends PerformBrush {
     }
 
     private final void cylinder(final SnipeData v) {
+    	final int _bSize = v.getBrushSize();
+    	final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
     	int _starringY = this.getBlockPositionY() + v.getcCen();
     	int _endTopY = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
+    	double _xPow = 0;
+    	
         if (_endTopY < _starringY) {
             _endTopY = _starringY;
         }
@@ -38,13 +42,11 @@ public class Cylinder extends PerformBrush {
             _endTopY = 127;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
-        final int _bSize = v.getBrushSize();
-
-        final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
 
         for (int _z = _endTopY; _z >= _starringY; _z--) {
             for (int _x = _bSize; _x >= 0; _x--) {
-                final double _xPow = Math.pow(_x, 2);
+                _xPow = Math.pow(_x, 2);
+                
                 for (int _y = _bSize; _y >= 0; _y--) {
                     if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                         this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));

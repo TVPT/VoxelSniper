@@ -11,8 +11,8 @@ import com.thevoxelbox.voxelsniper.Message;
  * @author Piotr
  */
 public class Entity extends Brush {
+	private static int timesUsed = 0;
     private EntityType entityType = EntityType.ZOMBIE;
-    private static int timesUsed = 0;
 
     public Entity() {
         this.setName("Entity");
@@ -21,8 +21,7 @@ public class Entity extends Brush {
     private final void spawn(final SnipeData v) {
     	for (int _x = 0; _x < v.getBrushSize(); _x++) {
     		try {
-    			final Class<? extends org.bukkit.entity.Entity> ent = this.entityType.getEntityClass();
-    			this.getWorld().spawn(this.getLastBlock().getLocation(), ent);
+    			this.getWorld().spawn(this.getLastBlock().getLocation(), this.entityType.getEntityClass());
     		} catch (final IllegalArgumentException ex) {
     			v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
     		}
@@ -48,14 +47,15 @@ public class Entity extends Brush {
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
     	if (par[1].equalsIgnoreCase("info")) {
+    		String _names = "";
+    		
     		v.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
-    		String names = "";
     		for (final EntityType cre : EntityType.values()) {
     			
-    			names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + cre.getName();
+    			_names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + cre.getName();
     		}
-    		names += ChatColor.AQUA + " |";
-    		v.sendMessage(names);
+    		_names += ChatColor.AQUA + " |";
+    		v.sendMessage(_names);
     	} else {
     		final EntityType cre = EntityType.fromName(par[1]);
     		if (cre != null) {

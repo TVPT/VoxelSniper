@@ -13,8 +13,9 @@ import com.thevoxelbox.voxelsniper.Undo;
  */
 public class CopyPasta extends Brush {
 	private static final int BLOCK_LIMIT = 10000;
+	private static int timesUsed = 0;
 
-    private boolean airMode = true; // False = no air, true = air
+    private boolean pasteAir = true; // False = no air, true = air
     private int points = 0; //
     private int numBlocks = 0;
     private int[] firstPoint = new int[3];
@@ -26,8 +27,6 @@ public class CopyPasta extends Brush {
     private byte[] dataArray;
     private int[] arraySize = new int[3];
     private int pivot = 0; // ccw degrees    
-
-    private static int timesUsed = 0;
 
     public CopyPasta() {
         this.setName("CopyPasta");
@@ -88,7 +87,7 @@ public class CopyPasta extends Brush {
                         break;
                     }
 
-                    if (!(this.blockArray[_currentPos] == 0 && this.airMode == false)) {
+                    if (!(this.blockArray[_currentPos] == 0 && this.pasteAir == false)) {
                         if (_b.getTypeId() != this.blockArray[_currentPos] || _b.getData() != this.dataArray[_currentPos]) {
                             _undo.put(_b);
                         }
@@ -152,7 +151,7 @@ public class CopyPasta extends Brush {
     @Override
     public final void info(final Message vm) {
     	vm.brushName(this.getName());
-    	vm.custom(ChatColor.GOLD + "Paste air: " + this.airMode);
+    	vm.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
     	vm.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
     }
     
@@ -166,9 +165,9 @@ public class CopyPasta extends Brush {
     	}
     	
     	if (par[1].equalsIgnoreCase("air")) {
-    		this.airMode = !this.airMode;
+    		this.pasteAir = !this.pasteAir;
     		
-    		v.sendMessage(ChatColor.GOLD + "Paste air: " + this.airMode);
+    		v.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
     		return;
     	}
     	

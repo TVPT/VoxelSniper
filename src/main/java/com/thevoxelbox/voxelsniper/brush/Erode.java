@@ -67,8 +67,9 @@ public class Erode extends Brush {
     }
 
     private boolean erode(final int x, final int y, final int z) {
-        if (this.snap[x][y][z].solid) {
-            int _d = 0;
+    	int _d = 0;
+
+    	if (this.snap[x][y][z].solid) {
             if (!this.snap[x + 1][y][z].solid) {
                 _d++;
             }
@@ -98,29 +99,33 @@ public class Erode extends Brush {
     }
 
     private void erosion(final SnipeData v) {
-        if (this.reverse) {
-            int _temp = this.erodeFace;
+    	final int _v = this.bsize + 1;
+    	final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+    	double _bpow = Math.pow(this.bsize + this.trueCircle, 2);
+    	double _zpow = 0;
+    	double _xpow = 0;
+    	int _temp;
+    	
+    	if (this.reverse) {
+            _temp = this.erodeFace;
             this.erodeFace = this.fillFace;
             this.fillFace = _temp;
+            
             _temp = this.erodeRecursion;
             this.erodeRecursion = this.fillRecursion;
             this.fillRecursion = _temp;
         }
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.erodeFace >= 0 && this.erodeFace <= 6) {
             for (int _er = 0; _er < this.erodeRecursion; _er++) {
                 this.getMatrix();
-
-                final int _v = this.bsize + 1;
-
-                final double _bpow = Math.pow(this.bsize + this.trueCircle, 2);
+                
                 for (int _z = 1; _z < this.snap.length - 1; _z++) {
 
-                    final double _zpow = Math.pow(_z - _v, 2);
+                    _zpow = Math.pow(_z - _v, 2);
                     for (int _x = 1; _x < this.snap.length - 1; _x++) {
 
-                        final double _xpow = Math.pow(_x - _v, 2);
+                        _xpow = Math.pow(_x - _v, 2);
                         for (int _y = 1; _y < this.snap.length - 1; _y++) {
 
                             if (((_xpow + Math.pow(_y - _v, 2) + _zpow) <= _bpow)) {
@@ -137,15 +142,13 @@ public class Erode extends Brush {
             for (int _fr = 0; _fr < this.fillRecursion; _fr++) {
                 this.getMatrix();
 
-                final int _v = this.bsize + 1;
-
-                final double _bpow = Math.pow(this.bsize + 0.5, 2);
+                _bpow = Math.pow(this.bsize + 0.5, 2); // force true circle !? -- Monofraps
                 for (int _z = 1; _z < this.snap.length - 1; _z++) {
 
-                    final double _zpow = Math.pow(_z - _v, 2);
+                    _zpow = Math.pow(_z - _v, 2);
                     for (int _x = 1; _x < this.snap.length - 1; _x++) {
 
-                        final double _xpow = Math.pow(_x - _v, 2);
+                        _xpow = Math.pow(_x - _v, 2);
                         for (int _y = 1; _y < this.snap.length - 1; _y++) {
 
                             if (((_xpow + Math.pow(_y - _v, 2) + _zpow) <= _bpow)) {
@@ -162,19 +165,23 @@ public class Erode extends Brush {
         for (int _x = 0; _x < this.firstSnap.length; _x++) {
             for (int _y = 0; _y < this.firstSnap.length; _y++) {
                 for (int _z = 0; _z < this.firstSnap.length; _z++) {
+                	
                     final eBlock _block = this.firstSnap[_x][_y][_z];
                     if (_block.dataId != _block.nativeBlock.getTypeId()) {
                         _undo.put(_block.nativeBlock);
                     }
+                    
                 }
             }
         }
 
         v.storeUndo(_undo);
+        
         if (this.reverse) { // if you dont put it back where it was, powder flips back and forth from fill to erode each time
-            int _temp = this.erodeFace;
+            _temp = this.erodeFace;
             this.erodeFace = this.fillFace;
             this.fillFace = _temp;
+            
             _temp = this.erodeRecursion;
             this.erodeRecursion = this.fillRecursion;
             this.fillRecursion = _temp;
@@ -182,10 +189,11 @@ public class Erode extends Brush {
     }
 
     private boolean fill(final int x, final int y, final int z) {
-        if (this.snap[x][y][z].solid) {
+    	int _d = 0;
+
+    	if (this.snap[x][y][z].solid) {
             return false;
         } else {
-            int _d = 0;
             if (this.snap[x + 1][y][z].solid) {
                 this.snap[x][y][z].id = this.snap[x + 1][y][z].nativeBlock.getTypeId();
                 _d++;
@@ -219,12 +227,12 @@ public class Erode extends Brush {
     }
     
     private void getMatrix() {
+    	final int _v = (this.bsize + 1);
         this.brushSize = ((this.bsize + 1) * 2) + 1;
 
         if (this.snap.length == 0) {
             this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
-            final int _v = (this.bsize + 1);
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
             int _sy = this.getBlockPositionY() - (this.bsize + 1);
             int _sz = this.getBlockPositionZ() - (this.bsize + 1);
@@ -244,7 +252,6 @@ public class Erode extends Brush {
         } else {
             this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
 
-            final int _v = this.bsize + 1;
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
             int _sy = this.getBlockPositionY() - (this.bsize + 1);
             int _sz = this.getBlockPositionZ() - (this.bsize + 1);
@@ -287,7 +294,7 @@ public class Erode extends Brush {
     public final void info(final Message vm) {
     	vm.brushName(this.getName());
     	vm.size();
-    	vm.custom(ChatColor.RED + "Litesnipers: This is a slow brush.  DO NOT SPAM it too much or hold down the mouse. ");
+    	vm.custom(ChatColor.RED + "Litesnipers: This is a slow brush. DO NOT SPAM it too much or hold down the mouse.");
     	vm.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.erodeFace);
     	vm.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.fillFace);
     	vm.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.erodeRecursion);
@@ -315,7 +322,7 @@ public class Erode extends Brush {
     		v.sendMessage(ChatColor.GREEN + "/b e melt -- for melting away protruding corners and edges.");
     		v.sendMessage(ChatColor.AQUA + "/b e fill -- for building up inside corners");
     		v.sendMessage(ChatColor.AQUA
-    				+ "/b e smooth -- For the most part, does not change total number of blocks, but smooths the shape nicely.  Use as a finishing touch for the most part, before overlaying grass and trees, etc.");
+    				+ "/b e smooth -- For the most part, does not change total number of blocks, but smooths the shape nicely. Use as a finishing touch for the most part, before overlaying grass and trees, etc.");
     		v.sendMessage(ChatColor.BLUE + "/b e lift-- More or less raises each block in the brush area blockPositionY one");
     		return;
     	}

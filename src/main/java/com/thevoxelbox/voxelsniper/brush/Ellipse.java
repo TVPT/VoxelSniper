@@ -11,9 +11,18 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author psanker
  */
 public class Ellipse extends PerformBrush {
+	private static final double TWO_PI = (2 * Math.PI);
+	private static final int SCL_MIN = 1;
+	private static final int SCL_MAX = 9999;
+	private static final int SCL_DEFAULT = 10;
+	private static final int STEPS_MIN = 1;
+	private static final int STEPS_MAX = 2000;
+	private static final int STEPS_DEFAULT = 200;
+	
     private int xscl;
     private int yscl;
     private int steps;
+    private double stepSize;
     private boolean fill;
     private static int timesUsed = 0;
 
@@ -22,15 +31,8 @@ public class Ellipse extends PerformBrush {
     }
 
     private final void ellipse(final SnipeData v) {
-        final double _stepSize = ((2 * Math.PI) / this.steps);
-
-        if (_stepSize <= 0) {
-            v.sendMessage("Failed: Step size is <= 0");
-            return;
-        }
-
         try {
-            for (double _steps = 0; (_steps <= (2 * Math.PI)); _steps += _stepSize) {
+            for (double _steps = 0; (_steps <= TWO_PI); _steps += stepSize) {
                 final int _x = (int) Math.round(this.xscl * Math.cos(_steps));
                 final int _y = (int) Math.round(this.yscl * Math.sin(_steps));
 
@@ -50,7 +52,7 @@ public class Ellipse extends PerformBrush {
                     break;
                 }
 
-                if (_steps >= (2 * Math.PI)) {
+                if (_steps >= TWO_PI) {
                     break;
                 }
             }
@@ -62,21 +64,15 @@ public class Ellipse extends PerformBrush {
     }
 
     private final void ellipsefill(final SnipeData v) {
-        this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
+    	int _ix = this.xscl;
+    	int _iy = this.yscl;
 
-        final double _stepSize = ((2 * Math.PI) / this.steps);
-        int _ix = this.xscl;
-        int _iy = this.yscl;
-
-        if (_stepSize <= 0) {
-            v.sendMessage("Failed: Step size is <= 0");
-            return;
-        }
+    	this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
 
         try {
             if (_ix >= _iy) { // Need this unless you want weird holes
                 for (_iy = this.yscl; _iy > 0; _iy--) {
-                    for (double _steps = 0; (_steps <= (2 * Math.PI)); _steps += _stepSize) {
+                    for (double _steps = 0; (_steps <= TWO_PI); _steps += stepSize) {
                         final int _x =  (int) Math.round(_ix * Math.cos(_steps));
                         final int _y =  (int) Math.round(_iy * Math.sin(_steps));
 
@@ -96,7 +92,7 @@ public class Ellipse extends PerformBrush {
                             break;
                         }
 
-                        if (_steps >= (2 * Math.PI)) {
+                        if (_steps >= TWO_PI) {
                             break;
                         }
                     }
@@ -104,7 +100,7 @@ public class Ellipse extends PerformBrush {
                 }
             } else {
                 for (_ix = this.xscl; _ix > 0; _ix--) {
-                    for (double _steps = 0; (_steps <= (2 * Math.PI)); _steps += _stepSize) {
+                    for (double _steps = 0; (_steps <= TWO_PI); _steps += stepSize) {
                         final int _x = (int) Math.round(_ix * Math.cos(_steps));
                         final int _y = (int) Math.round(_iy * Math.sin(_steps));
 
@@ -124,7 +120,7 @@ public class Ellipse extends PerformBrush {
                             break;
                         }
 
-                        if (_steps >= (2 * Math.PI)) {
+                        if (_steps >= TWO_PI) {
                             break;
                         }
                     }
@@ -139,6 +135,8 @@ public class Ellipse extends PerformBrush {
     }
 
     private void execute(final SnipeData v) {
+    	this.stepSize = (TWO_PI / this.steps);
+    	
         if (this.fill) {
             this.ellipsefill(v);
         } else {
@@ -161,16 +159,16 @@ public class Ellipse extends PerformBrush {
     
     @Override
     public final void info(final Message vm) {
-    	if (this.xscl < 1 || this.xscl > 9999) {
-    		this.xscl = 10;
+    	if (this.xscl < SCL_MIN || this.xscl > SCL_MAX) {
+    		this.xscl = SCL_DEFAULT;
     	}
     	
-    	if (this.yscl < 1 || this.yscl > 9999) {
-    		this.yscl = 10;
+    	if (this.yscl < SCL_MIN || this.yscl > SCL_MAX) {
+    		this.yscl = SCL_DEFAULT;
     	}
     	
-    	if (this.steps < 1 || this.steps > 2000) {
-    		this.steps = 200;
+    	if (this.steps < STEPS_MIN || this.steps > STEPS_MAX) {
+    		this.steps = STEPS_DEFAULT;
     	}
     	
     	vm.brushName(this.getName());
@@ -198,15 +196,30 @@ public class Ellipse extends PerformBrush {
     	for (int _i = 1; _i < par.length; _i++) {
     		try {
     			if (par[_i].startsWith("x")) {
-    				this.xscl = Integer.parseInt(par[_i].replace("x", ""));
+    				int _tmpXScl = Integer.parseInt(par[_i].replace("x", ""));
+    				if(_tmpXScl < SCL_MIN || _tmpXScl > SCL_MAX) {
+    					v.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+    					continue;
+    				}
+    				this.xscl = _tmpXScl;
     				v.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
     				continue;
     			} else if (par[_i].startsWith("y")) {
-    				this.yscl = Integer.parseInt(par[_i].replace("y", ""));
+    				int _tmpYScl = Integer.parseInt(par[_i].replace("y", ""));
+    				if(_tmpYScl < SCL_MIN || _tmpYScl > SCL_MAX) {
+    					v.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+    					continue;
+    				}
+    				this.yscl = _tmpYScl;
     				v.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
     				continue;
     			} else if (par[_i].startsWith("t")) {
-    				this.steps = Integer.parseInt(par[_i].replace("t", ""));
+    				int _tempSteps = Integer.parseInt(par[_i].replace("t", ""));
+    				if(_tempSteps < STEPS_MIN || _tempSteps > STEPS_MAX) {
+    					v.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
+    					continue;
+    				}
+    				this.steps = _tempSteps;
     				v.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
     				continue;
     			} else if (par[_i].equalsIgnoreCase("fill")) {

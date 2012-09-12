@@ -26,14 +26,14 @@ public class Extrude extends Brush {
 
     private void extrudeD(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        double _xPow = 0;
 
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
                         for (int _i = 0; _i <= this.level - 1; _i++) {
                             _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i - 1, this.getBlockPositionZ() + _y), v, _undo);
@@ -58,13 +58,14 @@ public class Extrude extends Brush {
 
     private void extrudeE(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
+        double _xPow = 0;
+        
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
                         for (int _i = 0; _i <= this.level - 1; _i++) {
                             _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i - 1), v, _undo);
@@ -89,13 +90,14 @@ public class Extrude extends Brush {
 
     private void extrudeN(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
+        double _xPow = 0;
+        
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
                         for (int _i = 0; _i <= this.level - 1; _i++) {
                             _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _i - 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), v, _undo);
@@ -120,13 +122,14 @@ public class Extrude extends Brush {
 
     private void extrudeS(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
+        double _xPow = 0;
+        
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
                         for (int _i = 0; _i <= this.level - 1; _i++) {
                             _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _i + 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), v, _undo);
@@ -151,13 +154,14 @@ public class Extrude extends Brush {
 
     private void extrudeU(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
+        double _xPow = 0;
+        
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
                         for (int _i = 0; _i <= this.level - 1; _i++) {
                             _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i + 1, this.getBlockPositionZ() + _y), v, _undo);
@@ -182,13 +186,13 @@ public class Extrude extends Brush {
 
     private void extrudeW(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         for (int _x = _brushSize; _x >= 0; _x--) {
             final double _xpow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xpow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
                         for (int _i = 0; _i <= this.level - 1; _i++) {
                             _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i + 1), v, _undo);
@@ -212,11 +216,7 @@ public class Extrude extends Brush {
     }
 
     private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo) {
-        if ((b2.getY() > 128) || (b2.getY() < 0)) {
-            return undo;
-        }
-
-        if (v.getVoxelList().contains(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()))) {
+    	if (v.getVoxelList().contains(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()))) {
             undo.put(b2);
             this.setBlockIdAt(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), b2.getX(), b2.getY(), b2.getZ());
             this.clampY(b2.getX(), b2.getY(), b2.getZ()).setData(this.clampY(b1.getX(), b1.getY(), b1.getZ()).getData());
@@ -293,6 +293,7 @@ public class Extrude extends Brush {
         vm.size();
         vm.height();
         vm.voxelList();
+        
         if (this.trueCircle == 0.5) {
             vm.custom(ChatColor.AQUA + "True circle mode ON.");
         } else {
