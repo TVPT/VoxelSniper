@@ -11,7 +11,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author Piotr, (lift preset by Giltwist)
  */
-public class Erode extends Brush {
+public class ErodeBrush extends Brush {
 
     private class eBlock {
 
@@ -62,7 +62,7 @@ public class Erode extends Brush {
 
     private static int timesUsed = 0;
 
-    public Erode() {
+    public ErodeBrush() {
         this.setName("Erode");
     }
 
@@ -399,11 +399,11 @@ public class Erode extends Brush {
 
     @Override
     public final int getTimesUsed() {
-    	return Erode.timesUsed;
+    	return ErodeBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Erode.timesUsed = tUsed;
+    	ErodeBrush.timesUsed = tUsed;
     }
 }

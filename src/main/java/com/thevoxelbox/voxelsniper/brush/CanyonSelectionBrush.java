@@ -11,14 +11,14 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author Voxel
  */
-public class CanyonSelection extends Canyon {
+public class CanyonSelectionBrush extends CanyonBrush {
     private boolean first = true;
     private int fx;
     private int fz;
 
     private static int timesUsed = 0;
 
-    public CanyonSelection() {
+    public CanyonSelectionBrush() {
         this.setName("Canyon Selection");
     }
 
@@ -78,11 +78,11 @@ public class CanyonSelection extends Canyon {
     
     @Override
     public final int getTimesUsed() {
-    	return CanyonSelection.timesUsed;
+    	return CanyonSelectionBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	CanyonSelection.timesUsed = tUsed;
+    	CanyonSelectionBrush.timesUsed = tUsed;
     }
 }

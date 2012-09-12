@@ -10,11 +10,11 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * 
  * @author Kavutop
  */
-public class Cylinder extends PerformBrush {
+public class CylinderBrush extends PerformBrush {
     private double trueCircle = 0;
     private static int timesUsed = 0;
 
-    public Cylinder() {
+    public CylinderBrush() {
         this.setName("Cylinder");
     }
 
@@ -117,11 +117,11 @@ public class Cylinder extends PerformBrush {
     
     @Override
     public final int getTimesUsed() {
-    	return Cylinder.timesUsed;
+    	return CylinderBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Cylinder.timesUsed = tUsed;
+    	CylinderBrush.timesUsed = tUsed;
     }
 }

@@ -10,10 +10,10 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author Voxel
  */
-public class Eraser extends Brush {	
+public class EraserBrush extends Brush {	
     private static int timesUsed = 0;
 
-    public Eraser() {
+    public EraserBrush() {
         this.setName("Eraser");
     }
 
@@ -56,11 +56,11 @@ public class Eraser extends Brush {
     
     @Override
     public final int getTimesUsed() {
-    	return Eraser.timesUsed;
+    	return EraserBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Eraser.timesUsed = tUsed;
+    	EraserBrush.timesUsed = tUsed;
     }
 }

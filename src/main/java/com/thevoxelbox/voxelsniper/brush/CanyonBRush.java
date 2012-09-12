@@ -13,7 +13,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author Voxel
  */
-public class Canyon extends Brush {
+public class CanyonBrush extends Brush {
 	protected static final int CHUNK_SIZE = 16;
 	
     protected int yLevel = 10;
@@ -21,7 +21,7 @@ public class Canyon extends Brush {
 
     private static int timesUsed = 0;
 
-    public Canyon() {
+    public CanyonBrush() {
         this.setName("Canyon");
     }
 
@@ -130,11 +130,11 @@ public class Canyon extends Brush {
     
     @Override
     public int getTimesUsed() {
-        return Canyon.timesUsed;
+        return CanyonBrush.timesUsed;
     }
     
     @Override
     public void setTimesUsed(final int tUsed) {
-        Canyon.timesUsed = tUsed;
+        CanyonBrush.timesUsed = tUsed;
     }
 }

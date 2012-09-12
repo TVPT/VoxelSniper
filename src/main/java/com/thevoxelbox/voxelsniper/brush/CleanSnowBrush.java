@@ -11,11 +11,11 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author psanker
  */
-public class CleanSnow extends Brush {
+public class CleanSnowBrush extends Brush {
 	private static int timesUsed = 0;
     private double trueCircle = 0;
 
-    public CleanSnow() {
+    public CleanSnowBrush() {
         this.setName("Clean Snow");
     }
 
@@ -89,11 +89,11 @@ public class CleanSnow extends Brush {
     
     @Override
     public final int getTimesUsed() {
-    	return CleanSnow.timesUsed;
+    	return CleanSnowBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	CleanSnow.timesUsed = tUsed;
+    	CleanSnowBrush.timesUsed = tUsed;
     }
 }

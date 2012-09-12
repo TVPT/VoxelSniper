@@ -12,7 +12,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author Gavjenks
  */
-public class Dome extends Brush {
+public class DomeBrush extends Brush {
 	private static final int DEFAULT_HEIGHT = 1024;
 	private static int timesUsed = 0;
     private boolean fsa = true;
@@ -26,7 +26,7 @@ public class Dome extends Brush {
     // curve, in same material.
     private double height = DEFAULT_HEIGHT; // just avoiding initiating bsize yet;
 
-    public Dome() {
+    public DomeBrush() {
         this.setName("Dome");
     }
 
@@ -240,11 +240,11 @@ public class Dome extends Brush {
     
     @Override
     public final int getTimesUsed() {
-    	return Dome.timesUsed;
+    	return DomeBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Dome.timesUsed = tUsed;
+    	DomeBrush.timesUsed = tUsed;
     }
 }

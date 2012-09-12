@@ -10,10 +10,10 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  * @author Voxel
  */
-public class CloneStamp extends Stamp {
+public class CloneStampBrush extends Stamp {
     private static int timesUsed = 0;
 
-    public CloneStamp() {
+    public CloneStampBrush() {
         this.setName("Clone");
     }
     
@@ -137,11 +137,11 @@ public class CloneStamp extends Stamp {
     
     @Override
     public final int getTimesUsed() {
-    	return CloneStamp.timesUsed;
+    	return CloneStampBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	CloneStamp.timesUsed = tUsed;
+    	CloneStampBrush.timesUsed = tUsed;
     }
 }

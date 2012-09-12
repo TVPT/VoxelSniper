@@ -17,10 +17,10 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  * @author Voxel
  */
-public class EntityRemoval extends Brush {
+public class EntityRemovalBrush extends Brush {
     private static int timesUsed = 0;
 
-    public EntityRemoval() {
+    public EntityRemovalBrush() {
         this.setName("Entity Removal");
     }
 
@@ -79,11 +79,11 @@ public class EntityRemoval extends Brush {
     
     @Override
     public final int getTimesUsed() {
-    	return EntityRemoval.timesUsed;
+    	return EntityRemovalBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	EntityRemoval.timesUsed = tUsed;
+    	EntityRemovalBrush.timesUsed = tUsed;
     }
 }

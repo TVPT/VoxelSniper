@@ -12,7 +12,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author psanker
  */
-public class Extrude extends Brush {
+public class ExtrudeBrush extends Brush {
 
     int level;
     double trueCircle;
@@ -20,7 +20,7 @@ public class Extrude extends Brush {
 
     private static int timesUsed = 0;
 
-    public Extrude() {
+    public ExtrudeBrush() {
         this.setName("Extrude");
     }
 
@@ -332,11 +332,11 @@ public class Extrude extends Brush {
 
     @Override
     public final int getTimesUsed() {
-        return Extrude.timesUsed;
+        return ExtrudeBrush.timesUsed;
     }
 
     @Override
     public final void setTimesUsed(final int tUsed) {
-        Extrude.timesUsed = tUsed;
+        ExtrudeBrush.timesUsed = tUsed;
     }
 }

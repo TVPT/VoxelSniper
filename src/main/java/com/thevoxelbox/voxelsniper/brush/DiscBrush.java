@@ -12,14 +12,14 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * 
  * @author Voxel
  */
-public class Disc extends PerformBrush {
+public class DiscBrush extends PerformBrush {
 	private static int timesUsed = 0;
     private double trueCircle = 0;
 
     /**
      * Default Constructor.
      */
-    public Disc() {
+    public DiscBrush() {
         this.setName("Disc");
     }
 
@@ -60,12 +60,12 @@ public class Disc extends PerformBrush {
     
     @Override
     public final int getTimesUsed() {
-    	return Disc.timesUsed;
+    	return DiscBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Disc.timesUsed = tUsed;
+    	DiscBrush.timesUsed = tUsed;
     }
     
     @Override

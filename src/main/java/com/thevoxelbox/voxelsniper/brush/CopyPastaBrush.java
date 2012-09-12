@@ -11,7 +11,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  * 
  * @author giltwist
  */
-public class CopyPasta extends Brush {
+public class CopyPastaBrush extends Brush {
 	private static final int BLOCK_LIMIT = 10000;
 	private static int timesUsed = 0;
 
@@ -28,7 +28,7 @@ public class CopyPasta extends Brush {
     private int[] arraySize = new int[3];
     private int pivot = 0; // ccw degrees    
 
-    public CopyPasta() {
+    public CopyPastaBrush() {
         this.setName("CopyPasta");
     }
 
@@ -39,7 +39,7 @@ public class CopyPasta extends Brush {
             this.offsetPoint[_i] = this.minPoint[_i] - this.firstPoint[_i]; // will always be negative or zero
         }
         this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
-        if (this.numBlocks > 0 && this.numBlocks < CopyPasta.BLOCK_LIMIT) {
+        if (this.numBlocks > 0 && this.numBlocks < CopyPastaBrush.BLOCK_LIMIT) {
             this.blockArray = new int[this.numBlocks];
             this.dataArray = new byte[this.numBlocks];
 
@@ -55,7 +55,7 @@ public class CopyPasta extends Brush {
 
             v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks copied.");
         } else {
-            v.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + CopyPasta.BLOCK_LIMIT + ")");
+            v.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + CopyPastaBrush.BLOCK_LIMIT + ")");
         }
     }
 
@@ -135,7 +135,7 @@ public class CopyPasta extends Brush {
         if (this.points == 2) {
             if (this.numBlocks == 0) {
                 this.doCopy(v);
-            } else if (this.numBlocks > 0 && this.numBlocks < CopyPasta.BLOCK_LIMIT) {
+            } else if (this.numBlocks > 0 && this.numBlocks < CopyPastaBrush.BLOCK_LIMIT) {
                 this.pastePoint[0] = this.getTargetBlock().getX();
                 this.pastePoint[1] = this.getTargetBlock().getY();
                 this.pastePoint[2] = this.getTargetBlock().getZ();
@@ -179,11 +179,11 @@ public class CopyPasta extends Brush {
     
     @Override
     public final int getTimesUsed() {
-    	return CopyPasta.timesUsed;
+    	return CopyPastaBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	CopyPasta.timesUsed = tUsed;
+    	CopyPastaBrush.timesUsed = tUsed;
     }
 }

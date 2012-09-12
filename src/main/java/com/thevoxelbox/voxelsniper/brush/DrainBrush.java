@@ -12,12 +12,12 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Gavjenks
  * @author psanker
  */
-public class Drain extends Brush {
+public class DrainBrush extends Brush {
 	private static int timesUsed = 0;
     private double trueCircle = 0;
     private boolean disc = false;
 
-    public Drain() {
+    public DrainBrush() {
         this.setName("Drain");
     }
 
@@ -144,11 +144,11 @@ public class Drain extends Brush {
     
     @Override
     public final int getTimesUsed() {
-    	return Drain.timesUsed;
+    	return DrainBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Drain.timesUsed = tUsed;
+    	DrainBrush.timesUsed = tUsed;
     }
 }

@@ -11,14 +11,14 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author MikeMatrix
  * 
  */
-public class CheckerVoxelDisc extends PerformBrush {
+public class CheckerVoxelDiscBrush extends PerformBrush {
     private boolean useWorldCoordinates = true;
     private static int timesUsed = 0;
 
     /**
      * Default constructor.
      */
-    public CheckerVoxelDisc() {
+    public CheckerVoxelDiscBrush() {
         this.setName("Checker Voxel Disc");
     }
 
@@ -81,11 +81,11 @@ public class CheckerVoxelDisc extends PerformBrush {
     
     @Override
     public final int getTimesUsed() {
-    	return CheckerVoxelDisc.timesUsed;
+    	return CheckerVoxelDiscBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	CheckerVoxelDisc.timesUsed = tUsed;
+    	CheckerVoxelDiscBrush.timesUsed = tUsed;
     }
 }

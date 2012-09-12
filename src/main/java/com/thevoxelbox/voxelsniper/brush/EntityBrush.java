@@ -10,11 +10,11 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  * @author Piotr
  */
-public class Entity extends Brush {
+public class EntityBrush extends Brush {
 	private static int timesUsed = 0;
     private EntityType entityType = EntityType.ZOMBIE;
 
-    public Entity() {
+    public EntityBrush() {
         this.setName("Entity");
     }
     
@@ -69,11 +69,11 @@ public class Entity extends Brush {
     
     @Override
     public final int getTimesUsed() {
-    	return Entity.timesUsed;
+    	return EntityBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Entity.timesUsed = tUsed;
+    	EntityBrush.timesUsed = tUsed;
     }
 }

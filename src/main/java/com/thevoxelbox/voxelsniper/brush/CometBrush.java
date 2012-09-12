@@ -16,10 +16,10 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  * 
  * @author Gavjenks Heavily revamped from ruler brush blockPositionY Giltwist
  */
-public class Comet extends Brush {
+public class CometBrush extends Brush {
 	private static int timesUsed = 0;
 
-	public Comet() {
+	public CometBrush() {
 		this.setName("Comet");
 	}
 
@@ -67,11 +67,11 @@ public class Comet extends Brush {
 
 	@Override
 	public final int getTimesUsed() {
-		return Comet.timesUsed;
+		return CometBrush.timesUsed;
 	}
 
 	@Override
 	public final void setTimesUsed(final int tUsed) {
-		Comet.timesUsed = tUsed;
+		CometBrush.timesUsed = tUsed;
 	}
 }

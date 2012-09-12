@@ -10,7 +10,7 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * 
  * @author psanker
  */
-public class Ellipse extends PerformBrush {
+public class EllipseBrush extends PerformBrush {
 	private static final double TWO_PI = (2 * Math.PI);
 	private static final int SCL_MIN = 1;
 	private static final int SCL_MAX = 9999;
@@ -26,7 +26,7 @@ public class Ellipse extends PerformBrush {
     private boolean fill;
     private static int timesUsed = 0;
 
-    public Ellipse() {
+    public EllipseBrush() {
         this.setName("Ellipse");
     }
 
@@ -244,11 +244,11 @@ public class Ellipse extends PerformBrush {
     
     @Override
     public final int getTimesUsed() {
-    	return Ellipse.timesUsed;
+    	return EllipseBrush.timesUsed;
     }
     
     @Override
     public final void setTimesUsed(final int tUsed) {
-    	Ellipse.timesUsed = tUsed;
+    	EllipseBrush.timesUsed = tUsed;
     }
 }
