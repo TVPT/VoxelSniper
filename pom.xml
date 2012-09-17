@@ -12,7 +12,7 @@
 
 	<scm>
 		<url>https://github.com/TVPT/VoxelSniper</url>
-		<developerConnection>scm:git:ssh://git@github.com:TVPT/VoxelSniper.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:TVPT/VoxelSniper.git</developerConnection>
 		<connection>scm:git:git://github.com/TVPT/VoxelSniper.git</connection>
 	</scm>
 
