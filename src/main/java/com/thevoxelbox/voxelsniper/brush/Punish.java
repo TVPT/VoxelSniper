@@ -149,7 +149,7 @@ public class Punish extends PerformBrush {
             entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Punish.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
             break;
         case KILL:
-            entity.damage(Integer.MAX_VALUE);
+            entity.setHealth(0);
             break;
         case RANDOMTP:
             final Random _rand = new Random();
