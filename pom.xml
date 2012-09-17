@@ -167,6 +167,15 @@
 					<configLocation>checkstyle.xml</configLocation>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<goals>clean install</goals>
+				</configuration>
+			</plugin>
 		</plugins>
 
 		<pluginManagement>
