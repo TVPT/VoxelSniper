@@ -46,28 +46,14 @@ public class VoxelSniper extends JavaPlugin {
     private static final String PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML = "plugins/VoxelSniper/SniperConfig.xml";
     private static final SniperPermissionHelper SNIPER_PERMISSION_HELPER = new SniperPermissionHelper();
 
-    /**
-     * @return the asshatList
-     */
-    public static Set<String> getAsshatList() {
-        return VoxelSniper.ASSHAT_LIST;
-    }
-
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener(this);
     private final ArrayList<Integer> liteRestricted = new ArrayList<Integer>();
     private int liteMaxBrush = 5;
-    private static final Set<String> ASSHAT_LIST;
     public static final Logger LOG = Logger.getLogger("Minecraft");
     protected static final Object ITEM_LOCK = new Object();
     private static HashMap<String, Integer> items;
 
     private static VoxelSniper instance;
-
-    static {
-        ASSHAT_LIST = new HashSet<String>();
-
-        VoxelSniper.getAsshatList().add("Killjaden");
-    }
 
     /**
      * @return {@link VoxelSniper}
