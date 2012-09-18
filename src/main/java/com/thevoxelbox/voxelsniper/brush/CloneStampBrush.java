@@ -10,7 +10,7 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  * @author Voxel
  */
-public class CloneStampBrush extends Stamp {
+public class CloneStampBrush extends StampBrush {
     private static int timesUsed = 0;
 
     public CloneStampBrush() {

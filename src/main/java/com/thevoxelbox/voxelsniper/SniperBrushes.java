@@ -36,56 +36,56 @@ import com.thevoxelbox.voxelsniper.brush.EntityRemovalBrush;
 import com.thevoxelbox.voxelsniper.brush.EraserBrush;
 import com.thevoxelbox.voxelsniper.brush.ErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.ExtrudeBrush;
-import com.thevoxelbox.voxelsniper.brush.FillDown;
-import com.thevoxelbox.voxelsniper.brush.FlatOcean;
-import com.thevoxelbox.voxelsniper.brush.FreezeRay;
-import com.thevoxelbox.voxelsniper.brush.GenerateChunk;
-import com.thevoxelbox.voxelsniper.brush.GenerateTree;
-import com.thevoxelbox.voxelsniper.brush.HeatRay;
+import com.thevoxelbox.voxelsniper.brush.FillDownBrush;
+import com.thevoxelbox.voxelsniper.brush.FlatOceanBrush;
+import com.thevoxelbox.voxelsniper.brush.FreezeRayBrush;
+import com.thevoxelbox.voxelsniper.brush.RegenerateChunkBrush;
+import com.thevoxelbox.voxelsniper.brush.GenerateTreeBrush;
+import com.thevoxelbox.voxelsniper.brush.HeatRayBrush;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.Jagged;
-import com.thevoxelbox.voxelsniper.brush.Jockey;
-import com.thevoxelbox.voxelsniper.brush.Line;
-import com.thevoxelbox.voxelsniper.brush.Meteor;
-import com.thevoxelbox.voxelsniper.brush.Move;
-import com.thevoxelbox.voxelsniper.brush.Ocean;
-import com.thevoxelbox.voxelsniper.brush.OceanSelection;
-import com.thevoxelbox.voxelsniper.brush.Overlay;
-import com.thevoxelbox.voxelsniper.brush.Painting;
+import com.thevoxelbox.voxelsniper.brush.JaggedLineBrush;
+import com.thevoxelbox.voxelsniper.brush.JockeyBrush;
+import com.thevoxelbox.voxelsniper.brush.LineBrush;
+import com.thevoxelbox.voxelsniper.brush.MeteorBrush;
+import com.thevoxelbox.voxelsniper.brush.MoveBrush;
+import com.thevoxelbox.voxelsniper.brush.OceanBrush;
+import com.thevoxelbox.voxelsniper.brush.OceanSelectionBrush;
+import com.thevoxelbox.voxelsniper.brush.OverlayBrush;
+import com.thevoxelbox.voxelsniper.brush.PaintingBrush;
 import com.thevoxelbox.voxelsniper.brush.Pointless;
 import com.thevoxelbox.voxelsniper.brush.PullTest;
-import com.thevoxelbox.voxelsniper.brush.Punish;
-import com.thevoxelbox.voxelsniper.brush.RandomErode;
-import com.thevoxelbox.voxelsniper.brush.Ring;
-import com.thevoxelbox.voxelsniper.brush.Rot2D;
-import com.thevoxelbox.voxelsniper.brush.Rot2Dvert;
-import com.thevoxelbox.voxelsniper.brush.Rot3D;
-import com.thevoxelbox.voxelsniper.brush.Ruler;
-import com.thevoxelbox.voxelsniper.brush.Scanner;
-import com.thevoxelbox.voxelsniper.brush.Set;
-import com.thevoxelbox.voxelsniper.brush.SetRedstoneFlip;
-import com.thevoxelbox.voxelsniper.brush.ShellBall;
-import com.thevoxelbox.voxelsniper.brush.ShellSet;
-import com.thevoxelbox.voxelsniper.brush.ShellVoxel;
-import com.thevoxelbox.voxelsniper.brush.Snipe;
-import com.thevoxelbox.voxelsniper.brush.SnowCone;
-import com.thevoxelbox.voxelsniper.brush.SpiralStaircase;
-import com.thevoxelbox.voxelsniper.brush.SplatterBall;
-import com.thevoxelbox.voxelsniper.brush.SplatterDisc;
-import com.thevoxelbox.voxelsniper.brush.SplatterOverlay;
-import com.thevoxelbox.voxelsniper.brush.SplatterVoxel;
-import com.thevoxelbox.voxelsniper.brush.SplatterVoxelDisc;
-import com.thevoxelbox.voxelsniper.brush.Spline;
-import com.thevoxelbox.voxelsniper.brush.Stencil;
-import com.thevoxelbox.voxelsniper.brush.StencilList;
-import com.thevoxelbox.voxelsniper.brush.ThreePointCircle;
-import com.thevoxelbox.voxelsniper.brush.TreeSnipe;
-import com.thevoxelbox.voxelsniper.brush.Triangle;
-import com.thevoxelbox.voxelsniper.brush.Underlay;
-import com.thevoxelbox.voxelsniper.brush.VoltMeter;
-import com.thevoxelbox.voxelsniper.brush.Voxel;
-import com.thevoxelbox.voxelsniper.brush.VoxelDisc;
-import com.thevoxelbox.voxelsniper.brush.VoxelDiscFace;
+import com.thevoxelbox.voxelsniper.brush.PunishBrush;
+import com.thevoxelbox.voxelsniper.brush.RandomErodeBrush;
+import com.thevoxelbox.voxelsniper.brush.RingBrush;
+import com.thevoxelbox.voxelsniper.brush.Rot2DBrush;
+import com.thevoxelbox.voxelsniper.brush.Rot2DvertBrush;
+import com.thevoxelbox.voxelsniper.brush.Rot3DBrush;
+import com.thevoxelbox.voxelsniper.brush.RulerBrush;
+import com.thevoxelbox.voxelsniper.brush.ScannerBrush;
+import com.thevoxelbox.voxelsniper.brush.SetBrush;
+import com.thevoxelbox.voxelsniper.brush.SetRedstoneFlipBrush;
+import com.thevoxelbox.voxelsniper.brush.ShellBallBrush;
+import com.thevoxelbox.voxelsniper.brush.ShellSetBrush;
+import com.thevoxelbox.voxelsniper.brush.ShellVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
+import com.thevoxelbox.voxelsniper.brush.SnowConeBrush;
+import com.thevoxelbox.voxelsniper.brush.SpiralStaircaseBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterBallBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterOverlayBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterVoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.SplineBrush;
+import com.thevoxelbox.voxelsniper.brush.StencilBrush;
+import com.thevoxelbox.voxelsniper.brush.StencilListBrush;
+import com.thevoxelbox.voxelsniper.brush.ThreePointCircleBrush;
+import com.thevoxelbox.voxelsniper.brush.TreeSnipeBrush;
+import com.thevoxelbox.voxelsniper.brush.TriangleBrush;
+import com.thevoxelbox.voxelsniper.brush.UnderlayBrush;
+import com.thevoxelbox.voxelsniper.brush.VoltMeterBrush;
+import com.thevoxelbox.voxelsniper.brush.VoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.VoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.VoxelDiscFaceBrush;
 import com.thevoxelbox.voxelsniper.brush.WarpInStyle;
 
 /**
@@ -94,102 +94,102 @@ import com.thevoxelbox.voxelsniper.brush.WarpInStyle;
  */
 public enum SniperBrushes {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~przerwap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    SNIPE(Snipe.class, "s", "snipe"), // [ 1 ] \\
+    SNIPE(SnipeBrush.class, "s", "snipe"), // [ 1 ] \\
     DISC(DiscBrush.class, "d", "disc"), // [ 2 ] \\
     DISC_FACE(DiscFaceBrush.class, "df", "discface"), // [ 3 ] \\
     BALL(BallBrush.class, "b", "ball"), // [ 4 ] \\
-    VOXEL(Voxel.class, "v", "voxel"), // [ 5 ] \\
-    VOXEL_DISC(VoxelDisc.class, "vd", "voxeldisc"), // [ 6 ] \\
-    VOXEL_DISC_FACE(VoxelDiscFace.class, "vdf", "voxeldiscface"), // [ 7 ] \\
+    VOXEL(VoxelBrush.class, "v", "voxel"), // [ 5 ] \\
+    VOXEL_DISC(VoxelDiscBrush.class, "vd", "voxeldisc"), // [ 6 ] \\
+    VOXEL_DISC_FACE(VoxelDiscFaceBrush.class, "vdf", "voxeldiscface"), // [ 7 ] \\
     ENTITY(EntityBrush.class, "en", "entity"), // [ 8 ] \\
-    OCEAN(Ocean.class, "o", "ocean"), // [ 9 ] \\
-    OCEAN_SELECTION(OceanSelection.class, "ocs", "oceanselection"), // [ 10 ] \\
+    OCEAN(OceanBrush.class, "o", "ocean"), // [ 9 ] \\
+    OCEAN_SELECTION(OceanSelectionBrush.class, "ocs", "oceanselection"), // [ 10 ] \\
     CLONE_STAMP(CloneStampBrush.class, "cs", "clonestamp"), // [ 11 ] \\
     ERODE(ErodeBrush.class, "e", "erode"), // [ 12 ] \\
     SOFT_SELECT_TEST(PullTest.class, "pull", "pull"), // [ 13 ] \\
-    PAINTING(Painting.class, "paint", "painting"), // [ 14 ] \\
+    PAINTING(PaintingBrush.class, "paint", "painting"), // [ 14 ] \\
     CANYON(CanyonBrush.class, "ca", "canyon"), // [ 15 ] \\
     CANYON_SELECTION(CanyonSelectionBrush.class, "cas", "canyonselection"), // [ 16 ] \\
-    TWO_D_ROTATION(Rot2D.class, "rot2", "rotation2D"), // [ 17 ] \\
+    TWO_D_ROTATION(Rot2DBrush.class, "rot2", "rotation2D"), // [ 17 ] \\
     WARP_IN_STYLE(WarpInStyle.class, "world", "warpinstyle"), // [ 18 ] \\
-    FILL_DOWN(FillDown.class, "fd", "filldown"), // [ 19 ] \\
-    SET(Set.class, "set", "set"), // [ 20 ] \\
-    JOCKEY(Jockey.class, "jockey", "jockey"), // [ 21 ] \\
+    FILL_DOWN(FillDownBrush.class, "fd", "filldown"), // [ 19 ] \\
+    SET(SetBrush.class, "set", "set"), // [ 20 ] \\
+    JOCKEY(JockeyBrush.class, "jockey", "jockey"), // [ 21 ] \\
     ENTITY_REMOVAL(EntityRemovalBrush.class, "er", "entityremoval"), // [ 22 ] \\
-    RING(Ring.class, "ri", "ring"), // [ 23 ] \\
-    SHELL_SET(ShellSet.class, "shs", "shellset"), // [ 24 ] \\
+    RING(RingBrush.class, "ri", "ring"), // [ 23 ] \\
+    SHELL_SET(ShellSetBrush.class, "shs", "shellset"), // [ 24 ] \\
     BIOME(BiomeBrush.class, "bio", "biome"), // [ 25 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~giltwist~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    SPLATTER_DISC(SplatterDisc.class, "sd", "splatdisc"), // [ 1 ] \\
-    SPLATTER_VOXEL_DISC(SplatterVoxelDisc.class, "svd", "splatvoxeldisc"), // [ 2 ] \\
-    SPLATTER_BALL(SplatterBall.class, "sb", "splatball"), // [ 3 ] \\
-    SPLATTER_VOXEL(SplatterVoxel.class, "sv", "splatvoxel"), // [ 4 ] \\
+    SPLATTER_DISC(SplatterDiscBrush.class, "sd", "splatdisc"), // [ 1 ] \\
+    SPLATTER_VOXEL_DISC(SplatterVoxelDiscBrush.class, "svd", "splatvoxeldisc"), // [ 2 ] \\
+    SPLATTER_BALL(SplatterBallBrush.class, "sb", "splatball"), // [ 3 ] \\
+    SPLATTER_VOXEL(SplatterVoxelBrush.class, "sv", "splatvoxel"), // [ 4 ] \\
     BLOB(BlobBrush.class, "blob", "splatblob"), // [ 5 ] \\
-    SPIRAL_STAIRCASE(SpiralStaircase.class, "sstair", "spiralstaircase"), // [ 6 ] \\
-    SPLATTER_OVERLAY(SplatterOverlay.class, "sover", "splatteroverlay"), // [ 7 ] \\
+    SPIRAL_STAIRCASE(SpiralStaircaseBrush.class, "sstair", "spiralstaircase"), // [ 6 ] \\
+    SPLATTER_OVERLAY(SplatterOverlayBrush.class, "sover", "splatteroverlay"), // [ 7 ] \\
     BLEND_VOXEL_DISC(BlendVoxelDiscBrush.class, "bvd", "blendvoxeldisc"), // [ 8 ] \\
     BLEND_VOXEL(BlendVoxelBrush.class, "bv", "blendvoxel"), // [ 9 ] \\
     BLEND_DISC(BlendDiscBrush.class, "bd", "blenddisc"), // [ 10 ] \\
     BLEND_BALL(BlendBallBrush.class, "bb", "blendball"), // [ 11 ] \\
-    LINE(Line.class, "l", "line"), // [ 12 ] \\
-    SNOW_CONE(SnowCone.class, "snow", "snowcone"), // [ 13 ] \\
-    SHELL_BALL(ShellBall.class, "shb", "shellball"), // [ 14 ] \\
-    SHELL_VOXEL(ShellVoxel.class, "shv", "shellvoxel"), // [ 15 ] \\
-    RANDOM_ERODE(RandomErode.class, "re", "randomerode"), // [ 16 ] \\
-    METEOR(Meteor.class, "met", "meteor"), // [ 17 ] \\
-    TRIANGLE(Triangle.class, "tri", "triangle"), // [ 19 ] \\
+    LINE(LineBrush.class, "l", "line"), // [ 12 ] \\
+    SNOW_CONE(SnowConeBrush.class, "snow", "snowcone"), // [ 13 ] \\
+    SHELL_BALL(ShellBallBrush.class, "shb", "shellball"), // [ 14 ] \\
+    SHELL_VOXEL(ShellVoxelBrush.class, "shv", "shellvoxel"), // [ 15 ] \\
+    RANDOM_ERODE(RandomErodeBrush.class, "re", "randomerode"), // [ 16 ] \\
+    METEOR(MeteorBrush.class, "met", "meteor"), // [ 17 ] \\
+    TRIANGLE(TriangleBrush.class, "tri", "triangle"), // [ 19 ] \\
     ERASER(EraserBrush.class, "erase", "eraser"), // [ 20 ] \\
     COPYPASTA(CopyPastaBrush.class, "cp", "copypasta"), // [ 22 ] \\
     COMET(CometBrush.class, "com", "comet"), // [ 23 ] \\
-    JAGGED(Jagged.class, "j", "jagged"), // [ 24 ] \\
-    THREEPOINTCIRCLE(ThreePointCircle.class, "tpc", "threepointcircle"), // [ 25 ] \\
+    JAGGED(JaggedLineBrush.class, "j", "jagged"), // [ 24 ] \\
+    THREEPOINTCIRCLE(ThreePointCircleBrush.class, "tpc", "threepointcircle"), // [ 25 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Ghost8700~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    GENERATE_TREE(GenerateTree.class, "gt", "generatetree"), // [ 1 ] \\
+    GENERATE_TREE(GenerateTreeBrush.class, "gt", "generatetree"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DivineRage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    GENERATE_CHUNK(GenerateChunk.class, "gc", "generatechunk"), // [ 1 ] \\ // No documentation. Fucks up client-sided. Still works though.
-    TREE_GENERATE(TreeSnipe.class, "t", "treesnipe"), // [ 2 ] \\
+    GENERATE_CHUNK(RegenerateChunkBrush.class, "gc", "generatechunk"), // [ 1 ] \\ // No documentation. Fucks up client-sided. Still works though.
+    TREE_GENERATE(TreeSnipeBrush.class, "t", "treesnipe"), // [ 2 ] \\
     POINTLESS(Pointless.class, "drlolol", "pointlessbrush"), // [ 4 ] \\
-    SCANNER(Scanner.class, "sc", "scanner"), // [ 5 ] \\
+    SCANNER(ScannerBrush.class, "sc", "scanner"), // [ 5 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    HEAT_RAY(HeatRay.class, "hr", "heatray"), // [ 1 ] \\
-    OVERLAY(Overlay.class, "over", "overlay"), // [ 4 ] \\
+    HEAT_RAY(HeatRayBrush.class, "hr", "heatray"), // [ 1 ] \\
+    OVERLAY(OverlayBrush.class, "over", "overlay"), // [ 4 ] \\
     DOME(DomeBrush.class, "dome", "domebrush"), // [ 6 ] \\
-    RULER(Ruler.class, "r", "ruler"), // [ 7 ] \\
-    VOLT_METER(VoltMeter.class, "volt", "voltmeter"), // [ 8 ] \\
+    RULER(RulerBrush.class, "r", "ruler"), // [ 7 ] \\
+    VOLT_METER(VoltMeterBrush.class, "volt", "voltmeter"), // [ 8 ] \\
     DRAIN(DrainBrush.class, "drain", "drain"), // [ 10 ] \\
-    THREE_D_ROTATION(Rot3D.class, "rot3", "rotation3D"), // [ 11 ] \\
+    THREE_D_ROTATION(Rot3DBrush.class, "rot3", "rotation3D"), // [ 11 ] \\
     ANTI_FREEZE(AntiFreezeBrush.class, "af", "antifreeze"), // [ 13 ] \\
-    TWO_D_ROTATION_EXP(Rot2Dvert.class, "rot2v", "rotation2Dvertical"), // [ 21 ] \\
-    STENCIL(Stencil.class, "st", "stencil"), // [ 23 ] \\
-    STENCILLIST(StencilList.class, "sl", "stencillist"), // [ 24 ] \\
+    TWO_D_ROTATION_EXP(Rot2DvertBrush.class, "rot2v", "rotation2Dvertical"), // [ 21 ] \\
+    STENCIL(StencilBrush.class, "st", "stencil"), // [ 23 ] \\
+    STENCILLIST(StencilListBrush.class, "sl", "stencillist"), // [ 24 ] \\
     BLOCK_RESET_SURFACE(BlockResetSurfaceBrush.class, "brbs", "blockresetbrushsurface"), // [25] \\
-    FLAT_OCEAN(FlatOcean.class, "fo", "flatocean"), // [ 26 ] \\
-    FREEZE_RAY(FreezeRay.class, "fr", "freezeray"),
+    FLAT_OCEAN(FlatOceanBrush.class, "fo", "flatocean"), // [ 26 ] \\
+    FREEZE_RAY(FreezeRayBrush.class, "fr", "freezeray"),
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~psanker~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     ELLIPSE(EllipseBrush.class, "el", "ellipse"), // [ 1 ] \\
-    SPLINE(Spline.class, "sp", "spline"), // [ 2 ] \\
+    SPLINE(SplineBrush.class, "sp", "spline"), // [ 2 ] \\
     CLEAN_SNOW(CleanSnowBrush.class, "cls", "cleansnow"), // [ 4 ] \\
     EXTRUDE(ExtrudeBrush.class, "ex", "extrude"), // [ 5 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Deamon~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    SET_REDSTONE_FLIP(SetRedstoneFlip.class, "setrf", "setredstoneflip"), // [ 1 ] \\
+    SET_REDSTONE_FLIP(SetRedstoneFlipBrush.class, "setrf", "setredstoneflip"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Jmck95~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    UNDERLAY(Underlay.class, "under", "underlay"), // [ 1 ] \\
+    UNDERLAY(UnderlayBrush.class, "under", "underlay"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Kavukamari~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     CYLINDER(CylinderBrush.class, "c", "cylinder"),
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Monofraps~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    PUNISH(Punish.class, "p", "punish"), // [ 1 ] \\
+    PUNISH(PunishBrush.class, "p", "punish"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    MOVE(Move.class, "mv", "move"), // [1] \\
+    MOVE(MoveBrush.class, "mv", "move"), // [1] \\
     BLOCK_RESET(BlockResetBrush.class, "brb", "blockresetbrush"), // [1] \\
     CHECKER_VOXEL_DISC(CheckerVoxelDiscBrush.class, "cvd", "checkervoxeldisc"); // [1] \\
 

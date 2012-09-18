@@ -5,7 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.tool;
 
 import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.Snipe;
+import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
@@ -23,7 +23,7 @@ import org.bukkit.event.block.Action;
  */
 public class BrushTool {
 
-    protected IBrush brush = new Snipe();
+    protected IBrush brush = new SnipeBrush();
     public SnipeData data;
 
     public BrushTool(Sniper owner) {

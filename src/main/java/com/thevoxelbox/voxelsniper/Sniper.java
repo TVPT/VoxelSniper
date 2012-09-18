@@ -19,7 +19,7 @@ import org.bukkit.event.block.Action;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.Sneak;
-import com.thevoxelbox.voxelsniper.brush.Snipe;
+import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.brush.tool.BrushTool;
 import com.thevoxelbox.voxelsniper.brush.tool.SneakBrushTool;
@@ -81,9 +81,9 @@ public class Sniper {
     private final HashMap<String, Brush> brushPresetsS = new HashMap<String, Brush>();
     private final HashMap<String, int[]> brushPresetsParamsS = new HashMap<String, int[]>();
 
-    private Brush current = new Snipe();
-    private Brush previous = new Snipe();
-    private Brush twoBack = new Snipe();
+    private Brush current = new SnipeBrush();
+    private Brush previous = new SnipeBrush();
+    private Brush twoBack = new SnipeBrush();
     private IBrush sneak = new Sneak();
 
     private Integer group;
@@ -521,7 +521,7 @@ public class Sniper {
 
         if (this.brushTools.containsKey(this.player.getItemInHand().getType())) {
             final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.setBrush(new Snipe());
+            _bt.setBrush(new SnipeBrush());
 
             _bt.data.setVoxelId(0);
             _bt.data.setReplaceId(0);
@@ -531,7 +531,7 @@ public class Sniper {
             _bt.data.setcCen(0);
             _bt.data.setReplaceData((byte) 0);
         } else {
-            this.current = new Snipe();
+            this.current = new SnipeBrush();
 
             this.fillPrevious();
             this.data.setVoxelId(0);
