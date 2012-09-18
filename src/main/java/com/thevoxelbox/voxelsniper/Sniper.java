@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,20 +40,20 @@ public class Sniper {
     private static final int SAVE_ARRAY_DATA_VALUE = 2;
     private static final int SAVE_ARRAY_REPLACE_VOXEL_ID = 1;
     private static final int SAVE_ARRAY_VOXEL_ID = 0;
-    private static int undoChacheSize = 20;
+    private static int undoCacheSize = 20;
 
     /**
      * @return int
      */
-    public static int getUndoChacheSize() {
-        return Sniper.undoChacheSize;
+    public static int getUndoCacheSize() {
+        return Sniper.undoCacheSize;
     }
 
     /**
-     * @param undoChacheSize
+     * @param undoCacheSize
      */
-    public static void setUndoChacheSize(final int undoChacheSize) {
-        Sniper.undoChacheSize = undoChacheSize;
+    public static void setUndoCacheSize(final int undoChacheSize) {
+        Sniper.undoCacheSize = undoChacheSize;
     }
 
     private Brush readingBrush;
@@ -926,11 +927,11 @@ public class Sniper {
      * @param undo
      */
     public final void storeUndo(final Undo undo) {
-        if (Sniper.undoChacheSize <= 0) {
+        if (Sniper.undoCacheSize <= 0) {
             return;
         }
         if (undo != null && undo.getSize() > 0) {
-            while (this.undoList.size() > Sniper.undoChacheSize) {
+            while (this.undoList.size() > Sniper.undoCacheSize) {
                 this.undoList.pop();
             }
             this.undoList.add(undo);
