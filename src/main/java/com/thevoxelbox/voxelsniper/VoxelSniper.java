@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,13 +45,29 @@ public class VoxelSniper extends JavaPlugin {
     private static final String PLUGINS_VOXEL_SNIPER_ITEMS_TXT = "plugins/VoxelSniper/items.txt";
     private static final String PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML = "plugins/VoxelSniper/SniperConfig.xml";
     private static final SniperPermissionHelper SNIPER_PERMISSION_HELPER = new SniperPermissionHelper();
+
+    /**
+     * @return the asshatList
+     */
+    public static Set<String> getAsshatList() {
+        return VoxelSniper.ASSHAT_LIST;
+    }
+
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener(this);
     private final ArrayList<Integer> liteRestricted = new ArrayList<Integer>();
     private int liteMaxBrush = 5;
+    private static final Set<String> ASSHAT_LIST;
     public static final Logger LOG = Logger.getLogger("Minecraft");
     protected static final Object ITEM_LOCK = new Object();
     private static HashMap<String, Integer> items;
+
     private static VoxelSniper instance;
+
+    static {
+        ASSHAT_LIST = new HashSet<String>();
+
+        VoxelSniper.getAsshatList().add("Killjaden");
+    }
 
     /**
      * @return {@link VoxelSniper}
@@ -91,20 +109,6 @@ public class VoxelSniper extends JavaPlugin {
     }
 
     /**
-     * @return int
-     */
-    public final int getLiteMaxBrush() {
-        return this.liteMaxBrush;
-    }
-
-    /**
-     * @return ArrayList<Integer>
-     */
-    public final ArrayList<Integer> getLiteRestricted() {
-        return this.liteRestricted;
-    }
-
-    /**
      * @return {@link SniperPermissionHelper}
      */
     public static SniperPermissionHelper getSniperPermissionHelper() {
@@ -122,10 +126,17 @@ public class VoxelSniper extends JavaPlugin {
     }
 
     /**
-     * @param liteMaxBrush
+     * @return int
      */
-    public final void setLiteMaxBrush(final int liteMaxBrush) {
-        this.liteMaxBrush = liteMaxBrush;
+    public final int getLiteMaxBrush() {
+        return this.liteMaxBrush;
+    }
+
+    /**
+     * @return ArrayList<Integer>
+     */
+    public final ArrayList<Integer> getLiteRestricted() {
+        return this.liteRestricted;
     }
 
     /**
@@ -205,7 +216,7 @@ public class VoxelSniper extends JavaPlugin {
                 } else if (_n.getNodeName().equals("MaxLiteBrushSize")) {
                     this.liteMaxBrush = Integer.parseInt(_n.getFirstChild().getNodeValue());
                 } else if (_n.getNodeName().equals("SniperUndoCache")) {
-                    Sniper.setUndoChacheSize(Integer.parseInt(_n.getFirstChild().getNodeValue()));
+                    Sniper.setUndoCacheSize(Integer.parseInt(_n.getFirstChild().getNodeValue()));
                 }
             }
         } catch (final SAXException _ex) {
@@ -296,7 +307,7 @@ public class VoxelSniper extends JavaPlugin {
             _vsElement.appendChild(_liteBrushSize);
 
             final Element _undoCache = _doc.createElement("SniperUndoCache");
-            _undoCache.appendChild(_doc.createTextNode(Sniper.getUndoChacheSize() + ""));
+            _undoCache.appendChild(_doc.createTextNode(Sniper.getUndoCacheSize() + ""));
             _vsElement.appendChild(_undoCache);
             _vsElement.normalize();
 
@@ -316,5 +327,12 @@ public class VoxelSniper extends JavaPlugin {
         } catch (final ParserConfigurationException _ex) {
             Logger.getLogger(VoxelSniperListener.class.getName()).log(Level.SEVERE, null, _ex);
         }
+    }
+
+    /**
+     * @param liteMaxBrush
+     */
+    public final void setLiteMaxBrush(final int liteMaxBrush) {
+        this.liteMaxBrush = liteMaxBrush;
     }
 }

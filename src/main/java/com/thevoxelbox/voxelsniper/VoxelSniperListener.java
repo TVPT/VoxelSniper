@@ -655,6 +655,11 @@ public class VoxelSniperListener implements Listener {
             return;
         }
         final Player _player = event.getPlayer();
+        
+        if (_player != null && VoxelSniper.getAsshatList().contains(_player.getName())) {
+            return;
+        }
+        
         try {
             final Sniper _vs = VoxelSniper.getSniperPermissionHelper().getSniperInstance(_player);
             if (_vs == null) {
