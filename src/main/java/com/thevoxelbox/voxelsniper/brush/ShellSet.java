@@ -14,6 +14,8 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Piotr
  */
 public class ShellSet extends Brush {
+	private static final int MAX_SIZE = 5000000;
+	
     private Block block = null;
     private static int timesUsed = 0;
 
@@ -31,17 +33,20 @@ public class ShellSet extends Brush {
                 this.block = null;
                 return true;
             }
+
+            final int _voxelMaterialId = v.getVoxelId();
+            final int _voxelReplaceMaterialId = v.getReplaceId();
+            
             final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
             final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
             final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
             final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
             final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
             final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
-            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > 5000000) {
+            
+            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > MAX_SIZE) {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
-                final int _voxelMaterialId = v.getVoxelId();
-                final int _voxelReplaceMaterialId = v.getReplaceId();
                 final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy)) / 2));
                 for (int _y = _lowy; _y <= _highy; _y++) {
                     for (int _x = _lowx; _x <= _highx; _x++) {

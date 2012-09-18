@@ -16,8 +16,7 @@ import com.thevoxelbox.voxelsniper.Sniper;
  * @author Piotr
  */
 public class Sneak extends Brush {
-
-    private static int timesUsed = 0;
+	private static int timesUsed = 0;
 
     public Sneak() {
         this.setName("Sneak");

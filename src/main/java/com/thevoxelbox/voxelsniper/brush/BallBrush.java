@@ -23,15 +23,12 @@ public class BallBrush extends PerformBrush {
 
     private final void ball(final SnipeData v) {    	
         final int _bSize = v.getBrushSize();
-
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
-        double _zPow = 0;
-        double _xPow = 0;
 
         this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
 
         for (int _z = 1; _z <= _bSize; _z++) {
-            _zPow = Math.pow(_z, 2);
+            final double _zPow = Math.pow(_z, 2);
             
             this.current.perform(this.clampY(this.getBlockPositionX() + _z, this.getBlockPositionY(), this.getBlockPositionZ()));
             this.current.perform(this.clampY(this.getBlockPositionX() - _z, this.getBlockPositionY(), this.getBlockPositionZ()));
@@ -41,7 +38,7 @@ public class BallBrush extends PerformBrush {
             this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() - _z));
             
             for (int _x = 1; _x <= _bSize; _x++) {
-                _xPow = Math.pow(_x, 2);
+                final double _xPow = Math.pow(_x, 2);
                 
                 if (_zPow + Math.pow(_x, 2) <= _bPow) {
                     this.current.perform(this.clampY(this.getBlockPositionX() + _z, this.getBlockPositionY(), this.getBlockPositionZ() + _x));
@@ -94,18 +91,19 @@ public class BallBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
-            v.sendMessage(ChatColor.AQUA
-                    + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-            return;
-        }
         for (int _i = 1; _i < par.length; _i++) {
-            if (par[_i].startsWith("true")) {
+        	final String _param = par[_i];
+        	
+        	if (_param.equalsIgnoreCase("info")) {
+        		v.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
+        		v.sendMessage(ChatColor.AQUA
+        				+ "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+        		return;
+        	} else if (_param.startsWith("true")) {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                 continue;
-            } else if (par[_i].startsWith("false")) {
+            } else if (_param.startsWith("false")) {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                 continue;

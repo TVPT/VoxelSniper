@@ -7,22 +7,22 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.thevoxelbox.voxelsniper.brush.Ball;
-import com.thevoxelbox.voxelsniper.brush.BlendBall;
-import com.thevoxelbox.voxelsniper.brush.BlendDisc;
-import com.thevoxelbox.voxelsniper.brush.BlendVoxel;
-import com.thevoxelbox.voxelsniper.brush.BlendVoxelDisc;
-import com.thevoxelbox.voxelsniper.brush.Blob;
+import com.thevoxelbox.voxelsniper.brush.BallBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendBallBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendVoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.BlobBrush;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDisc;
-import com.thevoxelbox.voxelsniper.brush.CloneStamp;
-import com.thevoxelbox.voxelsniper.brush.CopyPasta;
-import com.thevoxelbox.voxelsniper.brush.Disc;
-import com.thevoxelbox.voxelsniper.brush.DiscFace;
-import com.thevoxelbox.voxelsniper.brush.Dome;
-import com.thevoxelbox.voxelsniper.brush.Drain;
-import com.thevoxelbox.voxelsniper.brush.Eraser;
-import com.thevoxelbox.voxelsniper.brush.Erode;
+import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.CloneStampBrush;
+import com.thevoxelbox.voxelsniper.brush.CopyPastaBrush;
+import com.thevoxelbox.voxelsniper.brush.DiscBrush;
+import com.thevoxelbox.voxelsniper.brush.DiscFaceBrush;
+import com.thevoxelbox.voxelsniper.brush.DomeBrush;
+import com.thevoxelbox.voxelsniper.brush.DrainBrush;
+import com.thevoxelbox.voxelsniper.brush.EraserBrush;
+import com.thevoxelbox.voxelsniper.brush.ErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.Line;
 import com.thevoxelbox.voxelsniper.brush.Overlay;
 import com.thevoxelbox.voxelsniper.brush.Painting;
@@ -52,14 +52,14 @@ import com.thevoxelbox.voxelsniper.brush.VoxelDiscFace;
 public enum LiteSniperBrushes {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~przerwap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     SNIPE(Snipe.class, "s", "snipe"), // [ 1 ] \\
-    DISC(Disc.class, "d", "disc"), // [ 2 ] \\
-    DISC_FACE(DiscFace.class, "df", "discface"), // [ 3 ] \\
-    BALL(Ball.class, "b", "ball"), // [ 6 ] \\
+    DISC(DiscBrush.class, "d", "disc"), // [ 2 ] \\
+    DISC_FACE(DiscFaceBrush.class, "df", "discface"), // [ 3 ] \\
+    BALL(BallBrush.class, "b", "ball"), // [ 6 ] \\
     VOXEL(Voxel.class, "v", "voxel"), // [ 8 ] \\
     VOXEL_DISC(VoxelDisc.class, "vd", "voxeldisc"), // [ 9 ] \\
     VOXEL_DISC_FACE(VoxelDiscFace.class, "vdf", "voxeldiscface"), // [ 11 ] \\
-    CLONE_STAMP(CloneStamp.class, "cs", "clonestamp"), // [ 22 ] \\
-    ERODE(Erode.class, "e", "erode"), // [ 23 ] \\
+    CLONE_STAMP(CloneStampBrush.class, "cs", "clonestamp"), // [ 22 ] \\
+    ERODE(ErodeBrush.class, "e", "erode"), // [ 23 ] \\
     PAINTING(Painting.class, "paint", "painting"), // [ 25 ] \\
     RING(Ring.class, "ri", "ring"), // [ 41 ] \\
 
@@ -69,15 +69,15 @@ public enum LiteSniperBrushes {
     SPLATTER_BALL(SplatterBall.class, "sb", "splatball"), // [ 3 ] \\
     SPLATTER_VOXEL(SplatterVoxel.class, "sv", "splatvoxel"), // [ 4 ] \\
     SPLATTER_OVERLAY(SplatterOverlay.class, "sover", "splatteroverlay"), // [ 7 ] \\
-    BLOB(Blob.class, "blob", "splatblob"), // [ 5 ] \\
-    BLEND_VOXEL_DISC(BlendVoxelDisc.class, "bvd", "blendvoxeldisc"), // [ 8 ] \\
-    BLEND_VOXEL(BlendVoxel.class, "bv", "blendvoxel"), // [ 9 ] \\
-    BLEND_DISC(BlendDisc.class, "bd", "blenddisc"), // [ 10 ] \\
-    BLEND_BALL(BlendBall.class, "bb", "blendball"), // [ 11 ] \\
+    BLOB(BlobBrush.class, "blob", "splatblob"), // [ 5 ] \\
+    BLEND_VOXEL_DISC(BlendVoxelDiscBrush.class, "bvd", "blendvoxeldisc"), // [ 8 ] \\
+    BLEND_VOXEL(BlendVoxelBrush.class, "bv", "blendvoxel"), // [ 9 ] \\
+    BLEND_DISC(BlendDiscBrush.class, "bd", "blenddisc"), // [ 10 ] \\
+    BLEND_BALL(BlendBallBrush.class, "bb", "blendball"), // [ 11 ] \\
     LINE(Line.class, "l", "line"), // [ 12 ] \\
     RANDOM_ERODE(RandomErode.class, "re", "randomerode"), // [ 16 ] \\
-    ERASER(Eraser.class, "erase", "eraser"), // [ 20 ] \\
-    COPYPASTA(CopyPasta.class, "cp", "copypasta"), // [ 22 ] \\
+    ERASER(EraserBrush.class, "erase", "eraser"), // [ 20 ] \\
+    COPYPASTA(CopyPastaBrush.class, "cp", "copypasta"), // [ 22 ] \\
     TRIANGLE(Triangle.class, "tri", "triangle"), // [ 19 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DivineRage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
@@ -85,8 +85,8 @@ public enum LiteSniperBrushes {
     GENERATE_TREE(TreeSnipe.class, "t", "treesnipe"), // [ 2 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    DRAIN(Drain.class, "drain", "drain"), // [ 10 ] \\
-    DOME(Dome.class, "dome", "domebrush"), // [ 6 ] \\
+    DRAIN(DrainBrush.class, "drain", "drain"), // [ 10 ] \\
+    DOME(DomeBrush.class, "dome", "domebrush"), // [ 6 ] \\
     OVERLAY(Overlay.class, "over", "overlay"), // [ 4 ] \\
     RULER(Ruler.class, "r", "ruler"), // [ 7 ] \\
     VOLT_METER(VoltMeter.class, "volt", "voltmeter"), // [ 8 ] \\
@@ -96,7 +96,7 @@ public enum LiteSniperBrushes {
     UNDERLAY(Underlay.class, "under", "underlay"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    CHECKER_VOXEL_DISC(CheckerVoxelDisc.class, "cvd", "checkervoxeldisc"); // [ 1 ] \\
+    CHECKER_VOXEL_DISC(CheckerVoxelDiscBrush.class, "cvd", "checkervoxeldisc"); // [ 1 ] \\
 
     private static final Map<String, LiteSniperBrushes> BRUSHES;
 

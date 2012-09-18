@@ -12,10 +12,15 @@ import com.thevoxelbox.voxelsniper.Message;
  * @author DivineRage
  */
 public class Scanner extends Brush {
-    private int depth = 24;
-    private Material checkFor = Material.AIR;
+	private static final int DEPTH_MIN = 1;
+	private static final int DEPTH_DEFAULT = 24;
+	private static final int DEPTH_MAX = 64;
 
-    private static int timesUsed = 0;
+	private static int timesUsed = 0;
+
+	private int depth = DEPTH_DEFAULT;
+	private Material checkFor = Material.AIR;
+
 
     public Scanner() {
         this.setName("Scanner");
@@ -35,6 +40,7 @@ public class Scanner extends Brush {
         if (bf == null) {
             return;
         }
+        
         switch (bf) {
         case NORTH:
             // Scan south
@@ -97,7 +103,7 @@ public class Scanner extends Brush {
         case DOWN:
             // Scan up
             for (int _i = 1; _i < this.depth + 1; _i++) {
-                if ((this.getBlockPositionY() + _i) >= 127) {
+                if ((this.getBlockPositionY() + _i) >= v.getWorld().getMaxHeight()) {
                     break;
                 }
                 if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _i, this.getBlockPositionZ()).getType() == this.checkFor) {
@@ -134,15 +140,15 @@ public class Scanner extends Brush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
-    		return;
-    	}
-    	for (int _x = 1; _x < par.length; _x++) {
-    		if (par[_x].startsWith("d")) {
-    			this.depth = this.clamp(Integer.parseInt(par[_x].substring(1)), 1, 64);
-    			v.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.clamp(Integer.parseInt(par[_x].substring(1)), 1, 64));
+    	for (int _i = 1; _i < par.length; _i++) {
+    		if (par[_i].equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
+    			return;
+    		}
+    		if (par[_i].startsWith("d")) {
+    			this.depth = this.clamp(Integer.parseInt(par[_i].substring(1)), DEPTH_MIN, DEPTH_MAX);
+    			v.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
     			continue;
     		} else {
     			v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");

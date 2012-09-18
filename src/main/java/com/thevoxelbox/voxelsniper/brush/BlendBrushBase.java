@@ -7,9 +7,9 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
 public abstract class BlendBrushBase extends Brush {
+	protected static int maxBlockMaterialID;
 	protected boolean excludeAir = true;
 	protected boolean excludeWater = true;
-	protected static int maxBlockMaterialID = -1;
 
 	static {
 		// Find highest placeable block ID
@@ -18,6 +18,10 @@ public abstract class BlendBrushBase extends Brush {
 		}
 	}
 
+	/**
+	 * 
+	 * @param v
+	 */
 	protected abstract void blend(final SnipeData v);
 
 	@Override
@@ -42,7 +46,8 @@ public abstract class BlendBrushBase extends Brush {
 
 	@Override
 	public void parameters(final String[] par, final SnipeData v) {
-		if (par[1].equalsIgnoreCase("water")) {
+		for(int _i = 1; _i < par.length; ++_i)
+		if (par[_i].equalsIgnoreCase("water")) {
 			this.excludeWater = !this.excludeWater;
 			v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 		}

@@ -38,13 +38,8 @@ public class DomeBrush extends Brush {
         final double _curvature = this.height / (_brushSize + 0.5);
         final double _powCurvature = Math.pow(_curvature, 2);
         final int[][] _heightMap = new int[_brushSize + 2][_brushSize + 2];
-        double _yManip = 0.5;
-        double _centerRef = 0;
-        double _xPow = 0;
-        double _zPow = 0;
-        double _yPowMinus = 0;
-        double _yPowPlus = 0;
-        double _yPow = 0;
+        double _yManip;
+        double _centerRef;
         
         if (this.height == DEFAULT_HEIGHT) {
             this.height = _brushSize + 0.5;
@@ -59,14 +54,14 @@ public class DomeBrush extends Brush {
         }
 
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
             for (int _z = _brushSize; _z >= 0; _z--) {
-                _zPow = Math.pow(_z, 2);
+                final double _zPow = Math.pow(_z, 2);
                 for (int _y = (int) this.height; _y >= 0; _y--) {
-                    _yPowMinus = Math.pow(_y - _yManip + _centerRef, 2);
-                    _yPow = Math.pow(_y + _centerRef, 2);
+                    final double _yPowMinus = Math.pow(_y - _yManip + _centerRef, 2);
+                    final double _yPow = Math.pow(_y + _centerRef, 2);
                     if ((_xPow + (_yPowMinus / Math.pow(_curvature, 2)) + _zPow) <= _bPow) { // If within the ellipse
-                        _yPowPlus = Math.pow(_y + _yManip + _centerRef, 2);
+                        final double _yPowPlus = Math.pow(_y + _yManip + _centerRef, 2);
                         if ((_xPow + (_yPowPlus / _powCurvature) + _zPow) > _bPow) { // If nothing else further out (i.e. if on the surface)
                             _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z));
                             _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z));
@@ -206,24 +201,24 @@ public class DomeBrush extends Brush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Dome brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA
-    				+ "/b dome h[number] -- set a custom dome height.  Default is the radius of the brush.  Anything else will make it a parabolic dome with circular base.  Cannot be negative.");
-    		v.sendMessage(ChatColor.BLUE
-    				+ "/b dome acc [or inacc] -- set brush to half (acc) or full step (inacc) accuracy.  if /v is anything other than 44, will override you and force full step accuracy.");
-    		return;
-    	}
-    	for (int x = 1; x < par.length; x++) {
-    		if (par[x].startsWith("h")) {
-    			this.height = Double.parseDouble(par[x].replace("h", ""));
+    	for (int _i = 1; _i < par.length; _i++) {
+    		final String _param = par[_i];
+    		if (_param.equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Dome brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA
+    					+ "/b dome h[number] -- set a custom dome height.  Default is the radius of the brush.  Anything else will make it a parabolic dome with circular base.  Cannot be negative.");
+    			v.sendMessage(ChatColor.BLUE
+    					+ "/b dome acc [or inacc] -- set brush to half (acc) or full step (inacc) accuracy.  if /v is anything other than 44, will override you and force full step accuracy.");
+				return;
+			} else if (_param.startsWith("h")) {
+				this.height = Double.parseDouble(par[_i].replace("h", ""));
     			v.sendMessage(ChatColor.AQUA + "Dome height set to: " + this.height);
     			continue;
-    		} else if (par[x].startsWith("inacc")) {
+    		} else if (_param.startsWith("inacc")) {
     			this.fsa = true;
     			v.sendMessage(ChatColor.BLUE + "Full step accuracy.");
     			continue;
-    		} else if (par[x].startsWith("acc")) {
+    		} else if (_param.startsWith("acc")) {
     			if (v.getVoxelId() != 44) {
     				this.fsa = true;
     				v.sendMessage(ChatColor.BLUE + "Full step accuracy. (overridden since you don't have half steps selected)");

@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
@@ -24,12 +23,8 @@ public class BlendBallBrush extends BlendBrushBase {
     protected final void blend(final SnipeData v) {    	
         final int _bSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _bSize;
-        final Undo _undo = new Undo(this.getWorld().getName());
-        final double _rPow = Math.pow(_bSize + 1, 2);
         final int[][][] _oldMaterials = new int[2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1]; // Array that holds the original materials plus a buffer
         final int[][][] _newMaterials = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1]; // Array that holds the blended materials
-        double _xPow = 0;
-        double _yPow = 0;
         
         // Log current materials into oldmats
         for (int _x = 0; _x <= 2 * (_bSize + 1); _x++) {
@@ -92,28 +87,31 @@ public class BlendBallBrush extends BlendBrushBase {
             }
         }
 
+        final Undo _undo = new Undo(this.getWorld().getName());
+        final double _rPow = Math.pow(_bSize + 1, 2);
+        
         // Make the changes  
         for (int _x = _twoBrushSize; _x >= 0; _x--) {
-        	_xPow = Math.pow(_x - _bSize - 1, 2);
+        	final double _xPow = Math.pow(_x - _bSize - 1, 2);
         	
-            for (int _y = 0; _y <= _twoBrushSize; _y++) {
-                _yPow = Math.pow(_y - _bSize - 1, 2);
-                
-                for (int _z = _twoBrushSize; _z >= 0; _z--) {
-                    if (_xPow + _yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow) {
-                        if (!(this.excludeAir && _newMaterials[_x][_y][_z] == Material.AIR.getId())
-                                && !(this.excludeWater && (_newMaterials[_x][_y][_z] == Material.WATER.getId() || _newMaterials[_x][_y][_z] == Material.STATIONARY_WATER.getId()))) {
-                            if (this.getBlockIdAt(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z) != _newMaterials[_x][_y][_z]) {
-                                _undo.put(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z));
-                            }
-                            this.setBlockIdAt(_newMaterials[_x][_y][_z], this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z);
-                        }
-                    }
-                }
-            }
+        	for (int _y = 0; _y <= _twoBrushSize; _y++) {
+        		final double _yPow = Math.pow(_y - _bSize - 1, 2);
+        		
+        		for (int _z = _twoBrushSize; _z >= 0; _z--) {
+        			if (_xPow + _yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow) {
+        				if (!(this.excludeAir && _newMaterials[_x][_y][_z] == Material.AIR.getId())
+        						&& !(this.excludeWater && (_newMaterials[_x][_y][_z] == Material.WATER.getId() || _newMaterials[_x][_y][_z] == Material.STATIONARY_WATER.getId()))) {
+        					if (this.getBlockIdAt(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z) != _newMaterials[_x][_y][_z]) {
+        						_undo.put(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z));
+        					}
+        					this.setBlockIdAt(_newMaterials[_x][_y][_z], this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z);
+        				}
+        			}
+        		}
+        	}
         }
-        v.storeUndo(_undo);
-    }   
+        v.storeUndo(_undo);    	
+    }
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {

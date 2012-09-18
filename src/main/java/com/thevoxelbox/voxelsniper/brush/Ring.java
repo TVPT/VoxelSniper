@@ -11,10 +11,11 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Voxel
  */
 public class Ring extends PerformBrush {
-    private double trueCircle = 0;
+	private static int timesUsed = 0;
+
+	private double trueCircle = 0;
     private double innerSize = 0;
 
-    private static int timesUsed = 0;
 
     public Ring() {
         this.setName("Ring");
@@ -22,13 +23,14 @@ public class Ring extends PerformBrush {
 
     private final void ring(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-        final double _outerpow = Math.pow(_brushSize + this.trueCircle, 2);
-        final double _innerpow = Math.pow(this.innerSize, 2);
+        final double _outerPow = Math.pow(_brushSize + this.trueCircle, 2);
+        final double _innerPow = Math.pow(this.innerSize, 2);
+        
         for (int _x = _brushSize; _x >= 0; _x--) {
-            final double _xpow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                final double _ypow = Math.pow(_y, 2);
-                if ((_xpow + _ypow) <= _outerpow && (_xpow + _ypow) >= _innerpow) {
+                final double _yPow = Math.pow(_y, 2);
+                if ((_xPow + _yPow) <= _outerPow && (_xPow + _yPow) >= _innerPow) {
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
                     this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
@@ -62,15 +64,14 @@ public class Ring extends PerformBrush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA
-    				+ "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
-    		v.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
-    		return;
-    	}
     	for (int _i = 1; _i < par.length; _i++) {
-    		if (par[_i].startsWith("true")) {
+    		if (par[_i].equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA
+    					+ "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
+    			v.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
+    			return;
+    		} else if (par[_i].startsWith("true")) {
     			this.trueCircle = 0.5;
     			v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
     			continue;

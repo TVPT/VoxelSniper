@@ -13,10 +13,12 @@ import com.thevoxelbox.voxelsniper.Message;
  * @author Mick
  */
 public class TreeSnipe extends Brush {
+	private static int timesUsed = 0;
     private TreeType treeType = TreeType.TREE;
 
-    private static int timesUsed = 0;
-
+    /**
+     * 
+     */
     public TreeSnipe() {
         this.setName("Tree Snipe");
     }
@@ -30,7 +32,7 @@ public class TreeSnipe extends Brush {
     }
 
     private int getLocation(final SnipeData v) {
-        for (int _i = 1; _i < (255 - this.getBlockPositionY()); _i++) {
+        for (int _i = 1; _i < (v.getWorld().getMaxHeight() - 1 - this.getBlockPositionY()); _i++) {
             if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _i, this.getBlockPositionZ()).getType() == Material.AIR) {
                 return this.getBlockPositionY() + _i;
             }
@@ -75,13 +77,13 @@ public class TreeSnipe extends Brush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-    		v.sendMessage(ChatColor.AQUA + "/b t treetype");
-    		this.printTreeType(v.getVoxelMessage());
-    		return;
-    	}
     	for (int _i = 1; _i < par.length; _i++) {
+    		if (par[_i].equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
+    			v.sendMessage(ChatColor.AQUA + "/b t treetype");
+    			this.printTreeType(v.getVoxelMessage());
+    			return;
+    		}
     		try {
     			this.treeType = TreeType.valueOf(par[_i].toUpperCase());
     			this.printTreeType(v.getVoxelMessage());

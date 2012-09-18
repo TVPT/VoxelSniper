@@ -20,10 +20,10 @@ public class ShellVoxel extends Brush {
 
     private final void vShell(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
+        final int _twoBrushSize = 2 * _brushSize;
         final int _voxelMaterialId = v.getVoxelId();
         final int _voxelReplaceMaterialId = v.getReplaceId();
-        final int[][][] _oldmats = new int[2 * (_brushSize + 1) + 1][2 * (_brushSize + 1) + 1][2 * (_brushSize + 1) + 1]; // Array that holds the original materials plus a
-                                                                                                          // buffer
+        final int[][][] _oldmats = new int[2 * (_brushSize + 1) + 1][2 * (_brushSize + 1) + 1][2 * (_brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
         final int[][][] _newmats = new int[2 * _brushSize + 1][2 * _brushSize + 1][2 * _brushSize + 1]; // Array that holds the hollowed materials
 
         // Log current materials into oldmats
@@ -36,9 +36,9 @@ public class ShellVoxel extends Brush {
         }
 
         // Log current materials into newmats
-        for (int _x = 0; _x <= 2 * _brushSize; _x++) {
-            for (int _y = 0; _y <= 2 * _brushSize; _y++) {
-                for (int _z = 0; _z <= 2 * _brushSize; _z++) {
+        for (int _x = 0; _x <= _twoBrushSize; _x++) {
+            for (int _y = 0; _y <= _twoBrushSize; _y++) {
+                for (int _z = 0; _z <= _twoBrushSize; _z++) {
                     _newmats[_x][_y][_z] = _oldmats[_x + 1][_y + 1][_z + 1];
                 }
             }
@@ -46,9 +46,9 @@ public class ShellVoxel extends Brush {
         int _temp;
 
         // Hollow Brush Area
-        for (int _x = 0; _x <= 2 * _brushSize; _x++) {
-            for (int _y = 0; _y <= 2 * _brushSize; _y++) {
-                for (int z = 0; z <= 2 * _brushSize; z++) {
+        for (int _x = 0; _x <= _twoBrushSize; _x++) {
+            for (int _y = 0; _y <= _twoBrushSize; _y++) {
+                for (int z = 0; z <= _twoBrushSize; z++) {
                     _temp = 0;
 
                     if (_oldmats[_x + 1 + 1][_y + 1][z + 1] == _voxelReplaceMaterialId) {
@@ -80,9 +80,9 @@ public class ShellVoxel extends Brush {
         // Make the changes
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _x = 2 * _brushSize; _x >= 0; _x--) {
-            for (int _y = 0; _y <= 2 * _brushSize; _y++) {
-                for (int _z = 2 * _brushSize; _z >= 0; _z--) {
+        for (int _x = _twoBrushSize; _x >= 0; _x--) {
+            for (int _y = 0; _y <= _twoBrushSize; _y++) {
+                for (int _z = _twoBrushSize; _z >= 0; _z--) {
 
                     if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z) != _newmats[_x][_y][_z]) {
                         _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z));

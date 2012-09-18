@@ -21,15 +21,15 @@ public class CleanSnowBrush extends Brush {
 
     public final void cleanSnow(final SnipeData v) {
         final int _bSize = v.getBrushSize();
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
-        double _yPow = 0;
-        double _xPow = 0;
-        
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+
         for (int _y = (_bSize + 1) * 2; _y >= 0; _y--) {
-            _yPow = Math.pow(_y - _bSize, 2);
+            final double _yPow = Math.pow(_y - _bSize, 2);
+            
             for (int _x = (_bSize + 1) * 2; _x >= 0; _x--) {
-                _xPow = Math.pow(_x - _bSize, 2);
+            	final double _xPow = Math.pow(_x - _bSize, 2);
+            	
                 for (int _z = (_bSize + 1) * 2; _z >= 0; _z--) {
                     if ((_xPow + Math.pow(_z - _bSize, 2) + _yPow) <= _bPow) {
                         if ((this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize).getType() == Material.SNOW)
@@ -64,20 +64,20 @@ public class CleanSnowBrush extends Brush {
     }
     
     @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Clean Snow Brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA
-    				+ "/b cls true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b cls false will switch back. (false is default)");
-    		return;
-    	}
-    	
+    public final void parameters(final String[] par, final SnipeData v) {    	
     	for (int _i = 1; _i < par.length; _i++) {
-    		if (par[_i].startsWith("true")) {
-    			this.trueCircle = 0.5;
+    		final String _param = par[_i];
+    		
+    		if (_param.equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Clean Snow Brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA
+    					+ "/b cls true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b cls false will switch back. (false is default)");
+    			return;
+			} else if (_param.startsWith("true")) {
+				this.trueCircle = 0.5;
     			v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
     			continue;
-    		} else if (par[_i].startsWith("false")) {
+    		} else if (_param.startsWith("false")) {
     			this.trueCircle = 0;
     			v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
     			continue;

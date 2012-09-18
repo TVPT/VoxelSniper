@@ -13,6 +13,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 public class WarpInStyle extends Brush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public WarpInStyle() {
         this.setName("Warp Like a Boss");
     }

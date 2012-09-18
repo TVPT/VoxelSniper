@@ -11,8 +11,8 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Kavutop
  */
 public class CylinderBrush extends PerformBrush {
+	private static int timesUsed = 0;
     private double trueCircle = 0;
-    private static int timesUsed = 0;
 
     public CylinderBrush() {
         this.setName("Cylinder");
@@ -20,39 +20,39 @@ public class CylinderBrush extends PerformBrush {
 
     private final void cylinder(final SnipeData v) {
     	final int _bSize = v.getBrushSize();
-    	final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
     	int _starringY = this.getBlockPositionY() + v.getcCen();
     	int _endTopY = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
-    	double _xPow = 0;
     	
         if (_endTopY < _starringY) {
             _endTopY = _starringY;
         }
         if (_starringY < 0) {
             _starringY = 0;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-        } else if (_starringY > 127) {
-            _starringY = 127;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+		} else if (_starringY > this.getWorld().getMaxHeight() - 1) {
+			_starringY = this.getWorld().getMaxHeight() - 1;
+			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+		}
+		if (_endTopY < 0) {
+			_endTopY = 0;
+			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+		} else if (_endTopY > this.getWorld().getMaxHeight() - 1) {
+			_endTopY = this.getWorld().getMaxHeight() - 1;
+			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
-        if (_endTopY < 0) {
-            _endTopY = 0;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-        } else if (_endTopY > 127) {
-            _endTopY = 127;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-        }
+
+        final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
 
         for (int _z = _endTopY; _z >= _starringY; _z--) {
             for (int _x = _bSize; _x >= 0; _x--) {
-                _xPow = Math.pow(_x, 2);
+                final double _xPow = Math.pow(_x, 2);
                 
                 for (int _y = _bSize; _y >= 0; _y--) {
                     if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, _endTopY, this.getBlockPositionZ() + _y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, _endTopY, this.getBlockPositionZ() - _y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, _endTopY, this.getBlockPositionZ() + _y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, _endTopY, this.getBlockPositionZ() - _y));
                     }
                 }
             }
@@ -83,30 +83,32 @@ public class CylinderBrush extends PerformBrush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
-    		v.sendMessage(ChatColor.DARK_AQUA
-    				+ "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-    		v.sendMessage(ChatColor.DARK_BLUE
-    				+ "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
-    		return;
-    	}
-    	for (int x = 1; x < par.length; x++) {
-    		if (par[x].startsWith("true")) {
+    	for (int _i = 1; _i < par.length; _i++) {
+    		final String _param = par[_i];
+    		
+    		if (_param.equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
+    			v.sendMessage(ChatColor.DARK_AQUA
+    					+ "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+    			v.sendMessage(ChatColor.DARK_BLUE
+    					+ "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
+    			return;
+    		}
+    		if (_param.startsWith("true")) {
     			this.trueCircle = 0.5;
     			v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
     			continue;
-    		} else if (par[x].startsWith("false")) {
+    		} else if (_param.startsWith("false")) {
     			this.trueCircle = 0;
     			v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
     			continue;
-    		} else if (par[x].startsWith("h")) {
-    			v.setVoxelHeight((int) Double.parseDouble(par[x].replace("h", "")));
+    		} else if (_param.startsWith("h")) {
+    			v.setVoxelHeight((int) Double.parseDouble(_param.replace("h", "")));
     			v.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + v.getVoxelHeight());
     			continue;
-    		} else if (par[x].startsWith("c")) {
-    			v.setcCen((int) Double.parseDouble(par[x].replace("c", "")));
+    		} else if (_param.startsWith("c")) {
+    			v.setcCen((int) Double.parseDouble(_param.replace("c", "")));
     			v.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + v.getcCen());
     			continue;
     		} else {

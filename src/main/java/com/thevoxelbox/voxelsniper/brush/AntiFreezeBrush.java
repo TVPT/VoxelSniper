@@ -24,17 +24,15 @@ public class AntiFreezeBrush extends Brush {
 
     private final void antiFreeze(final SnipeData v, final int invisibleOverlayMaterialId) {
         final int _bSize = v.getBrushSize();
-        final double _bPow = Math.pow(_bSize + 0.5, 2);
-        double _xPow = 0;
-        double _zPow = 0;
         
         for (int _x = _bSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
             
             for (int _z = _bSize; _z >= 0; _z--) {
-                _zPow = Math.pow(_z, 2);
+                final double _zPow = Math.pow(_z, 2);
+                final double _bPow = Math.pow(_bSize + 0.5, 2);
 
-				if (_xPow + _zPow <= _bPow) {
+                if (_xPow + _zPow <= _bPow) {
 					for (int _y = 1; _y < v.getWorld().getMaxHeight(); _y++) {
 						if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z) == Material.ICE.getId()
 								&& this.getBlockIdAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z) == Material.AIR.getId()) {

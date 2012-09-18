@@ -46,11 +46,12 @@ public class BlockResetBrush extends Brush {
     	for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
     		for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++) {
     			for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++) {
-    				final Block _block = this.getWorld().getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
+    				final Block _block = this.getWorld().getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);    				
     				if (BlockResetBrush.DENIED_UPDATES.contains(_block.getType())) {
     					continue;
     				}
-    				final byte _oldData = _block.getData();
+    				
+    				final byte _oldData = _block.getData();    				
     				_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     				_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     			}

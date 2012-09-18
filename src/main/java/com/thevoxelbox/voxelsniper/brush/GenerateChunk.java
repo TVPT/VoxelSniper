@@ -18,12 +18,11 @@ public class GenerateChunk extends Brush {
     }
 
     private final void generateChunk(final SnipeData v) {
-    	Chunk _chunk = this.getTargetBlock().getChunk();
-
+    	final Chunk _chunk = this.getTargetBlock().getChunk();
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _z = 16; _z >= 0; _z--) {
-            for (int _x = 16; _x >= 0; _x--) {
+        for (int _z = CHUNK_SIZE; _z >= 0; _z--) {
+            for (int _x = CHUNK_SIZE; _x >= 0; _x--) {
                 for (int _y = this.getWorld().getMaxHeight(); _y >= 0; _y--) {
                     _undo.put(_chunk.getBlock(_x, _y, _z));
                 }
@@ -43,7 +42,7 @@ public class GenerateChunk extends Brush {
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.arrow(v);
+    	this.generateChunk(v);
     }
     
     @Override

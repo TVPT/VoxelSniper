@@ -13,9 +13,9 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No worldEdit rotates properly, although it still doesn't flip -Deamon
+	private static int timesUsed = 0;
     private Block block = null;
     private Undo undo;
-    private static int timesUsed = 0;
 
     public SetRedstoneRotate() {
         this.setName("Set Redstone Rotate");
@@ -26,13 +26,14 @@ public class SetRedstoneRotate extends Brush { // Is this used anymore? -psa No 
             this.block = bl;
             return true;
         } else {
-            this.undo = new Undo(this.block.getWorld().getName());
+            this.undo = new Undo(this.block.getWorld().getName());            
             final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
             final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
             final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
             final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
             final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
             final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            
             for (int _y = _lowy; _y <= _highy; _y++) {
                 for (int _x = _lowx; _x <= _highx; _x++) {
                     for (int _z = _lowz; _z <= _highz; _z++) {

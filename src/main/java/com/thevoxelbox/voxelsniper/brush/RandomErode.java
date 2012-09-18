@@ -147,6 +147,7 @@ public class RandomErode extends Brush {
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
             int _sy = this.getBlockPositionY() - (this.bsize + 1);
             int _sz = this.getBlockPositionZ() - (this.bsize + 1);
+            
             for (int _x = 0; _x < this.snap.length; _x++) {
                 _sz = this.getBlockPositionZ() - _choosUsefulNamesForYourFuckingVariables;
                 for (int _z = 0; _z < this.snap.length; _z++) {
@@ -167,6 +168,7 @@ public class RandomErode extends Brush {
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
             int _sy = this.getBlockPositionY() - (this.bsize + 1);
             int _sz = this.getBlockPositionZ() - (this.bsize + 1);
+            
             for (int _x = 0; _x < this.snap.length; _x++) {
                 _sz = this.getBlockPositionZ() - _choosUsefulNamesForYourFuckingVariables;
                 for (int _z = 0; _z < this.snap.length; _z++) {
@@ -191,16 +193,16 @@ public class RandomErode extends Brush {
 
                 final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
 
-                final double _bpow = Math.pow(this.bsize + this.trueCircle, 2);
+                final double _bPow = Math.pow(this.bsize + this.trueCircle, 2);
                 for (int _z = 1; _z < this.snap.length - 1; _z++) {
 
-                    final double _zpow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
+                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
                     for (int _x = 1; _x < this.snap.length - 1; _x++) {
 
-                        final double _xpow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
+                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
                         for (int _y = 1; _y < this.snap.length - 1; _y++) {
 
-                            if (((_xpow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zpow) <= _bpow)) {
+                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bPow)) {
                                 if (this.erode(_x, _y, _z)) {
                                     this.snap[_x][_y][_z].b.setTypeId(0);
                                 }
@@ -211,21 +213,21 @@ public class RandomErode extends Brush {
             }
         }
         if (this.fillFace >= 0 && this.fillFace <= 6) {
+        	final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
+        	final double _bPow = Math.pow(this.bsize + 0.5, 2);
+        	
             for (int _fr = 0; _fr < this.fillRecursion; _fr++) {
                 this.getMatrix();
 
-                final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
-
-                final double _bpow = Math.pow(this.bsize + 0.5, 2);
                 for (int _z = 1; _z < this.snap.length - 1; _z++) {
 
-                    final double _zpow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
+                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
                     for (int _x = 1; _x < this.snap.length - 1; _x++) {
 
-                        final double _xpow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
+                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
                         for (int _y = 1; _y < this.snap.length - 1; _y++) {
 
-                            if (((_xpow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zpow) <= _bpow)) {
+                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bPow)) {
                                 if (this.fill(_x, _y, _z)) {
                                     this.snap[_x][_y][_z].b.setTypeId(this.snap[_x][_y][_z].id);
                                 }
@@ -254,21 +256,21 @@ public class RandomErode extends Brush {
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.fillFace >= 0 && this.fillFace <= 6) {
-            for (int _fr = 0; _fr < this.fillRecursion; _fr++) {
+        	final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
+        	final double _bpow = Math.pow(this.bsize + 0.5, 2);
+
+        	for (int _fr = 0; _fr < this.fillRecursion; _fr++) {
                 this.getMatrix();
 
-                final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
-
-                final double _bpow = Math.pow(this.bsize + 0.5, 2);
                 for (int _z = 1; _z < this.snap.length - 1; _z++) {
 
-                    final double _zpow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
+                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
                     for (int _x = 1; _x < this.snap.length - 1; _x++) {
 
-                        final double _xpow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
+                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
                         for (int _y = 1; _y < this.snap.length - 1; _y++) {
 
-                            if (((_xpow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zpow) <= _bpow)) {
+                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bpow)) {
                                 if (this.fill(_x, _y, _z)) {
                                     this.snap[_x][_y][_z].b.setTypeId(this.snap[_x][_y][_z].id);
                                 }
@@ -279,21 +281,21 @@ public class RandomErode extends Brush {
             }
         }
         if (this.erodeFace >= 0 && this.erodeFace <= 6) {
-            for (int _er = 0; _er < this.erodeRecursion; _er++) {
+        	final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
+        	final double _bpow = Math.pow(this.bsize + this.trueCircle, 2);
+
+        	for (int _er = 0; _er < this.erodeRecursion; _er++) {
                 this.getMatrix();
 
-                final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
-
-                final double _bpow = Math.pow(this.bsize + this.trueCircle, 2);
                 for (int _z = 1; _z < this.snap.length - 1; _z++) {
 
-                    final double _zpow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
+                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
                     for (int _x = 1; _x < this.snap.length - 1; _x++) {
 
-                        final double _xpow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
+                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
                         for (int _y = 1; _y < this.snap.length - 1; _y++) {
 
-                            if (((_xpow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zpow) <= _bpow)) {
+                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bpow)) {
                                 if (this.erode(_x, _y, _z)) {
                                     this.snap[_x][_y][_z].b.setTypeId(0);
                                 }

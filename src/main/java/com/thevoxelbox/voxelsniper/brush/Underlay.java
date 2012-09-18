@@ -12,10 +12,15 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  */
 
 public class Underlay extends PerformBrush {
-    private int depth = 3;
+	private static final int DEFAULT_DEPTH = 3;
+	
+	private static int timesUsed = 0;
+    private int depth = DEFAULT_DEPTH;
     private boolean allBlocks = false;
-    private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public Underlay() {
         this.setName("Underlay (Reverse Overlay)");
     }
@@ -147,16 +152,16 @@ public class Underlay extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.owner().getPlayer().sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
-            v.owner().getPlayer().sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
-            v.owner().getPlayer().sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
-            if (this.depth < 1) {
-                this.depth = 1;
-            }
-            return;
-        }
         for (int _i = 1; _i < par.length; _i++) {
+        	if (par[_i].equalsIgnoreCase("info")) {
+        		v.owner().getPlayer().sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
+        		v.owner().getPlayer().sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
+        		v.owner().getPlayer().sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
+        		if (this.depth < 1) {
+        			this.depth = 1;
+        		}
+        		return;
+        	}
             if (par[_i].startsWith("d")) {
                 this.depth = Integer.parseInt(par[_i].replace("d", ""));
                 v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);

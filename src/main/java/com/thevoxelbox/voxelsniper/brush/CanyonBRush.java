@@ -14,70 +14,51 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class CanyonBrush extends Brush {
-	protected static final int CHUNK_SIZE = 16;
+	private static final int SHIFT_LEVEL_MIN = 10;
+	private static final int SHIFT_LEVEL_MAX = 60;
 	
+	private static int timesUsed = 0;	
     protected int yLevel = 10;
-    protected Undo undo;
 
-    private static int timesUsed = 0;
-
+    /**
+     * 
+     */
     public CanyonBrush() {
         this.setName("Canyon");
     }
 
-    private void canyon(final Chunk chunk, final SnipeData v) {
-    	final Undo _undo = new Undo(chunk.getWorld().getName());
-        int _yy = 0;
-
+    /**
+     * 
+     * @param chunk
+     * @param undo
+     */
+    protected void canyon(final Chunk chunk, final Undo undo) {
 
         for (int _x = 0; _x < CHUNK_SIZE; _x++) {
             for (int _z = 0; _z < CHUNK_SIZE; _z++) {
-                _yy = this.yLevel;
+                int _yy = this.yLevel;
+                
                 for (int _y = 63; _y < this.getWorld().getMaxHeight(); _y++) {
                     final Block _b = chunk.getBlock(_x, _y, _z);
                     final Block _bb = chunk.getBlock(_x, _yy, _z);
-                    _undo.put(_b);
-                    _undo.put(_bb);
+                    
+                    undo.put(_b);
+                    undo.put(_bb);
+                    
                     _bb.setTypeId(_b.getTypeId(), false);
-                    _b.setTypeId(0);
+                    _b.setType(Material.AIR);
+                    
                     _yy++;
                 }
+                
                 final Block _b = chunk.getBlock(_x, 0, _z);
-                _undo.put(_b);
+                undo.put(_b);                
                 _b.setTypeId(Material.BEDROCK.getId());
+                
                 for (int _y = 1; _y < 10; _y++) {
                     final Block _bb = chunk.getBlock(_x, _y, _z);
-                    _undo.put(_bb);
-                    _bb.setTypeId(1);
-                }
-            }
-        }
-
-        v.storeUndo(_undo);
-    }
-
-    protected final void multiCanyon(final Chunk c, final SnipeData v) {
-        int _yy = 0;
-
-        for (int _x = 0; _x < CHUNK_SIZE; _x++) {
-            for (int _z = 0; _z < CHUNK_SIZE; _z++) {
-                _yy = this.yLevel;
-                for (int _y = 63; _y < this.getWorld().getMaxHeight(); _y++) {
-                    final Block _b = c.getBlock(_x, _y, _z);
-                    this.undo.put(_b);
-                    final Block _bb = c.getBlock(_x, _yy, _z);
-                    this.undo.put(_bb);
-                    _bb.setTypeId(_b.getTypeId(), false);
-                    _b.setTypeId(0);
-                    _yy++;
-                }
-                final Block _b = c.getBlock(_x, 0, _z);
-                this.undo.put(_b);
-                _b.setTypeId(7);
-                for (int _y = 1; _y < 10; _y++) {
-                    final Block _bb = c.getBlock(_x, _y, _z);
-                    this.undo.put(_bb);
-                    _bb.setTypeId(1);
+                    undo.put(_bb);
+                    _bb.setType(Material.STONE);
                 }
             }
         }
@@ -85,24 +66,26 @@ public class CanyonBrush extends Brush {
     
     @Override
     protected void arrow(final SnipeData v) {    	
-    	this.canyon(this.getWorld().getChunkAt(this.getTargetBlock()), v);
+    	final Undo _undo = new Undo(this.getWorld().getName());
+    	this.canyon(this.getWorld().getChunkAt(this.getTargetBlock()), _undo);
+    	v.storeUndo(_undo);
     }
 
     @Override
     protected void powder(final SnipeData v) {
-        this.undo = new Undo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
+    	final Undo _undo = new Undo(this.getWorld().getName());
 
-        this.multiCanyon(this.getWorld().getChunkAt(this.getTargetBlock()), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ())), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() + CHUNK_SIZE)), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ())), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() - CHUNK_SIZE)), v);
-        this.multiCanyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)), v);
+        this.canyon(this.getWorld().getChunkAt(this.getTargetBlock()), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ())), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() + CHUNK_SIZE)), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ())), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() - CHUNK_SIZE)), _undo);
+        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)), _undo);
 
-        v.storeUndo(this.undo);
+        v.storeUndo(_undo);
     }
     
     @Override
@@ -118,10 +101,10 @@ public class CanyonBrush extends Brush {
     	}
     	if (par[1].startsWith("y")) {
     		int _i = Integer.parseInt(par[1].replace("y", ""));
-    		if (_i < 10) {
-    			_i = 10;
-    		} else if (_i > 60) {
-    			_i = 60;
+    		if (_i < SHIFT_LEVEL_MIN) {
+    			_i = SHIFT_LEVEL_MIN;
+    		} else if (_i > SHIFT_LEVEL_MAX) {
+    			_i = SHIFT_LEVEL_MAX;
     		}
     		this.yLevel = _i;
     		v.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);

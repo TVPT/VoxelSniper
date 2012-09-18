@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
@@ -24,11 +23,8 @@ public class BlendDiscBrush extends BlendBrushBase {
     protected final void blend(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _bSize;
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        final double _rPow = Math.pow(_bSize + 1, 2);
         final int[][] _oldMats = new int[2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1]; // Array that holds the original materials plus a buffer
         final int[][] _newMats = new int[_twoBrushSize + 1][_twoBrushSize + 1]; // Array that holds the blended materials
-        double _xPow = 0;
         
         // Log current materials into oldmats
         for (int _x = 0; _x <= 2 * (_bSize + 1); _x++) {
@@ -82,10 +78,13 @@ public class BlendDiscBrush extends BlendBrushBase {
                 }
             }
         }
+        
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final double _rPow = Math.pow(_bSize + 1, 2);
 
         // Make the changes
         for (int _x = _twoBrushSize; _x >= 0; _x--) {        	
-            _xPow = Math.pow(_x - _bSize - 1, 2);
+            final double _xPow = Math.pow(_x - _bSize - 1, 2);
             
             for (int _z = _twoBrushSize; _z >= 0; _z--) {
                 if (_xPow + Math.pow(_z - _bSize - 1, 2) <= _rPow) {

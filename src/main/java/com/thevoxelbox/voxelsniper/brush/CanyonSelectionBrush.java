@@ -22,52 +22,47 @@ public class CanyonSelectionBrush extends CanyonBrush {
         this.setName("Canyon Selection");
     }
 
+    private void execute(final SnipeData v) {
+    	final Chunk _c = this.getWorld().getChunkAt(this.getTargetBlock());
+    	
+    	if (this.first) {
+    		this.fx = _c.getX();
+    		this.fz = _c.getZ();
+    		
+    		v.sendMessage(ChatColor.YELLOW + "First point selected!");
+    		this.first = !this.first;
+    	} else {            
+    		this.setBlockPositionX(_c.getX());
+    		this.setBlockPositionZ(_c.getZ());
+    		
+    		v.sendMessage(ChatColor.YELLOW + "Second point selected!");
+    		this.selection(this.fx < this.getBlockPositionX() ? this.fx : this.getBlockPositionX(), this.fz < this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), this.fx > this.getBlockPositionX() ? this.fx : this.getBlockPositionX(),
+    				this.fz > this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), v);
+    		
+    		this.first = !this.first;
+    	}    	
+    }
+    
     private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final SnipeData v) {
-        this.undo = new Undo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
+        final Undo _undo = new Undo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
 
         for (int _x = lowX; _x <= highX; _x++) {
             for (int _z = lowZ; _z <= highZ; _z++) {
-                this.multiCanyon(this.getWorld().getChunkAt(_x, _z), v);
+                this.canyon(this.getWorld().getChunkAt(_x, _z), _undo);
             }
         }
 
-        v.storeUndo(this.undo);
+        v.storeUndo(_undo);
     }
 
     @Override
     protected final void arrow(final SnipeData v) {
-    	final Chunk _c = this.getWorld().getChunkAt(this.getTargetBlock());
-        if (this.first) {
-            this.fx = _c.getX();
-            this.fz = _c.getZ();
-            v.sendMessage(ChatColor.YELLOW + "First point selected!");
-            this.first = !this.first;
-        } else {            
-            this.setBlockPositionX(_c.getX());
-            this.setBlockPositionZ(_c.getZ());
-            v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-            this.selection(this.fx < this.getBlockPositionX() ? this.fx : this.getBlockPositionX(), this.fz < this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), this.fx > this.getBlockPositionX() ? this.fx : this.getBlockPositionX(),
-                    this.fz > this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), v);
-            this.first = !this.first;
-        }
+    	execute(v);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-    	final Chunk _c = this.getWorld().getChunkAt(this.getTargetBlock());
-        if (this.first) {
-            this.fx = _c.getX();
-            this.fz = _c.getZ();
-            v.sendMessage(ChatColor.YELLOW + "First point selected!");
-            this.first = !this.first;
-        } else {            
-            this.setBlockPositionX(_c.getX());
-            this.setBlockPositionZ(_c.getZ());
-            v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-            this.selection(this.fx < this.getBlockPositionX() ? this.fx : this.getBlockPositionX(), this.fz < this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), this.fx > this.getBlockPositionX() ? this.fx : this.getBlockPositionX(),
-                    this.fz > this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), v);
-            this.first = !this.first;
-        }
+    	execute(v);
     }
 
     @Override

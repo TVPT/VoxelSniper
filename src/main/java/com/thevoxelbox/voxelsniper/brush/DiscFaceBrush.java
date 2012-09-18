@@ -20,15 +20,14 @@ public class DiscFaceBrush extends PerformBrush {
     }
 
     private final void discUD(final SnipeData v) {
-        final int _brushSize = v.getBrushSize();
-        double _xpow = 0;
+        final int _brushSize = v.getBrushSize();        
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xpow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
             
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
                     this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
@@ -42,13 +41,12 @@ public class DiscFaceBrush extends PerformBrush {
 
     private final void discEW(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-        double _xpow = 0;
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
 
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xpow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ()));
                     this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ()));
                     this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ()));
@@ -62,13 +60,12 @@ public class DiscFaceBrush extends PerformBrush {
 
     private final void discNS(final SnipeData v) {
     	final int _brushSize = v.getBrushSize();
-        double _xpow = 0;
+    	final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
 
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xpow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
             for (int _y = _brushSize; _y >= 0; _y--) {
-                if ((_xpow + Math.pow(_y, 2)) <= _bpow) {
+                if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y));
                     this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y));
                     this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y));
@@ -126,18 +123,20 @@ public class DiscFaceBrush extends PerformBrush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA
-    				+ "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-    		return;
-    	}
-    	for (int _x = 1; _x < par.length; _x++) {
-    		if (par[_x].startsWith("true")) {
+    	for (int _i = 1; _i < par.length; _i++) {
+    		final String _param = par[_i];
+    		
+    		if (_param.equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA
+    					+ "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+    			return;
+    		}
+    		if (_param.startsWith("true")) {
     			this.trueCircle = 0.5;
     			v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
     			continue;
-    		} else if (par[_x].startsWith("false")) {
+    		} else if (_param.startsWith("false")) {
     			this.trueCircle = 0;
     			v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
     			continue;

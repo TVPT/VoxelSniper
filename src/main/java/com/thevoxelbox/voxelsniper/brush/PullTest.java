@@ -11,8 +11,8 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  * @author Piotr
  */
 public class PullTest extends SoftSelection {
+	private static int timesUsed = 0;
     private int vh;
-    private static int timesUsed = 0;
 
     public PullTest() {
         this.setName("Soft Selection");

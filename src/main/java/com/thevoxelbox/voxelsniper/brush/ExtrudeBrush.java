@@ -13,12 +13,10 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author psanker
  */
 public class ExtrudeBrush extends Brush {
-
-    int level;
-    double trueCircle;
-    boolean awto;
-
-    private static int timesUsed = 0;
+	private static int timesUsed = 0;
+    private int level;
+    private double trueCircle;
+    private boolean awto;
 
     public ExtrudeBrush() {
         this.setName("Extrude");
@@ -28,10 +26,10 @@ public class ExtrudeBrush extends Brush {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        double _xPow = 0;
 
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
+            
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
@@ -60,10 +58,10 @@ public class ExtrudeBrush extends Brush {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        double _xPow = 0;
         
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
+            
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
@@ -92,10 +90,10 @@ public class ExtrudeBrush extends Brush {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        double _xPow = 0;
         
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x, 2);
+        	final double _xPow = Math.pow(_x, 2);
+        	
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
@@ -124,10 +122,10 @@ public class ExtrudeBrush extends Brush {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        double _xPow = 0;
         
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x, 2);
+        	final double _xPow = Math.pow(_x, 2);
+        	
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
@@ -156,10 +154,10 @@ public class ExtrudeBrush extends Brush {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        double _xPow = 0;
         
         for (int _x = _brushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x, 2);
+        	final double _xPow = Math.pow(_x, 2);
+        	
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
@@ -191,6 +189,7 @@ public class ExtrudeBrush extends Brush {
 
         for (int _x = _brushSize; _x >= 0; _x--) {
             final double _xpow = Math.pow(_x, 2);
+            
             for (int _y = _brushSize; _y >= 0; _y--) {
                 if ((_xpow + Math.pow(_y, 2)) <= _bPow) {
                     if (this.awto) {
@@ -236,11 +235,11 @@ public class ExtrudeBrush extends Brush {
             return;
         } else if (!this.awto) {
             if (this.level > 0) {
-                this.level = -1 * this.level;
+                this.level = -this.level;
             }
         } else if (this.awto) {
             if (this.level < 0) {
-                this.level = -1 * this.level;
+                this.level = -this.level;
             }
         }
 
@@ -294,29 +293,25 @@ public class ExtrudeBrush extends Brush {
         vm.height();
         vm.voxelList();
         
-        if (this.trueCircle == 0.5) {
-            vm.custom(ChatColor.AQUA + "True circle mode ON.");
-        } else {
-            vm.custom(ChatColor.AQUA + "True circle mode OFF.");
-        }
+        vm.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
-            v.sendMessage(ChatColor.AQUA
-                    + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
-            return;
-        }
-
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {        
         for (int _i = 1; _i < par.length; _i++) {
+        	final String _param = par[_i];
+        	
             try {
-                if (par[_i].startsWith("true")) {
+            	if (_param.equalsIgnoreCase("info")) {
+                    v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
+                    v.sendMessage(ChatColor.AQUA
+                            + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
+                    return;
+                } else if (_param.startsWith("true")) {
                     this.trueCircle = 0.5;
                     v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                     continue;
-                } else if (par[_i].startsWith("false")) {
+                } else if (_param.startsWith("false")) {
                     this.trueCircle = 0;
                     v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                     continue;
@@ -325,7 +320,7 @@ public class ExtrudeBrush extends Brush {
                     return;
                 }
             } catch (final Exception e) {
-                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + par[_i] + "\"; use the \"info\" parameter.");
+                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + _param + "\"; use the \"info\" parameter.");
             }
         }
     }    

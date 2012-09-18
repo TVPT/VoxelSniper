@@ -11,10 +11,8 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class OceanSelection extends Ocean {
-
+	private static int timesUsed = 0;
     private boolean sel = true;
-
-    private static int timesUsed = 0;
 
     public OceanSelection() {
         this.setName("Ocean Selection");
@@ -22,9 +20,9 @@ public class OceanSelection extends Ocean {
 
     private void oceanate(final SnipeData v, final int lowx, final int highx, final int lowz, final int highz) {
         this.undo = new Undo(this.getTargetBlock().getWorld().getName());
-        for (int _x = lowx; _x <= highx; _x += 16) {
+        for (int _x = lowx; _x <= highx; _x += CHUNK_SIZE) {
             this.setTargetBlock(this.setX(this.getTargetBlock(), _x));
-            for (int _z = lowz; _z <= highz; _z += 16) {
+            for (int _z = lowz; _z <= highz; _z += CHUNK_SIZE) {
                 this.setTargetBlock(this.setZ(this.getTargetBlock(), _z));
                 this.oceanator(v);
             }
@@ -37,19 +35,25 @@ public class OceanSelection extends Ocean {
             this.undo = new Undo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
             v.storeUndo(this.undo);
+            
             this.s1x = this.getTargetBlock().getX();
             this.s1z = this.getTargetBlock().getZ();
+            
             v.sendMessage(ChatColor.DARK_PURPLE + "Chunk one selected");
             this.sel = !this.sel;
         } else {
-            v.sendMessage(ChatColor.DARK_PURPLE + "Chunk two selected");
+        	v.sendMessage(ChatColor.DARK_PURPLE + "Chunk two selected");
+            
             this.undo = new Undo(this.getTargetBlock().getWorld().getName());
             this.oceanator(v);
             v.storeUndo(this.undo);
+            
             this.s2x = this.getTargetBlock().getX();
             this.s2z = this.getTargetBlock().getZ();
+            
             this.oceanate(v, ((this.s1x <= this.s2x) ? this.s1x : this.s2x), ((this.s2x >= this.s1x) ? this.s2x : this.s1x), ((this.s1z <= this.s2z) ? this.s1z
                     : this.s2z), ((this.s2z >= this.s1z) ? this.s2z : this.s1z));
+            
             this.sel = !this.sel;
         }
     }

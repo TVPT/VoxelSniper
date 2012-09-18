@@ -56,23 +56,22 @@ public class BlockResetSurfaceBrush extends Brush {
     }
     
     private final void applyBrush(final SnipeData v) {
-    	Block _block = null;
-    	World _world = this.getWorld();
-    	byte _oldData = 0;
-    	boolean airFound = false;
+    	final World _world = this.getWorld();
     	
     	for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
     		for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++) {
     			for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++) {
     				
-    				_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
+    				Block _block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
     				if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(_block.getType())) {
     					continue;
     				}
+
+    				boolean airFound = false;
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x + 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x + 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-    					_oldData = _block.getData();
+    					final byte _oldData = _block.getData();
     					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     					airFound = true;
@@ -80,7 +79,7 @@ public class BlockResetSurfaceBrush extends Brush {
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x - 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x - 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-    					_oldData = _block.getData();
+    					final byte _oldData = _block.getData();
     					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     					airFound = true;
@@ -88,7 +87,7 @@ public class BlockResetSurfaceBrush extends Brush {
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y + 1, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y + 1, this.getBlockPositionZ() + _z);
-    					_oldData = _block.getData();
+    					final byte _oldData = _block.getData();
     					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     					airFound = true;
@@ -96,7 +95,7 @@ public class BlockResetSurfaceBrush extends Brush {
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z);
-    					_oldData = _block.getData();
+    					final byte _oldData = _block.getData();
     					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     					airFound = true;
@@ -104,7 +103,7 @@ public class BlockResetSurfaceBrush extends Brush {
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z + 1).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z + 1);
-    					_oldData = _block.getData();
+    					final byte _oldData = _block.getData();
     					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     					airFound = true;
@@ -112,7 +111,7 @@ public class BlockResetSurfaceBrush extends Brush {
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z - 1).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z - 1);
-    					_oldData = _block.getData();
+    					final byte _oldData = _block.getData();
     					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     					airFound = true;
@@ -120,7 +119,7 @@ public class BlockResetSurfaceBrush extends Brush {
     				
     				if (airFound) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-    					_oldData = _block.getData();
+    					final byte _oldData = _block.getData();
     					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
     					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
     				}

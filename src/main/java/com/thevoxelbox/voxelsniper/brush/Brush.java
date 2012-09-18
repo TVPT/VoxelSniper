@@ -19,6 +19,7 @@ import com.thevoxelbox.voxelsniper.util.BlockWrapper;
  * @author Piotr
  */
 public abstract class Brush implements IBrush {
+	protected static final int CHUNK_SIZE = 16;
 
     /**
      * Reference to the world the current action is being executed.

@@ -12,8 +12,8 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author giltwist
  */
 public class CopyPastaBrush extends Brush {
-	private static final int BLOCK_LIMIT = 10000;
 	private static int timesUsed = 0;
+	private static final int BLOCK_LIMIT = 10000;
 
     private boolean pasteAir = true; // False = no air, true = air
     private int points = 0; //
@@ -38,7 +38,9 @@ public class CopyPastaBrush extends Brush {
             this.minPoint[_i] = Math.min(this.firstPoint[_i], this.secondPoint[_i]);
             this.offsetPoint[_i] = this.minPoint[_i] - this.firstPoint[_i]; // will always be negative or zero
         }
+        
         this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
+        
         if (this.numBlocks > 0 && this.numBlocks < CopyPastaBrush.BLOCK_LIMIT) {
             this.blockArray = new int[this.numBlocks];
             this.dataArray = new byte[this.numBlocks];
@@ -60,14 +62,14 @@ public class CopyPastaBrush extends Brush {
     }
 
     private final void doPasta(final SnipeData v) {
-        this.setWorld(v.owner().getPlayer().getWorld());
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        Block _b;
+    	final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         for (int _i = 0; _i < this.arraySize[0]; _i++) {
             for (int _j = 0; _j < this.arraySize[1]; _j++) {
                 for (int _k = 0; _k < this.arraySize[2]; _k++) {
                     final int _currentPos = _i + this.arraySize[0] * _j + this.arraySize[0] * this.arraySize[1] * _k;
+                    Block _b = null;
+                    
                     switch (this.pivot) {
                     case 180:
                         _b = this.clampY(this.pastePoint[0] - this.offsetPoint[0] - _i, this.pastePoint[1] + this.offsetPoint[1] + _j, this.pastePoint[2]
@@ -141,7 +143,7 @@ public class CopyPastaBrush extends Brush {
                 this.pastePoint[2] = this.getTargetBlock().getZ();
                 this.doPasta(v);
             } else {
-                v.sendMessage(ChatColor.RED + "C");
+                v.sendMessage(ChatColor.RED + "Error");
             }
         } else {
             v.sendMessage(ChatColor.RED + "You must select exactly two points.");
@@ -157,22 +159,24 @@ public class CopyPastaBrush extends Brush {
     
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
+    	final String _param = par[1];
+    	
+    	if (_param.equalsIgnoreCase("info")) {
     		v.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
     		v.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
     		v.sendMessage(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
     		return;
     	}
     	
-    	if (par[1].equalsIgnoreCase("air")) {
+    	if (_param.equalsIgnoreCase("air")) {
     		this.pasteAir = !this.pasteAir;
     		
     		v.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
     		return;
     	}
     	
-    	if (par[1].equalsIgnoreCase("90") || par[1].equalsIgnoreCase("180") || par[1].equalsIgnoreCase("270") || par[1].equalsIgnoreCase("0")) {
-    		this.pivot = Integer.parseInt(par[1]);
+    	if (_param.equalsIgnoreCase("90") || _param.equalsIgnoreCase("180") || _param.equalsIgnoreCase("270") || _param.equalsIgnoreCase("0")) {
+    		this.pivot = Integer.parseInt(_param);
     		v.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
     	}
     }

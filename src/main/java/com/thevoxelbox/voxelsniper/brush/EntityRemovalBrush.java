@@ -25,9 +25,9 @@ public class EntityRemovalBrush extends Brush {
     }
 
     private final void radialRemoval(final SnipeData v) {
+    	final Chunk _targetChunk = this.getTargetBlock().getChunk();
     	int entityCount = 0;
         int chunkCount = 0;
-        final Chunk _targetChunk = this.getTargetBlock().getChunk();
         
         entityCount += this.removeEntities(_targetChunk);
         

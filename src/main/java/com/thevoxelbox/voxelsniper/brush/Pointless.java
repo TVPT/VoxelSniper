@@ -13,8 +13,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  * @author Mick
  */
 public class Pointless extends Brush {
+	private static int timesUsed = 0;
+	private static HashMap<String, String[]> printouts = new HashMap<String, String[]>();
     private boolean broadcastIt = false;
-    private static HashMap<String, String[]> printouts = new HashMap<String, String[]>();
     private String selection = "voxelbox";
 
     static {
@@ -30,7 +31,6 @@ public class Pointless extends Brush {
     			"§a  \\ V /§b  (_) §6>   <§c  __/ |   |_) | (_)  >   < ", "§a   \\_/ §b\\___/§6_/\\_\\§c__|_|_.__/ \\___/_/\\_\\" });
     }
 
-    private static int timesUsed = 0;
 
     public Pointless() {
         this.setName("Mind-Numbingly Pointless");

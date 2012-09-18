@@ -77,19 +77,19 @@ public class DiscBrush extends PerformBrush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA + "/b d true|false"
-    				+ " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
-    		return;
-    	}
-    	for (int _x = 1; _x < par.length; _x++) {
-    		final String _string = par[_x].toLowerCase();
-    		if (_string.startsWith("true")) {
+    	for (int _i = 1; _i < par.length; _i++) {
+    		final String _param = par[_i].toLowerCase();
+
+    		if (_param.equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA + "/b d true|false"
+    					+ " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
+    			return;
+    		} else if (_param.startsWith("true")) {
     			this.trueCircle = 0.5;
     			v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
     			continue;
-    		} else if (_string.startsWith("false")) {
+    		} else if (_param.startsWith("false")) {
     			this.trueCircle = 0;
     			v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
     			continue;

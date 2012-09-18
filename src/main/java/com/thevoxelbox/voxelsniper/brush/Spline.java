@@ -110,22 +110,22 @@ public class Spline extends PerformBrush {
         this.spline.clear();
 
         try {
-            final Point c = (c1.subtract(start)).multiply(3);
-            final Point b = ((c2.subtract(c1)).multiply(3)).subtract(c);
-            final Point a = ((end.subtract(start)).subtract(c)).subtract(b);
+            final Point _c = (c1.subtract(start)).multiply(3);
+            final Point _b = ((c2.subtract(c1)).multiply(3)).subtract(_c);
+            final Point _a = ((end.subtract(start)).subtract(_c)).subtract(_b);
 
-            for (double t = 0.0; t < 1.0; t += 0.01) {
-                final int px = (int) Math.round((a.x * (t * t * t)) + (b.x * (t * t)) + (c.x * t) + this.endPts.get(0).getX());
-                final int py = (int) Math.round((a.y * (t * t * t)) + (b.y * (t * t)) + (c.y * t) + this.endPts.get(0).getY());
-                final int pz = (int) Math.round((a.z * (t * t * t)) + (b.z * (t * t)) + (c.z * t) + this.endPts.get(0).getZ());
+            for (double _t = 0.0; _t < 1.0; _t += 0.01) {
+                final int _px = (int) Math.round((_a.x * (_t * _t * _t)) + (_b.x * (_t * _t)) + (_c.x * _t) + this.endPts.get(0).getX());
+                final int _py = (int) Math.round((_a.y * (_t * _t * _t)) + (_b.y * (_t * _t)) + (_c.y * _t) + this.endPts.get(0).getY());
+                final int _pz = (int) Math.round((_a.z * (_t * _t * _t)) + (_b.z * (_t * _t)) + (_c.z * _t) + this.endPts.get(0).getZ());
 
-                if (!this.spline.contains(new Point(px, py, pz))) {
-                    this.spline.add(new Point(px, py, pz));
+                if (!this.spline.contains(new Point(_px, _py, _pz))) {
+                    this.spline.add(new Point(_px, _py, _pz));
                 }
             }
 
             return true;
-        } catch (final Exception e) {
+        } catch (final Exception _e) {
             v.sendMessage(ChatColor.RED + "Not enough points selected; " + this.endPts.size() + " endpoints, " + this.ctrlPts.size() + " control points");
             return false;
         }
@@ -136,8 +136,8 @@ public class Spline extends PerformBrush {
     		return;
     	}
     	
-    	for (final Point pt : this.spline) {
-    		this.current.perform(this.clampY(pt.x, pt.y, pt.z));
+    	for (final Point _pt : this.spline) {
+    		this.current.perform(this.clampY(_pt.x, _pt.y, _pt.z));
     	}
     	
     	v.storeUndo(this.current.getUndo());
@@ -193,17 +193,16 @@ public class Spline extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Spline brush parameters");
-            v.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
-            v.sendMessage(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve");
-            v.sendMessage(ChatColor.AQUA + "clear: Clear out the curve selection");
-            v.sendMessage(ChatColor.AQUA + "ren: Render curve from control points");
-            return;
-        }
-
-        for (int i = 1; i < par.length; i++) {
-            if (par[i].equalsIgnoreCase("sc")) {
+        for (int _i = 1; _i < par.length; _i++) {
+        	if (par[_i].equalsIgnoreCase("info")) {
+        		v.sendMessage(ChatColor.GOLD + "Spline brush parameters");
+        		v.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
+        		v.sendMessage(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve");
+        		v.sendMessage(ChatColor.AQUA + "clear: Clear out the curve selection");
+        		v.sendMessage(ChatColor.AQUA + "ren: Render curve from control points");
+        		return;
+        	}
+            if (par[_i].equalsIgnoreCase("sc")) {
                 if (!this.ctrl) {
                     this.set = false;
                     this.ctrl = true;
@@ -215,7 +214,7 @@ public class Spline extends PerformBrush {
                     continue;
                 }
 
-            } else if (par[i].equalsIgnoreCase("ss")) {
+            } else if (par[_i].equalsIgnoreCase("ss")) {
                 if (!this.set) {
                     this.set = true;
                     this.ctrl = false;
@@ -227,10 +226,10 @@ public class Spline extends PerformBrush {
                     continue;
                 }
 
-            } else if (par[i].equalsIgnoreCase("clear")) {
+            } else if (par[_i].equalsIgnoreCase("clear")) {
                 this.clear(v);
 
-            } else if (par[i].equalsIgnoreCase("ren")) {
+            } else if (par[_i].equalsIgnoreCase("ren")) {
                 if (this.spline(new Point(this.endPts.get(0)), new Point(this.endPts.get(1)), new Point(this.ctrlPts.get(0)), new Point(this.ctrlPts.get(1)), v)) {
                     this.render(v);
                 }

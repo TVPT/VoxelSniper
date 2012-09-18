@@ -12,11 +12,11 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author giltwist
  */
 public class SpiralStaircase extends Brush {
-    private String stairtype = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
+	private static int timesUsed = 0;
+
+	private String stairtype = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
     private String sdirect = "c"; // "c" clockwise (default), "cc" counter-clockwise
     private String sopen = "n"; // "n" north (default), "e" east, "world" south, "world" west
-
-    private static int timesUsed = 0;
 
     public SpiralStaircase() {
         this.setName("Spiral Staircase");
@@ -25,15 +25,13 @@ public class SpiralStaircase extends Brush {
     private final void buildStairWell(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final int _voxelMaterialId = v.getVoxelId();
+        final int[][][] _spiral = new int[2 * _brushSize + 1][_height][2 * _brushSize + 1];
 
         if (v.getVoxelHeight() < 1) {
             v.setVoxelHeight(1);
             v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
         final int _height = v.getVoxelHeight();
-
-        // initialize array
-        final int[][][] _spiral = new int[2 * _brushSize + 1][_height][2 * _brushSize + 1];
 
         // locate first block in staircase
         // Note to self, fix these

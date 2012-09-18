@@ -12,8 +12,10 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Voxel
  */
 public class Set extends PerformBrush {
+	private static final int SELECTION_SIZE_MAX = 5000000;
+	
+	private static int timesUsed = 0;
     private Block block = null;
-    private static int timesUsed = 0;
 
     public Set() {
         this.setName("Set");
@@ -35,7 +37,8 @@ public class Set extends PerformBrush {
             final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
             final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
             final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
-            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > 5000000) {
+            
+            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > SELECTION_SIZE_MAX) {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
                 for (int _y = _lowy; _y <= _highy; _y++) {
@@ -77,7 +80,7 @@ public class Set extends PerformBrush {
     }
     
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+    public final void parameters(final String[] par, final SnipeData v) {
     	super.parameters(par, v);
     }
     

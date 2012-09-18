@@ -277,17 +277,16 @@ public class Move extends Brush {
     }
     
     @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.getVoxelMessage().custom(ChatColor.GOLD + this.getName() + " Parameters:");
-    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
-    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
-    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
-    		v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
-    		v.getVoxelMessage().custom(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
-    	}
-    	
+    public final void parameters(final String[] par, final SnipeData v) {    	
     	for (int _i = 1; _i < par.length; _i++) {
+    		if (par[_i].equalsIgnoreCase("info")) {
+    			v.getVoxelMessage().custom(ChatColor.GOLD + this.getName() + " Parameters:");
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
+    			v.getVoxelMessage().custom(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
+    		}
     		if (par[_i].equalsIgnoreCase("reset")) {
     			this.moveDirections[0] = 0;
     			this.moveDirections[1] = 0;

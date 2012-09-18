@@ -13,8 +13,8 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author Voxel
  */
 public class FillDown extends PerformBrush {
+	private static int timesUsed = 0;
     private double trueCircle = 0;
-    private static int timesUsed = 0;
 
     public FillDown() {
         this.setName("Fill Down");
@@ -22,15 +22,16 @@ public class FillDown extends PerformBrush {
 
     private void fillDown(final SnipeData v, final Block b) {
     	final int _brushSize = v.getBrushSize();
-        final double _bpow = Math.pow(_brushSize + this.trueCircle, 2);
+        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
+        
         for (int _x = 0 - _brushSize; _x <= _brushSize; _x++) {
-            final double _xpow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
+            
             for (int _z = 0 - _brushSize; _z <= _brushSize; _z++) {
-                if (_xpow + Math.pow(_z, 2) <= _bpow) {
+                if (_xPow + Math.pow(_z, 2) <= _bPow) {
                 	for(int _y = this.getBlockPositionY(); _y >= 0; --_y) {
-                		final Block _block = this.clampY(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                		
-                		if(_block.getType() == Material.AIR) {
+                		final Block _block = this.clampY(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);                		
+                		if(_block.getType().equals(Material.AIR)) {
                 			this.current.perform(_block);
                 		}
                 	}
@@ -58,15 +59,14 @@ public class FillDown extends PerformBrush {
     }
     
     @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
-    		v.sendMessage(ChatColor.AQUA
-    				+ "/b fd true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-    		return;
-    	}
+    public final void parameters(final String[] par, final SnipeData v) {    	
     	for (int _x = 1; _x < par.length; _x++) {
-    		if (par[_x].startsWith("true")) {
+    		if (par[_x].equalsIgnoreCase("info")) {
+        		v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
+        		v.sendMessage(ChatColor.AQUA
+        				+ "/b fd true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b fd false will switch back. (false is default)");
+        		return;
+        	} else if (par[_x].startsWith("true")) {
     			this.trueCircle = 0.5;
     			v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
     			continue;

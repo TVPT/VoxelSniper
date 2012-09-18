@@ -23,14 +23,14 @@ public class Overlay extends PerformBrush {
 
     private final void overlay(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-
+        final double _bPow = Math.pow(_brushSize + 0.5, 2);
         final int[][] _memory = new int[_brushSize * 2 + 1][_brushSize * 2 + 1];
-        final double _bpow = Math.pow(_brushSize + 0.5, 2);
+        
         for (int _z = _brushSize; _z >= -_brushSize; _z--) {
             for (int _x = _brushSize; _x >= -_brushSize; _x--) {
                 for (int _y = this.getBlockPositionY(); _y > 0; _y--) { // start scanning from the height you clicked at
                     if (_memory[_x + _brushSize][_z + _brushSize] != 1) { // if haven't already found the surface in this column
-                        if ((Math.pow(_x, 2) + Math.pow(_z, 2)) <= _bpow) { // if inside of the column...
+                        if ((Math.pow(_x, 2) + Math.pow(_z, 2)) <= _bPow) { // if inside of the column...
                             final int _check = this.getBlockIdAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z);
                             if (_check == 0 || _check == 8 || _check == 9) { // must start at surface... this prevents it filling stuff in if you click in a wall
                                                                           // and it starts out below surface.
@@ -80,14 +80,14 @@ public class Overlay extends PerformBrush {
 
     private final void overlayTwo(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
-
+        final double _bPow = Math.pow(_brushSize + 0.5, 2);
         final int[][] _memory = new int[_brushSize * 2 + 1][_brushSize * 2 + 1];
-        final double _bpow = Math.pow(_brushSize + 0.5, 2);
+        
         for (int _z = _brushSize; _z >= -_brushSize; _z--) {
             for (int _x = _brushSize; _x >= -_brushSize; _x--) {
                 for (int _y = this.getBlockPositionY(); _y > 0; _y--) { // start scanning from the height you clicked at
                     if (_memory[_x + _brushSize][_z + _brushSize] != 1) { // if haven't already found the surface in this column
-                        if ((Math.pow(_x, 2) + Math.pow(_z, 2)) <= _bpow) { // if inside of the column...
+                        if ((Math.pow(_x, 2) + Math.pow(_z, 2)) <= _bPow) { // if inside of the column...
                             if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y - 1, this.getBlockPositionZ() + _z) != 0) { // if not a floating block (like one of Notch'world pools)
                                 if (this.getBlockIdAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z) == 0) { // must start at surface... this prevents it filling stuff in if
                                                                                                // you click in a wall and it starts out below surface.
@@ -155,27 +155,28 @@ public class Overlay extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
-            v.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-            v.sendMessage(ChatColor.BLUE
-                    + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
-
-            return;
-        }
         for (int _i = 1; _i < par.length; _i++) {
-            if (par[_i].startsWith("d")) {
-                this.depth = Integer.parseInt(par[_i].replace("d", ""));
+        	final String _param = par[_i];
+        	
+        	if (_param.equalsIgnoreCase("info")) {
+        		v.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
+        		v.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
+        		v.sendMessage(ChatColor.BLUE
+        				+ "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
+        		return;
+        	}
+            if (_param.startsWith("d")) {
+                this.depth = Integer.parseInt(_param.replace("d", ""));
                 v.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
                 if (this.depth < 1) {
                     this.depth = 1;
                 }
                 continue;
-            } else if (par[_i].startsWith("all")) {
+            } else if (_param.startsWith("all")) {
                 this.allBlocks = true;
                 v.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
                 continue;
-            } else if (par[_i].startsWith("some")) {
+            } else if (_param.startsWith("some")) {
                 this.allBlocks = false;
                 v.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
                 continue;

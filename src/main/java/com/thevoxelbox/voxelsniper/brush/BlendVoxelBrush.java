@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
@@ -24,10 +23,8 @@ public class BlendVoxelBrush extends BlendBrushBase {
     protected final void blend(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _bSize;
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
         final int[][][] _oldMaterials = new int[2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1][2 * (_bSize + 1) + 1]; // Array that holds the original materials plus a buffer
-        final int[][][] _newMaterials = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1]; // Array that holds the blended materials
-        int _maxMaterialId = 0; // What is the highest material ID that is a block?
+        final int[][][] _newMaterials = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1]; // Array that holds the blended materials        
 
         // Log current materials into oldmats
         for (int _x = 0; _x <= 2 * (_bSize + 1); _x++) {
@@ -51,7 +48,7 @@ public class BlendVoxelBrush extends BlendBrushBase {
         for (int _x = 0; _x <= _twoBrushSize; _x++) {
             for (int _y = 0; _y <= _twoBrushSize; _y++) {
                 for (int _z = 0; _z <= _twoBrushSize; _z++) {
-                    final int[] _materialFrequency = new int[_maxMaterialId + 1]; // Array that tracks frequency of materials neighboring given block
+                    final int[] _materialFrequency = new int[maxBlockMaterialID + 1]; // Array that tracks frequency of materials neighboring given block
                     int _modeMatCount = 0;
                     int _modeMatId = 0;
                     boolean _tiecheck = true;
@@ -67,7 +64,7 @@ public class BlendVoxelBrush extends BlendBrushBase {
                     }
 
                     // Find most common neighboring material.
-                    for (int _i = 0; _i <= _maxMaterialId; _i++) {
+                    for (int _i = 0; _i <= maxBlockMaterialID; _i++) {
                         if (_materialFrequency[_i] > _modeMatCount && !(this.excludeAir && _i == Material.AIR.getId())
                                 && !(this.excludeWater && (_i == Material.WATER.getId() || _i == Material.STATIONARY_WATER.getId()))) {
                             _modeMatCount = _materialFrequency[_i];
@@ -89,6 +86,8 @@ public class BlendVoxelBrush extends BlendBrushBase {
                 }
             }
         }
+
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         // Make the changes
         for (int _x = _twoBrushSize; _x >= 0; _x--) {

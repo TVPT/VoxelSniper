@@ -1,11 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.Arrays;
-
 import org.bukkit.ChatColor;
+import org.bukkit.util.Vector;
 
-import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -14,73 +13,56 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  * @author giltwist
  */
 public class Line extends PerformBrush {
-    private double[] origincoords = new double[3];
-    private double[] targetcoords = new double[3];
-    private int[] currentcoords = new int[3];
-    private int[] previouscoords = new int[3];
-    private double[] slopevector = new double[3];
+	private static int timesUsed = 0;
 
-    private static int timesUsed = 0;
+	private Vector originCoords = null;
+	private Vector targetCoords = new Vector();
 
+	/**
+	 * 
+	 */
     public Line() {
         this.setName("Line");
     }
 
-    private final void lineArrow(final SnipeData v) {
-        v.owner().getPlayer().sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
-    }
-
     private final void linePowder(final SnipeData v) {
-        this.setWorld(v.owner().getPlayer().getWorld());
-        double _lineLength = 0;
+        Vector _previousCoords = new Vector();
+        Vector _currentCoords = null;
+        final Vector _slope = targetCoords.subtract(originCoords).normalize();
 
-        // Calculate slope vector
-        for (int _i = 0; _i < 3; _i++) {
-            this.slopevector[_i] = this.targetcoords[_i] - this.origincoords[_i];
+        for (int _t = 0; _t <= _slope.length(); _t++) {
+			_currentCoords = _slope.multiply(_t).add(originCoords);
+
+			if (_currentCoords != _previousCoords) {
+				this.current.perform(this.clampY((int) Math.round(_currentCoords.getX()), (int) Math.round(_currentCoords.getY()), (int) Math.round(_currentCoords.getZ())));
+			}
+
+			_previousCoords = _currentCoords;
         }
-        // Calculate line length in
-        _lineLength = Math.pow((Math.pow(this.slopevector[0], 2) + Math.pow(this.slopevector[1], 2) + Math.pow(this.slopevector[2], 2)), .5);
 
-        // Unitize slope vector
-        for (int _i = 0; _i < 3; _i++) {
-            this.slopevector[_i] = this.slopevector[_i] / _lineLength;
-        }
-        // Make the Changes
-
-        for (int _t = 0; _t <= _lineLength; _t++) {
-
-            // Update current coords
-            for (int _i = 0; _i < 3; _i++) {
-                this.currentcoords[_i] = (int) (this.origincoords[_i] + _t * this.slopevector[_i]);
-            }
-
-            if (this.currentcoords[0] != this.previouscoords[0] || this.currentcoords[1] != this.previouscoords[1]
-                    || this.currentcoords[2] != this.previouscoords[2]) { // Don't double-down
-                this.current.perform(this.clampY(this.currentcoords[0], this.currentcoords[1], this.currentcoords[2]));
-            }
-
-            this.previouscoords = Arrays.copyOf(this.currentcoords, this.currentcoords.length);
-        }
-        
         v.storeUndo(this.current.getUndo());
     }
     
     @Override
     protected final void arrow(final SnipeData v) {
-    	this.origincoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX());
-    	this.origincoords[1] = this.getTargetBlock().getY() + .5;
-    	this.origincoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
-    	this.lineArrow(v);
+		if (originCoords == null) {
+			originCoords = new Vector();
+		}
+    	originCoords.setX(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()));
+    	originCoords.setY(this.getTargetBlock().getY() + .5);
+    	originCoords.setZ(this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
+    	v.owner().getPlayer().sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
     }
     
     @Override
     protected final void powder(final SnipeData v) {
-    	if (this.origincoords[0] == 0 && this.origincoords[1] == 0 && this.origincoords[2] == 0) {
+    	if (originCoords == null) {
     		v.owner().getPlayer().sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+    		return;
     	} else {
-    		this.targetcoords[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX());
-    		this.targetcoords[1] = this.getTargetBlock().getY() + .5;
-    		this.targetcoords[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
+    		targetCoords.setX(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()));
+        	targetCoords.setY(this.getTargetBlock().getY() + .5);
+        	targetCoords.setZ(this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
     		this.linePowder(v);
     	}
     }

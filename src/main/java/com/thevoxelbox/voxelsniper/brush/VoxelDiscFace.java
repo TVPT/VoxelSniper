@@ -13,6 +13,9 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 public class VoxelDiscFace extends PerformBrush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public VoxelDiscFace() {
         this.setName("Voxel Disc Face");
     }

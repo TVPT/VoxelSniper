@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 
 import com.thevoxelbox.voxelsniper.Message;
@@ -12,29 +13,28 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  */
 public class BiomeBrush extends Brush {
 	private static int timesUsed = 0;
-    private org.bukkit.block.Biome selectedBiome = org.bukkit.block.Biome.PLAINS;
+    private Biome selectedBiome = Biome.PLAINS;
 
     /**
      * 
      */
     public BiomeBrush() {
-        this.setName("Biome");
+        this.setName("Biome (currently not working)");
     }   
     
     private final void biome(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final double _bPow = Math.pow(_bSize, 2);
-        double _xPow = 0;
         
         for (int _x = -_bSize; _x <= _bSize; _x++) {
-            _xPow = Math.pow(_x, 2);
+            final double _xPow = Math.pow(_x, 2);
+            
             for (int _z = -_bSize; _z <= _bSize; _z++) {
                 if ((_xPow + Math.pow(_z, 2)) <= _bPow) {
                     this.getWorld().setBiome(this.getBlockPositionX() + _x, this.getBlockPositionZ() + _z, this.selectedBiome);
                 }
             }
         }
-        
 
         final Block _b1 = this.getWorld().getBlockAt(this.getBlockPositionX() - _bSize, 0, this.getBlockPositionZ() - _bSize);
         final Block _b2 = this.getWorld().getBlockAt(this.getBlockPositionX() + _bSize, 0, this.getBlockPositionZ() + _bSize);
@@ -86,7 +86,7 @@ public class BiomeBrush extends Brush {
     		v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + _availableBiomes);
     	} else {
     		for (final org.bukkit.block.Biome bio : org.bukkit.block.Biome.values()) {
-    			if (bio.name().equals(par[1])) {
+    			if (bio.name().equalsIgnoreCase(par[1])) {
     				this.selectedBiome = bio;
     				break;
     			}

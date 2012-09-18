@@ -32,6 +32,12 @@ public class Stamp extends Brush {
             this.z = blz;
         }
     }
+    
+    protected enum StampType {
+		NO_AIR, FILL, DEFAULT
+	}
+
+    private static int timesUsed = 0;
 
     protected HashSet<cBlock> clone = new HashSet<cBlock>();
     protected HashSet<cBlock> fall = new HashSet<cBlock>();
@@ -40,9 +46,8 @@ public class Stamp extends Brush {
     protected Undo undo;
     protected boolean sorted = false;
 
-    protected byte stamp = 0;
+    protected StampType stamp = StampType.DEFAULT;
 
-    private static int timesUsed = 0;
 
     public Stamp() {
         this.setName("Stamp");
@@ -64,107 +69,56 @@ public class Stamp extends Brush {
         switch (id) {
         // 6, 37, 38, 39, 40, 50, 51, 55, 59, 63, 64, 65, 66, 69, 70, 71, 72, 75, 76, 77, 83
         case (6):
-            return true;
-
         case (37):
-            return true;
-
         case (38):
-            return true;
-
         case (39):
-            return true;
-
         case (40):
-            return true;
-
         case (50):
-            return true;
-
         case (51):
-            return true; // Fire drops off of blocks?
-            // No, but it will burn out if placed before the fuel under it -- prz
         case (55):
-            return true;
-
         case (59):
-            return true;
-
         case (63):
-            return true;
-
         case (64):
-            return true;
-
         case (65):
-            return true;
-
         case (66):
-            return true;
-
         case (68):
-            return true; // Added Wall signs
-
         case (69):
-            return true;
-
         case (70):
-            return true;
-
         case (71):
-            return true;
-
         case (72):
-            return true;
-
         case (75):
-            return true;
-
         case (76):
-            return true;
-
         case (77):
-            return true;
-
         case (78):
-            return true; // Does snow drop snowballs when destroyed blockPositionY the game instead of the player?
-
         case (83):
-            return true;
-
         case (93):
-            return true;
-
         case (94):
-            return true;
-
         default:
             return false;
         }
     }
 
     protected final void setBlock(final cBlock cb) {
-        final Block b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
-        this.undo.put(b);
-        b.setTypeId(cb.id);
-        b.setData(cb.d);
+        final Block _b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
+        this.undo.put(_b);
+        _b.setTypeId(cb.id);
+        _b.setData(cb.d);
     }
 
     protected final void setBlockFill(final cBlock cb) {
-        final Block b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
-        if (b.getTypeId() == 0) {
-            this.undo.put(b);
-            b.setTypeId(cb.id);
-            b.setData(cb.d);
+        final Block _b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
+        if (_b.getTypeId() == 0) {
+            this.undo.put(_b);
+            _b.setTypeId(cb.id);
+            _b.setData(cb.d);
         }
     }
 
-    protected final void setStamp(final byte by) {
-        this.stamp = by;
+    protected final void setStamp(final StampType type) {
+        this.stamp = type;
     }
 
     protected final void stamp(final SnipeData v) {
-
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -195,11 +149,11 @@ public class Stamp extends Brush {
                     this.setBlock(cb);
                 }
             }
-            for (final cBlock cb : this.drop) {
-                this.setBlock(cb);
+            for (final cBlock _cb : this.drop) {
+                this.setBlock(_cb);
             }
-            for (final cBlock cb : this.fall) {
-                this.setBlock(cb);
+            for (final cBlock _cb : this.fall) {
+                this.setBlock(_cb);
             }
             this.sorted = true;
         }
@@ -208,7 +162,6 @@ public class Stamp extends Brush {
     }
 
     protected final void stampFill(final SnipeData v) {
-
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -216,34 +169,34 @@ public class Stamp extends Brush {
         this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
-            for (final cBlock cb : this.solid) {
-                this.setBlockFill(cb);
+            for (final cBlock _cb : this.solid) {
+                this.setBlockFill(_cb);
             }
-            for (final cBlock cb : this.drop) {
-                this.setBlockFill(cb);
+            for (final cBlock _cb : this.drop) {
+                this.setBlockFill(_cb);
             }
-            for (final cBlock cb : this.fall) {
-                this.setBlockFill(cb);
+            for (final cBlock _cb : this.fall) {
+                this.setBlockFill(_cb);
             }
         } else {
             this.fall.clear();
             this.drop.clear();
             this.solid.clear();
-            for (final cBlock cb : this.clone) {
-                if (this.fallsOff(cb.id)) {
-                    this.fall.add(cb);
-                } else if (this.falling(cb.id)) {
-                    this.drop.add(cb);
-                } else if (cb.id != 0) {
-                    this.solid.add(cb);
-                    this.setBlockFill(cb);
+            for (final cBlock _cb : this.clone) {
+                if (this.fallsOff(_cb.id)) {
+                    this.fall.add(_cb);
+                } else if (this.falling(_cb.id)) {
+                    this.drop.add(_cb);
+                } else if (_cb.id != 0) {
+                    this.solid.add(_cb);
+                    this.setBlockFill(_cb);
                 }
             }
-            for (final cBlock cb : this.drop) {
-                this.setBlockFill(cb);
+            for (final cBlock _cb : this.drop) {
+                this.setBlockFill(_cb);
             }
-            for (final cBlock cb : this.fall) {
-                this.setBlockFill(cb);
+            for (final cBlock _cb : this.fall) {
+                this.setBlockFill(_cb);
             }
             this.sorted = true;
         }
@@ -252,7 +205,6 @@ public class Stamp extends Brush {
     }
 
     protected final void stampNoAir(final SnipeData v) {
-
         this.setBlockPositionX(this.getTargetBlock().getX());
         this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
         this.setBlockPositionZ(this.getTargetBlock().getZ());
@@ -260,34 +212,34 @@ public class Stamp extends Brush {
         this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted) {
-            for (final cBlock cb : this.solid) {
-                this.setBlock(cb);
+            for (final cBlock _cb : this.solid) {
+                this.setBlock(_cb);
             }
-            for (final cBlock cb : this.drop) {
-                this.setBlock(cb);
+            for (final cBlock _cb : this.drop) {
+                this.setBlock(_cb);
             }
-            for (final cBlock cb : this.fall) {
-                this.setBlock(cb);
+            for (final cBlock _cb : this.fall) {
+                this.setBlock(_cb);
             }
         } else {
             this.fall.clear();
             this.drop.clear();
             this.solid.clear();
-            for (final cBlock cb : this.clone) {
-                if (this.fallsOff(cb.id)) {
-                    this.fall.add(cb);
-                } else if (this.falling(cb.id)) {
-                    this.drop.add(cb);
-                } else if (cb.id != 0) {
-                    this.solid.add(cb);
-                    this.setBlock(cb);
+            for (final cBlock _cb : this.clone) {
+                if (this.fallsOff(_cb.id)) {
+                    this.fall.add(_cb);
+                } else if (this.falling(_cb.id)) {
+                    this.drop.add(_cb);
+                } else if (_cb.id != 0) {
+                    this.solid.add(_cb);
+                    this.setBlock(_cb);
                 }
             }
-            for (final cBlock cb : this.drop) {
-                this.setBlock(cb);
+            for (final cBlock _cb : this.drop) {
+                this.setBlock(_cb);
             }
-            for (final cBlock cb : this.fall) {
-                this.setBlock(cb);
+            for (final cBlock _cb : this.fall) {
+                this.setBlock(_cb);
             }
             this.sorted = true;
         }
@@ -298,15 +250,15 @@ public class Stamp extends Brush {
     @Override
     protected void arrow(final SnipeData v) {
         switch (this.stamp) {
-        case 0:
+        case DEFAULT:
             this.stamp(v);
             break;
 
-        case 1:
+        case NO_AIR:
             this.stampNoAir(v);
             break;
 
-        case 2:
+        case FILL:
             this.stampFill(v);
             break;
 

@@ -25,7 +25,6 @@ public class HeatRay extends Brush {
      * 
      */
     private enum FlameableBlock {
-
         WOOD(Material.WOOD), SAPLING(Material.SAPLING), LOG(Material.LOG), LEAVES(Material.LEAVES), SPONGE(Material.SPONGE), WEB(Material.WEB), LONG_GRASS(
                 Material.LONG_GRASS), DEAD_BUSH(Material.DEAD_BUSH), WOOL(Material.WOOL), YELLOW_FLOWER(Material.YELLOW_FLOWER), RED_ROSE(Material.RED_ROSE), TORCH(
                 Material.TORCH), FIRE(Material.FIRE), WOOD_STAIRS(Material.WOOD_STAIRS), CROPS(Material.CROPS), SIGN_POST(Material.SIGN_POST), WOODEN_DOOR(
@@ -47,6 +46,7 @@ public class HeatRay extends Brush {
     
     private static final ArrayList<Material> FLAMABLE_BLOCKS = new ArrayList<Material>();
     
+    private static int timesUsed = 0;
     private int octaves = 5;
     private double frequency = 1;
 
@@ -58,7 +58,6 @@ public class HeatRay extends Brush {
         }
     }
 
-    private static int timesUsed = 0;
 
     /**
      * Default Constructor.
@@ -77,8 +76,8 @@ public class HeatRay extends Brush {
 
         final Vector _targetLocation = this.getTargetBlock().getLocation().toVector();
         final Location _currentLocation = new Location(this.getTargetBlock().getWorld(), 0, 0, 0);
-        Block _currentBlock = null;
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Block _currentBlock = null;
 
         for (int _z = v.getBrushSize(); _z >= -v.getBrushSize(); _z--) {
             for (int _x = v.getBrushSize(); _x >= -v.getBrushSize(); _x--) {
@@ -167,22 +166,23 @@ public class HeatRay extends Brush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par.length > 1 && par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
-    		v.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
-    		v.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
-    		v.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
-    	}
     	for (int _i = 1; _i < par.length; _i++) {
-    		final String _string = par[_i].toLowerCase();
-    		if (_string.startsWith("oct")) {
-    			this.octaves = Integer.valueOf(_string.substring(3));
+    		final String _param = par[_i].toLowerCase();
+
+    		if (_param.equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
+    			v.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
+    			v.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
+    			v.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
+    		}
+    		if (_param.startsWith("oct")) {
+    			this.octaves = Integer.valueOf(_param.substring(3));
     			v.getVoxelMessage().custom(ChatColor.GREEN + "Octaves: " + this.octaves);
-    		} else if (_string.startsWith("amp")) {
-    			this.amplitude = Double.valueOf(_string.substring(3));
+    		} else if (_param.startsWith("amp")) {
+    			this.amplitude = Double.valueOf(_param.substring(3));
     			v.getVoxelMessage().custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
-    		} else if (_string.startsWith("freq")) {
-    			this.frequency = Double.valueOf(_string.substring(4));
+    		} else if (_param.startsWith("freq")) {
+    			this.frequency = Double.valueOf(_param.substring(4));
     			v.getVoxelMessage().custom(ChatColor.GREEN + "Frequency: " + this.frequency);
     		}
     	}

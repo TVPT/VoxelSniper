@@ -1,6 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.text.DecimalFormat;
+
 import org.bukkit.ChatColor;
+import org.bukkit.util.Vector;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
@@ -11,14 +14,15 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Gavjenks
  */
 public class Ruler extends Brush {
-    private boolean first = true;
-    private double[] coords = new double[3];
+	private static int timesUsed = 0;
+
+	private boolean first = true;
+	private Vector coords = null;
 
     private int xOff = 0;
     private int yOff = 0;
     private int zOff = 0;
 
-    private static int timesUsed = 0;
 
     public Ruler() {
         this.setName("Ruler");
@@ -26,14 +30,11 @@ public class Ruler extends Brush {
 
     private final void rulerA(final SnipeData v) {
         final int _voxelMaterialId = v.getVoxelId();
+        coords = this.getTargetBlock().getLocation().toVector();
+        
         if (this.xOff == 0 && this.yOff == 0 && this.zOff == 0) {
-
-            this.coords[0] = this.getTargetBlock().getX();
-            this.coords[1] = this.getTargetBlock().getY();
-            this.coords[2] = this.getTargetBlock().getZ();
             v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
             this.first = !this.first;
-
         } else {
             final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
@@ -44,26 +45,24 @@ public class Ruler extends Brush {
     }
 
     private final void rulerP(final SnipeData v) {
-        if (this.coords[0] == 0 && this.coords[1] == 0 && this.coords[2] == 0) {
+        if (this.coords == null) {
             v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow.  Comparing to point 0,0,0 instead.");
+            return;
         }
 
         v.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
-        v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock().getX() - this.coords[0]));
-        v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock().getY() - this.coords[1]));
-        v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock().getZ() - this.coords[2]));
-        double _distance = Math.sqrt(Math.pow((this.coords[0] - this.getTargetBlock().getX()), 2) + Math.pow((this.coords[1] - this.getTargetBlock().getY()), 2)
-                + Math.pow((this.coords[2] - this.getTargetBlock().getZ()), 2));
-        _distance = this.roundTwoDecimals(_distance);
-        double _blockdistance = Math.abs(Math.max(Math.max(Math.abs(this.getTargetBlock().getX() - this.coords[0]), Math.abs(this.getTargetBlock().getY() - this.coords[1])),
-                Math.abs(this.getTargetBlock().getZ() - this.coords[2]))) + 1;
-        _blockdistance = this.roundTwoDecimals(_blockdistance);
+        v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock().getX() - this.coords.getX()));
+        v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock().getY() - this.coords.getY()));
+        v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock().getZ() - this.coords.getZ()));
+        final double _distance = this.roundTwoDecimals(coords.subtract(this.getTargetBlock().getLocation().toVector()).length());
+        final double _blockDistance = this.roundTwoDecimals(Math.abs(this.getTargetBlock().getLocation().toVector().subtract(coords).length()) + 1);
+
         v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + _distance);
-        v.sendMessage(ChatColor.AQUA + "Block distance = " + _blockdistance); 
+        v.sendMessage(ChatColor.AQUA + "Block distance = " + _blockDistance); 
     }
     
     private final double roundTwoDecimals(final double d) {
-    	final java.text.DecimalFormat twoDForm = new java.text.DecimalFormat("#.##");
+    	final DecimalFormat twoDForm = new DecimalFormat("#.##");
     	return Double.valueOf(twoDForm.format(d));
     }
 
@@ -85,29 +84,30 @@ public class Ruler extends Brush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD
-                    + "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
-            v.sendMessage(ChatColor.LIGHT_PURPLE
-                    + "/b r x[x value] y[y value] z[z value] -- Will place blocks one at a time of the type you have set with /v at the location you click + this many units away.  If you don't include a value, it will be zero.  Don't include ANY values, and the brush will just measure distance.");
-            v.sendMessage(ChatColor.BLUE + "/b r ruler -- will reset the tool to just measure distances, not layout blocks.");
-
-            return;
-        }
         for (int _i = 1; _i < par.length; _i++) {
-            if (par[_i].startsWith("x")) {
-                this.xOff = Integer.parseInt(par[_i].replace("x", ""));
+        	final String _param = par[_i];
+        	
+        	if (_param.equalsIgnoreCase("info")) {
+        		v.sendMessage(ChatColor.GOLD
+        				+ "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
+        		v.sendMessage(ChatColor.LIGHT_PURPLE
+        				+ "/b r x[x value] y[y value] z[z value] -- Will place blocks one at a time of the type you have set with /v at the location you click + this many units away.  If you don't include a value, it will be zero.  Don't include ANY values, and the brush will just measure distance.");
+        		v.sendMessage(ChatColor.BLUE + "/b r ruler -- will reset the tool to just measure distances, not layout blocks.");
+        		
+        		return;
+        	} else if (_param.startsWith("x")) {
+                this.xOff = Integer.parseInt(_param.replace("x", ""));
                 v.sendMessage(ChatColor.AQUA + "X offset set to " + this.xOff);
                 continue;
-            } else if (par[_i].startsWith("y")) {
-                this.yOff = Integer.parseInt(par[_i].replace("y", ""));
+            } else if (_param.startsWith("y")) {
+                this.yOff = Integer.parseInt(_param.replace("y", ""));
                 v.sendMessage(ChatColor.AQUA + "Y offset set to " + this.yOff);
                 continue;
-            } else if (par[_i].startsWith("z")) {
-                this.zOff = Integer.parseInt(par[_i].replace("z", ""));
+            } else if (_param.startsWith("z")) {
+                this.zOff = Integer.parseInt(_param.replace("z", ""));
                 v.sendMessage(ChatColor.AQUA + "Z offset set to " + this.zOff);
                 continue;
-            } else if (par[_i].startsWith("ruler")) {
+            } else if (_param.startsWith("ruler")) {
                 this.zOff = 0;
                 this.yOff = 0;
                 this.xOff = 0;

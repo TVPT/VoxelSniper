@@ -184,18 +184,18 @@ public class EllipseBrush extends PerformBrush {
     
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-    		v.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
-    		v.sendMessage(ChatColor.AQUA + "y[n]: Set Y size modifier to n");
-    		v.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
-    		v.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
-    		return;
-    	}
-    	
     	for (int _i = 1; _i < par.length; _i++) {
+    		final String _param = par[_i];
+    		
     		try {
-    			if (par[_i].startsWith("x")) {
+    			if (_param.equalsIgnoreCase("info")) {
+    	    		v.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
+    	    		v.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
+    	    		v.sendMessage(ChatColor.AQUA + "y[n]: Set Y size modifier to n");
+    	    		v.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
+    	    		v.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
+    	    		return;
+    	    	} else if (_param.startsWith("x")) {
     				int _tmpXScl = Integer.parseInt(par[_i].replace("x", ""));
     				if(_tmpXScl < SCL_MIN || _tmpXScl > SCL_MAX) {
     					v.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
@@ -204,7 +204,7 @@ public class EllipseBrush extends PerformBrush {
     				this.xscl = _tmpXScl;
     				v.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
     				continue;
-    			} else if (par[_i].startsWith("y")) {
+    			} else if (_param.startsWith("y")) {
     				int _tmpYScl = Integer.parseInt(par[_i].replace("y", ""));
     				if(_tmpYScl < SCL_MIN || _tmpYScl > SCL_MAX) {
     					v.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
@@ -213,7 +213,7 @@ public class EllipseBrush extends PerformBrush {
     				this.yscl = _tmpYScl;
     				v.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
     				continue;
-    			} else if (par[_i].startsWith("t")) {
+    			} else if (_param.startsWith("t")) {
     				int _tempSteps = Integer.parseInt(par[_i].replace("t", ""));
     				if(_tempSteps < STEPS_MIN || _tempSteps > STEPS_MAX) {
     					v.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
@@ -222,7 +222,7 @@ public class EllipseBrush extends PerformBrush {
     				this.steps = _tempSteps;
     				v.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
     				continue;
-    			} else if (par[_i].equalsIgnoreCase("fill")) {
+    			} else if (_param.equalsIgnoreCase("fill")) {
     				if (this.fill == true) {
     					this.fill = false;
     					v.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
@@ -237,7 +237,7 @@ public class EllipseBrush extends PerformBrush {
     			}
     			
     		} catch (final Exception e) {
-    			v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + par[_i] + "\"; use the \"info\" parameter.");
+    			v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + _param + "\"; use the \"info\" parameter.");
     		}
     	}
     }

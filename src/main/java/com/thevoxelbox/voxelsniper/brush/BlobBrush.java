@@ -18,8 +18,8 @@ public class BlobBrush extends PerformBrush {
 	private static final int GROW_PERCENT_MAX = 9999;
 	
 	private static int timesUsed = 0;
+	private Random randomGenerator = new Random();
     private int growPercent = GROW_PERCENT_DEFAULT; // chance block on recursion pass is made active
-    private Random randomGenerator = new Random();
 
     /**
      * 
@@ -30,22 +30,16 @@ public class BlobBrush extends PerformBrush {
     
     private final void checkValidGrowPercent(final SnipeData v) {
     	if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
-    		if(v != null) {
-    			v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
-    		}
     		this.growPercent = GROW_PERCENT_DEFAULT;
+   			v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
     	}    	
     }
 
     private final void digBlob(final SnipeData v) {
     	final int _bSize = v.getBrushSize();
     	final int _twoBrushSize = 2 * _bSize;
-    	final double _rPow = Math.pow(_bSize + 1, 2);
     	final int[][][] _splat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
     	final int[][][] _tempSplat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
-    	int _growCheck = 0;
-    	double _xPow = 0;
-    	double _yPow = 0;
     	
     	this.checkValidGrowPercent(v);
 
@@ -53,7 +47,7 @@ public class BlobBrush extends PerformBrush {
         for (int _x = _twoBrushSize; _x >= 0; _x--) {
             for (int _y = _twoBrushSize; _y >= 0; _y--) {
                 for (int _z = _twoBrushSize; _z >= 0; _z--) {
-                    if ((_x == 0 || _y == 0 | _z == 0 || _x == 2 * _bSize || _y == 2 * _bSize || _z == 2 * _bSize) && this.randomGenerator.nextInt(10000) <= this.growPercent) {
+                    if ((_x == 0 || _y == 0 | _z == 0 || _x == _twoBrushSize || _y == _twoBrushSize || _z == _twoBrushSize) && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
                         _splat[_x][_y][_z] = 0;
                     } else {
                         _splat[_x][_y][_z] = 1;
@@ -69,7 +63,7 @@ public class BlobBrush extends PerformBrush {
                 for (int _y = _twoBrushSize; _y >= 0; _y--) {
                     for (int _z = _twoBrushSize; _z >= 0; _z--) {
                         _tempSplat[_x][_y][_z] = _splat[_x][_y][_z];
-                        _growCheck = 0;
+                        double _growCheck = 0;
                         if (_splat[_x][_y][_z] == 1) {
                             if (_x != 0 && _splat[_x - 1][_y][_z] == 0) {
                                 _growCheck++;
@@ -91,7 +85,7 @@ public class BlobBrush extends PerformBrush {
                             }
                         }
 
-                        if (_growCheck >= 1 && this.randomGenerator.nextInt(10000) <= this.growPercent) {
+                        if (_growCheck >= 1 && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
                             _tempSplat[_x][_y][_z] = 0; // prevent bleed into splat
                         }
                     }
@@ -109,12 +103,14 @@ public class BlobBrush extends PerformBrush {
             }
         }
 
+        final double _rPow = Math.pow(_bSize + 1, 2);
+
         // Make the changes        
         for (int _x = _twoBrushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x - _bSize - 1, 2);
+            final double _xPow = Math.pow(_x - _bSize - 1, 2);
             
             for (int _y = _twoBrushSize; _y >= 0; _y--) {
-                _yPow = Math.pow(_y - _bSize - 1, 2);
+            	final double _yPow = Math.pow(_y - _bSize - 1, 2);
                 
                 for (int z = _twoBrushSize; z >= 0; z--) {
                     if (_splat[_x][_y][z] == 1 && _xPow + _yPow + Math.pow(z - _bSize - 1, 2) <= _rPow) {
@@ -131,11 +127,7 @@ public class BlobBrush extends PerformBrush {
     	final int _bSize = v.getBrushSize();
     	final int _twoBrushSize = 2 * _bSize;
     	final int[][][] _splat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
-    	final int[][][] _tempSplat = new int[2 * _bSize + 1][2 * _bSize + 1][2 * _bSize + 1];
-    	final double _rPow = Math.pow(_bSize + 1, 2);
-    	int _growCheck = 0;
-    	double _xPow = 0;
-    	double _yPow = 0;
+    	final int[][][] _tempSplat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
     	
         this.checkValidGrowPercent(v);
         
@@ -149,7 +141,7 @@ public class BlobBrush extends PerformBrush {
                 for (int _y = _twoBrushSize; _y >= 0; _y--) {
                     for (int _z = _twoBrushSize; _z >= 0; _z--) {
                         _tempSplat[_x][_y][_z] = _splat[_x][_y][_z]; 
-                        _growCheck = 0;
+                        int _growCheck = 0;
                         if (_splat[_x][_y][_z] == 0) {
                             if (_x != 0 && _splat[_x - 1][_y][_z] == 1) {
                                 _growCheck++;
@@ -188,12 +180,14 @@ public class BlobBrush extends PerformBrush {
             }
         }
 
+        final double _rPow = Math.pow(_bSize + 1, 2);
+
         // Make the changes
         for (int _x = _twoBrushSize; _x >= 0; _x--) {
-            _xPow = Math.pow(_x - _bSize - 1, 2);
+            final double _xPow = Math.pow(_x - _bSize - 1, 2);
             
             for (int _y = _twoBrushSize; _y >= 0; _y--) {
-                _yPow = Math.pow(_y - _bSize - 1, 2);
+                final double _yPow = Math.pow(_y - _bSize - 1, 2);
                 
                 for (int z = _twoBrushSize; z >= 0; z--) {
                     if (_splat[_x][_y][z] == 1 && _xPow + _yPow + Math.pow(z - _bSize - 1, 2) <= _rPow) {
@@ -227,19 +221,21 @@ public class BlobBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (1-9999).  Default is 1000");
-            return;
-        }
-        for (int _x = 1; _x < par.length; _x++) {
-            if (par[_x].startsWith("g")) {
-                final double _temp = Integer.parseInt(par[_x].replace("g", ""));
+        for (int _i = 1; _i < par.length; _i++) {
+        	final String _param = par[_i];
+        	
+        	if (_param.equalsIgnoreCase("info")) {
+        		v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
+        		v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
+        		return;
+        	}
+            if (_param.startsWith("g")) {
+                final int _temp = Integer.parseInt(_param.replace("g", ""));
                 if (_temp >= GROW_PERCENT_MIN && _temp <= GROW_PERCENT_MAX) {
-                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + _temp / 100 + "%");
-                    this.growPercent = (int) _temp;
+                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float)_temp / 100f + "%");
+                    this.growPercent = _temp;
                 } else {
-                    v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                    v.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
                 }
                 continue;
             } else {

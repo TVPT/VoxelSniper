@@ -4,13 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * 
@@ -25,32 +24,25 @@ public class Jockey extends Brush {
     }
 
     private void sitOn(final SnipeData v) {
-        final Location _loc = v.owner().getPlayer().getLocation();
-        _loc.getX();
-        _loc.getY();
-        _loc.getZ();
+    	final Chunk _targetChunk = this.getWorld().getChunkAt(this.getTargetBlock().getLocation());
+    	final int _targetChunkX = _targetChunk.getX();
+    	final int _targetChunkZ = _targetChunk.getZ();
 
+        double _range = Double.MAX_VALUE;
         Entity _closest = null;
-        double _range = 99999999;
 
-        Chunk _chunk = this.getWorld().getChunkAt(this.getTargetBlock().getLocation());
-        final int chunkx = _chunk.getX();
-        final int chunkz = _chunk.getZ();
-
-        for (int _x = chunkx - 1; _x <= chunkx + 1; _x++) {
-            for (int _y = chunkz - 1; _y <= chunkz + 1; _y++) {
-                _chunk = this.getWorld().getChunkAt(_x, _y);
-                final Entity[] _toCheck = _chunk.getEntities();
-                for (final Entity _e : _toCheck) {
+        for (int _x = _targetChunkX - 1; _x <= _targetChunkX + 1; _x++) {
+            for (int _y = _targetChunkZ - 1; _y <= _targetChunkZ + 1; _y++) {
+                for (final Entity _e : this.getWorld().getChunkAt(_x, _y).getEntities()) {
                     if (_e.getEntityId() == v.owner().getPlayer().getEntityId()) {
                         continue;
                     }
+                    
                     final Location _entityLocation = _e.getLocation();
-
-                    final double _entityRange = Math.pow(this.getBlockPositionX() - _entityLocation.getX(), 2) + Math.pow(this.getBlockPositionY() - _entityLocation.getY(), 2) + Math.pow(this.getBlockPositionZ() - _entityLocation.getZ(), 2);
-
-                    if (_entityRange < _range) {
-                        _range = _entityRange;
+                    final double _entityDistance = _entityLocation.distance(v.owner().getPlayer().getLocation());
+                    
+                    if (_entityDistance < _range) {
+                        _range = _entityDistance;
                         _closest = _e;
                     }
                 }
@@ -58,24 +50,17 @@ public class Jockey extends Brush {
         }
 
         if (_closest != null) {
-            boolean _teleport = false;
-            PlayerTeleportEvent _teleEvent = null;
+			final Player _player = v.owner().getPlayer();
+			final PlayerTeleportEvent _teleEvent =  new PlayerTeleportEvent(_player, _player.getLocation(), _closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+			
+			Bukkit.getPluginManager().callEvent(_teleEvent);
 
-            final Player _player = v.owner().getPlayer();
-            _teleport = _player.isOnline();
-
-            if (_teleport) {
-                _teleEvent = new PlayerTeleportEvent(_player, _player.getLocation(), _closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-                Bukkit.getPluginManager().callEvent(_teleEvent);
-                _teleport = !_teleEvent.isCancelled();
-            }
-
-            if (_teleport) {
-                ((CraftEntity) v.owner().getPlayer()).getHandle().setPassengerOf(((CraftEntity) _closest).getHandle());
-                v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + _closest.getEntityId());
-            }
-        } else {
-            v.sendMessage(ChatColor.RED + "Could not find any entities");
+			if (!_teleEvent.isCancelled()) {
+				_player.setPassenger(_closest);
+				v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + _closest.getEntityId());
+			}
+		} else {
+			v.sendMessage(ChatColor.RED + "Could not find any entities");
         }
     }
 

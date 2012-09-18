@@ -43,12 +43,14 @@ public class Punish extends PerformBrush {
 
     private static final int TICKS_PER_SECOND = 20;
     private static final int INFINIPUNISH_SIZE = -3;
+    private static final int DEFAULT_PUNISH_LEVEL = 10;
+    private static final int DEFAULT_PUSNIH_DURATION = 60;
 
     private static int timesUsed = 0;
 
     private Punishment punishment = Punishment.FIRE;
-    private int punishLevel = 10;
-    private int punishDuration = 60;
+    private int punishLevel = DEFAULT_PUNISH_LEVEL;
+    private int punishDuration = DEFAULT_PUSNIH_DURATION;
 
     private boolean specificPlayer = false;
     private String punishPlayerName = "";
@@ -83,12 +85,12 @@ public class Punish extends PerformBrush {
             entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Punish.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
             break;
         case KILL:
-            entity.damage(Integer.MAX_VALUE);
+            entity.setHealth(0);
             break;
         case RANDOMTP:
             final Random _rand = new Random();
             final Location _targetLocation = entity.getLocation();
-            _targetLocation.setX(_targetLocation.getX() + (_rand.nextInt(400) - 200));
+            _targetLocation.setX(_targetLocation.getX() + (_rand.nextInt(MAXIMAL_RANDOM_TELEPORTATION_RANGE) - (MAXIMAL_RANDOM_TELEPORTATION_RANGE / 2)));
             _targetLocation.setZ(_targetLocation.getZ()
                     + (_rand.nextInt(Punish.MAXIMAL_RANDOM_TELEPORTATION_RANGE) - Punish.MAXIMAL_RANDOM_TELEPORTATION_RANGE / 2));
             entity.teleport(_targetLocation);
@@ -113,17 +115,17 @@ public class Punish extends PerformBrush {
             if (entity instanceof Player) {
                 final Location _loc = entity.getLocation();
                 Location _target = _loc.clone();
-                for (int z = this.punishLevel; z >= -this.punishLevel; z--) {
-                    for (int x = this.punishLevel; x >= -this.punishLevel; x--) {
-                        for (int y = this.punishLevel; y >= -this.punishLevel; y--) {
-                            _target.setX(_loc.getX() + x);
-                            _target.setY(_loc.getY() + y);
-                            _target.setZ(_loc.getZ() + z);
+                for (int _z = this.punishLevel; _z >= -this.punishLevel; _z--) {
+                    for (int _x = this.punishLevel; _x >= -this.punishLevel; _x--) {
+                        for (int _y = this.punishLevel; _y >= -this.punishLevel; _y--) {
+                            _target.setX(_loc.getX() + _x);
+                            _target.setY(_loc.getY() + _y);
+                            _target.setZ(_loc.getZ() + _z);
                             if (this.hypnoAffectLandscape && _target.getBlock().getType() == Material.AIR) {
                                 continue;
                             }
                             _target = _loc.clone();
-                            _target.add(x, y, z);
+                            _target.add(_x, _y, _z);
                             ((Player) entity).sendBlockChange(_target, v.getVoxelId(), v.getData());
                         }
                     }
@@ -166,6 +168,9 @@ public class Punish extends PerformBrush {
                             this.applyPunishment(_entity, v);
                         }
                     } catch (final Exception _e) {
+                    	_e.printStackTrace();
+                    	v.sendMessage("An error occured.");
+                    	return;
                     }
                 } else if (v.getBrushSize() == Punish.INFINIPUNISH_SIZE) {
                     _numPunishApps++;
@@ -173,16 +178,11 @@ public class Punish extends PerformBrush {
                 }
             }
         }
-        v.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + _numPunishApps + " Living Entities.");
+        v.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + _numPunishApps + " living entities.");
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        if (!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
-            v.sendMessage("Y U don't have permission to use this brush?!");
-            return;
-        }
-
         final int _brushSizeSquare = v.getBrushSize() * v.getBrushSize();
         final Location _targetLocation = new Location(v.getWorld(), this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
 
@@ -210,32 +210,31 @@ public class Punish extends PerformBrush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
-    		v.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
-    		v.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
-    		v.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
-    		v.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
-    		v.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
-    		v.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
-    		final StringBuilder _punishmentOptions = new StringBuilder();
-    		for (final Punishment _punishment : Punishment.values()) {
-    			if (_punishmentOptions.length() != 0) {
-    				_punishmentOptions.append(" | ");
-    			}
-    			_punishmentOptions.append(_punishment.name());
-    		}
-    		v.sendMessage(ChatColor.GOLD + _punishmentOptions.toString());
-    		return;
-    	}
-    	for (int _x = 1; _x < par.length; _x++) {
-    		final String _string = par[_x].toLowerCase();
+    	for (int _i = 1; _i < par.length; _i++) {
+    		final String _string = par[_i].toLowerCase();
     		
-    		if (_string.equalsIgnoreCase("-toggleSM")) {
+    		if (_string.equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
+    			v.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
+    			v.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
+    			v.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
+    			v.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
+    			v.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
+    			v.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
+    			final StringBuilder _punishmentOptions = new StringBuilder();
+    			for (final Punishment _punishment : Punishment.values()) {
+    				if (_punishmentOptions.length() != 0) {
+    					_punishmentOptions.append(" | ");
+    				}
+    				_punishmentOptions.append(_punishment.name());
+    			}
+				v.sendMessage(ChatColor.GOLD + _punishmentOptions.toString());
+				return;
+			} else if (_string.equalsIgnoreCase("-toggleSM")) {
     			this.specificPlayer = !this.specificPlayer;
     			if (this.specificPlayer) {
     				try {
-    					this.punishPlayerName = par[++_x];
+    					this.punishPlayerName = par[++_i];
     					continue;
     				} catch (final IndexOutOfBoundsException _e) {
     					v.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");

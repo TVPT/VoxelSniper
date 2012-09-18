@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.PaintingWrapper;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * Painting scrolling Brush
@@ -11,6 +12,9 @@ import com.thevoxelbox.voxelsniper.PaintingWrapper;
 public class Painting extends Brush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public Painting() {
         this.setName("Painting");
     }

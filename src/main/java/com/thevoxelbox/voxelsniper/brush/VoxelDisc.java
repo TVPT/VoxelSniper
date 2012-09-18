@@ -11,15 +11,18 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 public class VoxelDisc extends PerformBrush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public VoxelDisc() {
         this.setName("Voxel Disc");
     }
 
     private final void disc(final SnipeData v) {
-        final int bsize = v.getBrushSize();
+        final int _bSize = v.getBrushSize();
 
-        for (int x = bsize; x >= -bsize; x--) {
-            for (int y = bsize; y >= -bsize; y--) {
+        for (int x = _bSize; x >= -_bSize; x--) {
+            for (int y = _bSize; y >= -_bSize; y--) {
                 this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
             }
         }

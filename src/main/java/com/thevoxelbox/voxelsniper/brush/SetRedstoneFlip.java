@@ -13,10 +13,10 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class SetRedstoneFlip extends Brush {
+	private static int timesUsed = 0;
     private Block block = null;
     private Undo undo;
     private boolean northSouth = true;
-    private static int timesUsed = 0;
 
     public SetRedstoneFlip() {
         this.setName("Set Redstone Flip");
@@ -34,6 +34,7 @@ public class SetRedstoneFlip extends Brush {
             final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
             final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
             final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            
             for (int _y = _lowy; _y <= _highy; _y++) {
                 for (int _x = _lowx; _x <= _highx; _x++) {
                     for (int _z = _lowz; _z <= _highz; _z++) {
@@ -69,7 +70,7 @@ public class SetRedstoneFlip extends Brush {
     }
 
     @Override
-    protected final void arrow(final SnipeData v) { // Derp
+    protected final void arrow(final SnipeData v) {
         if (this.set(this.getTargetBlock())) {
             v.sendMessage(ChatColor.GRAY + "Point one");
         } else {
@@ -94,18 +95,18 @@ public class SetRedstoneFlip extends Brush {
     
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
-    		v.sendMessage(ChatColor.AQUA
-    				+ "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
-    		return;
-    	}
-    	for (int _x = 1; _x < par.length; _x++) {
-    		if (par[_x].startsWith("n") || par[_x].startsWith("s") || par[_x].startsWith("ns")) {
+    	for (int _i = 1; _i < par.length; _i++) {
+    		if (par[_i].equalsIgnoreCase("info")) {
+    			v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
+    			v.sendMessage(ChatColor.AQUA
+    					+ "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
+    			return;
+    		}
+    		if (par[_i].startsWith("n") || par[_i].startsWith("s") || par[_i].startsWith("ns")) {
     			this.northSouth = true;
     			v.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
     			continue;
-    		} else if (par[_x].startsWith("e") || par[_x].startsWith("world") || par[_x].startsWith("ew")) {
+    		} else if (par[_i].startsWith("e") || par[_i].startsWith("world") || par[_i].startsWith("ew")) {
     			this.northSouth = false;
     			v.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
     			continue;
