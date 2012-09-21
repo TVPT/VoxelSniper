@@ -38,8 +38,6 @@ import com.thevoxelbox.voxelsniper.brush.ErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.ExtrudeBrush;
 import com.thevoxelbox.voxelsniper.brush.FillDownBrush;
 import com.thevoxelbox.voxelsniper.brush.FlatOceanBrush;
-import com.thevoxelbox.voxelsniper.brush.FreezeRayBrush;
-import com.thevoxelbox.voxelsniper.brush.RegenerateChunkBrush;
 import com.thevoxelbox.voxelsniper.brush.GenerateTreeBrush;
 import com.thevoxelbox.voxelsniper.brush.HeatRayBrush;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
@@ -52,10 +50,9 @@ import com.thevoxelbox.voxelsniper.brush.OceanBrush;
 import com.thevoxelbox.voxelsniper.brush.OceanSelectionBrush;
 import com.thevoxelbox.voxelsniper.brush.OverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.PaintingBrush;
-import com.thevoxelbox.voxelsniper.brush.Pointless;
-import com.thevoxelbox.voxelsniper.brush.PullTest;
 import com.thevoxelbox.voxelsniper.brush.PunishBrush;
 import com.thevoxelbox.voxelsniper.brush.RandomErodeBrush;
+import com.thevoxelbox.voxelsniper.brush.RegenerateChunkBrush;
 import com.thevoxelbox.voxelsniper.brush.RingBrush;
 import com.thevoxelbox.voxelsniper.brush.Rot2DBrush;
 import com.thevoxelbox.voxelsniper.brush.Rot2DvertBrush;
@@ -75,7 +72,6 @@ import com.thevoxelbox.voxelsniper.brush.SplatterDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterOverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterVoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterVoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.SplineBrush;
 import com.thevoxelbox.voxelsniper.brush.StencilBrush;
 import com.thevoxelbox.voxelsniper.brush.StencilListBrush;
 import com.thevoxelbox.voxelsniper.brush.ThreePointCircleBrush;
@@ -86,7 +82,6 @@ import com.thevoxelbox.voxelsniper.brush.VoltMeterBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelDiscFaceBrush;
-import com.thevoxelbox.voxelsniper.brush.WarpInStyle;
 
 /**
  * 
@@ -106,12 +101,10 @@ public enum SniperBrushes {
     OCEAN_SELECTION(OceanSelectionBrush.class, "ocs", "oceanselection"), // [ 10 ] \\
     CLONE_STAMP(CloneStampBrush.class, "cs", "clonestamp"), // [ 11 ] \\
     ERODE(ErodeBrush.class, "e", "erode"), // [ 12 ] \\
-    SOFT_SELECT_TEST(PullTest.class, "pull", "pull"), // [ 13 ] \\
     PAINTING(PaintingBrush.class, "paint", "painting"), // [ 14 ] \\
     CANYON(CanyonBrush.class, "ca", "canyon"), // [ 15 ] \\
     CANYON_SELECTION(CanyonSelectionBrush.class, "cas", "canyonselection"), // [ 16 ] \\
     TWO_D_ROTATION(Rot2DBrush.class, "rot2", "rotation2D"), // [ 17 ] \\
-    WARP_IN_STYLE(WarpInStyle.class, "world", "warpinstyle"), // [ 18 ] \\
     FILL_DOWN(FillDownBrush.class, "fd", "filldown"), // [ 19 ] \\
     SET(SetBrush.class, "set", "set"), // [ 20 ] \\
     JOCKEY(JockeyBrush.class, "jockey", "jockey"), // [ 21 ] \\
@@ -151,7 +144,6 @@ public enum SniperBrushes {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DivineRage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     GENERATE_CHUNK(RegenerateChunkBrush.class, "gc", "generatechunk"), // [ 1 ] \\ // No documentation. Fucks up client-sided. Still works though.
     TREE_GENERATE(TreeSnipeBrush.class, "t", "treesnipe"), // [ 2 ] \\
-    POINTLESS(Pointless.class, "drlolol", "pointlessbrush"), // [ 4 ] \\
     SCANNER(ScannerBrush.class, "sc", "scanner"), // [ 5 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Gavjenks~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
@@ -168,11 +160,9 @@ public enum SniperBrushes {
     STENCILLIST(StencilListBrush.class, "sl", "stencillist"), // [ 24 ] \\
     BLOCK_RESET_SURFACE(BlockResetSurfaceBrush.class, "brbs", "blockresetbrushsurface"), // [25] \\
     FLAT_OCEAN(FlatOceanBrush.class, "fo", "flatocean"), // [ 26 ] \\
-    FREEZE_RAY(FreezeRayBrush.class, "fr", "freezeray"),
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~psanker~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     ELLIPSE(EllipseBrush.class, "el", "ellipse"), // [ 1 ] \\
-    SPLINE(SplineBrush.class, "sp", "spline"), // [ 2 ] \\
     CLEAN_SNOW(CleanSnowBrush.class, "cls", "cleansnow"), // [ 4 ] \\
     EXTRUDE(ExtrudeBrush.class, "ex", "extrude"), // [ 5 ] \\
 
