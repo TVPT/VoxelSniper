@@ -23,15 +23,15 @@ public class SpiralStaircaseBrush extends Brush {
     }
 
     private final void buildStairWell(final SnipeData v) {
-        final int _brushSize = v.getBrushSize();
-        final int _voxelMaterialId = v.getVoxelId();
-        final int[][][] _spiral = new int[2 * _brushSize + 1][_height][2 * _brushSize + 1];
-
         if (v.getVoxelHeight() < 1) {
             v.setVoxelHeight(1);
             v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
+
         final int _height = v.getVoxelHeight();
+        final int _brushSize = v.getBrushSize();
+        final int _voxelMaterialId = v.getVoxelId();
+        final int[][][] _spiral = new int[2 * _brushSize + 1][_height][2 * _brushSize + 1];
 
         // locate first block in staircase
         // Note to self, fix these
