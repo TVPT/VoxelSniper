@@ -7,13 +7,16 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * THIS BRUSH SHOULD NOT USE PERFORMERS
+ * THIS BRUSH SHOULD NOT USE PERFORMERS.
  * 
  * @author Voxel
  */
 public class ShellVoxelBrush extends Brush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public ShellVoxelBrush() {
         this.setName("Shell Voxel");
     }
@@ -48,30 +51,30 @@ public class ShellVoxelBrush extends Brush {
         // Hollow Brush Area
         for (int _x = 0; _x <= _twoBrushSize; _x++) {
             for (int _y = 0; _y <= _twoBrushSize; _y++) {
-                for (int z = 0; z <= _twoBrushSize; z++) {
+                for (int _z = 0; _z <= _twoBrushSize; _z++) {
                     _temp = 0;
 
-                    if (_oldmats[_x + 1 + 1][_y + 1][z + 1] == _voxelReplaceMaterialId) {
+                    if (_oldmats[_x + 1 + 1][_y + 1][_z + 1] == _voxelReplaceMaterialId) {
                         _temp++;
                     }
-                    if (_oldmats[_x + 1 - 1][_y + 1][z + 1] == _voxelReplaceMaterialId) {
+                    if (_oldmats[_x + 1 - 1][_y + 1][_z + 1] == _voxelReplaceMaterialId) {
                         _temp++;
                     }
-                    if (_oldmats[_x + 1][_y + 1 + 1][z + 1] == _voxelReplaceMaterialId) {
+                    if (_oldmats[_x + 1][_y + 1 + 1][_z + 1] == _voxelReplaceMaterialId) {
                         _temp++;
                     }
-                    if (_oldmats[_x + 1][_y + 1 - 1][z + 1] == _voxelReplaceMaterialId) {
+                    if (_oldmats[_x + 1][_y + 1 - 1][_z + 1] == _voxelReplaceMaterialId) {
                         _temp++;
                     }
-                    if (_oldmats[_x + 1][_y + 1][z + 1 + 1] == _voxelReplaceMaterialId) {
+                    if (_oldmats[_x + 1][_y + 1][_z + 1 + 1] == _voxelReplaceMaterialId) {
                         _temp++;
                     }
-                    if (_oldmats[_x + 1][_y + 1][z + 1 - 1] == _voxelReplaceMaterialId) {
+                    if (_oldmats[_x + 1][_y + 1][_z + 1 - 1] == _voxelReplaceMaterialId) {
                         _temp++;
                     }
 
                     if (_temp == 0) {
-                        _newmats[_x][_y][z] = _voxelMaterialId;
+                        _newmats[_x][_y][_z] = _voxelMaterialId;
                     }
                 }
             }

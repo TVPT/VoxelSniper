@@ -15,6 +15,9 @@ public class DiscFaceBrush extends PerformBrush {
     private double trueCircle = 0;
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public DiscFaceBrush() {
         this.setName("Disc Face");
     }

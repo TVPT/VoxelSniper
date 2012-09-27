@@ -5,7 +5,7 @@ import com.thevoxelbox.voxelsniper.PaintingWrapper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
- * Painting scrolling Brush
+ * Painting scrolling Brush.
  * 
  * @author Voxel
  */
@@ -20,7 +20,7 @@ public class PaintingBrush extends Brush {
     }
 
     /**
-     * Scroll painting forward
+     * Scroll painting forward.
      * 
      * @param v
      *            Sniper caller
@@ -31,7 +31,7 @@ public class PaintingBrush extends Brush {
     }
 
     /**
-     * Scroll painting backwards
+     * Scroll painting backwards.
      * 
      * @param v
      *            Sniper caller

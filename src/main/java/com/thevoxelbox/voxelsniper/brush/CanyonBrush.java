@@ -32,8 +32,7 @@ public class CanyonBrush extends Brush {
      * @param chunk
      * @param undo
      */
-    protected void canyon(final Chunk chunk, final Undo undo) {
-
+    protected final void canyon(final Chunk chunk, final Undo undo) {
         for (int _x = 0; _x < CHUNK_SIZE; _x++) {
             for (int _z = 0; _z < CHUNK_SIZE; _z++) {
                 int _yy = this.yLevel;

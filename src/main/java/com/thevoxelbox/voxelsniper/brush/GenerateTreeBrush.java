@@ -43,6 +43,9 @@ public class GenerateTreeBrush extends Brush {
 
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public GenerateTreeBrush() {
         this.setName("Generate Tree");
     }
@@ -183,7 +186,7 @@ public class GenerateTreeBrush extends Brush {
     }
 
     /**
-     * Code Concerning Root Generation
+     * Code Concerning Root Generation.
      * @param xDirection
      * @param zDirection
      */
@@ -619,7 +622,7 @@ public class GenerateTreeBrush extends Brush {
                 } else {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
                 }
-            } catch (final Exception e) {
+            } catch (final Exception _e) {
                 v.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + par[_i]
                         + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
             }

@@ -32,7 +32,9 @@ public class SplatterBallBrush extends PerformBrush {
     private int splatterRecursions; // How many times you grow the seeds
     private Random generator = new Random();
 
-
+    /**
+     * 
+     */
     public SplatterBallBrush() {
         this.setName("Splatter Ball");
     }
@@ -195,31 +197,31 @@ public class SplatterBallBrush extends PerformBrush {
     			v.sendMessage(ChatColor.AQUA + "/b sb r[int] -- set a recursion (1-10).  Default is 3");
     			return;
     		} else if (_param.startsWith("s")) {
-    			final double temp = Integer.parseInt(_param.replace("s", ""));
+    			final double _temp = Integer.parseInt(_param.replace("s", ""));
     			
-    			if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX) {
-    				v.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
-    				this.seedPercent = (int) temp;
+    			if (_temp >= SEED_PERCENT_MIN && _temp <= SEED_PERCENT_MAX) {
+    				v.sendMessage(ChatColor.AQUA + "Seed percent set to: " + _temp / 100 + "%");
+    				this.seedPercent = (int) _temp;
     			} else {
     				v.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
     			}
     			continue;
     		} else if (_param.startsWith("g")) {
-    			final double temp = Integer.parseInt(_param.replace("g", ""));
+    			final double _temp = Integer.parseInt(_param.replace("g", ""));
     			
-    			if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
-    				v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
-    				this.growPercent = (int) temp;
+    			if (_temp >= GROW_PERCENT_MIN && _temp <= GROW_PERCENT_MAX) {
+    				v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + _temp / 100 + "%");
+    				this.growPercent = (int) _temp;
     			} else {
     				v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
     			}
     			continue;
     		} else if (_param.startsWith("r")) {
-    			final int temp = Integer.parseInt(_param.replace("r", ""));
+    			final int _temp = Integer.parseInt(_param.replace("r", ""));
     			
-    			if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX) {
-    				v.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
-    				this.splatterRecursions = temp;
+    			if (_temp >= SPLATREC_PERCENT_MIN && _temp <= SPLATREC_PERCENT_MAX) {
+    				v.sendMessage(ChatColor.AQUA + "Recursions set to: " + _temp);
+    				this.splatterRecursions = _temp;
     			} else {
     				v.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
     			}

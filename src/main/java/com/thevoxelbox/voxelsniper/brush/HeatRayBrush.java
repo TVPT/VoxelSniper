@@ -176,13 +176,13 @@ public class HeatRayBrush extends Brush {
     			v.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
     		}
     		if (_param.startsWith("oct")) {
-    			this.octaves = Integer.valueOf(_param.substring(3));
+    			this.octaves = Integer.valueOf(_param.replace("oct", ""));
     			v.getVoxelMessage().custom(ChatColor.GREEN + "Octaves: " + this.octaves);
     		} else if (_param.startsWith("amp")) {
-    			this.amplitude = Double.valueOf(_param.substring(3));
+    			this.amplitude = Double.valueOf(_param.replace("amp", ""));
     			v.getVoxelMessage().custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
     		} else if (_param.startsWith("freq")) {
-    			this.frequency = Double.valueOf(_param.substring(4));
+    			this.frequency = Double.valueOf(_param.replace("freq", ""));
     			v.getVoxelMessage().custom(ChatColor.GREEN + "Frequency: " + this.frequency);
     		}
     	}

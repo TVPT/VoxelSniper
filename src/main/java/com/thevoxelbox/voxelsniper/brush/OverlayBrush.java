@@ -17,6 +17,9 @@ public class OverlayBrush extends PerformBrush {
 
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public OverlayBrush() {
         this.setName("Overlay (Topsoil Filling)");
     }

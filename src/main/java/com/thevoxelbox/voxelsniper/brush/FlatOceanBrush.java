@@ -16,7 +16,9 @@ public class FlatOceanBrush extends Brush {
     private int waterLevel = 29;
     private int floorLevel = 8;
 
-
+    /**
+     * 
+     */
     public FlatOceanBrush() {
         this.setName("FlatOcean");
     }
@@ -45,14 +47,14 @@ public class FlatOceanBrush extends Brush {
     @Override
     protected final void powder(final SnipeData v) {
         this.flatOcean(this.getWorld().getChunkAt(this.getTargetBlock()));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ())));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() + CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ())));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() - CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 1, this.getBlockPositionZ())));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 1, this.getBlockPositionZ() + CHUNK_SIZE)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 1, this.getBlockPositionZ() + CHUNK_SIZE)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 1, this.getBlockPositionZ() + CHUNK_SIZE)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 1, this.getBlockPositionZ())));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 1, this.getBlockPositionZ() - CHUNK_SIZE)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 1, this.getBlockPositionZ() - CHUNK_SIZE)));
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 1, this.getBlockPositionZ() - CHUNK_SIZE)));
     }
     
     @Override
@@ -64,8 +66,7 @@ public class FlatOceanBrush extends Brush {
     }
     
     @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-    	
+    public final void parameters(final String[] par, final SnipeData v) {    	
     	for (int _i = 1; _i < par.length; _i++) {
     		final String _param = par[_i];
     		

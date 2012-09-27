@@ -173,10 +173,10 @@ public class TriangleBrush extends PerformBrush {
                             / this.normalVector[1];
 
                     // Area of triangle currentcoords, coordsone, coordstwo
-                    for (int i = 0; i < 3; i++) {
-                        _cVectorOne[i] = this.coordsTwo[i] - this.coordsOne[i];
-                        _cVectorTwo[i] = this.currentCoords[i] - this.coordsOne[i];
-                        _cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
+                    for (int _i = 0; _i < 3; _i++) {
+                        _cVectorOne[_i] = this.coordsTwo[_i] - this.coordsOne[_i];
+                        _cVectorTwo[_i] = this.currentCoords[_i] - this.coordsOne[_i];
+                        _cVectorThree[_i] = this.currentCoords[_i] - this.coordsTwo[_i];
                     }
                     double _cLengthOne = Math.pow(Math.pow(_cVectorOne[0], 2) + Math.pow(_cVectorOne[1], 2) + Math.pow(_cVectorOne[2], 2), .5);
                     double _cLengthTwo = Math.pow(Math.pow(_cVectorTwo[0], 2) + Math.pow(_cVectorTwo[1], 2) + Math.pow(_cVectorTwo[2], 2), .5);
@@ -187,10 +187,10 @@ public class TriangleBrush extends PerformBrush {
                                     * (Math.pow(_cLengthOne, 4) + Math.pow(_cLengthTwo, 4) + Math.pow(_cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordstwo
-                    for (int i = 0; i < 3; i++) {
-                        _cVectorOne[i] = this.coordsTwo[i] - this.coordsThree[i];
-                        _cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
-                        _cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
+                    for (int _i = 0; _i < 3; _i++) {
+                        _cVectorOne[_i] = this.coordsTwo[_i] - this.coordsThree[_i];
+                        _cVectorTwo[_i] = this.currentCoords[_i] - this.coordsThree[_i];
+                        _cVectorThree[_i] = this.currentCoords[_i] - this.coordsTwo[_i];
                     }
                     _cLengthOne = Math.pow(Math.pow(_cVectorOne[0], 2) + Math.pow(_cVectorOne[1], 2) + Math.pow(_cVectorOne[2], 2), .5);
                     _cLengthTwo = Math.pow(Math.pow(_cVectorTwo[0], 2) + Math.pow(_cVectorTwo[1], 2) + Math.pow(_cVectorTwo[2], 2), .5);
@@ -200,10 +200,10 @@ public class TriangleBrush extends PerformBrush {
                                     * (Math.pow(_cLengthOne, 4) + Math.pow(_cLengthTwo, 4) + Math.pow(_cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordsone
-                    for (int i = 0; i < 3; i++) {
-                        _cVectorOne[i] = this.coordsOne[i] - this.coordsThree[i];
-                        _cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
-                        _cVectorThree[i] = this.currentCoords[i] - this.coordsOne[i];
+                    for (int _i = 0; _i < 3; _i++) {
+                        _cVectorOne[_i] = this.coordsOne[_i] - this.coordsThree[_i];
+                        _cVectorTwo[_i] = this.currentCoords[_i] - this.coordsThree[_i];
+                        _cVectorThree[_i] = this.currentCoords[_i] - this.coordsOne[_i];
                     }
                     _cLengthOne = Math.pow(Math.pow(_cVectorOne[0], 2) + Math.pow(_cVectorOne[1], 2) + Math.pow(_cVectorOne[2], 2), .5);
                     _cLengthTwo = Math.pow(Math.pow(_cVectorTwo[0], 2) + Math.pow(_cVectorTwo[1], 2) + Math.pow(_cVectorTwo[2], 2), .5);
@@ -212,9 +212,9 @@ public class TriangleBrush extends PerformBrush {
                             Math.pow(Math.pow(_cLengthOne, 2) + Math.pow(_cLengthTwo, 2) + Math.pow(_cLengthThree, 2), 2) - 2
                                     * (Math.pow(_cLengthOne, 4) + Math.pow(_cLengthTwo, 4) + Math.pow(_cLengthThree, 4)), .5);
 
-                    final double barycentric = (_heronOne + _heronTwo + _heronThree) / _heronBig;
+                    final double _barycentric = (_heronOne + _heronTwo + _heronThree) / _heronBig;
 
-                    if (barycentric <= 1.1) {
+                    if (_barycentric <= 1.1) {
 
                         this.current.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
 

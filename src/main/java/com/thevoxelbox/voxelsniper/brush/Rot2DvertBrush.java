@@ -23,6 +23,9 @@ public class Rot2DvertBrush extends Brush {
     private BlockWrapper[][][] snap;
     private double se;
 
+    /**
+     * 
+     */
     public Rot2DvertBrush() {
         this.setName("2D Rotation");
     }
@@ -39,13 +42,13 @@ public class Rot2DvertBrush extends Brush {
         for (int _x = 0; _x < this.snap.length; _x++) {
             _sz = this.getBlockPositionZ() - this.bSize;
 
-            for (int z = 0; z < this.snap.length; z++) {
+            for (int _z = 0; _z < this.snap.length; _z++) {
                 _sy = this.getBlockPositionY() - this.bSize;
 
-                for (int y = 0; y < this.snap.length; y++) {
-                    final Block b = this.clampY(_sx, _sy, _sz); // why is this not sx + x, sy + y sz + z?
-                    this.snap[_x][y][z] = new BlockWrapper(b);
-                    b.setTypeId(0);
+                for (int _y = 0; _y < this.snap.length; _y++) {
+                    final Block _b = this.clampY(_sx, _sy, _sz); // why is this not sx + x, sy + y sz + z?
+                    this.snap[_x][_y][_z] = new BlockWrapper(_b);
+                    _b.setTypeId(0);
                     _sy++;
                 }
 
@@ -80,11 +83,11 @@ public class Rot2DvertBrush extends Brush {
                     for (int _y = 0; _y < this.snap.length; _y++) {
                     	final int _yy = _y - this.bSize;
 
-                        final BlockWrapper vb = this.snap[_y][_x][_z];
-                        if (vb.id == 0) {
+                        final BlockWrapper _vb = this.snap[_y][_x][_z];
+                        if (_vb.id == 0) {
                             continue;
                         }
-                        this.setBlockIdAt(vb.id, this.getBlockPositionX() + _yy, this.getBlockPositionY() + (int) _newX, this.getBlockPositionZ() + (int) _newZ);
+                        this.setBlockIdAt(_vb.id, this.getBlockPositionX() + _yy, this.getBlockPositionY() + (int) _newX, this.getBlockPositionZ() + (int) _newZ);
                     }
                 }
             }
@@ -143,7 +146,7 @@ public class Rot2DvertBrush extends Brush {
     }
 
     @Override
-    protected void powder(final SnipeData v) {
+    protected final void powder(final SnipeData v) {
     	this.bSize = v.getBrushSize();
 
         switch (this.mode) {
@@ -164,16 +167,16 @@ public class Rot2DvertBrush extends Brush {
         vm.brushName(this.getName());
     }
 
-    @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-    	try {
-        this.se = Math.toRadians(Double.parseDouble(par[1]));
-        v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
-    
-    	}catch(Exception _ex) {
-    		v.sendMessage("Exception while parsing parameter: " + par[1]);
-    		Bukkit.getLogger().severe(_ex.getMessage());}
-    	}
+	@Override
+	public final void parameters(final String[] par, final SnipeData v) {
+		try {
+			this.se = Math.toRadians(Double.parseDouble(par[1]));
+			v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
+		} catch (Exception _ex) {
+			v.sendMessage("Exception while parsing parameter: " + par[1]);
+			Bukkit.getLogger().severe(_ex.getMessage());
+		}
+	}
 
     @Override
     public final int getTimesUsed() {

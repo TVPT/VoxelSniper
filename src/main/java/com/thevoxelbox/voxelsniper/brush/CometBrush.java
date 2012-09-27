@@ -14,6 +14,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 public class CometBrush extends Brush {
 	private static int timesUsed = 0;
 
+	/**
+	 * 
+	 */
 	public CometBrush() {
 		this.setName("Comet");
 	}
@@ -23,7 +26,7 @@ public class CometBrush extends Brush {
 		final Vector _targetCoords = new Vector(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()), this.getTargetBlock().getY() + .5, this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
 		
 		// Hadoken!
-		this.getWorld().spawn(_playerLoc, SmallFireball.class).setVelocity( _targetCoords.subtract(_playerLoc.toVector()).normalize());
+		this.getWorld().spawn(_playerLoc, SmallFireball.class).setVelocity(_targetCoords.subtract(_playerLoc.toVector()).normalize());
 	}
 
 	@Override

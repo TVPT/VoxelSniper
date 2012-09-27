@@ -16,7 +16,9 @@ public class RingBrush extends PerformBrush {
 	private double trueCircle = 0;
     private double innerSize = 0;
 
-
+	/**
+	 * 
+	 */
     public RingBrush() {
         this.setName("Ring");
     }
@@ -81,11 +83,11 @@ public class RingBrush extends PerformBrush {
     			continue;
     		} else if (par[_i].startsWith("ir")) {
     			try {
-    				final double d = Double.parseDouble(par[_i].replace("ir", ""));
-    				this.innerSize = d;
+    				final double _d = Double.parseDouble(par[_i].replace("ir", ""));
+    				this.innerSize = _d;
     				v.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
-    			} catch (final Exception e) {
-    				v.sendMessage(ChatColor.RED + "The parameters included are invalid");
+    			} catch (final Exception _e) {
+    				v.sendMessage(ChatColor.RED + "The parameters included are invalid.");
     			}
     		} else {
     			v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");

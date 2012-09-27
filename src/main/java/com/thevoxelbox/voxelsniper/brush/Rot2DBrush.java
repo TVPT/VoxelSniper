@@ -20,6 +20,9 @@ public class Rot2DBrush extends Brush {
     private BlockWrapper[][][] snap;
     private double se;
 
+    /**
+     * 
+     */
     public Rot2DBrush() {
         this.setName("2D Rotation");
     }
@@ -41,9 +44,9 @@ public class Rot2DBrush extends Brush {
                 _sy = this.getBlockPositionY() - this.bSize;
                 if (_xPow + Math.pow(_z - this.bSize, 2) <= _bPow) {
                     for (int _y = 0; _y < this.snap.length; _y++) {
-                        final Block b = this.clampY(_sx, _sy, _sz); // why is this not sx + x, sy + y sz + z?
-                        this.snap[_x][_y][_z] = new BlockWrapper(b);
-                        b.setTypeId(0);
+                        final Block _b = this.clampY(_sx, _sy, _sz); // why is this not sx + x, sy + y sz + z?
+                        this.snap[_x][_y][_z] = new BlockWrapper(_b);
+                        _b.setTypeId(0);
                         _sy++;
                     }
                 }
@@ -98,8 +101,8 @@ public class Rot2DBrush extends Brush {
                     if (!_doNotFill[_x][_z]) {
                         // smart fill stuff
 
-                        for (int y = 0; y < this.snap.length; y++) {
-                            final int _fy = y + this.getBlockPositionY() - this.bSize;
+                        for (int _y = 0; _y < this.snap.length; _y++) {
+                            final int _fy = _y + this.getBlockPositionY() - this.bSize;
                             
                             final int _a = this.getBlockIdAt(_fx + 1, _fy, _fz);
                             final int _d = this.getBlockIdAt(_fx - 1, _fy, _fz);
@@ -142,7 +145,7 @@ public class Rot2DBrush extends Brush {
     }
 
     @Override
-    protected void powder(final SnipeData v) {
+    protected final void powder(final SnipeData v) {
     	this.bSize = v.getBrushSize();
 
         switch (this.mode) {

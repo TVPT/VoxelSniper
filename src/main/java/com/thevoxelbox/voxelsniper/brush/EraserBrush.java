@@ -13,11 +13,14 @@ import com.thevoxelbox.voxelsniper.Undo;
 public class EraserBrush extends Brush {	
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public EraserBrush() {
         this.setName("Eraser");
     }
 
-    private final void doErase(final SnipeData v, boolean keepWater) {
+    private final void doErase(final SnipeData v, final boolean keepWater) {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _brushSize;
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());

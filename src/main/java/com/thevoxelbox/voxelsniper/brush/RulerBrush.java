@@ -23,7 +23,9 @@ public class RulerBrush extends Brush {
     private int yOff = 0;
     private int zOff = 0;
 
-
+    /**
+     * 
+     */
     public RulerBrush() {
         this.setName("Ruler");
     }
@@ -62,8 +64,8 @@ public class RulerBrush extends Brush {
     }
     
     private final double roundTwoDecimals(final double d) {
-    	final DecimalFormat twoDForm = new DecimalFormat("#.##");
-    	return Double.valueOf(twoDForm.format(d));
+    	final DecimalFormat _twoDForm = new DecimalFormat("#.##");
+    	return Double.valueOf(_twoDForm.format(d));
     }
 
     @Override

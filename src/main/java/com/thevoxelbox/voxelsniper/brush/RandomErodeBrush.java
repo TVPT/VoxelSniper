@@ -13,16 +13,18 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Piotr Randomized blockPositionY Giltwist
  */
 public class RandomErodeBrush extends Brush {
-
-    private class eBlock {
-
+    private class BlockWrapper {
         public boolean solid;
-        public Block b;
-        public int id;
+        public Block nativeBlock;
+		public int id;
         public int i;
 
-        public eBlock(final Block bl) {
-            this.b = bl;
+        /**
+         * 
+         * @param bl
+         */
+        public BlockWrapper(final Block bl) {
+            this.nativeBlock = bl;
             this.i = bl.getTypeId();
             switch (bl.getType()) {
             case AIR:
@@ -50,8 +52,8 @@ public class RandomErodeBrush extends Brush {
         }
     }
 
-    private eBlock[][][] snap;
-    private eBlock[][][] firstSnap;
+    private BlockWrapper[][][] snap;
+    private BlockWrapper[][][] firstSnap;
     private int bsize;
     private int erodeFace;
     private int fillFace;
@@ -64,6 +66,9 @@ public class RandomErodeBrush extends Brush {
 
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public RandomErodeBrush() {
         this.setName("RandomErode");
     }
@@ -90,11 +95,7 @@ public class RandomErodeBrush extends Brush {
             if (!this.snap[x][y][z - 1].solid) {
                 _d++;
             }
-            if (_d >= this.erodeFace) {
-                return true;
-            } else {
-                return false;
-            }
+            return (_d >= this.erodeFace);
         } else {
             return false;
         }
@@ -106,27 +107,27 @@ public class RandomErodeBrush extends Brush {
         } else {
             int _d = 0;
             if (this.snap[x + 1][y][z].solid) {
-                this.snap[x][y][z].id = this.snap[x + 1][y][z].b.getTypeId();
+                this.snap[x][y][z].id = this.snap[x + 1][y][z].nativeBlock.getTypeId();
                 _d++;
             }
             if (this.snap[x - 1][y][z].solid) {
-                this.snap[x][y][z].id = this.snap[x - 1][y][z].b.getTypeId();
+                this.snap[x][y][z].id = this.snap[x - 1][y][z].nativeBlock.getTypeId();
                 _d++;
             }
             if (this.snap[x][y + 1][z].solid) {
-                this.snap[x][y][z].id = this.snap[x][y + 1][z].b.getTypeId();
+                this.snap[x][y][z].id = this.snap[x][y + 1][z].nativeBlock.getTypeId();
                 _d++;
             }
             if (this.snap[x][y - 1][z].solid) {
-                this.snap[x][y][z].id = this.snap[x][y - 1][z].b.getTypeId();
+                this.snap[x][y][z].id = this.snap[x][y - 1][z].nativeBlock.getTypeId();
                 _d++;
             }
             if (this.snap[x][y][z + 1].solid) {
-                this.snap[x][y][z].id = this.snap[x][y][z + 1].b.getTypeId();
+                this.snap[x][y][z].id = this.snap[x][y][z + 1].nativeBlock.getTypeId();
                 _d++;
             }
             if (this.snap[x][y][z - 1].solid) {
-                this.snap[x][y][z].id = this.snap[x][y][z - 1].b.getTypeId();
+                this.snap[x][y][z].id = this.snap[x][y][z - 1].nativeBlock.getTypeId();
                 _d++;
             }
             if (_d >= this.fillFace) {
@@ -141,7 +142,7 @@ public class RandomErodeBrush extends Brush {
         this.brushSize = ((this.bsize + 1) * 2) + 1;
 
         if (this.snap.length == 0) {
-            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
+            this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
             final int _choosUsefulNamesForYourFuckingVariables = (this.bsize + 1);
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
@@ -153,7 +154,7 @@ public class RandomErodeBrush extends Brush {
                 for (int _z = 0; _z < this.snap.length; _z++) {
                     _sy = this.getBlockPositionY() - _choosUsefulNamesForYourFuckingVariables;
                     for (int _y = 0; _y < this.snap.length; _y++) {
-                        this.snap[_x][_y][_z] = new eBlock(this.clampY(_sx, _sy, _sz));
+                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
                         _sy++;
                     }
                     _sz++;
@@ -162,7 +163,7 @@ public class RandomErodeBrush extends Brush {
             }
             this.firstSnap = this.snap.clone();
         } else {
-            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
+            this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
             final int _choosUsefulNamesForYourFuckingVariables = (this.bsize + 1);
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
@@ -174,7 +175,7 @@ public class RandomErodeBrush extends Brush {
                 for (int _z = 0; _z < this.snap.length; _z++) {
                     _sy = this.getBlockPositionY() - _choosUsefulNamesForYourFuckingVariables;
                     for (int _y = 0; _y < this.snap.length; _y++) {
-                        this.snap[_x][_y][_z] = new eBlock(this.clampY(_sx, _sy, _sz));
+                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
                         _sy++;
                     }
                     _sz++;
@@ -204,7 +205,7 @@ public class RandomErodeBrush extends Brush {
 
                             if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bPow)) {
                                 if (this.erode(_x, _y, _z)) {
-                                    this.snap[_x][_y][_z].b.setTypeId(0);
+                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(0);
                                 }
                             }
                         }
@@ -229,7 +230,7 @@ public class RandomErodeBrush extends Brush {
 
                             if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bPow)) {
                                 if (this.fill(_x, _y, _z)) {
-                                    this.snap[_x][_y][_z].b.setTypeId(this.snap[_x][_y][_z].id);
+                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(this.snap[_x][_y][_z].id);
                                 }
                             }
                         }
@@ -241,9 +242,9 @@ public class RandomErodeBrush extends Brush {
         for (int _x = 0; _x < this.firstSnap.length; _x++) {
             for (int _y = 0; _y < this.firstSnap.length; _y++) {
                 for (int _z = 0; _z < this.firstSnap.length; _z++) {
-                    final eBlock _block = this.firstSnap[_x][_y][_z];
-                    if (_block.i != _block.b.getTypeId()) {
-                        _undo.put(_block.b);
+                    final BlockWrapper _block = this.firstSnap[_x][_y][_z];
+                    if (_block.i != _block.nativeBlock.getTypeId()) {
+                        _undo.put(_block.nativeBlock);
                     }
                 }
             }
@@ -272,7 +273,7 @@ public class RandomErodeBrush extends Brush {
 
                             if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bpow)) {
                                 if (this.fill(_x, _y, _z)) {
-                                    this.snap[_x][_y][_z].b.setTypeId(this.snap[_x][_y][_z].id);
+                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(this.snap[_x][_y][_z].id);
                                 }
                             }
                         }
@@ -297,7 +298,7 @@ public class RandomErodeBrush extends Brush {
 
                             if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bpow)) {
                                 if (this.erode(_x, _y, _z)) {
-                                    this.snap[_x][_y][_z].b.setTypeId(0);
+                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(0);
                                 }
                             }
                         }
@@ -309,9 +310,9 @@ public class RandomErodeBrush extends Brush {
         for (int _x = 0; _x < this.firstSnap.length; _x++) {
             for (int _y = 0; _y < this.firstSnap.length; _y++) {
                 for (int _z = 0; _z < this.firstSnap.length; _z++) {
-                    final eBlock _block = this.firstSnap[_x][_y][_z];
-                    if (_block.i != _block.b.getTypeId()) {
-                        _undo.put(_block.b);
+                    final BlockWrapper _block = this.firstSnap[_x][_y][_z];
+                    if (_block.i != _block.nativeBlock.getTypeId()) {
+                        _undo.put(_block.nativeBlock);
                     }
                 }
             }
@@ -324,7 +325,7 @@ public class RandomErodeBrush extends Brush {
     protected final void arrow(final SnipeData v) {
         this.bsize = v.getBrushSize();
 
-        this.snap = new eBlock[0][0][0];
+        this.snap = new BlockWrapper[0][0][0];
 
         this.erodeFace = this.generator.nextInt(5) + 1;
         this.fillFace = this.generator.nextInt(3) + 3;
@@ -344,7 +345,7 @@ public class RandomErodeBrush extends Brush {
     protected final void powder(final SnipeData v) {
         this.bsize = v.getBrushSize();
 
-        this.snap = new eBlock[0][0][0];
+        this.snap = new BlockWrapper[0][0][0];
 
         this.erodeFace = this.generator.nextInt(3) + 3;
         this.fillFace = this.generator.nextInt(5) + 1;

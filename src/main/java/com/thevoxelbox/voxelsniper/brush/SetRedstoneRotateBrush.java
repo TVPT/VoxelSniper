@@ -17,6 +17,9 @@ public class SetRedstoneRotateBrush extends Brush { // Is this used anymore? -ps
     private Block block = null;
     private Undo undo;
 
+    /**
+     * 
+     */
     public SetRedstoneRotateBrush() {
         this.setName("Set Redstone Rotate");
     }

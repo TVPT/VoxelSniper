@@ -14,6 +14,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 public class MeteorBrush extends Brush {
 	private static int timesUsed = 0;
 	
+	/**
+	 * 
+	 */
     public MeteorBrush() {
         this.setName("Meteor");
     }

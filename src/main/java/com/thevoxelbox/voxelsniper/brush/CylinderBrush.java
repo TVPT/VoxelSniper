@@ -14,6 +14,9 @@ public class CylinderBrush extends PerformBrush {
 	private static int timesUsed = 0;
     private double trueCircle = 0;
 
+    /**
+     * 
+     */
     public CylinderBrush() {
         this.setName("Cylinder");
     }

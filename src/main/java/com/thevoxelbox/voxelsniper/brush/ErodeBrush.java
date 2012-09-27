@@ -14,14 +14,14 @@ import com.thevoxelbox.voxelsniper.Undo;
  */
 public class ErodeBrush extends Brush {
 
-    private class eBlock {
+    private class BlockWrapper {
 
         public boolean solid;
         public Block nativeBlock;
         public int id;
         public int dataId;
 
-        public eBlock(final Block bl) {
+        public BlockWrapper(final Block bl) {
             this.nativeBlock = bl;
             this.dataId = bl.getTypeId();
             switch (bl.getType()) {
@@ -52,8 +52,8 @@ public class ErodeBrush extends Brush {
 
     private static int timesUsed = 0;
 
-    private eBlock[][][] snap;
-    private eBlock[][][] firstSnap;
+    private BlockWrapper[][][] snap;
+    private BlockWrapper[][][] firstSnap;
     private int bsize;
     private int erodeFace;
     private int fillFace;
@@ -63,7 +63,9 @@ public class ErodeBrush extends Brush {
     private double trueCircle = 0.5;
     private boolean reverse = false;
 
-
+    /**
+     * 
+     */
     public ErodeBrush() {
         this.setName("Erode");
     }
@@ -90,11 +92,7 @@ public class ErodeBrush extends Brush {
             if (!this.snap[x][y][z - 1].solid) {
                 _d++;
             }
-            if (_d >= this.erodeFace) {
-                return true;
-            } else {
-                return false;
-            }
+            return _d >= this.erodeFace;
         } else {
             return false;
         }
@@ -166,7 +164,7 @@ public class ErodeBrush extends Brush {
             for (int _y = 0; _y < this.firstSnap.length; _y++) {
                 for (int _z = 0; _z < this.firstSnap.length; _z++) {
                 	
-                    final eBlock _block = this.firstSnap[_x][_y][_z];
+                    final BlockWrapper _block = this.firstSnap[_x][_y][_z];
                     if (_block.dataId != _block.nativeBlock.getTypeId()) {
                         _undo.put(_block.nativeBlock);
                     }
@@ -231,7 +229,7 @@ public class ErodeBrush extends Brush {
         this.brushSize = ((this.bsize + 1) * 2) + 1;
 
         if (this.snap.length == 0) {
-            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
+            this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
             int _sy = this.getBlockPositionY() - (this.bsize + 1);
@@ -241,7 +239,7 @@ public class ErodeBrush extends Brush {
                 for (int _z = 0; _z < this.snap.length; _z++) {
                     _sy = this.getBlockPositionY() - _v;
                     for (int _y = 0; _y < this.snap.length; _y++) {
-                        this.snap[_x][_y][_z] = new eBlock(this.clampY(_sx, _sy, _sz));
+                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
                         _sy++;
                     }
                     _sz++;
@@ -250,7 +248,7 @@ public class ErodeBrush extends Brush {
             }
             this.firstSnap = this.snap.clone();
         } else {
-            this.snap = new eBlock[this.brushSize][this.brushSize][this.brushSize];
+            this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
             int _sx = this.getBlockPositionX() - (this.bsize + 1);
             int _sy = this.getBlockPositionY() - (this.bsize + 1);
@@ -260,7 +258,7 @@ public class ErodeBrush extends Brush {
                 for (int _z = 0; _z < this.snap.length; _z++) {
                     _sy = this.getBlockPositionY() - _v;
                     for (int _y = 0; _y < this.snap.length; _y++) {
-                        this.snap[_x][_y][_z] = new eBlock(this.clampY(_sx, _sy, _sz));
+                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
                         _sy++;
                     }
                     _sz++;
@@ -274,7 +272,7 @@ public class ErodeBrush extends Brush {
     protected final void arrow(final SnipeData v) {
         this.bsize = v.getBrushSize();
 
-        this.snap = new eBlock[0][0][0];
+        this.snap = new BlockWrapper[0][0][0];
         this.reverse = false;
 
         this.erosion(v);
@@ -284,7 +282,7 @@ public class ErodeBrush extends Brush {
     protected final void powder(final SnipeData v) {
         this.bsize = v.getBrushSize();
 
-        this.snap = new eBlock[0][0][0];
+        this.snap = new BlockWrapper[0][0][0];
         this.reverse = true;
 
         this.erosion(v);
@@ -392,7 +390,7 @@ public class ErodeBrush extends Brush {
     			} else {
     				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
     			}
-    		} catch (final Exception e) {
+    		} catch (final Exception _e) {
     			v.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + _param
     					+ "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
     		}

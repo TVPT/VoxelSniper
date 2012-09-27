@@ -12,12 +12,15 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class CanyonSelectionBrush extends CanyonBrush {
-    private boolean first = true;
+	private static int timesUsed = 0;
+   
+	private boolean first = true;
     private int fx;
     private int fz;
 
-    private static int timesUsed = 0;
-
+    /**
+     * 
+     */
     public CanyonSelectionBrush() {
         this.setName("Canyon Selection");
     }

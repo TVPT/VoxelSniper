@@ -16,6 +16,9 @@ public class FillDownBrush extends PerformBrush {
 	private static int timesUsed = 0;
     private double trueCircle = 0;
 
+    /**
+     * 
+     */
     public FillDownBrush() {
         this.setName("Fill Down");
     }
@@ -29,9 +32,9 @@ public class FillDownBrush extends PerformBrush {
             
             for (int _z = 0 - _brushSize; _z <= _brushSize; _z++) {
                 if (_xPow + Math.pow(_z, 2) <= _bPow) {
-                	for(int _y = this.getBlockPositionY(); _y >= 0; --_y) {
+                	for (int _y = this.getBlockPositionY(); _y >= 0; --_y) {
                 		final Block _block = this.clampY(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);                		
-                		if(_block.getType().equals(Material.AIR)) {
+                		if (_block.getType().equals(Material.AIR)) {
                 			this.current.perform(_block);
                 		}
                 	}

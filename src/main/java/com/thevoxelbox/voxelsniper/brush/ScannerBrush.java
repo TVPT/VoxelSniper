@@ -21,7 +21,9 @@ public class ScannerBrush extends Brush {
 	private int depth = DEPTH_DEFAULT;
 	private Material checkFor = Material.AIR;
 
-
+	/**
+	 * 
+	 */
     public ScannerBrush() {
         this.setName("Scanner");
     }

@@ -28,6 +28,9 @@ public class CopyPastaBrush extends Brush {
     private int[] arraySize = new int[3];
     private int pivot = 0; // ccw degrees    
 
+    /**
+     * 
+     */
     public CopyPastaBrush() {
         this.setName("CopyPasta");
     }

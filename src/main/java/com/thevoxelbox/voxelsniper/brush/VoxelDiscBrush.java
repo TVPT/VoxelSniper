@@ -21,9 +21,9 @@ public class VoxelDiscBrush extends PerformBrush {
     private final void disc(final SnipeData v) {
         final int _bSize = v.getBrushSize();
 
-        for (int x = _bSize; x >= -_bSize; x--) {
-            for (int y = _bSize; y >= -_bSize; y--) {
-                this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY(), this.getBlockPositionZ() + y));
+        for (int _x = _bSize; _x >= -_bSize; _x--) {
+            for (int _y = _bSize; _y >= -_bSize; _y--) {
+                this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
             }
         }
         v.storeUndo(this.current.getUndo());

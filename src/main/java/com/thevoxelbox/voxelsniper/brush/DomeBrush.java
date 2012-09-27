@@ -26,6 +26,9 @@ public class DomeBrush extends Brush {
     // curve, in same material.
     private double height = DEFAULT_HEIGHT; // just avoiding initiating bsize yet;
 
+    /**
+     * 
+     */
     public DomeBrush() {
         this.setName("Dome");
     }
@@ -208,7 +211,7 @@ public class DomeBrush extends Brush {
     			v.sendMessage(ChatColor.AQUA
     					+ "/b dome h[number] -- set a custom dome height.  Default is the radius of the brush.  Anything else will make it a parabolic dome with circular base.  Cannot be negative.");
     			v.sendMessage(ChatColor.BLUE
-    					+ "/b dome acc [or inacc] -- set brush to half (acc) or full step (inacc) accuracy.  if /v is anything other than 44, will override you and force full step accuracy.");
+    					+ "/b dome acc [or inacc] -- set brush to half (acc) or full step (inacc) accuracy.  if /v is anything other than 44 (Slabs/Steps), will override you and force full step accuracy.");
 				return;
 			} else if (_param.startsWith("h")) {
 				this.height = Double.parseDouble(par[_i].replace("h", ""));
@@ -219,7 +222,7 @@ public class DomeBrush extends Brush {
     			v.sendMessage(ChatColor.BLUE + "Full step accuracy.");
     			continue;
     		} else if (_param.startsWith("acc")) {
-    			if (v.getVoxelId() != 44) {
+    			if (v.getVoxelId() != Material.STEP.getId()) {
     				this.fsa = true;
     				v.sendMessage(ChatColor.BLUE + "Full step accuracy. (overridden since you don't have half steps selected)");
     			} else {

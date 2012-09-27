@@ -19,6 +19,9 @@ public class ShellSetBrush extends Brush {
     private Block block = null;
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public ShellSetBrush() {
         this.setName("Shell Set");
     }
@@ -47,7 +50,7 @@ public class ShellSetBrush extends Brush {
             if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > MAX_SIZE) {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
-                final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy)) / 2));
+                final ArrayList<Block> _blocks = new ArrayList<Block>(((Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy)) / 2));
                 for (int _y = _lowy; _y <= _highy; _y++) {
                     for (int _x = _lowx; _x <= _highx; _x++) {
                         for (int _z = _lowz; _z <= _highz; _z++) {
@@ -66,14 +69,14 @@ public class ShellSetBrush extends Brush {
                             } else if (this.getWorld().getBlockTypeIdAt(_x, _y - 1, _z) == _voxelReplaceMaterialId) {
                                 continue;
                             } else {
-                                blocks.add(this.getWorld().getBlockAt(_x, _y, _z));
+                                _blocks.add(this.getWorld().getBlockAt(_x, _y, _z));
                             }
                         }
                     }
                 }
 
                 final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-                for (final Block _block : blocks) {
+                for (final Block _block : _blocks) {
                     if (_block.getTypeId() != _voxelMaterialId) {
                         _undo.put(_block);
                         _block.setTypeId(_voxelMaterialId);

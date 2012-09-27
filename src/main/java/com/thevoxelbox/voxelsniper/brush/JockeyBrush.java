@@ -19,6 +19,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 public class JockeyBrush extends Brush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public JockeyBrush() {
         this.setName("Jockey");
     }

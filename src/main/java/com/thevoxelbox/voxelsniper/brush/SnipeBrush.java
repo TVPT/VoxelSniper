@@ -11,6 +11,9 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 public class SnipeBrush extends PerformBrush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public SnipeBrush() {
         this.setName("Snipe");
     }

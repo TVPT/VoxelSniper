@@ -23,18 +23,20 @@ public class Rot3DBrush extends Brush {
     private double sePitch;
     private double seRoll;
 
-
+    /**
+     * 
+     */
     public Rot3DBrush() {
         this.setName("3D Rotation");
     }
 
 
-    private void getMatrix() {// only need to do once. But y needs to change + sphere
+    private void getMatrix() { // only need to do once. But y needs to change + sphere
+    	final double _bpow = Math.pow(this.bSize + 0.5, 2);
         this.brushSize = (this.bSize * 2) + 1;
 
         this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-        final double bpow = Math.pow(this.bSize + 0.5, 2);
         int _sx = this.getBlockPositionX() - this.bSize;
         int _sy = this.getBlockPositionY() - this.bSize;
         int _sz = this.getBlockPositionZ() - this.bSize;
@@ -47,10 +49,10 @@ public class Rot3DBrush extends Brush {
             	final double _zPow = Math.pow(_z - this.bSize, 2);
                 _sy = this.getBlockPositionY() - this.bSize;
 
-                for (int y = 0; y < this.snap.length; y++) {
-                    if (_xPow + _zPow + Math.pow(y - this.bSize, 2) <= bpow) {
+                for (int _y = 0; _y < this.snap.length; _y++) {
+                    if (_xPow + _zPow + Math.pow(_y - this.bSize, 2) <= _bpow) {
                         final Block _b = this.clampY(_sx, _sy, _sz);
-                        this.snap[_x][y][_z] = new BlockWrapper(_b);
+                        this.snap[_x][_y][_z] = new BlockWrapper(_b);
                         _b.setTypeId(0);
                         _sy++;
                     }
@@ -105,11 +107,11 @@ public class Rot3DBrush extends Brush {
                         _doNotFill[(int) _newxyX + this.bSize][(int) _newyzY + this.bSize][(int) _newyzZ + this.bSize] = true; // only rounds off to nearest block
                                                                                                                            // after all three, though.
 
-                        final BlockWrapper vb = this.snap[_x][_y][_z];
-                        if (vb.id == 0) {
+                        final BlockWrapper _vb = this.snap[_x][_y][_z];
+                        if (_vb.id == 0) {
                             continue;
                         }
-                        this.setBlockIdAt(vb.id, this.getBlockPositionX() + (int) _newxyX, this.getBlockPositionY() + (int) _newyzY, this.getBlockPositionZ() + (int) _newyzZ);
+                        this.setBlockIdAt(_vb.id, this.getBlockPositionX() + (int) _newxyX, this.getBlockPositionY() + (int) _newyzY, this.getBlockPositionZ() + (int) _newyzZ);
                     }
                 }
             }

@@ -27,7 +27,9 @@ public class JaggedLineBrush extends PerformBrush {
     private Vector targetCoords = new Vector();
     private int recursion = RECURSION_DEFAULT;
 
-
+    /**
+     * 
+     */
     public JaggedLineBrush() {
         this.setName("Jagged Line");
     }
@@ -41,11 +43,11 @@ public class JaggedLineBrush extends PerformBrush {
         	_currentCoords = _slope.multiply(_t).add(originCoords);
         	
             for (int _r = 0; _r < this.recursion; _r++) {
-            	if(_currentCoords != _previousCoords) {
-            		this.current.perform(this.clampY((int)Math.round(_currentCoords.getX() + this.random.nextInt(RANDOM_MAX) - 1), 
-            				(int)Math.round(_currentCoords.getY() + this.random.nextInt(RANDOM_MAX) - 1), 
-            				(int)Math.round(_currentCoords.getZ() + this.random.nextInt(RANDOM_MAX) - 1)));
-            	}
+				if (_currentCoords != _previousCoords) {
+					this.current.perform(this.clampY((int) Math.round(_currentCoords.getX() + this.random.nextInt(RANDOM_MAX) - 1),
+							(int) Math.round(_currentCoords.getY() + this.random.nextInt(RANDOM_MAX) - 1),
+							(int) Math.round(_currentCoords.getZ() + this.random.nextInt(RANDOM_MAX) - 1)));
+				}
             }
             _previousCoords = _currentCoords;
         }

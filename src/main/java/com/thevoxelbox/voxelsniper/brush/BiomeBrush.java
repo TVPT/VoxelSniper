@@ -44,9 +44,9 @@ public class BiomeBrush extends Brush {
         final int _highX = (_b1.getX() >= _b2.getX()) ? _b1.getChunk().getX() : _b2.getChunk().getX();
         final int _highZ = (_b1.getZ() >= _b2.getZ()) ? _b1.getChunk().getZ() : _b2.getChunk().getZ();
         
-        for (int x = _lowX; x <= _highX; x++) {
-            for (int z = _lowZ; z <= _highZ; z++) {
-                this.getWorld().refreshChunk(x, z);
+        for (int _x = _lowX; _x <= _highX; _x++) {
+            for (int _z = _lowZ; _z <= _highZ; _z++) {
+                this.getWorld().refreshChunk(_x, _z);
             }
         }
     }
@@ -71,23 +71,23 @@ public class BiomeBrush extends Brush {
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
     	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
-    		String _availableBiomes = "";
+			v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
+			String _availableBiomes = "";
 
-    		for (final org.bukkit.block.Biome _biome : org.bukkit.block.Biome.values()) {
-    			if(_availableBiomes.isEmpty()) {
-    				_availableBiomes = ChatColor.DARK_GREEN + _biome.name();
-    				continue;
-    			}
+			for (final org.bukkit.block.Biome _biome : org.bukkit.block.Biome.values()) {
+				if (_availableBiomes.isEmpty()) {
+					_availableBiomes = ChatColor.DARK_GREEN + _biome.name();
+					continue;
+				}
 
-    			_availableBiomes += ChatColor.RED + ", " + ChatColor.DARK_GREEN + _biome.name();
+				_availableBiomes += ChatColor.RED + ", " + ChatColor.DARK_GREEN + _biome.name();
     			
     		}
     		v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + _availableBiomes);
     	} else {
-    		for (final org.bukkit.block.Biome bio : org.bukkit.block.Biome.values()) {
-    			if (bio.name().equalsIgnoreCase(par[1])) {
-    				this.selectedBiome = bio;
+    		for (final org.bukkit.block.Biome _bio : org.bukkit.block.Biome.values()) {
+    			if (_bio.name().equalsIgnoreCase(par[1])) {
+    				this.selectedBiome = _bio;
     				break;
     			}
     		}

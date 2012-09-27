@@ -13,6 +13,9 @@ import com.thevoxelbox.voxelsniper.Undo;
 public class RegenerateChunkBrush extends Brush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public RegenerateChunkBrush() {
         this.setName("Chunk Generator 40k");
     }

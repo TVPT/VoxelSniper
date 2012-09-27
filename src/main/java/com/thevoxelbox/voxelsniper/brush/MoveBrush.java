@@ -129,47 +129,47 @@ public class MoveBrush extends Brush {
     /**
      * Breakable Blocks to determine if no-physics should be used.
      */
-    private static final Set<Material> breakableMaterials = new TreeSet<Material>();
+    private static final Set<Material> BREAKABLE_MATERIALS = new TreeSet<Material>();
 
     static {
-        MoveBrush.breakableMaterials.add(Material.SAPLING);
-        MoveBrush.breakableMaterials.add(Material.BED_BLOCK);
-        MoveBrush.breakableMaterials.add(Material.POWERED_RAIL);
-        MoveBrush.breakableMaterials.add(Material.DETECTOR_RAIL);
-        MoveBrush.breakableMaterials.add(Material.LONG_GRASS);
-        MoveBrush.breakableMaterials.add(Material.DEAD_BUSH);
-        MoveBrush.breakableMaterials.add(Material.PISTON_EXTENSION);
-        MoveBrush.breakableMaterials.add(Material.YELLOW_FLOWER);
-        MoveBrush.breakableMaterials.add(Material.RED_ROSE);
-        MoveBrush.breakableMaterials.add(Material.BROWN_MUSHROOM);
-        MoveBrush.breakableMaterials.add(Material.RED_MUSHROOM);
-        MoveBrush.breakableMaterials.add(Material.TORCH);
-        MoveBrush.breakableMaterials.add(Material.FIRE);
-        MoveBrush.breakableMaterials.add(Material.CROPS);
-        MoveBrush.breakableMaterials.add(Material.SIGN_POST);
-        MoveBrush.breakableMaterials.add(Material.WOODEN_DOOR);
-        MoveBrush.breakableMaterials.add(Material.LADDER);
-        MoveBrush.breakableMaterials.add(Material.RAILS);
-        MoveBrush.breakableMaterials.add(Material.WALL_SIGN);
-        MoveBrush.breakableMaterials.add(Material.LEVER);
-        MoveBrush.breakableMaterials.add(Material.STONE_PLATE);
-        MoveBrush.breakableMaterials.add(Material.IRON_DOOR_BLOCK);
-        MoveBrush.breakableMaterials.add(Material.WOOD_PLATE);
-        MoveBrush.breakableMaterials.add(Material.REDSTONE_TORCH_OFF);
-        MoveBrush.breakableMaterials.add(Material.REDSTONE_TORCH_ON);
-        MoveBrush.breakableMaterials.add(Material.STONE_BUTTON);
-        MoveBrush.breakableMaterials.add(Material.SNOW);
-        MoveBrush.breakableMaterials.add(Material.CACTUS);
-        MoveBrush.breakableMaterials.add(Material.SUGAR_CANE_BLOCK);
-        MoveBrush.breakableMaterials.add(Material.CAKE_BLOCK);
-        MoveBrush.breakableMaterials.add(Material.DIODE_BLOCK_OFF);
-        MoveBrush.breakableMaterials.add(Material.DIODE_BLOCK_ON);
-        MoveBrush.breakableMaterials.add(Material.TRAP_DOOR);
-        MoveBrush.breakableMaterials.add(Material.PUMPKIN_STEM);
-        MoveBrush.breakableMaterials.add(Material.MELON_STEM);
-        MoveBrush.breakableMaterials.add(Material.VINE);
-        MoveBrush.breakableMaterials.add(Material.WATER_LILY);
-        MoveBrush.breakableMaterials.add(Material.NETHER_WARTS);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.SAPLING);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.BED_BLOCK);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.POWERED_RAIL);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.DETECTOR_RAIL);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.LONG_GRASS);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.DEAD_BUSH);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.PISTON_EXTENSION);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.YELLOW_FLOWER);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.RED_ROSE);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.BROWN_MUSHROOM);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.RED_MUSHROOM);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.TORCH);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.FIRE);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.CROPS);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.SIGN_POST);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.WOODEN_DOOR);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.LADDER);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.RAILS);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.WALL_SIGN);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.LEVER);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.STONE_PLATE);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.IRON_DOOR_BLOCK);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.WOOD_PLATE);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.REDSTONE_TORCH_OFF);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.REDSTONE_TORCH_ON);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.STONE_BUTTON);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.SNOW);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.CACTUS);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.CAKE_BLOCK);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.DIODE_BLOCK_OFF);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.DIODE_BLOCK_ON);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.TRAP_DOOR);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.PUMPKIN_STEM);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.MELON_STEM);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.VINE);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.WATER_LILY);
+        MoveBrush.BREAKABLE_MATERIALS.add(Material.NETHER_WARTS);
     }
 
     private static int timesUsed = 0;
@@ -227,7 +227,7 @@ public class MoveBrush extends Brush {
             for (final BlockState _blockState : selection.getBlockStates()) {
                 final Block _affectedBlock = _world.getBlockAt(_blockState.getX() + direction[0], _blockState.getY() + direction[1], _blockState.getZ()
                         + direction[2]);
-                _affectedBlock.setTypeId(_blockState.getTypeId(), !MoveBrush.breakableMaterials.contains(_blockState.getType()));
+                _affectedBlock.setTypeId(_blockState.getTypeId(), !MoveBrush.BREAKABLE_MATERIALS.contains(_blockState.getType()));
                 _affectedBlock.setData(_blockState.getRawData());
             }
         }

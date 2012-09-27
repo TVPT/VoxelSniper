@@ -18,6 +18,9 @@ public class ExtrudeBrush extends Brush {
     private double trueCircle;
     private boolean awto;
 
+    /**
+     * 
+     */
     public ExtrudeBrush() {
         this.setName("Extrude");
     }
@@ -319,7 +322,7 @@ public class ExtrudeBrush extends Brush {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                     return;
                 }
-            } catch (final Exception e) {
+            } catch (final Exception _e) {
                 v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + _param + "\"; use the \"info\" parameter.");
             }
         }

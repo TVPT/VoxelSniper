@@ -26,7 +26,7 @@ public class TreeSnipeBrush extends Brush {
     private final void single(final SnipeData v) {
         try {
             this.getWorld().generateTree(new Location(this.getWorld(), this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()), this.treeType);
-        } catch (final Exception e) {
+        } catch (final Exception _e) {
             v.sendMessage("Tree placement unexpectedly failed.");
         }
     }

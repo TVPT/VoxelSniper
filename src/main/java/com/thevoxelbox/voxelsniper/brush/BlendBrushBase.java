@@ -6,6 +6,11 @@ import org.bukkit.Material;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
+/**
+ * 
+ * @author Monofraps
+ *
+ */
 public abstract class BlendBrushBase extends Brush {
 	protected static int maxBlockMaterialID;
 	protected boolean excludeAir = true;
@@ -46,10 +51,11 @@ public abstract class BlendBrushBase extends Brush {
 
 	@Override
 	public void parameters(final String[] par, final SnipeData v) {
-		for(int _i = 1; _i < par.length; ++_i)
-		if (par[_i].equalsIgnoreCase("water")) {
-			this.excludeWater = !this.excludeWater;
-			v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+		for (int _i = 1; _i < par.length; ++_i) {
+			if (par[_i].equalsIgnoreCase("water")) {
+				this.excludeWater = !this.excludeWater;
+				v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+			}
 		}
 	}
 }

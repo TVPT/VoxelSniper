@@ -14,6 +14,9 @@ public class EntityBrush extends Brush {
 	private static int timesUsed = 0;
     private EntityType entityType = EntityType.ZOMBIE;
 
+    /**
+     * 
+     */
     public EntityBrush() {
         this.setName("Entity");
     }
@@ -22,7 +25,7 @@ public class EntityBrush extends Brush {
     	for (int _x = 0; _x < v.getBrushSize(); _x++) {
     		try {
     			this.getWorld().spawn(this.getLastBlock().getLocation(), this.entityType.getEntityClass());
-    		} catch (final IllegalArgumentException ex) {
+    		} catch (final IllegalArgumentException _ex) {
     			v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
     		}
     	}
@@ -50,16 +53,16 @@ public class EntityBrush extends Brush {
     		String _names = "";
     		
     		v.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
-    		for (final EntityType cre : EntityType.values()) {
+    		for (final EntityType _cre : EntityType.values()) {
     			
-    			_names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + cre.getName();
+    			_names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + _cre.getName();
     		}
     		_names += ChatColor.AQUA + " |";
     		v.sendMessage(_names);
     	} else {
-    		final EntityType cre = EntityType.fromName(par[1]);
-    		if (cre != null) {
-    			this.entityType = cre;
+    		final EntityType _cre = EntityType.fromName(par[1]);
+    		if (_cre != null) {
+    			this.entityType = _cre;
     			v.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
     		} else {
     			v.sendMessage(ChatColor.RED + "This is not a valid entity!");

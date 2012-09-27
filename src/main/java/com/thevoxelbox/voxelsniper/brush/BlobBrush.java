@@ -112,9 +112,9 @@ public class BlobBrush extends PerformBrush {
             for (int _y = _twoBrushSize; _y >= 0; _y--) {
             	final double _yPow = Math.pow(_y - _bSize - 1, 2);
                 
-                for (int z = _twoBrushSize; z >= 0; z--) {
-                    if (_splat[_x][_y][z] == 1 && _xPow + _yPow + Math.pow(z - _bSize - 1, 2) <= _rPow) {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + z, this.getBlockPositionZ() - _bSize + _y));
+                for (int _z = _twoBrushSize; _z >= 0; _z--) {
+                    if (_splat[_x][_y][_z] == 1 && _xPow + _yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow) {
+                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _z, this.getBlockPositionZ() - _bSize + _y));
                     }
                 }
             }
@@ -189,9 +189,9 @@ public class BlobBrush extends PerformBrush {
             for (int _y = _twoBrushSize; _y >= 0; _y--) {
                 final double _yPow = Math.pow(_y - _bSize - 1, 2);
                 
-                for (int z = _twoBrushSize; z >= 0; z--) {
-                    if (_splat[_x][_y][z] == 1 && _xPow + _yPow + Math.pow(z - _bSize - 1, 2) <= _rPow) {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + z, this.getBlockPositionZ() - _bSize + _y));
+                for (int _z = _twoBrushSize; _z >= 0; _z--) {
+                    if (_splat[_x][_y][_z] == 1 && _xPow + _yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow) {
+                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _z, this.getBlockPositionZ() - _bSize + _y));
                     }
                 }
             }
@@ -216,7 +216,7 @@ public class BlobBrush extends PerformBrush {
         
         vm.brushName(this.getName());
         vm.size();
-        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100f + "%");
     }
 
     @Override
@@ -232,7 +232,7 @@ public class BlobBrush extends PerformBrush {
             if (_param.startsWith("g")) {
                 final int _temp = Integer.parseInt(_param.replace("g", ""));
                 if (_temp >= GROW_PERCENT_MIN && _temp <= GROW_PERCENT_MAX) {
-                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float)_temp / 100f + "%");
+                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) _temp / 100f + "%");
                     this.growPercent = _temp;
                 } else {
                     v.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");

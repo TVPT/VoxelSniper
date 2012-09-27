@@ -18,6 +18,9 @@ public class SpiralStaircaseBrush extends Brush {
     private String sdirect = "c"; // "c" clockwise (default), "cc" counter-clockwise
     private String sopen = "n"; // "n" north (default), "e" east, "world" south, "world" west
 
+    /**
+     * 
+     */
     public SpiralStaircaseBrush() {
         this.setName("Spiral Staircase");
     }
@@ -198,6 +201,7 @@ public class SpiralStaircaseBrush extends Brush {
                 }
             }
         }
+        
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
         // Make the changes
 

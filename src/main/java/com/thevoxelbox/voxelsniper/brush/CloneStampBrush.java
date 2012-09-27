@@ -6,19 +6,22 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
 
 /**
- * The CloneStamp class is used to create a collection of blocks in a cylinder shape according to the selection the player has set
+ * The CloneStamp class is used to create a collection of blocks in a cylinder shape according to the selection the player has set.
  * 
  * @author Voxel
  */
 public class CloneStampBrush extends StampBrush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public CloneStampBrush() {
         this.setName("Clone");
     }
     
     /**
-     * The clone method is used to grab a snapshot of the selected area dictated blockPositionY targetBlock.x y z v.brushSize v.voxelHeight and v.cCen
+     * The clone method is used to grab a snapshot of the selected area dictated blockPositionY targetBlock.x y z v.brushSize v.voxelHeight and v.cCen.
      * 
      * x y z -- initial center of the selection v.brushSize -- the radius of the cylinder v.voxelHeight -- the heigth of the cylinder c.cCen -- the offset on
      * the Y axis of the selection ( bottom of the cylinder ) as blockPositionY: Bottom_Y = targetBlock.y + v.cCen;
@@ -56,21 +59,21 @@ public class CloneStampBrush extends StampBrush {
         final double _bPow = Math.pow(_brushSize, 2);
         
         for (int _z = _starringPoint; _z < _yTopEnd; _z++) {
-            this.clone.add(new cBlock(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ()), 0, _z - _starringPoint, 0));
+            this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ()), 0, _z - _starringPoint, 0));
             for (int _y = 1; _y <= _brushSize; _y++) {
-                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ() + _y), 0, _z - _starringPoint, _y));
-                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ() - _y), 0, _z - _starringPoint, -_y));
-                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() + _y, _z, this.getBlockPositionZ()), _y, _z - _starringPoint, 0));
-                this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() - _y, _z, this.getBlockPositionZ()), -_y, _z - _starringPoint, 0));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ() + _y), 0, _z - _starringPoint, _y));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ() - _y), 0, _z - _starringPoint, -_y));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + _y, _z, this.getBlockPositionZ()), _y, _z - _starringPoint, 0));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - _y, _z, this.getBlockPositionZ()), -_y, _z - _starringPoint, 0));
             }
             for (int _x = 1; _x <= _brushSize; _x++) {
                 final double _xPow = Math.pow(_x, 2);
                 for (int _y = 1; _y <= _brushSize; _y++) {
                     if ((_xPow + Math.pow(_y, 2)) <= _bPow) {
-                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() + _x, _z, this.getBlockPositionZ() + _y), _x, _z - _starringPoint, _y));
-                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() + _x, _z, this.getBlockPositionZ() - _y), _x, _z - _starringPoint, -_y));
-                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() - _x, _z, this.getBlockPositionZ() + _y), -_x, _z - _starringPoint, _y));
-                        this.clone.add(new cBlock(this.clampY(this.getBlockPositionX() - _x, _z, this.getBlockPositionZ() - _y), -_x, _z - _starringPoint, -_y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + _x, _z, this.getBlockPositionZ() + _y), _x, _z - _starringPoint, _y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + _x, _z, this.getBlockPositionZ() - _y), _x, _z - _starringPoint, -_y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - _x, _z, this.getBlockPositionZ() + _y), -_x, _z - _starringPoint, _y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - _x, _z, this.getBlockPositionZ() - _y), -_x, _z - _starringPoint, -_y));
                     }
                 }
             }

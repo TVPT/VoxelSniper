@@ -7,13 +7,16 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * THIS BRUSH SHOULD NOT USE PERFORMERS
+ * THIS BRUSH SHOULD NOT USE PERFORMERS.
  * 
  * @author Voxel
  */
 public class ShellBallBrush extends Brush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public ShellBallBrush() {
         this.setName("Shell Ball");
     }

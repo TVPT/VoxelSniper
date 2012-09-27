@@ -20,6 +20,9 @@ public class OceanBrush extends Brush {
 
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public OceanBrush() {
         this.setName("OCEANATOR 5000(tm)");
     }
@@ -88,6 +91,10 @@ public class OceanBrush extends Brush {
         return 0;
     }
 
+    /**
+     * 
+     * @param v
+     */
     protected final void oceanator(final SnipeData v) {
         int _sx = (int) Math.floor((double) this.getTargetBlock().getX() / CHUNK_SIZE) * CHUNK_SIZE;
         int _sz = (int) Math.floor((double) this.getTargetBlock().getZ() / CHUNK_SIZE) * CHUNK_SIZE;
@@ -141,14 +148,14 @@ public class OceanBrush extends Brush {
                     _y = this.getHeight(_x, _z);
                     if (_y > 59) {
                         _dif = 59 - (_y - 59);
-                        for (int t = 127; t > _dif; t--) {
-                            if (t > 8) {
-                                if (t > 63) {
-                                    this.undo.put(this.clampY(_x, t, _z));
-                                    this.setBlockIdAt(0, _x, t, _z);
+                        for (int _t = 127; _t > _dif; _t--) {
+                            if (_t > 8) {
+                                if (_t > 63) {
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
-                                    this.undo.put(this.clampY(_x, t, _z));
-                                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, t, _z);
+                                    this.undo.put(this.clampY(_x, _t, _z));
+                                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, _t, _z);
                                 }
                             }
                         }
@@ -234,10 +241,22 @@ public class OceanBrush extends Brush {
         }
     }
     
+    /**
+     * 
+     * @param bl
+     * @param bx
+     * @return
+     */
     protected final Block setX(final Block bl, final int bx) {
     	return this.clampY(bx, bl.getY(), bl.getZ());
     }
     
+    /**
+     * 
+     * @param bl
+     * @param bz
+     * @return
+     */
     protected final Block setZ(final Block bl, final int bz) {
     	return this.clampY(bl.getX(), bl.getY(), bz);
     }

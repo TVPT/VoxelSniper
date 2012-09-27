@@ -14,6 +14,9 @@ public class OceanSelectionBrush extends OceanBrush {
 	private static int timesUsed = 0;
     private boolean sel = true;
 
+    /**
+     * 
+     */
     public OceanSelectionBrush() {
         this.setName("Ocean Selection");
     }
@@ -59,27 +62,27 @@ public class OceanSelectionBrush extends OceanBrush {
     }
 
     @Override
-    protected void arrow(final SnipeData v) {
+    protected final void arrow(final SnipeData v) {
         this.oceanSelection(v);
     }
 
     @Override
-    protected void powder(final SnipeData v) {
+    protected final void powder(final SnipeData v) {
         this.oceanSelection(v);
     }
     
     @Override
-    public void info(final Message vm) {
+    public final void info(final Message vm) {
     	vm.brushName(this.getName());
     }
     
     @Override
-    public int getTimesUsed() {
+    public final int getTimesUsed() {
     	return OceanSelectionBrush.timesUsed;
     }
     
     @Override
-    public void setTimesUsed(final int tUsed) {
+    public final void setTimesUsed(final int tUsed) {
     	OceanSelectionBrush.timesUsed = tUsed;
     }
 }

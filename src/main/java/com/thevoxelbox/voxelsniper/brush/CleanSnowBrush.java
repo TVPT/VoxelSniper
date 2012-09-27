@@ -15,11 +15,14 @@ public class CleanSnowBrush extends Brush {
 	private static int timesUsed = 0;
     private double trueCircle = 0;
 
+    /**
+     * 
+     */
     public CleanSnowBrush() {
         this.setName("Clean Snow");
     }
 
-    public final void cleanSnow(final SnipeData v) {
+    private final void cleanSnow(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());

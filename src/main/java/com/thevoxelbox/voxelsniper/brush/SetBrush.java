@@ -17,6 +17,9 @@ public class SetBrush extends PerformBrush {
 	private static int timesUsed = 0;
     private Block block = null;
 
+    /**
+     * 
+     */
     public SetBrush() {
         this.setName("Set");
     }

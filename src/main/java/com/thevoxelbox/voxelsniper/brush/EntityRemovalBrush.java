@@ -20,29 +20,32 @@ import com.thevoxelbox.voxelsniper.Message;
 public class EntityRemovalBrush extends Brush {
     private static int timesUsed = 0;
 
+    /**
+     * 
+     */
     public EntityRemovalBrush() {
         this.setName("Entity Removal");
     }
 
     private final void radialRemoval(final SnipeData v) {
     	final Chunk _targetChunk = this.getTargetBlock().getChunk();
-    	int entityCount = 0;
-        int chunkCount = 0;
+    	int _entityCount = 0;
+        int _chunkCount = 0;
         
-        entityCount += this.removeEntities(_targetChunk);
+        _entityCount += this.removeEntities(_targetChunk);
         
         for (int _x = _targetChunk.getX() - v.getBrushSize(); _x <= _targetChunk.getX() + v.getBrushSize(); _x++) {
             for (int _z = _targetChunk.getZ() - v.getBrushSize(); _z <= _targetChunk.getZ() + v.getBrushSize(); _z++) {
-            	entityCount += removeEntities(this.getWorld().getChunkAt(_x, _z));
-                chunkCount++;
+            	_entityCount += removeEntities(this.getWorld().getChunkAt(_x, _z));
+                _chunkCount++;
             }
         }
-        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount
+        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + _entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + _chunkCount
                 + ChatColor.GREEN + " chunks.");
     }
 
     private final int removeEntities(final Chunk chunk) {
-    	int entityCount = 0;
+    	int _entityCount = 0;
     	
         for (final Entity _e : chunk.getEntities()) {
             if ((_e instanceof Player) || (_e instanceof Painting)) {
@@ -54,11 +57,11 @@ public class EntityRemovalBrush extends Brush {
                     }
                 }
                 _e.remove();
-                entityCount++;
+                _entityCount++;
             }
         }
         
-        return entityCount;
+        return _entityCount;
     }
     
     @Override
