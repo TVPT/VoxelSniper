@@ -9,6 +9,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Three-Point_Circle_Brush
  * @author Giltwist
  */
 public class ThreePointCircleBrush extends PerformBrush {

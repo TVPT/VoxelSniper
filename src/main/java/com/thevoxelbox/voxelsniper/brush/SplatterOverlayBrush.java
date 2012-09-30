@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Splatter_Overlay_Brush
  * @author Gavjenks Splatterized blockPositionY Giltwist
  */
 public class SplatterOverlayBrush extends PerformBrush {

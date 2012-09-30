@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Underlay_Brush
  * @author jmck95 Credit to GavJenks for framework and 95 of code. Big Thank you to GavJenks
  */
 

@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Drain_Brush
  * @author Gavjenks
  * @author psanker
  */

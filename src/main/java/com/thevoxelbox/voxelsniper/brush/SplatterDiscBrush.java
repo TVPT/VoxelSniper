@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Splatter_Brushes
  * @author Voxel
  */
 public class SplatterDiscBrush extends PerformBrush {

@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#CopyPasta_Brush
  * @author giltwist
  */
 public class CopyPastaBrush extends Brush {

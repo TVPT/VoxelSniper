@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Dome_Brush
  * @author Gavjenks
  */
 public class DomeBrush extends Brush {

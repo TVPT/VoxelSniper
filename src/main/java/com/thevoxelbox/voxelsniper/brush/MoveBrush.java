@@ -18,7 +18,7 @@ import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * Moves a selection blockPositionY a certain amount.
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Move_Brush
  * @author MikeMatrix
  * 
  */

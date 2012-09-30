@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Clean_Snow_Brush
  * @author psanker
  */
 public class CleanSnowBrush extends Brush {

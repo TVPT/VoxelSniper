@@ -9,8 +9,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
- * @author Piotr Randomized blockPositionY Giltwist
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Random-Erode_Brush
+ * @author Piotr 
+ * @author Giltwist (Randomized blockPositionY)
  */
 public class RandomErodeBrush extends Brush {
     private class BlockWrapper {

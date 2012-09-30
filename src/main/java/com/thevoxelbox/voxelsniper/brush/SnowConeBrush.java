@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Snow_cone_brush
  * @author Voxel
  */
 public class SnowConeBrush extends Brush {

@@ -12,8 +12,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
- * 
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush
  * @author Voxel
  */
 public class JockeyBrush extends Brush {

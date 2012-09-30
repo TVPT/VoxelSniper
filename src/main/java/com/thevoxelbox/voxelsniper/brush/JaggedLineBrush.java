@@ -10,7 +10,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Jagged_Line_Brush
  * @author Giltwist
  * 
  */

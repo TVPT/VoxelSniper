@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Overlay_.2F_Topsoil_Brush
  * @author Gavjenks
  */
 public class OverlayBrush extends PerformBrush {

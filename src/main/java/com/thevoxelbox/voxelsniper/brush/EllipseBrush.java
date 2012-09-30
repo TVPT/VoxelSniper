@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipse_Brush
  * @author psanker
  */
 public class EllipseBrush extends PerformBrush {

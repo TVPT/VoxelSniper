@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_OCEANATOR_5000
  * @author Voxel
  */
 public class OceanBrush extends Brush {

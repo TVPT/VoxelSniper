@@ -18,7 +18,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Punish_Brush
  * @author Monofraps
  * @author Deamon
  * @author MikeMatrix

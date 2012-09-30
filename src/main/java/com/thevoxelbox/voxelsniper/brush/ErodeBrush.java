@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Erosion_Brush
  * @author Piotr, (lift preset by Giltwist)
  */
 public class ErodeBrush extends Brush {

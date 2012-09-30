@@ -13,7 +13,7 @@ import com.thevoxelbox.voxelsniper.Undo;
 
 // Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#VoxelTrees_Brush
  * @author Ghost8700 @ Voxel
  * 
  */

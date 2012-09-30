@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Ring_Brush
  * @author Voxel
  */
 public class RingBrush extends PerformBrush {

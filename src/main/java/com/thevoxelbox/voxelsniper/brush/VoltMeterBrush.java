@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Volt-Meter_Brush
  * @author Gavjenks
  */
 public class VoltMeterBrush extends Brush {

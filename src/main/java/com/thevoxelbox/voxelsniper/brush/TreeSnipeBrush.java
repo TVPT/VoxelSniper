@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Tree_Brush
  * @author Mick
  */
 public class TreeSnipeBrush extends Brush {

@@ -10,8 +10,9 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_CANYONATOR
  * @author Voxel
+ *
  */
 public class CanyonBrush extends Brush {
 	private static final int SHIFT_LEVEL_MIN = 10;

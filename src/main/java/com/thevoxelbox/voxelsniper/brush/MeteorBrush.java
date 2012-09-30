@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Meteor_Brush
  * @author Gavjenks
  * @author giltwist
  */

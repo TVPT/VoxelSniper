@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Set_Brush
  * @author Voxel
  */
 public class SetBrush extends PerformBrush {

@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Triangle_Brush
  * @author Giltwist
  */
 public class TriangleBrush extends PerformBrush {

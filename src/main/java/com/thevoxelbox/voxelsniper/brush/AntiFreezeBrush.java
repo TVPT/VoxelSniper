@@ -12,9 +12,8 @@ import com.thevoxelbox.voxelsniper.Message;
  */
 public class AntiFreezeBrush extends Brush {
 	private static final int INVISIBLE_DATA_VALUE = 6;
+	private static int timesUsed = 0;
 	
-    private static int timesUsed = 0;
-
     /**
      * 
      */

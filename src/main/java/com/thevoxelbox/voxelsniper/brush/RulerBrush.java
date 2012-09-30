@@ -10,7 +10,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Ruler_Brush
  * @author Gavjenks
  */
 public class RulerBrush extends Brush {

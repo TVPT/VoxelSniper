@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Blob_Brush
  * @author Giltwist
  */
 public class BlobBrush extends PerformBrush {

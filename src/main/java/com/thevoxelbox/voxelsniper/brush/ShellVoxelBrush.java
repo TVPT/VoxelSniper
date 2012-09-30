@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS.
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
  * @author Voxel
  */
 public class ShellVoxelBrush extends Brush {

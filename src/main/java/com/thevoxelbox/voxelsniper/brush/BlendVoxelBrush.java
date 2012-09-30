@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- *
+ *	http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
  */
 public class BlendVoxelBrush extends BlendBrushBase {
 	private static int timesUsed = 0;

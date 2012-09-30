@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Eraser_Brush
  * @author Voxel
  */
 public class EraserBrush extends Brush {	

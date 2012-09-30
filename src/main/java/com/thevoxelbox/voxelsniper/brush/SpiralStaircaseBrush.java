@@ -7,8 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * 
- * 
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Spiral_Staircase_Brush
  * @author giltwist
  */
 public class SpiralStaircaseBrush extends Brush {
