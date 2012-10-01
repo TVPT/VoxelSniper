@@ -17,7 +17,7 @@ public class RulerBrush extends Brush {
 	private static int timesUsed = 0;
 
 	private boolean first = true;
-	private Vector coords = null;
+	private Vector coords = new Vector(0, 0, 0);
 
     private int xOff = 0;
     private int yOff = 0;
@@ -56,7 +56,7 @@ public class RulerBrush extends Brush {
         v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock().getX() - this.coords.getX()));
         v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock().getY() - this.coords.getY()));
         v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock().getZ() - this.coords.getZ()));
-        final double _distance = this.roundTwoDecimals(coords.subtract(this.getTargetBlock().getLocation().toVector()).length());
+        final double _distance = this.roundTwoDecimals(this.getTargetBlock().getLocation().toVector().subtract(coords).length());
         final double _blockDistance = this.roundTwoDecimals(Math.abs(this.getTargetBlock().getLocation().toVector().subtract(coords).length()) + 1);
 
         v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + _distance);
