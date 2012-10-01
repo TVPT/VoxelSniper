@@ -44,7 +44,6 @@ import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.JaggedLineBrush;
 import com.thevoxelbox.voxelsniper.brush.JockeyBrush;
 import com.thevoxelbox.voxelsniper.brush.LineBrush;
-import com.thevoxelbox.voxelsniper.brush.MeteorBrush;
 import com.thevoxelbox.voxelsniper.brush.MoveBrush;
 import com.thevoxelbox.voxelsniper.brush.OceanBrush;
 import com.thevoxelbox.voxelsniper.brush.OceanSelectionBrush;
@@ -130,7 +129,6 @@ public enum SniperBrushes {
     SHELL_BALL(ShellBallBrush.class, "shb", "shellball"), // [ 14 ] \\
     SHELL_VOXEL(ShellVoxelBrush.class, "shv", "shellvoxel"), // [ 15 ] \\
     RANDOM_ERODE(RandomErodeBrush.class, "re", "randomerode"), // [ 16 ] \\
-    METEOR(MeteorBrush.class, "met", "meteor"), // [ 17 ] \\
     TRIANGLE(TriangleBrush.class, "tri", "triangle"), // [ 19 ] \\
     ERASER(EraserBrush.class, "erase", "eraser"), // [ 20 ] \\
     COPYPASTA(CopyPastaBrush.class, "cp", "copypasta"), // [ 22 ] \\

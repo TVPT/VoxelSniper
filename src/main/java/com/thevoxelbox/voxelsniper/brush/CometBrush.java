@@ -1,7 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import net.minecraft.server.EntityFireball;
+import net.minecraft.server.EntitySmallFireball;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.SmallFireball;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftFireball;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftSmallFireball;
 import org.bukkit.util.Vector;
 
 import com.thevoxelbox.voxelsniper.Message;
@@ -9,10 +17,13 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * 
- * @author Gavjenks Heavily revamped from ruler brush blockPositionY Giltwist
+ * @author Gavjenks Heavily revamped from ruler brush blockPositionY 
+ * @author Giltwist
+ * @author Monofraps (Merged Meteor brush)
  */
 public class CometBrush extends Brush {
 	private static int timesUsed = 0;
+	private boolean useBigBalls = false;
 
 	/**
 	 * 
@@ -22,11 +33,52 @@ public class CometBrush extends Brush {
 	}
 
 	private final void doFireball(final SnipeData v) {
+		final Vector _targetCoords = new Vector(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()), this
+				.getTargetBlock().getY() + .5, this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
 		final Location _playerLoc = v.owner().getPlayer().getLocation();
-		final Vector _targetCoords = new Vector(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()), this.getTargetBlock().getY() + .5, this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
-		
-		// Hadoken!
-		this.getWorld().spawn(_playerLoc, SmallFireball.class).setVelocity(_targetCoords.subtract(_playerLoc.toVector()).normalize());
+		final Vector _slope = _targetCoords.subtract(_playerLoc.toVector());
+
+		if (useBigBalls) {
+			final EntityFireball _ballEntity = new EntityFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v
+					.owner().getPlayer()).getHandle(), _slope.getX(), _slope.getY(), _slope.getZ());
+			final CraftFireball _craftBall = new CraftFireball((CraftServer) v.owner().getPlayer().getServer(), _ballEntity);
+			_craftBall.setVelocity(_slope.normalize());
+			((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(_ballEntity);
+		} else {
+			final EntitySmallFireball _ballEntity = new EntitySmallFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v
+					.owner().getPlayer()).getHandle(), _slope.getX(), _slope.getY(), _slope.getZ());
+			final CraftSmallFireball _craftBall = new CraftSmallFireball((CraftServer) v.owner().getPlayer().getServer(), _ballEntity);
+			_craftBall.setVelocity(_slope.normalize());
+			((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(_ballEntity);
+		}
+	}
+	
+	@Override
+	public final void parameters(final String[] par, final SnipeData v) {
+		for(int _i = 0; _i < par.length; ++_i) {
+			String _param = par[_i];
+			
+			if(_param.equalsIgnoreCase("info")) {
+				v.sendMessage("Parameters:");
+				v.sendMessage("balls [big|small]  -- Sets your ball size.");
+			}
+			if(_param.equalsIgnoreCase("balls")) {
+				if(_i+1 >= par.length) {
+					v.sendMessage("The balls parameter expects a ball size after it.");
+				}
+				
+				String _newBallSize = par[++_i];
+				if(_newBallSize.equalsIgnoreCase("big")) {
+					useBigBalls = true;
+					v.sendMessage("Your balls are "+ ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+				} else if(_newBallSize.equalsIgnoreCase("small")) {
+					useBigBalls = false;
+					v.sendMessage("Your balls are "+ ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+				} else {
+					v.sendMessage("Unknown ball size.");
+				}
+			}
+		}
 	}
 
 	@Override
@@ -43,6 +95,7 @@ public class CometBrush extends Brush {
 	public final void info(final Message vm) {
 		vm.brushName(this.getName());
 		vm.voxel();
+		vm.custom("Your balls are "+ ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
 	}
 
 	@Override

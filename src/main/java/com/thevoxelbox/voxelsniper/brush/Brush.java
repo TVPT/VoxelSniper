@@ -74,12 +74,12 @@ public abstract class Brush implements IBrush {
     }
 
 	private boolean preparePerform(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
-		this.setTimesUsed(this.getTimesUsed() + 1);
-		this.setWorld(this.getTargetBlock().getWorld());
-		this.setBlockPositionX(this.getTargetBlock().getX());
-		this.setBlockPositionY(this.getTargetBlock().getY());
-		this.setBlockPositionZ(this.getTargetBlock().getZ());
+		this.setTimesUsed(this.getTimesUsed() + 1);		
 		if (this.getTarget(v, clickedBlock, clickedFace)) {
+			this.setWorld(this.getTargetBlock().getWorld());
+			this.setBlockPositionX(this.getTargetBlock().getX());
+			this.setBlockPositionY(this.getTargetBlock().getY());
+			this.setBlockPositionZ(this.getTargetBlock().getZ());
 			this.updateScale();
 			if (this instanceof PerformBrush) {
 				((PerformBrush) this).initP(v);
