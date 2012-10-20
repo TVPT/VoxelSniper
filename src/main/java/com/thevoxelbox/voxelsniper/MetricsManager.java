@@ -138,7 +138,7 @@ public final class MetricsManager {
 			});
             
             final Graph _graphOsName = _metrics.createGraph("OS Name");
-            _graphSysInfo.addPlotter(new Metrics.Plotter(System.getProperty("os.name")) {
+            _graphOsName.addPlotter(new Metrics.Plotter(System.getProperty("os.name")) {
 				
 				@Override
 				public int getValue() {					
@@ -147,7 +147,7 @@ public final class MetricsManager {
 			});
             
             final Graph _graphOsArch = _metrics.createGraph("OS Architecture");
-            _graphSysArch.addPlotter(new Metrics.Plotter(System.getProperty("os.arch")) {
+            _graphOsArch.addPlotter(new Metrics.Plotter(System.getProperty("os.arch")) {
 				
 				@Override
 				public int getValue() {					
