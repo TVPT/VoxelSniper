@@ -109,7 +109,8 @@ public final class MetricsManager {
                     return NumberConversions.floor(_avg);
                 }
             });
-
+            
+           
             final Graph _graphBrushUsage = _metrics.createGraph("Brush Usage");
 
             final HashMap<String, Brush> _temp = SniperBrushes.getSniperBrushes();
@@ -126,6 +127,33 @@ public final class MetricsManager {
                     }
                 });
             }
+            
+            final Graph _graphJavaVersion = _metrics.createGraph("Java Version");
+            _graphJavaVersion.addPlotter(new Metrics.Plotter(System.getProperty("java.version")) {
+				
+				@Override
+				public int getValue() {					
+					return 1;
+				}
+			});
+            
+            final Graph _graphOsName = _metrics.createGraph("OS Name");
+            _graphSysInfo.addPlotter(new Metrics.Plotter(System.getProperty("os.name")) {
+				
+				@Override
+				public int getValue() {					
+					return 1;
+				}
+			});
+            
+            final Graph _graphOsArch = _metrics.createGraph("OS Architecture");
+            _graphSysArch.addPlotter(new Metrics.Plotter(System.getProperty("os.arch")) {
+				
+				@Override
+				public int getValue() {					
+					return 1;
+				}
+			});
 
             _metrics.start();
         } catch (final IOException _e) {
