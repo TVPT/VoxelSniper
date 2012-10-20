@@ -140,6 +140,11 @@ public class PunishBrush extends PerformBrush {
 
     @Override
     protected final void arrow(final SnipeData v) {
+    	if(!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
+    		v.sendMessage("The server says no!");
+    		return;
+    	}
+    	
         this.punishDuration = v.getVoxelHeight();
         this.punishLevel = v.getcCen();
 
@@ -183,6 +188,11 @@ public class PunishBrush extends PerformBrush {
 
     @Override
     protected final void powder(final SnipeData v) {
+    	if(!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
+    		v.sendMessage("The server says no!");
+    		return;
+    	}
+    	
         final int _brushSizeSquare = v.getBrushSize() * v.getBrushSize();
         final Location _targetLocation = new Location(v.getWorld(), this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
 
