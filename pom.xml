@@ -3,7 +3,7 @@
 
 	<groupId>com.thevoxelbox</groupId>
 	<artifactId>VoxelSniper</artifactId>
-	<version>5.166.13-SNAPSHOT</version>
+	<version>5.166.13</version>
 	<packaging>jar</packaging>
 
 	<name>VoxelSniper</name>
@@ -13,7 +13,7 @@
 		<url>https://github.com/TVPT/VoxelSniper</url>
 		<developerConnection>scm:git:git@github.com:TVPT/VoxelSniper.git</developerConnection>
 		<connection>scm:git:git://github.com/TVPT/VoxelSniper.git</connection>
-	  <tag>VoxelSniper-5.166.8</tag>
+	  <tag>VoxelSniper-5.166.13</tag>
   </scm>
 
 	<properties>
