@@ -1,0 +1,27 @@
+brush-ref Todo:
+
+Brush documentation:
+	* AntiFreezeBrush has no wiki documentation
+	* BiomeBrush has no wiki documentation
+	* BlockResetBrush has no wiki documentation
+	* BlockResetSurfaceBrush has no wiki documentation
+	* CheckerVoxelDiscBrush has no wiki documentation
+	* CometBrush has no wiki documentation
+	* CylinderBrush has no wiki documentation
+	* EntityRemovalBrush has no wiki documentation
+	* FillDownBrush has no wiki documentation
+	* FlatOceanBrush has no wiki documentation
+	* OceanSelectionBrush has no wiki documentation
+	* (Re)generateChunkBrush has no wiki documentation
+	* Rot2D, Rot2Dvert, Rot3D have no wiki documentation
+	* ScannerBRush has no wiki documentation
+	* SetRedstoneFlip and SetRedstoneRotate have no wiki documentation
+	* StampBrush has no wiki documentation
+	* Stencil has no wiki documentation
+	* StencilList has no wiki documentation
+	
+	
+Brush merge:
+	* All punishing brushes into punish brush
+		* Jockey
+		* Meteor/Comet

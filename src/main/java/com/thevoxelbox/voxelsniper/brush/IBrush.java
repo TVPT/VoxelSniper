@@ -16,16 +16,6 @@ import com.thevoxelbox.voxelsniper.Message;
 public interface IBrush {
 
     /**
-     * @return the name
-     */
-    String getName();
-
-    /**
-     * @return int
-     */
-    int getTimesUsed();
-
-    /**
      * 
      * @param voxelMessage
      */
@@ -52,6 +42,16 @@ public interface IBrush {
      */
     boolean perform(Action action, SnipeData v, Material heldItem, Block clickedBlock, BlockFace clickedFace);
 
+    /**
+     * @return the name
+     */
+    String getName();
+
+    /**
+     * @return int
+     */
+    int getTimesUsed();
+    
     /**
      * @param name
      *            the name to set

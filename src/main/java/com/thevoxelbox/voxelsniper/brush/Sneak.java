@@ -16,23 +16,18 @@ import com.thevoxelbox.voxelsniper.Sniper;
  * @author Piotr
  */
 public class Sneak extends Brush {
+	private static int timesUsed = 0;
 
-    private static int timesUsed = 0;
-
+	/**
+	 * 
+	 */
     public Sneak() {
         this.setName("Sneak");
     }
 
-    @Override
-    public final int getTimesUsed() {
-        return Sneak.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    /**
+     * 
+     */
     @Override
     public final boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
         switch (action) {
@@ -121,16 +116,6 @@ public class Sneak extends Brush {
         return false;
     }
 
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-        Sneak.timesUsed = tUsed;
-    }
-
-    @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     protected final boolean getSilentTarget(final Sniper v, final Block clickedBlock, final BlockFace clickedFace) {
         this.setWorld(v.getPlayer().getWorld());
         if (clickedBlock != null) {
@@ -144,16 +129,16 @@ public class Sneak extends Brush {
             }
             return true;
         } else {
-            RangeBlockHelper hb = null;
+            RangeBlockHelper _hb = null;
             if (v.isDistRestrict()) {
-                hb = new RangeBlockHelper(v.getPlayer(), this.getWorld(), v.getRange());
-                this.setTargetBlock(hb.getRangeBlock());
+                _hb = new RangeBlockHelper(v.getPlayer(), this.getWorld(), v.getRange());
+                this.setTargetBlock(_hb.getRangeBlock());
             } else {
-                hb = new RangeBlockHelper(v.getPlayer(), this.getWorld());
-                this.setTargetBlock(hb.getTargetBlock());
+                _hb = new RangeBlockHelper(v.getPlayer(), this.getWorld());
+                this.setTargetBlock(_hb.getTargetBlock());
             }
             if (this.getTargetBlock() != null) {
-                this.setLastBlock(hb.getLastBlock());
+                this.setLastBlock(_hb.getLastBlock());
                 if (this.getLastBlock() == null) {
                     return false;
                 }
@@ -166,9 +151,30 @@ public class Sneak extends Brush {
             }
         }
     }
+    
+    @Override
+    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     @Override
     protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }       
+
+    @Override
+    public final void info(final Message vm) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        Sneak.timesUsed = tUsed;
+    }
+
+
+    @Override
+    public final int getTimesUsed() {
+        return Sneak.timesUsed;
     }
 }

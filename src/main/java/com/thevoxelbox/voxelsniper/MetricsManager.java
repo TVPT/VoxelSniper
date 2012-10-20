@@ -91,8 +91,20 @@ public final class MetricsManager {
                 public int getValue() {
                     final int _currentSnipes = MetricsManager.snipesDone;
                     final long _initializationTimeStamp = MetricsManager.snipeCounterInitTimeStamp;
-                    final double _timeRunning = (System.currentTimeMillis() - _initializationTimeStamp) / 60000;
-                    final double _avg = _currentSnipes / _timeRunning;
+                    final double _deltaTime = System.currentTimeMillis() - _initializationTimeStamp;
+                    
+                    double _avg = 0;
+                    if(_deltaTime < 60000) {
+                    	_avg = _currentSnipes;
+                    } else {
+                    	final double _timeRunning = _deltaTime / 60000;
+                    	_avg = _currentSnipes / _timeRunning;
+                    }
+                    
+                    // quite unlikely ...
+                    if(_avg > 10000) {
+                    	_avg = 0;
+                    }
 
                     return NumberConversions.floor(_avg);
                 }
