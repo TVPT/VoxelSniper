@@ -13,7 +13,7 @@ import com.thevoxelbox.voxelsniper.Message;
  * 
  */
 public class BlockResetBrush extends Brush {
-
+	private static int timesUsed = 0;
     private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
 
     static {
@@ -35,54 +35,52 @@ public class BlockResetBrush extends Brush {
         BlockResetBrush.DENIED_UPDATES.add(Material.FENCE_GATE);
     }
 
-    private static int timesUsed = 0;
-
     /**
      * 
      */
     public BlockResetBrush() {
         this.setName("Block Reset Brush");
     }
+    
+    private final void applyBrush(final SnipeData v) {    	
+    	for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
+    		for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++) {
+    			for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++) {
+    				final Block _block = this.getWorld().getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);    				
+    				if (BlockResetBrush.DENIED_UPDATES.contains(_block.getType())) {
+    					continue;
+    				}
+    				
+    				final byte _oldData = _block.getData();    				
+    				_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
+    				_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    			}
+    		}
+    	}    	
+    }
 
+    @Override
+    protected final void arrow(final SnipeData v) {
+    	applyBrush(v);
+    }
+
+    @Override
+    protected final void powder(final SnipeData v) {
+    	applyBrush(v);
+    }
+    
+    @Override
+    public final void info(final Message vm) {
+        vm.brushName(this.getName());
+    }
+    
     @Override
     public final int getTimesUsed() {
         return BlockResetBrush.timesUsed;
     }
 
     @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-    }
-
-    @Override
     public final void setTimesUsed(final int tUsed) {
         BlockResetBrush.timesUsed = tUsed;
-    }
-
-    @Override
-    protected final void arrow(final SnipeData v) {
-        this.setWorld(this.getTargetBlock().getWorld());
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-
-        for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
-            for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++) {
-                for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++) {
-                    final Block _block = this.getWorld().getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                    if (BlockResetBrush.DENIED_UPDATES.contains(_block.getType())) {
-                        continue;
-                    }
-                    final byte _oldData = _block.getData();
-                    _block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-                    _block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected final void powder(final SnipeData v) {
-        this.arrow(v);
     }
 }
