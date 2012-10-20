@@ -1,67 +1,217 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Erosion_Brush
- * @author Piotr, (lift preset by Giltwist)
+ * http://www.voxelwiki.com/minecraft/VoxelSniper#The_Erosion_Brush
+ * 
+ * @author Piotr
+ * @author MikeMatrix
  */
 public class ErodeBrush extends Brush {
+    /**
+     * @author MikeMatrix
+     */
+    private static final class BlockChangeTracker {
+        private final Map<Integer, Map<Vector, BlockWrapper>> blockChanges;
+        private final Map<Vector, BlockWrapper> flatChanges;
+        private final World world;
+        private int nextIterationId = 0;
 
-    private class BlockWrapper {
+        public BlockChangeTracker(final World world) {
+            this.blockChanges = new HashMap<Integer, Map<Vector, BlockWrapper>>();
+            this.flatChanges = new HashMap<Vector, BlockWrapper>();
+            this.world = world;
+        }
 
-        public boolean solid;
-        public Block nativeBlock;
-        public int id;
-        public int dataId;
+        public BlockWrapper get(final Vector position, final int iteration) {
+            BlockWrapper _changedBlock = null;
 
-        public BlockWrapper(final Block bl) {
-            this.nativeBlock = bl;
-            this.dataId = bl.getTypeId();
-            switch (bl.getType()) {
-            case AIR:
-                this.solid = false;
-                break;
-
-            case WATER:
-                this.solid = false;
-                break;
-
-            case STATIONARY_WATER:
-                this.solid = false;
-                break;
-
-            case STATIONARY_LAVA:
-                this.solid = false;
-                break;
-            case LAVA:
-                this.solid = false;
-                break;
-
-            default:
-                this.solid = true;
+            for (int _i = iteration - 1; _i >= 0; --_i) {
+                if (this.blockChanges.containsKey(_i) && this.blockChanges.get(_i).containsKey(position)) {
+                    _changedBlock = this.blockChanges.get(_i).get(position);
+                    return _changedBlock;
+                }
             }
+
+            if (_changedBlock == null) {
+                _changedBlock = new BlockWrapper(position.toLocation(this.world).getBlock());
+            }
+
+            return _changedBlock;
+        }
+
+        public Collection<BlockWrapper> getAll() {
+            return this.flatChanges.values();
+        }
+
+        public int nextIteration() {
+            return this.nextIterationId++;
+        }
+
+        public void put(final Vector position, final BlockWrapper changedBlock, final int iteration) {
+            if (!this.blockChanges.containsKey(iteration)) {
+                this.blockChanges.put(iteration, new HashMap<Vector, BlockWrapper>());
+            }
+
+            this.blockChanges.get(iteration).put(position, changedBlock);
+            this.flatChanges.put(position, changedBlock);
         }
     }
 
+    /**
+     * @author MikeMatrix
+     */
+    private static final class BlockWrapper {
+
+        private final Block block;
+        private final Material material;
+        private final byte data;
+
+        public BlockWrapper(final Block block) {
+            this.block = block;
+            this.data = block.getData();
+            this.material = block.getType();
+        }
+
+        public BlockWrapper(final Block block, final Material material, final byte data) {
+            this.block = block;
+            this.material = material;
+            this.data = data;
+        }
+
+        /**
+         * @return the block
+         */
+        public Block getBlock() {
+            return this.block;
+        }
+
+        /**
+         * @return the data
+         */
+        public byte getData() {
+            return this.data;
+        }
+
+        /**
+         * @return the material
+         */
+        public Material getMaterial() {
+            return this.material;
+        }
+
+        /**
+         * @return if the block is Empty.
+         */
+        public boolean isEmpty() {
+            if (this.material == Material.AIR) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * @return if the block is a Liquid.
+         */
+        public boolean isLiquid() {
+            switch (this.material) {
+            case WATER:
+            case STATIONARY_WATER:
+            case LAVA:
+            case STATIONARY_LAVA:
+                return true;
+            default:
+                return false;
+            }
+        }
+
+    }
+
+    /**
+     * @author MikeMatrix
+     */
+    private static final class ErosionPreset {
+        private final int erosionFaces;
+        private final int erosionRecursion;
+        private final int fillFaces;
+        private final int fillRecursion;
+
+        public ErosionPreset(final int erosionFaces, final int erosionRecursion, final int fillFaces, final int fillRecursion) {
+            this.erosionFaces = erosionFaces;
+            this.erosionRecursion = erosionRecursion;
+            this.fillFaces = fillFaces;
+            this.fillRecursion = fillRecursion;
+        }
+
+        /**
+         * @return the erosionFaces
+         */
+        public int getErosionFaces() {
+            return this.erosionFaces;
+        }
+
+        /**
+         * @return the erosionRecursion
+         */
+        public int getErosionRecursion() {
+            return this.erosionRecursion;
+        }
+
+        /**
+         * @return the fillFaces
+         */
+        public int getFillFaces() {
+            return this.fillFaces;
+        }
+
+        /**
+         * @return the fillRecursion
+         */
+        public int getFillRecursion() {
+            return this.fillRecursion;
+        }
+
+        public ErosionPreset getInverted() {
+            return new ErosionPreset(this.fillFaces, this.fillRecursion, this.erosionFaces, this.erosionRecursion);
+        }
+    }
+
+    /**
+     * @author MikeMatrix
+     */
+    private enum Preset {
+        MELT(new ErosionPreset(2, 1, 5, 1)), FILL(new ErosionPreset(5, 1, 2, 1)), SMOOTH(new ErosionPreset(3, 1, 3, 1)), LIFT(new ErosionPreset(6, 0, 1, 1));
+
+        ErosionPreset preset;
+
+        Preset(final ErosionPreset preset) {
+            this.preset = preset;
+        }
+
+        public ErosionPreset getPreset() {
+            return this.preset;
+        }
+    }
+
+    private static final Vector[] FACES_TO_CHECK = { new Vector(0, 0, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), new Vector(0, -1, 0), new Vector(1, 0, 0),
+            new Vector(-1, 0, 0) };
+
     private static int timesUsed = 0;
 
-    private BlockWrapper[][][] snap;
-    private BlockWrapper[][][] firstSnap;
-    private int bsize;
-    private int erodeFace;
-    private int fillFace;
-    private int brushSize;
-    private int erodeRecursion = 1;
-    private int fillRecursion = 1;
-    private double trueCircle = 0.5;
-    private boolean reverse = false;
+    private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
 
     /**
      * 
@@ -70,89 +220,107 @@ public class ErodeBrush extends Brush {
         this.setName("Erode");
     }
 
-    private boolean erode(final int x, final int y, final int z) {
-    	int _d = 0;
+    @Override
+    public final int getTimesUsed() {
+        return ErodeBrush.timesUsed;
+    }
 
-    	if (this.snap[x][y][z].solid) {
-            if (!this.snap[x + 1][y][z].solid) {
-                _d++;
+    @Override
+    public final void info(final Message vm) {
+        vm.brushName(this.getName());
+        vm.size();
+        vm.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
+        vm.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
+        vm.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
+        vm.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
+    }
+
+    @Override
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+        for (int _i = 1; _i < par.length; _i++) {
+            final String _param = par[_i];
+
+            try {
+                if (_param.equalsIgnoreCase("info")) {
+                    v.sendMessage(ChatColor.GOLD + "Erode brush parameters");
+                    v.sendMessage(ChatColor.AQUA + "e[number] (ex:  e3) Sets the number of minimum exposed faces to erode a block.");
+                    v.sendMessage(ChatColor.BLUE + "f[number] (ex:  f5) Sets the number of minumum faces containing a block to place a block.");
+                    v.sendMessage(ChatColor.DARK_BLUE + "re[number] (ex:  re3) Sets the number of recursions the brush will perform erosion.");
+                    v.sendMessage(ChatColor.DARK_GREEN + "rf[number] (ex:  rf5) Sets the number of recursions the brush will perform filling.");
+                    this.printPresets(v.getVoxelMessage());
+                    return;
+                } else if (_param.startsWith("rf")) {
+                    this.currentPreset = new ErosionPreset(this.currentPreset.getErosionFaces(), this.currentPreset.getErosionRecursion(),
+                            this.currentPreset.getFillFaces(), Integer.parseInt(_param.replace("rf", "")));
+                    v.sendMessage(ChatColor.BLUE + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
+                    continue;
+                } else if (_param.startsWith("re")) {
+                    this.currentPreset = new ErosionPreset(this.currentPreset.getErosionFaces(), Integer.parseInt(_param.replace("re", "")),
+                            this.currentPreset.getFillFaces(), this.currentPreset.getFillRecursion());
+                    v.sendMessage(ChatColor.AQUA + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
+                    continue;
+                } else if (_param.startsWith("f")) {
+                    this.currentPreset = new ErosionPreset(this.currentPreset.getErosionFaces(), this.currentPreset.getErosionRecursion(),
+                            Integer.parseInt(_param.replace("f", "")), this.currentPreset.getFillRecursion());
+                    v.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
+                    continue;
+                } else if (_param.startsWith("e")) {
+                    this.currentPreset = new ErosionPreset(Integer.parseInt(_param.replace("e", "")), this.currentPreset.getErosionRecursion(),
+                            this.currentPreset.getFillFaces(), this.currentPreset.getFillRecursion());
+                    v.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
+                    continue;
+                }
+            } catch (final Exception _e) {
             }
-            if (!this.snap[x - 1][y][z].solid) {
-                _d++;
+
+            try {
+                this.currentPreset = Preset.valueOf(_param.toUpperCase()).getPreset();
+                v.getVoxelMessage().brushMessage("Brush preset set to " + _param.toLowerCase());
+                return;
+            } catch (final IllegalArgumentException _ex) {
+                v.getVoxelMessage().brushMessage("No such preset.");
+                return;
             }
-            if (!this.snap[x][y + 1][z].solid) {
-                _d++;
-            }
-            if (!this.snap[x][y - 1][z].solid) {
-                _d++;
-            }
-            if (!this.snap[x][y][z + 1].solid) {
-                _d++;
-            }
-            if (!this.snap[x][y][z - 1].solid) {
-                _d++;
-            }
-            return _d >= this.erodeFace;
-        } else {
-            return false;
         }
     }
 
-    private void erosion(final SnipeData v) {
-    	final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-    	final int _bSizePlusOne = this.bsize + 1;
-    	final double _bPow = Math.pow(this.bsize + this.trueCircle, 2);
-    	final double _bPowTC = Math.pow(this.bsize + 0.5, 2);
-    	int _temp;
-    	
-    	if (this.reverse) {    		
-            _temp = this.erodeFace;
-            this.erodeFace = this.fillFace;
-            this.fillFace = _temp;
-            
-            _temp = this.erodeRecursion;
-            this.erodeRecursion = this.fillRecursion;
-            this.fillRecursion = _temp;
-        }
+    @Override
+    public final void setTimesUsed(final int tUsed) {
+        ErodeBrush.timesUsed = tUsed;
+    }
 
-        if (this.erodeFace >= 0 && this.erodeFace <= 6) {
-            for (int _er = 0; _er < this.erodeRecursion; _er++) {
-                this.getMatrix();
-                
-                for (int _z = 1; _z < this.snap.length - 1; _z++) {
+    private void erosion(final SnipeData v, final ErosionPreset erosionPreset) {
 
-                    final double _zpow = Math.pow(_z - _bSizePlusOne, 2);
-                    for (int _x = 1; _x < this.snap.length - 1; _x++) {
+        final BlockChangeTracker _blockChangeTracker = new BlockChangeTracker(this.getTargetBlock().getWorld());
 
-                        final double _xpow = Math.pow(_x - _bSizePlusOne, 2);
-                        for (int _y = 1; _y < this.snap.length - 1; _y++) {
+        final Vector _targetBlockVector = this.getTargetBlock().getLocation().toVector();
 
-                            if (((_xpow + Math.pow(_y - _bSizePlusOne, 2) + _zpow) <= _bPow)) {
-                                if (this.erode(_x, _y, _z)) {
-                                    this.snap[_x][_y][_z].nativeBlock.setType(Material.AIR);
+        for (int _i = 0; _i < erosionPreset.getErosionRecursion(); ++_i) {
+            final int _currentIteration = _blockChangeTracker.nextIteration();
+            for (int _x = this.getTargetBlock().getX() - v.getBrushSize(); _x <= this.getTargetBlock().getX() + v.getBrushSize(); ++_x) {
+                for (int _z = this.getTargetBlock().getZ() - v.getBrushSize(); _z <= this.getTargetBlock().getZ() + v.getBrushSize(); ++_z) {
+                    for (int _y = this.getTargetBlock().getY() - v.getBrushSize(); _y <= this.getTargetBlock().getY() + v.getBrushSize(); ++_y) {
+                        final Vector _currentPosition = new Vector(_x, _y, _z);
+                        if (_currentPosition.isInSphere(_targetBlockVector, v.getBrushSize())) {
+                            final BlockWrapper _currentBlock = _blockChangeTracker.get(_currentPosition, _currentIteration);
+
+                            if (_currentBlock.isEmpty() || _currentBlock.isLiquid()) {
+                                continue;
+                            }
+
+                            int _count = 0;
+                            for (final Vector _vector : ErodeBrush.FACES_TO_CHECK) {
+                                final Vector _relativePosition = _currentPosition.clone().add(_vector);
+                                final BlockWrapper _relativeBlock = _blockChangeTracker.get(_relativePosition, _currentIteration);
+
+                                if (_relativeBlock.isEmpty() || _relativeBlock.isLiquid()) {
+                                    _count++;
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-        if (this.fillFace >= 0 && this.fillFace <= 6) {
-            for (int _fr = 0; _fr < this.fillRecursion; _fr++) {
-                this.getMatrix();
 
-                for (int _z = 1; _z < this.snap.length - 1; _z++) {
-
-                    final double _zpow = Math.pow(_z - _bSizePlusOne, 2);
-                    for (int _x = 1; _x < this.snap.length - 1; _x++) {
-
-                        final double _xpow = Math.pow(_x - _bSizePlusOne, 2);
-                        for (int _y = 1; _y < this.snap.length - 1; _y++) {
-
-                            if (((_xpow + Math.pow(_y - _bSizePlusOne, 2) + _zpow) <= _bPowTC)) {
-                                if (this.fill(_x, _y, _z)) {
-                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(this.snap[_x][_y][_z].id);
-                                }
+                            if (_count >= erosionPreset.getErosionFaces()) {
+                                _blockChangeTracker
+                                        .put(_currentPosition, new BlockWrapper(_currentBlock.getBlock(), Material.AIR, (byte) 0), _currentIteration);
                             }
                         }
                     }
@@ -160,250 +328,91 @@ public class ErodeBrush extends Brush {
             }
         }
 
-        for (int _x = 0; _x < this.firstSnap.length; _x++) {
-            for (int _y = 0; _y < this.firstSnap.length; _y++) {
-                for (int _z = 0; _z < this.firstSnap.length; _z++) {
-                	
-                    final BlockWrapper _block = this.firstSnap[_x][_y][_z];
-                    if (_block.dataId != _block.nativeBlock.getTypeId()) {
-                        _undo.put(_block.nativeBlock);
+        for (int _i = 0; _i < erosionPreset.getFillRecursion(); ++_i) {
+            final int _currentIteration = _blockChangeTracker.nextIteration();
+            for (int _x = this.getTargetBlock().getX() - v.getBrushSize(); _x <= this.getTargetBlock().getX() + v.getBrushSize(); ++_x) {
+                for (int _z = this.getTargetBlock().getZ() - v.getBrushSize(); _z <= this.getTargetBlock().getZ() + v.getBrushSize(); ++_z) {
+                    for (int _y = this.getTargetBlock().getY() - v.getBrushSize(); _y <= this.getTargetBlock().getY() + v.getBrushSize(); ++_y) {
+                        final Vector _currentPosition = new Vector(_x, _y, _z);
+                        if (_currentPosition.isInSphere(_targetBlockVector, v.getBrushSize())) {
+                            final BlockWrapper _currentBlock = _blockChangeTracker.get(_currentPosition, _currentIteration);
+
+                            if (!(_currentBlock.isEmpty() || _currentBlock.isLiquid())) {
+                                continue;
+                            }
+
+                            int _count = 0;
+
+                            final Map<BlockWrapper, Integer> _blockCount = new HashMap<BlockWrapper, Integer>();
+
+                            for (final Vector _vector : ErodeBrush.FACES_TO_CHECK) {
+                                final Vector _relativePosition = _currentPosition.clone().add(_vector);
+                                final BlockWrapper _relativeBlock = _blockChangeTracker.get(_relativePosition, _currentIteration);
+
+                                if (!(_relativeBlock.isEmpty() || _relativeBlock.isLiquid())) {
+                                    _count++;
+                                    final BlockWrapper _typeBlock = new BlockWrapper(null, _relativeBlock.getMaterial(), _relativeBlock.getData());
+                                    if (_blockCount.containsKey(_typeBlock)) {
+                                        _blockCount.put(_typeBlock, _blockCount.get(_typeBlock) + 1);
+                                    } else {
+                                        _blockCount.put(_typeBlock, 1);
+                                    }
+                                }
+                            }
+
+                            BlockWrapper _currentMaterial = new BlockWrapper(null, Material.AIR, (byte) 0);
+                            int _amount = 0;
+
+                            for (final BlockWrapper _wrapper : _blockCount.keySet()) {
+                                final Integer _currentCount = _blockCount.get(_wrapper);
+                                if (_amount <= _currentCount) {
+                                    _currentMaterial = _wrapper;
+                                    _amount = _currentCount;
+                                }
+                            }
+
+                            if (_count >= erosionPreset.getFillFaces()) {
+                                _blockChangeTracker.put(_currentPosition, new BlockWrapper(_currentBlock.getBlock(), _currentMaterial.getMaterial(),
+                                        _currentMaterial.getData()), _currentIteration);
+                            }
+                        }
                     }
-                    
                 }
             }
+        }
+
+        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        for (final BlockWrapper _blockWrapper : _blockChangeTracker.getAll()) {
+            _undo.put(_blockWrapper.getBlock());
+            _blockWrapper.getBlock().setTypeIdAndData(_blockWrapper.getMaterial().getId(), _blockWrapper.getData(), true);
         }
 
         v.storeUndo(_undo);
-        
-        if (this.reverse) { // if you dont put it back where it was, powder flips back and forth from fill to erode each time
-            _temp = this.erodeFace;
-            this.erodeFace = this.fillFace;
-            this.fillFace = _temp;
-            
-            _temp = this.erodeRecursion;
-            this.erodeRecursion = this.fillRecursion;
-            this.fillRecursion = _temp;
-        }
     }
 
-    private boolean fill(final int x, final int y, final int z) {
-    	int _d = 0;
+    private void printPresets(final Message vm) {
+        String _printout = "";
 
-    	if (this.snap[x][y][z].solid) {
-            return false;
-        } else {
-            if (this.snap[x + 1][y][z].solid) {
-                this.snap[x][y][z].id = this.snap[x + 1][y][z].nativeBlock.getTypeId();
-                _d++;
-            }
-            if (this.snap[x - 1][y][z].solid) {
-                this.snap[x][y][z].id = this.snap[x - 1][y][z].nativeBlock.getTypeId();
-                _d++;
-            }
-            if (this.snap[x][y + 1][z].solid) {
-                this.snap[x][y][z].id = this.snap[x][y + 1][z].nativeBlock.getTypeId();
-                _d++;
-            }
-            if (this.snap[x][y - 1][z].solid) {
-                this.snap[x][y][z].id = this.snap[x][y - 1][z].nativeBlock.getTypeId();
-                _d++;
-            }
-            if (this.snap[x][y][z + 1].solid) {
-                this.snap[x][y][z].id = this.snap[x][y][z + 1].nativeBlock.getTypeId();
-                _d++;
-            }
-            if (this.snap[x][y][z - 1].solid) {
-                this.snap[x][y][z].id = this.snap[x][y][z - 1].nativeBlock.getTypeId();
-                _d++;
-            }
-            if (_d >= this.fillFace) {
-                return true;
+        boolean _delimiterHelper = true;
+        for (final Preset _treeType : Preset.values()) {
+            if (_delimiterHelper) {
+                _delimiterHelper = false;
             } else {
-                return false;
+                _printout += ", ";
             }
+            _printout += ChatColor.GRAY + _treeType.name().toLowerCase() + ChatColor.WHITE;
         }
-    }
-    
-    private void getMatrix() {
-    	final int _v = (this.bsize + 1);
-        this.brushSize = ((this.bsize + 1) * 2) + 1;
 
-        if (this.snap.length == 0) {
-            this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
-
-            int _sx = this.getBlockPositionX() - (this.bsize + 1);
-            int _sy = this.getBlockPositionY() - (this.bsize + 1);
-            int _sz = this.getBlockPositionZ() - (this.bsize + 1);
-            for (int _x = 0; _x < this.snap.length; _x++) {
-                _sz = this.getBlockPositionZ() - _v;
-                for (int _z = 0; _z < this.snap.length; _z++) {
-                    _sy = this.getBlockPositionY() - _v;
-                    for (int _y = 0; _y < this.snap.length; _y++) {
-                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
-                        _sy++;
-                    }
-                    _sz++;
-                }
-                _sx++;
-            }
-            this.firstSnap = this.snap.clone();
-        } else {
-            this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
-
-            int _sx = this.getBlockPositionX() - (this.bsize + 1);
-            int _sy = this.getBlockPositionY() - (this.bsize + 1);
-            int _sz = this.getBlockPositionZ() - (this.bsize + 1);
-            for (int _x = 0; _x < this.snap.length; _x++) {
-                _sz = this.getBlockPositionZ() - _v;
-                for (int _z = 0; _z < this.snap.length; _z++) {
-                    _sy = this.getBlockPositionY() - _v;
-                    for (int _y = 0; _y < this.snap.length; _y++) {
-                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
-                        _sy++;
-                    }
-                    _sz++;
-                }
-                _sx++;
-            }
-        }
+        vm.custom(_printout);
     }
 
     @Override
     protected final void arrow(final SnipeData v) {
-        this.bsize = v.getBrushSize();
-
-        this.snap = new BlockWrapper[0][0][0];
-        this.reverse = false;
-
-        this.erosion(v);
+        this.erosion(v, this.currentPreset);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.bsize = v.getBrushSize();
-
-        this.snap = new BlockWrapper[0][0][0];
-        this.reverse = true;
-
-        this.erosion(v);
-    }
-    
-    @Override
-    public final void info(final Message vm) {
-    	vm.brushName(this.getName());
-    	vm.size();
-    	vm.custom(ChatColor.RED + "Litesnipers: This is a slow brush. DO NOT SPAM it too much or hold down the mouse.");
-    	vm.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.erodeFace);
-    	vm.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.fillFace);
-    	vm.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.erodeRecursion);
-    	vm.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.fillRecursion);
-    }
-    
-    @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {    	
-    	for (int _i = 1; _i < par.length; _i++) {
-    		final String _param = par[_i];
-    		
-    		try {
-    			if (_param.equalsIgnoreCase("info")) {
-    	    		v.sendMessage(ChatColor.GOLD + "Erode brush parameters");
-    	    		v.sendMessage(ChatColor.RED + "NOT for litesnipers:");
-    	    		v.sendMessage(ChatColor.GREEN + "b[number] (ex:   b23) Sets your sniper brush size.");
-    	    		v.sendMessage(ChatColor.AQUA + "e[number] (ex:  e3) Sets the number of minimum exposed faces to erode a block.");
-    	    		v.sendMessage(ChatColor.BLUE + "f[number] (ex:  f5) Sets the number of minumum faces containing a block to place a block.");
-    	    		v.sendMessage(ChatColor.DARK_BLUE + "re[number] (ex:  re3) Sets the number of recursions the brush will perform erosion.");
-    	    		v.sendMessage(ChatColor.DARK_GREEN + "rf[number] (ex:  rf5) Sets the number of recursions the brush will perform filling.");
-    	    		v.sendMessage(ChatColor.AQUA + "/b d false -- will turn off true circle algorithm /b b true will switch back. (true is default for this brush.)");
-    	    		v.sendMessage(ChatColor.GOLD + "For user-friendly pre-sets, type /b e info2.");
-    	    		return;
-    	    	}
-    	    	if (_param.equalsIgnoreCase("info2")) {
-    	    		v.sendMessage(ChatColor.GOLD
-    	    				+ "User-friendly Preset Options.  These are for the arrow.  Powder will do reverse for the first two (for fast switching):");
-    	    		v.sendMessage(ChatColor.BLUE + "OK for litesnipers:");
-    	    		v.sendMessage(ChatColor.GREEN + "/b e melt -- for melting away protruding corners and edges.");
-    	    		v.sendMessage(ChatColor.AQUA + "/b e fill -- for building up inside corners");
-    	    		v.sendMessage(ChatColor.AQUA
-    	    				+ "/b e smooth -- For the most part, does not change total number of blocks, but smooths the shape nicely. Use as a finishing touch for the most part, before overlaying grass and trees, etc.");
-    	    		v.sendMessage(ChatColor.BLUE + "/b e lift-- More or less raises each block in the brush area blockPositionY one");
-    	    		return;
-    	    	}
-    			if (_param.startsWith("melt")) {
-    				this.fillRecursion = 1;
-    				this.erodeRecursion = 1;
-    				this.fillFace = 5;
-    				this.erodeFace = 2;
-    				v.owner().setBrushSize(10);
-    				v.sendMessage(ChatColor.AQUA + "Melt mode. (/b e e2 f5 re1 rf1 b10)");
-    				continue;
-    			} else if (_param.startsWith("fill")) {
-    				this.fillRecursion = 1;
-    				this.erodeRecursion = 1;
-    				this.fillFace = 2;
-    				this.erodeFace = 5;
-    				v.owner().setBrushSize(8);
-    				v.sendMessage(ChatColor.AQUA + "Fill mode. (/b e e5 f2 re1 rf1 b8)");
-    				continue;
-    			} else if (_param.startsWith("smooth")) {
-    				this.fillRecursion = 1;
-    				this.erodeRecursion = 1;
-    				this.fillFace = 3;
-    				this.erodeFace = 3;
-    				v.owner().setBrushSize(16);
-    				v.sendMessage(ChatColor.AQUA + "Smooth mode. (/b e e3 f3 re1 rf1 b16)");
-    				continue;
-    			} else if (_param.startsWith("lift")) {
-    				this.fillRecursion = 1;
-    				this.erodeRecursion = 0;
-    				this.fillFace = 1;
-    				this.erodeFace = 6;
-    				v.owner().setBrushSize(10);
-    				v.sendMessage(ChatColor.AQUA + "Lift mode. (/b e e6 f1 re0 rf1 b10)");
-    				continue;
-    			} else if (_param.startsWith("true")) {
-    				this.trueCircle = 0.5;
-    				v.sendMessage(ChatColor.AQUA + "True circle mode ON." + this.erodeRecursion);
-    				continue;
-    			} else if (_param.startsWith("false")) {
-    				this.trueCircle = 0;
-    				v.sendMessage(ChatColor.AQUA + "True circle mode OFF." + this.erodeRecursion);
-    				continue;
-    			} else if (_param.startsWith("rf")) {
-    				this.fillRecursion = Integer.parseInt(_param.replace("rf", ""));
-    				v.sendMessage(ChatColor.BLUE + "Fill recursion amount set to " + this.fillRecursion);
-    				continue;
-    			} else if (_param.startsWith("re")) {
-    				this.erodeRecursion = Integer.parseInt(_param.replace("re", ""));
-    				v.sendMessage(ChatColor.AQUA + "Erosion recursion amount set to " + this.erodeRecursion);
-    				continue;    				
-    			} else if (_param.startsWith("f")) {
-    				this.fillFace = Integer.parseInt(_param.replace("f", ""));
-    				v.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + this.fillFace);
-    				continue;
-    			} else if (_param.startsWith("b")) {
-    				v.owner().setBrushSize(Integer.parseInt(_param.replace("b", "")));
-    				continue;
-    			} else if (_param.startsWith("e")) {
-    				this.erodeFace = Integer.parseInt(_param.replace("e", ""));
-    				v.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.erodeFace);
-    				continue;
-    			} else {
-    				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-    			}
-    		} catch (final Exception _e) {
-    			v.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + _param
-    					+ "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
-    		}
-    	}
-    }
-
-    @Override
-    public final int getTimesUsed() {
-    	return ErodeBrush.timesUsed;
-    }
-    
-    @Override
-    public final void setTimesUsed(final int tUsed) {
-    	ErodeBrush.timesUsed = tUsed;
+        this.erosion(v, this.currentPreset.getInverted());
     }
 }
