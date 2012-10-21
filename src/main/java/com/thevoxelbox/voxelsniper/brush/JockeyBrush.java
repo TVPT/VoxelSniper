@@ -78,7 +78,7 @@ public class JockeyBrush extends Brush {
 					_player.setPassenger(_closest);
 				} else {
 					_closest.setPassenger(_player);
-					jockeydEntity = _closest;
+					jockeyedEntity = _closest;
 				}
 				v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + _closest.getEntityId());
 			}
@@ -98,9 +98,9 @@ public class JockeyBrush extends Brush {
 			v.owner().getPlayer().eject();
 			v.owner().getPlayer().sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
 		} else {
-			if (jockeydEntity != null) {
-				jockeydEntity.eject();
-				jockeydEntity = null;
+			if (jockeyedEntity != null) {
+				jockeyedEntity.eject();
+				jockeyedEntity = null;
 				v.owner().getPlayer().sendMessage(ChatColor.GOLD + "You have been ejected!");
 			}
 		}
