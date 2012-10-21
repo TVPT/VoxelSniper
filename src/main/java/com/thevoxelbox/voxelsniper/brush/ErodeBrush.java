@@ -193,7 +193,8 @@ public class ErodeBrush extends Brush {
      * @author MikeMatrix
      */
     private enum Preset {
-        MELT(new ErosionPreset(2, 1, 5, 1)), FILL(new ErosionPreset(5, 1, 2, 1)), SMOOTH(new ErosionPreset(3, 1, 3, 1)), LIFT(new ErosionPreset(6, 0, 1, 1));
+        MELT(new ErosionPreset(2, 1, 5, 1)), FILL(new ErosionPreset(5, 1, 2, 1)), SMOOTH(new ErosionPreset(3, 1, 3, 1)), LIFT(new ErosionPreset(6, 0, 1, 1)), FLOATCLEAN(
+                new ErosionPreset(6, 1, 6, 1));
 
         ErosionPreset preset;
 
