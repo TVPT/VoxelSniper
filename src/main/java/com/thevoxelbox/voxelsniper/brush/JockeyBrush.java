@@ -10,6 +10,9 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.plaf.basic.BasicScrollPaneUI.VSBChangeListener;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush
@@ -20,11 +23,13 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 public class JockeyBrush extends Brush {
 	private static int timesUsed = 0;
 
+        private final int ENTITY_STACK_LIMIT = 50;
+        
 	private JockeyType jockeyType = JockeyType.NORMAL_ALL_ENTITIES;
 	private Entity jockeyedEntity = null;
 
 	private enum JockeyType {
-		NORMAL_ALL_ENTITIES, NORMAL_PLAYER_ONLY, INVERSE_ALL_ENTITIES, INVERSE_PLAYER_ONLY
+		NORMAL_ALL_ENTITIES, NORMAL_PLAYER_ONLY, INVERSE_ALL_ENTITIES, INVERSE_PLAYER_ONLY, STACK_ALL_ENTITIES, STACK_PLAYER_ONLY
 	}
 
 	/**
@@ -86,10 +91,46 @@ public class JockeyBrush extends Brush {
 			v.sendMessage(ChatColor.RED + "Could not find any entities");
 		}
 	}
+        
+        private void stack(final SnipeData v){
+            List<Entity> nearbyEntities = v.owner().getPlayer().getNearbyEntities(v.getBrushSize() * 2, v.getBrushSize() * 2, v.getBrushSize() * 2);
+            Entity lastEntity = v.owner().getPlayer(); 
+            int stackHeight = 0;
+            
+            for(Entity e : nearbyEntities){
+                if(!(stackHeight >= ENTITY_STACK_LIMIT)){
+                    if(jockeyType == JockeyType.STACK_ALL_ENTITIES){
+                        lastEntity.setPassenger(e);
+                        lastEntity = e;
+                        stackHeight++;
+                    }
+                    else if(jockeyType == JockeyType.STACK_PLAYER_ONLY){
+                        if(e instanceof Player){
+                            lastEntity.setPassenger(e);
+                            lastEntity = e;
+                            stackHeight++;
+                        }
+                    }
+                    else{
+                        v.owner().getPlayer().sendMessage("You broke stack! :O");
+                    }
+                } 
+                else{
+                    return;
+                }
+            }
+            
+        }
 
 	@Override
 	protected final void arrow(final SnipeData v) {
-		this.sitOn(v);
+            if(jockeyType == JockeyType.STACK_ALL_ENTITIES || jockeyType == JockeyType.STACK_PLAYER_ONLY){
+                stack(v);
+            }
+            else{
+                this.sitOn(v);
+            }
+		
 	}
 
 	@Override
@@ -111,12 +152,14 @@ public class JockeyBrush extends Brush {
 	public final void info(final Message vm) {
 		vm.brushName(this.getName());
 		vm.custom("Current jockey mode: " + ChatColor.GREEN + jockeyType.toString());
+                vm.custom(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush" );
 	}
 
 	@Override
 	public void parameters(final String[] par, final SnipeData v) {
 		boolean _inverse = false;
 		boolean _playerOnly = false;
+                boolean _stack = false;
 
 		try {
 			for (String _arg : par) {
@@ -127,6 +170,10 @@ public class JockeyBrush extends Brush {
 				if (_arg.startsWith("-po:")) {
 					_playerOnly = _arg.endsWith("y") ? true : false;
 				}
+				if (_arg.startsWith("-s:")) {
+					_stack = _arg.endsWith("y") ? true : false;
+				}                               
+
 			}
 
 			if (_inverse) {
@@ -135,13 +182,19 @@ public class JockeyBrush extends Brush {
 				} else {
 					jockeyType = JockeyType.INVERSE_ALL_ENTITIES;
 				}
+                        } else if(_stack){
+                                if(_playerOnly){
+                                    jockeyType = JockeyType.STACK_PLAYER_ONLY;
+                                } else {
+                                    jockeyType = JockeyType.STACK_ALL_ENTITIES;
+                                }
 			} else {
 				if (_playerOnly) {
 					jockeyType = JockeyType.NORMAL_PLAYER_ONLY;
 				} else {
 					jockeyType = JockeyType.NORMAL_ALL_ENTITIES;
 				}
-			}
+			}                        
 
 			v.sendMessage("Current jockey mode: " + ChatColor.GREEN + jockeyType.toString());
 		} catch (Exception _e) {
