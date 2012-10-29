@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
@@ -12,11 +14,16 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Voxel
  */
 public class OceanBrush extends Brush {
-    protected int s1x;
+    private final static int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
+    private final static int WATER_LEVEL_MIN = 0;
+	
+	protected int s1x;
     protected int s1z;
     protected int s2x;
     protected int s2z;
     protected Undo undo;
+    
+    private int waterLevel = WATER_LEVEL_DEFAULT;
 
     private static int timesUsed = 0;
 
@@ -28,66 +35,67 @@ public class OceanBrush extends Brush {
     }
 
     private final int getHeight(final int bx, final int bz) {
-        for (int _y = this.getWorld().getMaxHeight(); _y > 0; _y--) {
+        for (int _y = this.getWorld().getMaxHeight() - 1; _y > 0; _y--) {
         	final Material _mat = this.clampY(bx, _y, bz).getType();
-            if (_mat != Material.AIR) {
-                switch (_mat) {               
-                case SAPLING:                	
-                    break;
+        	if(_mat.equals(Material.AIR)) {
+        		continue;
+			}
+			switch (_mat) {
+			case SAPLING:
+				break;
 
-                case WATER:
-                    break;
+			case WATER:
+				break;
 
-                case STATIONARY_WATER:
-                    break;
+			case STATIONARY_WATER:
+				break;
 
-                case LAVA:
-                    break;
+			case LAVA:
+				break;
 
-                case STATIONARY_LAVA:
-                    break;
+			case STATIONARY_LAVA:
+				break;
 
-                case LOG:
-                    break;
+			case LOG:
+				break;
 
-                case LEAVES:
-                    break;
+			case LEAVES:
+				break;
 
-                case YELLOW_FLOWER:
-                    break;
+			case YELLOW_FLOWER:
+				break;
 
-                case RED_ROSE:
-                    break;
+			case RED_ROSE:
+				break;
 
-                case BROWN_MUSHROOM:
-                    break;
+			case BROWN_MUSHROOM:
+				break;
 
-                case RED_MUSHROOM:
-                    break;
+			case RED_MUSHROOM:
+				break;
 
-                case SNOW:
-                    break;
+			case SNOW:
+				break;
 
-                case ICE:
-                    break;
+			case ICE:
+				break;
 
-                case SNOW_BLOCK:
-                    break;
+			case SNOW_BLOCK:
+				break;
 
-                case CACTUS:
-                    break;
+			case CACTUS:
+				break;
 
-                case SUGAR_CANE_BLOCK:
-                    break;
+			case SUGAR_CANE_BLOCK:
+				break;
 
-                case PUMPKIN:
-                    break;
+			case PUMPKIN:
+				break;
 
-                default:
-                    return _y;
-                }
-            }
-        }
+			default:
+				return _y;
+			}
+		}
         return 0;
     }
 
@@ -105,13 +113,13 @@ public class OceanBrush extends Brush {
         if (this.getTargetBlock().getX() >= 0 && this.getTargetBlock().getZ() >= 0) {
             for (int _x = _sx; _x < _sx + CHUNK_SIZE; _x++) {
                 for (int _z = _sz; _z < _sz + CHUNK_SIZE; _z++) {
-                    this.undo.put(this.clampY(_x, 63, _z));
-                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, 63, _z);
+                    this.undo.put(this.clampY(_x,  this.waterLevel, _z));
+                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x,  this.waterLevel, _z);
                 }
             }
             for (int _x = _sx; _x < _sx + CHUNK_SIZE; _x++) {
                 for (int _z = _sz; _z < _sz + CHUNK_SIZE; _z++) {
-                    _y = this.getHeight(_x, _z);
+                    _y = this.getHeight(_x, _z);                    
                     if (_y > 59) {
                         _dif = 59 - (_y - 59);
                         for (int _t = 127; _t > _dif; _t--) {
@@ -125,7 +133,7 @@ public class OceanBrush extends Brush {
                                 }
                             }
                         }
-                        for (int _r = 63; _r > 5; _r--) {
+                        for (int _r =  this.waterLevel; _r > 5; _r--) {
                             if (this.getBlockIdAt(_x, _r, _z) == 0) {
                                 this.undo.put(this.clampY(_x, _r, _z));
                                 this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, _r, _z);
@@ -139,8 +147,8 @@ public class OceanBrush extends Brush {
             _sx = (int) Math.floor((this.getTargetBlock().getX() - 1) / CHUNK_SIZE) * CHUNK_SIZE;
             for (int _x = _sx - CHUNK_SIZE; _x < _sx; _x++) {
                 for (int _z = _sz; _z < _sz + CHUNK_SIZE; _z++) {
-                    this.undo.put(this.clampY(_x, 63, _z));
-                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, 63, _z);
+                    this.undo.put(this.clampY(_x,  this.waterLevel, _z));
+                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x,  this.waterLevel, _z);
                 }
             }
             for (int _x = _sx - CHUNK_SIZE; _x < _sx; _x++) {
@@ -150,7 +158,7 @@ public class OceanBrush extends Brush {
                         _dif = 59 - (_y - 59);
                         for (int _t = 127; _t > _dif; _t--) {
                             if (_t > 8) {
-                                if (_t > 63) {
+                                if (_t >  this.waterLevel) {
                                     this.undo.put(this.clampY(_x, _t, _z));
                                     this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
@@ -159,7 +167,7 @@ public class OceanBrush extends Brush {
                                 }
                             }
                         }
-                        for (int _r = 63; _r > 5; _r--) {
+                        for (int _r =  this.waterLevel; _r > 5; _r--) {
                             if (this.getBlockIdAt(_x, _r, _z) == 0) {
                                 this.undo.put(this.clampY(_x, _r, _z));
                                 this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, _r, _z);
@@ -173,8 +181,8 @@ public class OceanBrush extends Brush {
             _sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / CHUNK_SIZE) * CHUNK_SIZE;
             for (int _x = _sx; _x < _sx + CHUNK_SIZE; _x++) {
                 for (int _z = _sz - CHUNK_SIZE; _z < _sz; _z++) {
-                    this.undo.put(this.clampY(_x, 63, _z));
-                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, 63, _z);
+                    this.undo.put(this.clampY(_x, this.waterLevel, _z));
+                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x,  this.waterLevel, _z);
                 }
             }
             for (int _x = _sx; _x < _sx + CHUNK_SIZE; _x++) {
@@ -193,7 +201,7 @@ public class OceanBrush extends Brush {
                                 }
                             }
                         }
-                        for (int _r = 63; _r > 5; _r--) {
+                        for (int _r =  this.waterLevel; _r > 5; _r--) {
                             if (this.getBlockIdAt(_x, _r, _z) == 0) {
                                 this.undo.put(this.clampY(_x, _r, _z));
                                 this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, _r, _z);
@@ -208,8 +216,8 @@ public class OceanBrush extends Brush {
             _sz = (int) Math.floor((this.getTargetBlock().getZ() - 1) / CHUNK_SIZE) * CHUNK_SIZE;
             for (int _x = _sx - CHUNK_SIZE; _x < _sx; _x++) {
                 for (int _z = _sz - CHUNK_SIZE; _z < _sz; _z++) {
-                    this.undo.put(this.clampY(_x, 63, _z));
-                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x, 63, _z);
+                    this.undo.put(this.clampY(_x,  this.waterLevel, _z));
+                    this.setBlockIdAt(Material.STATIONARY_WATER.getId(), _x,  this.waterLevel, _z);
                 }
             }
             for (int _x = _sx - CHUNK_SIZE; _x < _sx; _x++) {
@@ -219,7 +227,7 @@ public class OceanBrush extends Brush {
                         _dif = 59 - (_y - 59);
                         for (int _t = 127; _t > _dif; _t--) {
                             if (_t > 8) {
-                                if (_t > 63) {
+                                if (_t >  this.waterLevel) {
                                     this.undo.put(this.clampY(_x, _t, _z));
                                     this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
@@ -228,7 +236,7 @@ public class OceanBrush extends Brush {
                                 }
                             }
                         }
-                        for (int _r = 63; _r > 5; _r--) {
+                        for (int _r = this.waterLevel; _r > 5; _r--) {
                             if (this.getBlockIdAt(_x, _r, _z) == 0) {
                                 this.undo.put(this.clampY(_x, _r, _z));
                                 this.setBlockIdAt(9, _x, _r, _z);
@@ -296,8 +304,42 @@ public class OceanBrush extends Brush {
     }
     
     @Override
+    public final void parameters(final String[] par, final SnipeData v) { 
+    	for(int _i = 0; _i < par.length; _i++) {
+			final String _param = par[_i];
+
+			try {
+				if(_param.equalsIgnoreCase("info")) {
+					v.sendMessage(ChatColor.BLUE + "Parameters:");
+					v.sendMessage(ChatColor.GREEN + "-wlevel #  " + ChatColor.BLUE + "--  Sets the water level (e.g. -wlevel 64) (Note: this is an experimental feature)");
+				}
+				else if (_param.equalsIgnoreCase("-wlevel")) {
+					if ((_i + 1) >= par.length) {
+						v.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
+						continue;
+					}
+
+					int _tmp = Integer.parseInt(par[++_i]);
+					
+					if(_tmp < WATER_LEVEL_MIN) {
+						v.sendMessage(ChatColor.RED + "Error: Your specified water level was below 0.");
+						continue;
+					}
+					
+					this.waterLevel = _tmp;
+					v.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
+				}
+			} catch (Exception _e) {
+				v.sendMessage(ChatColor.RED + String.format("Error while parsing parameter: %s", _param));
+				_e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
     public void info(final Message vm) {
     	vm.brushName(this.getName());
+    	vm.custom(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
     }
     
     @Override

@@ -70,7 +70,7 @@ public abstract class Brush implements IBrush {
             _y = this.getWorld().getMaxHeight();
         }
 
-        return this.getWorld().getBlockAt(x, y, z);
+        return this.getWorld().getBlockAt(x, _y, z);
     }
 
 	private boolean preparePerform(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
