@@ -15,7 +15,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  */
 public class OceanBrush extends Brush {
     private final static int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
-    private final static int WATER_LEVEL_MIN = 0;
+    private final static int WATER_LEVEL_MIN = 1;
 	
 	protected int s1x;
     protected int s1z;
@@ -321,12 +321,12 @@ public class OceanBrush extends Brush {
 
 					int _tmp = Integer.parseInt(par[++_i]);
 					
-					if(_tmp < WATER_LEVEL_MIN) {
+					if(_tmp <= WATER_LEVEL_MIN) {
 						v.sendMessage(ChatColor.RED + "Error: Your specified water level was below 0.");
 						continue;
 					}
 					
-					this.waterLevel = _tmp;
+					this.waterLevel = _tmp - 1;
 					v.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
 				}
 			} catch (Exception _e) {
