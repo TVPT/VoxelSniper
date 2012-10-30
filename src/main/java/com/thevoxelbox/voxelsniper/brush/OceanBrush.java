@@ -124,7 +124,7 @@ public class OceanBrush extends Brush {
                         _dif = 59 - (_y - 59);
                         for (int _t = 127; _t > _dif; _t--) {
                             if (_t > 8) {
-                                if (_t > 63) {
+                                if (_t > this.waterLevel) {
                                     this.undo.put(this.clampY(_x, _t, _z));
                                     this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
@@ -192,7 +192,7 @@ public class OceanBrush extends Brush {
                         _dif = 59 - (_y - 59);
                         for (int _t = 127; _t > _dif; _t--) {
                             if (_t > 8) {
-                                if (_t > 63) {
+                                if (_t > this.waterLevel) {
                                     this.undo.put(this.clampY(_x, _t, _z));
                                     this.setBlockIdAt(0, _x, _t, _z);
                                 } else {
