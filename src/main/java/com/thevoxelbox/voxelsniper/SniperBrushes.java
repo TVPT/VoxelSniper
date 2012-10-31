@@ -49,6 +49,7 @@ import com.thevoxelbox.voxelsniper.brush.MoveBrush;
 import com.thevoxelbox.voxelsniper.brush.OceanBrush;
 import com.thevoxelbox.voxelsniper.brush.OverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.PaintingBrush;
+import com.thevoxelbox.voxelsniper.brush.PullBrush;
 import com.thevoxelbox.voxelsniper.brush.PunishBrush;
 import com.thevoxelbox.voxelsniper.brush.RandomErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.RegenerateChunkBrush;
@@ -100,6 +101,7 @@ public enum SniperBrushes {
     OCEAN(OceanBrush.class, "o", "ocean"), // [ 9 ] \\
     CLONE_STAMP(CloneStampBrush.class, "cs", "clonestamp"), // [ 11 ] \\
     ERODE(ErodeBrush.class, "e", "erode"), // [ 12 ] \\
+    PULL(PullBrush.class, "pull", "pull"), // [ 13 ] \\
     PAINTING(PaintingBrush.class, "paint", "painting"), // [ 14 ] \\
     CANYON(CanyonBrush.class, "ca", "canyon"), // [ 15 ] \\
     CANYON_SELECTION(CanyonSelectionBrush.class, "cas", "canyonselection"), // [ 16 ] \\
