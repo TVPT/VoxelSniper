@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.thevoxelbox.voxelsniper.brush.AntiFreezeBrush;
 import com.thevoxelbox.voxelsniper.brush.BallBrush;
 import com.thevoxelbox.voxelsniper.brush.BiomeBrush;
 import com.thevoxelbox.voxelsniper.brush.BlendBallBrush;
@@ -156,13 +155,12 @@ public enum SniperBrushes {
     LIGHTNING(LightningBrush.class, "light", "lightning"), // [ 9 ] \\
     DRAIN(DrainBrush.class, "drain", "drain"), // [ 10 ] \\
     THREE_D_ROTATION(Rot3DBrush.class, "rot3", "rotation3D"), // [ 11 ] \\
-    ANTI_FREEZE(AntiFreezeBrush.class, "af", "antifreeze"), // [ 13 ] \\
     TWO_D_ROTATION_EXP(Rot2DvertBrush.class, "rot2v", "rotation2Dvertical"), // [ 21 ] \\
     STENCIL(StencilBrush.class, "st", "stencil"), // [ 23 ] \\
     STENCILLIST(StencilListBrush.class, "sl", "stencillist"), // [ 24 ] \\
     BLOCK_RESET_SURFACE(BlockResetSurfaceBrush.class, "brbs", "blockresetbrushsurface"), // [25] \\
     FLAT_OCEAN(FlatOceanBrush.class, "fo", "flatocean"), // [ 26 ] \\
-    
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~psanker~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     ELLIPSE(EllipseBrush.class, "el", "ellipse"), // [ 1 ] \\
     CLEAN_SNOW(CleanSnowBrush.class, "cls", "cleansnow"), // [ 4 ] \\
