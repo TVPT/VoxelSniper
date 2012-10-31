@@ -46,7 +46,6 @@ import com.thevoxelbox.voxelsniper.brush.JockeyBrush;
 import com.thevoxelbox.voxelsniper.brush.LineBrush;
 import com.thevoxelbox.voxelsniper.brush.MoveBrush;
 import com.thevoxelbox.voxelsniper.brush.OceanBrush;
-import com.thevoxelbox.voxelsniper.brush.OceanSelectionBrush;
 import com.thevoxelbox.voxelsniper.brush.OverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.PaintingBrush;
 import com.thevoxelbox.voxelsniper.brush.PunishBrush;
@@ -97,7 +96,6 @@ public enum SniperBrushes {
     VOXEL_DISC_FACE(VoxelDiscFaceBrush.class, "vdf", "voxeldiscface"), // [ 7 ] \\
     ENTITY(EntityBrush.class, "en", "entity"), // [ 8 ] \\
     OCEAN(OceanBrush.class, "o", "ocean"), // [ 9 ] \\
-    OCEAN_SELECTION(OceanSelectionBrush.class, "ocs", "oceanselection"), // [ 10 ] \\
     CLONE_STAMP(CloneStampBrush.class, "cs", "clonestamp"), // [ 11 ] \\
     ERODE(ErodeBrush.class, "e", "erode"), // [ 12 ] \\
     PAINTING(PaintingBrush.class, "paint", "painting"), // [ 14 ] \\

@@ -34,3 +34,6 @@ target/
 .idea/
 
 .checkstyle
+
+# Testfiles
+test.sh
