@@ -12,9 +12,9 @@ import com.thevoxelbox.voxelsniper.util.BlockWrapper;
  * @author Piotr
  */
 public class Rot2DBrush extends Brush {
-	private static int timesUsed = 0;
+    private static int timesUsed = 0;
 
-	private int mode = 0;
+    private int mode = 0;
     private int bSize;
     private int brushSize;
     private BlockWrapper[][][] snap;
@@ -57,10 +57,10 @@ public class Rot2DBrush extends Brush {
     }
 
     private void rotate(final SnipeData v) {
-    	final double _bPow = Math.pow(this.bSize + 0.5, 2);
-    	final double _cos = Math.cos(this.se);
-    	final double _sin = Math.sin(this.se);
-    	final boolean[][] _doNotFill = new boolean[this.snap.length][this.snap.length];
+        final double _bPow = Math.pow(this.bSize + 0.5, 2);
+        final double _cos = Math.cos(this.se);
+        final double _sin = Math.sin(this.se);
+        final boolean[][] _doNotFill = new boolean[this.snap.length][this.snap.length];
         // I put y in the inside loop, since it doesn't have any power functions, should be much faster.
         // Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
         // do a targeted filling of only those columns later that were left out.
@@ -68,10 +68,10 @@ public class Rot2DBrush extends Brush {
         for (int _x = 0; _x < this.snap.length; _x++) {
             final int _xx = _x - this.bSize;
             final double _xPow = Math.pow(_xx, 2);
-            
+
             for (int _z = 0; _z < this.snap.length; _z++) {
                 final int _zz = _z - this.bSize;
-                
+
                 if (_xPow + Math.pow(_zz, 2) <= _bPow) {
                     final double _newX = (_xx * _cos) - (_zz * _sin);
                     final double _newZ = (_xx * _sin) + (_zz * _cos);
@@ -85,7 +85,8 @@ public class Rot2DBrush extends Brush {
                         if (_vb.getId() == 0) {
                             continue;
                         }
-                        this.setBlockIdAt(_vb.getId(), this.getBlockPositionX() + (int) _newX, this.getBlockPositionY() + _yy, this.getBlockPositionZ() + (int) _newZ);
+                        this.setBlockIdAndDataAt(_vb.getId(), _vb.getData(), this.getBlockPositionX() + (int) _newX, this.getBlockPositionY() + _yy,
+                                this.getBlockPositionZ() + (int) _newZ);
                     }
                 }
             }
@@ -93,34 +94,43 @@ public class Rot2DBrush extends Brush {
         for (int _x = 0; _x < this.snap.length; _x++) {
             final double _xpow = Math.pow(_x - this.bSize, 2);
             final int _fx = _x + this.getBlockPositionX() - this.bSize;
-            
+
             for (int _z = 0; _z < this.snap.length; _z++) {
                 if (_xpow + Math.pow(_z - this.bSize, 2) <= _bPow) {
                     final int _fz = _z + this.getBlockPositionZ() - this.bSize;
-                    
+
                     if (!_doNotFill[_x][_z]) {
                         // smart fill stuff
 
                         for (int _y = 0; _y < this.snap.length; _y++) {
                             final int _fy = _y + this.getBlockPositionY() - this.bSize;
-                            
+
                             final int _a = this.getBlockIdAt(_fx + 1, _fy, _fz);
+                            final byte _aData = this.getBlockDataAt(_fx + 1, _fy, _fz);
                             final int _d = this.getBlockIdAt(_fx - 1, _fy, _fz);
+                            final byte _dData = this.getBlockDataAt(_fx - 1, _fy, _fz);
                             final int _c = this.getBlockIdAt(_fx, _fy, _fz + 1);
+                            final byte _cData = this.getBlockDataAt(_fx, _fy, _fz + 1);
                             final int _b = this.getBlockIdAt(_fx, _fy, _fz - 1);
-                            
+                            final byte _bData = this.getBlockDataAt(_fx, _fy, _fz - 1);
+
                             int _winner;
-                            
-                            if (_a == _b || _a == _c || _a == _d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it should
-                                                              // be fine to do all 5 checks needed to be legit about it.
+                            byte _winnerData;
+
+                            if (_a == _b || _a == _c || _a == _d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
+                                                                    // should
+                                // be fine to do all 5 checks needed to be legit about it.
                                 _winner = _a;
+                                _winnerData = _aData;
                             } else if (_b == _d || _c == _d) {
                                 _winner = _d;
+                                _winnerData = _dData;
                             } else {
                                 _winner = _b; // blockPositionY making this default, it will also automatically cover situations where B = C;
+                                _winnerData = _bData;
                             }
 
-                            this.setBlockIdAt(_winner, _fx, _fy, _fz);
+                            this.setBlockIdAndDataAt(_winner, _winnerData, _fx, _fy, _fz);
                         }
                     }
                 }
@@ -130,7 +140,7 @@ public class Rot2DBrush extends Brush {
 
     @Override
     protected final void arrow(final SnipeData v) {
-    	this.bSize = v.getBrushSize();
+        this.bSize = v.getBrushSize();
 
         switch (this.mode) {
         case 0:
@@ -146,7 +156,7 @@ public class Rot2DBrush extends Brush {
 
     @Override
     protected final void powder(final SnipeData v) {
-    	this.bSize = v.getBrushSize();
+        this.bSize = v.getBrushSize();
 
         switch (this.mode) {
         case 0:
@@ -159,7 +169,6 @@ public class Rot2DBrush extends Brush {
             break;
         }
     }
-    
 
     @Override
     public final void info(final Message vm) {
@@ -170,7 +179,7 @@ public class Rot2DBrush extends Brush {
     public final void parameters(final String[] par, final SnipeData v) {
         this.se = Math.toRadians(Double.parseDouble(par[1]));
         v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
-    }    
+    }
 
     @Override
     public final int getTimesUsed() {

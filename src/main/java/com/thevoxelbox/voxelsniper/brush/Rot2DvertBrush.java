@@ -15,9 +15,9 @@ import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 // The X Y and Z variable names in this file do NOT MAKE ANY SENSE. Do not attempt to actually figure out what on earth is going on here. Just go to the
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 public class Rot2DvertBrush extends Brush {
-	private static int timesUsed = 0;
+    private static int timesUsed = 0;
 
-	private int mode = 0;
+    private int mode = 0;
     private int bSize;
     private int brushSize;
     private BlockWrapper[][][] snap;
@@ -70,10 +70,10 @@ public class Rot2DvertBrush extends Brush {
         for (int _x = 0; _x < this.snap.length; _x++) {
             final int _xx = _x - this.bSize;
             final double _xPow = Math.pow(_xx, 2);
-            
+
             for (int _z = 0; _z < this.snap.length; _z++) {
-            	final int _zz = _z - this.bSize;
-            	
+                final int _zz = _z - this.bSize;
+
                 if (_xPow + Math.pow(_zz, 2) <= _bPow) {
                     final double _newX = (_xx * _cos) - (_zz * _sin);
                     final double _newZ = (_xx * _sin) + (_zz * _cos);
@@ -81,47 +81,58 @@ public class Rot2DvertBrush extends Brush {
                     _doNotFill[(int) _newX + this.bSize][(int) _newZ + this.bSize] = true;
 
                     for (int _y = 0; _y < this.snap.length; _y++) {
-                    	final int _yy = _y - this.bSize;
+                        final int _yy = _y - this.bSize;
 
                         final BlockWrapper _vb = this.snap[_y][_x][_z];
                         if (_vb.getId() == 0) {
                             continue;
                         }
-                        this.setBlockIdAt(_vb.getId(), this.getBlockPositionX() + _yy, this.getBlockPositionY() + (int) _newX, this.getBlockPositionZ() + (int) _newZ);
+                        this.setBlockIdAndDataAt(_vb.getId(), _vb.getData(), this.getBlockPositionX() + _yy, this.getBlockPositionY() + (int) _newX,
+                                this.getBlockPositionZ() + (int) _newZ);
                     }
                 }
             }
         }
 
         for (int _x = 0; _x < this.snap.length; _x++) {
-            final double _xPow = Math.pow(_x - this.bSize, 2);           
+            final double _xPow = Math.pow(_x - this.bSize, 2);
             final int _fx = _x + this.getBlockPositionX() - this.bSize;
-            
+
             for (int _z = 0; _z < this.snap.length; _z++) {
                 if (_xPow + Math.pow(_z - this.bSize, 2) <= _bPow) {
                     final int _fz = _z + this.getBlockPositionZ() - this.bSize;
-                    
+
                     if (!_doNotFill[_x][_z]) {
                         // smart fill stuff
                         for (int _y = 0; _y < this.snap.length; _y++) {
                             final int _fy = _y + this.getBlockPositionY() - this.bSize;
+
                             final int _a = this.getBlockIdAt(_fy, _fx + 1, _fz);
+                            final byte _aData = this.getBlockDataAt(_fy, _fx + 1, _fz);
                             final int _d = this.getBlockIdAt(_fy, _fx - 1, _fz);
+                            final byte _dData = this.getBlockDataAt(_fy, _fx - 1, _fz);
                             final int _c = this.getBlockIdAt(_fy, _fx, _fz + 1);
+                            final byte _cData = this.getBlockDataAt(_fy, _fx, _fz + 1);
                             final int _b = this.getBlockIdAt(_fy, _fx, _fz - 1);
-                            
+                            final byte _bData = this.getBlockDataAt(_fy, _fx, _fz - 1);
+
                             int _winner;
-                            
-                            if (_a == _b || _a == _c || _a == _d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it should
-                                                              // be fine to do all 5 checks needed to be legit about it.
+                            byte _winnerData;
+
+                            if (_a == _b || _a == _c || _a == _d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
+                                                                    // should
+                                // be fine to do all 5 checks needed to be legit about it.
                                 _winner = _a;
+                                _winnerData = _aData;
                             } else if (_b == _d || _c == _d) {
                                 _winner = _d;
+                                _winnerData = _dData;
                             } else {
                                 _winner = _b; // blockPositionY making this default, it will also automatically cover situations where B = C;
+                                _winnerData = _bData;
                             }
 
-                            this.setBlockIdAt(_winner, _fy, _fx, _fz);
+                            this.setBlockIdAndDataAt(_winner, _winnerData, _fy, _fx, _fz);
                         }
                     }
                 }
@@ -147,7 +158,7 @@ public class Rot2DvertBrush extends Brush {
 
     @Override
     protected final void powder(final SnipeData v) {
-    	this.bSize = v.getBrushSize();
+        this.bSize = v.getBrushSize();
 
         switch (this.mode) {
         case 0:
@@ -160,29 +171,28 @@ public class Rot2DvertBrush extends Brush {
             break;
         }
     }
-    
 
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
-	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
-		try {
-			this.se = Math.toRadians(Double.parseDouble(par[1]));
-			v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
-		} catch (Exception _ex) {
-			v.sendMessage("Exception while parsing parameter: " + par[1]);
-			Bukkit.getLogger().severe(_ex.getMessage());
-		}
-	}
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+        try {
+            this.se = Math.toRadians(Double.parseDouble(par[1]));
+            v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
+        } catch (Exception _ex) {
+            v.sendMessage("Exception while parsing parameter: " + par[1]);
+            Bukkit.getLogger().severe(_ex.getMessage());
+        }
+    }
 
     @Override
     public final int getTimesUsed() {
         return Rot2DvertBrush.timesUsed;
     }
-    
+
     @Override
     public final void setTimesUsed(final int tUsed) {
         Rot2DvertBrush.timesUsed = tUsed;
