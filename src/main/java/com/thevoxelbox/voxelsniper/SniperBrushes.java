@@ -81,6 +81,7 @@ import com.thevoxelbox.voxelsniper.brush.VoltMeterBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelDiscFaceBrush;
+import com.thevoxelbox.voxelsniper.brush.WarpBrush;
 
 /**
  * 
@@ -103,6 +104,7 @@ public enum SniperBrushes {
     CANYON(CanyonBrush.class, "ca", "canyon"), // [ 15 ] \\
     CANYON_SELECTION(CanyonSelectionBrush.class, "cas", "canyonselection"), // [ 16 ] \\
     TWO_D_ROTATION(Rot2DBrush.class, "rot2", "rotation2D"), // [ 17 ] \\
+    WARP(WarpBrush.class, "w", "warp"), // [ 18 ] \\
     FILL_DOWN(FillDownBrush.class, "fd", "filldown"), // [ 19 ] \\
     SET(SetBrush.class, "set", "set"), // [ 20 ] \\
     JOCKEY(JockeyBrush.class, "jockey", "jockey"), // [ 21 ] \\
