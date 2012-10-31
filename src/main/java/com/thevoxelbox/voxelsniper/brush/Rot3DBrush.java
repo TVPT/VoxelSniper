@@ -108,10 +108,10 @@ public class Rot3DBrush extends Brush {
                                                                                                                            // after all three, though.
 
                         final BlockWrapper _vb = this.snap[_x][_y][_z];
-                        if (_vb.id == 0) {
+                        if (_vb.getId() == 0) {
                             continue;
                         }
-                        this.setBlockIdAt(_vb.id, this.getBlockPositionX() + (int) _newxyX, this.getBlockPositionY() + (int) _newyzY, this.getBlockPositionZ() + (int) _newyzZ);
+                        this.setBlockIdAt(_vb.getId(), this.getBlockPositionX() + (int) _newxyX, this.getBlockPositionY() + (int) _newyzY, this.getBlockPositionZ() + (int) _newyzZ);
                     }
                 }
             }

@@ -84,10 +84,10 @@ public class Rot2DvertBrush extends Brush {
                     	final int _yy = _y - this.bSize;
 
                         final BlockWrapper _vb = this.snap[_y][_x][_z];
-                        if (_vb.id == 0) {
+                        if (_vb.getId() == 0) {
                             continue;
                         }
-                        this.setBlockIdAt(_vb.id, this.getBlockPositionX() + _yy, this.getBlockPositionY() + (int) _newX, this.getBlockPositionZ() + (int) _newZ);
+                        this.setBlockIdAt(_vb.getId(), this.getBlockPositionX() + _yy, this.getBlockPositionY() + (int) _newX, this.getBlockPositionZ() + (int) _newZ);
                     }
                 }
             }

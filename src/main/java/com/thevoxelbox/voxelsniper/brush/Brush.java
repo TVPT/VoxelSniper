@@ -279,7 +279,7 @@ public abstract class Brush implements IBrush {
      * @param v
      */
     protected final void setBlock(final BlockWrapper v) {
-        this.getWorld().getBlockAt(v.x, v.y, v.z).setTypeId(v.id);
+        this.getWorld().getBlockAt(v.getX(), v.getY(), v.getZ()).setTypeId(v.getId());
     }
 
     /**
