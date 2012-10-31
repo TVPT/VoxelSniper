@@ -43,6 +43,7 @@ import com.thevoxelbox.voxelsniper.brush.HeatRayBrush;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.JaggedLineBrush;
 import com.thevoxelbox.voxelsniper.brush.JockeyBrush;
+import com.thevoxelbox.voxelsniper.brush.LightningBrush;
 import com.thevoxelbox.voxelsniper.brush.LineBrush;
 import com.thevoxelbox.voxelsniper.brush.MoveBrush;
 import com.thevoxelbox.voxelsniper.brush.OceanBrush;
@@ -148,6 +149,7 @@ public enum SniperBrushes {
     DOME(DomeBrush.class, "dome", "domebrush"), // [ 6 ] \\
     RULER(RulerBrush.class, "r", "ruler"), // [ 7 ] \\
     VOLT_METER(VoltMeterBrush.class, "volt", "voltmeter"), // [ 8 ] \\
+    LIGHTNING(LightningBrush.class, "light", "lightning"), // [ 9 ] \\
     DRAIN(DrainBrush.class, "drain", "drain"), // [ 10 ] \\
     THREE_D_ROTATION(Rot3DBrush.class, "rot3", "rotation3D"), // [ 11 ] \\
     ANTI_FREEZE(AntiFreezeBrush.class, "af", "antifreeze"), // [ 13 ] \\
