@@ -63,6 +63,7 @@ import com.thevoxelbox.voxelsniper.brush.SetRedstoneFlipBrush;
 import com.thevoxelbox.voxelsniper.brush.ShellBallBrush;
 import com.thevoxelbox.voxelsniper.brush.ShellSetBrush;
 import com.thevoxelbox.voxelsniper.brush.ShellVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.SignOverwriteBrush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.SnowConeBrush;
 import com.thevoxelbox.voxelsniper.brush.SpiralStaircaseBrush;
@@ -177,6 +178,7 @@ public enum SniperBrushes {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Monofraps~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     PUNISH(PunishBrush.class, "p", "punish"), // [ 1 ] \\
+    SIGN_OVERWRITE(SignOverwriteBrush.class, "sio", "signoverwrite"),
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     MOVE(MoveBrush.class, "mv", "move"), // [1] \\
