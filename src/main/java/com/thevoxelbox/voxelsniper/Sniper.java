@@ -543,6 +543,8 @@ public class Sniper {
             this.data.setcCen(0);
             this.data.setReplaceData((byte) 0);
             this.range = 1;
+            this.distRestrict = false;
+            
         }
         this.fillCurrent();
     }
