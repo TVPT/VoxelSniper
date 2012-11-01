@@ -87,11 +87,6 @@ public class CloneStampBrush extends StampBrush {
     }
     
     @Override
-    protected final void arrow(final SnipeData v) {
-        this.clone(v);
-    }
-    
-    @Override
     public final void info(final Message vm) {
     	vm.brushName(this.getName());
     	vm.size();
