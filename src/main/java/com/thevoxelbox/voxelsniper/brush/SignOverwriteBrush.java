@@ -45,7 +45,7 @@ public class SignOverwriteBrush extends Brush {
 	 * 
 	 * @param sign
 	 */
-	private final void setSignText(final Sign sign) {
+	private void setSignText(final Sign sign) {
 		for (int _i = 0; _i < this.signTextLines.length; _i++) {
 			if (this.signLinesEnabled[_i]) {
 				sign.setLine(_i, this.signTextLines[_i]);
@@ -60,7 +60,7 @@ public class SignOverwriteBrush extends Brush {
 	 * 
 	 * @param v
 	 */
-	private final void setSingle(final SnipeData v) {
+	private void setSingle(final SnipeData v) {
 		if (this.getTargetBlock().getState() instanceof Sign) {
 			setSignText((Sign) this.getTargetBlock().getState());
 		} else {
@@ -74,7 +74,7 @@ public class SignOverwriteBrush extends Brush {
 	 * 
 	 * @param v
 	 */
-	private final void setRanged(final SnipeData v) {
+	private void setRanged(final SnipeData v) {
 		final int _minX = getTargetBlock().getX() - v.getBrushSize();
 		final int _maxX = getTargetBlock().getX() + v.getBrushSize();
 		final int _minY = getTargetBlock().getY() - v.getVoxelHeight();
@@ -239,7 +239,7 @@ public class SignOverwriteBrush extends Brush {
 
 		if ((i + 1) >= params.length) {
 			// return if the user just wanted to set the status
-			if(_statusSet) {
+			if (_statusSet) {
 				return i;
 			}
 			
@@ -265,7 +265,7 @@ public class SignOverwriteBrush extends Brush {
 		if (!_newText.isEmpty()) {
 			_newText = _newText.substring(0, _newText.length() - 1);
 		} else {
-			if(_statusSet) {
+			if (_statusSet) {
 				return i;
 			}
 			v.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
@@ -301,7 +301,7 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	public void info(Message vm) {
+	public final void info(final Message vm) {
 		vm.brushName("Sign Overwrite Brush");
 
 		vm.custom(ChatColor.BLUE + "Buffer text: ");
@@ -318,12 +318,12 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	public int getTimesUsed() {
+	public final int getTimesUsed() {
 		return SignOverwriteBrush.timesUsed;
 	}
 
 	@Override
-	public void setTimesUsed(int timesUsed) {
+	public final void setTimesUsed(final int timesUsed) {
 		SignOverwriteBrush.timesUsed = timesUsed;
 	}
 
