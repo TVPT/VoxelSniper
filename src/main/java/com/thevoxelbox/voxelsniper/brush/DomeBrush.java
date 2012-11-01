@@ -1,8 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
+import org.bukkit.util.Vector;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
@@ -39,22 +43,6 @@ public class DomeBrush extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(ChatColor.GOLD + this.getName() + " Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b dome fill -- toggles fill mode.");
-        } else {
-            for (final String _string : par) {
-                final String _lowercaseString = _string.toLowerCase();
-                if (_lowercaseString.equals("fill")) {
-                    this.fill = !this.fill;
-                    v.getVoxelMessage().brushMessage("Fill mode " + (this.fill ? "enabled" : "disabled") + ".");
-                }
-            }
-        }
-    }
-
-    @Override
     public final void setTimesUsed(final int tUsed) {
         DomeBrush.timesUsed = tUsed;
     }
@@ -64,38 +52,43 @@ public class DomeBrush extends Brush {
      * @param targetBlock
      */
     private void generateDome(final SnipeData v, final Block targetBlock, final boolean fill) {
+
+        if (v.getVoxelHeight() == 0) {
+            v.sendMessage("VoxelHeight must not be 0.");
+            return;
+        }
+
+        final int _absoluteHeight = Math.abs(v.getVoxelHeight());
+        final boolean _negative = v.getVoxelHeight() < 0;
+
+        final Set<Vector> _changeablePositions = new HashSet<Vector>();
+
         final Undo _undo = new Undo(targetBlock.getWorld().getName());
 
-        final boolean _negative = (v.getVoxelHeight() < 0);
-        final int _absoluteHeight = Math.abs(v.getVoxelHeight());
+        final int _brushSizeTimesVoxelHeight = v.getBrushSize() * _absoluteHeight;
+        final double _stepScale = ((v.getBrushSize() * v.getBrushSize()) + _brushSizeTimesVoxelHeight + _brushSizeTimesVoxelHeight) / 3;
 
-        for (int _y = 0; _y <= _absoluteHeight; ++_y) {
-            final int _currentY = _negative ? targetBlock.getY() - _y : targetBlock.getY() + _y;
-            int _ellipseX = v.getBrushSize();
-            int _nextEllipseX = 0;
-            if (_absoluteHeight != 0) {
-                _ellipseX = NumberConversions.round(v.getBrushSize() * Math.sqrt((_absoluteHeight * _absoluteHeight) - (_y * _y)) / _absoluteHeight);
-                final int _nextY = _y + 1;
-                _nextEllipseX = (fill || (_y + 1 > _absoluteHeight)) ? 0 : NumberConversions.round(v.getBrushSize()
-                        * Math.sqrt((_absoluteHeight * _absoluteHeight) - (_nextY * _nextY)) / _absoluteHeight);
+        final double _stepSize = 1 / _stepScale;
+
+        for (double _u = 0; _u <= Math.PI / 2; _u += _stepSize) {
+            final double _y = _absoluteHeight * Math.sin(_u);
+            for (double _v = -Math.PI; _v <= Math.PI; _v += _stepSize) {
+                final double _x = v.getBrushSize() * Math.cos(_u) * Math.cos(_v);
+                final double _z = v.getBrushSize() * Math.cos(_u) * Math.sin(_v);
+
+                final int _targetX = NumberConversions.floor(targetBlock.getX() + _x);
+                final int _targetY = NumberConversions.floor(targetBlock.getY() + (_negative ? -_y : _y));
+                final int _targetZ = NumberConversions.floor(targetBlock.getZ() + _z);
+
+                _changeablePositions.add(new Vector(_targetX, _targetY, _targetZ));
             }
+        }
 
-            final double _ellipseRadius = Math.sqrt(_ellipseX * _ellipseX);
-            final double _nextEllipseRadius = Math.sqrt((_nextEllipseX) * (_nextEllipseX));
-
-            for (int _x = targetBlock.getX() - v.getBrushSize(); _x <= targetBlock.getX() + v.getBrushSize(); ++_x) {
-                for (int _z = targetBlock.getZ() - v.getBrushSize(); _z <= targetBlock.getZ() + v.getBrushSize(); ++_z) {
-                    final int _distanceSquared = NumberConversions.round(Math.sqrt(((_x - targetBlock.getX()) * (_x - targetBlock.getX()))
-                            + ((_z - targetBlock.getZ()) * (_z - targetBlock.getZ()))));
-
-                    if (_distanceSquared <= _ellipseRadius) {
-                        if (_nextEllipseRadius == 0 || _distanceSquared >= _nextEllipseRadius) {
-                            final Block _currentBlock = this.clampY(_x, _currentY, _z);
-                            _undo.put(_currentBlock);
-                            _currentBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
-                        }
-                    }
-                }
+        for (final Vector _vector : _changeablePositions) {
+            final Block _targetBlock = _vector.toLocation(this.getTargetBlock().getWorld()).getBlock();
+            if (_targetBlock.getTypeId() != v.getVoxelId() || _targetBlock.getData() != v.getData()) {
+                _undo.put(_targetBlock);
+                _targetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
             }
         }
 
