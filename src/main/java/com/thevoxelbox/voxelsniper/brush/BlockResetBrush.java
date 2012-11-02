@@ -42,7 +42,7 @@ public class BlockResetBrush extends Brush {
         this.setName("Block Reset Brush");
     }
     
-    private final void applyBrush(final SnipeData v) {    	
+    private void applyBrush(final SnipeData v) {    	
     	for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
     		for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++) {
     			for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++) {
