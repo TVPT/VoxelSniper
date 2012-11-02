@@ -27,7 +27,7 @@ public class EntityRemovalBrush extends Brush {
         this.setName("Entity Removal");
     }
 
-    private final void radialRemoval(final SnipeData v) {
+    private void radialRemoval(final SnipeData v) {
     	final Chunk _targetChunk = this.getTargetBlock().getChunk();
     	int _entityCount = 0;
         int _chunkCount = 0;
@@ -44,7 +44,7 @@ public class EntityRemovalBrush extends Brush {
                 + ChatColor.GREEN + " chunks.");
     }
 
-    private final int removeEntities(final Chunk chunk) {
+    private int removeEntities(final Chunk chunk) {
     	int _entityCount = 0;
     	
         for (final Entity _e : chunk.getEntities()) {
