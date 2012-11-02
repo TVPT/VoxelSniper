@@ -207,7 +207,7 @@ public class SignOverwriteBrush extends Brush {
 
 		if (_textChanged) {
 			v.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
-			for (int _i = 0; _i < this.signTextLines.length; _i++) {				
+			for (int _i = 0; _i < this.signTextLines.length; _i++) {
 				v.sendMessage((this.signLinesEnabled[_i] ? ChatColor.GREEN : ChatColor.BLACK)
 						+ (this.signTextLines[_i].isEmpty() ? (this.signLinesEnabled[_i] ? "" : "DISABLED/EMPTY") : this.signTextLines[_i]));
 			}
@@ -215,8 +215,8 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	/**
-	 * Parses parameter input text of line [param:lineNumber]. Iterates though
-	 * the given array until the next top level param (a parameter which starts
+	 * Parses parameter input text of line [param:lineNumber]. 
+	 * Iterates though the given array until the next top level param (a parameter which starts
 	 * with a dash -) is found.
 	 * 
 	 * @param params
@@ -228,7 +228,7 @@ public class SignOverwriteBrush extends Brush {
 	private int parseSignLineFromParam(final String[] params, final int lineNumber, final SnipeData v, int i) {
 		final int _lineIndex = lineNumber - 1;
 		final String _param = params[i];
-		
+
 		boolean _statusSet = false;
 
 		if (_param.contains(":")) {
@@ -242,13 +242,12 @@ public class SignOverwriteBrush extends Brush {
 			if (_statusSet) {
 				return i;
 			}
-			
+
 			v.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
 			signTextLines[_lineIndex] = "";
 			return i;
 		}
 
-		
 		String _newText = "";
 
 		// go through the array until the next top level parameter is found
