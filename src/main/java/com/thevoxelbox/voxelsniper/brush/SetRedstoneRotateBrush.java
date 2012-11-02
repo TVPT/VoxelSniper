@@ -49,7 +49,7 @@ public class SetRedstoneRotateBrush extends Brush { // Is this used anymore? -ps
         }
     }
     
-    private final void perform(final Block bl) {
+    private void perform(final Block bl) {
     	if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
     		this.undo.put(bl);
     		bl.setData((((bl.getData() % 4) + 1 < 5) ? (byte) (bl.getData() + 1) : (byte) (bl.getData() - 4)));
