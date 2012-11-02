@@ -21,7 +21,7 @@ public class ShellVoxelBrush extends Brush {
         this.setName("Shell Voxel");
     }
 
-    private final void vShell(final SnipeData v) {
+    private void vShell(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _brushSize;
         final int _voxelMaterialId = v.getVoxelId();
