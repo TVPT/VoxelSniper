@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
+ * A brush that creates a solid ball.
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Ball_Brush
  * @author Piotr
  */
@@ -21,7 +22,7 @@ public class BallBrush extends PerformBrush {
         this.setName("Ball");
     }
 
-    private final void ball(final SnipeData v) {    	
+    private void ball(final SnipeData v) {    	
         final int _bSize = v.getBrushSize();
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
 
