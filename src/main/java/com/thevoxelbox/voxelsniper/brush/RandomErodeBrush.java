@@ -14,7 +14,12 @@ import com.thevoxelbox.voxelsniper.Undo;
  * @author Giltwist (Randomized blockPositionY)
  */
 public class RandomErodeBrush extends Brush {
-    private class BlockWrapper {
+	/**
+	 * 
+	 * @author unknown
+	 *
+	 */
+	private class BlockWrapper {
         public boolean solid;
         public Block nativeBlock;
 		public int id;
@@ -131,11 +136,7 @@ public class RandomErodeBrush extends Brush {
                 this.snap[x][y][z].id = this.snap[x][y][z - 1].nativeBlock.getTypeId();
                 _d++;
             }
-            if (_d >= this.fillFace) {
-                return true;
-            } else {
-                return false;
-            }
+            return (_d >= this.fillFace);
         }
     }
 
