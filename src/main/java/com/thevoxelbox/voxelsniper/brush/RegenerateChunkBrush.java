@@ -20,7 +20,7 @@ public class RegenerateChunkBrush extends Brush {
         this.setName("Chunk Generator 40k");
     }
 
-    private final void generateChunk(final SnipeData v) {
+    private void generateChunk(final SnipeData v) {
     	final Chunk _chunk = this.getTargetBlock().getChunk();
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
