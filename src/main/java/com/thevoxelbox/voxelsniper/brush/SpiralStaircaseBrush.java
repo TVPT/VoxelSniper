@@ -24,7 +24,7 @@ public class SpiralStaircaseBrush extends Brush {
         this.setName("Spiral Staircase");
     }
 
-    private final void buildStairWell(final SnipeData v) {
+    private void buildStairWell(final SnipeData v) {
         if (v.getVoxelHeight() < 1) {
             v.setVoxelHeight(1);
             v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
