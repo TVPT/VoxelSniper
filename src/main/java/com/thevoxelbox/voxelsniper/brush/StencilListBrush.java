@@ -38,14 +38,14 @@ public class StencilListBrush extends Brush {
         this.setName("StencilList");
     }
     
-    private final String readRandomStencil(final SnipeData v) {
+    private String readRandomStencil(final SnipeData v) {
         double _rand = Math.random();
         _rand = _rand * (this.stencilList.size());
         final int _choice = (int) (_rand);
         return this.stencilList.get(_choice);
     }
 
-    private final void readStencilList(final String listname, final SnipeData v) {
+    private void readStencilList(final String listname, final SnipeData v) {
         final File _file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
         if (_file.exists()) {
             try {
@@ -62,7 +62,7 @@ public class StencilListBrush extends Brush {
         }
     }
 
-    private final void stencilPaste(final SnipeData v) {
+    private void stencilPaste(final SnipeData v) {
         if (this.filename.matches("NoFileLoaded")) {
             v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -222,7 +222,7 @@ public class StencilListBrush extends Brush {
         }
     }
 
-    private final void stencilPaste180(final SnipeData v) {
+    private void stencilPaste180(final SnipeData v) {
         if (this.filename.matches("NoFileLoaded")) {
             v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -381,7 +381,7 @@ public class StencilListBrush extends Brush {
         }
     }
 
-    private final void stencilPaste270(final SnipeData v) {
+    private void stencilPaste270(final SnipeData v) {
         if (this.filename.matches("NoFileLoaded")) {
             v.owner().getPlayer().sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -548,7 +548,7 @@ public class StencilListBrush extends Brush {
         }
     }
 
-    private final void stencilPaste90(final SnipeData v) {
+    private void stencilPaste90(final SnipeData v) {
         if (this.filename.matches("NoFileLoaded")) {
             v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
             return;
@@ -619,10 +619,10 @@ public class StencilListBrush extends Brush {
                 } else if (this.pasteOption == 1) {
                     for (int _i = 1; _i < _numRuns + 1; _i++) {
                         if (_in.readBoolean()) {
-                            final int numLoops = _in.readByte() + 128;
+                            final int _numLoops = _in.readByte() + 128;
                             _id = (_in.readByte() + 128);
                             _data = (_in.readByte() + 128);
-                            for (int _j = 0; _j < numLoops; _j++) {
+                            for (int _j = 0; _j < _numLoops; _j++) {
                                 if (_id != 0 && this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).getTypeId() == 0) {
                                     _undo.put(this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ));
                                     this.clampY(this.getBlockPositionX() + _currX, this.getBlockPositionY() + _currY, this.getBlockPositionZ() + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
@@ -707,7 +707,7 @@ public class StencilListBrush extends Brush {
         }
     }
 
-    private final void stencilPasteRotation(final SnipeData v) {
+    private void stencilPasteRotation(final SnipeData v) {
         // just randomly chooses a rotation and then calls stencilPaste.
         this.readStencilList(this.filename, v);
         final double _rand = Math.random();
