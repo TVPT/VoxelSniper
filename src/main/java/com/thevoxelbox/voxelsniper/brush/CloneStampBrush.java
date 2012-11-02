@@ -29,7 +29,7 @@ public class CloneStampBrush extends StampBrush {
      * @param v
      *            the caller
      */
-    private final void clone(final SnipeData v) {
+    private void clone(final SnipeData v) {
     	final int _brushSize = v.getBrushSize();
         this.clone.clear();
         this.fall.clear();
