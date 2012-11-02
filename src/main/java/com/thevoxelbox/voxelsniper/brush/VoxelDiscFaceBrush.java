@@ -20,7 +20,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
         this.setName("Voxel Disc Face");
     }
 
-    private final void disc(final SnipeData v) {
+    private void disc(final SnipeData v) {
         final int _bSize = v.getBrushSize();
 
         for (int _x = _bSize; _x >= -_bSize; _x--) {
@@ -32,7 +32,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void discEW(final SnipeData v) {
+    private void discEW(final SnipeData v) {
         final int _bSize = v.getBrushSize();
 
         for (int _x = _bSize; _x >= -_bSize; _x--) {
@@ -44,7 +44,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void discNS(final SnipeData v) {
+    private void discNS(final SnipeData v) {
         final int _bSize = v.getBrushSize();
 
         for (int _x = _bSize; _x >= -_bSize; _x--) {
