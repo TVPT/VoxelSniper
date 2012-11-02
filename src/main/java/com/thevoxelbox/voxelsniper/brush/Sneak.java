@@ -26,7 +26,7 @@ public class Sneak extends Brush {
     }
 
     /**
-     * 
+     * @return
      */
     @Override
     public final boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace) {
@@ -116,6 +116,13 @@ public class Sneak extends Brush {
         return false;
     }
 
+    /**
+     * 
+     * @param v
+     * @param clickedBlock
+     * @param clickedFace
+     * @return
+     */
     protected final boolean getSilentTarget(final Sniper v, final Block clickedBlock, final BlockFace clickedFace) {
         this.setWorld(v.getPlayer().getWorld());
         if (clickedBlock != null) {
