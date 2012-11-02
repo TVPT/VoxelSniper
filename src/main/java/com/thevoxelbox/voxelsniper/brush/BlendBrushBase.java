@@ -12,7 +12,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  *
  */
 public abstract class BlendBrushBase extends Brush {
-	protected static int maxBlockMaterialID;
+	private static int maxBlockMaterialID;
 	protected boolean excludeAir = true;
 	protected boolean excludeWater = true;
 
@@ -57,5 +57,53 @@ public abstract class BlendBrushBase extends Brush {
 				v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected static final int getMaxBlockMaterialID() {
+		return maxBlockMaterialID;
+	}
+
+	/**
+	 * 
+	 * @param maxBlockMaterialID
+	 */
+	protected static final void setMaxBlockMaterialID(int maxBlockMaterialID) {
+		BlendBrushBase.maxBlockMaterialID = maxBlockMaterialID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected final boolean isExcludeAir() {
+		return excludeAir;
+	}
+
+	/**
+	 * 
+	 * @param excludeAir
+	 */
+	protected final void setExcludeAir(boolean excludeAir) {
+		this.excludeAir = excludeAir;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected final boolean isExcludeWater() {
+		return excludeWater;
+	}
+
+	/**
+	 * 
+	 * @param excludeWater
+	 */
+	protected final void setExcludeWater(boolean excludeWater) {
+		this.excludeWater = excludeWater;
 	}
 }
