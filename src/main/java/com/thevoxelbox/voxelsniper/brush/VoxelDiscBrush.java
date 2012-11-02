@@ -18,7 +18,7 @@ public class VoxelDiscBrush extends PerformBrush {
         this.setName("Voxel Disc");
     }
 
-    private final void disc(final SnipeData v) {
+    private void disc(final SnipeData v) {
         final int _bSize = v.getBrushSize();
 
         for (int _x = _bSize; _x >= -_bSize; _x--) {
