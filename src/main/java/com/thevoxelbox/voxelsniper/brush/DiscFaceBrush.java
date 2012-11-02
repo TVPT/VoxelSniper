@@ -22,7 +22,7 @@ public class DiscFaceBrush extends PerformBrush {
         this.setName("Disc Face");
     }
 
-    private final void discUD(final SnipeData v) {
+    private void discUD(final SnipeData v) {
         final int _brushSize = v.getBrushSize();        
         final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
         
@@ -42,7 +42,7 @@ public class DiscFaceBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void discEW(final SnipeData v) {
+    private void discEW(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
 
@@ -61,7 +61,7 @@ public class DiscFaceBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void discNS(final SnipeData v) {
+    private void discNS(final SnipeData v) {
     	final int _brushSize = v.getBrushSize();
     	final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
 
