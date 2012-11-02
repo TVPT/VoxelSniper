@@ -24,7 +24,7 @@ public class DrainBrush extends Brush {
         this.setName("Drain");
     }
 
-    private final void drain(final SnipeData v) {
+    private void drain(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
