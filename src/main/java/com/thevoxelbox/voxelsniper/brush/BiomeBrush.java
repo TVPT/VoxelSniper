@@ -22,7 +22,7 @@ public class BiomeBrush extends Brush {
         this.setName("Biome (currently not working)");
     }   
     
-    private final void biome(final SnipeData v) {
+    private void biome(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final double _bPow = Math.pow(_bSize, 2);
         
