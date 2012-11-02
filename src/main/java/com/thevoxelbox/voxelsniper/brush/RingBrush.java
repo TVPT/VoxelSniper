@@ -23,7 +23,7 @@ public class RingBrush extends PerformBrush {
         this.setName("Ring");
     }
 
-    private final void ring(final SnipeData v) {
+    private void ring(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final double _outerPow = Math.pow(_brushSize + this.trueCircle, 2);
         final double _innerPow = Math.pow(this.innerSize, 2);
