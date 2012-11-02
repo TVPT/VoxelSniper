@@ -41,7 +41,7 @@ public class JaggedLineBrush extends PerformBrush {
 		this.setName("Jagged Line");
 	}
 
-	private final void jaggedP(final SnipeData v) {
+	private void jaggedP(final SnipeData v) {
 		final Vector _originClone = this.originCoords.clone().add(JaggedLineBrush.HALF_BLOCK_OFFSET);
 		final Vector _targetClone = this.targetCoords.clone().add(JaggedLineBrush.HALF_BLOCK_OFFSET);
 
@@ -119,8 +119,9 @@ public class JaggedLineBrush extends PerformBrush {
 					this.spread = _temp;
 					v.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
 				}
-			} catch (Exception e) {
+			} catch (Exception _e) {
 				v.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", _param));
+				_e.printStackTrace();
 			}
 		}
 
