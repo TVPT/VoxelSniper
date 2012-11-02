@@ -25,7 +25,7 @@ public class UnderlayBrush extends PerformBrush {
         this.setName("Underlay (Reverse Overlay)");
     }
 
-    private final void underlay(final SnipeData v) {
+    private void underlay(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final int[][] _memory = new int[_bSize * 2 + 1][_bSize * 2 + 1];
         final double _bPow = Math.pow(_bSize + 0.5, 2);
@@ -78,7 +78,7 @@ public class UnderlayBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void underlay2(final SnipeData v) {
+    private void underlay2(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final int[][] _memory = new int[_bSize * 2 + 1][_bSize * 2 + 1];
         final double _bPow = Math.pow(_bSize + 0.5, 2);
