@@ -28,7 +28,7 @@ public class DiscBrush extends PerformBrush {
      * 
      * @param v
      */
-    private final void disc(final SnipeData v, final Block targetBlock) {
+    private void disc(final SnipeData v, final Block targetBlock) {
         final double _radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
         final Vector _centerPoint = targetBlock.getLocation().toVector();
         final Vector _currentPoint = _centerPoint.clone();
