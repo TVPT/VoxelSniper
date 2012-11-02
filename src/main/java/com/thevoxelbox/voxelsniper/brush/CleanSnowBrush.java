@@ -22,7 +22,7 @@ public class CleanSnowBrush extends Brush {
         this.setName("Clean Snow");
     }
 
-    private final void cleanSnow(final SnipeData v) {
+    private void cleanSnow(final SnipeData v) {
         final int _bSize = v.getBrushSize();
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
