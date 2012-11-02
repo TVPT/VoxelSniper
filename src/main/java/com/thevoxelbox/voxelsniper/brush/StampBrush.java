@@ -298,7 +298,7 @@ public class StampBrush extends Brush {
     }    
 
     @Override
-    protected void arrow(final SnipeData v) {
+    protected final void arrow(final SnipeData v) {
         switch (this.stamp) {
         case DEFAULT:
             this.stamp(v);
@@ -319,22 +319,22 @@ public class StampBrush extends Brush {
     }
     
     @Override
-    protected void powder(final SnipeData v) {
+    protected final void powder(final SnipeData v) {
     	throw new UnsupportedOperationException("Not supported yet.");
     }
     
     @Override
-    public void info(final Message vm) {
+    public final void info(final Message vm) {
     	throw new UnsupportedOperationException("Not supported yet.");
     }
     
     @Override
-    public int getTimesUsed() {
+    public final int getTimesUsed() {
     	return StampBrush.timesUsed;
     }
     
     @Override
-    public void setTimesUsed(final int tUsed) {
+    public final void setTimesUsed(final int tUsed) {
     	StampBrush.timesUsed = tUsed;
     }
 }
