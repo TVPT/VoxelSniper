@@ -272,6 +272,8 @@ public class ErodeBrush extends Brush {
                     continue;
                 }
             } catch (final Exception _e) {
+            	v.sendMessage(ChatColor.RED + "Failed parsing parameter" + _param);
+            	_e.printStackTrace();
             }
 
             try {
