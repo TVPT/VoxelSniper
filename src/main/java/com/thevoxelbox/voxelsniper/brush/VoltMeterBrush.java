@@ -21,13 +21,13 @@ public class VoltMeterBrush extends Brush {
         this.setName("VoltMeter");
     }
 
-    private final void data(final SnipeData v) {
+    private void data(final SnipeData v) {
         final Block _block = this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ());
         final byte _data = _block.getData();
         v.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + _data);
     }
 
-    private final void volt(final SnipeData v) {
+    private void volt(final SnipeData v) {
     	final Block _block = this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ());
         final boolean _indirect = _block.isBlockIndirectlyPowered();
         final boolean _direct = _block.isBlockPowered();
