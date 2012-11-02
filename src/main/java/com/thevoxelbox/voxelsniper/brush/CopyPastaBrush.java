@@ -35,7 +35,7 @@ public class CopyPastaBrush extends Brush {
         this.setName("CopyPasta");
     }
 
-    private final void doCopy(final SnipeData v) {
+    private void doCopy(final SnipeData v) {
         for (int _i = 0; _i < 3; _i++) {
             this.arraySize[_i] = Math.abs(this.firstPoint[_i] - this.secondPoint[_i]) + 1;
             this.minPoint[_i] = Math.min(this.firstPoint[_i], this.secondPoint[_i]);
@@ -64,7 +64,7 @@ public class CopyPastaBrush extends Brush {
         }
     }
 
-    private final void doPasta(final SnipeData v) {
+    private void doPasta(final SnipeData v) {
     	final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         for (int _i = 0; _i < this.arraySize[0]; _i++) {
@@ -92,10 +92,10 @@ public class CopyPastaBrush extends Brush {
                         break;
                     }
 
-                    if (!(this.blockArray[_currentPos] == 0 && this.pasteAir == false)) {
-                        if (_b.getTypeId() != this.blockArray[_currentPos] || _b.getData() != this.dataArray[_currentPos]) {
-                            _undo.put(_b);
-                        }
+					if (!(this.blockArray[_currentPos] == 0 && !this.pasteAir)) {
+						if (_b.getTypeId() != this.blockArray[_currentPos] || _b.getData() != this.dataArray[_currentPos]) {
+							_undo.put(_b);
+						}
                         _b.setTypeIdAndData(this.blockArray[_currentPos], this.dataArray[_currentPos], true);
                     }
                 }
