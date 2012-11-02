@@ -169,7 +169,7 @@ public abstract class Brush implements IBrush {
      * @param clickedFace
      * @return boolean
      */
-    protected boolean getTarget(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
+    protected final boolean getTarget(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
         this.setWorld(v.getWorld());
         if (clickedBlock != null) {
             this.setTargetBlock(clickedBlock);
@@ -183,16 +183,16 @@ public abstract class Brush implements IBrush {
             }
             return true;
         } else {
-            RangeBlockHelper hb = null;
+            RangeBlockHelper _hb = null;
             if (v.owner().isDistRestrict()) {
-                hb = new RangeBlockHelper(v.owner().getPlayer(), this.getWorld(), v.owner().getRange());
-                this.setTargetBlock(hb.getRangeBlock());
+                _hb = new RangeBlockHelper(v.owner().getPlayer(), this.getWorld(), v.owner().getRange());
+                this.setTargetBlock(_hb.getRangeBlock());
             } else {
-                hb = new RangeBlockHelper(v.owner().getPlayer(), this.getWorld());
-                this.setTargetBlock(hb.getTargetBlock());
+                _hb = new RangeBlockHelper(v.owner().getPlayer(), this.getWorld());
+                this.setTargetBlock(_hb.getTargetBlock());
             }
             if (this.getTargetBlock() != null) {
-                this.setLastBlock(hb.getLastBlock());
+                this.setLastBlock(_hb.getLastBlock());
                 if (this.getLastBlock() == null) {
                     v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
                     return false;
