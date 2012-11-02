@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 /**
- *	http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
  */
 public class BlendBallBrush extends BlendBrushBase {
 	private static int timesUsed = 0;    
@@ -72,9 +72,9 @@ public class BlendBallBrush extends BlendBrushBase {
                         }
                     }
                     // Make sure there'world not a tie for most common
-                    for (int i = 0; i < _modeMatId; i++) {
-                    	if(_materialFrequency[i] == _modeMatCount && !(this.excludeAir && i == Material.AIR.getId())
-                                && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
+                    for (int _i = 0; _i < _modeMatId; _i++) {
+                    	if (_materialFrequency[_i] == _modeMatCount && !(this.excludeAir && _i == Material.AIR.getId())
+                                && !(this.excludeWater && (_i == Material.WATER.getId() || _i == Material.STATIONARY_WATER.getId()))) {
                     		_tiecheck = false;
                     	}
                     }
