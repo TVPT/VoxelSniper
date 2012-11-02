@@ -19,7 +19,7 @@ public class CanyonBrush extends Brush {
 	private static final int SHIFT_LEVEL_MAX = 60;
 	
 	private static int timesUsed = 0;	
-    protected int yLevel = 10;
+    private int yLevel = 10;
 
     /**
      * 
@@ -55,7 +55,7 @@ public class CanyonBrush extends Brush {
                 undo.put(_b);                
                 _b.setTypeId(Material.BEDROCK.getId());
                 
-                for (int _y = 1; _y < 10; _y++) {
+                for (int _y = 1; _y < SHIFT_LEVEL_MIN; _y++) {
                     final Block _bb = chunk.getBlock(_x, _y, _z);
                     undo.put(_bb);
                     _bb.setType(Material.STONE);
@@ -112,12 +112,20 @@ public class CanyonBrush extends Brush {
     }
     
     @Override
-    public int getTimesUsed() {
+    public final int getTimesUsed() {
         return CanyonBrush.timesUsed;
     }
     
     @Override
-    public void setTimesUsed(final int tUsed) {
+    public final void setTimesUsed(final int tUsed) {
         CanyonBrush.timesUsed = tUsed;
     }
+
+	protected final int getyLevel() {
+		return yLevel;
+	}
+
+	protected final void setyLevel(int yLevel) {
+		this.yLevel = yLevel;
+	}
 }
