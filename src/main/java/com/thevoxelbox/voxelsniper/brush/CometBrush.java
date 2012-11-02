@@ -32,7 +32,7 @@ public class CometBrush extends Brush {
 		this.setName("Comet");
 	}
 
-	private final void doFireball(final SnipeData v) {
+	private void doFireball(final SnipeData v) {
 		final Vector _targetCoords = new Vector(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()), this
 				.getTargetBlock().getY() + .5, this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
 		final Location _playerLoc = v.owner().getPlayer().getLocation();
@@ -55,25 +55,25 @@ public class CometBrush extends Brush {
 	
 	@Override
 	public final void parameters(final String[] par, final SnipeData v) {
-		for(int _i = 0; _i < par.length; ++_i) {
+		for (int _i = 0; _i < par.length; ++_i) {
 			String _param = par[_i];
-			
-			if(_param.equalsIgnoreCase("info")) {
+
+			if (_param.equalsIgnoreCase("info")) {
 				v.sendMessage("Parameters:");
 				v.sendMessage("balls [big|small]  -- Sets your ball size.");
 			}
-			if(_param.equalsIgnoreCase("balls")) {
-				if(_i+1 >= par.length) {
+			if (_param.equalsIgnoreCase("balls")) {
+				if (_i + 1 >= par.length) {
 					v.sendMessage("The balls parameter expects a ball size after it.");
 				}
-				
+
 				String _newBallSize = par[++_i];
-				if(_newBallSize.equalsIgnoreCase("big")) {
+				if (_newBallSize.equalsIgnoreCase("big")) {
 					useBigBalls = true;
-					v.sendMessage("Your balls are "+ ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
-				} else if(_newBallSize.equalsIgnoreCase("small")) {
+					v.sendMessage("Your balls are " + ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+				} else if (_newBallSize.equalsIgnoreCase("small")) {
 					useBigBalls = false;
-					v.sendMessage("Your balls are "+ ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+					v.sendMessage("Your balls are " + ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
 				} else {
 					v.sendMessage("Unknown ball size.");
 				}
@@ -95,7 +95,7 @@ public class CometBrush extends Brush {
 	public final void info(final Message vm) {
 		vm.brushName(this.getName());
 		vm.voxel();
-		vm.custom("Your balls are "+ ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+		vm.custom("Your balls are " + ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
 	}
 
 	@Override
