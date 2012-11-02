@@ -58,9 +58,10 @@ public class RulerBrush extends Brush {
         v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock().getX() - this.coords.getX()));
         v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock().getY() - this.coords.getY()));
         v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock().getZ() - this.coords.getZ()));
-        final double _distance = (double) (Math.round(this.getTargetBlock().getLocation().toVector().subtract(this.coords).length() * 100) / 100);
-        final double _blockDistance = (double) (Math.round((Math.abs(Math.max(Math.max(Math.abs(this.getTargetBlock().getX() - coords.getX()), Math.abs(this.getTargetBlock().getY() - this.coords.getY())), Math.abs(this.getTargetBlock().getZ() - this.coords.getZ()))) + 1) * 100 ) / 100);
-        
+		final double _distance = (double) (Math.round(this.getTargetBlock().getLocation().toVector().subtract(this.coords).length() * 100) / 100);
+		final double _blockDistance = (double) (Math.round((Math.abs(Math.max(
+				Math.max(Math.abs(this.getTargetBlock().getX() - coords.getX()), Math.abs(this.getTargetBlock().getY() - this.coords.getY())),
+				Math.abs(this.getTargetBlock().getZ() - this.coords.getZ()))) + 1) * 100) / 100);
 
         v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + _distance);
         v.sendMessage(ChatColor.AQUA + "Block distance = " + _blockDistance);
