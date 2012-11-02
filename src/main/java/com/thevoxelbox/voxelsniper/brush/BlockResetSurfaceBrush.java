@@ -55,7 +55,7 @@ public class BlockResetSurfaceBrush extends Brush {
         this.setName("Block Reset Brush Surface Only");
     }
     
-    private final void applyBrush(final SnipeData v) {
+    private void applyBrush(final SnipeData v) {
     	final World _world = this.getWorld();
     	
     	for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++) {
@@ -72,61 +72,59 @@ public class BlockResetSurfaceBrush extends Brush {
     				if (_world.getBlockAt(this.getBlockPositionX() + _x + 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x + 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
     					final byte _oldData = _block.getData();
-    					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-    					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    					resetBlock(_block, _oldData);
     					_airFound = true;
     				}
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x - 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x - 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
     					final byte _oldData = _block.getData();
-    					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-    					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    					resetBlock(_block, _oldData);
     					_airFound = true;
     				}
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y + 1, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y + 1, this.getBlockPositionZ() + _z);
     					final byte _oldData = _block.getData();
-    					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-    					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    					resetBlock(_block, _oldData);
     					_airFound = true;
     				}
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z);
     					final byte _oldData = _block.getData();
-    					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-    					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    					resetBlock(_block, _oldData);
     					_airFound = true;
     				}
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z + 1).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z + 1);
     					final byte _oldData = _block.getData();
-    					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-    					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    					resetBlock(_block, _oldData);
     					_airFound = true;
     				}
     				
     				if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z - 1).getTypeId() == 0) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z - 1);
     					final byte _oldData = _block.getData();
-    					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-    					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    					resetBlock(_block, _oldData);
     					_airFound = true;
     				}
     				
     				if (_airFound) {
     					_block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
     					final byte _oldData = _block.getData();
-    					_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-    					_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+    					resetBlock(_block, _oldData);
     				}
     			}
     		}
     	}    	
     }
+
+	private void resetBlock(Block _block, final byte _oldData) {
+		_block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
+		_block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+	}
 
     @Override
     protected final void arrow(final SnipeData v) {
