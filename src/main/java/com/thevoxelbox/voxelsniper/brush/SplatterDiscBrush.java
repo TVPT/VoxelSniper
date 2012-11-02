@@ -39,7 +39,7 @@ public class SplatterDiscBrush extends PerformBrush {
         this.setName("Splatter Disc");
     }
 
-    private final void splatterDisc(final SnipeData v) {
+    private void splatterDisc(final SnipeData v) {
         if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
             v.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
             this.seedPercent = SEED_PERCENT_DEFAULT;
