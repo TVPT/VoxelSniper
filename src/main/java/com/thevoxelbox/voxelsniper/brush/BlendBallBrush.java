@@ -48,7 +48,7 @@ public class BlendBallBrush extends BlendBrushBase {
         for (int _x = 0; _x <= _twoBrushSize; _x++) {
             for (int _y = 0; _y <= _twoBrushSize; _y++) {
                 for (int _z = 0; _z <= _twoBrushSize; _z++) {
-                    final int[] _materialFrequency = new int[maxBlockMaterialID + 1]; // Array that tracks frequency of materials neighboring given block
+                    final int[] _materialFrequency = new int[BlendBrushBase.getMaxBlockMaterialID() + 1]; // Array that tracks frequency of materials neighboring given block
                     int _modeMatCount = 0;
                     int _modeMatId = 0;
                     boolean _tiecheck = true;
@@ -64,7 +64,7 @@ public class BlendBallBrush extends BlendBrushBase {
                     }
 
                     // Find most common neighboring material.
-                    for (int _i = 0; _i <= maxBlockMaterialID; _i++) {
+                    for (int _i = 0; _i <= BlendBrushBase.getMaxBlockMaterialID(); _i++) {
                         if (_materialFrequency[_i] > _modeMatCount && !(this.excludeAir && _i == Material.AIR.getId())
                                 && !(this.excludeWater && (_i == Material.WATER.getId() || _i == Material.STATIONARY_WATER.getId()))) {
                             _modeMatCount = _materialFrequency[_i];

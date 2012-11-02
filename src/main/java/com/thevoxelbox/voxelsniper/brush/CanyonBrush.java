@@ -112,12 +112,12 @@ public class CanyonBrush extends Brush {
     }
     
     @Override
-    public final int getTimesUsed() {
+    public int getTimesUsed() {
         return CanyonBrush.timesUsed;
     }
     
     @Override
-    public final void setTimesUsed(final int tUsed) {
+    public void setTimesUsed(final int tUsed) {
         CanyonBrush.timesUsed = tUsed;
     }
 

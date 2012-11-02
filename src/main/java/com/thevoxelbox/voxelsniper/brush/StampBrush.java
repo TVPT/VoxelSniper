@@ -319,22 +319,22 @@ public class StampBrush extends Brush {
     }
     
     @Override
-    protected final void powder(final SnipeData v) {
+    protected void powder(final SnipeData v) {
     	throw new UnsupportedOperationException("Not supported yet.");
     }
     
     @Override
-    public final void info(final Message vm) {
+    public void info(final Message vm) {
     	throw new UnsupportedOperationException("Not supported yet.");
     }
     
     @Override
-    public final int getTimesUsed() {
+    public int getTimesUsed() {
     	return StampBrush.timesUsed;
     }
     
     @Override
-    public final void setTimesUsed(final int tUsed) {
+    public void setTimesUsed(final int tUsed) {
     	StampBrush.timesUsed = tUsed;
     }
 }
