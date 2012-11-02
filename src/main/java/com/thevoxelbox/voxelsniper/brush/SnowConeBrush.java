@@ -15,7 +15,7 @@ import com.thevoxelbox.voxelsniper.Undo;
 public class SnowConeBrush extends Brush {
     private static int timesUsed = 0;
 
-    private final void addSnow(final SnipeData v) {
+    private void addSnow(final SnipeData v) {
         int _brushSize;
         if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()) == Material.AIR.getId()) {
             _brushSize = 0;
@@ -61,8 +61,7 @@ public class SnowConeBrush extends Brush {
                 if (_snowData >= 0) { // no funny business
                     switch (_snowData) {
                     case 0:
-                        if (_snowcone[_x][_z] == Material.SNOW.getId()) {
-                        } else if (_snowcone[_x][_z] == Material.AIR.getId()) {
+                        if (_snowcone[_x][_z] == Material.AIR.getId()) {
                             _snowcone[_x][_z] = Material.SNOW.getId();
                             _snowconedata[_x][_z] = 0;
                         }
