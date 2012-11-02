@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
