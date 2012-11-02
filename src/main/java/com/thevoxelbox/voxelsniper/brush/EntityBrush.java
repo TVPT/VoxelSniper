@@ -21,7 +21,7 @@ public class EntityBrush extends Brush {
         this.setName("Entity");
     }
     
-    private final void spawn(final SnipeData v) {
+    private void spawn(final SnipeData v) {
     	for (int _x = 0; _x < v.getBrushSize(); _x++) {
     		try {
     			this.getWorld().spawn(this.getLastBlock().getLocation(), this.entityType.getEntityClass());
