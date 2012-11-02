@@ -139,9 +139,9 @@ public class PunishBrush extends PerformBrush {
     }
 
     @Override
-    protected final void arrow(final SnipeData v) {
-    	if(!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
-    		v.sendMessage("The server says no!");
+	protected final void arrow(final SnipeData v) {
+		if (!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
+			v.sendMessage("The server says no!");
     		return;
     	}
     	
@@ -187,9 +187,9 @@ public class PunishBrush extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final SnipeData v) {
-    	if(!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
-    		v.sendMessage("The server says no!");
+	protected final void powder(final SnipeData v) {
+		if (!v.owner().getPlayer().hasPermission("voxelsniper.punish")) {
+			v.sendMessage("The server says no!");
     		return;
     	}
     	
