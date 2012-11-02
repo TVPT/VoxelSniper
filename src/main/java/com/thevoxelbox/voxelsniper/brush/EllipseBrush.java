@@ -33,7 +33,7 @@ public class EllipseBrush extends PerformBrush {
         this.setName("Ellipse");
     }
 
-    private final void ellipse(final SnipeData v) {
+    private void ellipse(final SnipeData v) {
         try {
             for (double _steps = 0; (_steps <= TWO_PI); _steps += stepSize) {
                 final int _x = (int) Math.round(this.xscl * Math.cos(_steps));
@@ -66,7 +66,7 @@ public class EllipseBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void ellipsefill(final SnipeData v) {
+    private void ellipsefill(final SnipeData v) {
     	int _ix = this.xscl;
     	int _iy = this.yscl;
 
