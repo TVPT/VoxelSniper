@@ -44,7 +44,7 @@ public class SplatterOverlayBrush extends PerformBrush {
         this.setName("Splatter Overlay");
     }
 
-    private final void sOverlay(final SnipeData v) {
+    private void sOverlay(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize =  2 * _brushSize;
 
@@ -166,7 +166,7 @@ public class SplatterOverlayBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void soverlayTwo(final SnipeData v) {
+    private void soverlayTwo(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _brushSize;
 
