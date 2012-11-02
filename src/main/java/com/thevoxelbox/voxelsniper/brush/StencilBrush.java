@@ -54,7 +54,7 @@ public class StencilBrush extends Brush {
         this.setName("Stencil");
     }
 
-    private final void stencilPaste(final SnipeData v) {
+    private void stencilPaste(final SnipeData v) {
         if (this.filename.matches("NoFileLoaded")) {
             v.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
             return;
@@ -220,7 +220,7 @@ public class StencilBrush extends Brush {
         }
     }
 
-    private final void stencilSave(final SnipeData v, final boolean reference) {
+    private void stencilSave(final SnipeData v, final boolean reference) {
 
         final File _file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
         try {
