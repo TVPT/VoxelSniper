@@ -21,7 +21,7 @@ public class CylinderBrush extends PerformBrush {
         this.setName("Cylinder");
     }
 
-    private final void cylinder(final SnipeData v) {
+    private void cylinder(final SnipeData v) {
     	final int _bSize = v.getBrushSize();
     	int _starringY = this.getBlockPositionY() + v.getcCen();
     	int _endTopY = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
