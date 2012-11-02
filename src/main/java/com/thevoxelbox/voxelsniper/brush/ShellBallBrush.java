@@ -22,7 +22,7 @@ public class ShellBallBrush extends Brush {
     }
 
     // parameters isn't an abstract method, gilt. You can just leave it out if there are none.
-    private final void bShell(final SnipeData v) {
+    private void bShell(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _brushSize;
         final int _voxelMaterialId = v.getVoxelId();
