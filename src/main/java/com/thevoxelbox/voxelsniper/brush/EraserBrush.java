@@ -20,7 +20,7 @@ public class EraserBrush extends Brush {
         this.setName("Eraser");
     }
 
-    private final void doErase(final SnipeData v, final boolean keepWater) {
+    private void doErase(final SnipeData v, final boolean keepWater) {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _brushSize;
         final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
