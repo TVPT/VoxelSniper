@@ -28,14 +28,14 @@ public class BlobBrush extends PerformBrush {
         this.setName("Blob");
     }
     
-    private final void checkValidGrowPercent(final SnipeData v) {
+    private void checkValidGrowPercent(final SnipeData v) {
     	if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
     		this.growPercent = GROW_PERCENT_DEFAULT;
    			v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
     	}    	
     }
 
-    private final void digBlob(final SnipeData v) {
+    private void digBlob(final SnipeData v) {
     	final int _bSize = v.getBrushSize();
     	final int _twoBrushSize = 2 * _bSize;
     	final int[][][] _splat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
@@ -123,7 +123,7 @@ public class BlobBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }   
 
-    private final void growBlob(final SnipeData v) {
+    private void growBlob(final SnipeData v) {
     	final int _bSize = v.getBrushSize();
     	final int _twoBrushSize = 2 * _bSize;
     	final int[][][] _splat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
