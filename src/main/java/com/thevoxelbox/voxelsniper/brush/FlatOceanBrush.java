@@ -12,9 +12,12 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  * @author GavJenks
  */
 public class FlatOceanBrush extends Brush {
+	private static final int DEFAULT_WATER_LEVEL = 29;
+	private static final int DEFAULT_FLOOR_LEVEL = 8;
+	
 	private static int timesUsed = 0;	
-    private int waterLevel = 29;
-    private int floorLevel = 8;
+    private int waterLevel = DEFAULT_WATER_LEVEL;
+    private int floorLevel = DEFAULT_FLOOR_LEVEL;
 
     /**
      * 
