@@ -24,7 +24,7 @@ public class OverlayBrush extends PerformBrush {
         this.setName("Overlay (Topsoil Filling)");
     }
 
-    private final void overlay(final SnipeData v) {
+    private void overlay(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + 0.5, 2);
         final int[][] _memory = new int[_brushSize * 2 + 1][_brushSize * 2 + 1];
@@ -81,7 +81,7 @@ public class OverlayBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private final void overlayTwo(final SnipeData v) {
+    private void overlayTwo(final SnipeData v) {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + 0.5, 2);
         final int[][] _memory = new int[_brushSize * 2 + 1][_brushSize * 2 + 1];
@@ -96,20 +96,20 @@ public class OverlayBrush extends PerformBrush {
                                                                                                // you click in a wall and it starts out below surface.
                                     if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                        switch (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z)) {
-                                        case 1:
-                                        case 2:
-                                        case 3:
-                                        case 12:
-                                        case 13:
-                                        case 14: 
-                                        case 15:
-                                        case 16:
-                                        case 24:
-                                        case 48:
-                                        case 82:
-                                        case 49:
-                                        case 78:
+										switch (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z)) {
+										case 1:
+										case 2:
+										case 3:
+										case 12:
+										case 13:
+										case 14:
+										case 15:
+										case 16:
+										case 24:
+										case 48:
+										case 82:
+										case 49:
+										case 78:
                                             for (int _d = 1; (_d < this.depth + 1); _d++) {
                                                 this.current.perform(this.clampY(this.getBlockPositionX() + _x, _y + _d, this.getBlockPositionZ() + _z)); // fills down as many layers as you specify
                                                                                                                     // in parameters
