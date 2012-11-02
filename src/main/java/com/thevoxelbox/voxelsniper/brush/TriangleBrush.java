@@ -29,7 +29,7 @@ public class TriangleBrush extends PerformBrush {
         this.setName("Triangle");
     }
 
-    private final void triangleA(final SnipeData v) {
+    private void triangleA(final SnipeData v) {
         switch (this.cornernumber) {
         case 1:
             this.coordsOne[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
@@ -62,7 +62,7 @@ public class TriangleBrush extends PerformBrush {
 
     }
 
-    private final void triangleP(final SnipeData v) {
+    private void triangleP(final SnipeData v) {
         double _lengthOne = 0;
         double _lengthTwo = 0;
         double _lengthThree = 0;
