@@ -51,7 +51,7 @@ public class GenerateTreeBrush extends Brush {
     }
 
     // Branch Creation based on direction chosen from the parameters passed.
-    private final void branchCreate(final int xDirection, final int zDirection) {
+    private void branchCreate(final int xDirection, final int zDirection) {
 
         // Sets branch origin.
         final int _originX = this.getBlockPositionX();
@@ -94,7 +94,7 @@ public class GenerateTreeBrush extends Brush {
         this.setBlockPositionZ(_originZ);
     }
 
-    private final void leafNodeCreate() {
+    private void leafNodeCreate() {
     	// Generates the node size.
     	final int _nodeRadius = this.randGenerator.nextInt(this.nodeMax - this.nodeMin + 1) + this.nodeMin;
     	final double _bPow = Math.pow(_nodeRadius + 0.5, 2);
@@ -190,20 +190,20 @@ public class GenerateTreeBrush extends Brush {
      * @param xDirection
      * @param zDirection
      */
-    private final void rootCreate(final int xDirection, final int zDirection) {
+    private void rootCreate(final int xDirection, final int zDirection) {
         // Sets Origin.
         final int _originX = this.getBlockPositionX();
         final int _originY = this.getBlockPositionY();
         final int _originZ = this.getBlockPositionZ();
 
         // Generates the number of roots to create.
-        final int roots = this.randGenerator.nextInt(this.maxRoots - this.minRoots + 1) + this.minRoots;
+        final int _roots = this.randGenerator.nextInt(this.maxRoots - this.minRoots + 1) + this.minRoots;
 
         // A roots preference to move along the X and Y axis.
 
 
         // Loops for each root to be created.
-        for (int _i = 0; _i < roots; _i++) {
+        for (int _i = 0; _i < _roots; _i++) {
             // Pushes the root'world starting point out from the center of the tree.
             for (int _t = 0; _t < this.thickness - 1; _t++) {
                 this.setBlockPositionX(this.getBlockPositionX() + xDirection);
@@ -217,16 +217,10 @@ public class GenerateTreeBrush extends Brush {
             for (int _j = 0; _j < this.rootLength; _j++) {
                 // For the purposes of this algorithm, logs aren't considered solid.
 
-                // Checks if location is solid.
-                if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getType() == Material.AIR || this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getType() == Material.WATER
-                        || this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getType() == Material.STATIONARY_WATER
-                        || this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getType() == Material.SNOW
-                        || this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getType() == Material.LOG) {
-                }
-                // If not solid then...
-                // Save for undo function
-                if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()) != Material.LOG.getId()) {
-                    this.undo.put(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
+				// If not solid then...
+				// Save for undo function
+				if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()) != Material.LOG.getId()) {
+					this.undo.put(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
 
                     // Place log block.
                     this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
@@ -244,7 +238,7 @@ public class GenerateTreeBrush extends Brush {
                         || this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - 1, this.getBlockPositionZ()).getType() == Material.LOG) {
                     // Mos down if solid.
                     this.setBlockPositionY(this.getBlockPositionY() - 1);
-                    if (this.rootFloat == true) {
+                    if (this.rootFloat) {
                         if (this.randGenerator.nextInt(100) < _xPreference) {
                             this.setBlockPositionX(this.getBlockPositionX() + xDirection);
                         }
@@ -279,7 +273,7 @@ public class GenerateTreeBrush extends Brush {
         }
     }
 
-    private final void rootGen() {
+    private void rootGen() {
         // Quadrant 1
         this.rootCreate(1, 1);
 
@@ -293,7 +287,7 @@ public class GenerateTreeBrush extends Brush {
         this.rootCreate(-1, -1);
     }
 
-    private final void trunkCreate() {
+    private void trunkCreate() {
         // Creates true circle discs of the set size using the wood type selected.
         final double _bPow = Math.pow(this.thickness + 0.5, 2);
         
@@ -338,7 +332,7 @@ public class GenerateTreeBrush extends Brush {
      * 
      * Code Concerning Trunk Generation
      */
-    private final void trunkGen() {
+    private void trunkGen() {
         // Sets Origin
         final int _originX = this.getBlockPositionX();
         final int _originY = this.getBlockPositionY();
