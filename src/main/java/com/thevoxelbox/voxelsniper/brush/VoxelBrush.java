@@ -18,7 +18,7 @@ public class VoxelBrush extends PerformBrush {
         this.setName("Voxel");
     }
 
-    private final void voxel(final SnipeData v) {
+    private void voxel(final SnipeData v) {
         final int _bSize = v.getBrushSize();
 
         for (int _z = _bSize; _z >= -_bSize; _z--) {
