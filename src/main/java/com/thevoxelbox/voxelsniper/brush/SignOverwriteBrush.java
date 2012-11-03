@@ -1,11 +1,20 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 
 /**
  * Overwrites signs. (Wiki:
@@ -122,17 +131,7 @@ public class SignOverwriteBrush extends Brush {
 				}
 			}
 
-			v.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
-			for (int _i = 0; _i < this.signTextLines.length; _i++) {
-				/*
-				 * uhh... that's C style, sorry :P
-				 * 
-				 * Basically: Black text if line is disabled and the text
-				 * DISABLED/EMPTY if the line is disabled and empty
-				 */
-				v.sendMessage((this.signLinesEnabled[_i] ? ChatColor.GREEN : ChatColor.BLACK)
-						+ (this.signTextLines[_i].isEmpty() ? (this.signLinesEnabled[_i] ? "" : "DISABLED/EMPTY") : this.signTextLines[_i]));
-			}
+			displayBuffer(v);
 		} else {
 			v.sendMessage(ChatColor.RED + "Target block is not a sign.");
 			return;
@@ -151,14 +150,20 @@ public class SignOverwriteBrush extends Brush {
 					v.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Powder/Arrow:");
 					v.sendMessage(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
 					v.sendMessage(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.");
+					v.sendMessage(ChatColor.AQUA + "How to use colors:");
+					v.sendMessage(ChatColor.BLUE + "Use color names tagged with # before and after the color word.");
+					v.sendMessage(ChatColor.BLUE + "Make sure you have spaces before and after #COLOR#.");
+					v.sendMessage(ChatColor.BLUE + "Colors will take the space of 2 characters. Keep this in mine when you want to write long messages.");
 					v.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Parameters:");
-					v.sendMessage(ChatColor.BLUE + "-1[:(enabled|disabled)] ... -- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
-					v.sendMessage(ChatColor.BLUE + "-2[:(enabled|disabled)] ... -- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
-					v.sendMessage(ChatColor.BLUE + "-3[:(enabled|disabled)] ... -- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
-					v.sendMessage(ChatColor.BLUE + "-4[:(enabled|disabled)] ... -- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
-					v.sendMessage(ChatColor.BLUE + "-clear -- Clears the line buffer. (Alias: -c)");
-					v.sendMessage(ChatColor.BLUE + "-clearall -- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
-					v.sendMessage(ChatColor.BLUE + "-multiple [on|off]-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
+					v.sendMessage(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
+					v.sendMessage(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
+					v.sendMessage(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
+					v.sendMessage(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
+					v.sendMessage(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)");
+					v.sendMessage(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
+					v.sendMessage(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
+					v.sendMessage(ChatColor.GREEN + "-save (name) " + ChatColor.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)");
+					v.sendMessage(ChatColor.GREEN + "-open (name) " + ChatColor.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)");
 					continue;
 				} else if (_param.startsWith("-1")) {
 					_textChanged = true;
@@ -198,6 +203,23 @@ public class SignOverwriteBrush extends Brush {
 						v.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + v.getVoxelHeight());
 					}
 					continue;
+				} else if (_param.equalsIgnoreCase("-save") || _param.equalsIgnoreCase("-s")) {
+					if ((_i + 1) >= par.length) {
+						v.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", _param));
+						continue;
+					}
+					
+					String _fileName = par[++_i];
+					saveBufferToFile(_fileName, v);
+				} else if (_param.equalsIgnoreCase("-open") || _param.equalsIgnoreCase("-o")) {
+					if ((_i + 1) >= par.length) {
+						v.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", _param));
+						continue;
+					}
+					
+					String _fileName = par[++_i];
+					loadBufferFromFile(_fileName, "", v);
+					_textChanged = true;
 				}
 			} catch (Exception _ex) {
 				v.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", _param));
@@ -206,11 +228,7 @@ public class SignOverwriteBrush extends Brush {
 		}
 
 		if (_textChanged) {
-			v.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
-			for (int _i = 0; _i < this.signTextLines.length; _i++) {
-				v.sendMessage((this.signLinesEnabled[_i] ? ChatColor.GREEN : ChatColor.BLACK)
-						+ (this.signTextLines[_i].isEmpty() ? (this.signLinesEnabled[_i] ? "" : "DISABLED/EMPTY") : this.signTextLines[_i]));
-			}
+			displayBuffer(v);
 		}
 	}
 
@@ -252,18 +270,29 @@ public class SignOverwriteBrush extends Brush {
 
 		// go through the array until the next top level parameter is found
 		for (i++; i < params.length; i++) {
-			if (params[i].startsWith("-")) {
+			final String _currentParam = params[i];
+			
+			if (_currentParam.startsWith("-")) {
 				i--;
 				break;
 			} else {
-				_newText += params[i] + " ";
+				if (_currentParam.startsWith("#") && _currentParam.endsWith("#")) {
+					try {
+						final ChatColor _color = ChatColor.valueOf(_currentParam.toUpperCase().substring(1, _currentParam.length() - 1));
+						_newText += _color;
+					} catch (IllegalArgumentException _ex) {
+						v.sendMessage(ChatColor.RED + "Unknown color code " + _currentParam);
+					}
+				} else {
+					_newText += _currentParam + " ";
+				}
 			}
 		}
 
 		// remove last space or return if the string is empty and the user just wanted to set the status
-		if (!_newText.isEmpty()) {
+		if (!_newText.isEmpty() && _newText.endsWith(" ")) {
 			_newText = _newText.substring(0, _newText.length() - 1);
-		} else {
+		} else  if(_newText.isEmpty()){
 			if (_statusSet) {
 				return i;
 			}
@@ -279,6 +308,77 @@ public class SignOverwriteBrush extends Brush {
 
 		this.signTextLines[_lineIndex] = _newText;
 		return i;
+	}
+	
+	private final void displayBuffer(final SnipeData v) {
+		v.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
+		for (int _i = 0; _i < this.signTextLines.length; _i++) {
+			v.sendMessage((this.signLinesEnabled[_i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[_i]);
+		}
+	}
+	
+	/**
+	 * Saves the buffer to file.
+	 * @param fileName
+	 * @param v
+	 */
+	private void saveBufferToFile(final String fileName, final SnipeData v) {
+		final File _store = new File(VoxelSniper.getInstance().getDataFolder() + "/" + fileName + ".vsign");
+		if(_store.exists()) {
+			v.sendMessage("This file already exists.");
+			return;
+		}		
+		
+		try {
+			_store.createNewFile();
+			FileWriter _outFile = new FileWriter(_store);
+			BufferedWriter _outStream = new BufferedWriter(_outFile);
+			
+			for(int _i = 0; _i < this.signTextLines.length; _i++) {
+				_outStream.write(String.valueOf(this.signLinesEnabled[_i]) + "\n");
+				_outStream.write(this.signTextLines[_i] + "\n");
+			}
+			
+			_outStream.close();
+			_outFile.close();
+			
+			v.sendMessage(ChatColor.BLUE + "File saved successfully.");
+		} catch (IOException _e) {
+			v.sendMessage(ChatColor.RED + "Failed to save file. " + _e.getMessage());
+			_e.printStackTrace();
+		}		
+	}
+	
+	/**
+	 * Loads a buffer from a file.
+	 * @param fileName
+	 * @param userDomain
+	 * @param v
+	 */
+	private void loadBufferFromFile(final String fileName, final String userDomain, final SnipeData v) {
+		final File _store = new File(VoxelSniper.getInstance().getDataFolder() + "/" + fileName + ".vsign");
+		if(!_store.exists()) {
+			v.sendMessage("This file does not exist.");
+			return;
+		}		
+		
+		try {
+			FileReader _inFile = new FileReader(_store);
+			BufferedReader _inStream = new BufferedReader(_inFile);
+			
+			for(int _i = 0; _i < this.signTextLines.length; _i++) {
+				this.signLinesEnabled[_i] = Boolean.valueOf(_inStream.readLine());
+				this.signTextLines[_i] = _inStream.readLine();
+			}
+			
+			_inStream.close();
+			_inFile.close();
+			
+			v.sendMessage(ChatColor.BLUE + "File loaded successfully.");
+		} catch (IOException _e) {
+			v.sendMessage(ChatColor.RED + "Failed to load file. " + _e.getMessage());
+			_e.printStackTrace();
+		}
 	}
 
 	/**
@@ -305,8 +405,7 @@ public class SignOverwriteBrush extends Brush {
 
 		vm.custom(ChatColor.BLUE + "Buffer text: ");
 		for (int _i = 0; _i < this.signTextLines.length; _i++) {
-			vm.custom((this.signLinesEnabled[_i] ? ChatColor.GREEN : ChatColor.BLACK)
-					+ (this.signTextLines[_i].isEmpty() ? (this.signLinesEnabled[_i] ? "" : "DISABLED/EMPTY") : this.signTextLines[_i]));
+			vm.custom((this.signLinesEnabled[_i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[_i]);
 		}
 
 		vm.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (rangedMode ? "enabled" : "disabled")));

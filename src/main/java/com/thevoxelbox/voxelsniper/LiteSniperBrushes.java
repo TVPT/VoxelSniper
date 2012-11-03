@@ -30,6 +30,7 @@ import com.thevoxelbox.voxelsniper.brush.RandomErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.RingBrush;
 import com.thevoxelbox.voxelsniper.brush.RulerBrush;
 import com.thevoxelbox.voxelsniper.brush.ScannerBrush;
+import com.thevoxelbox.voxelsniper.brush.SignOverwriteBrush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterBallBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterDiscBrush;
@@ -94,6 +95,9 @@ public enum LiteSniperBrushes {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Jmck95~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     UNDERLAY(UnderlayBrush.class, "under", "underlay"), // [ 1 ] \\
+    
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MONOFRAPS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
+    SIGN_OVERWRITE(SignOverwriteBrush.class, "sio", "signoverwriter"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MikeMatrix~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     CHECKER_VOXEL_DISC(CheckerVoxelDiscBrush.class, "cvd", "checkervoxeldisc"); // [ 1 ] \\
