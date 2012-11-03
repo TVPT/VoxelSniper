@@ -5,103 +5,161 @@
 package com.thevoxelbox.voxelsniper.util;
 
 /**
- *
+ * 
  * @author Voxel
  */
 public class VoxelList {
 
-    private int[] col = new int[100];
-    private int vir = 0;
+	private int[] col = new int[100];
+	private int vir = 0;
 
-    public void add(int i) {
-        if(!contains(i)) {
-            col[vir++] = i;
-        }
-    }
+	/**
+	 * 
+	 * @param i
+	 */
+	public final void add(final int i) {
+		if (!contains(i)) {
+			col[vir++] = i;
+		}
+	}
 
-    public boolean removeValue(int i) {
-        if(isEmpty()) {
-            return false;
-        } else {
-            return removeFrom(getIndexOf(i));
-        }
-    }
+	/**
+	 * 
+	 * @param i
+	 * @return
+	 */
+	public final boolean removeValue(final int i) {
+		if (isEmpty()) {
+			return false;
+		} else {
+			return removeFrom(getIndexOf(i));
+		}
+	}
 
-    public boolean removeFrom(int i) {
-        if(i >= 0 && i < vir) {
-            for(int x = i; x < vir; x++) {
-                col[x] = col[x+1];
-            }
-            vir--;
-            return true;
-        } else {
-            return false;
-        }
-    }
+	/**
+	 * 
+	 * @param i
+	 * @return
+	 */
+	public final boolean removeFrom(final int i) {
+		if (i >= 0 && i < vir) {
+			for (int x = i; x < vir; x++) {
+				col[x] = col[x + 1];
+			}
+			vir--;
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    public boolean contains(int i) {
-        if (isEmpty()) {
-            return false;
-        } else {
-            for (int x = 0; x < vir; x++) {
-                if(col[x] == i) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+	/**
+	 * 
+	 * @param i
+	 * @return
+	 */
+	public final boolean contains(final int i) {
+		if (isEmpty()) {
+			return false;
+		} else {
+			for (int x = 0; x < vir; x++) {
+				if (col[x] == i) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
-    public boolean isEmpty() {
-        return vir == 0;
-    }
+	/**
+	 * 
+	 * @return
+	 */
+	public final boolean isEmpty() {
+		return vir == 0;
+	}
 
-    public void clear() {
-        vir = 0;
-    }
+	/**
+	 * 
+	 */
+	public final void clear() {
+		vir = 0;
+	}
 
-    public int getIndexOf(int i) {
-        if (isEmpty()) {
-            return -1;
-        } else {
-            for (int x = 0; x < vir; x++) {
-                if(col[x] == i) {
-                    return x;
-                }
-            }
-            return -1;
-        }
-    }
+	/**
+	 * 
+	 * @param i
+	 * @return
+	 */
+	public final int getIndexOf(final int i) {
+		if (isEmpty()) {
+			return -1;
+		} else {
+			for (int x = 0; x < vir; x++) {
+				if (col[x] == i) {
+					return x;
+				}
+			}
+			return -1;
+		}
+	}
 
-    public int getFrom(int i) {
-        if(i >= 0 && i < vir) {
-            return col[i];
-        } else {
-            return -1;
-        }
-    }
-    
-    public VoxIterator getIterator() {
-        return new VoxIterator(col, vir);
-    }
+	/**
+	 * 
+	 * @param i
+	 * @return
+	 */
+	public final int getFrom(final int i) {
+		if (i >= 0 && i < vir) {
+			return col[i];
+		} else {
+			return -1;
+		}
+	}
 
-    public class VoxIterator {
+	/**
+	 * 
+	 * @return
+	 */
+	public final VoxIterator getIterator() {
+		return new VoxIterator(col, vir);
+	}
 
-        private int[] col;
-        private int vir;
-        private int cur = 0;
+	/**
+	 * 
+	 * @author Voxel
+	 *
+	 */
+	public class VoxIterator {
 
-        public VoxIterator(int[] collection, int virtual) {
-            col = collection;
-            vir = virtual;
-        }
+		private int[] col;
+		private int vir;
+		private int cur = 0;
 
-        public boolean hasNext() {
-            return cur < vir;
-        }
+		/**
+		 * 
+		 * @param collection
+		 * @param virtual
+		 */
+		public VoxIterator(int[] collection, int virtual) {
+			col = collection;
+			vir = virtual;
+		}
 
-        public int next() {
-            return col[cur++];
-        }
-    }
+		/**
+		 * 
+		 * @return
+		 */
+		public final boolean hasNext() {
+			return cur < vir;
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public final int next() {
+			return col[cur++];
+		}
+	}
 }
