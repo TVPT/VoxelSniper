@@ -71,15 +71,22 @@ public class DomeBrush extends Brush {
 
         for (double _u = 0; _u <= Math.PI / 2; _u += _stepSize) {
             final double _y = _absoluteHeight * Math.sin(_u);
-            for (double _v = -Math.PI; _v <= Math.PI; _v += _stepSize) {
+            for (double _v = -Math.PI; _v <= -(Math.PI / 2); _v += _stepSize) {
                 final double _x = v.getBrushSize() * Math.cos(_u) * Math.cos(_v);
                 final double _z = v.getBrushSize() * Math.cos(_u) * Math.sin(_v);
 
-                final int _targetX = NumberConversions.floor(targetBlock.getX() + _x);
+                final double _targetBlockX = targetBlock.getX() + 0.5;
+                final double _targetBlockZ = targetBlock.getZ() + 0.5;
                 final int _targetY = NumberConversions.floor(targetBlock.getY() + (_negative ? -_y : _y));
-                final int _targetZ = NumberConversions.floor(targetBlock.getZ() + _z);
+                final int _currentBlockXAdd = NumberConversions.floor(_targetBlockX + _x);
+                final int _currentBlockZAdd = NumberConversions.floor(_targetBlockZ + _z);
+                final int _currentBlockXSubtract = NumberConversions.floor(_targetBlockX - _x);
+                final int _currentBlockZSubtract = NumberConversions.floor(_targetBlockZ - _z);
+                _changeablePositions.add(new Vector(_currentBlockXAdd, _targetY, _currentBlockZAdd));
+                _changeablePositions.add(new Vector(_currentBlockXSubtract, _targetY, _currentBlockZAdd));
+                _changeablePositions.add(new Vector(_currentBlockXAdd, _targetY, _currentBlockZSubtract));
+                _changeablePositions.add(new Vector(_currentBlockXSubtract, _targetY, _currentBlockZSubtract));
 
-                _changeablePositions.add(new Vector(_targetX, _targetY, _targetZ));
             }
         }
 
