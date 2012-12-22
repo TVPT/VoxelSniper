@@ -6,11 +6,11 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Sniper;
-import net.minecraft.server.Packet53BlockChange;
+import net.minecraft.server.v1_4_5.Packet53BlockChange;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
 
 /**
  *
