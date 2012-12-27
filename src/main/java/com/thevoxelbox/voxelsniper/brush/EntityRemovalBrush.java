@@ -2,11 +2,11 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import net.minecraft.server.v1_4_5.EntityCreature;
-import net.minecraft.server.v1_4_5.NPC;
+import net.minecraft.server.v1_4_6.EntityCreature;
+import net.minecraft.server.v1_4_6.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;

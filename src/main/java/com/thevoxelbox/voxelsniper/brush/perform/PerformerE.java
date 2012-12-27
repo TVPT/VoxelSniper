@@ -44,9 +44,7 @@ public enum PerformerE { // =========== Hey, can we get a "No-Undo" performer?  
                                                                                                             // old brush in   Description
                                                                                                             // this categ.
     MATERIAL(                   pMaterial.class,                "m",            "material"               ), // /b b         place mat
-    MAT_UPDATE(                 pMatUpdate.class,               "mu",           "mat-update"         ),     //              place mat, graphical update
     MATERIAL_NOPHYS(            pMaterialNoPhys.class,          "mp",           "mat-nophys"         ),     //              place mat, no-physics
-    MATERIAL_NOPHYS_UPDATE(     pMaterialNoPhysUpdate.class,    "mup",          "mat-update-nophys"   ),    //              place mat, graphical update, no physics
     MAT_MAT(                    pMatMat.class,                  "mm",           "mat-mat"           ),      // /b br        place mat, replace mat
     MAT_MAT_NOPHYS(             pMatMatNoPhys.class,            "mmp",          "mat-mat-nophys"     ),     // /b sp        place mat, replace mat, no physics
     MAT_INK(                    pMatInk.class,                  "mi",           "mat-ink"           ),      //              place mat, replace ink (e.g. all things with data value 14 to sand)
@@ -54,14 +52,11 @@ public enum PerformerE { // =========== Hey, can we get a "No-Undo" performer?  
     MAT_COMBO(                  pMatCombo.class,                "mc",           "mat-combo"           ),    // /b ibrs      place mat, replace both
     MAT_COMBO_NOPHYS(           pMatComboNophys.class,          "mcp",          "mat-combo-nophys"  ),      //              place mat, replace combo, no physics
     INK(                        pInk.class,                     "i",            "ink"               ),      // /b ib        place ink
-    INK_UPDATE(                 pInkUpdate.class,               "iu",           "ink-update"         ),     //              place ink, graphical update
     INK_MAT(                    pInkMat.class,                  "im",           "ink-mat"        ),         // /b ibr       place ink, replace mat
     INK_INK(                    pInkInk.class,                  "ii",           "ink-ink"        ),         //              place ink, replace ink
     INK_COMBO(                  pInkCombo.class,                "ic",           "ink-combo"        ),       //              place ink, replace both
     COMBO(                      pCombo.class,                   "c",            "combo"            ),       // strong inks  place both
-    COMBO_UPDATE(               pComboUpdate.class,             "cu",           "combo-update"         ),   //              place both, graphical update
     COMBO_NOPHYS(               pComboNoPhys.class,             "cp",           "combo-nophys"      ),      //              place both, no-physics
-    COMBO_NOPHYS_UPDATE(        pComboNoPhysUpdate.class,       "cup",          "combo-update-nophys"   ),  //              place both, graphical update, no physics
     COMBO_MAT(                  pComboMat.class,                "cm",           "combo-mat"        ),       //              place both, replace mat
     COMBO_MAT_NOPHYS(           pComboMatNoPhys.class,          "cmp",          "combo-mat-nophys"),        //              place combo, replace mat, no physics
     COMBO_INK(                  pComboInk.class,                "ci",           "combo-ink"        ),       //              place both, replace ink

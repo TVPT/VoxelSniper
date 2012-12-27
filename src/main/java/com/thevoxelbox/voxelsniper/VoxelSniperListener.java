@@ -1,13 +1,11 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
-import net.minecraft.server.v1_4_5.Packet39AttachEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -581,11 +579,6 @@ public class VoxelSniperListener implements Listener {
                         VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setRange(-1);
                         return true;
                     }
-                } else if (split[0].equalsIgnoreCase("sitall")) {
-                    player.sendMessage("Sitting all the players...");
-                    VoxelSniperListener.sitAll();
-                    player.sendMessage("Done!");
-                    return true;
                 } else if (split[0].equalsIgnoreCase("perf")) {
                     player.sendMessage(ChatColor.AQUA + "The aviable performers are:");
                     player.sendMessage(PerformerE.performer_list_short);
@@ -612,19 +605,6 @@ public class VoxelSniperListener implements Listener {
     private static boolean commandVChunk(final Player player) {
         player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
         return true;
-    }
-
-    private static void sitAll() {
-        for (final Player _player : Bukkit.getServer().getOnlinePlayers()) {
-            ((CraftPlayer) _player).getHandle().netServerHandler.sendPacket(new Packet39AttachEntity(((CraftPlayer) _player).getHandle(),
-                    ((CraftPlayer) _player).getHandle()));
-            for (final Player _p : _player.getServer().getOnlinePlayers()) {
-                if (!_p.getName().equals(_player.getName())) {
-                    ((CraftPlayer) _p).getHandle().netServerHandler.sendPacket(new Packet39AttachEntity(((CraftPlayer) _player).getHandle(),
-                            ((CraftPlayer) _player).getHandle()));
-                }
-            }
-        }
     }
 
     private final VoxelSniper plugin;
