@@ -1,26 +1,24 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.logging.Level;
-
-import net.minecraft.server.Packet39AttachEntity;
-
+import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
+import net.minecraft.server.v1_4_5.Packet39AttachEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
+import java.util.logging.Level;
 
 /**
  * @author Voxel
- * 
+ *
  */
 public class VoxelSniperListener implements Listener {
 
