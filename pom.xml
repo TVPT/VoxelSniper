@@ -4,7 +4,7 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelSniper</artifactId>
-    <version>5.168.3-SNAPSHOT</version>
+    <version>5.168.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>VoxelSniper</name>
@@ -56,17 +56,22 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.4.6-R0.1</version>
+            <version>1.4.6-R0.3</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.4.6-R0.1</version>
+            <version>1.4.6-R0.3</version>
         </dependency>
         <dependency>
             <groupId>org.mcstats</groupId>
             <artifactId>metrics</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.martiansoftware</groupId>
+            <artifactId>jsap</artifactId>
+            <version>2.1</version>
         </dependency>
     </dependencies>
 
