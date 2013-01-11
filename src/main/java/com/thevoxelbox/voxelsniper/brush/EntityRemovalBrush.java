@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.craftbukkit.v1_4_6.entity.CraftEntity;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 
@@ -46,7 +47,7 @@ public class EntityRemovalBrush extends Brush {
     	int _entityCount = 0;
     	
         for (final Entity _e : chunk.getEntities()) {
-            if ((_e instanceof Player) || (_e instanceof Painting)) {
+            if ((_e instanceof Player) || (_e instanceof Painting) || (_e instanceof ItemFrame)) {
                 continue;
             } else {
                 if (((CraftEntity) _e).getHandle() instanceof NPC) {
