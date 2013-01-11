@@ -24,6 +24,9 @@ import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.brush.tool.BrushTool;
 import com.thevoxelbox.voxelsniper.brush.tool.SneakBrushTool;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * 
@@ -113,7 +116,7 @@ public class Sniper {
         this.brushPresetsS.put("previous@", this.myBrushes.get("s"));
         this.brushPresetsS.put("twoBack@", this.myBrushes.get("s"));
     }
-
+    
     /**
      * 
      */
@@ -151,7 +154,58 @@ public class Sniper {
             this.voxelMessage.voxelList();
         }
     }
-
+    
+    /**
+    * 
+    */
+    public final void renameItemInfo() {
+	
+	final HashMap<Integer, ? extends ItemStack> _arrows = this.getPlayer().getInventory().all(Material.ARROW);
+	final HashMap<Integer, ? extends ItemStack> _gunpowders = this.getPlayer().getInventory().all(Material.SULPHUR);
+	
+	if (_arrows.isEmpty() && _gunpowders.isEmpty()) {
+	    return;
+	}
+	
+	for (final int _pos : _arrows.keySet()) {
+	    for (final ItemStack _is : _arrows.values()) {
+		final ItemStack _arrow = new ItemStack(_is);
+		final ItemMeta _meta = _arrow.getItemMeta();
+		final SnipeData _data = this.getData();
+		_meta.setDisplayName
+		(
+		    "§d" + this.current.getName() 
+		    + " §a" + _data.getBrushSize() 
+		    + " §6" + Material.getMaterial(_data.getVoxelId()) + ((int) _data.getData() == 0 ? "" : "§f:§9" + _data.getData())
+		    + " §b" + Material.getMaterial(_data.getReplaceId()) + ((int) _data.getReplaceData() == 0 ? "" : "§f:§8" + _data.getReplaceData())
+		);
+		
+		_arrow.setItemMeta(_meta);
+		
+		this.getPlayer().getInventory().setItem(_pos, _arrow);
+	    }
+	}
+	
+	for (final int _pos : _gunpowders.keySet()) {
+	    for (final ItemStack _is : _gunpowders.values()) {
+		final ItemStack _gunpowder = new ItemStack(_is);
+		final ItemMeta _meta = _gunpowder.getItemMeta();
+		final SnipeData _data = this.getData();
+		_meta.setDisplayName
+		(
+		    "§d" + this.current.getName() 
+		    + " §a" + _data.getBrushSize() 
+		    + " §6" + Material.getMaterial(_data.getVoxelId()) + ((int) _data.getData() == 0 ? "" : "§f:§9" + _data.getData())
+		    + " §b" + Material.getMaterial(_data.getReplaceId()) + ((int) _data.getReplaceData() == 0 ? "" : "§f:§8" + _data.getReplaceData())
+		);
+		
+		_gunpowder.setItemMeta(_meta);
+		
+		this.getPlayer().getInventory().setItem(_pos, _gunpowder);
+	    }
+	}
+    }    
+    
     /**
      * 
      */
@@ -622,6 +676,7 @@ public class Sniper {
         this.saveAllPresets();
         this.player.sendMessage(ChatColor.AQUA + "Preset saved in slot " + slot);
     }
+    
 
     /**
      * @param args
