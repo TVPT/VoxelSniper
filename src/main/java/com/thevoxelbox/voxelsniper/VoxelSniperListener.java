@@ -27,50 +27,56 @@ public class VoxelSniperListener implements Listener {
      * @return boolean Success.
      */
     public static boolean onCommand(final Player player, final String[] split, final String command) {
+	boolean success = false;
         if (command.equalsIgnoreCase("vchunk")) {
-            return VoxelSniperListener.commandVChunk(player);
+            success = VoxelSniperListener.commandVChunk(player);
         } else if (command.equalsIgnoreCase("paint")) {
-            return VoxelSniperListener.commandPaint(player, split);
+            success = VoxelSniperListener.commandPaint(player, split);
         } else if (command.equalsIgnoreCase("goto") && VoxelSniper.getSniperPermissionHelper().isSniper(player)) {
-            return VoxelSniperListener.commandGoto(player, split);
+            success = VoxelSniperListener.commandGoto(player, split);
         } else if (VoxelSniper.getSniperPermissionHelper().isSniper(player) || VoxelSniper.getSniperPermissionHelper().isLiteSniper(player)) {
             if (command.equalsIgnoreCase("btool")) {
-                return VoxelSniperListener.commandSniperBTool(player, split);
+                success = VoxelSniperListener.commandSniperBTool(player, split);
             } else if (command.equalsIgnoreCase("uuu")) {
-                return VoxelSniperListener.commandSniperUUU(player);
+                success = VoxelSniperListener.commandSniperUUU(player);
             } else if (command.equalsIgnoreCase("uu")) {
-                return VoxelSniperListener.commandSniperUU(player, split);
+                success = VoxelSniperListener.commandSniperUU(player, split);
             } else if (command.equalsIgnoreCase("u")) {
-                return VoxelSniperListener.commandSniperU(player, split);
+                success = VoxelSniperListener.commandSniperU(player, split);
             } else if (command.equalsIgnoreCase("d")) {
-                return VoxelSniperListener.commandSniperD(player);
+                success = VoxelSniperListener.commandSniperD(player);
             } else if (command.equalsIgnoreCase("vs")) {
-                return VoxelSniperListener.commandSniperVs(player, split);
+                success = VoxelSniperListener.commandSniperVs(player, split);
             } else if (command.equalsIgnoreCase("vc")) {
-                return VoxelSniperListener.commandSniperVc(player, split);
+                success = VoxelSniperListener.commandSniperVc(player, split);
             } else if (command.equalsIgnoreCase("vh")) {
-                return VoxelSniperListener.commandSniperVh(player, split);
+                success = VoxelSniperListener.commandSniperVh(player, split);
             } else if (command.equalsIgnoreCase("vi")) {
-                return VoxelSniperListener.commandSniperVi(player, split);
+                success = VoxelSniperListener.commandSniperVi(player, split);
             } else if (command.equalsIgnoreCase("vir")) {
-                return VoxelSniperListener.commandSniperVir(player, split);
+                success = VoxelSniperListener.commandSniperVir(player, split);
             } else if (command.equalsIgnoreCase("vr")) {
-                return VoxelSniperListener.commandSniperVr(player, split);
+                success = VoxelSniperListener.commandSniperVr(player, split);
             } else if (command.equalsIgnoreCase("vl")) {
-                return VoxelSniperListener.commandSniperVl(player, split);
+                success = VoxelSniperListener.commandSniperVl(player, split);
             } else if (command.equalsIgnoreCase("v")) {
-                return VoxelSniperListener.commandSniperV(player, split);
+                success = VoxelSniperListener.commandSniperV(player, split);
             } else if (command.equalsIgnoreCase("b")) {
-                return VoxelSniperListener.commandSniperB(player, split);
+                success = VoxelSniperListener.commandSniperB(player, split);
             } else if (command.equalsIgnoreCase("p")) {
-                return VoxelSniperListener.commandSniperP(player, split);
+                success = VoxelSniperListener.commandSniperP(player, split);
             } else if (command.equalsIgnoreCase("bms")) {
-                return VoxelSniperListener.commandSniperBms(player, split);
+                success = VoxelSniperListener.commandSniperBms(player, split);
             } else if (command.equalsIgnoreCase("bml")) {
-                return VoxelSniperListener.commandSniperBml(player, split);
+                success = VoxelSniperListener.commandSniperBml(player, split);
             }
         }
-        return false;
+	
+	if (success) {
+	    VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).renameItemInfo();
+	}
+	
+        return success;
     }
 
     /**
@@ -659,6 +665,7 @@ public class VoxelSniperListener implements Listener {
                 final Sniper _vs = VoxelSniper.getSniperPermissionHelper().getSniperInstance(_p);
                 _vs.setPlayer(_p);
                 _vs.info();
+		_vs.renameItemInfo();
                 return;
             } catch (final Exception _e) {
                 return;
