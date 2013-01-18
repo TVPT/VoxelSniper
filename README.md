@@ -85,6 +85,6 @@ Some rough guidelines for now:
 - Try to submit one change in one pull request and try to link it to the issue in the tracker if possible.
 
 [VoxelSniperWiki]: http://voxelwiki.com/minecraft/VoxelSniper/
-[JenkinsJob]: http://jenkins.thevoxelbox.com/job/VoxelSniper/
+[JenkinsJob]: http://ci.thevoxelbox.com/job/VoxelSniper/
 [Bukkit]: http://bukkit.org/
 [Maven]: http://maven.apache.org/
