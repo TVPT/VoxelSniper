@@ -5,11 +5,12 @@
 package com.thevoxelbox.voxelsniper.brush.tool;
 
 /**
- *
  * @author Piotr
  */
-public class BToolManager {
+public class BToolManager
+{
 
-    static {
+    static
+    {
     }
 }

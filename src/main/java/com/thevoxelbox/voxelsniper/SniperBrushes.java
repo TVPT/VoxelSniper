@@ -7,88 +7,13 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.thevoxelbox.voxelsniper.brush.BallBrush;
-import com.thevoxelbox.voxelsniper.brush.BiomeBrush;
-import com.thevoxelbox.voxelsniper.brush.BlendBallBrush;
-import com.thevoxelbox.voxelsniper.brush.BlendDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.BlendVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.BlendVoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.BlobBrush;
-import com.thevoxelbox.voxelsniper.brush.BlockResetBrush;
-import com.thevoxelbox.voxelsniper.brush.BlockResetSurfaceBrush;
-import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.CanyonBrush;
-import com.thevoxelbox.voxelsniper.brush.CanyonSelectionBrush;
-import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.CleanSnowBrush;
-import com.thevoxelbox.voxelsniper.brush.CloneStampBrush;
-import com.thevoxelbox.voxelsniper.brush.CometBrush;
-import com.thevoxelbox.voxelsniper.brush.CopyPastaBrush;
-import com.thevoxelbox.voxelsniper.brush.CylinderBrush;
-import com.thevoxelbox.voxelsniper.brush.DiscBrush;
-import com.thevoxelbox.voxelsniper.brush.DiscFaceBrush;
-import com.thevoxelbox.voxelsniper.brush.DomeBrush;
-import com.thevoxelbox.voxelsniper.brush.DrainBrush;
-import com.thevoxelbox.voxelsniper.brush.EllipseBrush;
-import com.thevoxelbox.voxelsniper.brush.EntityBrush;
-import com.thevoxelbox.voxelsniper.brush.EntityRemovalBrush;
-import com.thevoxelbox.voxelsniper.brush.EraserBrush;
-import com.thevoxelbox.voxelsniper.brush.ErodeBrush;
-import com.thevoxelbox.voxelsniper.brush.ExtrudeBrush;
-import com.thevoxelbox.voxelsniper.brush.FillDownBrush;
-import com.thevoxelbox.voxelsniper.brush.FlatOceanBrush;
-import com.thevoxelbox.voxelsniper.brush.GenerateTreeBrush;
-import com.thevoxelbox.voxelsniper.brush.HeatRayBrush;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.JaggedLineBrush;
-import com.thevoxelbox.voxelsniper.brush.JockeyBrush;
-import com.thevoxelbox.voxelsniper.brush.LightningBrush;
-import com.thevoxelbox.voxelsniper.brush.LineBrush;
-import com.thevoxelbox.voxelsniper.brush.MoveBrush;
-import com.thevoxelbox.voxelsniper.brush.OceanBrush;
-import com.thevoxelbox.voxelsniper.brush.OverlayBrush;
-import com.thevoxelbox.voxelsniper.brush.PaintingBrush;
-import com.thevoxelbox.voxelsniper.brush.PullBrush;
-import com.thevoxelbox.voxelsniper.brush.PunishBrush;
-import com.thevoxelbox.voxelsniper.brush.RandomErodeBrush;
-import com.thevoxelbox.voxelsniper.brush.RegenerateChunkBrush;
-import com.thevoxelbox.voxelsniper.brush.RingBrush;
-import com.thevoxelbox.voxelsniper.brush.Rot2DBrush;
-import com.thevoxelbox.voxelsniper.brush.Rot2DvertBrush;
-import com.thevoxelbox.voxelsniper.brush.Rot3DBrush;
-import com.thevoxelbox.voxelsniper.brush.RulerBrush;
-import com.thevoxelbox.voxelsniper.brush.ScannerBrush;
-import com.thevoxelbox.voxelsniper.brush.SetBrush;
-import com.thevoxelbox.voxelsniper.brush.SetRedstoneFlipBrush;
-import com.thevoxelbox.voxelsniper.brush.ShellBallBrush;
-import com.thevoxelbox.voxelsniper.brush.ShellSetBrush;
-import com.thevoxelbox.voxelsniper.brush.ShellVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.SignOverwriteBrush;
-import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
-import com.thevoxelbox.voxelsniper.brush.SnowConeBrush;
-import com.thevoxelbox.voxelsniper.brush.SpiralStaircaseBrush;
-import com.thevoxelbox.voxelsniper.brush.SplatterBallBrush;
-import com.thevoxelbox.voxelsniper.brush.SplatterDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.SplatterOverlayBrush;
-import com.thevoxelbox.voxelsniper.brush.SplatterVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.SplatterVoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.StencilBrush;
-import com.thevoxelbox.voxelsniper.brush.StencilListBrush;
-import com.thevoxelbox.voxelsniper.brush.ThreePointCircleBrush;
-import com.thevoxelbox.voxelsniper.brush.TreeSnipeBrush;
-import com.thevoxelbox.voxelsniper.brush.TriangleBrush;
-import com.thevoxelbox.voxelsniper.brush.UnderlayBrush;
-import com.thevoxelbox.voxelsniper.brush.VoltMeterBrush;
-import com.thevoxelbox.voxelsniper.brush.VoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.VoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.VoxelDiscFaceBrush;
-import com.thevoxelbox.voxelsniper.brush.WarpBrush;
+import com.thevoxelbox.voxelsniper.brush.*;
 
 /**
- * 
  * @author Voxel
  */
-public enum SniperBrushes {
+public enum SniperBrushes
+{
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~przerwap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     SNIPE(SnipeBrush.class, "s", "snipe"), // [ 1 ] \\
     DISC(DiscBrush.class, "d", "disc"), // [ 2 ] \\
@@ -190,10 +115,12 @@ public enum SniperBrushes {
     /**
      * @return HashMap<String, String>
      */
-    public static HashMap<String, String> getBrushAlternates() {
+    public static HashMap<String, String> getBrushAlternates()
+    {
         final HashMap<String, String> _temp = new HashMap<String, String>();
 
-        for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values()) {
+        for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values())
+        {
             _temp.put(_vb.getLong(), _vb.getShort());
         }
 
@@ -202,14 +129,21 @@ public enum SniperBrushes {
 
     /**
      * @param name
+     *
      * @return Brush
      */
-    public static IBrush getBrushInstance(final String name) {
-        if (SniperBrushes.BRUSHES.containsKey(name)) {
+    public static IBrush getBrushInstance(final String name)
+    {
+        if (SniperBrushes.BRUSHES.containsKey(name))
+        {
             return SniperBrushes.BRUSHES.get(name).getBrush();
-        } else {
-            for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values()) {
-                if (_vb.getLong().equalsIgnoreCase(name)) {
+        }
+        else
+        {
+            for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values())
+            {
+                if (_vb.getLong().equalsIgnoreCase(name))
+                {
                     return _vb.getBrush();
                 }
             }
@@ -219,11 +153,15 @@ public enum SniperBrushes {
 
     /**
      * @param brush
+     *
      * @return String
      */
-    public static String getName(final Brush brush) {
-        for (final SniperBrushes _vbs : SniperBrushes.BRUSHES.values()) {
-            if (brush.getClass().getName().equals(_vbs.brush.getName())) {
+    public static String getName(final Brush brush)
+    {
+        for (final SniperBrushes _vbs : SniperBrushes.BRUSHES.values())
+        {
+            if (brush.getClass().getName().equals(_vbs.brush.getName()))
+            {
                 return _vbs.longName;
             }
         }
@@ -233,10 +171,12 @@ public enum SniperBrushes {
     /**
      * @return HashMap<String, Brush>
      */
-    public static HashMap<String, Brush> getSniperBrushes() {
+    public static HashMap<String, Brush> getSniperBrushes()
+    {
         final HashMap<String, Brush> _temp = new HashMap<String, Brush>();
 
-        for (final Entry<String, SniperBrushes> _set : SniperBrushes.BRUSHES.entrySet()) {
+        for (final Entry<String, SniperBrushes> _set : SniperBrushes.BRUSHES.entrySet())
+        {
             _temp.put(_set.getKey(), _set.getValue().getBrush());
         }
 
@@ -245,14 +185,21 @@ public enum SniperBrushes {
 
     /**
      * @param name
+     *
      * @return boolean
      */
-    public static boolean hasBrush(final String name) {
-        if (SniperBrushes.BRUSHES.containsKey(name)) {
+    public static boolean hasBrush(final String name)
+    {
+        if (SniperBrushes.BRUSHES.containsKey(name))
+        {
             return true;
-        } else {
-            for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values()) {
-                if (_vb.getLong().equalsIgnoreCase(name)) {
+        }
+        else
+        {
+            for (final SniperBrushes _vb : SniperBrushes.BRUSHES.values())
+            {
+                if (_vb.getLong().equalsIgnoreCase(name))
+                {
                     return true;
                 }
             }
@@ -266,48 +213,68 @@ public enum SniperBrushes {
 
     private String longName;
 
-    static {
+    static
+    {
         BRUSHES = new HashMap<String, SniperBrushes>();
 
-        for (final SniperBrushes _vb : SniperBrushes.values()) {
+        for (final SniperBrushes _vb : SniperBrushes.values())
+        {
             SniperBrushes.BRUSHES.put(_vb.getShort(), _vb);
         }
     }
 
-    private SniperBrushes(final Class<? extends Brush> brush, final String shortName, final String longName) {
+    private SniperBrushes(final Class<? extends Brush> brush, final String shortName, final String longName)
+    {
         this.brush = brush;
         this.shortName = shortName;
         this.longName = longName;
     }
 
-    private Brush getBrush() {
+    private Brush getBrush()
+    {
         Brush _brush;
-        try {
-            try {
+        try
+        {
+            try
+            {
                 _brush = this.brush.getConstructor().newInstance();
                 return _brush;
-            } catch (final InstantiationException _ex) {
-                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
-            } catch (final IllegalAccessException _ex) {
-                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
-            } catch (final IllegalArgumentException _ex) {
-                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
-            } catch (final InvocationTargetException _ex) {
+            }
+            catch (final InstantiationException _ex)
+            {
                 Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
             }
-        } catch (final NoSuchMethodException _ex) {
+            catch (final IllegalAccessException _ex)
+            {
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+            }
+            catch (final IllegalArgumentException _ex)
+            {
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+            }
+            catch (final InvocationTargetException _ex)
+            {
+                Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
+            }
+        }
+        catch (final NoSuchMethodException _ex)
+        {
             Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
-        } catch (final SecurityException _ex) {
+        }
+        catch (final SecurityException _ex)
+        {
             Logger.getLogger(SniperBrushes.class.getName()).log(Level.SEVERE, null, _ex);
         }
         return null;
     }
 
-    private String getLong() {
+    private String getLong()
+    {
         return this.longName;
     }
 
-    private String getShort() {
+    private String getShort()
+    {
         return this.shortName;
     }
 }

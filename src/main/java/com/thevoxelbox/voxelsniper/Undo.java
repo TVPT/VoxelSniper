@@ -15,21 +15,22 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Jukebox;
 import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
 
 /**
  * VoxelUndo class holds block data in form of BlockState objects.
- * 
+ *
  * @author Voxel
  */
-public class Undo {
+public class Undo
+{
 
     private static final Set<Material> FALLING_MATERIALS = new TreeSet<Material>();
     private static final Set<Material> FALLOFF_MATERIALS = new TreeSet<Material>();
 
-    static {
+    static
+    {
         Undo.FALLING_MATERIALS.add(Material.WATER);
         Undo.FALLING_MATERIALS.add(Material.STATIONARY_WATER);
         Undo.FALLING_MATERIALS.add(Material.LAVA);
@@ -85,11 +86,12 @@ public class Undo {
 
     /**
      * Default constructor of a Undo container.
-     * 
+     *
      * @param wName
-     *            name of the world the blocks reside in
+     *         name of the world the blocks reside in
      */
-    public Undo(final String wName) {
+    public Undo(final String wName)
+    {
         this.worldName = wName;
         this.world = Bukkit.getServer().getWorld(this.worldName);
         this.all = new LinkedList<BlockState>();
@@ -99,27 +101,31 @@ public class Undo {
 
     /**
      * Get the number of blocks in the collection.
-     * 
+     *
      * @return size of the Undo collection
      */
-    public final int getSize() {
+    public final int getSize()
+    {
         return this.all.size();
     }
 
     /**
      * Adds a Block to the collection.
-     * 
+     *
      * @param b
-     *            Block to be added
+     *         Block to be added
      */
-    public final void put(final Block b) {
+    public final void put(final Block b)
+    {
         this.all.add(b.getState());
 
-        if (Undo.FALLING_MATERIALS.contains(b.getType())) {
+        if (Undo.FALLING_MATERIALS.contains(b.getType()))
+        {
             this.dropdown.add(b.getState());
         }
 
-        if (Undo.FALLOFF_MATERIALS.contains(b.getType())) {
+        if (Undo.FALLOFF_MATERIALS.contains(b.getType()))
+        {
             this.falloff.add(b.getState());
         }
     }
@@ -127,22 +133,27 @@ public class Undo {
     /**
      * This method begins the process of replacing the blocks stored in this collection.
      */
-    public final void undo() {
+    public final void undo()
+    {
 
-        for (final BlockState _blockState : this.all) {
-            if (this.falloff.contains(_blockState) || this.dropdown.contains(_blockState)) {
+        for (final BlockState _blockState : this.all)
+        {
+            if (this.falloff.contains(_blockState) || this.dropdown.contains(_blockState))
+            {
                 continue;
             }
             _blockState.getBlock().setTypeIdAndData(_blockState.getTypeId(), _blockState.getRawData(), false);
             updateSpecialBlocks(_blockState);
         }
 
-        for (final BlockState _blockState : this.falloff) {
+        for (final BlockState _blockState : this.falloff)
+        {
             _blockState.getBlock().setTypeIdAndData(_blockState.getTypeId(), _blockState.getRawData(), false);
             updateSpecialBlocks(_blockState);
         }
 
-        for (final BlockState _blockState : this.dropdown) {
+        for (final BlockState _blockState : this.dropdown)
+        {
             _blockState.getBlock().setTypeIdAndData(_blockState.getTypeId(), _blockState.getRawData(), false);
             updateSpecialBlocks(_blockState);
         }
@@ -151,44 +162,66 @@ public class Undo {
     /**
      * @param blockState
      */
-    private void updateSpecialBlocks(final BlockState blockState) {
+    private void updateSpecialBlocks(final BlockState blockState)
+    {
         BlockState _currentState = blockState.getWorld().getBlockAt(blockState.getLocation()).getState();
-        if (blockState instanceof BrewingStand) {
-            if (_currentState instanceof BrewingStand) {
+        if (blockState instanceof BrewingStand)
+        {
+            if (_currentState instanceof BrewingStand)
+            {
                 ((BrewingStand) _currentState).getInventory().setContents(((BrewingStand) blockState).getInventory().getContents());
             }
-        } else if (blockState instanceof Chest) {
-            if (_currentState instanceof Chest) {
+        }
+        else if (blockState instanceof Chest)
+        {
+            if (_currentState instanceof Chest)
+            {
                 ((Chest) _currentState).getInventory().setContents(((Chest) blockState).getInventory().getContents());
                 ((Chest) _currentState).getBlockInventory().setContents(((Chest) blockState).getBlockInventory().getContents());
                 _currentState.update();
             }
-        } else if (blockState instanceof CreatureSpawner) {
-            if (_currentState instanceof CreatureSpawner) {
+        }
+        else if (blockState instanceof CreatureSpawner)
+        {
+            if (_currentState instanceof CreatureSpawner)
+            {
                 ((CreatureSpawner) _currentState).setSpawnedType(((CreatureSpawner) _currentState).getSpawnedType());
                 _currentState.update();
             }
-        } else if (blockState instanceof Dispenser) {
-            if (_currentState instanceof Dispenser) {
+        }
+        else if (blockState instanceof Dispenser)
+        {
+            if (_currentState instanceof Dispenser)
+            {
                 ((Dispenser) _currentState).getInventory().setContents(((Dispenser) blockState).getInventory().getContents());
                 _currentState.update();
             }
-        } else if (blockState instanceof Furnace) {
-            if (_currentState instanceof Furnace) {
+        }
+        else if (blockState instanceof Furnace)
+        {
+            if (_currentState instanceof Furnace)
+            {
                 ((Furnace) _currentState).getInventory().setContents(((Furnace) blockState).getInventory().getContents());
                 ((Furnace) _currentState).setBurnTime(((Furnace) blockState).getBurnTime());
                 ((Furnace) _currentState).setCookTime(((Furnace) blockState).getCookTime());
                 _currentState.update();
             }
-        } else if (blockState instanceof NoteBlock) {
-            if (_currentState instanceof NoteBlock) {
+        }
+        else if (blockState instanceof NoteBlock)
+        {
+            if (_currentState instanceof NoteBlock)
+            {
                 ((NoteBlock) _currentState).setNote(((NoteBlock) blockState).getNote());
                 _currentState.update();
             }
-        } else if (blockState instanceof Sign) {
-            if (_currentState instanceof Sign) {
+        }
+        else if (blockState instanceof Sign)
+        {
+            if (_currentState instanceof Sign)
+            {
                 int _i = 0;
-                for (String _text : ((Sign) blockState).getLines()) {
+                for (String _text : ((Sign) blockState).getLines())
+                {
                     ((Sign) _currentState).setLine(_i++, _text);
                 }
                 _currentState.update();

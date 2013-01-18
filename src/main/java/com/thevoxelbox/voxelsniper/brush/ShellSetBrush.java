@@ -2,36 +2,44 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
 
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.Undo;
-
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
+ *
  * @author Piotr
  */
-public class ShellSetBrush extends Brush {
-	private static final int MAX_SIZE = 5000000;
-	
+public class ShellSetBrush extends Brush
+{
+    private static final int MAX_SIZE = 5000000;
+
     private Block block = null;
     private static int timesUsed = 0;
 
     /**
-     * 
+     *
      */
-    public ShellSetBrush() {
+    public ShellSetBrush()
+    {
         this.setName("Shell Set");
     }
 
-    private boolean set(final Block bl, final SnipeData v) {
-        if (this.block == null) {
+    private boolean set(final Block bl, final SnipeData v)
+    {
+        if (this.block == null)
+        {
             this.block = bl;
             return true;
-        } else {
-            if (!this.block.getWorld().getName().equals(bl.getWorld().getName())) {
+        }
+        else
+        {
+            if (!this.block.getWorld().getName().equals(bl.getWorld().getName()))
+            {
                 v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
                 this.block = null;
                 return true;
@@ -39,36 +47,57 @@ public class ShellSetBrush extends Brush {
 
             final int _voxelMaterialId = v.getVoxelId();
             final int _voxelReplaceMaterialId = v.getReplaceId();
-            
+
             final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
             final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
             final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
             final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
             final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
             final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
-            
-            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > MAX_SIZE) {
+
+            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > MAX_SIZE)
+            {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
-            } else {
+            }
+            else
+            {
                 final ArrayList<Block> _blocks = new ArrayList<Block>(((Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy)) / 2));
-                for (int _y = _lowy; _y <= _highy; _y++) {
-                    for (int _x = _lowx; _x <= _highx; _x++) {
-                        for (int _z = _lowz; _z <= _highz; _z++) {
-                            if (this.getWorld().getBlockTypeIdAt(_x, _y, _z) == _voxelReplaceMaterialId) {
+                for (int _y = _lowy; _y <= _highy; _y++)
+                {
+                    for (int _x = _lowx; _x <= _highx; _x++)
+                    {
+                        for (int _z = _lowz; _z <= _highz; _z++)
+                        {
+                            if (this.getWorld().getBlockTypeIdAt(_x, _y, _z) == _voxelReplaceMaterialId)
+                            {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(_x + 1, _y, _z) == _voxelReplaceMaterialId) {
+                            }
+                            else if (this.getWorld().getBlockTypeIdAt(_x + 1, _y, _z) == _voxelReplaceMaterialId)
+                            {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(_x - 1, _y, _z) == _voxelReplaceMaterialId) {
+                            }
+                            else if (this.getWorld().getBlockTypeIdAt(_x - 1, _y, _z) == _voxelReplaceMaterialId)
+                            {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z + 1) == _voxelReplaceMaterialId) {
+                            }
+                            else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z + 1) == _voxelReplaceMaterialId)
+                            {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z - 1) == _voxelReplaceMaterialId) {
+                            }
+                            else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z - 1) == _voxelReplaceMaterialId)
+                            {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y + 1, _z) == _voxelReplaceMaterialId) {
+                            }
+                            else if (this.getWorld().getBlockTypeIdAt(_x, _y + 1, _z) == _voxelReplaceMaterialId)
+                            {
                                 continue;
-                            } else if (this.getWorld().getBlockTypeIdAt(_x, _y - 1, _z) == _voxelReplaceMaterialId) {
+                            }
+                            else if (this.getWorld().getBlockTypeIdAt(_x, _y - 1, _z) == _voxelReplaceMaterialId)
+                            {
                                 continue;
-                            } else {
+                            }
+                            else
+                            {
                                 _blocks.add(this.getWorld().getBlockAt(_x, _y, _z));
                             }
                         }
@@ -76,8 +105,10 @@ public class ShellSetBrush extends Brush {
                 }
 
                 final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-                for (final Block _block : _blocks) {
-                    if (_block.getTypeId() != _voxelMaterialId) {
+                for (final Block _block : _blocks)
+                {
+                    if (_block.getTypeId() != _voxelMaterialId)
+                    {
                         _undo.put(_block);
                         _block.setTypeId(_voxelMaterialId);
                     }
@@ -92,34 +123,41 @@ public class ShellSetBrush extends Brush {
     }
 
     @Override
-    protected final void arrow(final SnipeData v) {
-        if (this.set(this.getTargetBlock(), v)) {
+    protected final void arrow(final SnipeData v)
+    {
+        if (this.set(this.getTargetBlock(), v))
+        {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }
 
     @Override
-    protected final void powder(final SnipeData v) {
-        if (this.set(this.getLastBlock(), v)) {
+    protected final void powder(final SnipeData v)
+    {
+        if (this.set(this.getLastBlock(), v))
+        {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
     }
-    
+
     @Override
-    public final void info(final Message vm) {
-    	vm.brushName(this.getName());
-    	vm.size();
-    	vm.voxel();
-    	vm.replace();
+    public final void info(final Message vm)
+    {
+        vm.brushName(this.getName());
+        vm.size();
+        vm.voxel();
+        vm.replace();
     }
-    
+
     @Override
-    public final int getTimesUsed() {
-    	return ShellSetBrush.timesUsed;
+    public final int getTimesUsed()
+    {
+        return ShellSetBrush.timesUsed;
     }
-    
+
     @Override
-    public final void setTimesUsed(final int tUsed) {
-    	ShellSetBrush.timesUsed = tUsed;
+    public final void setTimesUsed(final int tUsed)
+    {
+        ShellSetBrush.timesUsed = tUsed;
     }
 }

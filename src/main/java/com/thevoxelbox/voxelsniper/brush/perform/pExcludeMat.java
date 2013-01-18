@@ -4,26 +4,29 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.util.VoxelList;
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.VoxelList;
+
 import org.bukkit.block.Block;
 
 /**
- *
  * @author Voxel
  */
-public class pExcludeMat extends vPerformer {
+public class pExcludeMat extends vPerformer
+{
 
     private VoxelList el;
     private int i;
 
-    public pExcludeMat() {
+    public pExcludeMat()
+    {
         name = "Exclude Material"; // This should probably be Material, Exclude Material and have the abbreviation mxm. Then you could have Combo exclude material cxm and material exclude combo mxc - Giltwist
         // I'll worry about the naming scheme when the performer works. ATM, it's very buggy... -psa
     }
 
     @Override
-    public void info(Message vm) {
+    public void info(Message vm)
+    {
         vm.performerName(name);
         vm.voxelList();
         vm.voxel();
@@ -31,17 +34,22 @@ public class pExcludeMat extends vPerformer {
     }
 
     @Override
-    public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
+    public void init(com.thevoxelbox.voxelsniper.SnipeData v)
+    {
         w = v.getWorld();
         i = v.getVoxelId();
         el = v.getVoxelList();
     }
 
     @Override
-    public void perform(Block b) {
-        if (el.contains(b.getTypeId())) {
+    public void perform(Block b)
+    {
+        if (el.contains(b.getTypeId()))
+        {
             return;
-        } else {
+        }
+        else
+        {
             h.put(b);
             b.setTypeId(i);
         }

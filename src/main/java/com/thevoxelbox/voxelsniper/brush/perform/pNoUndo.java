@@ -5,35 +5,41 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+
 import org.bukkit.block.Block;
 
 /**
- *
  * @author Voxel
  */
-public class pNoUndo extends vPerformer {
+public class pNoUndo extends vPerformer
+{
 
     private int i;
 
-    public pNoUndo() {
+    public pNoUndo()
+    {
         name = "BOMB SQUAD";
     }
 
     @Override
-    public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
+    public void init(com.thevoxelbox.voxelsniper.SnipeData v)
+    {
         w = v.getWorld();
         i = v.getVoxelId();
     }
 
     @Override
-    public void info(Message vm) {
+    public void info(Message vm)
+    {
         vm.performerName(name);
         vm.voxel();
     }
 
     @Override
-    public void perform(Block b) {
-        if (b.getTypeId() != i) {
+    public void perform(Block b)
+    {
+        if (b.getTypeId() != i)
+        {
             b.setTypeId(i);
         }
     }

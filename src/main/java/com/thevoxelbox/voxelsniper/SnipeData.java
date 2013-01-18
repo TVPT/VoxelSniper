@@ -1,14 +1,14 @@
 package com.thevoxelbox.voxelsniper;
 
-import org.bukkit.World;
-
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 
+import org.bukkit.World;
+
 /**
- * 
  * @author Piotr
  */
-public class SnipeData {
+public class SnipeData
+{
 
     public static final int DEFAULT_REPLACE_DATA_VALUE = 0;
     public static final int DEFAULT_CYLINDER_CENTER = 0;
@@ -56,91 +56,104 @@ public class SnipeData {
     /**
      * @param vs
      */
-    public SnipeData(final Sniper vs) {
+    public SnipeData(final Sniper vs)
+    {
         this.owner = vs;
     }
 
     /**
      * @return the brushSize
      */
-    public final int getBrushSize() {
+    public final int getBrushSize()
+    {
         return this.brushSize;
     }
 
     /**
      * @return the cCen
      */
-    public final int getcCen() {
+    public final int getcCen()
+    {
         return this.cCen;
     }
 
     /**
      * @return the data
      */
-    public final byte getData() {
+    public final byte getData()
+    {
         return this.data;
     }
 
     /**
      * @return the replaceData
      */
-    public final byte getReplaceData() {
+    public final byte getReplaceData()
+    {
         return this.replaceData;
     }
 
     /**
      * @return the replaceId
      */
-    public final int getReplaceId() {
+    public final int getReplaceId()
+    {
         return this.replaceId;
     }
 
     /**
      * @return the voxelHeight
      */
-    public final int getVoxelHeight() {
+    public final int getVoxelHeight()
+    {
         return this.voxelHeight;
     }
 
     /**
      * @return the voxelId
      */
-    public final int getVoxelId() {
+    public final int getVoxelId()
+    {
         return this.voxelId;
     }
 
     /**
      * @return the voxelList
      */
-    public final VoxelList getVoxelList() {
+    public final VoxelList getVoxelList()
+    {
         return this.voxelList;
     }
 
     /**
      * @return the voxelMessage
      */
-    public final Message getVoxelMessage() {
+    public final Message getVoxelMessage()
+    {
         return this.voxelMessage;
     }
 
     /**
      * @return World
      */
-    public final World getWorld() {
+    public final World getWorld()
+    {
         return this.owner.getPlayer().getWorld();
     }
 
     /**
      * @return Sniper
      */
-    public final Sniper owner() {
+    public final Sniper owner()
+    {
         return this.owner;
     }
 
     /**
      * Reset to default values.
      */
-    public final void reset() {
+    public final void reset()
+    {
         this.voxelId = SnipeData.DEFAULT_VOXEL_ID;
         this.replaceId = SnipeData.DEFAULT_REPLACE_ID;
         this.data = SnipeData.DEFAULT_DATA_VALUE;
@@ -153,86 +166,97 @@ public class SnipeData {
     /**
      * @param message
      */
-    public final void sendMessage(final String message) {
+    public final void sendMessage(final String message)
+    {
         this.owner.getPlayer().sendMessage(message);
     }
 
     /**
      * @param brushSize
-     *            the brushSize to set
+     *         the brushSize to set
      */
-    public final void setBrushSize(final int brushSize) {
+    public final void setBrushSize(final int brushSize)
+    {
         this.brushSize = brushSize;
     }
 
     /**
      * @param cCen
-     *            the cCen to set
+     *         the cCen to set
      */
-    public final void setcCen(final int cCen) {
+    public final void setcCen(final int cCen)
+    {
         this.cCen = cCen;
     }
 
     /**
      * @param data
-     *            the data to set
+     *         the data to set
      */
-    public final void setData(final byte data) {
+    public final void setData(final byte data)
+    {
         this.data = data;
     }
 
     /**
      * @param replaceData
-     *            the replaceData to set
+     *         the replaceData to set
      */
-    public final void setReplaceData(final byte replaceData) {
+    public final void setReplaceData(final byte replaceData)
+    {
         this.replaceData = replaceData;
     }
 
     /**
      * @param replaceId
-     *            the replaceId to set
+     *         the replaceId to set
      */
-    public final void setReplaceId(final int replaceId) {
+    public final void setReplaceId(final int replaceId)
+    {
         this.replaceId = replaceId;
     }
 
     /**
      * @param voxelHeight
-     *            the voxelHeight to set
+     *         the voxelHeight to set
      */
-    public final void setVoxelHeight(final int voxelHeight) {
+    public final void setVoxelHeight(final int voxelHeight)
+    {
         this.voxelHeight = voxelHeight;
     }
 
     /**
      * @param voxelId
-     *            the voxelId to set
+     *         the voxelId to set
      */
-    public final void setVoxelId(final int voxelId) {
+    public final void setVoxelId(final int voxelId)
+    {
         this.voxelId = voxelId;
     }
 
     /**
      * @param voxelList
-     *            the voxelList to set
+     *         the voxelList to set
      */
-    public final void setVoxelList(final VoxelList voxelList) {
+    public final void setVoxelList(final VoxelList voxelList)
+    {
         this.voxelList = voxelList;
     }
 
     /**
      * @param voxelMessage
-     *            the voxelMessage to set
+     *         the voxelMessage to set
      */
-    public final void setVoxelMessage(final Message voxelMessage) {
+    public final void setVoxelMessage(final Message voxelMessage)
+    {
         this.voxelMessage = voxelMessage;
     }
 
     /**
      * @param vundo
      */
-    public final void storeUndo(final com.thevoxelbox.voxelsniper.Undo vundo) {
+    public final void storeUndo(final com.thevoxelbox.voxelsniper.Undo vundo)
+    {
         this.owner.storeUndo(vundo);
     }
 }

@@ -3,15 +3,16 @@ package com.thevoxelbox.voxelsniper;
 import org.bukkit.ChatColor;
 
 /**
- * 
  * @author Voxel
  */
-public class LiteSniper extends Sniper {
+public class LiteSniper extends Sniper
+{
 
     /**
      * Default Constructor.
      */
-    public LiteSniper() {
+    public LiteSniper()
+    {
         this.setMyBrushes(LiteSniperBrushes.getSniperBrushes());
         this.setBrushAlt(LiteSniperBrushes.getBrushAlternates());
         this.setVoxelMessage(new Message(this.getData()));
@@ -33,59 +34,83 @@ public class LiteSniper extends Sniper {
     }
 
     @Override
-    public final void setBrushSize(final int size) {
-        if (size <= VoxelSniper.getInstance().getLiteMaxBrush() && size >= 0) {
+    public final void setBrushSize(final int size)
+    {
+        if (size <= VoxelSniper.getInstance().getLiteMaxBrush() && size >= 0)
+        {
             super.setBrushSize(size);
-        } else {
+        }
+        else
+        {
             this.getPlayer().sendMessage(ChatColor.RED + "You cant use this size of brush!");
         }
     }
 
     @Override
-    public final void setHeigth(final int heigth) {
-        if (heigth <= (VoxelSniper.getInstance().getLiteMaxBrush() * 2 + 1) && heigth >= 0) {
+    public final void setHeigth(final int heigth)
+    {
+        if (heigth <= (VoxelSniper.getInstance().getLiteMaxBrush() * 2 + 1) && heigth >= 0)
+        {
             super.setHeigth(heigth);
-        } else {
+        }
+        else
+        {
             this.getPlayer().sendMessage(ChatColor.RED + "You cant use this size of heigth!");
         }
     }
 
     @Override
-    public final void setRange(final double rng) {
-        if (rng > -1) {
-            if (rng <= 40) {
+    public final void setRange(final double rng)
+    {
+        if (rng > -1)
+        {
+            if (rng <= 40)
+            {
                 super.setRange(rng);
                 this.setDistRestrict(true);
                 this.getVoxelMessage().toggleRange();
-            } else {
+            }
+            else
+            {
                 this.getPlayer().sendMessage(ChatColor.GREEN + "liteSnipers are not allowed to use ranges higher than 40.");
             }
-        } else {
+        }
+        else
+        {
             this.setDistRestrict(!this.isDistRestrict());
             this.getVoxelMessage().toggleRange();
         }
     }
 
     @Override
-    public final void setReplace(final int replace) {
-        if (!VoxelSniper.getInstance().getLiteRestricted().contains(replace)) {
+    public final void setReplace(final int replace)
+    {
+        if (!VoxelSniper.getInstance().getLiteRestricted().contains(replace))
+        {
             super.setReplace(replace);
-        } else {
+        }
+        else
+        {
             this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block!");
         }
     }
 
     @Override
-    public final void setVoxel(final int voxel) {
-        if (!VoxelSniper.getInstance().getLiteRestricted().contains(voxel)) {
+    public final void setVoxel(final int voxel)
+    {
+        if (!VoxelSniper.getInstance().getLiteRestricted().contains(voxel))
+        {
             super.setVoxel(voxel);
-        } else {
+        }
+        else
+        {
             this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block!");
         }
     }
 
     @Override
-    public final void toggleLightning() {
+    public final void toggleLightning()
+    {
         this.getPlayer().sendMessage(ChatColor.GREEN + "liteSnipers are not allowed to use this.");
     }
 }

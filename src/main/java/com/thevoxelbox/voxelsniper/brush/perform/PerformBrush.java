@@ -4,48 +4,59 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 
 /**
- *
  * @author Voxel
  */
-public abstract class PerformBrush extends Brush implements Performer {
+public abstract class PerformBrush extends Brush implements Performer
+{
 
     protected vPerformer current = new pMaterial();
 
     @Override
-    public void parse(String[] args, com.thevoxelbox.voxelsniper.SnipeData v) {
-        if (PerformerE.has(args[1])) {
+    public void parse(String[] args, com.thevoxelbox.voxelsniper.SnipeData v)
+    {
+        if (PerformerE.has(args[1]))
+        {
             vPerformer p = PerformerE.getPerformer(args[1]);
-            if (p != null) {
+            if (p != null)
+            {
                 current = p;
                 info(v.getVoxelMessage());
                 current.info(v.getVoxelMessage());
-                if (args.length > 2) {
+                if (args.length > 2)
+                {
                     String[] t = new String[args.length - 1];
                     t[0] = args[0];
-                    for (int x = 2; x < args.length; x++) {
+                    for (int x = 2; x < args.length; x++)
+                    {
                         t[x - 1] = args[x];
                     }
                     parameters(t, v);
                 }
-            } else {
+            }
+            else
+            {
                 parameters(args, v);
             }
-        } else {
+        }
+        else
+        {
             parameters(args, v);
         }
     }
 
-    public void initP(com.thevoxelbox.voxelsniper.SnipeData v) {
+    public void initP(com.thevoxelbox.voxelsniper.SnipeData v)
+    {
         current.init(v);
         current.setUndo();
     }
 
     @Override
-    public void showInfo(Message vm) {
+    public void showInfo(Message vm)
+    {
         current.info(vm);
     }
 }

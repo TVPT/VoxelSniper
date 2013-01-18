@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 
 /**
- *
  * @author Voxel
  */
 
@@ -39,33 +39,34 @@ import org.bukkit.ChatColor;
  * Regex to the rescue, am I right? - Giltwist
  */
 
-public enum PerformerE { // =========== Hey, can we get a "No-Undo" performer?  -prz; Done -psa
-                                                                                                            // Example of
-                                                                                                            // old brush in   Description
-                                                                                                            // this categ.
-    MATERIAL(                   pMaterial.class,                "m",            "material"               ), // /b b         place mat
-    MATERIAL_NOPHYS(            pMaterialNoPhys.class,          "mp",           "mat-nophys"         ),     //              place mat, no-physics
-    MAT_MAT(                    pMatMat.class,                  "mm",           "mat-mat"           ),      // /b br        place mat, replace mat
-    MAT_MAT_NOPHYS(             pMatMatNoPhys.class,            "mmp",          "mat-mat-nophys"     ),     // /b sp        place mat, replace mat, no physics
-    MAT_INK(                    pMatInk.class,                  "mi",           "mat-ink"           ),      //              place mat, replace ink (e.g. all things with data value 14 to sand)
-    MAT_INK_NOPHYS(             pMatInkNoPhys.class,            "mip",          "mat-ink-nophys"),          //              place mat, replace ink, no physics
-    MAT_COMBO(                  pMatCombo.class,                "mc",           "mat-combo"           ),    // /b ibrs      place mat, replace both
-    MAT_COMBO_NOPHYS(           pMatComboNophys.class,          "mcp",          "mat-combo-nophys"  ),      //              place mat, replace combo, no physics
-    INK(                        pInk.class,                     "i",            "ink"               ),      // /b ib        place ink
-    INK_MAT(                    pInkMat.class,                  "im",           "ink-mat"        ),         // /b ibr       place ink, replace mat
-    INK_INK(                    pInkInk.class,                  "ii",           "ink-ink"        ),         //              place ink, replace ink
-    INK_COMBO(                  pInkCombo.class,                "ic",           "ink-combo"        ),       //              place ink, replace both
-    COMBO(                      pCombo.class,                   "c",            "combo"            ),       // strong inks  place both
-    COMBO_NOPHYS(               pComboNoPhys.class,             "cp",           "combo-nophys"      ),      //              place both, no-physics
-    COMBO_MAT(                  pComboMat.class,                "cm",           "combo-mat"        ),       //              place both, replace mat
-    COMBO_MAT_NOPHYS(           pComboMatNoPhys.class,          "cmp",          "combo-mat-nophys"),        //              place combo, replace mat, no physics
-    COMBO_INK(                  pComboInk.class,                "ci",           "combo-ink"        ),       //              place both, replace ink
-    COMBO_INK_NOPHYS(           pComboInkNoPhys.class,          "cip",          "combo-ink-nophys"),        //              place combo, replace ink, no physics
-    COMBO_COMBO(                pComboCombo.class,              "cc",           "combo-combo"        ),     //              place both, replace both
-    COMBO_COMBO_NOPHYS (        pComboComboNoPhys.class,        "ccp",          "combo-combo-nophys"  ),    //              place both, replace both, no physics
-    EXCLUDE_MATERIAL(           pExcludeMat.class,              "xm",           "exclude-mat"         ),    //              place block unless old block is a member of the exclusion list
-    INCLUDE_MATERIAL(           pIncludeMat.class,              "nm",           "include-mat"         ),    //              place block only if the old block is a member of the inclusion list
-    MAT_NO_UNDO(                pNoUndo.class,                  "noundo",       "noundo"          );    //          place a block without the choice of undo
+public enum PerformerE
+{ // =========== Hey, can we get a "No-Undo" performer?  -prz; Done -psa
+    // Example of
+    // old brush in   Description
+    // this categ.
+    MATERIAL(pMaterial.class, "m", "material"), // /b b         place mat
+    MATERIAL_NOPHYS(pMaterialNoPhys.class, "mp", "mat-nophys"),     //              place mat, no-physics
+    MAT_MAT(pMatMat.class, "mm", "mat-mat"),      // /b br        place mat, replace mat
+    MAT_MAT_NOPHYS(pMatMatNoPhys.class, "mmp", "mat-mat-nophys"),     // /b sp        place mat, replace mat, no physics
+    MAT_INK(pMatInk.class, "mi", "mat-ink"),      //              place mat, replace ink (e.g. all things with data value 14 to sand)
+    MAT_INK_NOPHYS(pMatInkNoPhys.class, "mip", "mat-ink-nophys"),          //              place mat, replace ink, no physics
+    MAT_COMBO(pMatCombo.class, "mc", "mat-combo"),    // /b ibrs      place mat, replace both
+    MAT_COMBO_NOPHYS(pMatComboNophys.class, "mcp", "mat-combo-nophys"),      //              place mat, replace combo, no physics
+    INK(pInk.class, "i", "ink"),      // /b ib        place ink
+    INK_MAT(pInkMat.class, "im", "ink-mat"),         // /b ibr       place ink, replace mat
+    INK_INK(pInkInk.class, "ii", "ink-ink"),         //              place ink, replace ink
+    INK_COMBO(pInkCombo.class, "ic", "ink-combo"),       //              place ink, replace both
+    COMBO(pCombo.class, "c", "combo"),       // strong inks  place both
+    COMBO_NOPHYS(pComboNoPhys.class, "cp", "combo-nophys"),      //              place both, no-physics
+    COMBO_MAT(pComboMat.class, "cm", "combo-mat"),       //              place both, replace mat
+    COMBO_MAT_NOPHYS(pComboMatNoPhys.class, "cmp", "combo-mat-nophys"),        //              place combo, replace mat, no physics
+    COMBO_INK(pComboInk.class, "ci", "combo-ink"),       //              place both, replace ink
+    COMBO_INK_NOPHYS(pComboInkNoPhys.class, "cip", "combo-ink-nophys"),        //              place combo, replace ink, no physics
+    COMBO_COMBO(pComboCombo.class, "cc", "combo-combo"),     //              place both, replace both
+    COMBO_COMBO_NOPHYS(pComboComboNoPhys.class, "ccp", "combo-combo-nophys"),    //              place both, replace both, no physics
+    EXCLUDE_MATERIAL(pExcludeMat.class, "xm", "exclude-mat"),    //              place block unless old block is a member of the exclusion list
+    INCLUDE_MATERIAL(pIncludeMat.class, "nm", "include-mat"),    //              place block only if the old block is a member of the inclusion list
+    MAT_NO_UNDO(pNoUndo.class, "noundo", "noundo");    //          place a block without the choice of undo
     //INK_NO_UNDO(                pInkNoUndo.class,               "in",           "ink-noundo"          ),    //          place ink without the choice of undo
     //COMBO_NO_UNDO(              pComboNoUndo.class,             "cn",           "combo-noundo"          );    //          place both without the choice of undo
     //Other Performers which don't exist yet but are required for a full set of possibilities that actually could potentially do something:
@@ -94,58 +95,81 @@ public enum PerformerE { // =========== Hey, can we get a "No-Undo" performer?  
     public static String performer_list_short = "";
     public static String performer_list_long = "";
 
-    private PerformerE(Class<? extends vPerformer> c, String s, String l) {
+    private PerformerE(Class<? extends vPerformer> c, String s, String l)
+    {
         pclass = c;
         short_name = s;
         long_name = l;
     }
 
-    private vPerformer getPerformer() {
+    private vPerformer getPerformer()
+    {
         vPerformer p;
-        try {
-            try {
+        try
+        {
+            try
+            {
                 p = pclass.getConstructor().newInstance();
                 return p;
-            } catch (InstantiationException ex) {
-                Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
+            }
+            catch (InstantiationException ex)
+            {
                 Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (NoSuchMethodException ex) {
+            catch (IllegalAccessException ex)
+            {
+                Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (IllegalArgumentException ex)
+            {
+                Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (InvocationTargetException ex)
+            {
+                Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        catch (NoSuchMethodException ex)
+        {
             Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        }
+        catch (SecurityException ex)
+        {
             Logger.getLogger(PerformerE.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
-    public static vPerformer getPerformer(String s) {
-        if(performers.containsKey(s)) {
+    public static vPerformer getPerformer(String s)
+    {
+        if (performers.containsKey(s))
+        {
             return performers.get(s);
-        } else {
+        }
+        else
+        {
             return performers.get(long_names.get(s));
         }
     }
 
-    public static boolean has(String s) {
+    public static boolean has(String s)
+    {
         return performers.containsKey(s);
     }
 
-    static {
+    static
+    {
         performers = new TreeMap<String, vPerformer>();
         long_names = new TreeMap<String, String>();
 
-        for (PerformerE pe : values()) {
+        for (PerformerE pe : values())
+        {
             performers.put(pe.short_name, pe.getPerformer());
             long_names.put(pe.long_name, pe.short_name);
             performer_list_short = performer_list_short + ChatColor.GREEN + pe.short_name + ChatColor.RED + ", ";
             performer_list_long = performer_list_long + ChatColor.GREEN + pe.long_name + ChatColor.RED + ", ";
         }
-        performer_list_short = performer_list_short.substring(0, performer_list_short.length()-2);
-        performer_list_long = performer_list_long.substring(0, performer_list_long.length()-2);
+        performer_list_short = performer_list_short.substring(0, performer_list_short.length() - 2);
+        performer_list_long = performer_list_long.substring(0, performer_list_long.length() - 2);
     }
 }

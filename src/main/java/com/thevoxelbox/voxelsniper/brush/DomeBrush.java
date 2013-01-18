@@ -3,38 +3,42 @@ package com.thevoxelbox.voxelsniper.brush;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.block.Block;
-import org.bukkit.util.NumberConversions;
-import org.bukkit.util.Vector;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
+import org.bukkit.block.Block;
+import org.bukkit.util.NumberConversions;
+import org.bukkit.util.Vector;
+
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Dome_Brush
- * 
+ *
  * @author Gavjenks
  * @author MikeMatrix
  */
-public class DomeBrush extends Brush {
+public class DomeBrush extends Brush
+{
     private static int timesUsed = 0;
     private boolean fill;
 
     /**
-     * 
+     *
      */
-    public DomeBrush() {
+    public DomeBrush()
+    {
         this.setName("Dome");
     }
 
     @Override
-    public final int getTimesUsed() {
+    public final int getTimesUsed()
+    {
         return DomeBrush.timesUsed;
     }
 
     @Override
-    public final void info(final Message vm) {
+    public final void info(final Message vm)
+    {
         vm.brushName(this.getName());
         vm.size();
         vm.voxel();
@@ -42,7 +46,8 @@ public class DomeBrush extends Brush {
     }
 
     @Override
-    public final void setTimesUsed(final int tUsed) {
+    public final void setTimesUsed(final int tUsed)
+    {
         DomeBrush.timesUsed = tUsed;
     }
 
@@ -50,9 +55,11 @@ public class DomeBrush extends Brush {
      * @param v
      * @param targetBlock
      */
-    private void generateDome(final SnipeData v, final Block targetBlock, final boolean fill) {
+    private void generateDome(final SnipeData v, final Block targetBlock, final boolean fill)
+    {
 
-        if (v.getVoxelHeight() == 0) {
+        if (v.getVoxelHeight() == 0)
+        {
             v.sendMessage("VoxelHeight must not be 0.");
             return;
         }
@@ -69,9 +76,11 @@ public class DomeBrush extends Brush {
 
         final double _stepSize = 1 / _stepScale;
 
-        for (double _u = 0; _u <= Math.PI / 2; _u += _stepSize) {
+        for (double _u = 0; _u <= Math.PI / 2; _u += _stepSize)
+        {
             final double _y = _absoluteHeight * Math.sin(_u);
-            for (double _v = -Math.PI; _v <= -(Math.PI / 2); _v += _stepSize) {
+            for (double _v = -Math.PI; _v <= -(Math.PI / 2); _v += _stepSize)
+            {
                 final double _x = v.getBrushSize() * Math.cos(_u) * Math.cos(_v);
                 final double _z = v.getBrushSize() * Math.cos(_u) * Math.sin(_v);
 
@@ -90,9 +99,11 @@ public class DomeBrush extends Brush {
             }
         }
 
-        for (final Vector _vector : _changeablePositions) {
+        for (final Vector _vector : _changeablePositions)
+        {
             final Block _targetBlock = _vector.toLocation(this.getTargetBlock().getWorld()).getBlock();
-            if (_targetBlock.getTypeId() != v.getVoxelId() || _targetBlock.getData() != v.getData()) {
+            if (_targetBlock.getTypeId() != v.getVoxelId() || _targetBlock.getData() != v.getData())
+            {
                 _undo.put(_targetBlock);
                 _targetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
             }
@@ -102,12 +113,14 @@ public class DomeBrush extends Brush {
     }
 
     @Override
-    protected final void arrow(final SnipeData v) {
+    protected final void arrow(final SnipeData v)
+    {
         this.generateDome(v, this.getTargetBlock(), this.fill);
     }
 
     @Override
-    protected final void powder(final SnipeData v) {
+    protected final void powder(final SnipeData v)
+    {
         this.generateDome(v, this.getLastBlock(), this.fill);
     }
 }

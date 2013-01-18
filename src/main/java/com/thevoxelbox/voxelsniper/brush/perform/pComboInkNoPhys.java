@@ -5,24 +5,27 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+
 import org.bukkit.block.Block;
 
 /**
- *
  * @author Voxel
  */
-public class pComboInkNoPhys extends vPerformer {
+public class pComboInkNoPhys extends vPerformer
+{
 
     private byte d;
     private byte dr;
     private int i;
 
-    public pComboInkNoPhys() {
+    public pComboInkNoPhys()
+    {
         name = "Combo-Ink, No Physics";
     }
 
     @Override
-    public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
+    public void init(com.thevoxelbox.voxelsniper.SnipeData v)
+    {
         w = v.getWorld();
         d = v.getData();
         dr = v.getReplaceData();
@@ -30,7 +33,8 @@ public class pComboInkNoPhys extends vPerformer {
     }
 
     @Override
-    public void info(Message vm) {
+    public void info(Message vm)
+    {
         vm.performerName(name);
         vm.voxel();
         vm.data();
@@ -38,8 +42,10 @@ public class pComboInkNoPhys extends vPerformer {
     }
 
     @Override
-    public void perform(Block b) {
-        if (b.getData() == dr) {
+    public void perform(Block b)
+    {
+        if (b.getData() == dr)
+        {
             h.put(b);
             b.setTypeIdAndData(i, d, false);
         }

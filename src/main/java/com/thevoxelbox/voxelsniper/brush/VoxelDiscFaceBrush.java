@@ -1,30 +1,36 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.block.BlockFace;
-
-import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+
+import org.bukkit.block.BlockFace;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Disc_Face_Brush
+ *
  * @author Voxel
  */
-public class VoxelDiscFaceBrush extends PerformBrush {
+public class VoxelDiscFaceBrush extends PerformBrush
+{
     private static int timesUsed = 0;
 
     /**
-     * 
+     *
      */
-    public VoxelDiscFaceBrush() {
+    public VoxelDiscFaceBrush()
+    {
         this.setName("Voxel Disc Face");
     }
 
-    private void disc(final SnipeData v) {
+    private void disc(final SnipeData v)
+    {
         final int _bSize = v.getBrushSize();
 
-        for (int _x = _bSize; _x >= -_bSize; _x--) {
-            for (int _y = _bSize; _y >= -_bSize; _y--) {
+        for (int _x = _bSize; _x >= -_bSize; _x--)
+        {
+            for (int _y = _bSize; _y >= -_bSize; _y--)
+            {
                 this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
             }
         }
@@ -32,11 +38,14 @@ public class VoxelDiscFaceBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private void discEW(final SnipeData v) {
+    private void discEW(final SnipeData v)
+    {
         final int _bSize = v.getBrushSize();
 
-        for (int _x = _bSize; _x >= -_bSize; _x--) {
-            for (int _y = _bSize; _y >= -_bSize; _y--) {
+        for (int _x = _bSize; _x >= -_bSize; _x--)
+        {
+            for (int _y = _bSize; _y >= -_bSize; _y--)
+            {
                 this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ()));
             }
         }
@@ -44,11 +53,14 @@ public class VoxelDiscFaceBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private void discNS(final SnipeData v) {
+    private void discNS(final SnipeData v)
+    {
         final int _bSize = v.getBrushSize();
 
-        for (int _x = _bSize; _x >= -_bSize; _x--) {
-            for (int _y = _bSize; _y >= -_bSize; _y--) {
+        for (int _x = _bSize; _x >= -_bSize; _x--)
+        {
+            for (int _y = _bSize; _y >= -_bSize; _y--)
+            {
                 this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y));
             }
         }
@@ -56,38 +68,43 @@ public class VoxelDiscFaceBrush extends PerformBrush {
         v.storeUndo(this.current.getUndo());
     }
 
-    private void pre(final SnipeData v, final BlockFace bf) {
-        if (bf == null) {
+    private void pre(final SnipeData v, final BlockFace bf)
+    {
+        if (bf == null)
+        {
             return;
         }
-        switch (bf) {
-        case NORTH:
-        case SOUTH:
-            this.discNS(v);
-            break;
+        switch (bf)
+        {
+            case NORTH:
+            case SOUTH:
+                this.discNS(v);
+                break;
 
-        case EAST:
-        case WEST:
-            this.discEW(v);
-            break;
+            case EAST:
+            case WEST:
+                this.discEW(v);
+                break;
 
-        case UP:
-        case DOWN:
-            this.disc(v);
-            break;
+            case UP:
+            case DOWN:
+                this.disc(v);
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
     }
 
     @Override
-    protected final void arrow(final SnipeData v) {
+    protected final void arrow(final SnipeData v)
+    {
         this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
     @Override
-    protected final void powder(final SnipeData v) {
+    protected final void powder(final SnipeData v)
+    {
         this.setBlockPositionX(this.getLastBlock().getX());
         this.setBlockPositionY(this.getLastBlock().getY());
         this.setBlockPositionZ(this.getLastBlock().getZ());
@@ -95,18 +112,21 @@ public class VoxelDiscFaceBrush extends PerformBrush {
     }
 
     @Override
-    public final void info(final Message vm) {
+    public final void info(final Message vm)
+    {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final int getTimesUsed() {
+    public final int getTimesUsed()
+    {
         return VoxelDiscFaceBrush.timesUsed;
     }
-    
+
     @Override
-    public final void setTimesUsed(final int tUsed) {
+    public final void setTimesUsed(final int tUsed)
+    {
         VoxelDiscFaceBrush.timesUsed = tUsed;
     }
 }

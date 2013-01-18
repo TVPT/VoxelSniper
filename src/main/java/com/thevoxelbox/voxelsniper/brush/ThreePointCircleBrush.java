@@ -1,35 +1,39 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.ChatColor;
-import org.bukkit.util.NumberConversions;
-import org.bukkit.util.Vector;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
+import org.bukkit.ChatColor;
+import org.bukkit.util.NumberConversions;
+import org.bukkit.util.Vector;
+
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Three-Point_Circle_Brush
+ *
  * @author Giltwist
  */
-public class ThreePointCircleBrush extends PerformBrush {
+public class ThreePointCircleBrush extends PerformBrush
+{
 
     /**
      * Enumeration on Tolerance values.
-     * 
+     *
      * @author MikeMatrix
-     * 
      */
-    private enum Tolerance {
+    private enum Tolerance
+    {
         DEFAULT(1000), ACCURATE(10), SMOOTH(2000);
 
         private int value;
 
-        Tolerance(final int value) {
+        Tolerance(final int value)
+        {
             this.value = value;
         }
 
-        public int getValue() {
+        public int getValue()
+        {
             return this.value;
         }
     }
@@ -44,22 +48,31 @@ public class ThreePointCircleBrush extends PerformBrush {
     /**
      * Default Constructor.
      */
-    public ThreePointCircleBrush() {
+    public ThreePointCircleBrush()
+    {
         this.setName("3-Point Circle");
     }
 
     @Override
-    protected final void arrow(final SnipeData v) {
-        if (this.coordsOne == null) {
+    protected final void arrow(final SnipeData v)
+    {
+        if (this.coordsOne == null)
+        {
             this.coordsOne = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "First Corner set.");
-        } else if (this.coordsTwo == null) {
+        }
+        else if (this.coordsTwo == null)
+        {
             this.coordsTwo = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "Second Corner set.");
-        } else if (this.coordsThree == null) {
+        }
+        else if (this.coordsThree == null)
+        {
             this.coordsThree = this.getTargetBlock().getLocation().toVector();
             v.sendMessage(ChatColor.GRAY + "Third Corner set.");
-        } else {
+        }
+        else
+        {
             this.coordsOne = this.getTargetBlock().getLocation().toVector();
             this.coordsTwo = null;
             this.coordsThree = null;
@@ -68,8 +81,10 @@ public class ThreePointCircleBrush extends PerformBrush {
     }
 
     @Override
-    protected final void powder(final SnipeData v) {
-        if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
+    protected final void powder(final SnipeData v)
+    {
+        if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null)
+        {
             return;
         }
 
@@ -82,8 +97,8 @@ public class ThreePointCircleBrush extends PerformBrush {
         _vectorThree.subtract(_vectorTwo);
 
         // Redundant data check
-        if (_vectorOne.length() == 0 || _vectorTwo.length() == 0 || _vectorThree.length() == 0 || _vectorOne.angle(_vectorTwo) == 0
-                || _vectorOne.angle(_vectorThree) == 0 || _vectorThree.angle(_vectorTwo) == 0) {
+        if (_vectorOne.length() == 0 || _vectorTwo.length() == 0 || _vectorThree.length() == 0 || _vectorOne.angle(_vectorTwo) == 0 || _vectorOne.angle(_vectorThree) == 0 || _vectorThree.angle(_vectorTwo) == 0)
+        {
 
             v.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
             this.coordsOne = null;
@@ -97,8 +112,7 @@ public class ThreePointCircleBrush extends PerformBrush {
         _normalVector.crossProduct(_vectorTwo);
 
         // Calculate constant term of the plane.
-        final double _planeConstant = _normalVector.getX() * this.coordsOne.getX() + _normalVector.getY() * this.coordsOne.getY() + _normalVector.getZ()
-                * this.coordsOne.getZ();
+        final double _planeConstant = _normalVector.getX() * this.coordsOne.getX() + _normalVector.getY() * this.coordsOne.getY() + _normalVector.getZ() * this.coordsOne.getZ();
 
         final Vector _midpointOne = this.coordsOne.getMidpoint(this.coordsTwo);
         final Vector _midpointTwo = this.coordsOne.getMidpoint(this.coordsThree);
@@ -129,24 +143,24 @@ public class ThreePointCircleBrush extends PerformBrush {
         final double _radius = _circumcenter.distance(new Vector(this.coordsOne.getX(), this.coordsOne.getY(), this.coordsOne.getZ()));
         final int _bSize = NumberConversions.ceil(_radius) + 1;
 
-        for (int _x = -_bSize; _x <= _bSize; _x++) {
-            for (int _y = -_bSize; _y <= _bSize; _y++) {
-                for (int _z = -_bSize; _z <= _bSize; _z++) {
+        for (int _x = -_bSize; _x <= _bSize; _x++)
+        {
+            for (int _y = -_bSize; _y <= _bSize; _y++)
+            {
+                for (int _z = -_bSize; _z <= _bSize; _z++)
+                {
                     // Calculate distance from center
                     final double _tempDistance = Math.pow(Math.pow(_x, 2) + Math.pow(_y, 2) + Math.pow(_z, 2), .5);
 
                     // gets corner-on blocks
-                    final double _cornerConstant = _normalVector.getX() * (_circumcenter.getX() + _x) + _normalVector.getY() * (_circumcenter.getY() + _y)
-                            + _normalVector.getZ() * (_circumcenter.getZ() + _z);
+                    final double _cornerConstant = _normalVector.getX() * (_circumcenter.getX() + _x) + _normalVector.getY() * (_circumcenter.getY() + _y) + _normalVector.getZ() * (_circumcenter.getZ() + _z);
 
                     // gets center-on blocks
-                    final double _centerConstant = _normalVector.getX() * (_circumcenter.getX() + _x + .5) + _normalVector.getY()
-                            * (_circumcenter.getY() + _y + .5) + _normalVector.getZ() * (_circumcenter.getZ() + _z + .5);
+                    final double _centerConstant = _normalVector.getX() * (_circumcenter.getX() + _x + .5) + _normalVector.getY() * (_circumcenter.getY() + _y + .5) + _normalVector.getZ() * (_circumcenter.getZ() + _z + .5);
 
                     // Check if point is within sphere and on plane (some tolerance given)
-                    if (_tempDistance <= _radius
-                            && (Math.abs(_cornerConstant - _planeConstant) < this.tolerance.getValue() || Math.abs(_centerConstant - _planeConstant) < this.tolerance
-                                    .getValue())) {
+                    if (_tempDistance <= _radius && (Math.abs(_cornerConstant - _planeConstant) < this.tolerance.getValue() || Math.abs(_centerConstant - _planeConstant) < this.tolerance.getValue()))
+                    {
                         this.current.perform(this.clampY(_brushcenter.getBlockX() + _x, _brushcenter.getBlockY() + _y, _brushcenter.getBlockZ() + _z));
                     }
 
@@ -163,62 +177,73 @@ public class ThreePointCircleBrush extends PerformBrush {
         this.coordsThree = null;
 
     }
-    
+
     @Override
-    public final void info(final Message vm) {
-    	vm.brushName(this.getName());
-    	switch (this.tolerance) {
-    	case ACCURATE:
-    		vm.custom(ChatColor.GOLD + "Mode: Accurate");
-    		break;
-    	case DEFAULT:
-    		vm.custom(ChatColor.GOLD + "Mode: Default");
-    		break;
-    	case SMOOTH:
-    		vm.custom(ChatColor.GOLD + "Mode: Smooth");
-    		break;
-    	default:
-    		vm.custom(ChatColor.GOLD + "Mode: Unknown");
-    		break;
-    	}
-    	
-    }
-    
-    @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-    	if (par[1].equalsIgnoreCase("info")) {
-    		v.sendMessage(ChatColor.YELLOW
-    				+ "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
-    		String _toleranceOptions = "";
-    		for (final Tolerance _tolerance : Tolerance.values()) {
-    			if (!_toleranceOptions.isEmpty()) {
-    				_toleranceOptions += "|";
-    			}
-    			_toleranceOptions += _tolerance.name().toLowerCase();
-    		}
-    		v.sendMessage(ChatColor.GOLD + "/b tpc " + _toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
-    		return;
-    	}
-    	
-    	for (int _i = 1; _i < par.length; _i++) {
-    		final String _string = par[_i].toUpperCase();
-    		try {
-    			this.tolerance = Tolerance.valueOf(_string);
-    			v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
-    			return;
-    		} catch (final IllegalArgumentException _e) {
-    			v.getVoxelMessage().brushMessage("No such tolerance.");
-    		}
-    	}
-    }
-    
-    @Override
-    public final int getTimesUsed() {
-    	return ThreePointCircleBrush.timesUsed;
+    public final void info(final Message vm)
+    {
+        vm.brushName(this.getName());
+        switch (this.tolerance)
+        {
+            case ACCURATE:
+                vm.custom(ChatColor.GOLD + "Mode: Accurate");
+                break;
+            case DEFAULT:
+                vm.custom(ChatColor.GOLD + "Mode: Default");
+                break;
+            case SMOOTH:
+                vm.custom(ChatColor.GOLD + "Mode: Smooth");
+                break;
+            default:
+                vm.custom(ChatColor.GOLD + "Mode: Unknown");
+                break;
+        }
+
     }
 
     @Override
-    public final void setTimesUsed(final int tUsed) {
+    public final void parameters(final String[] par, final SnipeData v)
+    {
+        if (par[1].equalsIgnoreCase("info"))
+        {
+            v.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
+            String _toleranceOptions = "";
+            for (final Tolerance _tolerance : Tolerance.values())
+            {
+                if (!_toleranceOptions.isEmpty())
+                {
+                    _toleranceOptions += "|";
+                }
+                _toleranceOptions += _tolerance.name().toLowerCase();
+            }
+            v.sendMessage(ChatColor.GOLD + "/b tpc " + _toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
+            return;
+        }
+
+        for (int _i = 1; _i < par.length; _i++)
+        {
+            final String _string = par[_i].toUpperCase();
+            try
+            {
+                this.tolerance = Tolerance.valueOf(_string);
+                v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
+                return;
+            }
+            catch (final IllegalArgumentException _e)
+            {
+                v.getVoxelMessage().brushMessage("No such tolerance.");
+            }
+        }
+    }
+
+    @Override
+    public final int getTimesUsed()
+    {
+        return ThreePointCircleBrush.timesUsed;
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed)
+    {
         ThreePointCircleBrush.timesUsed = tUsed;
     }
 }

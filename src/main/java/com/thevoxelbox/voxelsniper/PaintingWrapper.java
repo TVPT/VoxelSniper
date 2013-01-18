@@ -16,12 +16,14 @@ import org.bukkit.entity.Player;
 
 /**
  * Painting state change handler.
- * 
+ *
  * @author Piotr
  */
-public final class PaintingWrapper {
+public final class PaintingWrapper
+{
 
-    private PaintingWrapper() {
+    private PaintingWrapper()
+    {
     }
 
     /**
@@ -31,17 +33,18 @@ public final class PaintingWrapper {
 
     /**
      * The paint method used to scroll or set a painting to a specific type.
-     * 
+     *
      * @param p
-     *            The player executing the method
+     *         The player executing the method
      * @param auto
-     *            Scroll automatically? If false will use 'choice' to try and set the painting
+     *         Scroll automatically? If false will use 'choice' to try and set the painting
      * @param back
-     *            Scroll in reverse?
+     *         Scroll in reverse?
      * @param choice
-     *            Chosen index to set the painting to
+     *         Chosen index to set the painting to
      */
-    public static void paint(final Player p, final boolean auto, final boolean back, final int choice) {
+    public static void paint(final Player p, final boolean auto, final boolean back, final int choice)
+    {
         final boolean _auto = auto;
 
         final Location _loc = p.getTargetBlock(null, 4).getLocation();
@@ -57,27 +60,33 @@ public final class PaintingWrapper {
         final AxisAlignedBB _bb = AxisAlignedBB.a(Math.min(_x1, _x2), _y1, Math.min(_z1, _z2), Math.max(_x1, _x2), _y2, Math.max(_z1, _z2));
 
         final List<?> _entities = _craftWorld.getHandle().getEntities(((CraftPlayer) p).getHandle(), _bb);
-        if ((_entities.size() == 1) && ((_entities.get(0) instanceof EntityPainting))) {
+        if ((_entities.size() == 1) && ((_entities.get(0) instanceof EntityPainting)))
+        {
             final EntityPainting _oldPainting = (EntityPainting) _entities.get(0);
-            final EntityPainting _newPainting = new EntityPainting(_craftWorld.getHandle(), _oldPainting.x, _oldPainting.y, _oldPainting.z,
-                    _oldPainting.direction % 4);
+            final EntityPainting _newPainting = new EntityPainting(_craftWorld.getHandle(), _oldPainting.x, _oldPainting.y, _oldPainting.z, _oldPainting.direction % 4);
 
             _newPainting.art = _oldPainting.art;
             _oldPainting.dead = true;
 
-            if (_auto) {
+            if (_auto)
+            {
                 final int _i = (PaintingWrapper.PAINTINGS.indexOf(_newPainting.art) + (back ? -1 : 1) + PaintingWrapper.PAINTINGS.size()) % PaintingWrapper.PAINTINGS.size();
                 _newPainting.art = (PaintingWrapper.PAINTINGS.get(_i));
                 _newPainting.setDirection(_newPainting.direction);
                 _newPainting.world.addEntity(_newPainting);
                 p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (_i));
-            } else {
-                try {
+            }
+            else
+            {
+                try
+                {
                     _newPainting.art = (PaintingWrapper.PAINTINGS.get(choice));
                     _newPainting.setDirection(_newPainting.direction);
                     _newPainting.world.addEntity(_newPainting);
                     p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);
-                } catch (final Exception _e) {
+                }
+                catch (final Exception _e)
+                {
                     p.sendMessage(ChatColor.RED + "Your input was invalid somewhere.");
                 }
             }
