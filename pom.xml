@@ -4,11 +4,12 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelSniper</artifactId>
-    <version>5.168.4-SNAPSHOT</version>
+    <version>5.168.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>VoxelSniper</name>
-    <url>http://tvpt.github.com/</url>
+    <description>World editing from ingame using 3D brushes.</description>
+    <url>http://www.voxelwiki.com/minecraft/VoxelSniper</url>
 
     <scm>
         <url>https://github.com/TVPT/VoxelSniper</url>
@@ -56,17 +57,17 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.4.6-R0.3</version>
+            <version>1.4.7-R0.1</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.4.6-R0.3</version>
+            <version>1.4.7-R0.1</version>
         </dependency>
         <dependency>
             <groupId>org.mcstats</groupId>
             <artifactId>metrics</artifactId>
-            <version>1.1</version>
+            <version>R6</version>
         </dependency>
         <dependency>
             <groupId>com.martiansoftware</groupId>
@@ -76,6 +77,13 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -84,29 +92,6 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.0</version>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <file>target/classes/plugin.yml</file>
-                    <replacements>
-                        <replacement>
-                            <token>maven-version-number</token>
-                            <value>${project.build.version}</value>
-                        </replacement>
-                    </replacements>
                 </configuration>
             </plugin>
 

@@ -1,10 +1,9 @@
-name: VoxelSniper
+name: ${project.artifactId}
 main: com.thevoxelbox.voxelsniper.VoxelSniper
-version: maven-version-number
-website: http://www.voxelwiki.com/minecraft/VoxelSniper
+version: ${project.build.version}
+website: ${project.url}
 authors: [przerwap, MikeMatrix, Gavjenks, giltwist, psanker, Deamon5550, DivineRage]
-description: >
-             World editing from ingame using 3D brushes.
+description: ${project.description}
 commands:
   paint:
     description: Change the selected painting to another painting.

@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +18,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -32,8 +32,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
 /**
  * @author Voxel
@@ -165,8 +163,6 @@ public class VoxelSniper extends JavaPlugin {
 
     /**
      * Load configuration.
-     * 
-     * @param voxelSniperListener
      */
     public final void loadSniperConfiguration() {
         try {
