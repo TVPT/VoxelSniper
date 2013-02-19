@@ -79,9 +79,9 @@ public class BiomeBrush extends Brush
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
+    public final void parameters(final String[] args, final SnipeData v)
     {
-        if (par[1].equalsIgnoreCase("info"))
+        if (args[1].equalsIgnoreCase("info"))
         {
             v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
             String _availableBiomes = "";
@@ -101,9 +101,15 @@ public class BiomeBrush extends Brush
         }
         else
         {
+            // allows biome names with spaces in their name
+            String biomeName = args[1];
+            for(int i = 1; i < args.length; i++) {
+                biomeName += " " + args[i];
+            }
+
             for (final org.bukkit.block.Biome _bio : org.bukkit.block.Biome.values())
             {
-                if (_bio.name().equalsIgnoreCase(par[1]))
+                if (_bio.name().equalsIgnoreCase(biomeName))
                 {
                     this.selectedBiome = _bio;
                     break;
