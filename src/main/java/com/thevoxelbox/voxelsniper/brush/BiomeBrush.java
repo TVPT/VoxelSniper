@@ -20,7 +20,7 @@ public class BiomeBrush extends Brush
      */
     public BiomeBrush()
     {
-        this.setName("Biome (currently not working)");
+        this.setName("Biome (/b biome [Biome Name])");
     }
 
     private void biome(final SnipeData v)
