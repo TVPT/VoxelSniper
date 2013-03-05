@@ -20,7 +20,7 @@ public class BiomeBrush extends Brush
      */
     public BiomeBrush()
     {
-        this.setName("Biome (currently not working)");
+        this.setName("Biome (/b biome [Biome Name])");
     }
 
     private void biome(final SnipeData v)
@@ -103,7 +103,7 @@ public class BiomeBrush extends Brush
         {
             // allows biome names with spaces in their name
             String biomeName = args[1];
-            for(int i = 1; i < args.length; i++) {
+            for(int i = 2; i < args.length; i++) {
                 biomeName += " " + args[i];
             }
 
