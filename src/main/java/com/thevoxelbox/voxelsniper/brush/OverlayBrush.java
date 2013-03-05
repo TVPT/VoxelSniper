@@ -3,8 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Overlay_.2F_Topsoil_Brush
@@ -14,10 +15,9 @@ import org.bukkit.ChatColor;
 public class OverlayBrush extends PerformBrush
 {
     private static final int DEFAULT_DEPTH = 3;
+    private static int timesUsed = 0;
     private int depth = DEFAULT_DEPTH;
     private boolean allBlocks = false;
-
-    private static int timesUsed = 0;
 
     /**
      *
@@ -31,65 +31,34 @@ public class OverlayBrush extends PerformBrush
     {
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + 0.5, 2);
-        final int[][] _memory = new int[_brushSize * 2 + 1][_brushSize * 2 + 1];
 
         for (int _z = _brushSize; _z >= -_brushSize; _z--)
         {
             for (int _x = _brushSize; _x >= -_brushSize; _x--)
             {
-                for (int _y = this.getBlockPositionY(); _y > 0; _y--)
-                { // start scanning from the height you clicked at
-                    if (_memory[_x + _brushSize][_z + _brushSize] != 1)
-                    { // if haven't already found the surface in this column
-                        if ((Math.pow(_x, 2) + Math.pow(_z, 2)) <= _bPow)
-                        { // if inside of the column...
-                            final int _check = this.getBlockIdAt(this.getBlockPositionX() + _x, _y + 1, this.getBlockPositionZ() + _z);
-                            if (_check == 0 || _check == 8 || _check == 9)
-                            { // must start at surface... this prevents it filling stuff in if you click in a wall
-                                // and it starts out below surface.
-                                if (!this.allBlocks)
-                                { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                    switch (this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z))
-                                    {
-                                        case 1:
-                                        case 2:
-                                        case 3:
-                                        case 12:
-                                        case 13:
-                                        case 24:
-                                        case 48:
-                                        case 82:
-                                        case 49:
-                                        case 78:
-                                            for (int _d = 0; (_d < this.depth); _d++)
-                                            {
-                                                if (this.clampY(this.getBlockPositionX() + _x, _y - _d, this.getBlockPositionZ() + _z).getTypeId() != 0)
-                                                {
-                                                    this.current.perform(this.clampY(this.getBlockPositionX() + _x, _y - _d, this.getBlockPositionZ() + _z)); // fills down as many layers as you specify
-                                                    // in parameters
-                                                    _memory[_x + _brushSize][_z + _brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                                }
-                                            }
-                                            break;
-
-                                        default:
-                                            break;
-                                    }
-                                }
-                                else
+                // check if column is valid
+                // column is valid if it has no solid block right above the clicked layer
+                final int materialId = this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + 1, this.getBlockPositionZ() + _z);
+                if (isColumnValid(materialId))
+                {
+                    if ((Math.pow(_x, 2) + Math.pow(_z, 2)) <= _bPow)
+                    {
+                        for (int _y = this.getBlockPositionY(); _y > 0; _y--)
+                        {
+                            // check for surface
+                            final int layerBlockId = this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
+                            if (isColumnValid(layerBlockId))
+                            {
+                                for (int currentDepth = _y; _y - currentDepth < depth; currentDepth--)
                                 {
-                                    for (int _d = 0; (_d < this.depth); _d++)
+                                    final int currentBlockId = this.getBlockIdAt(this.getBlockPositionX() + _x, currentDepth, this.getBlockPositionZ() + _z);
+                                    if (isOverrideableMaterial(currentBlockId))
                                     {
-                                        if (this.clampY(this.getBlockPositionX() + _x, _y - _d, this.getBlockPositionZ() + _z).getTypeId() != 0)
-                                        {
-                                            this.current.perform(this.clampY(this.getBlockPositionX() + _x, _y - _d, this.getBlockPositionZ() + _z)); // fills down as many layers as you specify in
-                                            // parameters
-                                            _memory[_x + _brushSize][_z + _brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                        }
+                                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, currentDepth, this.getBlockPositionZ() + _z));
                                     }
                                 }
+                                break;
                             }
-
                         }
                     }
                 }
@@ -97,6 +66,32 @@ public class OverlayBrush extends PerformBrush
         }
 
         v.storeUndo(this.current.getUndo());
+    }
+
+    private boolean isColumnValid(int materialId) {
+        return materialId == 9 || materialId == 8 || Material.getMaterial(materialId).isTransparent();
+    }
+
+    private boolean isOverrideableMaterial(int materialId) {
+        if (allBlocks) return true;
+
+        switch (materialId)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 12:
+            case 13:
+            case 24:
+            case 48:
+            case 82:
+            case 49:
+            case 78:
+                return true;
+
+            default:
+                return false;
+        }
     }
 
     private void overlayTwo(final SnipeData v)
@@ -109,7 +104,8 @@ public class OverlayBrush extends PerformBrush
         {
             for (int _x = _brushSize; _x >= -_brushSize; _x--)
             {
-                for (int _y = this.getBlockPositionY(); _y > 0; _y--)
+                boolean surfaceFound = false;
+                for (int _y = this.getBlockPositionY(); _y > 0 && !surfaceFound; _y--)
                 { // start scanning from the height you clicked at
                     if (_memory[_x + _brushSize][_z + _brushSize] != 1)
                     { // if haven't already found the surface in this column
@@ -144,6 +140,7 @@ public class OverlayBrush extends PerformBrush
                                                     // in parameters
                                                     _memory[_x + _brushSize][_z + _brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                                 }
+                                                surfaceFound = true;
                                                 break;
 
                                             default:
@@ -158,6 +155,7 @@ public class OverlayBrush extends PerformBrush
                                             // parameters
                                             _memory[_x + _brushSize][_z + _brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                         }
+                                        surfaceFound = true;
                                     }
 
                                 }
@@ -189,7 +187,6 @@ public class OverlayBrush extends PerformBrush
         vm.brushName(this.getName());
         vm.size();
     }
-
 
     @Override
     public final void parameters(final String[] par, final SnipeData v)
