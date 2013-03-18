@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.server.v1_4_R1.AxisAlignedBB;
-import net.minecraft.server.v1_4_R1.EntityPainting;
-import net.minecraft.server.v1_4_R1.EnumArt;
+import net.minecraft.server.v1_5_R1.AxisAlignedBB;
+import net.minecraft.server.v1_5_R1.EntityPainting;
+import net.minecraft.server.v1_5_R1.EnumArt;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_5_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
