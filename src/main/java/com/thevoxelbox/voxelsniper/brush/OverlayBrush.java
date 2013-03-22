@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -32,6 +31,7 @@ public class OverlayBrush extends PerformBrush
         final int _brushSize = v.getBrushSize();
         final double _bPow = Math.pow(_brushSize + 0.5, 2);
 
+
         for (int _z = _brushSize; _z >= -_brushSize; _z--)
         {
             for (int _x = _brushSize; _x >= -_brushSize; _x--)
@@ -39,7 +39,7 @@ public class OverlayBrush extends PerformBrush
                 // check if column is valid
                 // column is valid if it has no solid block right above the clicked layer
                 final int materialId = this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + 1, this.getBlockPositionZ() + _z);
-                if (isColumnValid(materialId))
+                if (isIgnoredBlock(materialId))
                 {
                     if ((Math.pow(_x, 2) + Math.pow(_z, 2)) <= _bPow)
                     {
@@ -47,7 +47,7 @@ public class OverlayBrush extends PerformBrush
                         {
                             // check for surface
                             final int layerBlockId = this.getBlockIdAt(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                            if (isColumnValid(layerBlockId))
+                            if (!isIgnoredBlock(layerBlockId))
                             {
                                 for (int currentDepth = _y; _y - currentDepth < depth; currentDepth--)
                                 {
@@ -68,12 +68,12 @@ public class OverlayBrush extends PerformBrush
         v.storeUndo(this.current.getUndo());
     }
 
-    private boolean isColumnValid(int materialId) {
-        return materialId == 9 || materialId == 8 || Material.getMaterial(materialId).isTransparent();
+    private boolean isIgnoredBlock(int materialId) {
+        return materialId == 9 || materialId == 8 || Material.getMaterial(materialId).isTransparent() || materialId == Material.CACTUS.getId();
     }
 
     private boolean isOverrideableMaterial(int materialId) {
-        if (allBlocks) return true;
+        if (allBlocks && !(materialId == Material.AIR.getId())) return true;
 
         switch (materialId)
         {
