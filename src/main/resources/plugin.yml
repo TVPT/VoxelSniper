@@ -37,6 +37,7 @@ commands:
            Example: /<command> -- resets the sniper to default settings.
   p:
     description: Voxelsniper performer.
+    aliases: [perf, performer]
     usage: |
            /<command>
            Example: /<command> -- sets the performer of the current brush to "m"
