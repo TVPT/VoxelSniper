@@ -14,7 +14,7 @@ commands:
     description: Warps to the specified coordinates.
     usage: |
            /<command> X Z
-           Example: /<command> 100 -100 takes the user to x: 100, z: -1000
+           Example: /<command> 100 -100 takes the user to x: 100, z: -100
   u:
     description: undoes the last snipe.
     usage: |
