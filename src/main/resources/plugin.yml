@@ -72,7 +72,6 @@ commands:
     usage: |
       /<command>
       Example: /<command> 89 -5: Add glowstone to voxel list and remove plank from voxel list.
-  
   vir:
     description: VoxelInkReplace.
     usage: |
