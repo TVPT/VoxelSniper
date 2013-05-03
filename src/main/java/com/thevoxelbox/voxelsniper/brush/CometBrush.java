@@ -2,16 +2,16 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import net.minecraft.server.v1_5_R2.EntityFireball;
-import net.minecraft.server.v1_5_R2.EntityLargeFireball;
-import net.minecraft.server.v1_5_R2.EntitySmallFireball;
+import net.minecraft.server.v1_5_R3.EntityFireball;
+import net.minecraft.server.v1_5_R3.EntityLargeFireball;
+import net.minecraft.server.v1_5_R3.EntitySmallFireball;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_5_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftFireball;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftSmallFireball;
+import org.bukkit.craftbukkit.v1_5_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftFireball;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftSmallFireball;
 import org.bukkit.util.Vector;
 
 /**
