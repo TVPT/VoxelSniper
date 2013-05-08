@@ -4,7 +4,7 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelSniper</artifactId>
-    <version>5.168.5-SNAPSHOT</version>
+    <version>5.168.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>VoxelSniper</name>
@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.number>UNKNOWN</project.build.number>
         <project.build.version>${project.version}</project.build.version>
-        <depversions.bukkit>1.5.1-R0.1-SNAPSHOT</depversions.bukkit>
+        <depversions.bukkit>1.5.2-R0.1-SNAPSHOT</depversions.bukkit>
     </properties>
 
     <profiles>
