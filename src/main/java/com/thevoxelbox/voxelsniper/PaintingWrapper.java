@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper;
 
-import net.minecraft.server.v1_6_R1.AxisAlignedBB;
-import net.minecraft.server.v1_6_R1.EntityPainting;
-import net.minecraft.server.v1_6_R1.EnumArt;
+import net.minecraft.server.v1_6_R2.AxisAlignedBB;
+import net.minecraft.server.v1_6_R2.EntityPainting;
+import net.minecraft.server.v1_6_R2.EnumArt;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
