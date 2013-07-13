@@ -65,8 +65,8 @@ public final class MetricsManager
         {
             final Metrics _metrics = new Metrics(VoxelSniper.getInstance());
 
-            final Graph _graph = _metrics.createGraph("Snipers Online");
-            _graph.addPlotter(new Metrics.Plotter("Snipers Online")
+            final Graph snipersOnlineGraph = _metrics.createGraph("Snipers Online");
+            snipersOnlineGraph.addPlotter(new Metrics.Plotter("Snipers Online")
             {
 
                 @Override
@@ -83,7 +83,7 @@ public final class MetricsManager
                     return _count;
                 }
             });
-            _graph.addPlotter(new Metrics.Plotter("Litesnipers Online")
+            snipersOnlineGraph.addPlotter(new Metrics.Plotter("Litesnipers Online")
             {
 
                 @Override
@@ -101,7 +101,8 @@ public final class MetricsManager
                 }
             });
 
-            _metrics.addCustomData(new Metrics.Plotter("Average Snipes per Minute")
+            final Graph defaultGraph = _metrics.createGraph("Default");
+            defaultGraph.addPlotter(new Metrics.Plotter("Average Snipes per Minute")
             {
 
                 @Override
@@ -133,12 +134,12 @@ public final class MetricsManager
             });
 
 
-            final Graph _graphBrushUsage = _metrics.createGraph("Brush Usage");
+            final Graph brushUsageGraph = _metrics.createGraph("Brush Usage");
 
             final HashMap<String, Brush> _temp = SniperBrushes.getSniperBrushes();
             for (final Entry<String, Brush> _entry : _temp.entrySet())
             {
-                _graphBrushUsage.addPlotter(new Metrics.Plotter(SniperBrushes.getName(_entry.getValue()))
+                brushUsageGraph.addPlotter(new Metrics.Plotter(SniperBrushes.getName(_entry.getValue()))
                 {
                     @Override
                     public int getValue()
@@ -153,39 +154,6 @@ public final class MetricsManager
                     }
                 });
             }
-
-            final Graph _graphJavaVersion = _metrics.createGraph("Java Version");
-            _graphJavaVersion.addPlotter(new Metrics.Plotter(System.getProperty("java.version"))
-            {
-
-                @Override
-                public int getValue()
-                {
-                    return 1;
-                }
-            });
-
-            final Graph _graphOsName = _metrics.createGraph("OS Name");
-            _graphOsName.addPlotter(new Metrics.Plotter(System.getProperty("os.name"))
-            {
-
-                @Override
-                public int getValue()
-                {
-                    return 1;
-                }
-            });
-
-            final Graph _graphOsArch = _metrics.createGraph("OS Architecture");
-            _graphOsArch.addPlotter(new Metrics.Plotter(System.getProperty("os.arch"))
-            {
-
-                @Override
-                public int getValue()
-                {
-                    return 1;
-                }
-            });
 
             _metrics.start();
         }

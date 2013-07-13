@@ -66,9 +66,9 @@
             <version>${depversions.bukkit}</version>
         </dependency>
         <dependency>
-            <groupId>org.mcstats</groupId>
+            <groupId>org.mcstats.bukkit</groupId>
             <artifactId>metrics</artifactId>
-            <version>R6</version>
+            <version>R7</version>
         </dependency>
         <dependency>
             <groupId>com.martiansoftware</groupId>
