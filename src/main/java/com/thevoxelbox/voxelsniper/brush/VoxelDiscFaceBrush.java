@@ -38,7 +38,7 @@ public class VoxelDiscFaceBrush extends PerformBrush
         v.storeUndo(this.current.getUndo());
     }
 
-    private void discEW(final SnipeData v)
+    private void discNS(final SnipeData v)
     {
         final int _bSize = v.getBrushSize();
 
@@ -53,7 +53,7 @@ public class VoxelDiscFaceBrush extends PerformBrush
         v.storeUndo(this.current.getUndo());
     }
 
-    private void discNS(final SnipeData v)
+    private void discEW(final SnipeData v)
     {
         final int _bSize = v.getBrushSize();
 
