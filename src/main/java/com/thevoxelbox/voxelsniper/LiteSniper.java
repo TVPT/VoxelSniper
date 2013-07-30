@@ -72,7 +72,7 @@ public class LiteSniper extends Sniper
             }
             else
             {
-                this.getPlayer().sendMessage(ChatColor.GREEN + "liteSnipers are not allowed to use ranges higher than 40.");
+                this.getPlayer().sendMessage(ChatColor.GREEN + "LiteSnipers are not allowed to use ranges higher than 40.");
             }
         }
         else
@@ -111,6 +111,6 @@ public class LiteSniper extends Sniper
     @Override
     public final void toggleLightning()
     {
-        this.getPlayer().sendMessage(ChatColor.GREEN + "liteSnipers are not allowed to use this.");
+        this.getPlayer().sendMessage(ChatColor.GREEN + "LiteSnipers are not allowed to use this.");
     }
 }
