@@ -42,7 +42,7 @@ public class LiteSniper extends Sniper
         }
         else
         {
-            this.getPlayer().sendMessage(ChatColor.RED + "You cant use this size of brush!");
+            this.getPlayer().sendMessage(ChatColor.RED + "You cannot use this brush size.");
         }
     }
 
@@ -55,7 +55,7 @@ public class LiteSniper extends Sniper
         }
         else
         {
-            this.getPlayer().sendMessage(ChatColor.RED + "You cant use this size of heigth!");
+            this.getPlayer().sendMessage(ChatColor.RED + "You cannot use this brush height.");
         }
     }
 
@@ -91,7 +91,7 @@ public class LiteSniper extends Sniper
         }
         else
         {
-            this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block!");
+            this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block.");
         }
     }
 
@@ -104,7 +104,7 @@ public class LiteSniper extends Sniper
         }
         else
         {
-            this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block!");
+            this.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to use this block.");
         }
     }
 
