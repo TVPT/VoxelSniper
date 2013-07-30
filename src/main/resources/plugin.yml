@@ -9,44 +9,44 @@ commands:
     description: Change the selected painting to another painting.
     usage: |
            /<command>
-           Example: /<command>
+           Example: /<command> -- Cycles through paintings. You must be adjacent to the painting and aiming at it.
   goto:
     description: Warps to the specified coordinates.
     usage: |
            /<command> X Z
-           Example: /<command> 100 -100 takes the user to x: 100, z: -100
+           Example: /<command> 100 -100 -- Takes the user to the coordinates X: 100, Z: -100. The Y-coordinate will always be 1 more than the Y-coordinate of the highest block at the X and Z-coordinates provided.
   u:
-    description: undoes the last snipe.
+    description: Undoes the last snipe.
     usage: |
            /<command>
-           Example: /<command> - does your most recent sniper.
+           Example: /<command> -- Undoes your most recent snipe.
   uu:
     description: UndoUser undoes another sniper user's snipes.
     usage: |
            /<command> playername (truncation okay)
-           Example: /<command> bads -- undoes BadSniper's last snipe.  BadSniper must be online for this to work.
+           Example: /<command> bads -- undoes BadSniper's last snipe.  BadSniper must be online for name detection to work.
   uuu:
     description: Ultimate Undo User.
     usage: |
            /<command> PlayerName
-           Example: /<command> BadSniper -- undoes BadSniper's last snipe, even though they logged off.
+           Example: /<command> BadSniper -- Undoes BadSniper's last snipe, even though he is offline.
   d:
     description: VoxelSniper Default.
     usage: |
            /<command>
-           Example: /<command> -- resets the sniper to default settings.
+           Example: /<command> -- Resets the brush settings to their default values.
   p:
     description: Voxelsniper performer.
     usage: |
            /<command>
-           Example: /<command> -- sets the performer of the current brush to "m"
+           Example: /<command> -- Sets the performer of the current brush to "m".
            /<command> <performer>
-           Example: /<command> -- sets the performer of the current brush to <performer>
+           Example: /<command> -- Sets the performer of the current brush to <performer>.
   vs:
     description: VoxelSniper Settings.
     usage: |
            /<command>
-           Example: /<command> -- gives the sniper's settings in a printout.
+           Example: /<command> -- Returns the current brush settings.
   vc:
     description: VoxelCentroid.
     usage: |
@@ -56,42 +56,42 @@ commands:
     description: VoxelHeight.
     usage: |
            /<command>
-           Example: /<command> -- sets the height from the center of the Clone Cylinder to copy.
+           Example: /<command> -- Sets the brush height.
   vi:
     description: VoxelInk (Data Value).
     usage: |
            /<command> 6
-           Example: /<command> -- sets a data value of 6 (e.g. Pink Wool).
+           Example: /<command> -- sets a data value of 6 (e.g. pink wool).
   vr:
     description: VoxelReplace.
     usage: |
            /<command> 0-94
-           Example: /<command> 12 - sets a replace brush to select Sand blocks for replacement.
+           Example: /<command> 12 -- Sets a replace brush to select sand blocks for replacement.
   vl:
     description: VoxelBlockExclusion list
     usage: |
       /<command>
-      Example: /<command> 89 -5: Add glowstone to voxel list and remove plank from voxel list.
+      Example: /<command> 89 -5 -- Adds glowstone to the voxel list and removes planks from the voxel list.
   vir:
     description: VoxelInkReplace.
     usage: |
            /<command> 6
-           Example: /<command> 12 - sets a replace ink brush to select data 6 blocks for replacement.
+           Example: /<command> 12 -- Sets a replace ink brush to select data 6 blocks for replacement.
   v:
     description: Voxel input.
     usage: |
            /<command> 0-94
-           Example: /<command> 1 -- loads the sniper with Stone blocks.
+           Example: /<command> 1 -- Loads the sniper with Stone blocks.
   b:
     description: Brush.
     usage: |
            /<command> select-radius
-           Example: /<command> 5 -- sets a brush radius size of 5 (11 spaces across).
-           Example: /<command> idr -- sets an ink disc replace brush.
+           Example: /<command> 5 -- Sets a brush radius size of 5 (11 spaces across).
+           Example: /<command> b cm -- Sets your brush to the Ball Brush with the combo-mat performer.
   btool:
     description: Brush Tool Command.
     usage : |
-            /<command> prints out the usage of the command.
+            /<command> -- Prints out the usage of the command.
   bms:
     description: Save brush preset.
     usage: |
@@ -106,4 +106,4 @@ commands:
     description: Update the chunk you are standing in.
     usage: |
            /<command>
-           Example: /<command> -- Loads the chunk you stand in.
+           Example: /<command> -- Loads the chunk you're standing in.
