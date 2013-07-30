@@ -176,7 +176,7 @@ public abstract class Brush implements IBrush
     @Override
     public void parameters(final String[] par, final SnipeData v)
     {
-        v.sendMessage(ChatColor.DARK_GREEN + "This brush doesn't take any extra parameters.");
+        v.sendMessage(ChatColor.RED + "This brush does not accept additional parameters.");
     }
 
     /**
@@ -197,7 +197,7 @@ public abstract class Brush implements IBrush
             this.setLastBlock(clickedBlock.getRelative(clickedFace));
             if (this.getLastBlock() == null)
             {
-                v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
+                v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                 return false;
             }
             if (v.owner().isLightning())
@@ -224,7 +224,7 @@ public abstract class Brush implements IBrush
                 this.setLastBlock(_hb.getLastBlock());
                 if (this.getLastBlock() == null)
                 {
-                    v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
+                    v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                     return false;
                 }
                 if (v.owner().isLightning())
@@ -235,7 +235,7 @@ public abstract class Brush implements IBrush
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "You clicked outside of your sniping range.");
+                v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                 return false;
             }
         }

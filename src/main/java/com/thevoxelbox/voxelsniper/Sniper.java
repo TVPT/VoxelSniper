@@ -580,7 +580,7 @@ public class Sniper
         }
         else
         {
-            this.player.sendMessage(ChatColor.DARK_GREEN + "Brush tool is non-existant!");
+            this.player.sendMessage(ChatColor.DARK_GREEN + "Brush tool is nonexistent!");
         }
     }
 
@@ -783,7 +783,7 @@ public class Sniper
             }
             else
             {
-                this.player.sendMessage(ChatColor.LIGHT_PURPLE + "No such brush.");
+                this.player.sendMessage(ChatColor.LIGHT_PURPLE + "That brush does not exist.");
                 return false;
             }
 
