@@ -89,6 +89,7 @@ public enum SniperBrushes
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~psanker~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     ELLIPSE(EllipseBrush.class, "el", "ellipse"), // [ 1 ] \\
+    SPLINE(SplineBrush.class, "sp", "spline"), // [ 2 ] \\
     CLEAN_SNOW(CleanSnowBrush.class, "cls", "cleansnow"), // [ 4 ] \\
     EXTRUDE(ExtrudeBrush.class, "ex", "extrude"), // [ 5 ] \\
 
