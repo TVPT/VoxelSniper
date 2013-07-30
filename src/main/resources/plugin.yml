@@ -13,7 +13,7 @@ commands:
   goto:
     description: Warps to the specified coordinates.
     usage: |
-           /<command> X Z
+           /<command> [X] [Z]
            Example: /<command> 100 -100 -- Takes the user to the coordinates X: 100, Z: -100. The Y-coordinate will always be 1 more than the Y-coordinate of the highest block at the X and Z-coordinates provided.
   u:
     description: Undoes the last snipe.
@@ -23,12 +23,12 @@ commands:
   uu:
     description: UndoUser undoes another sniper user's snipes.
     usage: |
-           /<command> playername (truncation okay)
-           Example: /<command> bads -- undoes BadSniper's last snipe.  BadSniper must be online for name detection to work.
+           /<command> [playername]
+           Example: /<command> bads -- Undoes BadSniper's last snipe.  BadSniper must be online for name detection to function. Truncation allowed.
   uuu:
     description: Ultimate Undo User.
     usage: |
-           /<command> PlayerName
+           /<command> [playername]
            Example: /<command> BadSniper -- Undoes BadSniper's last snipe, even though he is offline.
   d:
     description: VoxelSniper Default.
@@ -50,22 +50,22 @@ commands:
   vc:
     description: VoxelCentroid.
     usage: |
-           /<command> ADJUST
+           /<command>
            Example: /<command> -1 -- Sets the Clone Cylinder's Y value for the base relative to the Clone Point.
   vh:
     description: VoxelHeight.
     usage: |
-           /<command>
+           /<command> [voxel-height]
            Example: /<command> -- Sets the brush height.
   vi:
     description: VoxelInk (Data Value).
     usage: |
-           /<command> 6
+           /<command> [0-16]
            Example: /<command> -- sets a data value of 6 (e.g. pink wool).
   vr:
     description: VoxelReplace.
     usage: |
-           /<command> 0-94
+           /<command> [0-159]
            Example: /<command> 12 -- Sets a replace brush to select sand blocks for replacement.
   vl:
     description: VoxelBlockExclusion list
@@ -75,32 +75,32 @@ commands:
   vir:
     description: VoxelInkReplace.
     usage: |
-           /<command> 6
+           /<command> [0-16]
            Example: /<command> 12 -- Sets a replace ink brush to select data 6 blocks for replacement.
   v:
     description: Voxel input.
     usage: |
-           /<command> 0-94
+           /<command> [0-159]
            Example: /<command> 1 -- Loads the sniper with Stone blocks.
   b:
     description: Brush.
     usage: |
-           /<command> select-radius
+           /<command> [brush-size]
            Example: /<command> 5 -- Sets a brush radius size of 5 (11 spaces across).
            Example: /<command> b cm -- Sets your brush to the Ball Brush with the combo-mat performer.
   btool:
     description: Brush Tool Command.
     usage : |
-            /<command> -- Prints out the usage of the command.
+            /<command> -- Prints out command usage information.
   bms:
     description: Save brush preset.
     usage: |
-           /<command> Integer preset key
+           /<command> [index]
            Example: /<command> 13 -- Saves your current brush settings to index 13.
   bml:
     description: Load brush preset.
     usage: |
-           /<command> Integer preset key
+           /<command> [index]
            Example: /<command> 13 -- Loads the brush settings you set earlier to index 13.
   vchunk:
     description: Update the chunk you are standing in.
