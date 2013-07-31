@@ -68,7 +68,7 @@ public enum SniperBrushes
     GENERATE_TREE(GenerateTreeBrush.class, "gt", "generatetree"), // [ 1 ] \\
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DivineRage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
-    GENERATE_CHUNK(RegenerateChunkBrush.class, "gc", "generatechunk"), // [ 1 ] \\ // No documentation. Fucks up client-sided. Still works though.
+    GENERATE_CHUNK(RegenerateChunkBrush.class, "gc", "generatechunk"), // [ 1 ] \\
     TREE_GENERATE(TreeSnipeBrush.class, "t", "treesnipe"), // [ 2 ] \\
     SCANNER(ScannerBrush.class, "sc", "scanner"), // [ 5 ] \\
 
@@ -89,6 +89,7 @@ public enum SniperBrushes
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~psanker~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
     ELLIPSE(EllipseBrush.class, "el", "ellipse"), // [ 1 ] \\
+    SPLINE(SplineBrush.class, "sp", "spline"), // [ 2 ] \\
     CLEAN_SNOW(CleanSnowBrush.class, "cls", "cleansnow"), // [ 4 ] \\
     EXTRUDE(ExtrudeBrush.class, "ex", "extrude"), // [ 5 ] \\
 
