@@ -123,7 +123,7 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            this.player.sendMessage(ChatColor.DARK_GREEN + "Brush tool already exists!");
+            this.player.sendMessage(ChatColor.DARK_GREEN + "That brush tool already exists!");
         }
         else
         {
@@ -139,7 +139,7 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            this.player.sendMessage(ChatColor.DARK_GREEN + "Brush tool already exists!");
+            this.player.sendMessage(ChatColor.DARK_GREEN + "That brush tool already exists!");
         }
         else
         {
@@ -200,7 +200,7 @@ public class Sniper
         int _sum = 0;
         if (this.undoList.isEmpty())
         {
-            this.player.sendMessage(ChatColor.GREEN + "Nothing to undo");
+            this.player.sendMessage(ChatColor.GREEN + "There's nothing to undo.");
         }
         else
         {
@@ -217,7 +217,7 @@ public class Sniper
                     break;
                 }
             }
-            this.player.sendMessage(ChatColor.GREEN + "Undo succesfull!  " + ChatColor.RED + _sum + ChatColor.GREEN + "  Blocks have been replaced.");
+            this.player.sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + _sum + ChatColor.GREEN + " blocks have been replaced.");
         }
     }
 
@@ -485,7 +485,7 @@ public class Sniper
         }
         catch (final Exception _e)
         {
-            this.player.sendMessage(ChatColor.RED + "Preset is empty.  Cannot load.");
+            this.player.sendMessage(ChatColor.RED + "Preset is empty. Cannot load.");
             _e.printStackTrace();
         }
     }
@@ -521,7 +521,7 @@ public class Sniper
         }
         catch (final Exception _e)
         {
-            this.player.sendMessage(ChatColor.RED + "Preset is empty.  Cannot load.");
+            this.player.sendMessage(ChatColor.RED + "Preset is empty. Cannot load.");
             _e.printStackTrace();
         }
     }
@@ -547,7 +547,7 @@ public class Sniper
      */
     public final void printBrushes()
     {
-        String _msg = ChatColor.GREEN + "Available brush short-names: /b ";
+        String _msg = ChatColor.GREEN + "Available brushes (abbreviated): ";
         for (final String _brushName : this.myBrushes.keySet())
         {
             _msg += ChatColor.GREEN + " | " + ChatColor.BLUE + _brushName;
@@ -560,7 +560,7 @@ public class Sniper
      */
     public final void printBrushesLong()
     {
-        String _msg = ChatColor.GREEN + "Available brush long-names: /b ";
+        String _msg = ChatColor.GREEN + "Available brushes: ";
         for (final String _brushName : this.brushAlt.keySet())
         {
             _msg += ChatColor.GREEN + " | " + ChatColor.BLUE + _brushName;
@@ -580,7 +580,7 @@ public class Sniper
         }
         else
         {
-            this.player.sendMessage(ChatColor.DARK_GREEN + "Brush tool is non-existant!");
+            this.player.sendMessage(ChatColor.DARK_GREEN + "That brush tool doesn't exist!");
         }
     }
 
@@ -744,7 +744,7 @@ public class Sniper
         {
             if (args == null || args.length == 0)
             {
-                this.player.sendMessage(ChatColor.RED + "Invalid input!");
+                this.player.sendMessage(ChatColor.RED + "Invalid input.");
                 return false;
             }
             if (this.myBrushes.containsKey(args[0]))
@@ -783,7 +783,7 @@ public class Sniper
             }
             else
             {
-                this.player.sendMessage(ChatColor.LIGHT_PURPLE + "No such brush.");
+                this.player.sendMessage(ChatColor.LIGHT_PURPLE + "That brush does not exist.");
                 return false;
             }
 
@@ -827,7 +827,7 @@ public class Sniper
         }
         catch (final ArrayIndexOutOfBoundsException _e)
         {
-            this.player.sendMessage(ChatColor.RED + "Invalid input!");
+            this.player.sendMessage(ChatColor.RED + "Invalid input.");
             _e.printStackTrace();
             return false;
         }
@@ -961,7 +961,7 @@ public class Sniper
             }
             else
             {
-                this.voxelMessage.custom(ChatColor.GOLD + "This brush is not a Performer brush!");
+                this.voxelMessage.custom(ChatColor.GOLD + "This brush is not a performer brush.");
             }
         }
     }
@@ -1215,7 +1215,7 @@ public class Sniper
                             }
                             catch (final Exception _e)
                             {
-                                this.player.sendMessage(ChatColor.RED + args[_x] + " is Not a valid parameter!");
+                                this.player.sendMessage(ChatColor.RED + args[_x] + " is not a valid parameter!");
                             }
                             break;
 
@@ -1234,7 +1234,7 @@ public class Sniper
                             }
                             catch (final Exception _e)
                             {
-                                this.player.sendMessage(ChatColor.RED + args[_x] + " is Not a valid parameter!");
+                                this.player.sendMessage(ChatColor.RED + args[_x] + " is not a valid parameter!");
                             }
                             break;
 
