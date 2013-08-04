@@ -126,7 +126,7 @@ public class VoxelSniperListener implements Listener
     {
         if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
         {
-            player.sendMessage(ChatColor.RED + "A LiteSniper is not permitted to use this command.");
+            player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use this command.");
             return true;
         }
         try
@@ -139,7 +139,7 @@ public class VoxelSniperListener implements Listener
         }
         catch (final Exception _e)
         {
-            player.sendMessage("Wrong.");
+            player.sendMessage(ChatColor.RED + "Invalid syntax.");
             return true;
         }
     }
@@ -161,7 +161,7 @@ public class VoxelSniperListener implements Listener
             }
             catch (final Exception _e)
             {
-                player.sendMessage(ChatColor.RED + "Invalid input!");
+                player.sendMessage(ChatColor.RED + "Invalid input.");
                 return true;
             }
         }
@@ -316,7 +316,7 @@ public class VoxelSniperListener implements Listener
         try
         {
             VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).reset();
-            player.sendMessage(ChatColor.GRAY + "Values reset.");
+            player.sendMessage(ChatColor.AQUA + "Brush settings reset to their default values.");
             return true;
         }
         catch (final Exception _e)
@@ -392,7 +392,7 @@ public class VoxelSniperListener implements Listener
         }
         catch (final Exception _e)
         {
-            player.sendMessage(ChatColor.GREEN + "Player not found");
+            player.sendMessage(ChatColor.GREEN + "Player not found.");
             return true;
         }
     }
@@ -411,7 +411,7 @@ public class VoxelSniperListener implements Listener
         }
         catch (final Exception _e)
         {
-            player.sendMessage(ChatColor.GREEN + "Player not found");
+            player.sendMessage(ChatColor.GREEN + "Player not found.");
             return true;
         }
     }
@@ -445,7 +445,7 @@ public class VoxelSniperListener implements Listener
             }
             else
             {
-                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID!");
+                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
                 return true;
             }
         }
@@ -454,7 +454,7 @@ public class VoxelSniperListener implements Listener
             final Material _mat = Material.matchMaterial(split[0]);
             if (_mat == null)
             {
-                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID!");
+                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
                 return true;
             }
 
@@ -467,7 +467,7 @@ public class VoxelSniperListener implements Listener
             }
             else
             {
-                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID!");
+                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
                 return true;
             }
         }
@@ -493,7 +493,7 @@ public class VoxelSniperListener implements Listener
         }
         catch (final Exception _e)
         {
-            player.sendMessage(ChatColor.RED + "Invalid input");
+            player.sendMessage(ChatColor.RED + "Invalid input.");
             return true;
         }
     }
@@ -513,7 +513,7 @@ public class VoxelSniperListener implements Listener
         }
         catch (final Exception _e)
         {
-            player.sendMessage(ChatColor.RED + "Invalid input");
+            player.sendMessage(ChatColor.RED + "Invalid input.");
             return true;
         }
     }
@@ -711,7 +711,7 @@ public class VoxelSniperListener implements Listener
             }
             else
             {
-                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID!");
+                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
                 return true;
             }
         }
@@ -720,7 +720,7 @@ public class VoxelSniperListener implements Listener
             final Material _mat = Material.matchMaterial(split[0]);
             if (_mat == null)
             {
-                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID!");
+                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
                 return true;
             }
 
@@ -733,7 +733,7 @@ public class VoxelSniperListener implements Listener
             }
             else
             {
-                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID!");
+                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
                 return true;
             }
         }
@@ -770,7 +770,7 @@ public class VoxelSniperListener implements Listener
                 {
                     if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
                     {
-                        player.sendMessage(ChatColor.RED + "A LiteSniper is not permitted to use this command.");
+                        player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use this command.");
                         return true;
                     }
                     VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).toggleLightning();
@@ -780,7 +780,7 @@ public class VoxelSniperListener implements Listener
                 {
                     if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
                     {
-                        player.sendMessage(ChatColor.RED + "A LiteSniper is not permitted to use this command.");
+                        player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use this command.");
                         return true;
                     }
                     player.getWorld().setWeatherDuration(0);
@@ -795,7 +795,7 @@ public class VoxelSniperListener implements Listener
                         final double _i = Double.parseDouble(split[1]);
                         if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player) && (_i > 12 || _i < -12))
                         {
-                            player.sendMessage(ChatColor.RED + "A LiteSniper is not permitted to use ranges over 12.");
+                            player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use ranges over 12.");
                             return true;
                         }
                         VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setRange(_i);
@@ -809,24 +809,24 @@ public class VoxelSniperListener implements Listener
                 }
                 else if (split[0].equalsIgnoreCase("perf"))
                 {
-                    player.sendMessage(ChatColor.AQUA + "The aviable performers are:");
+                    player.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");
                     player.sendMessage(PerformerE.performer_list_short);
                     return true;
                 }
                 else if (split[0].equalsIgnoreCase("perflong"))
                 {
-                    player.sendMessage(ChatColor.AQUA + "The aviable performers are:");
+                    player.sendMessage(ChatColor.AQUA + "Available performers:");
                     player.sendMessage(PerformerE.performer_list_long);
                     return true;
                 }
             }
-            player.sendMessage(ChatColor.DARK_RED + "VoxelSniper current settings:");
+            player.sendMessage(ChatColor.DARK_RED + "VoxelSniper - Current Brush Settings:");
             VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).info();
             return true;
         }
         catch (final Exception _e)
         {
-            player.sendMessage(ChatColor.RED + "You are not allowed to use this command");
+            player.sendMessage(ChatColor.RED + "You are not allowed to use this command.");
             return true;
         }
     }
