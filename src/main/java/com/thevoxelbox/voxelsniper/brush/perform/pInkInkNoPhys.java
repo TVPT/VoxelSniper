@@ -15,7 +15,7 @@ public class pInkInkNoPhys extends vPerformer
 
     public pInkInkNoPhys()
     {
-        name = "Ink-Ink";
+        name = "Ink-Ink, No Physics";
     }
 
     @Override
