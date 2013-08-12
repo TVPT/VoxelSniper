@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Tree_Brush
@@ -30,7 +31,11 @@ public class TreeSnipeBrush extends Brush
     {
         try
         {
+        	Block b = this.getTargetBlock();
+        	int id_old = b.getTypeId();
+        	b.setTypeId(net.minecraft.server.v1_6_R2.Block.GRASS.id);
             this.getWorld().generateTree(new Location(this.getWorld(), this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()), this.treeType);
+            b.setTypeId(id_old);
         }
         catch (final Exception _e)
         {

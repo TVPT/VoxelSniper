@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.number>UNKNOWN</project.build.number>
         <project.build.version>${project.version}</project.build.version>
-        <depversions.bukkit>1.5.1-R0.2</depversions.bukkit>
+        <depversions.bukkit>1.6.2-R0.1-SNAPSHOT</depversions.bukkit>
     </properties>
 
     <profiles>
@@ -66,9 +66,9 @@
             <version>${depversions.bukkit}</version>
         </dependency>
         <dependency>
-            <groupId>org.mcstats</groupId>
+            <groupId>org.mcstats.bukkit</groupId>
             <artifactId>metrics</artifactId>
-            <version>R6</version>
+            <version>R7</version>
         </dependency>
         <dependency>
             <groupId>com.martiansoftware</groupId>

@@ -35,7 +35,8 @@ public class PunishBrush extends PerformBrush
         // Monofraps
         FIRE, LIGHTNING, BLINDNESS, DRUNK, KILL, RANDOMTP, ALL_POTION,
         // Deamon
-        INVERT, JUMP,
+        SLOW, JUMP, ABSORPTION, DAMAGE_RESISTANCE, FAST_DIGGING, FIRE_RESISTANCE, HEAL, HEALTH_BOOST, HUNGER, INCREASE_DAMAGE, INVISIBILITY, NIGHT_VISION, POISON, REGENERATION,
+        SATURATION, SLOW_DIGGING, SPEED, WATER_BREATHING, WEAKNESS, WITHER,
         // MikeMatrix
         FORCE, HYPNO
     }
@@ -57,6 +58,8 @@ public class PunishBrush extends PerformBrush
     private String punishPlayerName = "";
 
     private boolean hypnoAffectLandscape = false;
+    
+    private boolean hitsSelf = false;
 
     /**
      * Default Constructor.
@@ -82,11 +85,65 @@ public class PunishBrush extends PerformBrush
             case DRUNK:
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
                 break;
-            case INVERT:
+            case SLOW:
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
                 break;
             case JUMP:
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case ABSORPTION:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case DAMAGE_RESISTANCE:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case FAST_DIGGING:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case FIRE_RESISTANCE:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case HEAL:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case HEALTH_BOOST:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case HUNGER:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case INCREASE_DAMAGE:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case INVISIBILITY:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case NIGHT_VISION:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case POISON:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.POISON, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case REGENERATION:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case SATURATION:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case SLOW_DIGGING:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case SPEED:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case WATER_BREATHING:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case WEAKNESS:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+                break;
+            case WITHER:
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
                 break;
             case KILL:
                 entity.setHealth(0);
@@ -178,7 +235,7 @@ public class PunishBrush extends PerformBrush
         int _numPunishApps = 0;
         for (final LivingEntity _entity : _entities)
         {
-            if (v.owner().getPlayer() != _entity)
+            if (v.owner().getPlayer() != _entity || hitsSelf)
             {
                 if (v.getBrushSize() >= 0)
                 {
@@ -259,6 +316,7 @@ public class PunishBrush extends PerformBrush
                 v.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
                 v.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
                 v.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
+                v.sendMessage(ChatColor.AQUA + "Parameter -toggleSelf will toggle whether you get hit as well.");
                 v.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
                 final StringBuilder _punishmentOptions = new StringBuilder();
                 for (final Punishment _punishment : Punishment.values())
@@ -286,6 +344,18 @@ public class PunishBrush extends PerformBrush
                     {
                         v.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
                     }
+                }
+            }
+            else if (_string.equalsIgnoreCase("-toggleSelf"))
+            {
+                this.hitsSelf = !this.hitsSelf;
+                if(hitsSelf) 
+                {
+                    v.sendMessage(ChatColor.AQUA + "Your punishments will now affect you too!");
+                }
+                else
+                {
+                    v.sendMessage(ChatColor.AQUA + "Your punishments will no longer affect you!");
                 }
             }
             else if (_string.equalsIgnoreCase("-toggleHypnoLandscape"))

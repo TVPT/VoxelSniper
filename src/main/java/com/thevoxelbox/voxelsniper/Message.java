@@ -42,7 +42,7 @@ public class Message
      */
     public final void brushName(final String brushName)
     {
-        this.v.sendMessage(ChatColor.LIGHT_PURPLE + "Brush set to " + brushName);
+        this.v.sendMessage(ChatColor.AQUA + "Brush Type: " + ChatColor.LIGHT_PURPLE + brushName);
     }
 
     /**
@@ -52,7 +52,7 @@ public class Message
     {
         if (this.v.owner().isPrintout())
         {
-            this.v.sendMessage(ChatColor.DARK_BLUE + "Center set to " + ChatColor.DARK_RED + this.v.getcCen());
+            this.v.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + this.v.getcCen());
         }
     }
 
@@ -73,7 +73,7 @@ public class Message
     {
         if (this.v.owner().isPrintout())
         {
-            this.v.sendMessage(ChatColor.BLUE + "Data variable set to " + ChatColor.DARK_RED + this.v.getData());
+            this.v.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + this.v.getData());
         }
     }
 
@@ -84,7 +84,7 @@ public class Message
     {
         if (this.v.owner().isPrintout())
         {
-            this.v.sendMessage(ChatColor.DARK_AQUA + "Brush height " + ChatColor.DARK_RED + this.v.getVoxelHeight());
+            this.v.sendMessage(ChatColor.DARK_AQUA + "Brush Height: " + ChatColor.DARK_RED + this.v.getVoxelHeight());
         }
     }
 
@@ -95,7 +95,7 @@ public class Message
      */
     public final void performerName(final String performerName)
     {
-        this.v.sendMessage(ChatColor.DARK_GREEN + performerName + ChatColor.LIGHT_PURPLE + " Performer selected");
+        this.v.sendMessage(ChatColor.DARK_PURPLE + "Performer: " + ChatColor.DARK_GREEN + performerName);
     }
 
     /**
@@ -105,7 +105,7 @@ public class Message
     {
         if (this.v.owner().isPrintout())
         {
-            this.v.sendMessage(ChatColor.AQUA + "Replace material set to " + ChatColor.DARK_RED + this.v.getReplaceId() + ChatColor.AQUA + " (" + Material.getMaterial(this.v.getReplaceId()).toString() + ")");
+            this.v.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + this.v.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(this.v.getReplaceId()).toString() + ")");
         }
     }
 
@@ -116,7 +116,7 @@ public class Message
     {
         if (this.v.owner().isPrintout())
         {
-            this.v.sendMessage(ChatColor.DARK_GRAY + "Replace data variable set to " + ChatColor.DARK_RED + this.v.getReplaceData());
+            this.v.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + this.v.getReplaceData());
         }
     }
 
@@ -125,7 +125,7 @@ public class Message
      */
     public final void size()
     {
-        this.v.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.DARK_RED + this.v.getBrushSize());
+        this.v.sendMessage(ChatColor.GREEN + "Brush Size: " + ChatColor.DARK_RED + this.v.getBrushSize());
         if (this.v.getBrushSize() >= BRUSH_SIZE_WARNING_THRESHOLD)
         {
             this.v.sendMessage(ChatColor.RED + "WARNING: Large brush size selected!");
@@ -163,7 +163,7 @@ public class Message
     {
         if (this.v.owner().isPrintout())
         {
-            this.v.sendMessage(ChatColor.GOLD + "Voxel set to " + ChatColor.DARK_RED + this.v.getVoxelId() + ChatColor.AQUA + " (" + Material.getMaterial(this.v.getVoxelId()).toString() + ")");
+            this.v.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + this.v.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(this.v.getVoxelId()).toString() + ")");
         }
     }
 
@@ -176,12 +176,12 @@ public class Message
         {
             if (this.v.getVoxelList().isEmpty())
             {
-                this.v.sendMessage(ChatColor.DARK_GREEN + "No selected blocks!");
+                this.v.sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
             }
             else
             {
                 final VoxIterator _it = this.v.getVoxelList().getIterator();
-                String _pre = ChatColor.DARK_GREEN + "Block types selected: " + ChatColor.AQUA;
+                String _pre = ChatColor.DARK_GREEN + "Block Types Selected: " + ChatColor.AQUA;
                 while (_it.hasNext())
                 {
                     _pre = _pre + _it.next() + " ";

@@ -40,35 +40,35 @@ import org.bukkit.ChatColor;
  */
 
 public enum PerformerE
-{ // =========== Hey, can we get a "No-Undo" performer?  -prz; Done -psa
-    // Example of
-    // old brush in   Description
-    // this categ.
-    MATERIAL(pMaterial.class, "m", "material"), // /b b         place mat
-    MATERIAL_NOPHYS(pMaterialNoPhys.class, "mp", "mat-nophys"),     //              place mat, no-physics
-    MAT_MAT(pMatMat.class, "mm", "mat-mat"),      // /b br        place mat, replace mat
-    MAT_MAT_NOPHYS(pMatMatNoPhys.class, "mmp", "mat-mat-nophys"),     // /b sp        place mat, replace mat, no physics
-    MAT_INK(pMatInk.class, "mi", "mat-ink"),      //              place mat, replace ink (e.g. all things with data value 14 to sand)
-    MAT_INK_NOPHYS(pMatInkNoPhys.class, "mip", "mat-ink-nophys"),          //              place mat, replace ink, no physics
-    MAT_COMBO(pMatCombo.class, "mc", "mat-combo"),    // /b ibrs      place mat, replace both
-    MAT_COMBO_NOPHYS(pMatComboNophys.class, "mcp", "mat-combo-nophys"),      //              place mat, replace combo, no physics
-    INK(pInk.class, "i", "ink"),      // /b ib        place ink
-    INK_MAT(pInkMat.class, "im", "ink-mat"),         // /b ibr       place ink, replace mat
-    INK_INK(pInkInk.class, "ii", "ink-ink"),         //              place ink, replace ink
-    INK_COMBO(pInkCombo.class, "ic", "ink-combo"),       //              place ink, replace both
-    COMBO(pCombo.class, "c", "combo"),       // strong inks  place both
-    COMBO_NOPHYS(pComboNoPhys.class, "cp", "combo-nophys"),      //              place both, no-physics
-    COMBO_MAT(pComboMat.class, "cm", "combo-mat"),       //              place both, replace mat
-    COMBO_MAT_NOPHYS(pComboMatNoPhys.class, "cmp", "combo-mat-nophys"),        //              place combo, replace mat, no physics
-    COMBO_INK(pComboInk.class, "ci", "combo-ink"),       //              place both, replace ink
-    COMBO_INK_NOPHYS(pComboInkNoPhys.class, "cip", "combo-ink-nophys"),        //              place combo, replace ink, no physics
-    COMBO_COMBO(pComboCombo.class, "cc", "combo-combo"),     //              place both, replace both
-    COMBO_COMBO_NOPHYS(pComboComboNoPhys.class, "ccp", "combo-combo-nophys"),    //              place both, replace both, no physics
-    EXCLUDE_MATERIAL(pExcludeMat.class, "xm", "exclude-mat"),    //              place block unless old block is a member of the exclusion list
-    INCLUDE_MATERIAL(pIncludeMat.class, "nm", "include-mat"),    //              place block only if the old block is a member of the inclusion list
-    MAT_NO_UNDO(pNoUndo.class, "noundo", "noundo");    //          place a block without the choice of undo
-    //INK_NO_UNDO(                pInkNoUndo.class,               "in",           "ink-noundo"          ),    //          place ink without the choice of undo
-    //COMBO_NO_UNDO(              pComboNoUndo.class,             "cn",           "combo-noundo"          );    //          place both without the choice of undo
+{
+
+    MATERIAL(pMaterial.class, "m", "material"),
+    MATERIAL_NOPHYS(pMaterialNoPhys.class, "mp", "mat-nophys"),
+    MAT_MAT(pMatMat.class, "mm", "mat-mat"),
+    MAT_MAT_NOPHYS(pMatMatNoPhys.class, "mmp", "mat-mat-nophys"),
+    MAT_INK(pMatInk.class, "mi", "mat-ink"),
+    MAT_INK_NOPHYS(pMatInkNoPhys.class, "mip", "mat-ink-nophys"),
+    MAT_COMBO(pMatCombo.class, "mc", "mat-combo"),
+    MAT_COMBO_NOPHYS(pMatComboNophys.class, "mcp", "mat-combo-nophys"),
+    INK(pInk.class, "i", "ink"),
+    INK_MAT(pInkMat.class, "im", "ink-mat"),
+    INK_INK(pInkInk.class, "ii", "ink-ink"),
+    INK_COMBO(pInkCombo.class, "ic", "ink-combo"),
+    INK_INK_NOPHYS(pInkInkNoPhys.class, "iip", "ink-ink-nophys"),
+    INK_NOPHYS(pInkNoPhys.class, "ip", "ink-nophys"),
+    INK_MAT_NOPHYS(pInkMatNoPhys.class, "imp", "ink-mat-nophys"),
+    INK_COMBO_NOPHYS(pInkComboNoPhys.class, "icp", "ink-combo-nophys"),
+    COMBO(pCombo.class, "c", "combo"),
+    COMBO_NOPHYS(pComboNoPhys.class, "cp", "combo-nophys"),
+    COMBO_MAT(pComboMat.class, "cm", "combo-mat"),
+    COMBO_MAT_NOPHYS(pComboMatNoPhys.class, "cmp", "combo-mat-nophys"),
+    COMBO_INK(pComboInk.class, "ci", "combo-ink"),
+    COMBO_INK_NOPHYS(pComboInkNoPhys.class, "cip", "combo-ink-nophys"),
+    COMBO_COMBO(pComboCombo.class, "cc", "combo-combo"),
+    COMBO_COMBO_NOPHYS(pComboComboNoPhys.class, "ccp", "combo-combo-nophys"),
+    EXCLUDE_MATERIAL(pExcludeMat.class, "xm", "exclude-mat"),
+    INCLUDE_MATERIAL(pIncludeMat.class, "nm", "include-mat"),
+    MAT_NO_UNDO(pNoUndo.class, "noundo", "noundo");
     //Other Performers which don't exist yet but are required for a full set of possibilities that actually could potentially do something:
     //List does not include any no-physics, unless materials are being placed (or combo), or any update unless ink is being placed (or combo) -Gavjenks
 
