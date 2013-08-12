@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * @author MikeMatrix
@@ -30,16 +31,27 @@ public class WarpBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        v.owner().getPlayer().teleport(this.getLastBlock().getLocation());
+        Player player = v.owner().getPlayer();
+        Location location = this.getLastBlock().getLocation();
+        Location playerLocation = player.getLocation();
+        location.setPitch(playerLocation.getPitch());
+        location.setYaw(playerLocation.getYaw());
+
+        player.teleport(location);
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        final Location _targetLocation = this.getLastBlock().getLocation();
-        this.getWorld().strikeLightning(_targetLocation);
-        v.owner().getPlayer().teleport(_targetLocation);
-        this.getWorld().strikeLightning(_targetLocation);
+        Player player = v.owner().getPlayer();
+        Location location = this.getLastBlock().getLocation();
+        Location playerLocation = player.getLocation();
+        location.setPitch(playerLocation.getPitch());
+        location.setYaw(playerLocation.getYaw());
+
+        getWorld().strikeLightning(location);
+        player.teleport(location);
+        getWorld().strikeLightning(location);
     }
 
     @Override
