@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,23 +25,27 @@ public class FillDownBrush extends PerformBrush
 
     private void fillDown(final SnipeData v, final Block b)
     {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 
-        for (int _x = 0 - _brushSize; _x <= _brushSize; _x++)
+        for (int currentX = 0 - brushSize; currentX <= brushSize; currentX++)
         {
-            final double _xPow = Math.pow(_x, 2);
+            final double currentXSquared = Math.pow(currentX, 2);
 
-            for (int _z = 0 - _brushSize; _z <= _brushSize; _z++)
+            for (int currentZ = 0 - brushSize; currentZ <= brushSize; currentZ++)
             {
-                if (_xPow + Math.pow(_z, 2) <= _bPow)
+                if (currentXSquared + Math.pow(currentZ, 2) <= brushSizeSquared)
                 {
-                    for (int _y = this.getBlockPositionY(); _y >= 0; --_y)
+                    for (int currentY = this.getBlockPositionY(); currentY >= 0; --currentY)
                     {
-                        final Block _block = this.clampY(this.getBlockPositionX() + _x, _y, this.getBlockPositionZ() + _z);
-                        if (_block.getType().equals(Material.AIR))
+                        final Block currentBlock = this.clampY(this.getBlockPositionX() + currentX, currentY, this.getBlockPositionZ() + currentZ);
+                        if (currentBlock.getType().equals(Material.AIR))
                         {
-                            this.current.perform(_block);
+                            this.current.perform(currentBlock);
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
                 }
