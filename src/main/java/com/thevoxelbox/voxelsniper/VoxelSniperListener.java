@@ -434,13 +434,13 @@ public class VoxelSniperListener implements Listener
             return true;
         }
 
-        if (VoxelSniper.getItem(split[0]) != -1)
+        Material material = Material.matchMaterial(split[0]);
+        if (material != null)
         {
             final Sniper _ps = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
-            final int _i = VoxelSniper.getItem(split[0]);
-            if (Material.getMaterial(_i) != null && Material.getMaterial(_i).isBlock())
+            if (material.isBlock())
             {
-                _ps.setVoxel(_i);
+                _ps.setVoxel(material.getId());
                 return true;
             }
             else
@@ -663,7 +663,7 @@ public class VoxelSniperListener implements Listener
                         _tmpstr = _str;
                     }
 
-                    _xstr = VoxelSniper.getItem(_tmpstr);
+                    _xstr = Material.matchMaterial(_tmpstr).getId();
 
                     if (!_rem)
                     {
@@ -700,13 +700,13 @@ public class VoxelSniperListener implements Listener
             return true;
         }
 
-        if (VoxelSniper.getItem(split[0]) != -1)
+        Material material = Material.matchMaterial(split[0]);
+        if (material != null)
         {
             final Sniper _ps = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
-            final int _i = VoxelSniper.getItem(split[0]);
-            if (Material.getMaterial(_i) != null && Material.getMaterial(_i).isBlock())
+            if (material.isBlock())
             {
-                _ps.setReplace(_i);
+                _ps.setReplace(material.getId());
                 return true;
             }
             else

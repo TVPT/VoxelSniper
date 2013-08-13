@@ -22,6 +22,7 @@ import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,8 +40,6 @@ import org.xml.sax.SAXException;
 public class VoxelSniper extends JavaPlugin
 {
 
-    private static final String ITEMS_TXT = "items.txt";
-    private static final String PLUGINS_VOXEL_SNIPER_ITEMS_TXT = "plugins/VoxelSniper/items.txt";
     private static final String PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML = "plugins/VoxelSniper/SniperConfig.xml";
     private static final SniperPermissionHelper SNIPER_PERMISSION_HELPER = new SniperPermissionHelper();
 
@@ -49,8 +48,6 @@ public class VoxelSniper extends JavaPlugin
     private int liteMaxBrush = 5;
     public static final Logger LOG = Logger.getLogger("Minecraft");
     protected static final Object ITEM_LOCK = new Object();
-    private static HashMap<String, Integer> items;
-
     private static VoxelSniper instance;
 
     /**
@@ -59,47 +56,6 @@ public class VoxelSniper extends JavaPlugin
     public static VoxelSniper getInstance()
     {
         return VoxelSniper.instance;
-    }
-
-    /**
-     * Get Item name from id.
-     *
-     * @param id
-     *
-     * @return String
-     */
-    public static String getItem(final int id)
-    {
-        synchronized (VoxelSniper.ITEM_LOCK)
-        {
-            for (final String _name : VoxelSniper.items.keySet())
-            {
-                if (VoxelSniper.items.get(_name) == id)
-                {
-                    return _name;
-                }
-            }
-        }
-        return String.valueOf(id);
-    }
-
-    /**
-     * Get Item id from name.
-     *
-     * @param name
-     *
-     * @return int
-     */
-    public static int getItem(final String name)
-    {
-        synchronized (VoxelSniper.ITEM_LOCK)
-        {
-            if (VoxelSniper.items.containsKey(name))
-            {
-                return VoxelSniper.items.get(name);
-            }
-        }
-        return -1;
     }
 
     /**
@@ -119,7 +75,7 @@ public class VoxelSniper extends JavaPlugin
      */
     public static boolean isValidItem(final int itemId)
     {
-        return VoxelSniper.items.containsValue(itemId);
+        return Material.getMaterial(itemId) != null;
     }
 
     /**
@@ -136,54 +92,6 @@ public class VoxelSniper extends JavaPlugin
     public final ArrayList<Integer> getLiteRestricted()
     {
         return this.liteRestricted;
-    }
-
-    /**
-     * Load items from Item List file.
-     */
-    public final void loadItems()
-    {
-        final String _location = VoxelSniper.PLUGINS_VOXEL_SNIPER_ITEMS_TXT;
-        final File _f = new File(VoxelSniper.ITEMS_TXT);
-        final File _nf = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_ITEMS_TXT);
-        if (_f.exists() && !_nf.exists())
-        {
-            _f.delete();
-        }
-
-        if (!_nf.exists())
-        {
-            _nf.getParentFile().mkdirs();
-            this.saveResource(VoxelSniper.ITEMS_TXT, false);
-        }
-
-        synchronized (VoxelSniper.ITEM_LOCK)
-        {
-            VoxelSniper.items = new HashMap<String, Integer>();
-            try
-            {
-                final Scanner _scanner = new Scanner(_nf);
-                while (_scanner.hasNextLine())
-                {
-                    final String _line = _scanner.nextLine();
-                    if (_line.startsWith("#"))
-                    {
-                        continue;
-                    }
-                    if (_line.equals(""))
-                    {
-                        continue;
-                    }
-                    final String[] _split = _line.split(":");
-                    VoxelSniper.items.put(_split[0], Integer.parseInt(_split[1]));
-                }
-                _scanner.close();
-            }
-            catch (final Exception _e)
-            {
-                VoxelSniper.LOG.log(Level.SEVERE, "Exception while reading " + _location + " (Are you sure you formatted it correctly?)", _e);
-            }
-        }
     }
 
     /**
@@ -313,7 +221,6 @@ public class VoxelSniper extends JavaPlugin
 
         MetricsManager.getInstance().start();
 
-        this.loadItems();
         this.loadSniperConfiguration();
 
         final PluginManager _pm = Bukkit.getPluginManager();
