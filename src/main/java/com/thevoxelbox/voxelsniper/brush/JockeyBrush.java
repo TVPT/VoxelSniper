@@ -29,7 +29,25 @@ public class JockeyBrush extends Brush
 
     private enum JockeyType
     {
-        NORMAL_ALL_ENTITIES, NORMAL_PLAYER_ONLY, INVERSE_ALL_ENTITIES, INVERSE_PLAYER_ONLY, STACK_ALL_ENTITIES, STACK_PLAYER_ONLY
+        NORMAL_ALL_ENTITIES("Normal (All)"), NORMAL_PLAYER_ONLY("Normal (Player only)"), INVERSE_ALL_ENTITIES("Inverse (All)"), INVERSE_PLAYER_ONLY("Inverse (Player only)"), STACK_ALL_ENTITIES("Stack (All)"), STACK_PLAYER_ONLY("Stack (Player only)");
+
+        private String name;
+
+        JockeyType(String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        @Override
+        public String toString()
+        {
+            return this.name;
+        }
     }
 
     /**
