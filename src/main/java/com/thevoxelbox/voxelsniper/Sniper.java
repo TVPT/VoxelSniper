@@ -67,6 +67,8 @@ public class Sniper
     private Message voxelMessage;
 
     private boolean lightning = false;
+
+    private boolean enabled = true;
     /**
      * If false, will suppress many types of common, spammy vmessages.
      */
@@ -114,6 +116,24 @@ public class Sniper
         this.brushPresetsS.put("current@", this.myBrushes.get("s"));
         this.brushPresetsS.put("previous@", this.myBrushes.get("s"));
         this.brushPresetsS.put("twoBack@", this.myBrushes.get("s"));
+    }
+
+    /**
+     * Check if Sniper currently is processing snipes.
+     * @return true if enabled, false otherwise.
+     */
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    /**
+     * Set if Sniper currently is processing snipes.
+     * @param enabled true for enabling snipe processing.
+     */
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 
     /**

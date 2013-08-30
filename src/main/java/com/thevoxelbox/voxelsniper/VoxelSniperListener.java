@@ -819,6 +819,27 @@ public class VoxelSniperListener implements Listener
                     player.sendMessage(PerformerE.performer_list_long);
                     return true;
                 }
+                else if (split[0].equalsIgnoreCase("enable"))
+                {
+                    Sniper sniperInstance = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                    sniperInstance.setEnabled(true);
+                    sniperInstance.getVoxelMessage().brushMessage("VoxelSniper is " + (sniperInstance.isEnabled() ? "enabled" : "disabled"));
+                    return true;
+                }
+                else if (split[0].equalsIgnoreCase("disable"))
+                {
+                    Sniper sniperInstance = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                    sniperInstance.setEnabled(false);
+                    sniperInstance.getVoxelMessage().brushMessage("VoxelSniper is " + (sniperInstance.isEnabled() ? "enabled" : "disabled"));
+                    return true;
+                }
+                else if (split[0].equalsIgnoreCase("toggle"))
+                {
+                    Sniper sniperInstance = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                    sniperInstance.setEnabled(!sniperInstance.isEnabled());
+                    sniperInstance.getVoxelMessage().brushMessage("VoxelSniper is " + (sniperInstance.isEnabled() ? "enabled" : "disabled"));
+                    return true;
+                }
             }
             player.sendMessage(ChatColor.DARK_RED + "VoxelSniper - Current Brush Settings:");
             VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).info();
@@ -880,7 +901,7 @@ public class VoxelSniperListener implements Listener
             {
                 return;
             }
-            else if (_vs.snipe(_player, event.getAction(), event.getMaterial(), event.getClickedBlock(), event.getBlockFace()))
+            else if (_vs.isEnabled() && _vs.snipe(_player, event.getAction(), event.getMaterial(), event.getClickedBlock(), event.getBlockFace()))
             {
                 MetricsManager.increaseSnipeCounter();
                 event.setCancelled(true);
