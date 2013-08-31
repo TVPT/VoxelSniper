@@ -3,8 +3,12 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import java.util.EnumSet;
+import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Eraser_Brush
@@ -13,6 +17,11 @@ import org.bukkit.Material;
  */
 public class EraserBrush extends Brush
 {
+
+    private static final Set<Material> exclusiveMaterials = EnumSet.of(
+            Material.AIR, Material.STONE, Material.GRASS, Material.DIRT, Material.SAND, Material.GRAVEL, Material.SANDSTONE);
+    private static final Set<Material> exclusiveLiquids = EnumSet.of(
+            Material.WATER, Material.STATIONARY_WATER, Material.LAVA, Material.STATIONARY_LAVA);
     private static int timesUsed = 0;
 
     /**
@@ -27,23 +36,26 @@ public class EraserBrush extends Brush
     {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _brushSize;
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        World world = this.getTargetBlock().getWorld();
+        final Undo _undo = new Undo(world.getName());
 
         for (int _x = _twoBrushSize; _x >= 0; _x--)
         {
+            int currentX = this.getBlockPositionX() - _brushSize + _x;
             for (int _y = 0; _y <= _twoBrushSize; _y++)
             {
+                int currentY = this.getBlockPositionY() - _brushSize + _y;
                 for (int _z = _twoBrushSize; _z >= 0; _z--)
                 {
-                    final int _blockMaterialId = this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z);
-                    if (_blockMaterialId > Material.DIRT.getId() && _blockMaterialId != Material.SAND.getId() && _blockMaterialId != Material.GRAVEL.getId())
+                    int currentZ = this.getBlockPositionZ() - _brushSize + _z;
+                    Block currentBlock = world.getBlockAt(currentX, currentY, currentZ);
+                    if (exclusiveMaterials.contains(currentBlock.getType())
+                            || (keepWater && exclusiveLiquids.contains(currentBlock.getType())))
                     {
-                        if (!(keepWater && (_blockMaterialId == Material.WATER.getId() || _blockMaterialId == Material.STATIONARY_WATER.getId())))
-                        {
-                            _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z));
-                            this.setBlockIdAt(0, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z);
-                        }
+                        continue;
                     }
+                    _undo.put(currentBlock);
+                    currentBlock.setType(Material.AIR);
                 }
             }
         }
