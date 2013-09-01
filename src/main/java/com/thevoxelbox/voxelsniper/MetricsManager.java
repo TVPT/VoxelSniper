@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
@@ -136,21 +138,22 @@ public final class MetricsManager
 
             final Graph brushUsageGraph = _metrics.createGraph("Brush Usage");
 
-            final HashMap<String, Brush> _temp = SniperBrushes.getSniperBrushes();
-            for (final Entry<String, Brush> _entry : _temp.entrySet())
+            final HashSet<Brush> brushes = new HashSet<Brush>(Brushes.getNewSniperBrushInstances().values());
+
+            for (final Brush brush : brushes)
             {
-                brushUsageGraph.addPlotter(new Metrics.Plotter(SniperBrushes.getName(_entry.getValue()))
+                brushUsageGraph.addPlotter(new Metrics.Plotter(brush.getName())
                 {
                     @Override
                     public int getValue()
                     {
-                        return _entry.getValue().getTimesUsed();
+                        return brush.getTimesUsed();
                     }
 
                     @Override
                     public void reset()
                     {
-                        _entry.getValue().setTimesUsed(0);
+                        brush.setTimesUsed(0);
                     }
                 });
             }

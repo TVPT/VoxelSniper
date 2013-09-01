@@ -2,13 +2,10 @@ package com.thevoxelbox.voxelsniper;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
 
+import com.google.common.base.Joiner;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.Sneak;
@@ -77,8 +74,7 @@ public class Sniper
     private double range = 5.0d;
 
     private final LinkedList<Undo> undoList = new LinkedList<Undo>();
-    private HashMap<String, Brush> myBrushes;
-    private HashMap<String, String> brushAlt;
+    private Map<String, Brush> myBrushes;
     private final EnumMap<Material, BrushTool> brushTools = new EnumMap<Material, BrushTool>(Material.class);
     private final HashMap<Integer, Brush> brushPresets = new HashMap<Integer, Brush>();
     private final HashMap<Integer, int[]> brushPresetsParams = new HashMap<Integer, int[]>();
@@ -97,8 +93,7 @@ public class Sniper
      */
     public Sniper()
     {
-        this.myBrushes = SniperBrushes.getSniperBrushes();
-        this.brushAlt = SniperBrushes.getBrushAlternates();
+        this.myBrushes = Brushes.getNewSniperBrushInstances();
 
         this.voxelMessage = new Message(this.data);
         this.data.setVoxelMessage(this.voxelMessage);
@@ -275,11 +270,6 @@ public class Sniper
         this.brushPresetsParamsS.put("previous@", _currentP);
     }
 
-    public HashMap<String, String> getBrushAlt()
-    {
-        return this.brushAlt;
-    }
-
     public HashMap<Integer, Brush> getBrushPresets()
     {
         return this.brushPresets;
@@ -320,7 +310,7 @@ public class Sniper
         return this.group;
     }
 
-    public HashMap<String, Brush> getMyBrushes()
+    public Map<String, Brush> getMyBrushes()
     {
         return this.myBrushes;
     }
@@ -567,25 +557,12 @@ public class Sniper
      */
     public final void printBrushes()
     {
-        String _msg = ChatColor.GREEN + "Available brushes (abbreviated): ";
-        for (final String _brushName : this.myBrushes.keySet())
-        {
-            _msg += ChatColor.GREEN + " | " + ChatColor.BLUE + _brushName;
-        }
-        this.player.sendMessage(_msg);
-    }
-
-    /**
-     *
-     */
-    public final void printBrushesLong()
-    {
-        String _msg = ChatColor.GREEN + "Available brushes: ";
-        for (final String _brushName : this.brushAlt.keySet())
-        {
-            _msg += ChatColor.GREEN + " | " + ChatColor.BLUE + _brushName;
-        }
-        this.player.sendMessage(_msg);
+        player.sendMessage("Available brushes:");
+        StringBuilder resultBuilder = new StringBuilder();
+        resultBuilder.append(ChatColor.BLUE);
+        Joiner joiner = Joiner.on(ChatColor.GREEN + " | " + ChatColor.BLUE).skipNulls();
+        resultBuilder.append(joiner.join(myBrushes.keySet()));
+        this.player.sendMessage(resultBuilder.toString());
     }
 
     /**
@@ -629,11 +606,11 @@ public class Sniper
     {
         if (this instanceof LiteSniper)
         {
-            this.myBrushes = LiteSniperBrushes.getSniperBrushes();
+            this.myBrushes = Brushes.getNewLiteSniperBrushInstances();
         }
         else
         {
-            this.myBrushes = SniperBrushes.getSniperBrushes();
+            this.myBrushes = Brushes.getNewSniperBrushInstances();
         }
 
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
@@ -772,7 +749,7 @@ public class Sniper
                 if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
                 {
                     final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-                    _bt.setBrush(SniperBrushes.getBrushInstance(args[0]));
+                    _bt.setBrush(Brushes.getNewSniperBrushInstance(args[0]));
                 }
                 else
                 {
@@ -782,23 +759,6 @@ public class Sniper
                     this.twoBack = this.previous;
                     this.previous = this.current;
                     this.current = this.myBrushes.get(args[0]);
-                }
-            }
-            else if (this.brushAlt.containsKey(args[0]))
-            {
-                if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
-                {
-                    final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-                    _bt.setBrush(SniperBrushes.getBrushInstance(args[0]));
-                }
-                else
-                {
-                    this.brushPresetsParamsS.put("twoBack@", this.brushPresetsParamsS.get("previous@"));
-                    this.fillPrevious();
-
-                    this.twoBack = this.previous;
-                    this.previous = this.current;
-                    this.current = this.myBrushes.get(this.brushAlt.get(args[0]));
                 }
             }
             else
@@ -851,11 +811,6 @@ public class Sniper
             _e.printStackTrace();
             return false;
         }
-    }
-
-    public void setBrushAlt(final HashMap<String, String> brushAlt)
-    {
-        this.brushAlt = brushAlt;
     }
 
     /**
@@ -955,7 +910,7 @@ public class Sniper
         this.lightning = lightning;
     }
 
-    public void setMyBrushes(final HashMap<String, Brush> myBrushes)
+    public void setMyBrushes(final Map<String, Brush> myBrushes)
     {
         this.myBrushes = myBrushes;
     }

@@ -75,6 +75,11 @@
             <artifactId>jsap</artifactId>
             <version>2.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -116,6 +121,10 @@
                                 </excludes>
                             </artifactSet>
                             <relocations>
+                                <relocation>
+                                    <pattern>com.martiansoftware</pattern>
+                                    <shadedPattern>com.thevoxelbox.voxelsniper.libs.com.martiansoftware</shadedPattern>
+                                </relocation>
                                 <relocation>
                                     <pattern>com.martiansoftware</pattern>
                                     <shadedPattern>com.thevoxelbox.voxelsniper.libs.com.martiansoftware</shadedPattern>

@@ -756,11 +756,6 @@ public class VoxelSniperListener implements Listener
                     VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).printBrushes();
                     return true;
                 }
-                else if (split[0].equalsIgnoreCase("brusheslong"))
-                {
-                    VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).printBrushesLong();
-                    return true;
-                }
                 else if (split[0].equalsIgnoreCase("printout"))
                 {
                     VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).togglePrintout();
