@@ -126,8 +126,8 @@
                                     <shadedPattern>com.thevoxelbox.voxelsniper.libs.com.martiansoftware</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.martiansoftware</pattern>
-                                    <shadedPattern>com.thevoxelbox.voxelsniper.libs.com.martiansoftware</shadedPattern>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>com.thevoxelbox.voxelsniper.libs.com.google.common</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
