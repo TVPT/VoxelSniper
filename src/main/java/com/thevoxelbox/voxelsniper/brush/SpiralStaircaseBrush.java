@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Spiral_Staircase_Brush
@@ -27,7 +28,7 @@ public class SpiralStaircaseBrush extends Brush
         this.setName("Spiral Staircase");
     }
 
-    private void buildStairWell(final SnipeData v)
+    private void buildStairWell(final SnipeData v, Block targetBlock)
     {
         if (v.getVoxelHeight() < 1)
         {
@@ -281,7 +282,7 @@ public class SpiralStaircaseBrush extends Brush
             }
         }
 
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo _undo = new Undo(targetBlock.getWorld().getName());
         // Make the changes
 
         for (int _x = 2 * _brushSize; _x >= 0; _x--)
@@ -290,6 +291,9 @@ public class SpiralStaircaseBrush extends Brush
             {
                 for (int _z = 2 * _brushSize; _z >= 0; _z--)
                 {
+                    int blockPositionX = targetBlock.getX();
+                    int blockPositionY = targetBlock.getY();
+                    int blockPositionZ = targetBlock.getZ();
                     switch (_spiral[_x][_i][_z])
                     {
                         case 0:
@@ -297,99 +301,99 @@ public class SpiralStaircaseBrush extends Brush
                             {
                                 if (!((this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair")) && _spiral[_x][_i + 1][_z] == 1))
                                 {
-                                    if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 0)
+                                    if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 0)
                                     {
-                                        _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                        _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                     }
-                                    this.setBlockIdAt(0, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
+                                    this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 0);
                                 }
 
                             }
                             else
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 0)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 0)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(0, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 0);
                             }
 
                             break;
                         case 1:
                             if (this.stairtype.equalsIgnoreCase("block"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != _voxelMaterialId)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != _voxelMaterialId)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(_voxelMaterialId, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, _voxelMaterialId);
                             }
                             else if (this.stairtype.equalsIgnoreCase("step"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 44)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 44)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(44, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z).setData(v.getData());
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 44);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z).setData(v.getData());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i - 1, this.getBlockPositionZ() - _brushSize + _z) != _voxelMaterialId)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i - 1, blockPositionZ - _brushSize + _z) != _voxelMaterialId)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i - 1, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i - 1, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(_voxelMaterialId, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i - 1, this.getBlockPositionZ() - _brushSize + _z);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i - 1, _voxelMaterialId);
 
                             }
                             break;
                         case 2:
                             if (this.stairtype.equalsIgnoreCase("step"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 43)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 43)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(43, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z).setData(v.getData());
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 43);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z).setData(v.getData());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 53)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 53)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(53, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) 0);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 53);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z).setData((byte) 0);
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 67)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 67)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(67, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) 0);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 67);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z).setData((byte) 0);
                             }
                             break;
                         default:
                             if (this.stairtype.equalsIgnoreCase("woodstair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 53)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 53)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(53, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 53);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z) != 67)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z) != 67)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(67, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY + _i, 67);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY + _i, blockPositionZ - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
                             }
                             break;
                     }
@@ -399,7 +403,7 @@ public class SpiralStaircaseBrush extends Brush
         v.storeUndo(_undo);
     }
 
-    private final void digStairWell(final SnipeData v)
+    private final void digStairWell(final SnipeData v, Block targetBlock)
     {
         final int _brushSize = v.getBrushSize();
         final int _voxelMaterialId = v.getVoxelId();
@@ -658,7 +662,7 @@ public class SpiralStaircaseBrush extends Brush
 
         }
 
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo _undo = new Undo(targetBlock.getWorld().getName());
         // Make the changes
 
         for (int _x = 2 * _brushSize; _x >= 0; _x--)
@@ -670,90 +674,93 @@ public class SpiralStaircaseBrush extends Brush
                 for (int _z = 2 * _brushSize; _z >= 0; _z--)
                 {
 
+                    int blockPositionX = targetBlock.getX();
+                    int blockPositionY = targetBlock.getY();
+                    int blockPositionZ = targetBlock.getZ();
                     switch (_spiral[_x][_i][_z])
                     {
                         case 0:
-                            if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != 0)
+                            if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != 0)
                             {
-                                _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                             }
-                            this.setBlockIdAt(0, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
+                            this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, 0);
                             break;
                         case 1:
                             if (this.stairtype.equalsIgnoreCase("block"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != _voxelMaterialId)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != _voxelMaterialId)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(_voxelMaterialId, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, _voxelMaterialId);
                             }
                             else if (this.stairtype.equalsIgnoreCase("step"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != 44)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != 44)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(44, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z).setData(v.getData());
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, 44);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z).setData(v.getData());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != _voxelMaterialId)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != _voxelMaterialId)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(_voxelMaterialId, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, _voxelMaterialId);
 
                             }
                             break;
                         case 2:
                             if (this.stairtype.equalsIgnoreCase("step"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != 43)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != 43)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(43, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z).setData(v.getData());
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, 43);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z).setData(v.getData());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != 53)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != 53)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize - _x, blockPositionY + _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(53, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) 0);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, 53);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z).setData((byte) 0);
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != 67)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != 67)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(67, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) 0);
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, 67);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z).setData((byte) 0);
                             }
                             break;
                         default:
                             if (this.stairtype.equalsIgnoreCase("woodstair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != 53)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != 53)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(53, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, 53);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
-                                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) != 67)
+                                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) != 67)
                                 {
-                                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z));
+                                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z));
                                 }
-                                this.setBlockIdAt(67, this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z);
-                                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
+                                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _i, 67);
+                                this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z).setData((byte) (_spiral[_x][_i][_z] - 2));
                             }
                             break;
 
@@ -769,19 +776,13 @@ public class SpiralStaircaseBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.digStairWell(v); // make stairwell below target
+        this.digStairWell(v, this.getTargetBlock()); // make stairwell below target
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.buildStairWell(v); // make stairwell above target
+        this.buildStairWell(v, this.getLastBlock()); // make stairwell above target
     }
 
     @Override

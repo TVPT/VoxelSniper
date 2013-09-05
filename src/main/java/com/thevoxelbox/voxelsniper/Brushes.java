@@ -3,21 +3,28 @@ package com.thevoxelbox.voxelsniper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.IBrush;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * @author MikeMatrix
+ * Brush registration manager.
  */
 public class Brushes
 {
-    private static final Multimap<Class<? extends Brush>, String> sniperBrushes = HashMultimap.create();
-    private static final Multimap<Class<? extends Brush>, String> liteSniperBrushes = HashMultimap.create();
+    private static final Multimap<Class<? extends IBrush>, String> sniperBrushes = HashMultimap.create();
+    private static final Multimap<Class<? extends IBrush>, String> liteSniperBrushes = HashMultimap.create();
 
-    public static void registerSniperBrush(Class<? extends Brush> clazz, BrushAvailability availability, String... handles)
+    /**
+     * Register a brush for VoxelSniper to be able to use.
+     *
+     * @param clazz        Brush implementing IBrush interface.
+     * @param availability Availability for Snipers/LiteSnipers.
+     * @param handles      Handles under which the brush can be accessed ingame.
+     */
+    public static void registerSniperBrush(Class<? extends IBrush> clazz, BrushAvailability availability, String... handles)
     {
         Preconditions.checkNotNull(clazz, "Cannot register null as a class.");
         for (String handle : handles)
@@ -40,30 +47,48 @@ public class Brushes
         }
     }
 
+    /**
+     * @return Amount of IBrush classes registered with the system under Sniper visibility.
+     */
     public static int registeredSniperBrushes()
     {
         return sniperBrushes.keySet().size();
     }
 
+    /**
+     * @return Amount of IBrush classes registered with the system under LiteSniper visibility.
+     */
     public static int registeredLiteSniperBrushes()
     {
         return liteSniperBrushes.keySet().size();
     }
 
+    /**
+     * @return Amount of handles registered with the system under Sniper visibility.
+     */
     public static int registeredSniperBrushHandles()
     {
         return sniperBrushes.size();
     }
 
+    /**
+     * @return Amount of handles registered with the system under LiteSniper visibility.
+     */
     public static int registeredLiteSniperBrushHandles()
     {
         return liteSniperBrushes.size();
     }
 
-    private static Brush getNewBrushInstance(Class<? extends Brush> clazz)
+    /**
+     * Create a new IBrush instance.
+     *
+     * @param clazz Class implementing IBrush to be instanciated.
+     * @return The newly created IBrush instance or null.
+     */
+    private static IBrush getNewBrushInstance(Class<? extends IBrush> clazz)
     {
         Preconditions.checkNotNull(clazz, "Null cannot be instanciated.");
-        Brush brushInstance;
+        IBrush brushInstance;
         try
         {
             brushInstance = clazz.newInstance();
@@ -81,9 +106,16 @@ public class Brushes
         return brushInstance;
     }
 
-    private static Brush getNewBrushInstance(Multimap<Class<? extends Brush>, String> brushes, String handle)
+    /**
+     * Find correct IBrush class by handle and create a new Instance of it.
+     *
+     * @param brushes Multimap containing IBrush to handle mapping.
+     * @param handle  Handle to look up and instanciate.
+     * @return The newly created IBrush instance or null if not found.
+     */
+    private static IBrush getNewBrushInstance(Multimap<Class<? extends IBrush>, String> brushes, String handle)
     {
-        for (Class<? extends Brush> clazz : brushes.keySet())
+        for (Class<? extends IBrush> clazz : brushes.keySet())
         {
             for (String brushHandle : brushes.get(clazz))
             {
@@ -96,28 +128,61 @@ public class Brushes
         return null;
     }
 
-    public static Brush getNewSniperBrushInstance(String handle)
+    /**
+     * Convinience Method for Sniper brushes around {@link #getNewBrushInstance(com.google.common.collect.Multimap, String)}.
+     *
+     * @param handle Handle to look up and instanciate.
+     * @return The newly created IBrush instance or null if not found.
+     */
+    public static IBrush getNewSniperBrushInstance(String handle)
     {
         return getNewBrushInstance(sniperBrushes, handle);
     }
 
-    public static Brush getnewLiteSniperBrushInstance(String handle)
+    /**
+     * Convinience Method for LiteSniper brushes around {@link #getNewBrushInstance(com.google.common.collect.Multimap, String)}.
+     *
+     * @param handle Handle to look up and instanciate.
+     * @return The newly created IBrush instance or null if not found.
+     */
+    public static IBrush getNewLiteSniperBrushInstance(String handle)
     {
         return getNewBrushInstance(liteSniperBrushes, handle);
     }
 
-    public static Map<String, Brush> getNewSniperBrushInstances()
+    /**
+     * Create and return a mapping of handles to {@link IBrush} instaces for Snipers.
+     *
+     * @return Mapping of handles to newly created {@link IBrush} instances.
+     */
+    public static Map<String, IBrush> getNewSniperBrushInstances()
     {
         return getNewBrushInstances(sniperBrushes);
     }
 
-    private static Map<String, Brush> getNewBrushInstances(Multimap<Class<? extends Brush>, String> brushes)
+    /**
+     * Create and return a mapping of handles to {@link IBrush} instaces for LiteSnipers.
+     *
+     * @return Mapping of handles to newly created {@link IBrush} instances.
+     */
+    public static Map<String, IBrush> getNewLiteSniperBrushInstances()
     {
-        HashMap<String, Brush> result = new HashMap<String, Brush>();
+        return getNewBrushInstances(liteSniperBrushes);
+    }
 
-        for (Class<? extends Brush> clazz : brushes.keySet())
+    /**
+     * Create and return a mapping of handles to {@link IBrush} instances.
+     *
+     * @param brushes Mappings between IBrush classes and handles.
+     * @return Mapping of handles to newly created {@link IBrush} instances.
+     */
+    private static Map<String, IBrush> getNewBrushInstances(Multimap<Class<? extends IBrush>, String> brushes)
+    {
+        HashMap<String, IBrush> result = new HashMap<String, IBrush>();
+
+        for (Class<? extends IBrush> clazz : brushes.keySet())
         {
-            Brush brushInstance = getNewBrushInstance(clazz);
+            IBrush brushInstance = getNewBrushInstance(clazz);
 
             if (brushInstance == null)
             {
@@ -133,13 +198,8 @@ public class Brushes
         return result;
     }
 
-    public static Map<String, Brush> getNewLiteSniperBrushInstances()
-    {
-        return getNewBrushInstances(liteSniperBrushes);
-    }
-
     public enum BrushAvailability
     {
-        LITESNIPER_ONLY, SNIPER_ONLY, ALL;
+        LITESNIPER_ONLY, SNIPER_ONLY, ALL
     }
 }

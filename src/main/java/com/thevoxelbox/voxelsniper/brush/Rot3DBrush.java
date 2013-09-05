@@ -201,7 +201,7 @@ public class Rot3DBrush extends Brush
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(_vb.getId(), _vb.getData(), this.getBlockPositionX() + (int) _newxyX, this.getBlockPositionY() + (int) _newyzY, this.getBlockPositionZ() + (int) _newyzZ);
+                        this.setBlockIdAndDataAt(this.getBlockPositionX() + (int) _newxyX, this.getBlockPositionY() + (int) _newyzY, this.getBlockPositionZ() + (int) _newyzZ, _vb.getId(), _vb.getData());
                     }
                 }
             }
@@ -254,7 +254,7 @@ public class Rot3DBrush extends Brush
                                 _winnerData = _bData;
                             }
 
-                            this.setBlockIdAndDataAt(_winner, _winnerData, _fx, _fy, _fz);
+                            this.setBlockIdAndDataAt(_fx, _fy, _fz, _winner, _winnerData);
                         }
                     }
                 }

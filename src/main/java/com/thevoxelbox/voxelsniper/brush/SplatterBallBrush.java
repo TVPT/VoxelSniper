@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.Random;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+
+import java.util.Random;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Splatter_Brushes
@@ -18,17 +18,13 @@ public class SplatterBallBrush extends PerformBrush
     private static final int GROW_PERCENT_MIN = 1;
     private static final int GROW_PERCENT_DEFAULT = 1000;
     private static final int GROW_PERCENT_MAX = 9999;
-
     private static final int SEED_PERCENT_MIN = 1;
     private static final int SEED_PERCENT_DEFAULT = 1000;
     private static final int SEED_PERCENT_MAX = 9999;
-
     private static final int SPLATREC_PERCENT_MIN = 1;
     private static final int SPLATREC_PERCENT_DEFAULT = 3;
     private static final int SPLATREC_PERCENT_MAX = 10;
-
     private static int timesUsed = 0;
-
     private int seedPercent; // Chance block on first pass is made active
     private int growPercent; // chance block on recursion pass is made active
     private int splatterRecursions; // How many times you grow the seeds
@@ -42,7 +38,7 @@ public class SplatterBallBrush extends PerformBrush
         this.setName("Splatter Ball");
     }
 
-    private void splatterBall(final SnipeData v)
+    private void splatterBall(final SnipeData v, Block targetBlock)
     {
         if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX)
         {
@@ -174,7 +170,7 @@ public class SplatterBallBrush extends PerformBrush
                 {
                     if (_splat[_x][_y][_z] == 1 && _xPow + _yPow + Math.pow(_z - _brushSize - 1, 2) <= _rPow)
                     {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _z, this.getBlockPositionZ() - _brushSize + _y));
+                        current.perform(targetBlock.getRelative(-_brushSize + _x, -_brushSize + _y, -_brushSize + _z));
                     }
                 }
             }
@@ -186,19 +182,13 @@ public class SplatterBallBrush extends PerformBrush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.splatterBall(v);
+        this.splatterBall(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.splatterBall(v);
+        this.splatterBall(v, this.getLastBlock());
     }
 
     @Override

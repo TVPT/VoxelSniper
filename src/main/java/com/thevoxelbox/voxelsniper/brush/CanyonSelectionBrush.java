@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
@@ -15,7 +14,6 @@ import org.bukkit.Chunk;
 public class CanyonSelectionBrush extends CanyonBrush
 {
     private static int timesUsed = 0;
-
     private boolean first = true;
     private int fx;
     private int fz;
@@ -30,7 +28,7 @@ public class CanyonSelectionBrush extends CanyonBrush
 
     private void execute(final SnipeData v)
     {
-        final Chunk _c = this.getWorld().getChunkAt(this.getTargetBlock());
+        final Chunk _c = getTargetBlock().getChunk();
 
         if (this.first)
         {
@@ -42,11 +40,8 @@ public class CanyonSelectionBrush extends CanyonBrush
         }
         else
         {
-            this.setBlockPositionX(_c.getX());
-            this.setBlockPositionZ(_c.getZ());
-
             v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-            this.selection(this.fx < this.getBlockPositionX() ? this.fx : this.getBlockPositionX(), this.fz < this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), this.fx > this.getBlockPositionX() ? this.fx : this.getBlockPositionX(), this.fz > this.getBlockPositionZ() ? this.fz : this.getBlockPositionZ(), v);
+            selection(Math.min(fx, _c.getX()), Math.min(fz, _c.getZ()), Math.max(fx, _c.getX()), Math.max(fz, _c.getZ()), v);
 
             this.first = !this.first;
         }
@@ -54,13 +49,13 @@ public class CanyonSelectionBrush extends CanyonBrush
 
     private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final SnipeData v)
     {
-        final Undo _undo = new Undo(this.getWorld().getChunkAt(this.getTargetBlock()).getWorld().getName());
+        final Undo _undo = new Undo(getWorld().getName());
 
         for (int _x = lowX; _x <= highX; _x++)
         {
             for (int _z = lowZ; _z <= highZ; _z++)
             {
-                this.canyon(this.getWorld().getChunkAt(_x, _z), _undo);
+                canyon(getWorld().getChunkAt(_x, _z), _undo);
             }
         }
 

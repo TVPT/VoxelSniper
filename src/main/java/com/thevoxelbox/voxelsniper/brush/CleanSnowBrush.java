@@ -46,7 +46,7 @@ public class CleanSnowBrush extends Brush
                         if ((this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize).getType() == Material.SNOW) && ((this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize - 1, this.getBlockPositionZ() + _y - _bSize).getType() == Material.SNOW) || (this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize - 1, this.getBlockPositionZ() + _y - _bSize).getType() == Material.AIR)))
                         {
                             _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _z, this.getBlockPositionZ() + _y));
-                            this.setBlockIdAt(0, this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize);
+                            this.setBlockIdAt(this.getBlockPositionZ() + _y - _bSize, this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, 0);
                         }
 
                     }

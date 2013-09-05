@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
 
+import com.thevoxelbox.voxelsniper.brush.IBrush;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.util.NumberConversions;
@@ -138,9 +139,9 @@ public final class MetricsManager
 
             final Graph brushUsageGraph = _metrics.createGraph("Brush Usage");
 
-            final HashSet<Brush> brushes = new HashSet<Brush>(Brushes.getNewSniperBrushInstances().values());
+            final HashSet<IBrush> brushes = new HashSet<IBrush>(Brushes.getNewSniperBrushInstances().values());
 
-            for (final Brush brush : brushes)
+            for (final IBrush brush : brushes)
             {
                 brushUsageGraph.addPlotter(new Metrics.Plotter(brush.getName())
                 {

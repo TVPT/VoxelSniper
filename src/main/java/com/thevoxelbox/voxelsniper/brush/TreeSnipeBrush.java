@@ -2,12 +2,13 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
+import java.util.Objects;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Tree_Brush
@@ -27,32 +28,25 @@ public class TreeSnipeBrush extends Brush
         this.setName("Tree Snipe");
     }
 
-    private void single(final SnipeData v)
+    private void single(final SnipeData v, Block targetBlock)
     {
-        try
-        {
-        	Block b = this.getTargetBlock();
-        	int id_old = b.getTypeId();
-        	b.setTypeId(net.minecraft.server.v1_6_R2.Block.GRASS.id);
-            this.getWorld().generateTree(new Location(this.getWorld(), this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()), this.treeType);
-            b.setTypeId(id_old);
-        }
-        catch (final Exception _e)
-        {
-            v.sendMessage("Tree placement unexpectedly failed.");
-        }
+        Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
+        Material currentMaterial = blockBelow.getType();
+        blockBelow.setType(Material.GRASS);
+        this.getWorld().generateTree(targetBlock.getLocation(), this.treeType);
+        blockBelow.setType(currentMaterial);
     }
 
-    private int getLocation(final SnipeData v)
+    private int getYOffset()
     {
-        for (int _i = 1; _i < (v.getWorld().getMaxHeight() - 1 - this.getBlockPositionY()); _i++)
+        for (int _i = 1; _i < (getTargetBlock().getWorld().getMaxHeight() - 1 - getTargetBlock().getY()); _i++)
         {
-            if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _i, this.getBlockPositionZ()).getType() == Material.AIR)
+            if (Objects.equals(getTargetBlock().getRelative(0, _i + 1, 0).getType(), Material.AIR))
             {
-                return this.getBlockPositionY() + _i;
+                return _i;
             }
         }
-        return this.getBlockPositionY();
+        return 0;
     }
 
     private void printTreeType(final Message vm)
@@ -79,14 +73,14 @@ public class TreeSnipeBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.setBlockPositionY(this.getLocation(v));
-        this.single(v);
+        Block targetBlock = getTargetBlock().getRelative(0, getYOffset(), 0);
+        this.single(v, targetBlock);
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.single(v);
+        this.single(v, getTargetBlock());
     }
 
     @Override

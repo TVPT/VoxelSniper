@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,55 +10,52 @@ import org.bukkit.event.block.Action;
 /**
  * Brush Interface.
  *
- * @author MikeMatrix
  */
 public interface IBrush
 {
 
     /**
-     * @param voxelMessage
+     * @param vm Message object
      */
     void info(Message vm);
 
     /**
-     * A Brush's custom command handler.
+     * Handles parameters passed to brushes.
      *
-     * @param par
-     *         Array of string containing parameters
-     * @param v
-     *         Sniper caller
+     * @param par Array of string containing parameters
+     * @param v   Snipe Data
      */
     void parameters(String[] par, SnipeData v);
 
     /**
-     * @param action
-     * @param v
-     * @param heldItem
-     * @param clickedBlock
-     * @param clickedFace
+     * Handle brush actions and pass through to other methods.
      *
-     * @return boolean
+     * @param action Click action performed
+     * @param v Snipe Data
+     * @param heldItem Item in hand
+     * @param clickedBlock Block clicked
+     * @param clickedFace Face clicked
+     * @return True on success, false otherwise
      */
     boolean perform(Action action, SnipeData v, Material heldItem, Block clickedBlock, BlockFace clickedFace);
 
     /**
-     * @return the name
+     * @return The name of the Brush
      */
     String getName();
 
     /**
-     * @return int
-     */
-    int getTimesUsed();
-
-    /**
-     * @param name
-     *         the name to set
+     * @param name New name for the Brush
      */
     void setName(String name);
 
     /**
-     * @param timesUsed
+     * @return Times the brush has been used
+     */
+    int getTimesUsed();
+
+    /**
+     * @param timesUsed Set the amount of times the brush has been used
      */
     void setTimesUsed(int timesUsed);
 

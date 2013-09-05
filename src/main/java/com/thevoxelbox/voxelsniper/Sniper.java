@@ -47,14 +47,14 @@ public class Sniper
     }
 
     /**
-     * @param undoCacheSize
+     * @param undoChacheSize
      */
     public static void setUndoCacheSize(final int undoChacheSize)
     {
         Sniper.undoCacheSize = undoChacheSize;
     }
 
-    private Brush readingBrush;
+    private IBrush readingBrush;
     private String readingString;
 
     private Player player;
@@ -74,16 +74,16 @@ public class Sniper
     private double range = 5.0d;
 
     private final LinkedList<Undo> undoList = new LinkedList<Undo>();
-    private Map<String, Brush> myBrushes;
+    private Map<String, IBrush> myBrushes;
     private final EnumMap<Material, BrushTool> brushTools = new EnumMap<Material, BrushTool>(Material.class);
-    private final HashMap<Integer, Brush> brushPresets = new HashMap<Integer, Brush>();
+    private final HashMap<Integer, IBrush> brushPresets = new HashMap<Integer, IBrush>();
     private final HashMap<Integer, int[]> brushPresetsParams = new HashMap<Integer, int[]>();
-    private final HashMap<String, Brush> brushPresetsS = new HashMap<String, Brush>();
+    private final HashMap<String, IBrush> brushPresetsS = new HashMap<String, IBrush>();
     private final HashMap<String, int[]> brushPresetsParamsS = new HashMap<String, int[]>();
 
-    private Brush current = new SnipeBrush();
-    private Brush previous = new SnipeBrush();
-    private Brush twoBack = new SnipeBrush();
+    private IBrush current = new SnipeBrush();
+    private IBrush previous = new SnipeBrush();
+    private IBrush twoBack = new SnipeBrush();
     private IBrush sneak = new Sneak();
 
     private Integer group;
@@ -270,7 +270,7 @@ public class Sniper
         this.brushPresetsParamsS.put("previous@", _currentP);
     }
 
-    public HashMap<Integer, Brush> getBrushPresets()
+    public HashMap<Integer, IBrush> getBrushPresets()
     {
         return this.brushPresets;
     }
@@ -285,7 +285,7 @@ public class Sniper
         return this.brushPresetsParamsS;
     }
 
-    public HashMap<String, Brush> getBrushPresetsS()
+    public HashMap<String, IBrush> getBrushPresetsS()
     {
         return this.brushPresetsS;
     }
@@ -310,7 +310,7 @@ public class Sniper
         return this.group;
     }
 
-    public Map<String, Brush> getMyBrushes()
+    public Map<String, IBrush> getMyBrushes()
     {
         return this.myBrushes;
     }
@@ -473,7 +473,7 @@ public class Sniper
         {
             final int[] _paramArray = this.brushPresetsParams.get(slot);
 
-            final Brush _temp = this.brushPresets.get(slot);
+            final IBrush _temp = this.brushPresets.get(slot);
             if (_temp != this.current)
             {
                 this.twoBack = this.previous;
@@ -509,7 +509,7 @@ public class Sniper
         {
             final int[] _paramArray = this.brushPresetsParamsS.get(slot);
 
-            final Brush _temp = this.brushPresetsS.get(slot);
+            final IBrush _temp = this.brushPresetsS.get(slot);
             if (_temp != this.current)
             {
                 this.twoBack = this.previous;
@@ -541,7 +541,7 @@ public class Sniper
      */
     public final void previousBrush()
     {
-        final Brush _temp = this.current;
+        final IBrush _temp = this.current;
         this.current = this.previous;
         this.previous = _temp;
 
@@ -910,7 +910,7 @@ public class Sniper
         this.lightning = lightning;
     }
 
-    public void setMyBrushes(final Map<String, Brush> myBrushes)
+    public void setMyBrushes(final Map<String, IBrush> myBrushes)
     {
         this.myBrushes = myBrushes;
     }
@@ -1143,8 +1143,8 @@ public class Sniper
     public final void twoBackBrush()
     {
         this.fillCurrent();
-        final Brush _temp = this.current;
-        final Brush _tempTwo = this.previous;
+        final IBrush _temp = this.current;
+        final IBrush _tempTwo = this.previous;
         this.current = this.twoBack;
         this.previous = _temp;
         this.twoBack = _tempTwo;

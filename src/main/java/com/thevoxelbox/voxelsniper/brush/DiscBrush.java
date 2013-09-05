@@ -61,9 +61,6 @@ public class DiscBrush extends PerformBrush
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
         this.disc(v, this.getLastBlock());
     }
 

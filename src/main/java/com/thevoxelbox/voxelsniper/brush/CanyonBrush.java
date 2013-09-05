@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -18,7 +17,6 @@ public class CanyonBrush extends Brush
 {
     private static final int SHIFT_LEVEL_MIN = 10;
     private static final int SHIFT_LEVEL_MAX = 60;
-
     private static int timesUsed = 0;
     private int yLevel = 10;
 
@@ -74,7 +72,9 @@ public class CanyonBrush extends Brush
     protected void arrow(final SnipeData v)
     {
         final Undo _undo = new Undo(this.getWorld().getName());
-        this.canyon(this.getWorld().getChunkAt(this.getTargetBlock()), _undo);
+
+        canyon(getTargetBlock().getChunk(), _undo);
+
         v.storeUndo(_undo);
     }
 
@@ -83,15 +83,14 @@ public class CanyonBrush extends Brush
     {
         final Undo _undo = new Undo(this.getWorld().getName());
 
-        this.canyon(this.getWorld().getChunkAt(this.getTargetBlock()), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ())), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() + CHUNK_SIZE)), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() + CHUNK_SIZE)), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ())), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() - CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX(), 63, this.getBlockPositionZ() - CHUNK_SIZE)), _undo);
-        this.canyon(this.getWorld().getChunkAt(this.clampY(this.getBlockPositionX() + CHUNK_SIZE, 63, this.getBlockPositionZ() - CHUNK_SIZE)), _undo);
+        Chunk targetChunk = getTargetBlock().getChunk();
+        for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++)
+        {
+            for (int z = targetChunk.getX() - 1; z <= targetChunk.getX() + 1; z++)
+            {
+                canyon(getWorld().getChunkAt(x, z), _undo);
+            }
+        }
 
         v.storeUndo(_undo);
     }

@@ -143,7 +143,6 @@ public class Sneak extends Brush
      */
     protected final boolean getSilentTarget(final Sniper v, final Block clickedBlock, final BlockFace clickedFace)
     {
-        this.setWorld(v.getPlayer().getWorld());
         if (clickedBlock != null)
         {
             this.setTargetBlock(clickedBlock);
@@ -163,12 +162,12 @@ public class Sneak extends Brush
             RangeBlockHelper _hb = null;
             if (v.isDistRestrict())
             {
-                _hb = new RangeBlockHelper(v.getPlayer(), this.getWorld(), v.getRange());
+                _hb = new RangeBlockHelper(v.getPlayer(), v.getPlayer().getWorld(), v.getRange());
                 this.setTargetBlock(_hb.getRangeBlock());
             }
             else
             {
-                _hb = new RangeBlockHelper(v.getPlayer(), this.getWorld());
+                _hb = new RangeBlockHelper(v.getPlayer(), v.getPlayer().getWorld());
                 this.setTargetBlock(_hb.getTargetBlock());
             }
             if (this.getTargetBlock() != null)

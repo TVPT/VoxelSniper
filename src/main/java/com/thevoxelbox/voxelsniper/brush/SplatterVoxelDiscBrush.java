@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Splatter_Brushes
@@ -42,7 +43,7 @@ public class SplatterVoxelDiscBrush extends PerformBrush
         this.setName("Splatter Voxel Disc");
     }
 
-    private void vSplatterDisc(final SnipeData v)
+    private void vSplatterDisc(final SnipeData v, Block targetBlock)
     {
         if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX)
         {
@@ -156,9 +157,7 @@ public class SplatterVoxelDiscBrush extends PerformBrush
             {
                 if (_splat[_x][_y] == 1)
                 {
-
-                    this.current.perform(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _brushSize + _y));
-
+                    this.current.perform(this.clampY(targetBlock.getX() - _brushSize + _x, targetBlock.getY(), targetBlock.getZ() - _brushSize + _y));
                 }
             }
         }
@@ -168,19 +167,13 @@ public class SplatterVoxelDiscBrush extends PerformBrush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.vSplatterDisc(v);
+        this.vSplatterDisc(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.vSplatterDisc(v);
+        this.vSplatterDisc(v, this.getLastBlock());
     }
 
     @Override
