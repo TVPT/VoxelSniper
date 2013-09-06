@@ -14,8 +14,12 @@ import java.util.logging.Logger;
  */
 public class Brushes
 {
-    private static final Multimap<Class<? extends IBrush>, String> sniperBrushes = HashMultimap.create();
-    private static final Multimap<Class<? extends IBrush>, String> liteSniperBrushes = HashMultimap.create();
+    private static final Multimap<Class<? extends IBrush>, String> SNIPER_BRUSHES = HashMultimap.create();
+    private static final Multimap<Class<? extends IBrush>, String> LITE_SNIPER_BRUSHES = HashMultimap.create();
+
+    private Brushes()
+    {
+    }
 
     /**
      * Register a brush for VoxelSniper to be able to use.
@@ -32,14 +36,14 @@ public class Brushes
             switch (availability)
             {
                 case SNIPER_ONLY:
-                    sniperBrushes.put(clazz, handle);
+                    SNIPER_BRUSHES.put(clazz, handle);
                     break;
                 case LITESNIPER_ONLY:
-                    liteSniperBrushes.put(clazz, handle);
+                    LITE_SNIPER_BRUSHES.put(clazz, handle);
                     break;
                 case ALL:
-                    sniperBrushes.put(clazz, handle);
-                    liteSniperBrushes.put(clazz, handle);
+                    SNIPER_BRUSHES.put(clazz, handle);
+                    LITE_SNIPER_BRUSHES.put(clazz, handle);
                     break;
                 default:
                     break;
@@ -52,7 +56,7 @@ public class Brushes
      */
     public static int registeredSniperBrushes()
     {
-        return sniperBrushes.keySet().size();
+        return SNIPER_BRUSHES.keySet().size();
     }
 
     /**
@@ -60,7 +64,7 @@ public class Brushes
      */
     public static int registeredLiteSniperBrushes()
     {
-        return liteSniperBrushes.keySet().size();
+        return LITE_SNIPER_BRUSHES.keySet().size();
     }
 
     /**
@@ -68,7 +72,7 @@ public class Brushes
      */
     public static int registeredSniperBrushHandles()
     {
-        return sniperBrushes.size();
+        return SNIPER_BRUSHES.size();
     }
 
     /**
@@ -76,7 +80,7 @@ public class Brushes
      */
     public static int registeredLiteSniperBrushHandles()
     {
-        return liteSniperBrushes.size();
+        return LITE_SNIPER_BRUSHES.size();
     }
 
     /**
@@ -136,7 +140,7 @@ public class Brushes
      */
     public static IBrush getNewSniperBrushInstance(String handle)
     {
-        return getNewBrushInstance(sniperBrushes, handle);
+        return getNewBrushInstance(SNIPER_BRUSHES, handle);
     }
 
     /**
@@ -147,7 +151,7 @@ public class Brushes
      */
     public static IBrush getNewLiteSniperBrushInstance(String handle)
     {
-        return getNewBrushInstance(liteSniperBrushes, handle);
+        return getNewBrushInstance(LITE_SNIPER_BRUSHES, handle);
     }
 
     /**
@@ -157,7 +161,7 @@ public class Brushes
      */
     public static Map<String, IBrush> getNewSniperBrushInstances()
     {
-        return getNewBrushInstances(sniperBrushes);
+        return getNewBrushInstances(SNIPER_BRUSHES);
     }
 
     /**
@@ -167,7 +171,7 @@ public class Brushes
      */
     public static Map<String, IBrush> getNewLiteSniperBrushInstances()
     {
-        return getNewBrushInstances(liteSniperBrushes);
+        return getNewBrushInstances(LITE_SNIPER_BRUSHES);
     }
 
     /**
@@ -198,6 +202,9 @@ public class Brushes
         return result;
     }
 
+    /**
+     * Brush Availability Ranks.
+     */
     public enum BrushAvailability
     {
         LITESNIPER_ONLY, SNIPER_ONLY, ALL

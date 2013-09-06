@@ -1,12 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.Random;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.block.Block;
+
+import java.util.Random;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Random-Erode_Brush
@@ -16,50 +15,8 @@ import org.bukkit.block.Block;
  */
 public class RandomErodeBrush extends Brush
 {
-    /**
-     * @author unknown
-     */
-    private class BlockWrapper
-    {
-        public boolean solid;
-        public Block nativeBlock;
-        public int id;
-        public int i;
-
-        /**
-         * @param bl
-         */
-        public BlockWrapper(final Block bl)
-        {
-            this.nativeBlock = bl;
-            this.i = bl.getTypeId();
-            switch (bl.getType())
-            {
-                case AIR:
-                    this.solid = false;
-                    break;
-
-                case WATER:
-                    this.solid = false;
-                    break;
-
-                case STATIONARY_WATER:
-                    this.solid = false;
-                    break;
-
-                case STATIONARY_LAVA:
-                    this.solid = false;
-                    break;
-                case LAVA:
-                    this.solid = false;
-                    break;
-
-                default:
-                    this.solid = true;
-            }
-        }
-    }
-
+    private static int timesUsed = 0;
+    private final double trueCircle = 0.5;
     private BlockWrapper[][][] snap;
     private BlockWrapper[][][] firstSnap;
     private int bsize;
@@ -68,11 +25,7 @@ public class RandomErodeBrush extends Brush
     private int brushSize;
     private int erodeRecursion = 1;
     private int fillRecursion = 1;
-    private final double trueCircle = 0.5;
-
     private Random generator = new Random();
-
-    private static int timesUsed = 0;
 
     /**
      *
@@ -82,37 +35,36 @@ public class RandomErodeBrush extends Brush
         this.setName("RandomErode");
     }
 
-
     private boolean erode(final int x, final int y, final int z)
     {
-        if (this.snap[x][y][z].solid)
+        if (this.snap[x][y][z].isSolid())
         {
-            int _d = 0;
-            if (!this.snap[x + 1][y][z].solid)
+            int d = 0;
+            if (!this.snap[x + 1][y][z].isSolid())
             {
-                _d++;
+                d++;
             }
-            if (!this.snap[x - 1][y][z].solid)
+            if (!this.snap[x - 1][y][z].isSolid())
             {
-                _d++;
+                d++;
             }
-            if (!this.snap[x][y + 1][z].solid)
+            if (!this.snap[x][y + 1][z].isSolid())
             {
-                _d++;
+                d++;
             }
-            if (!this.snap[x][y - 1][z].solid)
+            if (!this.snap[x][y - 1][z].isSolid())
             {
-                _d++;
+                d++;
             }
-            if (!this.snap[x][y][z + 1].solid)
+            if (!this.snap[x][y][z + 1].isSolid())
             {
-                _d++;
+                d++;
             }
-            if (!this.snap[x][y][z - 1].solid)
+            if (!this.snap[x][y][z - 1].isSolid())
             {
-                _d++;
+                d++;
             }
-            return (_d >= this.erodeFace);
+            return (d >= this.erodeFace);
         }
         else
         {
@@ -122,44 +74,44 @@ public class RandomErodeBrush extends Brush
 
     private boolean fill(final int x, final int y, final int z)
     {
-        if (this.snap[x][y][z].solid)
+        if (this.snap[x][y][z].isSolid())
         {
             return false;
         }
         else
         {
-            int _d = 0;
-            if (this.snap[x + 1][y][z].solid)
+            int d = 0;
+            if (this.snap[x + 1][y][z].isSolid())
             {
-                this.snap[x][y][z].id = this.snap[x + 1][y][z].nativeBlock.getTypeId();
-                _d++;
+                this.snap[x][y][z].setId(this.snap[x + 1][y][z].getNativeBlock().getTypeId());
+                d++;
             }
-            if (this.snap[x - 1][y][z].solid)
+            if (this.snap[x - 1][y][z].isSolid())
             {
-                this.snap[x][y][z].id = this.snap[x - 1][y][z].nativeBlock.getTypeId();
-                _d++;
+                this.snap[x][y][z].setId(this.snap[x - 1][y][z].getNativeBlock().getTypeId());
+                d++;
             }
-            if (this.snap[x][y + 1][z].solid)
+            if (this.snap[x][y + 1][z].isSolid())
             {
-                this.snap[x][y][z].id = this.snap[x][y + 1][z].nativeBlock.getTypeId();
-                _d++;
+                this.snap[x][y][z].setId(this.snap[x][y + 1][z].getNativeBlock().getTypeId());
+                d++;
             }
-            if (this.snap[x][y - 1][z].solid)
+            if (this.snap[x][y - 1][z].isSolid())
             {
-                this.snap[x][y][z].id = this.snap[x][y - 1][z].nativeBlock.getTypeId();
-                _d++;
+                this.snap[x][y][z].setId(this.snap[x][y - 1][z].getNativeBlock().getTypeId());
+                d++;
             }
-            if (this.snap[x][y][z + 1].solid)
+            if (this.snap[x][y][z + 1].isSolid())
             {
-                this.snap[x][y][z].id = this.snap[x][y][z + 1].nativeBlock.getTypeId();
-                _d++;
+                this.snap[x][y][z].setId(this.snap[x][y][z + 1].getNativeBlock().getTypeId());
+                d++;
             }
-            if (this.snap[x][y][z - 1].solid)
+            if (this.snap[x][y][z - 1].isSolid())
             {
-                this.snap[x][y][z].id = this.snap[x][y][z - 1].nativeBlock.getTypeId();
-                _d++;
+                this.snap[x][y][z].setId(this.snap[x][y][z - 1].getNativeBlock().getTypeId());
+                d++;
             }
-            return (_d >= this.fillFace);
+            return (d >= this.fillFace);
         }
     }
 
@@ -171,25 +123,24 @@ public class RandomErodeBrush extends Brush
         {
             this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-            final int _choosUsefulNamesForYourFuckingVariables = (this.bsize + 1);
-            int _sx = this.getBlockPositionX() - (this.bsize + 1);
-            int _sy = this.getBlockPositionY() - (this.bsize + 1);
-            int _sz = this.getBlockPositionZ() - (this.bsize + 1);
+            int sx = this.getBlockPositionX() - (this.bsize + 1);
+            int sy = this.getBlockPositionY() - (this.bsize + 1);
+            int sz = this.getBlockPositionZ() - (this.bsize + 1);
 
-            for (int _x = 0; _x < this.snap.length; _x++)
+            for (int x = 0; x < this.snap.length; x++)
             {
-                _sz = this.getBlockPositionZ() - _choosUsefulNamesForYourFuckingVariables;
-                for (int _z = 0; _z < this.snap.length; _z++)
+                sz = this.getBlockPositionZ() - (this.bsize + 1);
+                for (int z = 0; z < this.snap.length; z++)
                 {
-                    _sy = this.getBlockPositionY() - _choosUsefulNamesForYourFuckingVariables;
-                    for (int _y = 0; _y < this.snap.length; _y++)
+                    sy = this.getBlockPositionY() - (this.bsize + 1);
+                    for (int y = 0; y < this.snap.length; y++)
                     {
-                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
-                        _sy++;
+                        this.snap[x][y][z] = new BlockWrapper(this.clampY(sx, sy, sz));
+                        sy++;
                     }
-                    _sz++;
+                    sz++;
                 }
-                _sx++;
+                sx++;
             }
             this.firstSnap = this.snap.clone();
         }
@@ -197,58 +148,55 @@ public class RandomErodeBrush extends Brush
         {
             this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-            final int _choosUsefulNamesForYourFuckingVariables = (this.bsize + 1);
-            int _sx = this.getBlockPositionX() - (this.bsize + 1);
-            int _sy = this.getBlockPositionY() - (this.bsize + 1);
-            int _sz = this.getBlockPositionZ() - (this.bsize + 1);
+            int sx = this.getBlockPositionX() - (this.bsize + 1);
+            int sy = this.getBlockPositionY() - (this.bsize + 1);
+            int sz = this.getBlockPositionZ() - (this.bsize + 1);
 
-            for (int _x = 0; _x < this.snap.length; _x++)
+            for (int x = 0; x < this.snap.length; x++)
             {
-                _sz = this.getBlockPositionZ() - _choosUsefulNamesForYourFuckingVariables;
-                for (int _z = 0; _z < this.snap.length; _z++)
+                sz = this.getBlockPositionZ() - (this.bsize + 1);
+                for (int z = 0; z < this.snap.length; z++)
                 {
-                    _sy = this.getBlockPositionY() - _choosUsefulNamesForYourFuckingVariables;
-                    for (int _y = 0; _y < this.snap.length; _y++)
+                    sy = this.getBlockPositionY() - (this.bsize + 1);
+                    for (int y = 0; y < this.snap.length; y++)
                     {
-                        this.snap[_x][_y][_z] = new BlockWrapper(this.clampY(_sx, _sy, _sz));
-                        _sy++;
+                        this.snap[x][y][z] = new BlockWrapper(this.clampY(sx, sy, sz));
+                        sy++;
                     }
-                    _sz++;
+                    sz++;
                 }
-                _sx++;
+                sx++;
             }
         }
     }
 
     private void rerosion(final SnipeData v)
     {
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.erodeFace >= 0 && this.erodeFace <= 6)
         {
-            for (int _er = 0; _er < this.erodeRecursion; _er++)
+            for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++)
             {
                 this.getMatrix();
 
-                final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
-
-                final double _bPow = Math.pow(this.bsize + this.trueCircle, 2);
-                for (int _z = 1; _z < this.snap.length - 1; _z++)
+                final double brushSizeSquared = Math.pow(this.bsize + this.trueCircle, 2);
+                for (int z = 1; z < this.snap.length - 1; z++)
                 {
 
-                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
-                    for (int _x = 1; _x < this.snap.length - 1; _x++)
+                    final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+                    for (int x = 1; x < this.snap.length - 1; x++)
                     {
 
-                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
-                        for (int _y = 1; _y < this.snap.length - 1; _y++)
+                        final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+                        for (int y = 1; y < this.snap.length - 1; y++)
                         {
 
-                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bPow))
+                            if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= brushSizeSquared))
                             {
-                                if (this.erode(_x, _y, _z))
+                                if (this.erode(x, y, z))
                                 {
-                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(0);
+                                    this.snap[x][y][z].getNativeBlock().setTypeId(0);
                                 }
                             }
                         }
@@ -258,29 +206,28 @@ public class RandomErodeBrush extends Brush
         }
         if (this.fillFace >= 0 && this.fillFace <= 6)
         {
-            final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
-            final double _bPow = Math.pow(this.bsize + 0.5, 2);
+            final double brushSizeSquared = Math.pow(this.bsize + 0.5, 2);
 
-            for (int _fr = 0; _fr < this.fillRecursion; _fr++)
+            for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursion; currentFillRecursion++)
             {
                 this.getMatrix();
 
-                for (int _z = 1; _z < this.snap.length - 1; _z++)
+                for (int z = 1; z < this.snap.length - 1; z++)
                 {
 
-                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
-                    for (int _x = 1; _x < this.snap.length - 1; _x++)
+                    final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+                    for (int x = 1; x < this.snap.length - 1; x++)
                     {
 
-                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
-                        for (int _y = 1; _y < this.snap.length - 1; _y++)
+                        final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+                        for (int y = 1; y < this.snap.length - 1; y++)
                         {
 
-                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bPow))
+                            if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= brushSizeSquared))
                             {
-                                if (this.fill(_x, _y, _z))
+                                if (this.fill(x, y, z))
                                 {
-                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(this.snap[_x][_y][_z].id);
+                                    this.snap[x][y][z].getNativeBlock().setTypeId(this.snap[x][y][z].getId());
                                 }
                             }
                         }
@@ -289,53 +236,48 @@ public class RandomErodeBrush extends Brush
             }
         }
 
-        for (int _x = 0; _x < this.firstSnap.length; _x++)
+        for (BlockWrapper[][] firstSnapSlice : this.firstSnap)
         {
-            for (int _y = 0; _y < this.firstSnap.length; _y++)
+            for (BlockWrapper[] firstSnapString : firstSnapSlice)
             {
-                for (int _z = 0; _z < this.firstSnap.length; _z++)
+                for (final BlockWrapper block : firstSnapString)
                 {
-                    final BlockWrapper _block = this.firstSnap[_x][_y][_z];
-                    if (_block.i != _block.nativeBlock.getTypeId())
+                    if (block.getI() != block.getNativeBlock().getTypeId())
                     {
-                        _undo.put(_block.nativeBlock);
+                        undo.put(block.getNativeBlock());
                     }
                 }
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     private void rfilling(final SnipeData v)
     {
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.fillFace >= 0 && this.fillFace <= 6)
         {
-            final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
-            final double _bpow = Math.pow(this.bsize + 0.5, 2);
+            final double bSquared = Math.pow(this.bsize + 0.5, 2);
 
-            for (int _fr = 0; _fr < this.fillRecursion; _fr++)
+            for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursion; currentFillRecursion++)
             {
                 this.getMatrix();
 
-                for (int _z = 1; _z < this.snap.length - 1; _z++)
+                for (int z = 1; z < this.snap.length - 1; z++)
                 {
-
-                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
-                    for (int _x = 1; _x < this.snap.length - 1; _x++)
+                    final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+                    for (int x = 1; x < this.snap.length - 1; x++)
                     {
-
-                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
-                        for (int _y = 1; _y < this.snap.length - 1; _y++)
+                        final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+                        for (int y = 1; y < this.snap.length - 1; y++)
                         {
-
-                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bpow))
+                            if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= bSquared))
                             {
-                                if (this.fill(_x, _y, _z))
+                                if (this.fill(x, y, z))
                                 {
-                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(this.snap[_x][_y][_z].id);
+                                    this.snap[x][y][z].getNativeBlock().setTypeId(this.snap[x][y][z].getId());
                                 }
                             }
                         }
@@ -345,29 +287,28 @@ public class RandomErodeBrush extends Brush
         }
         if (this.erodeFace >= 0 && this.erodeFace <= 6)
         {
-            final int _choosUsefulNamesForYourFuckingVariables = this.bsize + 1;
-            final double _bpow = Math.pow(this.bsize + this.trueCircle, 2);
+            final double bSquared = Math.pow(this.bsize + this.trueCircle, 2);
 
-            for (int _er = 0; _er < this.erodeRecursion; _er++)
+            for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++)
             {
                 this.getMatrix();
 
-                for (int _z = 1; _z < this.snap.length - 1; _z++)
+                for (int z = 1; z < this.snap.length - 1; z++)
                 {
 
-                    final double _zPow = Math.pow(_z - _choosUsefulNamesForYourFuckingVariables, 2);
-                    for (int _x = 1; _x < this.snap.length - 1; _x++)
+                    final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+                    for (int x = 1; x < this.snap.length - 1; x++)
                     {
 
-                        final double _xPow = Math.pow(_x - _choosUsefulNamesForYourFuckingVariables, 2);
-                        for (int _y = 1; _y < this.snap.length - 1; _y++)
+                        final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+                        for (int y = 1; y < this.snap.length - 1; y++)
                         {
 
-                            if (((_xPow + Math.pow(_y - _choosUsefulNamesForYourFuckingVariables, 2) + _zPow) <= _bpow))
+                            if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= bSquared))
                             {
-                                if (this.erode(_x, _y, _z))
+                                if (this.erode(x, y, z))
                                 {
-                                    this.snap[_x][_y][_z].nativeBlock.setTypeId(0);
+                                    this.snap[x][y][z].getNativeBlock().setTypeId(0);
                                 }
                             }
                         }
@@ -376,22 +317,21 @@ public class RandomErodeBrush extends Brush
             }
         }
 
-        for (int _x = 0; _x < this.firstSnap.length; _x++)
+        for (BlockWrapper[][] firstSnapSlice : this.firstSnap)
         {
-            for (int _y = 0; _y < this.firstSnap.length; _y++)
+            for (BlockWrapper[] firstSnapString : firstSnapSlice)
             {
-                for (int _z = 0; _z < this.firstSnap.length; _z++)
+                for (final BlockWrapper block : firstSnapString)
                 {
-                    final BlockWrapper _block = this.firstSnap[_x][_y][_z];
-                    if (_block.i != _block.nativeBlock.getTypeId())
+                    if (block.getI() != block.getNativeBlock().getTypeId())
                     {
-                        _undo.put(_block.nativeBlock);
+                        undo.put(block.getNativeBlock());
                     }
                 }
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
@@ -454,5 +394,89 @@ public class RandomErodeBrush extends Brush
     public final void setTimesUsed(final int tUsed)
     {
         RandomErodeBrush.timesUsed = tUsed;
+    }
+
+    /**
+     * @author unknown
+     */
+    private class BlockWrapper
+    {
+        private boolean solid;
+        private Block nativeBlock;
+        private int id;
+        private int i;
+
+        /**
+         * @param bl
+         */
+        public BlockWrapper(final Block bl)
+        {
+            this.setNativeBlock(bl);
+            this.setI(bl.getTypeId());
+            switch (bl.getType())
+            {
+                case AIR:
+                    this.setSolid(false);
+                    break;
+
+                case WATER:
+                    this.setSolid(false);
+                    break;
+
+                case STATIONARY_WATER:
+                    this.setSolid(false);
+                    break;
+
+                case STATIONARY_LAVA:
+                    this.setSolid(false);
+                    break;
+                case LAVA:
+                    this.setSolid(false);
+                    break;
+
+                default:
+                    this.setSolid(true);
+            }
+        }
+
+        public boolean isSolid()
+        {
+            return solid;
+        }
+
+        public void setSolid(boolean solid)
+        {
+            this.solid = solid;
+        }
+
+        public Block getNativeBlock()
+        {
+            return nativeBlock;
+        }
+
+        public void setNativeBlock(Block nativeBlock)
+        {
+            this.nativeBlock = nativeBlock;
+        }
+
+        public int getId()
+        {
+            return id;
+        }
+
+        public void setId(int id)
+        {
+            this.id = id;
+        }
+
+        public int getI()
+        {
+            return i;
+        }
+
+        public void setI(int i)
+        {
+            this.i = i;
+        }
     }
 }

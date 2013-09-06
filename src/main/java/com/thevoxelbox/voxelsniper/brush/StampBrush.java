@@ -133,10 +133,10 @@ public class StampBrush extends Brush
      */
     protected final void setBlock(final BlockWrapper cb)
     {
-        final Block _b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
-        this.undo.put(_b);
-        _b.setTypeId(cb.id);
-        _b.setData(cb.d);
+        final Block block = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
+        this.undo.put(block);
+        block.setTypeId(cb.id);
+        block.setData(cb.d);
     }
 
     /**
@@ -144,12 +144,12 @@ public class StampBrush extends Brush
      */
     protected final void setBlockFill(final BlockWrapper cb)
     {
-        final Block _b = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
-        if (_b.getTypeId() == 0)
+        final Block block = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
+        if (block.getTypeId() == 0)
         {
-            this.undo.put(_b);
-            _b.setTypeId(cb.id);
-            _b.setData(cb.d);
+            this.undo.put(block);
+            block.setTypeId(cb.id);
+            block.setData(cb.d);
         }
     }
 
@@ -166,22 +166,21 @@ public class StampBrush extends Brush
      */
     protected final void stamp(final SnipeData v)
     {
-
         this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
         if (this.sorted)
         {
-            for (final BlockWrapper _cb : this.solid)
+            for (final BlockWrapper block : this.solid)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
-            for (final BlockWrapper _cb : this.drop)
+            for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
-            for (final BlockWrapper _cb : this.fall)
+            for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
         }
         else
@@ -189,29 +188,29 @@ public class StampBrush extends Brush
             this.fall.clear();
             this.drop.clear();
             this.solid.clear();
-            for (final BlockWrapper _cb : this.clone)
+            for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(_cb.id))
+                if (this.fallsOff(block.id))
                 {
-                    this.fall.add(_cb);
+                    this.fall.add(block);
                 }
-                else if (this.falling(_cb.id))
+                else if (this.falling(block.id))
                 {
-                    this.drop.add(_cb);
+                    this.drop.add(block);
                 }
                 else
                 {
-                    this.solid.add(_cb);
-                    this.setBlock(_cb);
+                    this.solid.add(block);
+                    this.setBlock(block);
                 }
             }
-            for (final BlockWrapper _cb : this.drop)
+            for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
-            for (final BlockWrapper _cb : this.fall)
+            for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
             this.sorted = true;
         }
@@ -229,17 +228,17 @@ public class StampBrush extends Brush
 
         if (this.sorted)
         {
-            for (final BlockWrapper _cb : this.solid)
+            for (final BlockWrapper block : this.solid)
             {
-                this.setBlockFill(_cb);
+                this.setBlockFill(block);
             }
-            for (final BlockWrapper _cb : this.drop)
+            for (final BlockWrapper block : this.drop)
             {
-                this.setBlockFill(_cb);
+                this.setBlockFill(block);
             }
-            for (final BlockWrapper _cb : this.fall)
+            for (final BlockWrapper block : this.fall)
             {
-                this.setBlockFill(_cb);
+                this.setBlockFill(block);
             }
         }
         else
@@ -247,29 +246,29 @@ public class StampBrush extends Brush
             this.fall.clear();
             this.drop.clear();
             this.solid.clear();
-            for (final BlockWrapper _cb : this.clone)
+            for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(_cb.id))
+                if (this.fallsOff(block.id))
                 {
-                    this.fall.add(_cb);
+                    this.fall.add(block);
                 }
-                else if (this.falling(_cb.id))
+                else if (this.falling(block.id))
                 {
-                    this.drop.add(_cb);
+                    this.drop.add(block);
                 }
-                else if (_cb.id != 0)
+                else if (block.id != 0)
                 {
-                    this.solid.add(_cb);
-                    this.setBlockFill(_cb);
+                    this.solid.add(block);
+                    this.setBlockFill(block);
                 }
             }
-            for (final BlockWrapper _cb : this.drop)
+            for (final BlockWrapper block : this.drop)
             {
-                this.setBlockFill(_cb);
+                this.setBlockFill(block);
             }
-            for (final BlockWrapper _cb : this.fall)
+            for (final BlockWrapper block : this.fall)
             {
-                this.setBlockFill(_cb);
+                this.setBlockFill(block);
             }
             this.sorted = true;
         }
@@ -287,17 +286,17 @@ public class StampBrush extends Brush
 
         if (this.sorted)
         {
-            for (final BlockWrapper _cb : this.solid)
+            for (final BlockWrapper block : this.solid)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
-            for (final BlockWrapper _cb : this.drop)
+            for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
-            for (final BlockWrapper _cb : this.fall)
+            for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
         }
         else
@@ -305,29 +304,29 @@ public class StampBrush extends Brush
             this.fall.clear();
             this.drop.clear();
             this.solid.clear();
-            for (final BlockWrapper _cb : this.clone)
+            for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(_cb.id))
+                if (this.fallsOff(block.id))
                 {
-                    this.fall.add(_cb);
+                    this.fall.add(block);
                 }
-                else if (this.falling(_cb.id))
+                else if (this.falling(block.id))
                 {
-                    this.drop.add(_cb);
+                    this.drop.add(block);
                 }
-                else if (_cb.id != 0)
+                else if (block.id != 0)
                 {
-                    this.solid.add(_cb);
-                    this.setBlock(_cb);
+                    this.solid.add(block);
+                    this.setBlock(block);
                 }
             }
-            for (final BlockWrapper _cb : this.drop)
+            for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
-            for (final BlockWrapper _cb : this.fall)
+            for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(_cb);
+                this.setBlock(block);
             }
             this.sorted = true;
         }

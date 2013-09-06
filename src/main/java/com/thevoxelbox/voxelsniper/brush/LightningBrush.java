@@ -26,16 +26,16 @@ public class LightningBrush extends Brush
     }
 
     @Override
+    public final void setTimesUsed(final int tUsed)
+    {
+        LightningBrush.timesUsed = tUsed;
+    }
+
+    @Override
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
         vm.brushMessage("Lightning Brush!  Please use in moderation.");
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        LightningBrush.timesUsed = tUsed;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -15,7 +14,6 @@ import org.bukkit.block.Block;
 public class SetBrush extends PerformBrush
 {
     private static final int SELECTION_SIZE_MAX = 5000000;
-
     private static int timesUsed = 0;
     private Block block = null;
 
@@ -42,26 +40,26 @@ public class SetBrush extends PerformBrush
                 this.block = null;
                 return true;
             }
-            final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-            final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-            final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-            final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-            final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-            final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+            final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+            final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+            final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+            final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
 
-            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > SELECTION_SIZE_MAX)
+            if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > SELECTION_SIZE_MAX)
             {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             }
             else
             {
-                for (int _y = _lowy; _y <= _highy; _y++)
+                for (int y = lowY; y <= highY; y++)
                 {
-                    for (int _x = _lowx; _x <= _highx; _x++)
+                    for (int x = lowX; x <= highX; x++)
                     {
-                        for (int _z = _lowz; _z <= _highz; _z++)
+                        for (int z = lowZ; z <= highZ; z++)
                         {
-                            this.current.perform(this.clampY(_x, _y, _z));
+                            this.current.perform(this.clampY(x, y, z));
                         }
                     }
                 }

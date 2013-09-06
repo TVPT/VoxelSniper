@@ -52,9 +52,9 @@ public class HeatRayBrush extends Brush
 
     static
     {
-        for (final FlameableBlock _flameableBlock : FlameableBlock.values())
+        for (final FlameableBlock flameableBlock : FlameableBlock.values())
         {
-            HeatRayBrush.FLAMABLE_BLOCKS.add(_flameableBlock.material);
+            HeatRayBrush.FLAMABLE_BLOCKS.add(flameableBlock.material);
         }
     }
 
@@ -74,82 +74,82 @@ public class HeatRayBrush extends Brush
      */
     public final void heatRay(final SnipeData v)
     {
-        final PerlinNoiseGenerator _generator = new PerlinNoiseGenerator(new Random());
+        final PerlinNoiseGenerator generator = new PerlinNoiseGenerator(new Random());
 
-        final Vector _targetLocation = this.getTargetBlock().getLocation().toVector();
-        final Location _currentLocation = new Location(this.getTargetBlock().getWorld(), 0, 0, 0);
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-        Block _currentBlock = null;
+        final Vector targetLocation = this.getTargetBlock().getLocation().toVector();
+        final Location currentLocation = new Location(this.getTargetBlock().getWorld(), 0, 0, 0);
+        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Block currentBlock;
 
-        for (int _z = v.getBrushSize(); _z >= -v.getBrushSize(); _z--)
+        for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--)
         {
-            for (int _x = v.getBrushSize(); _x >= -v.getBrushSize(); _x--)
+            for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
             {
-                for (int _y = v.getBrushSize(); _y >= -v.getBrushSize(); _y--)
+                for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
                 {
-                    _currentLocation.setX(this.getBlockPositionX() + _x);
-                    _currentLocation.setY(this.getBlockPositionY() + _y);
-                    _currentLocation.setZ(this.getBlockPositionZ() + _z);
+                    currentLocation.setX(this.getBlockPositionX() + x);
+                    currentLocation.setY(this.getBlockPositionY() + y);
+                    currentLocation.setZ(this.getBlockPositionZ() + z);
 
-                    if (_currentLocation.toVector().isInSphere(_targetLocation, v.getBrushSize()))
+                    if (currentLocation.toVector().isInSphere(targetLocation, v.getBrushSize()))
                     {
-                        _currentBlock = _currentLocation.getBlock();
-                        if (_currentBlock == null || _currentBlock.getType() == Material.CHEST)
+                        currentBlock = currentLocation.getBlock();
+                        if (currentBlock == null || currentBlock.getType() == Material.CHEST)
                         {
                             continue;
                         }
 
-                        if (_currentBlock.isLiquid())
+                        if (currentBlock.isLiquid())
                         {
-                            _undo.put(_currentBlock);
-                            _currentBlock.setType(Material.AIR);
+                            undo.put(currentBlock);
+                            currentBlock.setType(Material.AIR);
                             continue;
                         }
 
-                        if (HeatRayBrush.FLAMABLE_BLOCKS.contains(_currentBlock.getType()))
+                        if (HeatRayBrush.FLAMABLE_BLOCKS.contains(currentBlock.getType()))
                         {
-                            _undo.put(_currentBlock);
-                            _currentBlock.setType(Material.FIRE);
+                            undo.put(currentBlock);
+                            currentBlock.setType(Material.FIRE);
                             continue;
                         }
 
-                        if (!_currentBlock.getType().equals(Material.AIR))
+                        if (!currentBlock.getType().equals(Material.AIR))
                         {
-                            final double _airDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
-                            final double _fireDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
-                            final double _cobbleDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
-                            final double _obsidianDensity = _generator.noise(_currentLocation.getX(), _currentLocation.getY(), _currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
+                            final double airDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
+                            final double fireDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
+                            final double cobbleDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
+                            final double obsidianDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 
-                            if (_obsidianDensity >= HeatRayBrush.REQUIRED_OBSIDIAN_DENSITY)
+                            if (obsidianDensity >= HeatRayBrush.REQUIRED_OBSIDIAN_DENSITY)
                             {
-                                _undo.put(_currentBlock);
-                                if (_currentBlock.getType() != Material.OBSIDIAN)
+                                undo.put(currentBlock);
+                                if (currentBlock.getType() != Material.OBSIDIAN)
                                 {
-                                    _currentBlock.setType(Material.OBSIDIAN);
+                                    currentBlock.setType(Material.OBSIDIAN);
                                 }
                             }
-                            else if (_cobbleDensity >= HeatRayBrush.REQUIRED_COBBLE_DENSITY)
+                            else if (cobbleDensity >= HeatRayBrush.REQUIRED_COBBLE_DENSITY)
                             {
-                                _undo.put(_currentBlock);
-                                if (_currentBlock.getType() != Material.COBBLESTONE)
+                                undo.put(currentBlock);
+                                if (currentBlock.getType() != Material.COBBLESTONE)
                                 {
-                                    _currentBlock.setType(Material.COBBLESTONE);
+                                    currentBlock.setType(Material.COBBLESTONE);
                                 }
                             }
-                            else if (_fireDensity >= HeatRayBrush.REQUIRED_FIRE_DENSITY)
+                            else if (fireDensity >= HeatRayBrush.REQUIRED_FIRE_DENSITY)
                             {
-                                _undo.put(_currentBlock);
-                                if (_currentBlock.getType() != Material.FIRE)
+                                undo.put(currentBlock);
+                                if (currentBlock.getType() != Material.FIRE)
                                 {
-                                    _currentBlock.setType(Material.FIRE);
+                                    currentBlock.setType(Material.FIRE);
                                 }
                             }
-                            else if (_airDensity >= HeatRayBrush.REQUIRED_AIR_DENSITY)
+                            else if (airDensity >= HeatRayBrush.REQUIRED_AIR_DENSITY)
                             {
-                                _undo.put(_currentBlock);
-                                if (_currentBlock.getType() != Material.AIR)
+                                undo.put(currentBlock);
+                                if (currentBlock.getType() != Material.AIR)
                                 {
-                                    _currentBlock.setType(Material.AIR);
+                                    currentBlock.setType(Material.AIR);
                                 }
                             }
                         }
@@ -159,7 +159,7 @@ public class HeatRayBrush extends Brush
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
@@ -187,30 +187,30 @@ public class HeatRayBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i].toLowerCase();
+            final String parameter = par[i].toLowerCase();
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
                 v.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
                 v.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
             }
-            if (_param.startsWith("oct"))
+            if (parameter.startsWith("oct"))
             {
-                this.octaves = Integer.valueOf(_param.replace("oct", ""));
+                this.octaves = Integer.valueOf(parameter.replace("oct", ""));
                 v.getVoxelMessage().custom(ChatColor.GREEN + "Octaves: " + this.octaves);
             }
-            else if (_param.startsWith("amp"))
+            else if (parameter.startsWith("amp"))
             {
-                this.amplitude = Double.valueOf(_param.replace("amp", ""));
+                this.amplitude = Double.valueOf(parameter.replace("amp", ""));
                 v.getVoxelMessage().custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
             }
-            else if (_param.startsWith("freq"))
+            else if (parameter.startsWith("freq"))
             {
-                this.frequency = Double.valueOf(_param.replace("freq", ""));
+                this.frequency = Double.valueOf(parameter.replace("freq", ""));
                 v.getVoxelMessage().custom(ChatColor.GREEN + "Frequency: " + this.frequency);
             }
         }

@@ -23,15 +23,13 @@ public class VoxelBrush extends PerformBrush
 
     private void voxel(final SnipeData v)
     {
-        final int _bSize = v.getBrushSize();
-
-        for (int _z = _bSize; _z >= -_bSize; _z--)
+        for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--)
         {
-            for (int _x = _bSize; _x >= -_bSize; _x--)
+            for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
             {
-                for (int _y = _bSize; _y >= -_bSize; _y--)
+                for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
                 {
-                    this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _z, this.getBlockPositionZ() + _y));
+                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + z, this.getBlockPositionZ() + y));
                 }
             }
         }

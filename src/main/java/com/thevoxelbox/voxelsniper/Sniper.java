@@ -1,10 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.*;
-import java.util.logging.Level;
-
 import com.google.common.base.Joiner;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
@@ -13,7 +8,6 @@ import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.brush.tool.BrushTool;
 import com.thevoxelbox.voxelsniper.brush.tool.SneakBrushTool;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,12 +15,21 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.logging.Level;
+
 /**
  * @author Piotr
  */
 public class Sniper
 {
-
     private static final int SAVE_ARRAY_SIZE = 8;
     private static final int SAVE_ARRAY_RANGE = 7;
     private static final int SAVE_ARRAY_REPLACE_DATA_VALUE = 6;
@@ -37,6 +40,56 @@ public class Sniper
     private static final int SAVE_ARRAY_REPLACE_VOXEL_ID = 1;
     private static final int SAVE_ARRAY_VOXEL_ID = 0;
     private static int undoCacheSize = 20;
+    private final LinkedList<Undo> undoList = new LinkedList<Undo>();
+    private final EnumMap<Material, BrushTool> brushTools = new EnumMap<Material, BrushTool>(Material.class);
+    private final HashMap<Integer, IBrush> brushPresets = new HashMap<Integer, IBrush>();
+    private final HashMap<Integer, int[]> brushPresetsParams = new HashMap<Integer, int[]>();
+    private final HashMap<String, IBrush> brushPresetsS = new HashMap<String, IBrush>();
+    private final HashMap<String, int[]> brushPresetsParamsS = new HashMap<String, int[]>();
+    private IBrush readingBrush;
+    private String readingString;
+    private Player player;
+    private SnipeData data = new SnipeData(this);
+    private Message voxelMessage;
+    private boolean lightning = false;
+    private boolean enabled = true;
+    /**
+     * If false, will suppress many types of common, spammy vmessages.
+     */
+    private boolean printout = true;
+    private boolean distRestrict = false;
+    private double range = 5.0d;
+    private Map<String, IBrush> myBrushes;
+    private IBrush current = new SnipeBrush();
+    private IBrush previous = new SnipeBrush();
+    private IBrush twoBack = new SnipeBrush();
+    private IBrush sneak = new Sneak();
+    private Integer group;
+
+    /**
+     * Default constructor.
+     */
+    public Sniper()
+    {
+        this.myBrushes = Brushes.getNewSniperBrushInstances();
+
+        this.voxelMessage = new Message(this.data);
+        this.data.setVoxelMessage(this.voxelMessage);
+
+        final int[] currentP = new int[Sniper.SAVE_ARRAY_SIZE];
+        currentP[Sniper.SAVE_ARRAY_VOXEL_ID] = 0;
+        currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = 0;
+        currentP[Sniper.SAVE_ARRAY_DATA_VALUE] = 0;
+        currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE] = 3;
+        currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = 1;
+        currentP[Sniper.SAVE_ARRAY_CENTROID] = 0;
+        this.brushPresetsParamsS.put("current@", currentP);
+        this.brushPresetsParamsS.put("previous@", currentP);
+        this.brushPresetsParamsS.put("twoBack@", currentP);
+        this.brushPresetsS.put("current@", this.myBrushes.get("s"));
+        this.brushPresetsS.put("previous@", this.myBrushes.get("s"));
+        this.brushPresetsS.put("twoBack@", this.myBrushes.get("s"));
+    }
 
     /**
      * @return int
@@ -54,67 +107,9 @@ public class Sniper
         Sniper.undoCacheSize = undoChacheSize;
     }
 
-    private IBrush readingBrush;
-    private String readingString;
-
-    private Player player;
-
-    private SnipeData data = new SnipeData(this);
-
-    private Message voxelMessage;
-
-    private boolean lightning = false;
-
-    private boolean enabled = true;
-    /**
-     * If false, will suppress many types of common, spammy vmessages.
-     */
-    private boolean printout = true;
-    private boolean distRestrict = false;
-    private double range = 5.0d;
-
-    private final LinkedList<Undo> undoList = new LinkedList<Undo>();
-    private Map<String, IBrush> myBrushes;
-    private final EnumMap<Material, BrushTool> brushTools = new EnumMap<Material, BrushTool>(Material.class);
-    private final HashMap<Integer, IBrush> brushPresets = new HashMap<Integer, IBrush>();
-    private final HashMap<Integer, int[]> brushPresetsParams = new HashMap<Integer, int[]>();
-    private final HashMap<String, IBrush> brushPresetsS = new HashMap<String, IBrush>();
-    private final HashMap<String, int[]> brushPresetsParamsS = new HashMap<String, int[]>();
-
-    private IBrush current = new SnipeBrush();
-    private IBrush previous = new SnipeBrush();
-    private IBrush twoBack = new SnipeBrush();
-    private IBrush sneak = new Sneak();
-
-    private Integer group;
-
-    /**
-     * Default constructor.
-     */
-    public Sniper()
-    {
-        this.myBrushes = Brushes.getNewSniperBrushInstances();
-
-        this.voxelMessage = new Message(this.data);
-        this.data.setVoxelMessage(this.voxelMessage);
-
-        final int[] _currentP = new int[Sniper.SAVE_ARRAY_SIZE];
-        _currentP[Sniper.SAVE_ARRAY_VOXEL_ID] = 0;
-        _currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = 0;
-        _currentP[Sniper.SAVE_ARRAY_DATA_VALUE] = 0;
-        _currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE] = 3;
-        _currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = 1;
-        _currentP[Sniper.SAVE_ARRAY_CENTROID] = 0;
-        this.brushPresetsParamsS.put("current@", _currentP);
-        this.brushPresetsParamsS.put("previous@", _currentP);
-        this.brushPresetsParamsS.put("twoBack@", _currentP);
-        this.brushPresetsS.put("current@", this.myBrushes.get("s"));
-        this.brushPresetsS.put("previous@", this.myBrushes.get("s"));
-        this.brushPresetsS.put("twoBack@", this.myBrushes.get("s"));
-    }
-
     /**
      * Check if Sniper currently is processing snipes.
+     *
      * @return true if enabled, false otherwise.
      */
     public boolean isEnabled()
@@ -124,6 +119,7 @@ public class Sniper
 
     /**
      * Set if Sniper currently is processing snipes.
+     *
      * @param enabled true for enabling snipe processing.
      */
     public void setEnabled(boolean enabled)
@@ -170,9 +166,9 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.getVoxelList().add(i);
-            _bt.data.getVoxelMessage().voxelList();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.getVoxelList().add(i);
+            brushTool.data.getVoxelMessage().voxelList();
         }
         else
         {
@@ -188,9 +184,9 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.getVoxelList().clear();
-            _bt.data.getVoxelMessage().voxelList();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.getVoxelList().clear();
+            brushTool.data.getVoxelMessage().voxelList();
         }
         else
         {
@@ -212,27 +208,27 @@ public class Sniper
      */
     public final void doUndo(final int num)
     {
-        int _sum = 0;
+        int sum = 0;
         if (this.undoList.isEmpty())
         {
             this.player.sendMessage(ChatColor.GREEN + "There's nothing to undo.");
         }
         else
         {
-            for (int _x = 0; _x < num; _x++)
+            for (int x = 0; x < num; x++)
             {
-                final Undo _undo = this.undoList.pollLast();
-                if (_undo != null)
+                final Undo undo = this.undoList.pollLast();
+                if (undo != null)
                 {
-                    _undo.undo();
-                    _sum += _undo.getSize();
+                    undo.undo();
+                    sum += undo.getSize();
                 }
                 else
                 {
                     break;
                 }
             }
-            this.player.sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + _sum + ChatColor.GREEN + " blocks have been replaced.");
+            this.player.sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
         }
     }
 
@@ -241,16 +237,16 @@ public class Sniper
      */
     public final void fillCurrent()
     {
-        final int[] _currentP = new int[Sniper.SAVE_ARRAY_SIZE];
-        _currentP[Sniper.SAVE_ARRAY_VOXEL_ID] = this.data.getVoxelId();
-        _currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = this.data.getReplaceId();
-        _currentP[Sniper.SAVE_ARRAY_DATA_VALUE] = this.data.getData();
-        _currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE] = this.data.getBrushSize();
-        _currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = this.data.getVoxelHeight();
-        _currentP[Sniper.SAVE_ARRAY_CENTROID] = this.data.getcCen();
-        _currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = this.data.getReplaceData();
-        _currentP[Sniper.SAVE_ARRAY_RANGE] = (int) this.range;
-        this.brushPresetsParamsS.put("current@", _currentP);
+        final int[] currentP = new int[Sniper.SAVE_ARRAY_SIZE];
+        currentP[Sniper.SAVE_ARRAY_VOXEL_ID] = this.data.getVoxelId();
+        currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = this.data.getReplaceId();
+        currentP[Sniper.SAVE_ARRAY_DATA_VALUE] = this.data.getData();
+        currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE] = this.data.getBrushSize();
+        currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = this.data.getVoxelHeight();
+        currentP[Sniper.SAVE_ARRAY_CENTROID] = this.data.getcCen();
+        currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = this.data.getReplaceData();
+        currentP[Sniper.SAVE_ARRAY_RANGE] = (int) this.range;
+        this.brushPresetsParamsS.put("current@", currentP);
     }
 
     /**
@@ -258,16 +254,16 @@ public class Sniper
      */
     public final void fillPrevious()
     {
-        final int[] _currentP = new int[Sniper.SAVE_ARRAY_SIZE];
-        _currentP[Sniper.SAVE_ARRAY_VOXEL_ID] = this.data.getVoxelId();
-        _currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = this.data.getReplaceId();
-        _currentP[Sniper.SAVE_ARRAY_DATA_VALUE] = this.data.getData();
-        _currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE] = this.data.getBrushSize();
-        _currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = this.data.getVoxelHeight();
-        _currentP[Sniper.SAVE_ARRAY_CENTROID] = this.data.getcCen();
-        _currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = this.data.getReplaceData();
-        _currentP[Sniper.SAVE_ARRAY_RANGE] = (int) this.range;
-        this.brushPresetsParamsS.put("previous@", _currentP);
+        final int[] currentP = new int[Sniper.SAVE_ARRAY_SIZE];
+        currentP[Sniper.SAVE_ARRAY_VOXEL_ID] = this.data.getVoxelId();
+        currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = this.data.getReplaceId();
+        currentP[Sniper.SAVE_ARRAY_DATA_VALUE] = this.data.getData();
+        currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE] = this.data.getBrushSize();
+        currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = this.data.getVoxelHeight();
+        currentP[Sniper.SAVE_ARRAY_CENTROID] = this.data.getcCen();
+        currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = this.data.getReplaceData();
+        currentP[Sniper.SAVE_ARRAY_RANGE] = (int) this.range;
+        this.brushPresetsParamsS.put("previous@", currentP);
     }
 
     public HashMap<Integer, IBrush> getBrushPresets()
@@ -300,9 +296,37 @@ public class Sniper
         return this.current;
     }
 
+    public void setCurrent(final Brush current)
+    {
+        this.current = current;
+    }
+
     public SnipeData getData()
     {
         return this.data;
+    }
+
+    /**
+     * @param dat
+     */
+    public final void setData(final byte dat)
+    {
+        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        {
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.setData(dat);
+            brushTool.data.getVoxelMessage().data();
+        }
+        else
+        {
+            this.data.setData(dat);
+            this.voxelMessage.data();
+        }
+    }
+
+    public void setData(final SnipeData data)
+    {
+        this.data = data;
     }
 
     public Integer getGroup()
@@ -310,9 +334,19 @@ public class Sniper
         return this.group;
     }
 
+    public void setGroup(final Integer group)
+    {
+        this.group = group;
+    }
+
     public Map<String, IBrush> getMyBrushes()
     {
         return this.myBrushes;
+    }
+
+    public void setMyBrushes(final Map<String, IBrush> myBrushes)
+    {
+        this.myBrushes = myBrushes;
     }
 
     public Player getPlayer()
@@ -320,9 +354,19 @@ public class Sniper
         return this.player;
     }
 
+    public void setPlayer(final Player player)
+    {
+        this.player = player;
+    }
+
     public IBrush getPrevious()
     {
         return this.previous;
+    }
+
+    public void setPrevious(final Brush previous)
+    {
+        this.previous = previous;
     }
 
     public double getRange()
@@ -330,9 +374,32 @@ public class Sniper
         return this.range;
     }
 
+    /**
+     * @param rng
+     */
+    public void setRange(final double rng)
+    {
+        if (rng > -1)
+        {
+            this.range = rng;
+            this.distRestrict = true;
+            this.voxelMessage.toggleRange();
+        }
+        else
+        {
+            this.distRestrict = !this.distRestrict;
+            this.voxelMessage.toggleRange();
+        }
+    }
+
     public IBrush getReadingBrush()
     {
         return this.readingBrush;
+    }
+
+    public void setReadingBrush(final Brush readingBrush)
+    {
+        this.readingBrush = readingBrush;
     }
 
     public String getReadingString()
@@ -340,14 +407,29 @@ public class Sniper
         return this.readingString;
     }
 
+    public void setReadingString(final String readingString)
+    {
+        this.readingString = readingString;
+    }
+
     public IBrush getSneak()
     {
         return this.sneak;
     }
 
+    public void setSneak(final IBrush sneak)
+    {
+        this.sneak = sneak;
+    }
+
     public IBrush getTwoBack()
     {
         return this.twoBack;
+    }
+
+    public void setTwoBack(final Brush twoBack)
+    {
+        this.twoBack = twoBack;
     }
 
     public LinkedList<Undo> getUndoList()
@@ -360,6 +442,11 @@ public class Sniper
         return this.voxelMessage;
     }
 
+    public void setVoxelMessage(final Message voxelMessage)
+    {
+        this.voxelMessage = voxelMessage;
+    }
+
     /**
      *
      */
@@ -367,8 +454,8 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.info();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.info();
         }
         else
         {
@@ -385,14 +472,29 @@ public class Sniper
         return this.distRestrict;
     }
 
+    public void setDistRestrict(final boolean distRestrict)
+    {
+        this.distRestrict = distRestrict;
+    }
+
     public boolean isLightning()
     {
         return this.lightning;
     }
 
+    public void setLightning(final boolean lightning)
+    {
+        this.lightning = lightning;
+    }
+
     public boolean isPrintout()
     {
         return this.printout;
+    }
+
+    public void setPrintout(final boolean printout)
+    {
+        this.printout = printout;
     }
 
     /**
@@ -402,65 +504,64 @@ public class Sniper
     {
         try
         {
-            final File _f = new File("plugins/VoxelSniper/presetsBySniper/" + this.player.getName() + ".txt");
-            if (_f.exists())
+            final File file = new File("plugins/VoxelSniper/presetsBySniper/" + this.player.getName() + ".txt");
+            if (file.exists())
             {
-                final Scanner _snr = new Scanner(_f);
-                final int[] _presetsHolder = new int[Sniper.SAVE_ARRAY_SIZE];
-                while (_snr.hasNext())
+                final Scanner scanner = new Scanner(file);
+                final int[] presetsHolder = new int[Sniper.SAVE_ARRAY_SIZE];
+                while (scanner.hasNext())
                 {
                     try
                     {
-                        this.readingString = _snr.nextLine();
-                        final int _key = Integer.parseInt(this.readingString);
-                        this.readingBrush = this.myBrushes.get(_snr.nextLine());
-                        this.brushPresets.put(_key, this.readingBrush);
-                        _presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] = Integer.parseInt(_snr.nextLine());
-                        _presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = Integer.parseInt(_snr.nextLine());
-                        _presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] = Byte.parseByte(_snr.nextLine());
-                        _presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] = Integer.parseInt(_snr.nextLine());
-                        _presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = Integer.parseInt(_snr.nextLine());
-                        _presetsHolder[Sniper.SAVE_ARRAY_CENTROID] = Integer.parseInt(_snr.nextLine());
-                        _presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = Byte.parseByte(_snr.nextLine());
-                        _presetsHolder[Sniper.SAVE_ARRAY_RANGE] = Integer.parseInt(_snr.nextLine());
-                        this.brushPresetsParams.put(_key, _presetsHolder);
+                        this.readingString = scanner.nextLine();
+                        final int key = Integer.parseInt(this.readingString);
+                        this.readingBrush = this.myBrushes.get(scanner.nextLine());
+                        this.brushPresets.put(key, this.readingBrush);
+                        presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] = Integer.parseInt(scanner.nextLine());
+                        presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = Integer.parseInt(scanner.nextLine());
+                        presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] = Byte.parseByte(scanner.nextLine());
+                        presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] = Integer.parseInt(scanner.nextLine());
+                        presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = Integer.parseInt(scanner.nextLine());
+                        presetsHolder[Sniper.SAVE_ARRAY_CENTROID] = Integer.parseInt(scanner.nextLine());
+                        presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = Byte.parseByte(scanner.nextLine());
+                        presetsHolder[Sniper.SAVE_ARRAY_RANGE] = Integer.parseInt(scanner.nextLine());
+                        this.brushPresetsParams.put(key, presetsHolder);
                     }
-                    catch (final NumberFormatException _e)
+                    catch (final NumberFormatException exception)
                     {
-                        boolean _first = true;
-                        while (_snr.hasNext())
+                        boolean first = true;
+                        while (scanner.hasNext())
                         {
-                            String _keyS;
-                            if (_first)
+                            String keyS;
+                            if (first)
                             {
-                                _keyS = this.readingString;
-                                _first = false;
+                                keyS = this.readingString;
+                                first = false;
                             }
                             else
                             {
-                                _keyS = _snr.nextLine();
+                                keyS = scanner.nextLine();
                             }
-                            this.readingBrush = this.myBrushes.get(_snr.nextLine());
-                            this.brushPresetsS.put(_keyS, this.readingBrush);
-                            _presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] = Integer.parseInt(_snr.nextLine());
-                            _presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = Integer.parseInt(_snr.nextLine());
-                            _presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] = Byte.parseByte(_snr.nextLine());
-                            _presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] = Integer.parseInt(_snr.nextLine());
-                            _presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = Integer.parseInt(_snr.nextLine());
-                            _presetsHolder[Sniper.SAVE_ARRAY_CENTROID] = Integer.parseInt(_snr.nextLine());
-                            _presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = Byte.parseByte(_snr.nextLine());
-                            _presetsHolder[Sniper.SAVE_ARRAY_RANGE] = Integer.parseInt(_snr.nextLine());
-                            this.brushPresetsParamsS.put(_keyS, _presetsHolder);
-
+                            this.readingBrush = this.myBrushes.get(scanner.nextLine());
+                            this.brushPresetsS.put(keyS, this.readingBrush);
+                            presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] = Integer.parseInt(scanner.nextLine());
+                            presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] = Integer.parseInt(scanner.nextLine());
+                            presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] = Byte.parseByte(scanner.nextLine());
+                            presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] = Integer.parseInt(scanner.nextLine());
+                            presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] = Integer.parseInt(scanner.nextLine());
+                            presetsHolder[Sniper.SAVE_ARRAY_CENTROID] = Integer.parseInt(scanner.nextLine());
+                            presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] = Byte.parseByte(scanner.nextLine());
+                            presetsHolder[Sniper.SAVE_ARRAY_RANGE] = Integer.parseInt(scanner.nextLine());
+                            this.brushPresetsParamsS.put(keyS, presetsHolder);
                         }
                     }
                 }
-                _snr.close();
+                scanner.close();
             }
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
-            _e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -471,32 +572,32 @@ public class Sniper
     {
         try
         {
-            final int[] _paramArray = this.brushPresetsParams.get(slot);
+            final int[] parameterArray = this.brushPresetsParams.get(slot);
 
-            final IBrush _temp = this.brushPresets.get(slot);
-            if (_temp != this.current)
+            final IBrush temp = this.brushPresets.get(slot);
+            if (temp != this.current)
             {
                 this.twoBack = this.previous;
                 this.previous = this.current;
-                this.current = _temp;
+                this.current = temp;
             }
             this.fillPrevious();
-            this.data.setVoxelId(_paramArray[Sniper.SAVE_ARRAY_VOXEL_ID]);
-            this.data.setReplaceId(_paramArray[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
-            this.data.setData((byte) _paramArray[Sniper.SAVE_ARRAY_DATA_VALUE]);
-            this.data.setBrushSize(_paramArray[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
-            this.data.setVoxelHeight(_paramArray[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
-            this.data.setcCen(_paramArray[Sniper.SAVE_ARRAY_CENTROID]);
-            this.data.setReplaceData((byte) _paramArray[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
-            this.range = _paramArray[Sniper.SAVE_ARRAY_RANGE];
-            this.setPerformer(new String[] { "", "m" });
+            this.data.setVoxelId(parameterArray[Sniper.SAVE_ARRAY_VOXEL_ID]);
+            this.data.setReplaceId(parameterArray[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
+            this.data.setData((byte) parameterArray[Sniper.SAVE_ARRAY_DATA_VALUE]);
+            this.data.setBrushSize(parameterArray[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
+            this.data.setVoxelHeight(parameterArray[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
+            this.data.setcCen(parameterArray[Sniper.SAVE_ARRAY_CENTROID]);
+            this.data.setReplaceData((byte) parameterArray[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
+            this.range = parameterArray[Sniper.SAVE_ARRAY_RANGE];
+            this.setPerformer(new String[]{"", "m"});
 
             this.player.sendMessage("Preset loaded.");
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
             this.player.sendMessage(ChatColor.RED + "Preset is empty. Cannot load.");
-            _e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -507,32 +608,32 @@ public class Sniper
     {
         try
         {
-            final int[] _paramArray = this.brushPresetsParamsS.get(slot);
+            final int[] parameterArray = this.brushPresetsParamsS.get(slot);
 
-            final IBrush _temp = this.brushPresetsS.get(slot);
-            if (_temp != this.current)
+            final IBrush temp = this.brushPresetsS.get(slot);
+            if (temp != this.current)
             {
                 this.twoBack = this.previous;
                 this.previous = this.current;
-                this.current = _temp;
+                this.current = temp;
             }
             this.fillPrevious();
-            this.data.setVoxelId(_paramArray[Sniper.SAVE_ARRAY_VOXEL_ID]);
-            this.data.setReplaceId(_paramArray[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
-            this.data.setData((byte) _paramArray[Sniper.SAVE_ARRAY_DATA_VALUE]);
-            this.data.setBrushSize(_paramArray[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
-            this.data.setVoxelHeight(_paramArray[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
-            this.data.setcCen(_paramArray[Sniper.SAVE_ARRAY_CENTROID]);
-            this.data.setReplaceData((byte) _paramArray[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
-            this.range = _paramArray[Sniper.SAVE_ARRAY_RANGE];
-            this.setPerformer(new String[] { "", "m" });
+            this.data.setVoxelId(parameterArray[Sniper.SAVE_ARRAY_VOXEL_ID]);
+            this.data.setReplaceId(parameterArray[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
+            this.data.setData((byte) parameterArray[Sniper.SAVE_ARRAY_DATA_VALUE]);
+            this.data.setBrushSize(parameterArray[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
+            this.data.setVoxelHeight(parameterArray[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
+            this.data.setcCen(parameterArray[Sniper.SAVE_ARRAY_CENTROID]);
+            this.data.setReplaceData((byte) parameterArray[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
+            this.range = parameterArray[Sniper.SAVE_ARRAY_RANGE];
+            this.setPerformer(new String[]{"", "m"});
 
             this.player.sendMessage("Preset loaded.");
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
             this.player.sendMessage(ChatColor.RED + "Preset is empty. Cannot load.");
-            _e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -541,9 +642,9 @@ public class Sniper
      */
     public final void previousBrush()
     {
-        final IBrush _temp = this.current;
+        final IBrush temp = this.current;
         this.current = this.previous;
-        this.previous = _temp;
+        this.previous = temp;
 
         this.fillCurrent();
         this.readPrevious();
@@ -588,9 +689,9 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.getVoxelList().removeValue(i);
-            _bt.data.getVoxelMessage().voxelList();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.getVoxelList().removeValue(i);
+            brushTool.data.getVoxelMessage().voxelList();
         }
         else
         {
@@ -615,16 +716,16 @@ public class Sniper
 
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.setBrush(new SnipeBrush());
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.setBrush(new SnipeBrush());
 
-            _bt.data.setVoxelId(0);
-            _bt.data.setReplaceId(0);
-            _bt.data.setData((byte) 0);
-            _bt.data.setBrushSize(3);
-            _bt.data.setVoxelHeight(1);
-            _bt.data.setcCen(0);
-            _bt.data.setReplaceData((byte) 0);
+            brushTool.data.setVoxelId(0);
+            brushTool.data.setReplaceId(0);
+            brushTool.data.setData((byte) 0);
+            brushTool.data.setBrushSize(3);
+            brushTool.data.setVoxelHeight(1);
+            brushTool.data.setcCen(0);
+            brushTool.data.setReplaceData((byte) 0);
         }
         else
         {
@@ -650,59 +751,59 @@ public class Sniper
      */
     public final void saveAllPresets()
     {
-        final String _location = "plugins/VoxelSniper/presetsBySniper/" + this.player.getName() + ".txt";
-        final File _nf = new File(_location);
+        final String location = "plugins/VoxelSniper/presetsBySniper/" + this.player.getName() + ".txt";
+        final File file = new File(location);
 
-        _nf.getParentFile().mkdirs();
-        PrintWriter _writer = null;
+        file.getParentFile().mkdirs();
+        PrintWriter writer;
         try
         {
-            _writer = new PrintWriter(_location);
-            int[] _presetsHolder = new int[Sniper.SAVE_ARRAY_SIZE];
-            Iterator<?> _it = this.brushPresets.keySet().iterator();
+            writer = new PrintWriter(location);
+            int[] presetsHolder = new int[Sniper.SAVE_ARRAY_SIZE];
+            Iterator<?> iterator = this.brushPresets.keySet().iterator();
             if (!this.brushPresets.isEmpty())
             {
-                while (_it.hasNext())
+                while (iterator.hasNext())
                 {
-                    final int _i = (Integer) _it.next();
-                    _writer.write(_i + "\r\n" + this.brushPresets.get(_i).getName() + "\r\n");
-                    _presetsHolder = this.brushPresetsParams.get(_i);
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] + "\r\n");
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] + "\r\n");
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] + "\r\n");
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] + "\r\n");
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] + "\r\n");
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_CENTROID] + "\r\n");
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] + "\r\n");
-                    _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_RANGE] + "\r\n");
+                    final int i = (Integer) iterator.next();
+                    writer.write(i + "\r\n" + this.brushPresets.get(i).getName() + "\r\n");
+                    presetsHolder = this.brushPresetsParams.get(i);
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] + "\r\n");
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] + "\r\n");
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] + "\r\n");
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] + "\r\n");
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] + "\r\n");
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_CENTROID] + "\r\n");
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] + "\r\n");
+                    writer.write(presetsHolder[Sniper.SAVE_ARRAY_RANGE] + "\r\n");
                 }
             }
-            _it = this.brushPresetsS.keySet().iterator();
+            iterator = this.brushPresetsS.keySet().iterator();
             if (!this.brushPresetsS.isEmpty())
             {
-                while (_it.hasNext())
+                while (iterator.hasNext())
                 {
-                    final String _key = (String) _it.next();
-                    if (!_key.startsWith("current") && !_key.startsWith("previous") && !_key.startsWith("twoBack"))
+                    final String key = (String) iterator.next();
+                    if (!key.startsWith("current") && !key.startsWith("previous") && !key.startsWith("twoBack"))
                     {
-                        _writer.write(_key + "\r\n" + this.brushPresetsS.get(_key).getName() + "\r\n");
-                        _presetsHolder = this.brushPresetsParamsS.get(_key);
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] + "\r\n");
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] + "\r\n");
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] + "\r\n");
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] + "\r\n");
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] + "\r\n");
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_CENTROID] + "\r\n");
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] + "\r\n");
-                        _writer.write(_presetsHolder[Sniper.SAVE_ARRAY_RANGE] + "\r\n");
+                        writer.write(key + "\r\n" + this.brushPresetsS.get(key).getName() + "\r\n");
+                        presetsHolder = this.brushPresetsParamsS.get(key);
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_VOXEL_ID] + "\r\n");
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID] + "\r\n");
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_DATA_VALUE] + "\r\n");
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_BRUSH_SIZE] + "\r\n");
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_VOXEL_HEIGHT] + "\r\n");
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_CENTROID] + "\r\n");
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE] + "\r\n");
+                        writer.write(presetsHolder[Sniper.SAVE_ARRAY_RANGE] + "\r\n");
                     }
                 }
             }
-            _writer.close();
+            writer.close();
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
-            _e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -732,7 +833,6 @@ public class Sniper
 
     /**
      * @param args
-     *
      * @return boolean
      */
     public final boolean setBrush(final String[] args)
@@ -748,8 +848,8 @@ public class Sniper
             {
                 if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
                 {
-                    final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-                    _bt.setBrush(Brushes.getNewSniperBrushInstance(args[0]));
+                    final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+                    brushTool.setBrush(Brushes.getNewSniperBrushInstance(args[0]));
                 }
                 else
                 {
@@ -767,48 +867,48 @@ public class Sniper
                 return false;
             }
 
-            final String[] _argsParsed = this.parseParams(args);
+            final String[] argumentsParsed = this.parseParams(args);
 
-            if (_argsParsed.length > 1)
+            if (argumentsParsed.length > 1)
             {
                 try
                 {
                     if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
                     {
-                        final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-                        _bt.parse(_argsParsed);
+                        final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+                        brushTool.parse(argumentsParsed);
                     }
                     else
                     {
                         if (this.current instanceof Performer)
                         {
-                            ((Performer) this.current).parse(_argsParsed, this.data);
+                            ((Performer) this.current).parse(argumentsParsed, this.data);
                         }
                         else
                         {
-                            this.current.parameters(_argsParsed, this.data);
+                            this.current.parameters(argumentsParsed, this.data);
                         }
                     }
                     return true;
                 }
-                catch (final Exception _e)
+                catch (final Exception exception)
                 {
                     this.player.sendMessage(ChatColor.RED + "Invalid parameters! (Parameter error)");
-                    this.player.sendMessage(ChatColor.DARK_PURPLE + "" + this.fromArgs(_argsParsed));
+                    this.player.sendMessage(ChatColor.DARK_PURPLE + "" + this.fromArgs(argumentsParsed));
                     this.player.sendMessage(ChatColor.RED + "Is not a valid statement");
-                    this.player.sendMessage(ChatColor.DARK_BLUE + "" + _e.getMessage());
-                    VoxelSniper.LOG.warning("[VoxelSniper] Exception while receiving parameters: \n(" + this.player.getName() + " " + this.current.getName() + ") par[ " + this.fromArgs(_argsParsed) + "]");
-                    VoxelSniper.LOG.log(Level.SEVERE, null, _e);
+                    this.player.sendMessage(ChatColor.DARK_BLUE + "" + exception.getMessage());
+                    VoxelSniper.LOG.warning("[VoxelSniper] Exception while receiving parameters: \n(" + this.player.getName() + " " + this.current.getName() + ") par[ " + this.fromArgs(argumentsParsed) + "]");
+                    VoxelSniper.LOG.log(Level.SEVERE, null, exception);
                     return false;
                 }
             }
             this.info();
             return true;
         }
-        catch (final ArrayIndexOutOfBoundsException _e)
+        catch (final ArrayIndexOutOfBoundsException exception)
         {
             this.player.sendMessage(ChatColor.RED + "Invalid input.");
-            _e.printStackTrace();
+            exception.printStackTrace();
             return false;
         }
     }
@@ -820,9 +920,9 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.setBrushSize(size);
-            _bt.data.getVoxelMessage().size();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.setBrushSize(size);
+            brushTool.data.getVoxelMessage().size();
         }
         else
         {
@@ -838,53 +938,15 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.setcCen(centroid);
-            _bt.data.getVoxelMessage().center();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.setcCen(centroid);
+            brushTool.data.getVoxelMessage().center();
         }
         else
         {
             this.data.setcCen(centroid);
             this.voxelMessage.center();
         }
-    }
-
-    public void setCurrent(final Brush current)
-    {
-        this.current = current;
-    }
-
-    /**
-     * @param dat
-     */
-    public final void setData(final byte dat)
-    {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
-        {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.setData(dat);
-            _bt.data.getVoxelMessage().data();
-        }
-        else
-        {
-            this.data.setData(dat);
-            this.voxelMessage.data();
-        }
-    }
-
-    public void setData(final SnipeData data)
-    {
-        this.data = data;
-    }
-
-    public void setDistRestrict(final boolean distRestrict)
-    {
-        this.distRestrict = distRestrict;
-    }
-
-    public void setGroup(final Integer group)
-    {
-        this.group = group;
     }
 
     /**
@@ -894,9 +956,9 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.setVoxelHeight(heigth);
-            _bt.data.getVoxelMessage().height();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.setVoxelHeight(heigth);
+            brushTool.data.getVoxelMessage().height();
         }
         else
         {
@@ -905,83 +967,30 @@ public class Sniper
         }
     }
 
-    public void setLightning(final boolean lightning)
-    {
-        this.lightning = lightning;
-    }
-
-    public void setMyBrushes(final Map<String, IBrush> myBrushes)
-    {
-        this.myBrushes = myBrushes;
-    }
-
     /**
      * @param args
      */
     public final void setPerformer(final String[] args)
     {
-        final String[] _derp = new String[args.length + 1];
-        _derp[0] = "";
-        System.arraycopy(args, 0, _derp, 1, args.length);
+        final String[] parameters = new String[args.length + 1];
+        parameters[0] = "";
+        System.arraycopy(args, 0, parameters, 1, args.length);
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.setPerformer(_derp);
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.setPerformer(parameters);
         }
         else
         {
             if (this.current instanceof Performer)
             {
-                ((Performer) this.current).parse(_derp, this.data);
+                ((Performer) this.current).parse(parameters, this.data);
             }
             else
             {
                 this.voxelMessage.custom(ChatColor.GOLD + "This brush is not a performer brush.");
             }
         }
-    }
-
-    public void setPlayer(final Player player)
-    {
-        this.player = player;
-    }
-
-    public void setPrevious(final Brush previous)
-    {
-        this.previous = previous;
-    }
-
-    public void setPrintout(final boolean printout)
-    {
-        this.printout = printout;
-    }
-
-    /**
-     * @param rng
-     */
-    public void setRange(final double rng)
-    {
-        if (rng > -1)
-        {
-            this.range = rng;
-            this.distRestrict = true;
-            this.voxelMessage.toggleRange();
-        }
-        else
-        {
-            this.distRestrict = !this.distRestrict;
-            this.voxelMessage.toggleRange();
-        }
-    }
-
-    public void setReadingBrush(final Brush readingBrush)
-    {
-        this.readingBrush = readingBrush;
-    }
-
-    public void setReadingString(final String readingString)
-    {
-        this.readingString = readingString;
     }
 
     /**
@@ -991,9 +1000,9 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.setReplaceId(replace);
-            _bt.data.getVoxelMessage().replace();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.setReplaceId(replace);
+            brushTool.data.getVoxelMessage().replace();
         }
         else
         {
@@ -1009,25 +1018,15 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.setReplaceData(dat);
-            _bt.data.getVoxelMessage().replaceData();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.setReplaceData(dat);
+            brushTool.data.getVoxelMessage().replaceData();
         }
         else
         {
             this.data.setReplaceData(dat);
             this.voxelMessage.replaceData();
         }
-    }
-
-    public void setSneak(final IBrush sneak)
-    {
-        this.sneak = sneak;
-    }
-
-    public void setTwoBack(final Brush twoBack)
-    {
-        this.twoBack = twoBack;
     }
 
     /**
@@ -1037,9 +1036,9 @@ public class Sniper
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
-            final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-            _bt.data.setVoxelId(voxel);
-            _bt.data.getVoxelMessage().voxel();
+            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            brushTool.data.setVoxelId(voxel);
+            brushTool.data.getVoxelMessage().voxel();
         }
         else
         {
@@ -1048,56 +1047,50 @@ public class Sniper
         }
     }
 
-    public void setVoxelMessage(final Message voxelMessage)
-    {
-        this.voxelMessage = voxelMessage;
-    }
-
     /**
      * @param playr
      * @param action
      * @param itemInHand
      * @param clickedBlock
      * @param clickedFace
-     *
      * @return boolean Success.
      */
     public final boolean snipe(final Player playr, final Action action, final Material itemInHand, final Block clickedBlock, final BlockFace clickedFace)
     {
-        boolean _success = false;
+        boolean success = false;
         try
         {
             this.player = playr;
             if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
             {
-                final BrushTool _bt = this.brushTools.get(this.player.getItemInHand().getType());
-                _success = _bt.snipe(playr, action, itemInHand, clickedBlock, clickedFace);
+                final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+                success = brushTool.snipe(playr, action, itemInHand, clickedBlock, clickedFace);
             }
             else
             {
                 if (this.player.isSneaking())
                 {
-                    _success = this.sneak.perform(action, this.data, itemInHand, clickedBlock, clickedFace);
-                    return _success;
+                    success = this.sneak.perform(action, this.data, itemInHand, clickedBlock, clickedFace);
+                    return success;
                 }
 
-                _success = this.current.perform(action, this.data, itemInHand, clickedBlock, clickedFace);
+                success = this.current.perform(action, this.data, itemInHand, clickedBlock, clickedFace);
             }
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
             this.player.sendMessage(ChatColor.RED + "An Exception has occured! (Sniping error)");
-            this.player.sendMessage(ChatColor.RED + "" + _e.toString());
-            final StackTraceElement[] _ste = _e.getStackTrace();
-            for (final StackTraceElement _se : _ste)
+            this.player.sendMessage(ChatColor.RED + "" + exception.toString());
+            final StackTraceElement[] stackTrace = exception.getStackTrace();
+            for (final StackTraceElement stackTraceElement : stackTrace)
             {
-                this.player.sendMessage(ChatColor.DARK_GRAY + _se.getClassName() + ChatColor.DARK_GREEN + " : " + ChatColor.DARK_GRAY + _se.getLineNumber());
+                this.player.sendMessage(ChatColor.DARK_GRAY + stackTraceElement.getClassName() + ChatColor.DARK_GREEN + " : " + ChatColor.DARK_GRAY + stackTraceElement.getLineNumber());
             }
             VoxelSniper.LOG.warning("[VoxelSniper] Exception while sniping: (" + this.player.getName() + " " + this.current.getName() + ")");
-            VoxelSniper.LOG.log(Level.SEVERE, null, _e);
+            VoxelSniper.LOG.log(Level.SEVERE, null, exception);
             return false;
         }
-        return _success;
+        return success;
     }
 
     /**
@@ -1143,11 +1136,11 @@ public class Sniper
     public final void twoBackBrush()
     {
         this.fillCurrent();
-        final IBrush _temp = this.current;
-        final IBrush _tempTwo = this.previous;
+        final IBrush temp = this.current;
+        final IBrush tempTwo = this.previous;
         this.current = this.twoBack;
-        this.previous = _temp;
-        this.twoBack = _tempTwo;
+        this.previous = temp;
+        this.twoBack = tempTwo;
 
         this.fillCurrent();
         this.readTwoBack();
@@ -1160,66 +1153,66 @@ public class Sniper
 
     private String fromArgs(final String[] args)
     {
-        String _str = "";
-        for (final String _st : args)
+        String string = "";
+        for (final String argument : args)
         {
-            _str += _st + " ";
+            string += argument + " ";
         }
-        return _str;
+        return string;
     }
 
     private String[] parseParams(final String[] args)
     {
-        final boolean[] _toremove = new boolean[args.length];
+        final boolean[] toRemove = new boolean[args.length];
         if (args.length > 1)
         {
-            for (int _x = 1; _x < args.length; _x++)
+            for (int x = 1; x < args.length; x++)
             {
-                final String _str = args[_x];
-                if (_str.startsWith("-") && _str.length() > 1)
+                final String arg = args[x];
+                if (arg.startsWith("-") && arg.length() > 1)
                 {
-                    switch (_str.charAt(1))
+                    switch (arg.charAt(1))
                     {
 
                         case 'b':
                             try
                             {
-                                final int _i = Integer.parseInt(_str.substring(2));
-                                this.setBrushSize(_i);
-                                _toremove[_x] = true;
+                                final int i = Integer.parseInt(arg.substring(2));
+                                this.setBrushSize(i);
+                                toRemove[x] = true;
                             }
-                            catch (final Exception _e)
+                            catch (final Exception exception)
                             {
-                                this.player.sendMessage(ChatColor.RED + args[_x] + " is not a valid parameter!");
+                                this.player.sendMessage(ChatColor.RED + args[x] + " is not a valid parameter!");
                             }
                             break;
 
                         case 'r':
                             try
                             {
-                                if (_str.length() == 2)
+                                if (arg.length() == 2)
                                 {
                                     this.setRange(-1);
                                 }
                                 else
                                 {
-                                    this.setRange(Double.parseDouble(_str.substring(2)));
+                                    this.setRange(Double.parseDouble(arg.substring(2)));
                                 }
-                                _toremove[_x] = true;
+                                toRemove[x] = true;
                             }
-                            catch (final Exception _e)
+                            catch (final Exception exception)
                             {
-                                this.player.sendMessage(ChatColor.RED + args[_x] + " is not a valid parameter!");
+                                this.player.sendMessage(ChatColor.RED + args[x] + " is not a valid parameter!");
                             }
                             break;
 
                         case 'l':
                             this.toggleLightning();
-                            _toremove[_x] = true;
+                            toRemove[x] = true;
                             break;
 
                         case 'e':
-                            this.player.chat("/ve " + _str.substring(2));
+                            this.player.chat("/ve " + arg.substring(2));
                             break;
                         default:
                             break;
@@ -1227,28 +1220,28 @@ public class Sniper
                 }
             }
         }
-        int _i = 0;
-        for (final boolean _b : _toremove)
+        int i = 0;
+        for (final boolean b : toRemove)
         {
-            if (_b)
+            if (b)
             {
-                _i++;
+                i++;
             }
         }
-        if (_i == 0)
+        if (i == 0)
         {
             return args;
         }
-        final String[] _temp = new String[args.length - _i];
-        _i = 0;
-        for (int _x = 0; _x < args.length; _x++)
+        final String[] temp = new String[args.length - i];
+        i = 0;
+        for (int x = 0; x < args.length; x++)
         {
-            if (!_toremove[_x])
+            if (!toRemove[x])
             {
-                _temp[_i++] = args[_x];
+                temp[i++] = args[x];
             }
         }
-        return _temp;
+        return temp;
     }
 
     /**
@@ -1256,15 +1249,15 @@ public class Sniper
      */
     private void readCurrent()
     {
-        final int[] _currentP = this.brushPresetsParamsS.get("current@");
-        this.data.setVoxelId(_currentP[Sniper.SAVE_ARRAY_VOXEL_ID]);
-        this.data.setReplaceId(_currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
-        this.data.setData((byte) _currentP[Sniper.SAVE_ARRAY_DATA_VALUE]);
-        this.data.setBrushSize(_currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
-        this.data.setVoxelHeight(_currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
-        this.data.setcCen(_currentP[Sniper.SAVE_ARRAY_CENTROID]);
-        this.data.setReplaceData((byte) _currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
-        this.range = _currentP[Sniper.SAVE_ARRAY_RANGE];
+        final int[] currentP = this.brushPresetsParamsS.get("current@");
+        this.data.setVoxelId(currentP[Sniper.SAVE_ARRAY_VOXEL_ID]);
+        this.data.setReplaceId(currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
+        this.data.setData((byte) currentP[Sniper.SAVE_ARRAY_DATA_VALUE]);
+        this.data.setBrushSize(currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
+        this.data.setVoxelHeight(currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
+        this.data.setcCen(currentP[Sniper.SAVE_ARRAY_CENTROID]);
+        this.data.setReplaceData((byte) currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
+        this.range = currentP[Sniper.SAVE_ARRAY_RANGE];
     }
 
     /**
@@ -1272,27 +1265,27 @@ public class Sniper
      */
     private void readPrevious()
     {
-        final int[] _currentP = this.brushPresetsParamsS.get("previous@");
-        this.data.setVoxelId(_currentP[Sniper.SAVE_ARRAY_VOXEL_ID]);
-        this.data.setReplaceId(_currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
-        this.data.setData((byte) _currentP[Sniper.SAVE_ARRAY_DATA_VALUE]);
-        this.data.setBrushSize(_currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
-        this.data.setVoxelHeight(_currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
-        this.data.setcCen(_currentP[Sniper.SAVE_ARRAY_CENTROID]);
-        this.data.setReplaceData((byte) _currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
-        this.range = _currentP[Sniper.SAVE_ARRAY_RANGE];
+        final int[] currentP = this.brushPresetsParamsS.get("previous@");
+        this.data.setVoxelId(currentP[Sniper.SAVE_ARRAY_VOXEL_ID]);
+        this.data.setReplaceId(currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
+        this.data.setData((byte) currentP[Sniper.SAVE_ARRAY_DATA_VALUE]);
+        this.data.setBrushSize(currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
+        this.data.setVoxelHeight(currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
+        this.data.setcCen(currentP[Sniper.SAVE_ARRAY_CENTROID]);
+        this.data.setReplaceData((byte) currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
+        this.range = currentP[Sniper.SAVE_ARRAY_RANGE];
     }
 
     private void readTwoBack()
     {
-        final int[] _currentP = this.brushPresetsParamsS.get("twoBack@");
-        this.data.setVoxelId(_currentP[Sniper.SAVE_ARRAY_VOXEL_ID]);
-        this.data.setReplaceId(_currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
-        this.data.setData((byte) _currentP[Sniper.SAVE_ARRAY_DATA_VALUE]);
-        this.data.setBrushSize(_currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
-        this.data.setVoxelHeight(_currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
-        this.data.setcCen(_currentP[Sniper.SAVE_ARRAY_CENTROID]);
-        this.data.setReplaceData((byte) _currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
-        this.range = _currentP[Sniper.SAVE_ARRAY_RANGE];
+        final int[] currentP = this.brushPresetsParamsS.get("twoBack@");
+        this.data.setVoxelId(currentP[Sniper.SAVE_ARRAY_VOXEL_ID]);
+        this.data.setReplaceId(currentP[Sniper.SAVE_ARRAY_REPLACE_VOXEL_ID]);
+        this.data.setData((byte) currentP[Sniper.SAVE_ARRAY_DATA_VALUE]);
+        this.data.setBrushSize(currentP[Sniper.SAVE_ARRAY_BRUSH_SIZE]);
+        this.data.setVoxelHeight(currentP[Sniper.SAVE_ARRAY_VOXEL_HEIGHT]);
+        this.data.setcCen(currentP[Sniper.SAVE_ARRAY_CENTROID]);
+        this.data.setReplaceData((byte) currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
+        this.range = currentP[Sniper.SAVE_ARRAY_RANGE];
     }
 }

@@ -24,13 +24,11 @@ public class VoxelDiscBrush extends PerformBrush
 
     private void disc(final SnipeData v, Block targetBlock)
     {
-        final int _bSize = v.getBrushSize();
-
-        for (int _x = _bSize; _x >= -_bSize; _x--)
+        for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
         {
-            for (int _z = _bSize; _z >= -_bSize; _z--)
+            for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--)
             {
-                current.perform(targetBlock.getRelative(_x, 0, _z));
+                current.perform(targetBlock.getRelative(x, 0, z));
             }
         }
         v.storeUndo(this.current.getUndo());
@@ -53,7 +51,6 @@ public class VoxelDiscBrush extends PerformBrush
     {
         vm.brushName(this.getName());
         vm.size();
-        // voxelMessage.voxel();
     }
 
     @Override

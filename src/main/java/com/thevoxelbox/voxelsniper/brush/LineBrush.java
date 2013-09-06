@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -21,12 +20,9 @@ import org.bukkit.util.Vector;
 public class LineBrush extends PerformBrush
 {
     private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
-
     private static int timesUsed = 0;
-
     private Vector originCoords = null;
     private Vector targetCoords = new Vector();
-
     private World targetWorld;
 
     /**
@@ -44,6 +40,12 @@ public class LineBrush extends PerformBrush
     }
 
     @Override
+    public final void setTimesUsed(final int tUsed)
+    {
+        LineBrush.timesUsed = tUsed;
+    }
+
+    @Override
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
@@ -58,31 +60,24 @@ public class LineBrush extends PerformBrush
         }
     }
 
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        LineBrush.timesUsed = tUsed;
-    }
-
     private void linePowder(final SnipeData v)
     {
+        final Vector originClone = this.originCoords.clone().add(LineBrush.HALF_BLOCK_OFFSET);
+        final Vector targetClone = this.targetCoords.clone().add(LineBrush.HALF_BLOCK_OFFSET);
 
-        final Vector _originClone = this.originCoords.clone().add(LineBrush.HALF_BLOCK_OFFSET);
-        final Vector _targetClone = this.targetCoords.clone().add(LineBrush.HALF_BLOCK_OFFSET);
+        final Vector direction = targetClone.clone().subtract(originClone);
+        final double length = this.targetCoords.distance(this.originCoords);
 
-        final Vector _direction = _targetClone.clone().subtract(_originClone);
-        final double _length = this.targetCoords.distance(this.originCoords);
-
-        if (_length == 0)
+        if (length == 0)
         {
             this.current.perform(this.targetCoords.toLocation(this.targetWorld).getBlock());
         }
         else
         {
-            for (final BlockIterator _iterator = new BlockIterator(this.targetWorld, _originClone, _direction, 0, NumberConversions.round(_length)); _iterator.hasNext(); )
+            for (final BlockIterator blockIterator = new BlockIterator(this.targetWorld, originClone, direction, 0, NumberConversions.round(length)); blockIterator.hasNext(); )
             {
-                final Block _block = _iterator.next();
-                this.current.perform(_block);
+                final Block currentBlock = blockIterator.next();
+                this.current.perform(currentBlock);
             }
         }
 
@@ -103,7 +98,6 @@ public class LineBrush extends PerformBrush
         if (this.originCoords == null || !this.getTargetBlock().getWorld().equals(this.targetWorld))
         {
             v.owner().getPlayer().sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
-            return;
         }
         else
         {

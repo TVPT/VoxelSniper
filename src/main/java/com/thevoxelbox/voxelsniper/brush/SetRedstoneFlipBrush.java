@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,20 +35,20 @@ public class SetRedstoneFlipBrush extends Brush
         else
         {
             this.undo = new Undo(this.block.getWorld().getName());
-            final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-            final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-            final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-            final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-            final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-            final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+            final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+            final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+            final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+            final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
 
-            for (int _y = _lowy; _y <= _highy; _y++)
+            for (int y = lowY; y <= highY; y++)
             {
-                for (int _x = _lowx; _x <= _highx; _x++)
+                for (int x = lowX; x <= highX; x++)
                 {
-                    for (int _z = _lowz; _z <= _highz; _z++)
+                    for (int z = lowZ; z <= highZ; z++)
                     {
-                        this.perform(this.clampY(_x, _y, _z));
+                        this.perform(this.clampY(x, y, z));
                     }
                 }
             }
@@ -127,25 +126,23 @@ public class SetRedstoneFlipBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            if (par[_i].equalsIgnoreCase("info"))
+            if (par[i].equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
                 return;
             }
-            if (par[_i].startsWith("n") || par[_i].startsWith("s") || par[_i].startsWith("ns"))
+            if (par[i].startsWith("n") || par[i].startsWith("s") || par[i].startsWith("ns"))
             {
                 this.northSouth = true;
                 v.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
-                continue;
             }
-            else if (par[_i].startsWith("e") || par[_i].startsWith("world") || par[_i].startsWith("ew"))
+            else if (par[i].startsWith("e") || par[i].startsWith("world") || par[i].startsWith("ew"))
             {
                 this.northSouth = false;
                 v.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
-                continue;
             }
             else
             {

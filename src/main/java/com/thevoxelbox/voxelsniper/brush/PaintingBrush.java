@@ -25,8 +25,7 @@ public class PaintingBrush extends Brush
     /**
      * Scroll painting forward.
      *
-     * @param v
-     *         Sniper caller
+     * @param v Sniper caller
      */
     @Override
     protected final void arrow(final SnipeData v)
@@ -37,8 +36,7 @@ public class PaintingBrush extends Brush
     /**
      * Scroll painting backwards.
      *
-     * @param v
-     *         Sniper caller
+     * @param v Sniper caller
      */
     @Override
     protected final void powder(final SnipeData v)

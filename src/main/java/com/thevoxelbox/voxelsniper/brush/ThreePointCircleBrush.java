@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
@@ -16,34 +15,11 @@ import org.bukkit.util.Vector;
 public class ThreePointCircleBrush extends PerformBrush
 {
 
-    /**
-     * Enumeration on Tolerance values.
-     *
-     * @author MikeMatrix
-     */
-    private enum Tolerance
-    {
-        DEFAULT(1000), ACCURATE(10), SMOOTH(2000);
-
-        private int value;
-
-        Tolerance(final int value)
-        {
-            this.value = value;
-        }
-
-        public int getValue()
-        {
-            return this.value;
-        }
-    }
-
+    private static int timesUsed = 0;
     private Vector coordsOne;
     private Vector coordsTwo;
     private Vector coordsThree;
     private Tolerance tolerance = Tolerance.DEFAULT;
-
-    private static int timesUsed = 0;
 
     /**
      * Default Constructor.
@@ -89,15 +65,15 @@ public class ThreePointCircleBrush extends PerformBrush
         }
 
         // Calculate triangle defining vectors
-        final Vector _vectorOne = this.coordsTwo.clone();
-        _vectorOne.subtract(this.coordsOne);
-        final Vector _vectorTwo = this.coordsThree.clone();
-        _vectorTwo.subtract(this.coordsOne);
-        final Vector _vectorThree = this.coordsThree.clone();
-        _vectorThree.subtract(_vectorTwo);
+        final Vector vectorOne = this.coordsTwo.clone();
+        vectorOne.subtract(this.coordsOne);
+        final Vector vectorTwo = this.coordsThree.clone();
+        vectorTwo.subtract(this.coordsOne);
+        final Vector vectorThree = this.coordsThree.clone();
+        vectorThree.subtract(vectorTwo);
 
         // Redundant data check
-        if (_vectorOne.length() == 0 || _vectorTwo.length() == 0 || _vectorThree.length() == 0 || _vectorOne.angle(_vectorTwo) == 0 || _vectorOne.angle(_vectorThree) == 0 || _vectorThree.angle(_vectorTwo) == 0)
+        if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0 || vectorOne.angle(vectorTwo) == 0 || vectorOne.angle(vectorThree) == 0 || vectorThree.angle(vectorTwo) == 0)
         {
 
             v.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
@@ -108,60 +84,60 @@ public class ThreePointCircleBrush extends PerformBrush
         }
 
         // Calculate normal vector of the plane.
-        final Vector _normalVector = _vectorOne.clone();
-        _normalVector.crossProduct(_vectorTwo);
+        final Vector normalVector = vectorOne.clone();
+        normalVector.crossProduct(vectorTwo);
 
         // Calculate constant term of the plane.
-        final double _planeConstant = _normalVector.getX() * this.coordsOne.getX() + _normalVector.getY() * this.coordsOne.getY() + _normalVector.getZ() * this.coordsOne.getZ();
+        final double planeConstant = normalVector.getX() * this.coordsOne.getX() + normalVector.getY() * this.coordsOne.getY() + normalVector.getZ() * this.coordsOne.getZ();
 
-        final Vector _midpointOne = this.coordsOne.getMidpoint(this.coordsTwo);
-        final Vector _midpointTwo = this.coordsOne.getMidpoint(this.coordsThree);
+        final Vector midpointOne = this.coordsOne.getMidpoint(this.coordsTwo);
+        final Vector midpointTwo = this.coordsOne.getMidpoint(this.coordsThree);
 
         // Find perpendicular vectors to two sides in the plane
-        final Vector _perpendicularOne = _normalVector.clone();
-        _perpendicularOne.crossProduct(_vectorOne);
-        final Vector _perpendicularTwo = _normalVector.clone();
-        _perpendicularTwo.crossProduct(_vectorTwo);
+        final Vector perpendicularOne = normalVector.clone();
+        perpendicularOne.crossProduct(vectorOne);
+        final Vector perpendicularTwo = normalVector.clone();
+        perpendicularTwo.crossProduct(vectorTwo);
 
         // determine value of parametric variable at intersection of two perpendicular bisectors
-        final Vector _tNumerator = _midpointTwo.clone();
-        _tNumerator.subtract(_midpointOne);
-        _tNumerator.crossProduct(_perpendicularTwo);
-        final Vector _tDenominator = _perpendicularOne.clone();
-        _tDenominator.crossProduct(_perpendicularTwo);
-        final double _t = _tNumerator.length() / _tDenominator.length();
+        final Vector tNumerator = midpointTwo.clone();
+        tNumerator.subtract(midpointOne);
+        tNumerator.crossProduct(perpendicularTwo);
+        final Vector tDenominator = perpendicularOne.clone();
+        tDenominator.crossProduct(perpendicularTwo);
+        final double t = tNumerator.length() / tDenominator.length();
 
         // Calculate Circumcenter and Brushcenter.
-        final Vector _circumcenter = new Vector();
-        _circumcenter.copy(_perpendicularOne);
-        _circumcenter.multiply(_t);
-        _circumcenter.add(_midpointOne);
+        final Vector circumcenter = new Vector();
+        circumcenter.copy(perpendicularOne);
+        circumcenter.multiply(t);
+        circumcenter.add(midpointOne);
 
-        final Vector _brushcenter = new Vector(Math.round(_circumcenter.getX()), Math.round(_circumcenter.getY()), Math.round(_circumcenter.getZ()));
+        final Vector brushCenter = new Vector(Math.round(circumcenter.getX()), Math.round(circumcenter.getY()), Math.round(circumcenter.getZ()));
 
         // Calculate radius of circumcircle and determine brushsize
-        final double _radius = _circumcenter.distance(new Vector(this.coordsOne.getX(), this.coordsOne.getY(), this.coordsOne.getZ()));
-        final int _bSize = NumberConversions.ceil(_radius) + 1;
+        final double radius = circumcenter.distance(new Vector(this.coordsOne.getX(), this.coordsOne.getY(), this.coordsOne.getZ()));
+        final int brushSize = NumberConversions.ceil(radius) + 1;
 
-        for (int _x = -_bSize; _x <= _bSize; _x++)
+        for (int x = -brushSize; x <= brushSize; x++)
         {
-            for (int _y = -_bSize; _y <= _bSize; _y++)
+            for (int y = -brushSize; y <= brushSize; y++)
             {
-                for (int _z = -_bSize; _z <= _bSize; _z++)
+                for (int z = -brushSize; z <= brushSize; z++)
                 {
                     // Calculate distance from center
-                    final double _tempDistance = Math.pow(Math.pow(_x, 2) + Math.pow(_y, 2) + Math.pow(_z, 2), .5);
+                    final double tempDistance = Math.pow(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2), .5);
 
                     // gets corner-on blocks
-                    final double _cornerConstant = _normalVector.getX() * (_circumcenter.getX() + _x) + _normalVector.getY() * (_circumcenter.getY() + _y) + _normalVector.getZ() * (_circumcenter.getZ() + _z);
+                    final double cornerConstant = normalVector.getX() * (circumcenter.getX() + x) + normalVector.getY() * (circumcenter.getY() + y) + normalVector.getZ() * (circumcenter.getZ() + z);
 
                     // gets center-on blocks
-                    final double _centerConstant = _normalVector.getX() * (_circumcenter.getX() + _x + .5) + _normalVector.getY() * (_circumcenter.getY() + _y + .5) + _normalVector.getZ() * (_circumcenter.getZ() + _z + .5);
+                    final double centerConstant = normalVector.getX() * (circumcenter.getX() + x + .5) + normalVector.getY() * (circumcenter.getY() + y + .5) + normalVector.getZ() * (circumcenter.getZ() + z + .5);
 
                     // Check if point is within sphere and on plane (some tolerance given)
-                    if (_tempDistance <= _radius && (Math.abs(_cornerConstant - _planeConstant) < this.tolerance.getValue() || Math.abs(_centerConstant - _planeConstant) < this.tolerance.getValue()))
+                    if (tempDistance <= radius && (Math.abs(cornerConstant - planeConstant) < this.tolerance.getValue() || Math.abs(centerConstant - planeConstant) < this.tolerance.getValue()))
                     {
-                        this.current.perform(this.clampY(_brushcenter.getBlockX() + _x, _brushcenter.getBlockY() + _y, _brushcenter.getBlockZ() + _z));
+                        this.current.perform(this.clampY(brushCenter.getBlockX() + x, brushCenter.getBlockY() + y, brushCenter.getBlockZ() + z));
                     }
 
                 }
@@ -206,29 +182,29 @@ public class ThreePointCircleBrush extends PerformBrush
         if (par[1].equalsIgnoreCase("info"))
         {
             v.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
-            String _toleranceOptions = "";
-            for (final Tolerance _tolerance : Tolerance.values())
+            String toleranceOptions = "";
+            for (final Tolerance tolerance : Tolerance.values())
             {
-                if (!_toleranceOptions.isEmpty())
+                if (!toleranceOptions.isEmpty())
                 {
-                    _toleranceOptions += "|";
+                    toleranceOptions += "|";
                 }
-                _toleranceOptions += _tolerance.name().toLowerCase();
+                toleranceOptions += tolerance.name().toLowerCase();
             }
-            v.sendMessage(ChatColor.GOLD + "/b tpc " + _toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
+            v.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
             return;
         }
 
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _string = par[_i].toUpperCase();
+            final String parameter = par[i].toUpperCase();
             try
             {
-                this.tolerance = Tolerance.valueOf(_string);
+                this.tolerance = Tolerance.valueOf(parameter);
                 v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
                 return;
             }
-            catch (final IllegalArgumentException _e)
+            catch (final IllegalArgumentException exception)
             {
                 v.getVoxelMessage().brushMessage("No such tolerance.");
             }
@@ -245,5 +221,26 @@ public class ThreePointCircleBrush extends PerformBrush
     public final void setTimesUsed(final int tUsed)
     {
         ThreePointCircleBrush.timesUsed = tUsed;
+    }
+
+    /**
+     * Enumeration on Tolerance values.
+     *
+     * @author MikeMatrix
+     */
+    private enum Tolerance
+    {
+        DEFAULT(1000), ACCURATE(10), SMOOTH(2000);
+        private int value;
+
+        Tolerance(final int value)
+        {
+            this.value = value;
+        }
+
+        public int getValue()
+        {
+            return this.value;
+        }
     }
 }

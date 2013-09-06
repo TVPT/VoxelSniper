@@ -27,22 +27,22 @@ public class RingBrush extends PerformBrush
 
     private void ring(final SnipeData v, Block targetBlock)
     {
-        final int _brushSize = v.getBrushSize();
-        final double _outerPow = Math.pow(_brushSize + this.trueCircle, 2);
-        final double _innerPow = Math.pow(this.innerSize, 2);
+        final int brushSize = v.getBrushSize();
+        final double outerSquared = Math.pow(brushSize + this.trueCircle, 2);
+        final double innerSquared = Math.pow(this.innerSize, 2);
 
-        for (int _x = _brushSize; _x >= 0; _x--)
+        for (int x = brushSize; x >= 0; x--)
         {
-            final double _xPow = Math.pow(_x, 2);
-            for (int _z = _brushSize; _z >= 0; _z--)
+            final double xSquared = Math.pow(x, 2);
+            for (int z = brushSize; z >= 0; z--)
             {
-                final double _yPow = Math.pow(_z, 2);
-                if ((_xPow + _yPow) <= _outerPow && (_xPow + _yPow) >= _innerPow)
+                final double ySquared = Math.pow(z, 2);
+                if ((xSquared + ySquared) <= outerSquared && (xSquared + ySquared) >= innerSquared)
                 {
-                    current.perform(targetBlock.getRelative(_x, 0, _z));
-                    current.perform(targetBlock.getRelative(_x, 0, -_z));
-                    current.perform(targetBlock.getRelative(-_x, 0, _z));
-                    current.perform(targetBlock.getRelative(-_x, 0, -_z));
+                    current.perform(targetBlock.getRelative(x, 0, z));
+                    current.perform(targetBlock.getRelative(x, 0, -z));
+                    current.perform(targetBlock.getRelative(-x, 0, z));
+                    current.perform(targetBlock.getRelative(-x, 0, -z));
                 }
             }
         }
@@ -73,36 +73,34 @@ public class RingBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            if (par[_i].equalsIgnoreCase("info"))
+            if (par[i].equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
                 v.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
                 return;
             }
-            else if (par[_i].startsWith("true"))
+            else if (par[i].startsWith("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
             }
-            else if (par[_i].startsWith("false"))
+            else if (par[i].startsWith("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
             }
-            else if (par[_i].startsWith("ir"))
+            else if (par[i].startsWith("ir"))
             {
                 try
                 {
-                    final double _d = Double.parseDouble(par[_i].replace("ir", ""));
-                    this.innerSize = _d;
+                    final double d = Double.parseDouble(par[i].replace("ir", ""));
+                    this.innerSize = d;
                     v.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
                 }
-                catch (final Exception _e)
+                catch (final Exception exception)
                 {
                     v.sendMessage(ChatColor.RED + "The parameters included are invalid.");
                 }

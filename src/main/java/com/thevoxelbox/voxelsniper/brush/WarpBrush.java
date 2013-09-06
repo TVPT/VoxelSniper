@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -14,18 +13,18 @@ public class WarpBrush extends Brush
 
     private static int timesUsed = 0;
 
-    @Override
-    public final void info(final Message vm)
-    {
-        vm.brushName(this.getName());
-    }
-
     /**
      *
      */
     public WarpBrush()
     {
         this.setName("Warp");
+    }
+
+    @Override
+    public final void info(final Message vm)
+    {
+        vm.brushName(this.getName());
     }
 
     @Override

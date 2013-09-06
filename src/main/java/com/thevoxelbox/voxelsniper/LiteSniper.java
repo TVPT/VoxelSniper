@@ -17,16 +17,16 @@ public class LiteSniper extends Sniper
         this.setVoxelMessage(new Message(this.getData()));
         this.getData().setVoxelMessage(this.getVoxelMessage());
         // defaults
-        final int[] _currentP = new int[8];
-        _currentP[0] = 0;
-        _currentP[1] = 0;
-        _currentP[2] = 0;
-        _currentP[3] = 3;
-        _currentP[4] = 1;
-        _currentP[5] = 0;
-        this.getBrushPresetsParamsS().put("current@", _currentP);
-        this.getBrushPresetsParamsS().put("previous@", _currentP);
-        this.getBrushPresetsParamsS().put("twoBack@", _currentP);
+        final int[] currentP = new int[8];
+        currentP[0] = 0;
+        currentP[1] = 0;
+        currentP[2] = 0;
+        currentP[3] = 3;
+        currentP[4] = 1;
+        currentP[5] = 0;
+        this.getBrushPresetsParamsS().put("current@", currentP);
+        this.getBrushPresetsParamsS().put("previous@", currentP);
+        this.getBrushPresetsParamsS().put("twoBack@", currentP);
         this.getBrushPresetsS().put("current@", this.getMyBrushes().get("s"));
         this.getBrushPresetsS().put("previous@", this.getMyBrushes().get("s"));
         this.getBrushPresetsS().put("twoBack@", this.getMyBrushes().get("s"));

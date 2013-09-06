@@ -37,122 +37,122 @@ public class Rot2DvertBrush extends Brush
 
         this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-        int _sx = this.getBlockPositionX() - this.bSize;
-        int _sy = this.getBlockPositionY() - this.bSize;
-        int _sz = this.getBlockPositionZ() - this.bSize;
+        int sx = this.getBlockPositionX() - this.bSize;
+        int sy = this.getBlockPositionY() - this.bSize;
+        int sz = this.getBlockPositionZ() - this.bSize;
 
-        for (int _x = 0; _x < this.snap.length; _x++)
+        for (int x = 0; x < this.snap.length; x++)
         {
-            _sz = this.getBlockPositionZ() - this.bSize;
+            sz = this.getBlockPositionZ() - this.bSize;
 
-            for (int _z = 0; _z < this.snap.length; _z++)
+            for (int z = 0; z < this.snap.length; z++)
             {
-                _sy = this.getBlockPositionY() - this.bSize;
+                sy = this.getBlockPositionY() - this.bSize;
 
-                for (int _y = 0; _y < this.snap.length; _y++)
+                for (int y = 0; y < this.snap.length; y++)
                 {
-                    final Block _b = this.clampY(_sx, _sy, _sz); // why is this not sx + x, sy + y sz + z?
-                    this.snap[_x][_y][_z] = new BlockWrapper(_b);
-                    _b.setTypeId(0);
-                    _sy++;
+                    final Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
+                    this.snap[x][y][z] = new BlockWrapper(block);
+                    block.setTypeId(0);
+                    sy++;
                 }
 
-                _sz++;
+                sz++;
             }
-            _sx++;
+            sx++;
         }
     }
 
     private void rotate(final SnipeData v)
     {
-        final double _bPow = Math.pow(this.bSize + 0.5, 2);
-        final double _cos = Math.cos(this.se);
-        final double _sin = Math.sin(this.se);
-        final boolean[][] _doNotFill = new boolean[this.snap.length][this.snap.length];
+        final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
+        final double cos = Math.cos(this.se);
+        final double sin = Math.sin(this.se);
+        final boolean[][] doNotFill = new boolean[this.snap.length][this.snap.length];
         // I put y in the inside loop, since it doesn't have any power functions, should be much faster.
         // Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
         // do a targeted filling of only those columns later that were left out.
 
-        for (int _x = 0; _x < this.snap.length; _x++)
+        for (int x = 0; x < this.snap.length; x++)
         {
-            final int _xx = _x - this.bSize;
-            final double _xPow = Math.pow(_xx, 2);
+            final int xx = x - this.bSize;
+            final double xSquared = Math.pow(xx, 2);
 
-            for (int _z = 0; _z < this.snap.length; _z++)
+            for (int z = 0; z < this.snap.length; z++)
             {
-                final int _zz = _z - this.bSize;
+                final int zz = z - this.bSize;
 
-                if (_xPow + Math.pow(_zz, 2) <= _bPow)
+                if (xSquared + Math.pow(zz, 2) <= brushSizeSquared)
                 {
-                    final double _newX = (_xx * _cos) - (_zz * _sin);
-                    final double _newZ = (_xx * _sin) + (_zz * _cos);
+                    final double newX = (xx * cos) - (zz * sin);
+                    final double newZ = (xx * sin) + (zz * cos);
 
-                    _doNotFill[(int) _newX + this.bSize][(int) _newZ + this.bSize] = true;
+                    doNotFill[(int) newX + this.bSize][(int) newZ + this.bSize] = true;
 
-                    for (int _y = 0; _y < this.snap.length; _y++)
+                    for (int y = 0; y < this.snap.length; y++)
                     {
-                        final int _yy = _y - this.bSize;
+                        final int yy = y - this.bSize;
 
-                        final BlockWrapper _vb = this.snap[_y][_x][_z];
-                        if (_vb.getId() == 0)
+                        final BlockWrapper block = this.snap[y][x][z];
+                        if (block.getId() == 0)
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getBlockPositionX() + _yy, this.getBlockPositionY() + (int) _newX, this.getBlockPositionZ() + (int) _newZ, _vb.getId(), _vb.getData());
+                        this.setBlockIdAndDataAt(this.getBlockPositionX() + yy, this.getBlockPositionY() + (int) newX, this.getBlockPositionZ() + (int) newZ, block.getId(), block.getData());
                     }
                 }
             }
         }
 
-        for (int _x = 0; _x < this.snap.length; _x++)
+        for (int x = 0; x < this.snap.length; x++)
         {
-            final double _xPow = Math.pow(_x - this.bSize, 2);
-            final int _fx = _x + this.getBlockPositionX() - this.bSize;
+            final double xSquared = Math.pow(x - this.bSize, 2);
+            final int fx = x + this.getBlockPositionX() - this.bSize;
 
-            for (int _z = 0; _z < this.snap.length; _z++)
+            for (int z = 0; z < this.snap.length; z++)
             {
-                if (_xPow + Math.pow(_z - this.bSize, 2) <= _bPow)
+                if (xSquared + Math.pow(z - this.bSize, 2) <= brushSizeSquared)
                 {
-                    final int _fz = _z + this.getBlockPositionZ() - this.bSize;
+                    final int fz = z + this.getBlockPositionZ() - this.bSize;
 
-                    if (!_doNotFill[_x][_z])
+                    if (!doNotFill[x][z])
                     {
                         // smart fill stuff
-                        for (int _y = 0; _y < this.snap.length; _y++)
+                        for (int y = 0; y < this.snap.length; y++)
                         {
-                            final int _fy = _y + this.getBlockPositionY() - this.bSize;
+                            final int fy = y + this.getBlockPositionY() - this.bSize;
 
-                            final int _a = this.getBlockIdAt(_fy, _fx + 1, _fz);
-                            final byte _aData = this.getBlockDataAt(_fy, _fx + 1, _fz);
-                            final int _d = this.getBlockIdAt(_fy, _fx - 1, _fz);
-                            final byte _dData = this.getBlockDataAt(_fy, _fx - 1, _fz);
-                            final int _c = this.getBlockIdAt(_fy, _fx, _fz + 1);
-                            final byte _cData = this.getBlockDataAt(_fy, _fx, _fz + 1);
-                            final int _b = this.getBlockIdAt(_fy, _fx, _fz - 1);
-                            final byte _bData = this.getBlockDataAt(_fy, _fx, _fz - 1);
+                            final int a = this.getBlockIdAt(fy, fx + 1, fz);
+                            final byte aData = this.getBlockDataAt(fy, fx + 1, fz);
+                            final int d = this.getBlockIdAt(fy, fx - 1, fz);
+                            final byte dData = this.getBlockDataAt(fy, fx - 1, fz);
+                            final int c = this.getBlockIdAt(fy, fx, fz + 1);
+                            final byte cData = this.getBlockDataAt(fy, fx, fz + 1);
+                            final int b = this.getBlockIdAt(fy, fx, fz - 1);
+                            final byte bData = this.getBlockDataAt(fy, fx, fz - 1);
 
-                            int _winner;
-                            byte _winnerData;
+                            int winner;
+                            byte winnerData;
 
-                            if (_a == _b || _a == _c || _a == _d)
+                            if (a == b || a == c || a == d)
                             { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
                                 // should
                                 // be fine to do all 5 checks needed to be legit about it.
-                                _winner = _a;
-                                _winnerData = _aData;
+                                winner = a;
+                                winnerData = aData;
                             }
-                            else if (_b == _d || _c == _d)
+                            else if (b == d || c == d)
                             {
-                                _winner = _d;
-                                _winnerData = _dData;
+                                winner = d;
+                                winnerData = dData;
                             }
                             else
                             {
-                                _winner = _b; // blockPositionY making this default, it will also automatically cover situations where B = C;
-                                _winnerData = _bData;
+                                winner = b; // blockPositionY making this default, it will also automatically cover situations where B = C;
+                                winnerData = bData;
                             }
 
-                            this.setBlockIdAndDataAt(_fy, _fx, _fz, _winner, _winnerData);
+                            this.setBlockIdAndDataAt(fy, fx, fz, winner, winnerData);
                         }
                     }
                 }
