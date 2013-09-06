@@ -15,10 +15,9 @@ import org.bukkit.block.BlockFace;
  */
 public class ExtrudeBrush extends Brush
 {
+
     private static int timesUsed = 0;
-    private int level;
     private double trueCircle;
-    private boolean awto;
 
     /**
      *
@@ -28,40 +27,58 @@ public class ExtrudeBrush extends Brush
         this.setName("Extrude");
     }
 
-    private void extrudeD(final SnipeData v)
+    private void extrudeUpOrDown(final SnipeData v, boolean isUp)
     {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+
+        for (int _x = -brushSize; _x <= brushSize; _x++)
+        {
+            final double xSquared = Math.pow(_x, 2);
+            for (int _z = -brushSize; _z <= brushSize; _z++)
+            {
+                if ((xSquared + Math.pow(_z, 2)) <= brushSizeSquared)
+                {
+                    final int direction = (isUp ? 1 : -1);
+                    for (int _y = 0; _y < Math.abs(v.getVoxelHeight()); _y++)
+                    {
+                        final int tempY = _y * direction;
+                        undo = this.perform(
+                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + tempY, this.getBlockPositionZ() + _z),
+                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + tempY + direction, this.getBlockPositionZ() + _z),
+                                v, undo);
+                    }
+                }
+            }
+        }
+
+        v.storeUndo(undo);
+    }
+
+    private void extrudeNorthOrSouth(final SnipeData v, boolean isSouth)
+    {
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _x = _brushSize; _x >= 0; _x--)
+        for (int _x = -brushSize; _x <= brushSize; _x++)
         {
-            final double _xPow = Math.pow(_x, 2);
-
-            for (int _y = _brushSize; _y >= 0; _y--)
+            final double xSquared = Math.pow(_x, 2);
+            for (int _y = -brushSize; _y <= brushSize; _y++)
             {
-                if ((_xPow + Math.pow(_y, 2)) <= _bPow)
+                if ((xSquared + Math.pow(_y, 2)) <= brushSizeSquared)
                 {
-                    if (this.awto)
+                    final int direction = (isSouth) ? 1 : -1;
+                    for (int _z = 0; _z < Math.abs(v.getVoxelHeight()); _z++)
                     {
-                        for (int _i = 0; _i <= this.level - 1; _i++)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i - 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i - 1, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i - 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i - 1, this.getBlockPositionZ() - _y), v, _undo);
-                        }
+                        final int tempZ = _z * direction;
+                        _undo = this.perform(
+                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + tempZ),
+                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + tempZ + direction),
+                                v, _undo);
                     }
-                    else
-                    {
-                        for (int _i = 0; _i >= this.level + 1; _i--)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i + 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _i + 1, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i + 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _i + 1, this.getBlockPositionZ() - _y), v, _undo);
-                        }
-                    }
+
                 }
             }
         }
@@ -69,208 +86,32 @@ public class ExtrudeBrush extends Brush
         v.storeUndo(_undo);
     }
 
-    private void extrudeE(final SnipeData v)
+    private void extrudeEastOrWest(final SnipeData v, boolean isEast)
     {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
         Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _x = _brushSize; _x >= 0; _x--)
+        for (int _y = -brushSize; _y <= brushSize; _y++)
         {
-            final double _xPow = Math.pow(_x, 2);
-
-            for (int _y = _brushSize; _y >= 0; _y--)
+            final double ySquared = Math.pow(_y, 2);
+            for (int _z = -brushSize; _z <= brushSize; _z++)
             {
-                if ((_xPow + Math.pow(_y, 2)) <= _bPow)
+                if ((ySquared + Math.pow(_z, 2)) <= brushSizeSquared)
                 {
-                    if (this.awto)
+                    final int direction = (isEast) ? 1 : -1;
+                    for (int _x = 0; _x < Math.abs(v.getVoxelHeight()); _x++)
                     {
-                        for (int _i = 0; _i <= this.level - 1; _i++)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i - 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i - 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i - 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i - 1), v, _undo);
-                        }
+                        final int tempX = _x * direction;
+                        _undo = this.perform(
+                                this.clampY(this.getBlockPositionX() + tempX, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z),
+                                this.clampY(this.getBlockPositionX() + tempX + direction, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z),
+                                v, _undo);
                     }
-                    else
-                    {
-                        for (int _i = 0; _i >= this.level + 1; _i--)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i + 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i + 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _i + 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _i + 1), v, _undo);
-                        }
-                    }
+
                 }
             }
         }
-
-        v.storeUndo(_undo);
-    }
-
-    private void extrudeN(final SnipeData v)
-    {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
-        Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
-        for (int _x = _brushSize; _x >= 0; _x--)
-        {
-            final double _xPow = Math.pow(_x, 2);
-
-            for (int _y = _brushSize; _y >= 0; _y--)
-            {
-                if ((_xPow + Math.pow(_y, 2)) <= _bPow)
-                {
-                    if (this.awto)
-                    {
-                        for (int _i = 0; _i <= this.level - 1; _i++)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _i - 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _i - 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _i - 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _i - 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), v, _undo);
-                        }
-                    }
-                    else
-                    {
-                        for (int _i = 0; _i >= this.level + 1; _i--)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _i + 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _i + 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _i + 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _i + 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), v, _undo);
-                        }
-                    }
-                }
-            }
-        }
-
-        v.storeUndo(_undo);
-    }
-
-    private void extrudeS(final SnipeData v)
-    {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
-        Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
-        for (int _x = _brushSize; _x >= 0; _x--)
-        {
-            final double _xPow = Math.pow(_x, 2);
-
-            for (int _y = _brushSize; _y >= 0; _y--)
-            {
-                if ((_xPow + Math.pow(_y, 2)) <= _bPow)
-                {
-                    if (this.awto)
-                    {
-                        for (int _i = 0; _i <= this.level - 1; _i++)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _i + 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _i + 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _i + 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _i + 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), v, _undo);
-                        }
-                    }
-                    else
-                    {
-                        for (int _i = 0; _i >= this.level + 1; _i--)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _i - 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _i - 1, this.getBlockPositionY() + _x, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _i - 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _i, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _i - 1, this.getBlockPositionY() - _x, this.getBlockPositionZ() - _y), v, _undo);
-                        }
-                    }
-                }
-            }
-        }
-
-        v.storeUndo(_undo);
-    }
-
-    private void extrudeU(final SnipeData v)
-    {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
-        Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
-        for (int _x = _brushSize; _x >= 0; _x--)
-        {
-            final double _xPow = Math.pow(_x, 2);
-
-            for (int _y = _brushSize; _y >= 0; _y--)
-            {
-                if ((_xPow + Math.pow(_y, 2)) <= _bPow)
-                {
-                    if (this.awto)
-                    {
-                        for (int _i = 0; _i <= this.level - 1; _i++)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i + 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i + 1, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i + 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i + 1, this.getBlockPositionZ() - _y), v, _undo);
-                        }
-                    }
-                    else
-                    {
-                        for (int _i = 0; _i >= this.level + 1; _i--)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i - 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _i - 1, this.getBlockPositionZ() - _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() + _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i - 1, this.getBlockPositionZ() + _y), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i, this.getBlockPositionZ() - _y), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _i - 1, this.getBlockPositionZ() - _y), v, _undo);
-                        }
-                    }
-                }
-            }
-        }
-
-        v.storeUndo(_undo);
-    }
-
-    private void extrudeW(final SnipeData v)
-    {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
-        Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-
-        for (int _x = _brushSize; _x >= 0; _x--)
-        {
-            final double _xpow = Math.pow(_x, 2);
-
-            for (int _y = _brushSize; _y >= 0; _y--)
-            {
-                if ((_xpow + Math.pow(_y, 2)) <= _bPow)
-                {
-                    if (this.awto)
-                    {
-                        for (int _i = 0; _i <= this.level - 1; _i++)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i + 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i + 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i + 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i + 1), v, _undo);
-                        }
-                    }
-                    else
-                    {
-                        for (int _i = 0; _i >= this.level + 1; _i--)
-                        {
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i - 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i - 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _i - 1), v, _undo);
-                            _undo = this.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i), this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _i - 1), v, _undo);
-                        }
-                    }
-                }
-            }
-        }
-
         v.storeUndo(_undo);
     }
 
@@ -286,60 +127,30 @@ public class ExtrudeBrush extends Brush
         return undo;
     }
 
-    private void pre(final SnipeData v, final BlockFace blockFace)
+    private void selectExtrudeMethod(final SnipeData v, final BlockFace blockFace, final boolean towardsUser)
     {
-        if (blockFace == null)
+        if (blockFace == null || v.getVoxelHeight() == 0)
         {
             return;
         }
-
-        this.level = v.getVoxelHeight();
-
-        if (this.level == 0)
-        {
-            return;
-        }
-        else if (!this.awto)
-        {
-            if (this.level > 0)
-            {
-                this.level = -this.level;
-            }
-        }
-        else if (this.awto)
-        {
-            if (this.level < 0)
-            {
-                this.level = -this.level;
-            }
-        }
-
+        boolean tempDirection = towardsUser;
         switch (blockFace)
         {
-            case NORTH:
-                this.extrudeN(v);
-                break;
-
-            case SOUTH:
-                this.extrudeS(v);
-                break;
-
-            case EAST:
-                this.extrudeE(v);
-                break;
-
-            case WEST:
-                this.extrudeW(v);
-                break;
-
-            case UP:
-                this.extrudeU(v);
-                break;
-
             case DOWN:
-                this.extrudeD(v);
+                tempDirection = !towardsUser;
+            case UP:
+                extrudeUpOrDown(v, tempDirection);
                 break;
-
+            case NORTH:
+                tempDirection = !towardsUser;
+            case SOUTH: 
+                extrudeNorthOrSouth(v, tempDirection);
+                break;
+            case WEST:
+                tempDirection = !towardsUser;
+            case EAST:
+                extrudeEastOrWest(v, tempDirection);
+                break;
             default:
                 break;
         }
@@ -348,17 +159,14 @@ public class ExtrudeBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.awto = false;
-        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
+        this.selectExtrudeMethod(v, this.getTargetBlock().getFace(this.getLastBlock()), false);
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.awto = true;
-        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()));
+        this.selectExtrudeMethod(v, this.getTargetBlock().getFace(this.getLastBlock()), true);
     }
-
 
     @Override
     public final void info(final Message vm)
@@ -385,26 +193,22 @@ public class ExtrudeBrush extends Brush
                     v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
                     v.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
                     return;
-                }
-                else if (_param.startsWith("true"))
+                } else if (_param.startsWith("true"))
                 {
                     this.trueCircle = 0.5;
                     v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
                     continue;
-                }
-                else if (_param.startsWith("false"))
+                } else if (_param.startsWith("false"))
                 {
                     this.trueCircle = 0;
                     v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
                     continue;
-                }
-                else
+                } else
                 {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                     return;
                 }
-            }
-            catch (final Exception _e)
+            } catch (final Exception _e)
             {
                 v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + _param + "\"; use the \"info\" parameter.");
             }
