@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * @author Kavutop
@@ -22,11 +22,11 @@ public class CylinderBrush extends PerformBrush
         this.setName("Cylinder");
     }
 
-    private void cylinder(final SnipeData v)
+    private void cylinder(final SnipeData v, Block targetBlock)
     {
         final int _bSize = v.getBrushSize();
-        int _starringY = this.getBlockPositionY() + v.getcCen();
-        int _endTopY = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
+        int _starringY = targetBlock.getY() + v.getcCen();
+        int _endTopY = targetBlock.getY() + v.getVoxelHeight() + v.getcCen();
 
         if (_endTopY < _starringY)
         {
@@ -55,20 +55,20 @@ public class CylinderBrush extends PerformBrush
 
         final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
 
-        for (int _z = _endTopY; _z >= _starringY; _z--)
+        for (int y = _endTopY; y >= _starringY; y--)
         {
-            for (int _x = _bSize; _x >= 0; _x--)
+            for (int x = _bSize; x >= 0; x--)
             {
-                final double _xPow = Math.pow(_x, 2);
+                final double _xPow = Math.pow(x, 2);
 
-                for (int _y = _bSize; _y >= 0; _y--)
+                for (int z = _bSize; z >= 0; z--)
                 {
-                    if ((_xPow + Math.pow(_y, 2)) <= _bPow)
+                    if ((_xPow + Math.pow(z, 2)) <= _bPow)
                     {
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, _endTopY, this.getBlockPositionZ() + _y));
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, _endTopY, this.getBlockPositionZ() - _y));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, _endTopY, this.getBlockPositionZ() + _y));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, _endTopY, this.getBlockPositionZ() - _y));
+                        this.current.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() + z));
+                        this.current.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() - z));
+                        this.current.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() + z));
+                        this.current.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() - z));
                     }
                 }
             }
@@ -79,16 +79,13 @@ public class CylinderBrush extends PerformBrush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.cylinder(v);
+        this.cylinder(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.cylinder(v);
+        this.cylinder(v, this.getLastBlock());
     }
 
     @Override

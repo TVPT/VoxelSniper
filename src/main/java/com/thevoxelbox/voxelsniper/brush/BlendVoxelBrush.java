@@ -121,7 +121,7 @@ public class BlendVoxelBrush extends BlendBrushBase
                         {
                             _undo.put(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z));
                         }
-                        this.setBlockIdAt(_newMaterials[_x][_y][_z], this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, this.getBlockPositionZ() - _bSize + _z);
+                        this.setBlockIdAt(this.getBlockPositionZ() - _bSize + _z, this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _y, _newMaterials[_x][_y][_z]);
 
                     }
                 }

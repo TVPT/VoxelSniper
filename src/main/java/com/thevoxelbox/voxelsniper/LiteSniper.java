@@ -13,8 +13,7 @@ public class LiteSniper extends Sniper
      */
     public LiteSniper()
     {
-        this.setMyBrushes(LiteSniperBrushes.getSniperBrushes());
-        this.setBrushAlt(LiteSniperBrushes.getBrushAlternates());
+        this.setMyBrushes(Brushes.getNewLiteSniperBrushInstances());
         this.setVoxelMessage(new Message(this.getData()));
         this.getData().setVoxelMessage(this.getVoxelMessage());
         // defaults

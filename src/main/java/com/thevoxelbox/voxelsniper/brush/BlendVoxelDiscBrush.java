@@ -107,7 +107,7 @@ public class BlendVoxelDiscBrush extends BlendBrushBase
                     {
                         _undo.put(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _bSize + _z));
                     }
-                    this.setBlockIdAt(_newMaterials[_x][_z], this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _bSize + _z);
+                    this.setBlockIdAt(this.getBlockPositionZ() - _bSize + _z, this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY(), _newMaterials[_x][_z]);
 
                 }
             }

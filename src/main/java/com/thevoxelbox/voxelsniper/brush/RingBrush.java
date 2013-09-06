@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Ring_Brush
@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 public class RingBrush extends PerformBrush
 {
     private static int timesUsed = 0;
-
     private double trueCircle = 0;
     private double innerSize = 0;
 
@@ -26,7 +25,7 @@ public class RingBrush extends PerformBrush
         this.setName("Ring");
     }
 
-    private void ring(final SnipeData v)
+    private void ring(final SnipeData v, Block targetBlock)
     {
         final int _brushSize = v.getBrushSize();
         final double _outerPow = Math.pow(_brushSize + this.trueCircle, 2);
@@ -35,15 +34,15 @@ public class RingBrush extends PerformBrush
         for (int _x = _brushSize; _x >= 0; _x--)
         {
             final double _xPow = Math.pow(_x, 2);
-            for (int _y = _brushSize; _y >= 0; _y--)
+            for (int _z = _brushSize; _z >= 0; _z--)
             {
-                final double _yPow = Math.pow(_y, 2);
+                final double _yPow = Math.pow(_z, 2);
                 if ((_xPow + _yPow) <= _outerPow && (_xPow + _yPow) >= _innerPow)
                 {
-                    this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
-                    this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
-                    this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
-                    this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
+                    current.perform(targetBlock.getRelative(_x, 0, _z));
+                    current.perform(targetBlock.getRelative(_x, 0, -_z));
+                    current.perform(targetBlock.getRelative(-_x, 0, _z));
+                    current.perform(targetBlock.getRelative(-_x, 0, -_z));
                 }
             }
         }
@@ -54,16 +53,13 @@ public class RingBrush extends PerformBrush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.ring(v);
+        this.ring(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.ring(v);
+        this.ring(v, this.getLastBlock());
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS.
@@ -24,7 +25,7 @@ public class ShellVoxelBrush extends Brush
         this.setName("Shell Voxel");
     }
 
-    private void vShell(final SnipeData v)
+    private void vShell(final SnipeData v, Block targetBlock)
     {
         final int _brushSize = v.getBrushSize();
         final int _twoBrushSize = 2 * _brushSize;
@@ -33,6 +34,9 @@ public class ShellVoxelBrush extends Brush
         final int[][][] _oldmats = new int[2 * (_brushSize + 1) + 1][2 * (_brushSize + 1) + 1][2 * (_brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
         final int[][][] _newmats = new int[2 * _brushSize + 1][2 * _brushSize + 1][2 * _brushSize + 1]; // Array that holds the hollowed materials
 
+        int blockPositionX = targetBlock.getX();
+        int blockPositionY = targetBlock.getY();
+        int blockPositionZ = targetBlock.getZ();
         // Log current materials into oldmats
         for (int _x = 0; _x <= 2 * (_brushSize + 1); _x++)
         {
@@ -40,7 +44,7 @@ public class ShellVoxelBrush extends Brush
             {
                 for (int _z = 0; _z <= 2 * (_brushSize + 1); _z++)
                 {
-                    _oldmats[_x][_y][_z] = this.getBlockIdAt(this.getBlockPositionX() - _brushSize - 1 + _x, this.getBlockPositionY() - _brushSize - 1 + _y, this.getBlockPositionZ() - _brushSize - 1 + _z);
+                    _oldmats[_x][_y][_z] = this.getBlockIdAt(blockPositionX - _brushSize - 1 + _x, blockPositionY - _brushSize - 1 + _y, blockPositionZ - _brushSize - 1 + _z);
                 }
             }
         }
@@ -101,7 +105,7 @@ public class ShellVoxelBrush extends Brush
         }
 
         // Make the changes
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo _undo = new Undo(targetBlock.getWorld().getName());
 
         for (int _x = _twoBrushSize; _x >= 0; _x--)
         {
@@ -109,12 +113,11 @@ public class ShellVoxelBrush extends Brush
             {
                 for (int _z = _twoBrushSize; _z >= 0; _z--)
                 {
-
-                    if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z) != _newmats[_x][_y][_z])
+                    if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _brushSize + _y, blockPositionZ - _brushSize + _z) != _newmats[_x][_y][_z])
                     {
-                        _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z));
+                        _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _brushSize + _y, blockPositionZ - _brushSize + _z));
                     }
-                    this.setBlockIdAt(_newmats[_x][_y][_z], this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _brushSize + _y, this.getBlockPositionZ() - _brushSize + _z);
+                    this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _brushSize + _y, _newmats[_x][_y][_z]);
                 }
             }
         }
@@ -126,19 +129,13 @@ public class ShellVoxelBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-        this.vShell(v);
+        this.vShell(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.vShell(v);
+        this.vShell(v, this.getLastBlock());
     }
 
     @Override

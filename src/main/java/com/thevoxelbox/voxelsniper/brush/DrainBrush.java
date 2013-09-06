@@ -46,25 +46,25 @@ public class DrainBrush extends Brush
                         if (this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.LAVA.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.STATIONARY_LAVA.getId())
                         {
                             _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
-                            this.setBlockIdAt(Material.AIR.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y);
+                            this.setBlockIdAt(this.getBlockPositionZ() + _y, this.getBlockPositionX() + _x, this.getBlockPositionY(), Material.AIR.getId());
                         }
 
                         if (this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.LAVA.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.STATIONARY_LAVA.getId())
                         {
                             _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
-                            this.setBlockIdAt(Material.AIR.getId(), this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y);
+                            this.setBlockIdAt(this.getBlockPositionZ() - _y, this.getBlockPositionX() + _x, this.getBlockPositionY(), Material.AIR.getId());
                         }
 
                         if (this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.LAVA.getId() || this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y) == Material.STATIONARY_LAVA.getId())
                         {
                             _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
-                            this.setBlockIdAt(Material.AIR.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y);
+                            this.setBlockIdAt(this.getBlockPositionZ() + _y, this.getBlockPositionX() - _x, this.getBlockPositionY(), Material.AIR.getId());
                         }
 
                         if (this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.LAVA.getId() || this.getBlockIdAt(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y) == Material.STATIONARY_LAVA.getId())
                         {
                             _undo.put(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y));
-                            this.setBlockIdAt(Material.AIR.getId(), this.getBlockPositionX() - _x, this.getBlockPositionY(), this.getBlockPositionZ() - _y);
+                            this.setBlockIdAt(this.getBlockPositionZ() - _y, this.getBlockPositionX() - _x, this.getBlockPositionY(), Material.AIR.getId());
                         }
                     }
                 }
@@ -87,7 +87,7 @@ public class DrainBrush extends Brush
                             if (this.getBlockIdAt(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize) == Material.WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize) == Material.LAVA.getId() || this.getBlockIdAt(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize) == Material.STATIONARY_LAVA.getId())
                             {
                                 _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _z, this.getBlockPositionZ() + _y));
-                                this.setBlockIdAt(Material.AIR.getId(), this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize);
+                                this.setBlockIdAt(this.getBlockPositionZ() + _y - _bSize, this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, Material.AIR.getId());
                             }
                         }
                     }

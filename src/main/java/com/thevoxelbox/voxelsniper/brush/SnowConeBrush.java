@@ -7,6 +7,8 @@ import com.thevoxelbox.voxelsniper.Undo;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Snow_cone_brush
@@ -17,16 +19,19 @@ public class SnowConeBrush extends Brush
 {
     private static int timesUsed = 0;
 
-    private void addSnow(final SnipeData v)
+    private void addSnow(final SnipeData v, Block targetBlock)
     {
         int _brushSize;
-        if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()) == Material.AIR.getId())
+        int blockPositionX = targetBlock.getX();
+        int blockPositionY = targetBlock.getY();
+        int blockPositionZ = targetBlock.getZ();
+        if (this.getBlockIdAt(blockPositionX, blockPositionY, blockPositionZ) == Material.AIR.getId())
         {
             _brushSize = 0;
         }
         else
         {
-            _brushSize = this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()).getData() + 1;
+            _brushSize = this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() + 1;
         }
 
         final int _twoBrushSize = 2 * _brushSize;
@@ -45,15 +50,15 @@ public class SnowConeBrush extends Brush
                 { // overlay
                     if (_flag)
                     {
-                        if ((this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) == 0 || this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i, this.getBlockPositionZ() - _brushSize + _z) == Material.SNOW.getId()) && this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i - 1, this.getBlockPositionZ() - _brushSize + _z) != Material.AIR.getId() && this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _i - 1, this.getBlockPositionZ() - _brushSize + _z) != Material.SNOW.getId())
+                        if ((this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) == 0 || this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i, blockPositionZ - _brushSize + _z) == Material.SNOW.getId()) && this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i - 1, blockPositionZ - _brushSize + _z) != Material.AIR.getId() && this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _i - 1, blockPositionZ - _brushSize + _z) != Material.SNOW.getId())
                         {
                             _flag = false;
                             _yoffset[_x][_z] = _i;
                         }
                     }
                 }
-                _snowcone[_x][_z] = this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _yoffset[_x][_z], this.getBlockPositionZ() - _brushSize + _z);
-                _snowconedata[_x][_z] = this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _yoffset[_x][_z], this.getBlockPositionZ() - _brushSize + _z).getData();
+                _snowcone[_x][_z] = this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _yoffset[_x][_z], blockPositionZ - _brushSize + _z);
+                _snowconedata[_x][_z] = this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _yoffset[_x][_z], blockPositionZ - _brushSize + _z).getData();
             }
         }
 
@@ -118,19 +123,19 @@ public class SnowConeBrush extends Brush
             }
         }
 
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo _undo = new Undo(targetBlock.getWorld().getName());
 
         for (int _x = 0; _x <= _twoBrushSize; _x++)
         {
             for (int _z = 0; _z <= _twoBrushSize; _z++)
             {
 
-                if (this.getBlockIdAt(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _yoffset[_x][_z], this.getBlockPositionZ() - _brushSize + _z) != _snowcone[_x][_z] || this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _yoffset[_x][_z], this.getBlockPositionZ() - _brushSize + _z).getData() != _snowconedata[_x][_z])
+                if (this.getBlockIdAt(blockPositionX - _brushSize + _x, blockPositionY - _yoffset[_x][_z], blockPositionZ - _brushSize + _z) != _snowcone[_x][_z] || this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _yoffset[_x][_z], blockPositionZ - _brushSize + _z).getData() != _snowconedata[_x][_z])
                 {
-                    _undo.put(this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _yoffset[_x][_z], this.getBlockPositionZ() - _brushSize + _z));
+                    _undo.put(this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _yoffset[_x][_z], blockPositionZ - _brushSize + _z));
                 }
-                this.setBlockIdAt(_snowcone[_x][_z], this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _yoffset[_x][_z], this.getBlockPositionZ() - _brushSize + _z);
-                this.clampY(this.getBlockPositionX() - _brushSize + _x, this.getBlockPositionY() - _yoffset[_x][_z], this.getBlockPositionZ() - _brushSize + _z).setData((byte) _snowconedata[_x][_z]);
+                this.setBlockIdAt(blockPositionZ - _brushSize + _z, blockPositionX - _brushSize + _x, blockPositionY - _yoffset[_x][_z], _snowcone[_x][_z]);
+                this.clampY(blockPositionX - _brushSize + _x, blockPositionY - _yoffset[_x][_z], blockPositionZ - _brushSize + _z).setData((byte) _snowconedata[_x][_z]);
 
             }
         }
@@ -145,17 +150,16 @@ public class SnowConeBrush extends Brush
     @Override
     protected final void powder(final SnipeData v)
     {
-        switch (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()))
+        switch (getTargetBlock().getType())
         {
-            case 78:
-                this.addSnow(v);
+            case SNOW:
+                this.addSnow(v, this.getTargetBlock());
                 break;
             default:
-                // Move up one if target is not snowtile
-                if (this.getBlockIdAt(this.getBlockPositionX(), this.getBlockPositionY() + 1, this.getBlockPositionZ()) == 0)
+                Block blockAbove = getTargetBlock().getRelative(BlockFace.UP);
+                if (blockAbove != null && blockAbove.getType() == Material.AIR)
                 {
-                    this.setBlockPositionY(this.getBlockPositionY() + 1);
-                    this.addSnow(v);
+                    addSnow(v, blockAbove);
                 }
                 else
                 {

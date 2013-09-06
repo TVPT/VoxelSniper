@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Disc_Brush
@@ -21,15 +22,15 @@ public class VoxelDiscBrush extends PerformBrush
         this.setName("Voxel Disc");
     }
 
-    private void disc(final SnipeData v)
+    private void disc(final SnipeData v, Block targetBlock)
     {
         final int _bSize = v.getBrushSize();
 
         for (int _x = _bSize; _x >= -_bSize; _x--)
         {
-            for (int _y = _bSize; _y >= -_bSize; _y--)
+            for (int _z = _bSize; _z >= -_bSize; _z--)
             {
-                this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
+                current.perform(targetBlock.getRelative(_x, 0, _z));
             }
         }
         v.storeUndo(this.current.getUndo());
@@ -38,16 +39,13 @@ public class VoxelDiscBrush extends PerformBrush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.disc(v);
+        this.disc(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.disc(v);
+        this.disc(v, this.getLastBlock());
     }
 
     @Override

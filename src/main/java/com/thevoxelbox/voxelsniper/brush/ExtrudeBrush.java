@@ -120,7 +120,7 @@ public class ExtrudeBrush extends Brush
         if (v.getVoxelList().contains(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ())))
         {
             undo.put(b2);
-            this.setBlockIdAt(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), b2.getX(), b2.getY(), b2.getZ());
+            this.setBlockIdAt(b2.getZ(), b2.getX(), b2.getY(), this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()));
             this.clampY(b2.getX(), b2.getY(), b2.getZ()).setData(this.clampY(b1.getX(), b1.getY(), b1.getZ()).getData());
         }
 

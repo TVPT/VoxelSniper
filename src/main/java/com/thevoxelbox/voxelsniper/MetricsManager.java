@@ -2,10 +2,13 @@ package com.thevoxelbox.voxelsniper;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
 
+import com.thevoxelbox.voxelsniper.brush.IBrush;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.util.NumberConversions;
@@ -136,21 +139,22 @@ public final class MetricsManager
 
             final Graph brushUsageGraph = _metrics.createGraph("Brush Usage");
 
-            final HashMap<String, Brush> _temp = SniperBrushes.getSniperBrushes();
-            for (final Entry<String, Brush> _entry : _temp.entrySet())
+            final HashSet<IBrush> brushes = new HashSet<IBrush>(Brushes.getNewSniperBrushInstances().values());
+
+            for (final IBrush brush : brushes)
             {
-                brushUsageGraph.addPlotter(new Metrics.Plotter(SniperBrushes.getName(_entry.getValue()))
+                brushUsageGraph.addPlotter(new Metrics.Plotter(brush.getName())
                 {
                     @Override
                     public int getValue()
                     {
-                        return _entry.getValue().getTimesUsed();
+                        return brush.getTimesUsed();
                     }
 
                     @Override
                     public void reset()
                     {
-                        _entry.getValue().setTimesUsed(0);
+                        brush.setTimesUsed(0);
                     }
                 });
             }

@@ -161,10 +161,6 @@ public class PullBrush extends Brush
      */
     private void getSurface(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
-
         this.surface.clear();
 
         final double _bpow = Math.pow(v.getBrushSize() + 0.5, 2);
@@ -217,7 +213,7 @@ public class PullBrush extends Brush
             _bl.setData(block.getD());
             for (int _y = block.getY(); _y < _bl.getY(); _y++)
             {
-                this.setBlockIdAt(0, block.getX(), _y, block.getZ());
+                this.setBlockIdAt(block.getZ(), block.getX(), _y, 0);
             }
         }
         else
@@ -240,7 +236,7 @@ public class PullBrush extends Brush
         _block.setData(block.getD());
         for (int _y = block.getY(); _y > _block.getY(); _y--)
         {
-            this.setBlockIdAt(0, block.getX(), _y, block.getZ());
+            this.setBlockIdAt(block.getZ(), block.getX(), _y, 0);
         }
         // }
     }
@@ -271,10 +267,6 @@ public class PullBrush extends Brush
     protected final void powder(final SnipeData v)
     {
         this.vh = v.getVoxelHeight();
-
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.surface.clear();
 

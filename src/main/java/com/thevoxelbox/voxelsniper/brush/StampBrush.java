@@ -166,9 +166,6 @@ public class StampBrush extends Brush
      */
     protected final void stamp(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
@@ -227,9 +224,6 @@ public class StampBrush extends Brush
      */
     protected final void stampFill(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 
@@ -288,9 +282,6 @@ public class StampBrush extends Brush
      */
     protected final void stampNoAir(final SnipeData v)
     {
-        this.setBlockPositionX(this.getTargetBlock().getX());
-        this.setBlockPositionY(this.getTargetBlock().getY() + v.getcCen());
-        this.setBlockPositionZ(this.getTargetBlock().getZ());
 
         this.undo = new Undo(this.getTargetBlock().getWorld().getName());
 

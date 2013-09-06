@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipse_Brush
@@ -20,13 +20,12 @@ public class EllipseBrush extends PerformBrush
     private static final int STEPS_MIN = 1;
     private static final int STEPS_MAX = 2000;
     private static final int STEPS_DEFAULT = 200;
-
+    private static int timesUsed = 0;
     private int xscl;
     private int yscl;
     private int steps;
     private double stepSize;
     private boolean fill;
-    private static int timesUsed = 0;
 
     /**
      *
@@ -36,7 +35,7 @@ public class EllipseBrush extends PerformBrush
         this.setName("Ellipse");
     }
 
-    private void ellipse(final SnipeData v)
+    private void ellipse(final SnipeData v, Block targetBlock)
     {
         try
         {
@@ -45,19 +44,19 @@ public class EllipseBrush extends PerformBrush
                 final int _x = (int) Math.round(this.xscl * Math.cos(_steps));
                 final int _y = (int) Math.round(this.yscl * Math.sin(_steps));
 
-                switch (this.getTargetBlock().getFace(this.getLastBlock()))
+                switch (getTargetBlock().getFace(this.getLastBlock()))
                 {
                     case NORTH:
                     case SOUTH:
-                        this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y));
+                        current.perform(targetBlock.getRelative(0, _x, _y));
                         break;
                     case EAST:
                     case WEST:
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ()));
+                        current.perform(targetBlock.getRelative(_x, _y, 0));
                         break;
                     case UP:
                     case DOWN:
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
+                        current.perform(targetBlock.getRelative(_x, 0, _y));
                     default:
                         break;
                 }
@@ -76,12 +75,12 @@ public class EllipseBrush extends PerformBrush
         v.storeUndo(this.current.getUndo());
     }
 
-    private void ellipsefill(final SnipeData v)
+    private void ellipsefill(final SnipeData v, Block targetBlock)
     {
         int _ix = this.xscl;
         int _iy = this.yscl;
 
-        this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
+        current.perform(targetBlock);
 
         try
         {
@@ -94,19 +93,19 @@ public class EllipseBrush extends PerformBrush
                         final int _x = (int) Math.round(_ix * Math.cos(_steps));
                         final int _y = (int) Math.round(_iy * Math.sin(_steps));
 
-                        switch (this.getTargetBlock().getFace(this.getLastBlock()))
+                        switch (getTargetBlock().getFace(this.getLastBlock()))
                         {
                             case NORTH:
                             case SOUTH:
-                                this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y));
+                                current.perform(targetBlock.getRelative(0, _x, _y));
                                 break;
                             case EAST:
                             case WEST:
-                                this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ()));
+                                current.perform(targetBlock.getRelative(_x, _y, 0));
                                 break;
                             case UP:
                             case DOWN:
-                                this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
+                                current.perform(targetBlock.getRelative(_x, 0, _y));
                             default:
                                 break;
                         }
@@ -128,19 +127,19 @@ public class EllipseBrush extends PerformBrush
                         final int _x = (int) Math.round(_ix * Math.cos(_steps));
                         final int _y = (int) Math.round(_iy * Math.sin(_steps));
 
-                        switch (this.getTargetBlock().getFace(this.getLastBlock()))
+                        switch (getTargetBlock().getFace(this.getLastBlock()))
                         {
                             case NORTH:
                             case SOUTH:
-                                this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _x, this.getBlockPositionZ() + _y));
+                                current.perform(targetBlock.getRelative(0, _x, _y));
                                 break;
                             case EAST:
                             case WEST:
-                                this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ()));
+                                current.perform(targetBlock.getRelative(_x, _y, 0));
                                 break;
                             case UP:
                             case DOWN:
-                                this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY(), this.getBlockPositionZ() + _y));
+                                current.perform(targetBlock.getRelative(_x, 0, _y));
                             default:
                                 break;
                         }
@@ -162,33 +161,30 @@ public class EllipseBrush extends PerformBrush
         v.storeUndo(this.current.getUndo());
     }
 
-    private void execute(final SnipeData v)
+    private void execute(final SnipeData v, Block targetBlock)
     {
         this.stepSize = (TWO_PI / this.steps);
 
         if (this.fill)
         {
-            this.ellipsefill(v);
+            this.ellipsefill(v, targetBlock);
         }
         else
         {
-            this.ellipse(v);
+            this.ellipse(v, targetBlock);
         }
     }
 
     @Override
-    protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v)
+    protected final void arrow(final SnipeData v)
     {
-        this.execute(v);
+        this.execute(v, this.getTargetBlock());
     }
 
     @Override
-    protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v)
+    protected final void powder(final SnipeData v)
     {
-        this.setBlockPositionX(this.getLastBlock().getX());
-        this.setBlockPositionY(this.getLastBlock().getY());
-        this.setBlockPositionZ(this.getLastBlock().getZ());
-        this.execute(v);
+        this.execute(v, this.getLastBlock());
     }
 
     @Override

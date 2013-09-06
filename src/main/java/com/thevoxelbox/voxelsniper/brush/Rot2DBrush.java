@@ -97,7 +97,7 @@ public class Rot2DBrush extends Brush
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(_vb.getId(), _vb.getData(), this.getBlockPositionX() + (int) _newX, this.getBlockPositionY() + _yy, this.getBlockPositionZ() + (int) _newZ);
+                        this.setBlockIdAndDataAt(this.getBlockPositionX() + (int) _newX, this.getBlockPositionY() + _yy, this.getBlockPositionZ() + (int) _newZ, _vb.getId(), _vb.getData());
                     }
                 }
             }
@@ -151,7 +151,7 @@ public class Rot2DBrush extends Brush
                                 _winnerData = _bData;
                             }
 
-                            this.setBlockIdAndDataAt(_winner, _winnerData, _fx, _fy, _fz);
+                            this.setBlockIdAndDataAt(_fx, _fy, _fz, _winner, _winnerData);
                         }
                     }
                 }
