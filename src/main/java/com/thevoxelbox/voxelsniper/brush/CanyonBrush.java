@@ -34,35 +34,35 @@ public class CanyonBrush extends Brush
      */
     protected final void canyon(final Chunk chunk, final Undo undo)
     {
-        for (int _x = 0; _x < CHUNK_SIZE; _x++)
+        for (int x = 0; x < CHUNK_SIZE; x++)
         {
-            for (int _z = 0; _z < CHUNK_SIZE; _z++)
+            for (int z = 0; z < CHUNK_SIZE; z++)
             {
-                int _yy = this.yLevel;
+                int currentYLevel = this.yLevel;
 
-                for (int _y = 63; _y < this.getWorld().getMaxHeight(); _y++)
+                for (int y = 63; y < this.getWorld().getMaxHeight(); y++)
                 {
-                    final Block _b = chunk.getBlock(_x, _y, _z);
-                    final Block _bb = chunk.getBlock(_x, _yy, _z);
+                    final Block block = chunk.getBlock(x, y, z);
+                    final Block currentYLevelBlock = chunk.getBlock(x, currentYLevel, z);
 
-                    undo.put(_b);
-                    undo.put(_bb);
+                    undo.put(block);
+                    undo.put(currentYLevelBlock);
 
-                    _bb.setTypeId(_b.getTypeId(), false);
-                    _b.setType(Material.AIR);
+                    currentYLevelBlock.setTypeId(block.getTypeId(), false);
+                    block.setType(Material.AIR);
 
-                    _yy++;
+                    currentYLevel++;
                 }
 
-                final Block _b = chunk.getBlock(_x, 0, _z);
-                undo.put(_b);
-                _b.setTypeId(Material.BEDROCK.getId());
+                final Block block = chunk.getBlock(x, 0, z);
+                undo.put(block);
+                block.setTypeId(Material.BEDROCK.getId());
 
-                for (int _y = 1; _y < SHIFT_LEVEL_MIN; _y++)
+                for (int y = 1; y < SHIFT_LEVEL_MIN; y++)
                 {
-                    final Block _bb = chunk.getBlock(_x, _y, _z);
-                    undo.put(_bb);
-                    _bb.setType(Material.STONE);
+                    final Block currentBlock = chunk.getBlock(x, y, z);
+                    undo.put(currentBlock);
+                    currentBlock.setType(Material.STONE);
                 }
             }
         }
@@ -71,28 +71,28 @@ public class CanyonBrush extends Brush
     @Override
     protected void arrow(final SnipeData v)
     {
-        final Undo _undo = new Undo(this.getWorld().getName());
+        final Undo undo = new Undo(this.getWorld().getName());
 
-        canyon(getTargetBlock().getChunk(), _undo);
+        canyon(getTargetBlock().getChunk(), undo);
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
     protected void powder(final SnipeData v)
     {
-        final Undo _undo = new Undo(this.getWorld().getName());
+        final Undo undo = new Undo(this.getWorld().getName());
 
         Chunk targetChunk = getTargetBlock().getChunk();
         for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++)
         {
             for (int z = targetChunk.getX() - 1; z <= targetChunk.getX() + 1; z++)
             {
-                canyon(getWorld().getChunkAt(x, z), _undo);
+                canyon(getWorld().getChunkAt(x, z), undo);
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
@@ -137,12 +137,12 @@ public class CanyonBrush extends Brush
         CanyonBrush.timesUsed = tUsed;
     }
 
-    protected final int getyLevel()
+    protected final int getYLevel()
     {
         return yLevel;
     }
 
-    protected final void setyLevel(int yLevel)
+    protected final void setYLevel(int yLevel)
     {
         this.yLevel = yLevel;
     }

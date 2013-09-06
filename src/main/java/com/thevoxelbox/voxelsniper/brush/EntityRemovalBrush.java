@@ -29,48 +29,44 @@ public class EntityRemovalBrush extends Brush
 
     private void radialRemoval(final SnipeData v)
     {
-        final Chunk _targetChunk = this.getTargetBlock().getChunk();
-        int _entityCount = 0;
-        int _chunkCount = 0;
+        final Chunk targetChunk = this.getTargetBlock().getChunk();
+        int entityCount = 0;
+        int chunkCount = 0;
 
-        _entityCount += this.removeEntities(_targetChunk);
+        entityCount += this.removeEntities(targetChunk);
 
-        for (int _x = _targetChunk.getX() - v.getBrushSize(); _x <= _targetChunk.getX() + v.getBrushSize(); _x++)
+        for (int x = targetChunk.getX() - v.getBrushSize(); x <= targetChunk.getX() + v.getBrushSize(); x++)
         {
-            for (int _z = _targetChunk.getZ() - v.getBrushSize(); _z <= _targetChunk.getZ() + v.getBrushSize(); _z++)
+            for (int z = targetChunk.getZ() - v.getBrushSize(); z <= targetChunk.getZ() + v.getBrushSize(); z++)
             {
-                _entityCount += removeEntities(this.getWorld().getChunkAt(_x, _z));
-                _chunkCount++;
+                entityCount += removeEntities(this.getWorld().getChunkAt(x, z));
+                chunkCount++;
             }
         }
-        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + _entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + _chunkCount + ChatColor.GREEN + " chunks.");
+        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + " chunks.");
     }
 
     private int removeEntities(final Chunk chunk)
     {
-        int _entityCount = 0;
+        int entityCount = 0;
 
-        for (final Entity _e : chunk.getEntities())
+        for (final Entity entity : chunk.getEntities())
         {
-            if ((_e instanceof Player) || (_e instanceof Painting) || (_e instanceof ItemFrame))
+            if ((!(entity instanceof Player)) && (!(entity instanceof Painting)) && (!(entity instanceof ItemFrame)))
             {
-                continue;
-            }
-            else
-            {
-                if (((CraftEntity) _e).getHandle() instanceof NPC)
+                if (((CraftEntity) entity).getHandle() instanceof NPC)
                 {
-                    if (!(((CraftEntity) _e).getHandle() instanceof EntityCreature))
+                    if (!(((CraftEntity) entity).getHandle() instanceof EntityCreature))
                     {
                         continue;
                     }
                 }
-                _e.remove();
-                _entityCount++;
+                entity.remove();
+                entityCount++;
             }
         }
 
-        return _entityCount;
+        return entityCount;
     }
 
     @Override

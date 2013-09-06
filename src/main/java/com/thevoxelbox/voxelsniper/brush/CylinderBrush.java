@@ -24,46 +24,46 @@ public class CylinderBrush extends PerformBrush
 
     private void cylinder(final SnipeData v, Block targetBlock)
     {
-        final int _bSize = v.getBrushSize();
-        int _starringY = targetBlock.getY() + v.getcCen();
-        int _endTopY = targetBlock.getY() + v.getVoxelHeight() + v.getcCen();
+        final int brushSize = v.getBrushSize();
+        int yStartingPoint = targetBlock.getY() + v.getcCen();
+        int yEndPoint = targetBlock.getY() + v.getVoxelHeight() + v.getcCen();
 
-        if (_endTopY < _starringY)
+        if (yEndPoint < yStartingPoint)
         {
-            _endTopY = _starringY;
+            yEndPoint = yStartingPoint;
         }
-        if (_starringY < 0)
+        if (yStartingPoint < 0)
         {
-            _starringY = 0;
+            yStartingPoint = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
         }
-        else if (_starringY > this.getWorld().getMaxHeight() - 1)
+        else if (yStartingPoint > this.getWorld().getMaxHeight() - 1)
         {
-            _starringY = this.getWorld().getMaxHeight() - 1;
+            yStartingPoint = this.getWorld().getMaxHeight() - 1;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
         }
-        if (_endTopY < 0)
+        if (yEndPoint < 0)
         {
-            _endTopY = 0;
+            yEndPoint = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
-        else if (_endTopY > this.getWorld().getMaxHeight() - 1)
+        else if (yEndPoint > this.getWorld().getMaxHeight() - 1)
         {
-            _endTopY = this.getWorld().getMaxHeight() - 1;
+            yEndPoint = this.getWorld().getMaxHeight() - 1;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
 
-        final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
+        final double bSquared = Math.pow(brushSize + this.trueCircle, 2);
 
-        for (int y = _endTopY; y >= _starringY; y--)
+        for (int y = yEndPoint; y >= yStartingPoint; y--)
         {
-            for (int x = _bSize; x >= 0; x--)
+            for (int x = brushSize; x >= 0; x--)
             {
-                final double _xPow = Math.pow(x, 2);
+                final double xSquared = Math.pow(x, 2);
 
-                for (int z = _bSize; z >= 0; z--)
+                for (int z = brushSize; z >= 0; z--)
                 {
-                    if ((_xPow + Math.pow(z, 2)) <= _bPow)
+                    if ((xSquared + Math.pow(z, 2)) <= bSquared)
                     {
                         this.current.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() + z));
                         this.current.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() - z));
@@ -100,11 +100,11 @@ public class CylinderBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
@@ -112,29 +112,25 @@ public class CylinderBrush extends PerformBrush
                 v.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
                 return;
             }
-            if (_param.startsWith("true"))
+            if (parameter.startsWith("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
             }
-            else if (_param.startsWith("false"))
+            else if (parameter.startsWith("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
             }
-            else if (_param.startsWith("h"))
+            else if (parameter.startsWith("h"))
             {
-                v.setVoxelHeight((int) Double.parseDouble(_param.replace("h", "")));
+                v.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
                 v.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + v.getVoxelHeight());
-                continue;
             }
-            else if (_param.startsWith("c"))
+            else if (parameter.startsWith("c"))
             {
-                v.setcCen((int) Double.parseDouble(_param.replace("c", "")));
+                v.setcCen((int) Double.parseDouble(parameter.replace("c", "")));
                 v.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + v.getcCen());
-                continue;
             }
             else
             {

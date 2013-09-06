@@ -18,9 +18,9 @@ public abstract class BlendBrushBase extends Brush
     static
     {
         // Find highest placeable block ID
-        for (Material _mat : Material.values())
+        for (Material material : Material.values())
         {
-            maxBlockMaterialID = ((_mat.isBlock() && (_mat.getId() > maxBlockMaterialID)) ? _mat.getId() : maxBlockMaterialID);
+            maxBlockMaterialID = ((material.isBlock() && (material.getId() > maxBlockMaterialID)) ? material.getId() : maxBlockMaterialID);
         }
     }
 
@@ -55,9 +55,9 @@ public abstract class BlendBrushBase extends Brush
     @Override
     public void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; ++_i)
+        for (int i = 1; i < par.length; ++i)
         {
-            if (par[_i].equalsIgnoreCase("water"))
+            if (par[i].equalsIgnoreCase("water"))
             {
                 this.excludeWater = !this.excludeWater;
                 v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
@@ -68,7 +68,7 @@ public abstract class BlendBrushBase extends Brush
     /**
      * @return
      */
-    protected static final int getMaxBlockMaterialID()
+    protected static int getMaxBlockMaterialID()
     {
         return maxBlockMaterialID;
     }
@@ -76,7 +76,7 @@ public abstract class BlendBrushBase extends Brush
     /**
      * @param maxBlockMaterialID
      */
-    protected static final void setMaxBlockMaterialID(int maxBlockMaterialID)
+    protected static void setMaxBlockMaterialID(int maxBlockMaterialID)
     {
         BlendBrushBase.maxBlockMaterialID = maxBlockMaterialID;
     }

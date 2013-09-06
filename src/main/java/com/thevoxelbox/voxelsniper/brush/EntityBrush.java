@@ -26,13 +26,13 @@ public class EntityBrush extends Brush
 
     private void spawn(final SnipeData v)
     {
-        for (int _x = 0; _x < v.getBrushSize(); _x++)
+        for (int x = 0; x < v.getBrushSize(); x++)
         {
             try
             {
                 this.getWorld().spawn(this.getLastBlock().getLocation(), this.entityType.getEntityClass());
             }
-            catch (final IllegalArgumentException _ex)
+            catch (final IllegalArgumentException exception)
             {
                 v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
             }
@@ -63,23 +63,23 @@ public class EntityBrush extends Brush
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            String _names = "";
+            String names = "";
 
             v.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
-            for (final EntityType _cre : EntityType.values())
+            for (final EntityType currentEntity : EntityType.values())
             {
 
-                _names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + _cre.getName();
+                names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + currentEntity.getName();
             }
-            _names += ChatColor.AQUA + " |";
-            v.sendMessage(_names);
+            names += ChatColor.AQUA + " |";
+            v.sendMessage(names);
         }
         else
         {
-            final EntityType _cre = EntityType.fromName(par[1]);
-            if (_cre != null)
+            final EntityType currentEntity = EntityType.fromName(par[1]);
+            if (currentEntity != null)
             {
-                this.entityType = _cre;
+                this.entityType = currentEntity;
                 v.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
             }
             else

@@ -27,21 +27,21 @@ public class DiscFaceBrush extends PerformBrush
 
     private void discUD(final SnipeData v, Block targetBlock)
     {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 
-        for (int _x = _brushSize; _x >= 0; _x--)
+        for (int x = brushSize; x >= 0; x--)
         {
-            final double _xPow = Math.pow(_x, 2);
+            final double xSquared = Math.pow(x, 2);
 
-            for (int _z = _brushSize; _z >= 0; _z--)
+            for (int z = brushSize; z >= 0; z--)
             {
-                if ((_xPow + Math.pow(_z, 2)) <= _bPow)
+                if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared)
                 {
-                    current.perform(targetBlock.getRelative(_x, 0, _z));
-                    current.perform(targetBlock.getRelative(_x, 0, -_z));
-                    current.perform(targetBlock.getRelative(-_x, 0, _z));
-                    current.perform(targetBlock.getRelative(-_x, 0, -_z));
+                    current.perform(targetBlock.getRelative(x, 0, z));
+                    current.perform(targetBlock.getRelative(x, 0, -z));
+                    current.perform(targetBlock.getRelative(-x, 0, z));
+                    current.perform(targetBlock.getRelative(-x, 0, -z));
                 }
             }
         }
@@ -51,20 +51,20 @@ public class DiscFaceBrush extends PerformBrush
 
     private void discNS(final SnipeData v, Block targetBlock)
     {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 
-        for (int _x = _brushSize; _x >= 0; _x--)
+        for (int x = brushSize; x >= 0; x--)
         {
-            final double _xPow = Math.pow(_x, 2);
-            for (int _y = _brushSize; _y >= 0; _y--)
+            final double xSquared = Math.pow(x, 2);
+            for (int y = brushSize; y >= 0; y--)
             {
-                if ((_xPow + Math.pow(_y, 2)) <= _bPow)
+                if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared)
                 {
-                    current.perform(targetBlock.getRelative(_x, _y, 0));
-                    current.perform(targetBlock.getRelative(_x, -_y, 0));
-                    current.perform(targetBlock.getRelative(-_x, _y, 0));
-                    current.perform(targetBlock.getRelative(-_x, -_y, 0));
+                    current.perform(targetBlock.getRelative(x, y, 0));
+                    current.perform(targetBlock.getRelative(x, -y, 0));
+                    current.perform(targetBlock.getRelative(-x, y, 0));
+                    current.perform(targetBlock.getRelative(-x, -y, 0));
                 }
             }
         }
@@ -74,20 +74,20 @@ public class DiscFaceBrush extends PerformBrush
 
     private void discEW(final SnipeData v, Block targetBlock)
     {
-        final int _brushSize = v.getBrushSize();
-        final double _bPow = Math.pow(_brushSize + this.trueCircle, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 
-        for (int _x = _brushSize; _x >= 0; _x--)
+        for (int x = brushSize; x >= 0; x--)
         {
-            final double _xPow = Math.pow(_x, 2);
-            for (int _y = _brushSize; _y >= 0; _y--)
+            final double xSquared = Math.pow(x, 2);
+            for (int y = brushSize; y >= 0; y--)
             {
-                if ((_xPow + Math.pow(_y, 2)) <= _bPow)
+                if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared)
                 {
-                    current.perform(targetBlock.getRelative(0, _x, _y));
-                    current.perform(targetBlock.getRelative(0, _x, -_y));
-                    current.perform(targetBlock.getRelative(0, -_x, _y));
-                    current.perform(targetBlock.getRelative(0, -_x, -_y));
+                    current.perform(targetBlock.getRelative(0, x, y));
+                    current.perform(targetBlock.getRelative(0, x, -y));
+                    current.perform(targetBlock.getRelative(0, -x, y));
+                    current.perform(targetBlock.getRelative(0, -x, -y));
                 }
             }
         }
@@ -146,27 +146,25 @@ public class DiscFaceBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
                 return;
             }
-            if (_param.startsWith("true"))
+            if (parameter.startsWith("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
             }
-            else if (_param.startsWith("false"))
+            else if (parameter.startsWith("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
             }
             else
             {

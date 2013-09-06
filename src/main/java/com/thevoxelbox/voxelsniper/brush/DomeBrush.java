@@ -20,7 +20,6 @@ import org.bukkit.util.Vector;
 public class DomeBrush extends Brush
 {
     private static int timesUsed = 0;
-    private boolean fill;
 
     /**
      *
@@ -55,7 +54,7 @@ public class DomeBrush extends Brush
      * @param v
      * @param targetBlock
      */
-    private void generateDome(final SnipeData v, final Block targetBlock, final boolean fill)
+    private void generateDome(final SnipeData v, final Block targetBlock)
     {
 
         if (v.getVoxelHeight() == 0)
@@ -64,63 +63,63 @@ public class DomeBrush extends Brush
             return;
         }
 
-        final int _absoluteHeight = Math.abs(v.getVoxelHeight());
-        final boolean _negative = v.getVoxelHeight() < 0;
+        final int absoluteHeight = Math.abs(v.getVoxelHeight());
+        final boolean negative = v.getVoxelHeight() < 0;
 
-        final Set<Vector> _changeablePositions = new HashSet<Vector>();
+        final Set<Vector> changeablePositions = new HashSet<Vector>();
 
-        final Undo _undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo(targetBlock.getWorld().getName());
 
-        final int _brushSizeTimesVoxelHeight = v.getBrushSize() * _absoluteHeight;
-        final double _stepScale = ((v.getBrushSize() * v.getBrushSize()) + _brushSizeTimesVoxelHeight + _brushSizeTimesVoxelHeight) / 3;
+        final int brushSizeTimesVoxelHeight = v.getBrushSize() * absoluteHeight;
+        final double stepScale = ((v.getBrushSize() * v.getBrushSize()) + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 3;
 
-        final double _stepSize = 1 / _stepScale;
+        final double stepSize = 1 / stepScale;
 
-        for (double _u = 0; _u <= Math.PI / 2; _u += _stepSize)
+        for (double u = 0; u <= Math.PI / 2; u += stepSize)
         {
-            final double _y = _absoluteHeight * Math.sin(_u);
-            for (double _v = -Math.PI; _v <= -(Math.PI / 2); _v += _stepSize)
+            final double y = absoluteHeight * Math.sin(u);
+            for (double stepV = -Math.PI; stepV <= -(Math.PI / 2); stepV += stepSize)
             {
-                final double _x = v.getBrushSize() * Math.cos(_u) * Math.cos(_v);
-                final double _z = v.getBrushSize() * Math.cos(_u) * Math.sin(_v);
+                final double x = v.getBrushSize() * Math.cos(u) * Math.cos(stepV);
+                final double z = v.getBrushSize() * Math.cos(u) * Math.sin(stepV);
 
-                final double _targetBlockX = targetBlock.getX() + 0.5;
-                final double _targetBlockZ = targetBlock.getZ() + 0.5;
-                final int _targetY = NumberConversions.floor(targetBlock.getY() + (_negative ? -_y : _y));
-                final int _currentBlockXAdd = NumberConversions.floor(_targetBlockX + _x);
-                final int _currentBlockZAdd = NumberConversions.floor(_targetBlockZ + _z);
-                final int _currentBlockXSubtract = NumberConversions.floor(_targetBlockX - _x);
-                final int _currentBlockZSubtract = NumberConversions.floor(_targetBlockZ - _z);
-                _changeablePositions.add(new Vector(_currentBlockXAdd, _targetY, _currentBlockZAdd));
-                _changeablePositions.add(new Vector(_currentBlockXSubtract, _targetY, _currentBlockZAdd));
-                _changeablePositions.add(new Vector(_currentBlockXAdd, _targetY, _currentBlockZSubtract));
-                _changeablePositions.add(new Vector(_currentBlockXSubtract, _targetY, _currentBlockZSubtract));
+                final double targetBlockX = targetBlock.getX() + 0.5;
+                final double targetBlockZ = targetBlock.getZ() + 0.5;
+                final int targetY = NumberConversions.floor(targetBlock.getY() + (negative ? -y : y));
+                final int currentBlockXAdd = NumberConversions.floor(targetBlockX + x);
+                final int currentBlockZAdd = NumberConversions.floor(targetBlockZ + z);
+                final int currentBlockXSubtract = NumberConversions.floor(targetBlockX - x);
+                final int currentBlockZSubtract = NumberConversions.floor(targetBlockZ - z);
+                changeablePositions.add(new Vector(currentBlockXAdd, targetY, currentBlockZAdd));
+                changeablePositions.add(new Vector(currentBlockXSubtract, targetY, currentBlockZAdd));
+                changeablePositions.add(new Vector(currentBlockXAdd, targetY, currentBlockZSubtract));
+                changeablePositions.add(new Vector(currentBlockXSubtract, targetY, currentBlockZSubtract));
 
             }
         }
 
-        for (final Vector _vector : _changeablePositions)
+        for (final Vector vector : changeablePositions)
         {
-            final Block _targetBlock = _vector.toLocation(this.getTargetBlock().getWorld()).getBlock();
-            if (_targetBlock.getTypeId() != v.getVoxelId() || _targetBlock.getData() != v.getData())
+            final Block currentTargetBlock = vector.toLocation(this.getTargetBlock().getWorld()).getBlock();
+            if (currentTargetBlock.getTypeId() != v.getVoxelId() || currentTargetBlock.getData() != v.getData())
             {
-                _undo.put(_targetBlock);
-                _targetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
+                undo.put(currentTargetBlock);
+                currentTargetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.generateDome(v, this.getTargetBlock(), this.fill);
+        this.generateDome(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.generateDome(v, this.getLastBlock(), this.fill);
+        this.generateDome(v, this.getLastBlock());
     }
 }

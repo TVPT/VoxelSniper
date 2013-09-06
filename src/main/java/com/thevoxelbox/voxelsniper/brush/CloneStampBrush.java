@@ -34,61 +34,61 @@ public class CloneStampBrush extends StampBrush
      */
     private void clone(final SnipeData v)
     {
-        final int _brushSize = v.getBrushSize();
+        final int brushSize = v.getBrushSize();
         this.clone.clear();
         this.fall.clear();
         this.drop.clear();
         this.solid.clear();
         this.sorted = false;
 
-        int _starringPoint = this.getBlockPositionY() + v.getcCen();
-        int _yTopEnd = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
+        int yStartingPoint = this.getBlockPositionY() + v.getcCen();
+        int yEndPoint = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
 
-        if (_starringPoint < 0)
+        if (yStartingPoint < 0)
         {
-            _starringPoint = 0;
+            yStartingPoint = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
         }
-        else if (_starringPoint > this.getWorld().getMaxHeight() - 1)
+        else if (yStartingPoint > this.getWorld().getMaxHeight() - 1)
         {
-            _starringPoint = this.getWorld().getMaxHeight() - 1;
+            yStartingPoint = this.getWorld().getMaxHeight() - 1;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
         }
 
-        if (_yTopEnd < 0)
+        if (yEndPoint < 0)
         {
-            _yTopEnd = 0;
+            yEndPoint = 0;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
-        else if (_yTopEnd > this.getWorld().getMaxHeight() - 1)
+        else if (yEndPoint > this.getWorld().getMaxHeight() - 1)
         {
-            _yTopEnd = this.getWorld().getMaxHeight() - 1;
+            yEndPoint = this.getWorld().getMaxHeight() - 1;
             v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
         }
 
-        final double _bPow = Math.pow(_brushSize, 2);
+        final double bSquared = Math.pow(brushSize, 2);
 
-        for (int _z = _starringPoint; _z < _yTopEnd; _z++)
+        for (int z = yStartingPoint; z < yEndPoint; z++)
         {
-            this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ()), 0, _z - _starringPoint, 0));
-            for (int _y = 1; _y <= _brushSize; _y++)
+            this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ()), 0, z - yStartingPoint, 0));
+            for (int y = 1; y <= brushSize; y++)
             {
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ() + _y), 0, _z - _starringPoint, _y));
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), _z, this.getBlockPositionZ() - _y), 0, _z - _starringPoint, -_y));
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + _y, _z, this.getBlockPositionZ()), _y, _z - _starringPoint, 0));
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - _y, _z, this.getBlockPositionZ()), -_y, _z - _starringPoint, 0));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ() + y), 0, z - yStartingPoint, y));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ() - y), 0, z - yStartingPoint, -y));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + y, z, this.getBlockPositionZ()), y, z - yStartingPoint, 0));
+                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - y, z, this.getBlockPositionZ()), -y, z - yStartingPoint, 0));
             }
-            for (int _x = 1; _x <= _brushSize; _x++)
+            for (int x = 1; x <= brushSize; x++)
             {
-                final double _xPow = Math.pow(_x, 2);
-                for (int _y = 1; _y <= _brushSize; _y++)
+                final double xSquared = Math.pow(x, 2);
+                for (int y = 1; y <= brushSize; y++)
                 {
-                    if ((_xPow + Math.pow(_y, 2)) <= _bPow)
+                    if ((xSquared + Math.pow(y, 2)) <= bSquared)
                     {
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + _x, _z, this.getBlockPositionZ() + _y), _x, _z - _starringPoint, _y));
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + _x, _z, this.getBlockPositionZ() - _y), _x, _z - _starringPoint, -_y));
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - _x, _z, this.getBlockPositionZ() + _y), -_x, _z - _starringPoint, _y));
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - _x, _z, this.getBlockPositionZ() - _y), -_x, _z - _starringPoint, -_y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + x, z, this.getBlockPositionZ() + y), x, z - yStartingPoint, y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + x, z, this.getBlockPositionZ() - y), x, z - yStartingPoint, -y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - x, z, this.getBlockPositionZ() + y), -x, z - yStartingPoint, y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - x, z, this.getBlockPositionZ() - y), -x, z - yStartingPoint, -y));
                     }
                 }
             }
@@ -132,36 +132,36 @@ public class CloneStampBrush extends StampBrush
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v)
     {
-        final String _param = par[1];
+        final String parameter = par[1];
 
-        if (_param.equalsIgnoreCase("info"))
+        if (parameter.equalsIgnoreCase("info"))
         {
             v.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
             v.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
             v.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
             v.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
         }
-        if (_param.equalsIgnoreCase("a"))
+        if (parameter.equalsIgnoreCase("a"))
         {
             this.setStamp(StampType.NO_AIR);
             this.reSort();
             v.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
         }
-        else if (_param.equalsIgnoreCase("f"))
+        else if (parameter.equalsIgnoreCase("f"))
         {
             this.setStamp(StampType.FILL);
             this.reSort();
             v.sendMessage(ChatColor.AQUA + "Fill stamp brush");
         }
-        else if (_param.equalsIgnoreCase("d"))
+        else if (parameter.equalsIgnoreCase("d"))
         {
             this.setStamp(StampType.DEFAULT);
             this.reSort();
             v.sendMessage(ChatColor.AQUA + "Default stamp brush");
         }
-        else if (_param.startsWith("c"))
+        else if (parameter.startsWith("c"))
         {
-            v.setcCen(Integer.parseInt(_param.replace("c", "")));
+            v.setcCen(Integer.parseInt(parameter.replace("c", "")));
             v.sendMessage(ChatColor.BLUE + "Center set to " + v.getcCen());
         }
     }
