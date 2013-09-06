@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.google.common.base.Objects;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
@@ -8,7 +9,6 @@ import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import java.util.Objects;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Tree_Brush
@@ -41,7 +41,7 @@ public class TreeSnipeBrush extends Brush
     {
         for (int _i = 1; _i < (getTargetBlock().getWorld().getMaxHeight() - 1 - getTargetBlock().getY()); _i++)
         {
-            if (Objects.equals(getTargetBlock().getRelative(0, _i + 1, 0).getType(), Material.AIR))
+            if (Objects.equal(getTargetBlock().getRelative(0, _i + 1, 0).getType(), Material.AIR))
             {
                 return _i;
             }
