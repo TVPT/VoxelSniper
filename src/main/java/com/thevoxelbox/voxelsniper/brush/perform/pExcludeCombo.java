@@ -12,15 +12,16 @@ import org.bukkit.block.Block;
 /**
  * @author Voxel
  */
-public class pIncludeMat extends vPerformer
+public class pExcludeCombo extends vPerformer
 {
 
-    private VoxelList includeList;
+    private VoxelList excludeList;
     private int id;
+    private byte data;
 
-    public pIncludeMat()
+    public pExcludeCombo()
     {
-        name = "Include Material";
+        name = "Exclude Combo";
     }
 
     @Override
@@ -29,6 +30,7 @@ public class pIncludeMat extends vPerformer
         vm.performerName(name);
         vm.voxelList();
         vm.voxel();
+        vm.data();
     }
 
     @Override
@@ -36,16 +38,17 @@ public class pIncludeMat extends vPerformer
     {
         w = v.getWorld();
         id = v.getVoxelId();
-        includeList = v.getVoxelList();
+        data = v.getData();
+        excludeList = v.getVoxelList();
     }
 
     @Override
     public void perform(Block b)
     {
-        if (includeList.contains(b.getTypeId()))
+        if (!excludeList.contains(b.getTypeId()))
         {
             h.put(b);
-            b.setTypeId(id);
+            b.setTypeIdAndData(id, data, true);
         }
     }
 }

@@ -718,27 +718,13 @@ public class Sniper
         {
             final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
             brushTool.setBrush(new SnipeBrush());
-
-            brushTool.data.setVoxelId(0);
-            brushTool.data.setReplaceId(0);
-            brushTool.data.setData((byte) 0);
-            brushTool.data.setBrushSize(3);
-            brushTool.data.setVoxelHeight(1);
-            brushTool.data.setcCen(0);
-            brushTool.data.setReplaceData((byte) 0);
+            brushTool.data.reset();
         }
         else
         {
             this.current = new SnipeBrush();
-
             this.fillPrevious();
-            this.data.setVoxelId(0);
-            this.data.setReplaceId(0);
-            this.data.setData((byte) 0);
-            this.data.setBrushSize(3);
-            this.data.setVoxelHeight(1);
-            this.data.setcCen(0);
-            this.data.setReplaceData((byte) 0);
+            this.data.reset();
             this.range = 1;
             this.distRestrict = false;
 

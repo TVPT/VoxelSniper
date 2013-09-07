@@ -12,15 +12,15 @@ import org.bukkit.block.Block;
 /**
  * @author Voxel
  */
-public class pIncludeMat extends vPerformer
+public class pExcludeInk extends vPerformer
 {
 
-    private VoxelList includeList;
-    private int id;
+    private VoxelList excludeList;
+    private byte data;
 
-    public pIncludeMat()
+    public pExcludeInk()
     {
-        name = "Include Material";
+        name = "Exclude Ink";
     }
 
     @Override
@@ -28,24 +28,24 @@ public class pIncludeMat extends vPerformer
     {
         vm.performerName(name);
         vm.voxelList();
-        vm.voxel();
+        vm.data();
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        id = v.getVoxelId();
-        includeList = v.getVoxelList();
+        data = v.getData();
+        excludeList = v.getVoxelList();
     }
 
     @Override
     public void perform(Block b)
     {
-        if (includeList.contains(b.getTypeId()))
+        if (!excludeList.contains(b.getTypeId()))
         {
             h.put(b);
-            b.setTypeId(id);
+            b.setData(data);
         }
     }
 }

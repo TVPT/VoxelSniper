@@ -161,6 +161,7 @@ public class SnipeData
         this.voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
         this.cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
         this.replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
+        this.voxelList = new VoxelList();
     }
 
     /**

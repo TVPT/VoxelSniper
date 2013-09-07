@@ -67,7 +67,11 @@ public enum PerformerE
     COMBO_COMBO(pComboCombo.class, "cc", "combo-combo"),
     COMBO_COMBO_NOPHYS(pComboComboNoPhys.class, "ccp", "combo-combo-nophys"),
     EXCLUDE_MATERIAL(pExcludeMat.class, "xm", "exclude-mat"),
+    EXCLUDE_INK(pExcludeInk.class, "xi", "exclude-ink"),
+    EXCLUDE_COMBO(pExcludeCombo.class, "xc", "exclude-combo"),
     INCLUDE_MATERIAL(pIncludeMat.class, "nm", "include-mat"),
+    INCLUDE_INK(pIncludeInk.class, "ni", "include-ink"),
+    INCLUDE_COMBO(pIncludeCombo.class, "nc", "include-combo"),
     MAT_NO_UNDO(pNoUndo.class, "noundo", "noundo");
     //Other Performers which don't exist yet but are required for a full set of possibilities that actually could potentially do something:
     //List does not include any no-physics, unless materials are being placed (or combo), or any update unless ink is being placed (or combo) -Gavjenks

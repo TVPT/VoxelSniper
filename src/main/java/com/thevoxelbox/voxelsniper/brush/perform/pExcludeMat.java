@@ -15,13 +15,12 @@ import org.bukkit.block.Block;
 public class pExcludeMat extends vPerformer
 {
 
-    private VoxelList el;
-    private int i;
+    private VoxelList excludeList;
+    private int id;
 
     public pExcludeMat()
     {
-        name = "Exclude Material"; // This should probably be Material, Exclude Material and have the abbreviation mxm. Then you could have Combo exclude material cxm and material exclude combo mxc - Giltwist
-        // I'll worry about the naming scheme when the performer works. ATM, it's very buggy... -psa
+        name = "Exclude Material";
     }
 
     @Override
@@ -30,28 +29,23 @@ public class pExcludeMat extends vPerformer
         vm.performerName(name);
         vm.voxelList();
         vm.voxel();
-        vm.data();
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        i = v.getVoxelId();
-        el = v.getVoxelList();
+        id = v.getVoxelId();
+        excludeList = v.getVoxelList();
     }
 
     @Override
     public void perform(Block b)
     {
-        if (el.contains(b.getTypeId()))
-        {
-            return;
-        }
-        else
+        if (!excludeList.contains(b.getTypeId()))
         {
             h.put(b);
-            b.setTypeId(i);
+            b.setTypeId(id);
         }
     }
 }
