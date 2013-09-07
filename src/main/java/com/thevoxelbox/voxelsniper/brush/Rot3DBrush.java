@@ -51,11 +51,11 @@ public class Rot3DBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
             // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "p[0-359] -- set degrees of pitch rotation (rotation about the Z axis).");
@@ -64,35 +64,32 @@ public class Rot3DBrush extends Brush
 
                 return;
             }
-            else if (_param.startsWith("p"))
+            else if (parameter.startsWith("p"))
             {
-                this.sePitch = Math.toRadians(Double.parseDouble(_param.replace("p", "")));
+                this.sePitch = Math.toRadians(Double.parseDouble(parameter.replace("p", "")));
                 v.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch);
                 if (this.sePitch < 0 || this.sePitch > 359)
                 {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
-                continue;
             }
-            else if (_param.startsWith("r"))
+            else if (parameter.startsWith("r"))
             {
-                this.seRoll = Math.toRadians(Double.parseDouble(_param.replace("r", "")));
+                this.seRoll = Math.toRadians(Double.parseDouble(parameter.replace("r", "")));
                 v.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll);
                 if (this.seRoll < 0 || this.seRoll > 359)
                 {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
-                continue;
             }
-            else if (_param.startsWith("y"))
+            else if (parameter.startsWith("y"))
             {
-                this.seYaw = Math.toRadians(Double.parseDouble(_param.replace("y", "")));
+                this.seYaw = Math.toRadians(Double.parseDouble(parameter.replace("y", "")));
                 v.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw);
                 if (this.seYaw < 0 || this.seYaw > 359)
                 {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
-                continue;
             }
         }
     }
@@ -105,39 +102,39 @@ public class Rot3DBrush extends Brush
 
     private void getMatrix()
     { // only need to do once. But y needs to change + sphere
-        final double _bpow = Math.pow(this.bSize + 0.5, 2);
+        final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
         this.brushSize = (this.bSize * 2) + 1;
 
         this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-        int _sx = this.getBlockPositionX() - this.bSize;
-        int _sy = this.getBlockPositionY() - this.bSize;
-        int _sz = this.getBlockPositionZ() - this.bSize;
+        int sx = this.getBlockPositionX() - this.bSize;
+        int sy = this.getBlockPositionY() - this.bSize;
+        int sz = this.getBlockPositionZ() - this.bSize;
 
-        for (int _x = 0; _x < this.snap.length; _x++)
+        for (int x = 0; x < this.snap.length; x++)
         {
-            final double _xPow = Math.pow(_x - this.bSize, 2);
-            _sz = this.getBlockPositionZ() - this.bSize;
+            final double xSquared = Math.pow(x - this.bSize, 2);
+            sz = this.getBlockPositionZ() - this.bSize;
 
-            for (int _z = 0; _z < this.snap.length; _z++)
+            for (int z = 0; z < this.snap.length; z++)
             {
-                final double _zPow = Math.pow(_z - this.bSize, 2);
-                _sy = this.getBlockPositionY() - this.bSize;
+                final double zSquared = Math.pow(z - this.bSize, 2);
+                sz = this.getBlockPositionY() - this.bSize;
 
-                for (int _y = 0; _y < this.snap.length; _y++)
+                for (int y = 0; y < this.snap.length; y++)
                 {
-                    if (_xPow + _zPow + Math.pow(_y - this.bSize, 2) <= _bpow)
+                    if (xSquared + zSquared + Math.pow(y - this.bSize, 2) <= brushSizeSquared)
                     {
-                        final Block _b = this.clampY(_sx, _sy, _sz);
-                        this.snap[_x][_y][_z] = new BlockWrapper(_b);
-                        _b.setTypeId(0);
-                        _sy++;
+                        final Block block = this.clampY(sx, sz, sz);
+                        this.snap[x][y][z] = new BlockWrapper(block);
+                        block.setTypeId(0);
+                        sz++;
                     }
                 }
 
-                _sz++;
+                sz++;
             }
-            _sx++;
+            sx++;
         }
 
     }
@@ -152,115 +149,110 @@ public class Rot3DBrush extends Brush
         // --> Well, there would be 7 different possibilities... X, Y, Z, XY, XZ, YZ, XYZ, and different numbers of parameters for each, so I think each having
         // and item is too confusing. How about this: arrow = rotate one dimension, based on the face you click, and takes 1 param... powder: rotates all three
         // at once, and takes 3 params.
-        final double _bpow = Math.pow(this.bSize + 0.5, 2);
-        final double _cosYaw = Math.cos(this.seYaw);
-        final double _sinYaw = Math.sin(this.seYaw);
-        final double _cosPitch = Math.cos(this.sePitch);
-        final double _sinPitch = Math.sin(this.sePitch);
-        final double _cosRoll = Math.cos(this.seRoll);
-        final double _sinRoll = Math.sin(this.seRoll);
-        final boolean[][][] _doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
+        final double cosYaw = Math.cos(this.seYaw);
+        final double sinYaw = Math.sin(this.seYaw);
+        final double cosPitch = Math.cos(this.sePitch);
+        final double sinPitch = Math.sin(this.sePitch);
+        final double cosRoll = Math.cos(this.seRoll);
+        final double sinRoll = Math.sin(this.seRoll);
+        final boolean[][][] doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
+        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _x = 0; _x < this.snap.length; _x++)
+        for (int x = 0; x < this.snap.length; x++)
         {
-            final int _xx = _x - this.bSize;
-            final double _xPow = Math.pow(_xx, 2);
+            final int xx = x - this.bSize;
+            final double xSquared = Math.pow(xx, 2);
 
-            for (int _z = 0; _z < this.snap.length; _z++)
+            for (int z = 0; z < this.snap.length; z++)
             {
-                final int _zz = _z - this.bSize;
-                final double _zPow = Math.pow(_zz, 2);
-                final double _newxzX = (_xx * _cosYaw) - (_zz * _sinYaw);
-                final double _newxzZ = (_xx * _sinYaw) + (_zz * _cosYaw);
+                final int zz = z - this.bSize;
+                final double zSquared = Math.pow(zz, 2);
+                final double newxzX = (xx * cosYaw) - (zz * sinYaw);
+                final double newxzZ = (xx * sinYaw) + (zz * cosYaw);
 
-                for (int _y = 0; _y < this.snap.length; _y++)
+                for (int y = 0; y < this.snap.length; y++)
                 {
-                    final int _yy = _y - this.bSize;
-                    if (_xPow + _zPow + Math.pow(_yy, 2) <= _bpow)
+                    final int yy = y - this.bSize;
+                    if (xSquared + zSquared + Math.pow(yy, 2) <= brushSizeSquared)
                     {
-                        _undo.put(this.clampY(this.getBlockPositionX() + _xx, this.getBlockPositionY() + _yy, this.getBlockPositionZ() + _zz)); // just store
-                        // whole sphere
-                        // in undo, too
-                        // complicated
-                        // otherwise,
-                        // since this
-                        // brush both adds and remos things unpredictably.
+                        undo.put(this.clampY(this.getBlockPositionX() + xx, this.getBlockPositionY() + yy, this.getBlockPositionZ() + zz)); // just store
+                        // whole sphere in undo, too complicated otherwise, since this brush both adds and remos things unpredictably.
 
-                        final double _newxyX = (_newxzX * _cosPitch) - (_yy * _sinPitch);
-                        final double _newxyY = (_newxzX * _sinPitch) + (_yy * _cosPitch); // calculates all three in succession in precise math space
-                        final double _newyzY = (_newxyY * _cosRoll) - (_newxzZ * _sinRoll);
-                        final double _newyzZ = (_newxyY * _sinRoll) + (_newxzZ * _cosRoll);
+                        final double newxyX = (newxzX * cosPitch) - (yy * sinPitch);
+                        final double newxyY = (newxzX * sinPitch) + (yy * cosPitch); // calculates all three in succession in precise math space
+                        final double newyzY = (newxyY * cosRoll) - (newxzZ * sinRoll);
+                        final double newyzZ = (newxyY * sinRoll) + (newxzZ * cosRoll);
 
-                        _doNotFill[(int) _newxyX + this.bSize][(int) _newyzY + this.bSize][(int) _newyzZ + this.bSize] = true; // only rounds off to nearest
+                        doNotFill[(int) newxyX + this.bSize][(int) newyzY + this.bSize][(int) newyzZ + this.bSize] = true; // only rounds off to nearest
                         // block
                         // after all three, though.
 
-                        final BlockWrapper _vb = this.snap[_x][_y][_z];
-                        if (_vb.getId() == 0)
+                        final BlockWrapper block = this.snap[x][y][z];
+                        if (block.getId() == 0)
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getBlockPositionX() + (int) _newxyX, this.getBlockPositionY() + (int) _newyzY, this.getBlockPositionZ() + (int) _newyzZ, _vb.getId(), _vb.getData());
+                        this.setBlockIdAndDataAt(this.getBlockPositionX() + (int) newxyX, this.getBlockPositionY() + (int) newyzY, this.getBlockPositionZ() + (int) newyzZ, block.getId(), block.getData());
                     }
                 }
             }
         }
 
-        for (int _x = 0; _x < this.snap.length; _x++)
+        for (int x = 0; x < this.snap.length; x++)
         {
-            final double _xPow = Math.pow(_x - this.bSize, 2);
-            final int _fx = _x + this.getBlockPositionX() - this.bSize;
+            final double xSquared = Math.pow(x - this.bSize, 2);
+            final int fx = x + this.getBlockPositionX() - this.bSize;
 
-            for (int _z = 0; _z < this.snap.length; _z++)
+            for (int z = 0; z < this.snap.length; z++)
             {
-                final double _zPow = Math.pow(_z - this.bSize, 2);
-                final int _fz = _z + this.getBlockPositionZ() - this.bSize;
+                final double zSquared = Math.pow(z - this.bSize, 2);
+                final int fz = z + this.getBlockPositionZ() - this.bSize;
 
-                for (int _y = 0; _y < this.snap.length; _y++)
+                for (int y = 0; y < this.snap.length; y++)
                 {
-                    if (_xPow + _zPow + Math.pow(_y - this.bSize, 2) <= _bpow)
+                    if (xSquared + zSquared + Math.pow(y - this.bSize, 2) <= brushSizeSquared)
                     {
-                        if (!_doNotFill[_x][_y][_z])
+                        if (!doNotFill[x][y][z])
                         {
                             // smart fill stuff
-                            final int _fy = _y + this.getBlockPositionY() - this.bSize;
-                            final int _a = this.getBlockIdAt(_fx + 1, _fy, _fz);
-                            final byte _aData = this.getBlockDataAt(_fx + 1, _fy, _fz);
-                            final int _d = this.getBlockIdAt(_fx - 1, _fy, _fz);
-                            final byte _dData = this.getBlockDataAt(_fx - 1, _fy, _fz);
-                            final int _c = this.getBlockIdAt(_fx, _fy, _fz + 1);
-                            final int _b = this.getBlockIdAt(_fx, _fy, _fz - 1);
-                            final byte _bData = this.getBlockDataAt(_fx, _fy, _fz - 1);
+                            final int fy = y + this.getBlockPositionY() - this.bSize;
+                            final int a = this.getBlockIdAt(fx + 1, fy, fz);
+                            final byte aData = this.getBlockDataAt(fx + 1, fy, fz);
+                            final int d = this.getBlockIdAt(fx - 1, fy, fz);
+                            final byte dData = this.getBlockDataAt(fx - 1, fy, fz);
+                            final int c = this.getBlockIdAt(fx, fy, fz + 1);
+                            final int b = this.getBlockIdAt(fx, fy, fz - 1);
+                            final byte bData = this.getBlockDataAt(fx, fy, fz - 1);
 
-                            int _winner;
-                            byte _winnerData;
+                            int winner;
+                            byte winnerData;
 
-                            if (_a == _b || _a == _c || _a == _d)
+                            if (a == b || a == c || a == d)
                             { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
                                 // should
                                 // be fine to do all 5 checks needed to be legit about it.
-                                _winner = _a;
-                                _winnerData = _aData;
+                                winner = a;
+                                winnerData = aData;
                             }
-                            else if (_b == _d || _c == _d)
+                            else if (b == d || c == d)
                             {
-                                _winner = _d;
-                                _winnerData = _dData;
+                                winner = d;
+                                winnerData = dData;
                             }
                             else
                             {
-                                _winner = _b; // blockPositionY making this default, it will also automatically cover situations where B = C;
-                                _winnerData = _bData;
+                                winner = b; // blockPositionY making this default, it will also automatically cover situations where B = C;
+                                winnerData = bData;
                             }
 
-                            this.setBlockIdAndDataAt(_fx, _fy, _fz, _winner, _winnerData);
+                            this.setBlockIdAndDataAt(fx, fy, fz, winner, winnerData);
                         }
                     }
                 }
             }
         }
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override

@@ -140,10 +140,6 @@ public class RangeBlockHelper
                 while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
             }
         }
-        else
-        {
-            return;
-        }
     }
 
     /**

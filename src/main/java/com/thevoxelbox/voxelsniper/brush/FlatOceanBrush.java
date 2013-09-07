@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -14,7 +13,6 @@ public class FlatOceanBrush extends Brush
 {
     private static final int DEFAULT_WATER_LEVEL = 29;
     private static final int DEFAULT_FLOOR_LEVEL = 8;
-
     private static int timesUsed = 0;
     private int waterLevel = DEFAULT_WATER_LEVEL;
     private int floorLevel = DEFAULT_FLOOR_LEVEL;
@@ -29,23 +27,23 @@ public class FlatOceanBrush extends Brush
 
     private void flatOcean(final Chunk chunk)
     {
-        for (int _x = 0; _x < CHUNK_SIZE; _x++)
+        for (int x = 0; x < CHUNK_SIZE; x++)
         {
-            for (int _z = 0; _z < CHUNK_SIZE; _z++)
+            for (int z = 0; z < CHUNK_SIZE; z++)
             {
-                for (int _y = 0; _y < chunk.getWorld().getMaxHeight(); _y++)
+                for (int y = 0; y < chunk.getWorld().getMaxHeight(); y++)
                 {
-                    if (_y <= this.floorLevel)
+                    if (y <= this.floorLevel)
                     {
-                        chunk.getBlock(_x, _y, _z).setType(Material.DIRT);
+                        chunk.getBlock(x, y, z).setType(Material.DIRT);
                     }
-                    else if (_y <= this.waterLevel)
+                    else if (y <= this.waterLevel)
                     {
-                        chunk.getBlock(_x, _y, _z).setTypeId(Material.STATIONARY_WATER.getId(), false);
+                        chunk.getBlock(x, y, z).setTypeId(Material.STATIONARY_WATER.getId(), false);
                     }
                     else
                     {
-                        chunk.getBlock(_x, _y, _z).setTypeId(Material.AIR.getId(), false);
+                        chunk.getBlock(x, y, z).setTypeId(Material.AIR.getId(), false);
                     }
                 }
             }
@@ -84,41 +82,39 @@ public class FlatOceanBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
                 v.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
             }
-            if (_param.startsWith("yo"))
+            if (parameter.startsWith("yo"))
             {
-                int _newWaterLevel = Integer.parseInt(_param.replace("yo", ""));
-                if (_newWaterLevel < this.floorLevel)
+                int newWaterLevel = Integer.parseInt(parameter.replace("yo", ""));
+                if (newWaterLevel < this.floorLevel)
                 {
-                    _newWaterLevel = this.floorLevel + 1;
+                    newWaterLevel = this.floorLevel + 1;
                 }
-                this.waterLevel = _newWaterLevel;
+                this.waterLevel = newWaterLevel;
                 v.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
-                continue;
             }
-            else if (_param.startsWith("yl"))
+            else if (parameter.startsWith("yl"))
             {
-                int _newFloorLevel = Integer.parseInt(_param.replace("yl", ""));
-                if (_newFloorLevel > this.waterLevel)
+                int newFloorLevel = Integer.parseInt(parameter.replace("yl", ""));
+                if (newFloorLevel > this.waterLevel)
                 {
-                    _newFloorLevel = this.waterLevel - 1;
-                    if (_newFloorLevel == 0)
+                    newFloorLevel = this.waterLevel - 1;
+                    if (newFloorLevel == 0)
                     {
-                        _newFloorLevel = 1;
+                        newFloorLevel = 1;
                         this.waterLevel = 2;
                     }
                 }
-                this.floorLevel = _newFloorLevel;
+                this.floorLevel = newFloorLevel;
                 v.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
-                continue;
             }
         }
     }

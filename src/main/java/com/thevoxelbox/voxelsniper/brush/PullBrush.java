@@ -1,18 +1,300 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.HashSet;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+
+import java.util.HashSet;
 
 /**
  * @author Piotr
  */
 public class PullBrush extends Brush
 {
+
+    private static int timesUsed = 0;
+    private final HashSet<BlockWrapper> surface = new HashSet<BlockWrapper>();
+    private int vh;
+    private double c1 = 1;
+    private double c2 = 0;
+
+    /**
+     * Default Constructor.
+     */
+    public PullBrush()
+    {
+        this.setName("Soft Selection");
+    }
+
+    @Override
+    public final int getTimesUsed()
+    {
+        return PullBrush.timesUsed;
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed)
+    {
+        PullBrush.timesUsed = tUsed;
+    }
+
+    @Override
+    public final void info(final Message vm)
+    {
+        vm.brushName(this.getName());
+        vm.size();
+        vm.height();
+        vm.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
+        vm.custom(ChatColor.AQUA + "Bubble " + this.c2);
+    }
+
+    @Override
+    public final void parameters(final String[] par, final SnipeData v)
+    {
+        try
+        {
+            final double pinch = Double.parseDouble(par[1]);
+            final double bubble = Double.parseDouble(par[2]);
+            this.c1 = 1 - pinch;
+            this.c2 = bubble;
+        }
+        catch (final Exception exception)
+        {
+            v.sendMessage(ChatColor.RED + "Invalid brush parameters!");
+        }
+    }
+
+    /**
+     * @param t
+     * @return double
+     */
+    private double getStr(final double t)
+    {
+        final double lt = 1 - t;
+        return (lt * lt * lt) + 3 * (lt * lt) * t * this.c1 + 3 * lt * (t * t) * this.c2; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
+    }
+
+    /**
+     * @param v
+     */
+    private void getSurface(final SnipeData v)
+    {
+        this.surface.clear();
+
+        final double bSquared = Math.pow(v.getBrushSize() + 0.5, 2);
+        for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
+        {
+            final double zSquared = Math.pow(z, 2);
+            final int actualZ = this.getBlockPositionZ() + z;
+            for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
+            {
+                final double xSquared = Math.pow(x, 2);
+                final int actualX = this.getBlockPositionX() + x;
+                for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
+                {
+                    final double volume = (xSquared + Math.pow(y, 2) + zSquared);
+                    if (volume <= bSquared)
+                    {
+                        if (this.isSurface(actualX, this.getBlockPositionY() + y, actualZ))
+                        {
+                            this.surface.add(new BlockWrapper(this.clampY(actualX, this.getBlockPositionY() + y, actualZ), this.getStr(((volume / bSquared)))));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @return boolean
+     */
+    private boolean isSurface(final int x, final int y, final int z)
+    {
+        return this.getBlockIdAt(x, y, z) != 0 && ((this.getBlockIdAt(x, y - 1, z) == 0) || (this.getBlockIdAt(x, y + 1, z) == 0) || (this.getBlockIdAt(x + 1, y, z) == 0) || (this.getBlockIdAt(x - 1, y, z) == 0) || (this.getBlockIdAt(x, y, z + 1) == 0) || (this.getBlockIdAt(x, y, z - 1) == 0));
+
+    }
+
+    private void setBlock(final BlockWrapper block)
+    {
+        final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
+        if (this.getBlockIdAt(block.getX(), block.getY() - 1, block.getZ()) == 0)
+        {
+            currentBlock.setTypeId(block.getId());
+            currentBlock.setData(block.getD());
+            for (int y = block.getY(); y < currentBlock.getY(); y++)
+            {
+                this.setBlockIdAt(block.getZ(), block.getX(), y, 0);
+            }
+        }
+        else
+        {
+            currentBlock.setTypeId(block.getId());
+            currentBlock.setData(block.getD());
+            for (int y = block.getY() - 1; y < currentBlock.getY(); y++)
+            {
+                final Block current = this.clampY(block.getX(), y, block.getZ());
+                current.setTypeId(block.getId());
+                current.setData(block.getD());
+            }
+        }
+    }
+
+    private void setBlockDown(final BlockWrapper block)
+    {
+        final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
+        currentBlock.setTypeId(block.getId());
+        currentBlock.setData(block.getD());
+        for (int y = block.getY(); y > currentBlock.getY(); y--)
+        {
+            this.setBlockIdAt(block.getZ(), block.getX(), y, 0);
+        }
+        // }
+    }
+
+    @Override
+    protected final void arrow(final SnipeData v)
+    {
+        this.vh = v.getVoxelHeight();
+        this.getSurface(v);
+
+        if (this.vh > 0)
+        {
+            for (final BlockWrapper block : this.surface)
+            {
+                this.setBlock(block);
+            }
+        }
+        else if (this.vh < 0)
+        {
+            for (final BlockWrapper block : this.surface)
+            {
+                this.setBlockDown(block);
+            }
+        }
+    }
+
+    @Override
+    protected final void powder(final SnipeData v)
+    {
+        this.vh = v.getVoxelHeight();
+
+        this.surface.clear();
+
+        int lastY;
+        int newY;
+        int lastStr;
+        double str;
+        final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
+
+        int id;
+
+        // Are we pulling up ?
+        if (this.vh > 0)
+        {
+
+            // Z - Axis
+            for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
+            {
+
+                final int zSquared = z * z;
+                final int actualZ = this.getBlockPositionZ() + z;
+
+                // X - Axis
+                for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
+                {
+
+                    final int xSquared = x * x;
+                    final int actualX = this.getBlockPositionX() + x;
+
+                    // Down the Y - Axis
+                    for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
+                    {
+
+                        final double volume = zSquared + xSquared + (y * y);
+
+                        // Is this in the range of the brush?
+                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getBlockPositionY() + y, actualZ) != 0)
+                        {
+
+                            int actualY = this.getBlockPositionY() + y;
+
+                            // Starting strength and new Position
+                            str = this.getStr(volume / brushSizeSquared);
+                            lastStr = (int) (this.vh * str);
+                            lastY = actualY + lastStr;
+
+                            this.clampY(actualX, lastY, actualZ).setTypeId(this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ));
+
+                            if (str == 1)
+                            {
+                                str = 0.8;
+                            }
+
+                            while (lastStr > 0)
+                            {
+                                if (actualY < this.getBlockPositionY())
+                                {
+                                    str = str * str;
+                                }
+                                lastStr = (int) (this.vh * str);
+                                newY = actualY + lastStr;
+                                id = this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ);
+                                for (int i = newY; i < lastY; i++)
+                                {
+                                    this.clampY(actualX, i, actualZ).setTypeId(id);
+                                }
+                                lastY = newY;
+                                actualY--;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
+            {
+                final double zSquared = Math.pow(z, 2);
+                final int actualZ = this.getBlockPositionZ() + z;
+                for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
+                {
+                    final double xSquared = Math.pow(x, 2);
+                    final int actualX = this.getBlockPositionX() + x;
+                    for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
+                    {
+                        double volume = (xSquared + Math.pow(y, 2) + zSquared);
+                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getBlockPositionY() + y, actualZ) != 0)
+                        {
+                            final int actualY = this.getBlockPositionY() + y;
+                            lastY = actualY + (int) (this.vh * this.getStr(volume / brushSizeSquared));
+                            this.clampY(actualX, lastY, actualZ).setTypeId(this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ));
+                            y++;
+                            volume = (xSquared + Math.pow(y, 2) + zSquared);
+                            while (volume <= brushSizeSquared)
+                            {
+                                final int blockY = this.getBlockPositionY() + y + (int) (this.vh * this.getStr(volume / brushSizeSquared));
+                                final int blockId = this.getWorld().getBlockTypeIdAt(actualX, this.getBlockPositionY() + y, actualZ);
+                                for (int i = blockY; i < lastY; i++)
+                                {
+                                    this.clampY(actualX, i, actualZ).setTypeId(blockId);
+                                }
+                                lastY = blockY;
+                                y++;
+                                volume = (xSquared + Math.pow(y, 2) + zSquared);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * @author Piotr
@@ -87,298 +369,6 @@ public class PullBrush extends Brush
         public int getZ()
         {
             return this.z;
-        }
-    }
-
-    private int vh;
-
-    private static int timesUsed = 0;
-
-    private final HashSet<BlockWrapper> surface = new HashSet<BlockWrapper>();
-    private double c1 = 1;
-
-    private double c2 = 0;
-
-    /**
-     * Default Constructor.
-     */
-    public PullBrush()
-    {
-        this.setName("Soft Selection");
-    }
-
-    @Override
-    public final int getTimesUsed()
-    {
-        return PullBrush.timesUsed;
-    }
-
-    @Override
-    public final void info(final Message vm)
-    {
-        vm.brushName(this.getName());
-        vm.size();
-        vm.height();
-        vm.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
-        vm.custom(ChatColor.AQUA + "Bubble " + this.c2);
-    }
-
-    @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        try
-        {
-            final double _pinch = Double.parseDouble(par[1]);
-            final double _bubble = Double.parseDouble(par[2]);
-            this.c1 = 1 - _pinch;
-            this.c2 = _bubble;
-        }
-        catch (final Exception _ex)
-        {
-            v.sendMessage(ChatColor.RED + "Invalid brush parameters!");
-        }
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        PullBrush.timesUsed = tUsed;
-    }
-
-    /**
-     * @param t
-     *
-     * @return double
-     */
-    private double getStr(final double t)
-    {
-        final double _lt = 1 - t;
-        return (_lt * _lt * _lt) + 3 * (_lt * _lt) * t * this.c1 + 3 * _lt * (t * t) * this.c2; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
-    }
-
-    /**
-     * @param v
-     */
-    private void getSurface(final SnipeData v)
-    {
-        this.surface.clear();
-
-        final double _bpow = Math.pow(v.getBrushSize() + 0.5, 2);
-        for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++)
-        {
-            final double _zpow = Math.pow(_z, 2);
-            final int _zz = this.getBlockPositionZ() + _z;
-            for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++)
-            {
-                final double _xpow = Math.pow(_x, 2);
-                final int _xx = this.getBlockPositionX() + _x;
-                for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++)
-                {
-                    final double _pow = (_xpow + Math.pow(_y, 2) + _zpow);
-                    if (_pow <= _bpow)
-                    {
-                        if (this.isSurface(_xx, this.getBlockPositionY() + _y, _zz))
-                        {
-                            this.surface.add(new BlockWrapper(this.clampY(_xx, this.getBlockPositionY() + _y, _zz), this.getStr(((_pow / _bpow)))));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * @param x
-     * @param y
-     * @param z
-     *
-     * @return boolean
-     */
-    private boolean isSurface(final int x, final int y, final int z)
-    {
-        if (this.getBlockIdAt(x, y, z) == 0)
-        {
-            return false;
-        }
-
-        return ((this.getBlockIdAt(x, y - 1, z) == 0) || (this.getBlockIdAt(x, y + 1, z) == 0) || (this.getBlockIdAt(x + 1, y, z) == 0) || (this.getBlockIdAt(x - 1, y, z) == 0) || (this.getBlockIdAt(x, y, z + 1) == 0) || (this.getBlockIdAt(x, y, z - 1) == 0));
-    }
-
-    private void setBlock(final BlockWrapper block)
-    {
-        final Block _bl = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
-        if (this.getBlockIdAt(block.getX(), block.getY() - 1, block.getZ()) == 0)
-        {
-            _bl.setTypeId(block.getId());
-            _bl.setData(block.getD());
-            for (int _y = block.getY(); _y < _bl.getY(); _y++)
-            {
-                this.setBlockIdAt(block.getZ(), block.getX(), _y, 0);
-            }
-        }
-        else
-        {
-            _bl.setTypeId(block.getId());
-            _bl.setData(block.getD());
-            for (int _y = block.getY() - 1; _y < _bl.getY(); _y++)
-            {
-                final Block _block = this.clampY(block.getX(), _y, block.getZ());
-                _block.setTypeId(block.getId());
-                _block.setData(block.getD());
-            }
-        }
-    }
-
-    private void setBlockDown(final BlockWrapper block)
-    {
-        final Block _block = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
-        _block.setTypeId(block.getId());
-        _block.setData(block.getD());
-        for (int _y = block.getY(); _y > _block.getY(); _y--)
-        {
-            this.setBlockIdAt(block.getZ(), block.getX(), _y, 0);
-        }
-        // }
-    }
-
-    @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.vh = v.getVoxelHeight();
-        this.getSurface(v);
-
-        if (this.vh > 0)
-        {
-            for (final BlockWrapper _block : this.surface)
-            {
-                this.setBlock(_block);
-            }
-        }
-        else if (this.vh < 0)
-        {
-            for (final BlockWrapper _block : this.surface)
-            {
-                this.setBlockDown(_block);
-            }
-        }
-    }
-
-    @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.vh = v.getVoxelHeight();
-
-        this.surface.clear();
-
-        int _lastY;
-        int _newY;
-        int _lastStr;
-        double _str;
-        final double _bPow = Math.pow(v.getBrushSize() + 0.5, 2);
-
-        int _id;
-
-        // Are we pulling up ?
-        if (this.vh > 0)
-        {
-
-            // Z - Axis
-            for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++)
-            {
-
-                final int _zPow = _z * _z;
-                final int _zz = this.getBlockPositionZ() + _z;
-
-                // X - Axis
-                for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++)
-                {
-
-                    final int _xPow = _x * _x;
-                    final int _xx = this.getBlockPositionX() + _x;
-
-                    // Down the Y - Axis
-                    for (int _y = v.getBrushSize(); _y >= -v.getBrushSize(); _y--)
-                    {
-
-                        final double _pow = _zPow + _xPow + (_y * _y);
-
-                        // Is this in the range of the brush?
-                        if (_pow <= _bPow && this.getWorld().getBlockTypeIdAt(_xx, this.getBlockPositionY() + _y, _zz) != 0)
-                        {
-
-                            int _yy = this.getBlockPositionY() + _y;
-
-                            // Starting strength and new Position
-                            _str = this.getStr(_pow / _bPow);
-                            _lastStr = (int) (this.vh * _str);
-                            _lastY = _yy + _lastStr;
-
-                            this.clampY(_xx, _lastY, _zz).setTypeId(this.getWorld().getBlockTypeIdAt(_xx, _yy, _zz));
-
-                            if (_str == 1)
-                            {
-                                _str = 0.8;
-                            }
-
-                            while (_lastStr > 0)
-                            {
-                                if (_yy < this.getBlockPositionY())
-                                {
-                                    _str = _str * _str;
-                                }
-                                _lastStr = (int) (this.vh * _str);
-                                _newY = _yy + _lastStr;
-                                _id = this.getWorld().getBlockTypeIdAt(_xx, _yy, _zz);
-                                for (int _i = _newY; _i < _lastY; _i++)
-                                {
-                                    this.clampY(_xx, _i, _zz).setTypeId(_id);
-                                }
-                                _lastY = _newY;
-                                _yy--;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++)
-            {
-                final double _zPow = Math.pow(_z, 2);
-                final int _zz = this.getBlockPositionZ() + _z;
-                for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++)
-                {
-                    final double _xpow = Math.pow(_x, 2);
-                    final int _xx = this.getBlockPositionX() + _x;
-                    for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++)
-                    {
-                        double _pow = (_xpow + Math.pow(_y, 2) + _zPow);
-                        if (_pow <= _bPow && this.getWorld().getBlockTypeIdAt(_xx, this.getBlockPositionY() + _y, _zz) != 0)
-                        {
-                            final int _byy = this.getBlockPositionY() + _y;
-                            _lastY = _byy + (int) (this.vh * this.getStr(_pow / _bPow));
-                            this.clampY(_xx, _lastY, _zz).setTypeId(this.getWorld().getBlockTypeIdAt(_xx, _byy, _zz));
-                            _y++;
-                            _pow = (_xpow + Math.pow(_y, 2) + _zPow);
-                            while (_pow <= _bPow)
-                            {
-                                final int _blY = this.getBlockPositionY() + _y + (int) (this.vh * this.getStr(_pow / _bPow));
-                                final int _blId = this.getWorld().getBlockTypeIdAt(_xx, this.getBlockPositionY() + _y, _zz);
-                                for (int _i = _blY; _i < _lastY; _i++)
-                                {
-                                    this.clampY(_xx, _i, _zz).setTypeId(_blId);
-                                }
-                                _lastY = _blY;
-                                _y++;
-                                _pow = (_xpow + Math.pow(_y, 2) + _zPow);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
         }
     }
 }

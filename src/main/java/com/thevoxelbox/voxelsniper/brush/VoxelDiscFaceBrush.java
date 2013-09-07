@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
@@ -26,13 +25,11 @@ public class VoxelDiscFaceBrush extends PerformBrush
 
     private void disc(final SnipeData v, Block targetBlock)
     {
-        final int _bSize = v.getBrushSize();
-
-        for (int _x = _bSize; _x >= -_bSize; _x--)
+        for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
         {
-            for (int _y = _bSize; _y >= -_bSize; _y--)
+            for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
             {
-                this.current.perform(this.clampY(targetBlock.getX() + _x, targetBlock.getY(), targetBlock.getZ() + _y));
+                this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
             }
         }
 
@@ -41,13 +38,11 @@ public class VoxelDiscFaceBrush extends PerformBrush
 
     private void discNS(final SnipeData v, Block targetBlock)
     {
-        final int _bSize = v.getBrushSize();
-
-        for (int _x = _bSize; _x >= -_bSize; _x--)
+        for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
         {
-            for (int _y = _bSize; _y >= -_bSize; _y--)
+            for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
             {
-                this.current.perform(this.clampY(targetBlock.getX() + _x, targetBlock.getY() + _y, targetBlock.getZ()));
+                this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
             }
         }
 
@@ -56,13 +51,11 @@ public class VoxelDiscFaceBrush extends PerformBrush
 
     private void discEW(final SnipeData v, Block targetBlock)
     {
-        final int _bSize = v.getBrushSize();
-
-        for (int _x = _bSize; _x >= -_bSize; _x--)
+        for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
         {
-            for (int _y = _bSize; _y >= -_bSize; _y--)
+            for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
             {
-                this.current.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + _x, targetBlock.getZ() + _y));
+                this.current.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
             }
         }
 

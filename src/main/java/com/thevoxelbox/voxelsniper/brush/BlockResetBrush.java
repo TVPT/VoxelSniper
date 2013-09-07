@@ -46,21 +46,21 @@ public class BlockResetBrush extends Brush
 
     private void applyBrush(final SnipeData v)
     {
-        for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++)
+        for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
         {
-            for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++)
+            for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
             {
-                for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++)
+                for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
                 {
-                    final Block _block = this.getWorld().getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                    if (BlockResetBrush.DENIED_UPDATES.contains(_block.getType()))
+                    final Block block = this.getWorld().getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                    if (BlockResetBrush.DENIED_UPDATES.contains(block.getType()))
                     {
                         continue;
                     }
 
-                    final byte _oldData = _block.getData();
-                    _block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-                    _block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+                    final byte oldData = block.getData();
+                    block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
+                    block.setTypeIdAndData(block.getTypeId(), oldData, true);
                 }
             }
         }

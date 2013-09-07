@@ -42,75 +42,74 @@ public class BlobBrush extends PerformBrush
 
     private void digBlob(final SnipeData v)
     {
-        final int _bSize = v.getBrushSize();
-        final int _twoBrushSize = 2 * _bSize;
-        final int[][][] _splat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
-        final int[][][] _tempSplat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
+        final int brushSize = v.getBrushSize();
+        final int brushSizeDoubled = 2 * brushSize;
+        final int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
+        final int[][][] tempSplat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 
         this.checkValidGrowPercent(v);
 
         // Seed the array
-        for (int _x = _twoBrushSize; _x >= 0; _x--)
+        for (int x = brushSizeDoubled; x >= 0; x--)
         {
-            for (int _y = _twoBrushSize; _y >= 0; _y--)
+            for (int y = brushSizeDoubled; y >= 0; y--)
             {
-                for (int _z = _twoBrushSize; _z >= 0; _z--)
+                for (int z = brushSizeDoubled; z >= 0; z--)
                 {
-                    if ((_x == 0 || _y == 0 | _z == 0 || _x == _twoBrushSize || _y == _twoBrushSize || _z == _twoBrushSize) && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent)
+                    if ((x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled) && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent)
                     {
-                        _splat[_x][_y][_z] = 0;
+                        splat[x][y][z] = 0;
                     }
                     else
                     {
-                        _splat[_x][_y][_z] = 1;
+                        splat[x][y][z] = 1;
                     }
                 }
             }
         }
 
         // Grow the seed
-        for (int _r = 0; _r < _bSize; _r++)
+        for (int r = 0; r < brushSize; r++)
         {
-
-            for (int _x = _twoBrushSize; _x >= 0; _x--)
+            for (int x = brushSizeDoubled; x >= 0; x--)
             {
-                for (int _y = _twoBrushSize; _y >= 0; _y--)
+                for (int y = brushSizeDoubled; y >= 0; y--)
                 {
-                    for (int _z = _twoBrushSize; _z >= 0; _z--)
+                    for (int z = brushSizeDoubled; z >= 0; z--)
                     {
-                        _tempSplat[_x][_y][_z] = _splat[_x][_y][_z];
-                        double _growCheck = 0;
-                        if (_splat[_x][_y][_z] == 1)
+                        tempSplat[x][y][z] = splat[x][y][z];
+                        double growCheck = 0;
+                        if (splat[x][y][z] == 1)
                         {
-                            if (_x != 0 && _splat[_x - 1][_y][_z] == 0)
+                            if (x != 0 && splat[x - 1][y][z] == 0)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_y != 0 && _splat[_x][_y - 1][_z] == 0)
+                            if (y != 0 && splat[x][y - 1][z] == 0)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_z != 0 && _splat[_x][_y][_z - 1] == 0)
+                            if (z != 0 && splat[x][y][z - 1] == 0)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_x != 2 * _bSize && _splat[_x + 1][_y][_z] == 0)
+                            if (x != 2 * brushSize && splat[x + 1][y][z] == 0)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_y != 2 * _bSize && _splat[_x][_y + 1][_z] == 0)
+                            if (y != 2 * brushSize && splat[x][y + 1][z] == 0)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_z != 2 * _bSize && _splat[_x][_y][_z + 1] == 0)
+                            if (z != 2 * brushSize && splat[x][y][z + 1] == 0)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
                         }
 
-                        if (_growCheck >= 1 && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent)
+                        if (growCheck >= 1 && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent)
                         {
-                            _tempSplat[_x][_y][_z] = 0; // prevent bleed into splat
+                            tempSplat[x][y][z] = 0; // prevent bleed into splat
                         }
                     }
                 }
@@ -118,34 +117,34 @@ public class BlobBrush extends PerformBrush
 
             // shouldn't this just be splat = tempsplat;? -Gavjenks
             // integrate tempsplat back into splat at end of iteration
-            for (int _x = _twoBrushSize; _x >= 0; _x--)
+            for (int x = brushSizeDoubled; x >= 0; x--)
             {
-                for (int _y = _twoBrushSize; _y >= 0; _y--)
+                for (int y = brushSizeDoubled; y >= 0; y--)
                 {
-                    for (int _z = _twoBrushSize; _z >= 0; _z--)
+                    for (int z = brushSizeDoubled; z >= 0; z--)
                     {
-                        _splat[_x][_y][_z] = _tempSplat[_x][_y][_z];
+                        splat[x][y][z] = tempSplat[x][y][z];
                     }
                 }
             }
         }
 
-        final double _rPow = Math.pow(_bSize + 1, 2);
+        final double rSquared = Math.pow(brushSize + 1, 2);
 
         // Make the changes        
-        for (int _x = _twoBrushSize; _x >= 0; _x--)
+        for (int x = brushSizeDoubled; x >= 0; x--)
         {
-            final double _xPow = Math.pow(_x - _bSize - 1, 2);
+            final double xSquared = Math.pow(x - brushSize - 1, 2);
 
-            for (int _y = _twoBrushSize; _y >= 0; _y--)
+            for (int y = brushSizeDoubled; y >= 0; y--)
             {
-                final double _yPow = Math.pow(_y - _bSize - 1, 2);
+                final double ySquared = Math.pow(y - brushSize - 1, 2);
 
-                for (int _z = _twoBrushSize; _z >= 0; _z--)
+                for (int z = brushSizeDoubled; z >= 0; z--)
                 {
-                    if (_splat[_x][_y][_z] == 1 && _xPow + _yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow)
+                    if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared)
                     {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _z, this.getBlockPositionZ() - _bSize + _y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - brushSize + x, this.getBlockPositionY() - brushSize + z, this.getBlockPositionZ() - brushSize + y));
                     }
                 }
             }
@@ -156,93 +155,94 @@ public class BlobBrush extends PerformBrush
 
     private void growBlob(final SnipeData v)
     {
-        final int _bSize = v.getBrushSize();
-        final int _twoBrushSize = 2 * _bSize;
-        final int[][][] _splat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
-        final int[][][] _tempSplat = new int[_twoBrushSize + 1][_twoBrushSize + 1][_twoBrushSize + 1];
+        final int brushSize = v.getBrushSize();
+        final int brushSizeDoubled = 2 * brushSize;
+        final int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
+        final int[][][] tempSplat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 
         this.checkValidGrowPercent(v);
 
         // Seed the array
-        _splat[_bSize][_bSize][_bSize] = 1;
+        splat[brushSize][brushSize][brushSize] = 1;
 
         // Grow the seed
-        for (int _r = 0; _r < _bSize; _r++)
+        for (int r = 0; r < brushSize; r++)
         {
 
-            for (int _x = _twoBrushSize; _x >= 0; _x--)
+            for (int x = brushSizeDoubled; x >= 0; x--)
             {
-                for (int _y = _twoBrushSize; _y >= 0; _y--)
+                for (int y = brushSizeDoubled; y >= 0; y--)
                 {
-                    for (int _z = _twoBrushSize; _z >= 0; _z--)
+                    for (int z = brushSizeDoubled; z >= 0; z--)
                     {
-                        _tempSplat[_x][_y][_z] = _splat[_x][_y][_z];
-                        int _growCheck = 0;
-                        if (_splat[_x][_y][_z] == 0)
+                        tempSplat[x][y][z] = splat[x][y][z];
+                        int growCheck = 0;
+                        if (splat[x][y][z] == 0)
                         {
-                            if (_x != 0 && _splat[_x - 1][_y][_z] == 1)
+                            if (x != 0 && splat[x - 1][y][z] == 1)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_y != 0 && _splat[_x][_y - 1][_z] == 1)
+                            if (y != 0 && splat[x][y - 1][z] == 1)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_z != 0 && _splat[_x][_y][_z - 1] == 1)
+                            if (z != 0 && splat[x][y][z - 1] == 1)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_x != 2 * _bSize && _splat[_x + 1][_y][_z] == 1)
+                            if (x != 2 * brushSize && splat[x + 1][y][z] == 1)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_y != 2 * _bSize && _splat[_x][_y + 1][_z] == 1)
+                            if (y != 2 * brushSize && splat[x][y + 1][z] == 1)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
-                            if (_z != 2 * _bSize && _splat[_x][_y][_z + 1] == 1)
+                            if (z != 2 * brushSize && splat[x][y][z + 1] == 1)
                             {
-                                _growCheck++;
+                                growCheck++;
                             }
                         }
 
-                        if (_growCheck >= 1 && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent)
+                        if (growCheck >= 1 && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent)
                         {
-                            _tempSplat[_x][_y][_z] = 1; // prevent bleed into splat
+                            // prevent bleed into splat
+                            tempSplat[x][y][z] = 1;
                         }
                     }
                 }
             }
 
             // integrate tempsplat back into splat at end of iteration
-            for (int _x = _twoBrushSize; _x >= 0; _x--)
+            for (int x = brushSizeDoubled; x >= 0; x--)
             {
-                for (int _y = _twoBrushSize; _y >= 0; _y--)
+                for (int y = brushSizeDoubled; y >= 0; y--)
                 {
-                    for (int _z = _twoBrushSize; _z >= 0; _z--)
+                    for (int z = brushSizeDoubled; z >= 0; z--)
                     {
-                        _splat[_x][_y][_z] = _tempSplat[_x][_y][_z];
+                        splat[x][y][z] = tempSplat[x][y][z];
                     }
                 }
             }
         }
 
-        final double _rPow = Math.pow(_bSize + 1, 2);
+        final double rSquared = Math.pow(brushSize + 1, 2);
 
         // Make the changes
-        for (int _x = _twoBrushSize; _x >= 0; _x--)
+        for (int x = brushSizeDoubled; x >= 0; x--)
         {
-            final double _xPow = Math.pow(_x - _bSize - 1, 2);
+            final double xSquared = Math.pow(x - brushSize - 1, 2);
 
-            for (int _y = _twoBrushSize; _y >= 0; _y--)
+            for (int y = brushSizeDoubled; y >= 0; y--)
             {
-                final double _yPow = Math.pow(_y - _bSize - 1, 2);
+                final double ySquared = Math.pow(y - brushSize - 1, 2);
 
-                for (int _z = _twoBrushSize; _z >= 0; _z--)
+                for (int z = brushSizeDoubled; z >= 0; z--)
                 {
-                    if (_splat[_x][_y][_z] == 1 && _xPow + _yPow + Math.pow(_z - _bSize - 1, 2) <= _rPow)
+                    if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared)
                     {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _bSize + _x, this.getBlockPositionY() - _bSize + _z, this.getBlockPositionZ() - _bSize + _y));
+                        this.current.perform(this.clampY(this.getBlockPositionX() - brushSize + x, this.getBlockPositionY() - brushSize + z, this.getBlockPositionZ() - brushSize + y));
                     }
                 }
             }
@@ -270,35 +270,34 @@ public class BlobBrush extends PerformBrush
 
         vm.brushName(this.getName());
         vm.size();
-        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100f + "%");
+        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
                 return;
             }
-            if (_param.startsWith("g"))
+            if (parameter.startsWith("g"))
             {
-                final int _temp = Integer.parseInt(_param.replace("g", ""));
-                if (_temp >= GROW_PERCENT_MIN && _temp <= GROW_PERCENT_MAX)
+                final int temp = Integer.parseInt(parameter.replace("g", ""));
+                if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX)
                 {
-                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) _temp / 100f + "%");
-                    this.growPercent = _temp;
+                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
+                    this.growPercent = temp;
                 }
                 else
                 {
                     v.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
                 }
-                continue;
             }
             else
             {

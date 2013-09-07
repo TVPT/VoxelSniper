@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.Chunk;
 
 /**
@@ -25,24 +24,24 @@ public class RegenerateChunkBrush extends Brush
 
     private void generateChunk(final SnipeData v)
     {
-        final Chunk _chunk = this.getTargetBlock().getChunk();
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Chunk chunk = this.getTargetBlock().getChunk();
+        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _z = CHUNK_SIZE; _z >= 0; _z--)
+        for (int z = CHUNK_SIZE; z >= 0; z--)
         {
-            for (int _x = CHUNK_SIZE; _x >= 0; _x--)
+            for (int x = CHUNK_SIZE; x >= 0; x--)
             {
-                for (int _y = this.getWorld().getMaxHeight(); _y >= 0; _y--)
+                for (int y = this.getWorld().getMaxHeight(); y >= 0; y--)
                 {
-                    _undo.put(_chunk.getBlock(_x, _y, _z));
+                    undo.put(chunk.getBlock(x, y, z));
                 }
             }
         }
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
 
-        v.sendMessage("Generate that chunk! " + _chunk.getX() + " " + _chunk.getZ());
-        this.getWorld().regenerateChunk(_chunk.getX(), _chunk.getZ());
-        this.getWorld().refreshChunk(_chunk.getX(), _chunk.getZ());
+        v.sendMessage("Generate that chunk! " + chunk.getX() + " " + chunk.getZ());
+        this.getWorld().regenerateChunk(chunk.getX(), chunk.getZ());
+        this.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
     }
 
     @Override

@@ -47,11 +47,11 @@ public class TreeSnipeBrush extends Brush
 
     private int getYOffset()
     {
-        for (int _i = 1; _i < (getTargetBlock().getWorld().getMaxHeight() - 1 - getTargetBlock().getY()); _i++)
+        for (int i = 1; i < (getTargetBlock().getWorld().getMaxHeight() - 1 - getTargetBlock().getY()); i++)
         {
-            if (Objects.equal(getTargetBlock().getRelative(0, _i + 1, 0).getType(), Material.AIR))
+            if (Objects.equal(getTargetBlock().getRelative(0, i + 1, 0).getType(), Material.AIR))
             {
-                return _i;
+                return i;
             }
         }
         return 0;
@@ -59,23 +59,23 @@ public class TreeSnipeBrush extends Brush
 
     private void printTreeType(final Message vm)
     {
-        String _printout = "";
+        String printout = "";
 
-        boolean _delimiterHelper = true;
-        for (final TreeType _treeType : TreeType.values())
+        boolean delimiterHelper = true;
+        for (final TreeType treeType : TreeType.values())
         {
-            if (_delimiterHelper)
+            if (delimiterHelper)
             {
-                _delimiterHelper = false;
+                delimiterHelper = false;
             }
             else
             {
-                _printout += ", ";
+                printout += ", ";
             }
-            _printout += ((_treeType.equals(this.treeType)) ? ChatColor.GRAY + _treeType.name().toLowerCase() : ChatColor.DARK_GRAY + _treeType.name().toLowerCase()) + ChatColor.WHITE;
+            printout += ((treeType.equals(this.treeType)) ? ChatColor.GRAY + treeType.name().toLowerCase() : ChatColor.DARK_GRAY + treeType.name().toLowerCase()) + ChatColor.WHITE;
         }
 
-        vm.custom(_printout);
+        vm.custom(printout);
     }
 
     @Override
@@ -101,9 +101,9 @@ public class TreeSnipeBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            if (par[_i].equalsIgnoreCase("info"))
+            if (par[i].equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
                 v.sendMessage(ChatColor.AQUA + "/b t treetype");
@@ -112,10 +112,10 @@ public class TreeSnipeBrush extends Brush
             }
             try
             {
-                this.treeType = TreeType.valueOf(par[_i].toUpperCase());
+                this.treeType = TreeType.valueOf(par[i].toUpperCase());
                 this.printTreeType(v.getVoxelMessage());
             }
-            catch (final IllegalArgumentException _ex)
+            catch (final IllegalArgumentException exception)
             {
                 v.getVoxelMessage().brushMessage("No such tree type.");
             }

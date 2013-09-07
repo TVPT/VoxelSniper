@@ -87,25 +87,25 @@ public class SplineBrush extends PerformBrush
 
         try
         {
-            final Point _c = (c1.subtract(start)).multiply(3);
-            final Point _b = ((c2.subtract(c1)).multiply(3)).subtract(_c);
-            final Point _a = ((end.subtract(start)).subtract(_c)).subtract(_b);
+            final Point c = (c1.subtract(start)).multiply(3);
+            final Point b = ((c2.subtract(c1)).multiply(3)).subtract(c);
+            final Point a = ((end.subtract(start)).subtract(c)).subtract(b);
 
-            for (double _t = 0.0; _t < 1.0; _t += 0.01)
+            for (double t = 0.0; t < 1.0; t += 0.01)
             {
-                final int _px = (int) Math.round((_a.x * (_t * _t * _t)) + (_b.x * (_t * _t)) + (_c.x * _t) + this.endPts.get(0).getX());
-                final int _py = (int) Math.round((_a.y * (_t * _t * _t)) + (_b.y * (_t * _t)) + (_c.y * _t) + this.endPts.get(0).getY());
-                final int _pz = (int) Math.round((_a.z * (_t * _t * _t)) + (_b.z * (_t * _t)) + (_c.z * _t) + this.endPts.get(0).getZ());
+                final int px = (int) Math.round((a.getX() * (t * t * t)) + (b.getX() * (t * t)) + (c.getX() * t) + this.endPts.get(0).getX());
+                final int py = (int) Math.round((a.getY() * (t * t * t)) + (b.getY() * (t * t)) + (c.getY() * t) + this.endPts.get(0).getY());
+                final int pz = (int) Math.round((a.getZ() * (t * t * t)) + (b.getZ() * (t * t)) + (c.getZ() * t) + this.endPts.get(0).getZ());
 
-                if (!this.spline.contains(new Point(_px, _py, _pz)))
+                if (!this.spline.contains(new Point(px, py, pz)))
                 {
-                    this.spline.add(new Point(_px, _py, _pz));
+                    this.spline.add(new Point(px, py, pz));
                 }
             }
 
             return true;
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
             v.sendMessage(ChatColor.RED + "Not enough points selected; " + this.endPts.size() + " endpoints, " + this.ctrlPts.size() + " control points");
             return false;
@@ -119,9 +119,9 @@ public class SplineBrush extends PerformBrush
             return;
         }
 
-        for (final Point _pt : this.spline)
+        for (final Point point : this.spline)
         {
-            this.current.perform(this.clampY(_pt.x, _pt.y, _pt.z));
+            this.current.perform(this.clampY(point.getX(), point.getY(), point.getZ()));
         }
 
         v.storeUndo(this.current.getUndo());
@@ -183,9 +183,9 @@ public class SplineBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            if (par[_i].equalsIgnoreCase("info"))
+            if (par[i].equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Spline brush parameters");
                 v.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
@@ -194,46 +194,39 @@ public class SplineBrush extends PerformBrush
                 v.sendMessage(ChatColor.AQUA + "ren: Render curve from control points");
                 return;
             }
-            if (par[_i].equalsIgnoreCase("sc"))
+            if (par[i].equalsIgnoreCase("sc"))
             {
                 if (!this.ctrl)
                 {
                     this.set = false;
                     this.ctrl = true;
                     v.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
-                    continue;
                 }
                 else
                 {
                     this.ctrl = false;
                     v.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
-                    continue;
                 }
-
             }
-            else if (par[_i].equalsIgnoreCase("ss"))
+            else if (par[i].equalsIgnoreCase("ss"))
             {
                 if (!this.set)
                 {
                     this.set = true;
                     this.ctrl = false;
                     v.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
-                    continue;
                 }
                 else
                 {
                     this.set = false;
                     v.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
-                    continue;
                 }
-
             }
-            else if (par[_i].equalsIgnoreCase("clear"))
+            else if (par[i].equalsIgnoreCase("clear"))
             {
                 this.clear(v);
-
             }
-            else if (par[_i].equalsIgnoreCase("ren"))
+            else if (par[i].equalsIgnoreCase("ren"))
             {
                 if (this.spline(new Point(this.endPts.get(0)), new Point(this.endPts.get(1)), new Point(this.ctrlPts.get(0)), new Point(this.ctrlPts.get(1)), v))
                 {
@@ -262,37 +255,67 @@ public class SplineBrush extends PerformBrush
     // Vector class for splines
     protected class Point
     {
-        int x;
-        int y;
-        int z;
+        private int x;
+        private int y;
+        private int z;
 
         public Point(final Block b)
         {
-            this.x = b.getX();
-            this.y = b.getY();
-            this.z = b.getZ();
+            this.setX(b.getX());
+            this.setY(b.getY());
+            this.setZ(b.getZ());
         }
 
         public Point(final int x, final int y, final int z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.setX(x);
+            this.setY(y);
+            this.setZ(z);
         }
 
         public final Point add(final Point p)
         {
-            return new Point(this.x + p.x, this.y + p.y, this.z + p.z);
+            return new Point(this.getX() + p.getX(), this.getY() + p.getY(), this.getZ() + p.getZ());
         }
 
         public final Point multiply(final int scalar)
         {
-            return new Point(this.x * scalar, this.y * scalar, this.z * scalar);
+            return new Point(this.getX() * scalar, this.getY() * scalar, this.getZ() * scalar);
         }
 
         public final Point subtract(final Point p)
         {
-            return new Point(this.x - p.x, this.y - p.y, this.z - p.z);
+            return new Point(this.getX() - p.getX(), this.getY() - p.getY(), this.getZ() - p.getZ());
+        }
+
+        public int getX()
+        {
+            return x;
+        }
+
+        public void setX(int x)
+        {
+            this.x = x;
+        }
+
+        public int getY()
+        {
+            return y;
+        }
+
+        public void setY(int y)
+        {
+            this.y = y;
+        }
+
+        public int getZ()
+        {
+            return z;
+        }
+
+        public void setZ(int z)
+        {
+            this.z = z;
         }
     }
 }

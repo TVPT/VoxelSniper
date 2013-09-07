@@ -18,9 +18,9 @@ import org.bukkit.block.Block;
 public class EraserBrush extends Brush
 {
 
-    private static final Set<Material> exclusiveMaterials = EnumSet.of(
+    private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(
             Material.AIR, Material.STONE, Material.GRASS, Material.DIRT, Material.SAND, Material.GRAVEL, Material.SANDSTONE);
-    private static final Set<Material> exclusiveLiquids = EnumSet.of(
+    private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(
             Material.WATER, Material.STATIONARY_WATER, Material.LAVA, Material.STATIONARY_LAVA);
     private static int timesUsed = 0;
 
@@ -34,32 +34,32 @@ public class EraserBrush extends Brush
 
     private void doErase(final SnipeData v, final boolean keepWater)
     {
-        final int _brushSize = v.getBrushSize();
-        final int _twoBrushSize = 2 * _brushSize;
+        final int brushSize = v.getBrushSize();
+        final int brushSizeDoubled = 2 * brushSize;
         World world = this.getTargetBlock().getWorld();
-        final Undo _undo = new Undo(world.getName());
+        final Undo undo = new Undo(world.getName());
 
-        for (int _x = _twoBrushSize; _x >= 0; _x--)
+        for (int x = brushSizeDoubled; x >= 0; x--)
         {
-            int currentX = this.getBlockPositionX() - _brushSize + _x;
-            for (int _y = 0; _y <= _twoBrushSize; _y++)
+            int currentX = this.getBlockPositionX() - brushSize + x;
+            for (int y = 0; y <= brushSizeDoubled; y++)
             {
-                int currentY = this.getBlockPositionY() - _brushSize + _y;
-                for (int _z = _twoBrushSize; _z >= 0; _z--)
+                int currentY = this.getBlockPositionY() - brushSize + y;
+                for (int z = brushSizeDoubled; z >= 0; z--)
                 {
-                    int currentZ = this.getBlockPositionZ() - _brushSize + _z;
+                    int currentZ = this.getBlockPositionZ() - brushSize + z;
                     Block currentBlock = world.getBlockAt(currentX, currentY, currentZ);
-                    if (exclusiveMaterials.contains(currentBlock.getType())
-                            || (keepWater && exclusiveLiquids.contains(currentBlock.getType())))
+                    if (EXCLUSIVE_MATERIALS.contains(currentBlock.getType())
+                            || (keepWater && EXCLUSIVE_LIQUIDS.contains(currentBlock.getType())))
                     {
                         continue;
                     }
-                    _undo.put(currentBlock);
+                    undo.put(currentBlock);
                     currentBlock.setType(Material.AIR);
                 }
             }
         }
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override

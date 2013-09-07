@@ -44,47 +44,45 @@ public final class PaintingWrapper
      */
     public static void paint(final Player p, final boolean auto, final boolean back, final int choice)
     {
-        final boolean _auto = auto;
+        final Location location = p.getTargetBlock(null, 4).getLocation();
+        final Location location2 = p.getLocation();
+        final CraftWorld craftWorld = (CraftWorld) p.getWorld();
+        final double x1 = location.getX() + 0.4D;
+        final double y1 = location.getY() + 0.4D;
+        final double z1 = location.getZ() + 0.4D;
+        final double x2 = location2.getX();
+        final double y2 = location.getY() + 0.6D;
+        final double z2 = location2.getZ();
 
-        final Location _loc = p.getTargetBlock(null, 4).getLocation();
-        final Location _loc2 = p.getLocation();
-        final CraftWorld _craftWorld = (CraftWorld) p.getWorld();
-        final double _x1 = _loc.getX() + 0.4D;
-        final double _y1 = _loc.getY() + 0.4D;
-        final double _z1 = _loc.getZ() + 0.4D;
-        final double _x2 = _loc2.getX();
-        final double _y2 = _loc.getY() + 0.6D;
-        final double _z2 = _loc2.getZ();
+        final AxisAlignedBB bb = AxisAlignedBB.a(Math.min(x1, x2), y1, Math.min(z1, z2), Math.max(x1, x2), y2, Math.max(z1, z2));
 
-        final AxisAlignedBB _bb = AxisAlignedBB.a(Math.min(_x1, _x2), _y1, Math.min(_z1, _z2), Math.max(_x1, _x2), _y2, Math.max(_z1, _z2));
-
-        final List<?> _entities = _craftWorld.getHandle().getEntities(((CraftPlayer) p).getHandle(), _bb);
-        if ((_entities.size() == 1) && ((_entities.get(0) instanceof EntityPainting)))
+        final List<?> entities = craftWorld.getHandle().getEntities(((CraftPlayer) p).getHandle(), bb);
+        if ((entities.size() == 1) && ((entities.get(0) instanceof EntityPainting)))
         {
-            final EntityPainting _oldPainting = (EntityPainting) _entities.get(0);
-            final EntityPainting _newPainting = new EntityPainting(_craftWorld.getHandle(), _oldPainting.x, _oldPainting.y, _oldPainting.z, _oldPainting.direction % 4);
+            final EntityPainting oldPainting = (EntityPainting) entities.get(0);
+            final EntityPainting newPainting = new EntityPainting(craftWorld.getHandle(), oldPainting.x, oldPainting.y, oldPainting.z, oldPainting.direction % 4);
 
-            _newPainting.art = _oldPainting.art;
-            _oldPainting.dead = true;
+            newPainting.art = oldPainting.art;
+            oldPainting.dead = true;
 
-            if (_auto)
+            if (auto)
             {
-                final int _i = (PaintingWrapper.PAINTINGS.indexOf(_newPainting.art) + (back ? -1 : 1) + PaintingWrapper.PAINTINGS.size()) % PaintingWrapper.PAINTINGS.size();
-                _newPainting.art = (PaintingWrapper.PAINTINGS.get(_i));
-                _newPainting.setDirection(_newPainting.direction);
-                _newPainting.world.addEntity(_newPainting);
-                p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (_i));
+                final int i = (PaintingWrapper.PAINTINGS.indexOf(newPainting.art) + (back ? -1 : 1) + PaintingWrapper.PAINTINGS.size()) % PaintingWrapper.PAINTINGS.size();
+                newPainting.art = (PaintingWrapper.PAINTINGS.get(i));
+                newPainting.setDirection(newPainting.direction);
+                newPainting.world.addEntity(newPainting);
+                p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (i));
             }
             else
             {
                 try
                 {
-                    _newPainting.art = (PaintingWrapper.PAINTINGS.get(choice));
-                    _newPainting.setDirection(_newPainting.direction);
-                    _newPainting.world.addEntity(_newPainting);
+                    newPainting.art = (PaintingWrapper.PAINTINGS.get(choice));
+                    newPainting.setDirection(newPainting.direction);
+                    newPainting.world.addEntity(newPainting);
                     p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);
                 }
-                catch (final Exception _e)
+                catch (final Exception exception)
                 {
                     p.sendMessage(ChatColor.RED + "Your input was invalid somewhere.");
                 }

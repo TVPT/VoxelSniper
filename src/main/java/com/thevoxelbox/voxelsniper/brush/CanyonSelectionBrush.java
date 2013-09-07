@@ -28,12 +28,12 @@ public class CanyonSelectionBrush extends CanyonBrush
 
     private void execute(final SnipeData v)
     {
-        final Chunk _c = getTargetBlock().getChunk();
+        final Chunk chunk = getTargetBlock().getChunk();
 
         if (this.first)
         {
-            this.fx = _c.getX();
-            this.fz = _c.getZ();
+            this.fx = chunk.getX();
+            this.fz = chunk.getZ();
 
             v.sendMessage(ChatColor.YELLOW + "First point selected!");
             this.first = !this.first;
@@ -41,7 +41,7 @@ public class CanyonSelectionBrush extends CanyonBrush
         else
         {
             v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-            selection(Math.min(fx, _c.getX()), Math.min(fz, _c.getZ()), Math.max(fx, _c.getX()), Math.max(fz, _c.getZ()), v);
+            selection(Math.min(fx, chunk.getX()), Math.min(fz, chunk.getZ()), Math.max(fx, chunk.getX()), Math.max(fz, chunk.getZ()), v);
 
             this.first = !this.first;
         }
@@ -49,17 +49,17 @@ public class CanyonSelectionBrush extends CanyonBrush
 
     private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final SnipeData v)
     {
-        final Undo _undo = new Undo(getWorld().getName());
+        final Undo undo = new Undo(getWorld().getName());
 
-        for (int _x = lowX; _x <= highX; _x++)
+        for (int x = lowX; x <= highX; x++)
         {
-            for (int _z = lowZ; _z <= highZ; _z++)
+            for (int z = lowZ; z <= highZ; z++)
             {
-                canyon(getWorld().getChunkAt(_x, _z), _undo);
+                canyon(getWorld().getChunkAt(x, z), undo);
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CanyonSelectionBrush extends CanyonBrush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Shift Level set to " + this.getyLevel());
+        vm.custom(ChatColor.GREEN + "Shift Level set to " + this.getYLevel());
     }
 
     @Override

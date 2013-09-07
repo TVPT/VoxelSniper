@@ -65,73 +65,73 @@ public class StencilBrush extends Brush
             return;
         }
 
-        final Undo _undo = new Undo(getWorld().getName());
-        final File _file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+        final Undo undo = new Undo(getWorld().getName());
+        final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 
-        if (_file.exists())
+        if (file.exists())
         {
             try
             {
-                final DataInputStream _in = new DataInputStream(new BufferedInputStream(new FileInputStream(_file)));
+                final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 
-                this.x = _in.readShort();
-                this.z = _in.readShort();
-                this.y = _in.readShort();
+                this.x = in.readShort();
+                this.z = in.readShort();
+                this.y = in.readShort();
 
-                this.xRef = _in.readShort();
-                this.zRef = _in.readShort();
-                this.yRef = _in.readShort();
+                this.xRef = in.readShort();
+                this.zRef = in.readShort();
+                this.yRef = in.readShort();
 
-                final int _numRuns = _in.readInt();
+                final int numRuns = in.readInt();
 
-                int _currX = -this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
+                int currX = -this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
                 // corner, for example.
-                int _currZ = -this.zRef;
-                int _currY = -this.yRef;
-                int _id;
-                int _data;
+                int currZ = -this.zRef;
+                int currY = -this.yRef;
+                int id;
+                int data;
                 int blockPositionX = getTargetBlock().getX();
                 int blockPositionY = getTargetBlock().getY();
                 int blockPositionZ = getTargetBlock().getZ();
                 if (this.pasteOption == 0)
                 {
-                    for (int _i = 1; _i < _numRuns + 1; _i++)
+                    for (int i = 1; i < numRuns + 1; i++)
                     {
-                        if (_in.readBoolean())
+                        if (in.readBoolean())
                         {
-                            final int _numLoops = _in.readByte() + 128;
-                            _id = (_in.readByte() + 128);
-                            _data = (_in.readByte() + 128);
-                            for (int _j = 0; _j < _numLoops; _j++)
+                            final int numLoops = in.readByte() + 128;
+                            id = (in.readByte() + 128);
+                            data = (in.readByte() + 128);
+                            for (int j = 0; j < numLoops; j++)
                             {
-                                _undo.put(this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ));
-                                this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).setTypeIdAndData(_id, (byte) _data, false);
-                                _currX++;
-                                if (_currX == this.x - this.xRef)
+                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
+                                currX++;
+                                if (currX == this.x - this.xRef)
                                 {
-                                    _currX = -this.xRef;
-                                    _currZ++;
-                                    if (_currZ == this.z - this.zRef)
+                                    currX = -this.xRef;
+                                    currZ++;
+                                    if (currZ == this.z - this.zRef)
                                     {
-                                        _currZ = -this.zRef;
-                                        _currY++;
+                                        currZ = -this.zRef;
+                                        currY++;
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            _undo.put(this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ));
-                            this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).setTypeIdAndData((_in.readByte() + 128), (byte) (_in.readByte() + 128), false);
-                            _currX++;
-                            if (_currX == this.x - this.xRef)
+                            undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                            this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData((in.readByte() + 128), (byte) (in.readByte() + 128), false);
+                            currX++;
+                            if (currX == this.x - this.xRef)
                             {
-                                _currX = -this.xRef;
-                                _currZ++;
-                                if (_currZ == this.z - this.zRef)
+                                currX = -this.xRef;
+                                currZ++;
+                                if (currZ == this.z - this.zRef)
                                 {
-                                    _currZ = -this.zRef;
-                                    _currY++;
+                                    currZ = -this.zRef;
+                                    currY++;
                                 }
                             }
                         }
@@ -139,52 +139,52 @@ public class StencilBrush extends Brush
                 }
                 else if (this.pasteOption == 1)
                 {
-                    for (int _i = 1; _i < _numRuns + 1; _i++)
+                    for (int i = 1; i < numRuns + 1; i++)
                     {
-                        if (_in.readBoolean())
+                        if (in.readBoolean())
                         {
-                            final int _numLoops = _in.readByte() + 128;
-                            _id = (_in.readByte() + 128);
-                            _data = (_in.readByte() + 128);
-                            for (int _j = 0; _j < _numLoops; _j++)
+                            final int numLoops = in.readByte() + 128;
+                            id = (in.readByte() + 128);
+                            data = (in.readByte() + 128);
+                            for (int j = 0; j < numLoops; j++)
                             {
-                                if (_id != 0 && this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).getTypeId() == 0)
+                                if (id != 0 && this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).getTypeId() == 0)
                                 {
-                                    _undo.put(this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ));
-                                    this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                                    undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                    this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
                                 }
-                                _currX++;
-                                if (_currX == this.x - this.xRef)
+                                currX++;
+                                if (currX == this.x - this.xRef)
                                 {
-                                    _currX = -this.xRef;
-                                    _currZ++;
-                                    if (_currZ == this.z - this.zRef)
+                                    currX = -this.xRef;
+                                    currZ++;
+                                    if (currZ == this.z - this.zRef)
                                     {
-                                        _currZ = -this.zRef;
-                                        _currY++;
+                                        currZ = -this.zRef;
+                                        currY++;
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            _id = (_in.readByte() + 128);
-                            _data = (_in.readByte() + 128);
-                            if (_id != 0 && this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).getTypeId() == 0)
+                            id = (in.readByte() + 128);
+                            data = (in.readByte() + 128);
+                            if (id != 0 && this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).getTypeId() == 0)
                             {
-                                _undo.put(this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ));
+                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
                                 // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).setTypeIdAndData(_id, (byte) (_data), false);
+                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
                             }
-                            _currX++;
-                            if (_currX == this.x - this.xRef)
+                            currX++;
+                            if (currX == this.x - this.xRef)
                             {
-                                _currX = -this.xRef;
-                                _currZ++;
-                                if (_currZ == this.z - this.zRef)
+                                currX = -this.xRef;
+                                currZ++;
+                                if (currZ == this.z - this.zRef)
                                 {
-                                    _currZ = -this.zRef;
-                                    _currY++;
+                                    currZ = -this.zRef;
+                                    currY++;
                                 }
                             }
                         }
@@ -192,64 +192,64 @@ public class StencilBrush extends Brush
                 }
                 else
                 { // replace
-                    for (int _i = 1; _i < _numRuns + 1; _i++)
+                    for (int i = 1; i < numRuns + 1; i++)
                     {
-                        if (_in.readBoolean())
+                        if (in.readBoolean())
                         {
-                            final int _numLoops = _in.readByte() + 128;
-                            _id = (_in.readByte() + 128);
-                            _data = (_in.readByte() + 128);
-                            for (int _j = 0; _j < (_numLoops); _j++)
+                            final int numLoops = in.readByte() + 128;
+                            id = (in.readByte() + 128);
+                            data = (in.readByte() + 128);
+                            for (int j = 0; j < (numLoops); j++)
                             {
-                                if (_id != 0)
+                                if (id != 0)
                                 {
-                                    _undo.put(this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ));
-                                    this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                    undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                    this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
                                 }
-                                _currX++;
-                                if (_currX == this.x - this.xRef)
+                                currX++;
+                                if (currX == this.x - this.xRef)
                                 {
-                                    _currX = -this.xRef;
-                                    _currZ++;
-                                    if (_currZ == this.z - this.zRef)
+                                    currX = -this.xRef;
+                                    currZ++;
+                                    if (currZ == this.z - this.zRef)
                                     {
-                                        _currZ = -this.zRef;
-                                        _currY++;
+                                        currZ = -this.zRef;
+                                        currY++;
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            _id = (_in.readByte() + 128);
-                            _data = (_in.readByte() + 128);
-                            if (_id != 0)
+                            id = (in.readByte() + 128);
+                            data = (in.readByte() + 128);
+                            if (id != 0)
                             {
-                                _undo.put(this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ));
-                                this.clampY(blockPositionX + _currX, blockPositionY + _currY, blockPositionZ + _currZ).setTypeIdAndData(_id, (byte) _data, false);
+                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
                             }
-                            _currX++;
-                            if (_currX == this.x)
+                            currX++;
+                            if (currX == this.x)
                             {
-                                _currX = 0;
-                                _currZ++;
-                                if (_currZ == this.z)
+                                currX = 0;
+                                currZ++;
+                                if (currZ == this.z)
                                 {
-                                    _currZ = 0;
-                                    _currY++;
+                                    currZ = 0;
+                                    currY++;
                                 }
                             }
                         }
                     }
                 }
-                _in.close();
-                v.storeUndo(_undo);
+                in.close();
+                v.storeUndo(undo);
 
             }
-            catch (final Exception _e)
+            catch (final Exception exception)
             {
                 v.sendMessage(ChatColor.RED + "Something went wrong.");
-                _e.printStackTrace();
+                exception.printStackTrace();
             }
         }
         else
@@ -261,7 +261,7 @@ public class StencilBrush extends Brush
     private void stencilSave(final SnipeData v)
     {
 
-        final File _file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+        final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
         try
         {
             this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
@@ -277,18 +277,18 @@ public class StencilBrush extends Brush
                 return;
             }
 
-            Files.createParentDirs(_file);
-            _file.createNewFile();
-            final DataOutputStream _out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(_file)));
+            Files.createParentDirs(file);
+            file.createNewFile();
+            final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
             int blockPositionX = (this.firstPoint[0] > this.secondPoint[0]) ? this.secondPoint[0] : this.firstPoint[0];
             int blockPositionZ = (this.firstPoint[1] > this.secondPoint[1]) ? this.secondPoint[1] : this.firstPoint[1];
             int blockPositionY = (this.firstPoint[2] > this.secondPoint[2]) ? this.secondPoint[2] : this.firstPoint[2];
-            _out.writeShort(this.x);
-            _out.writeShort(this.z);
-            _out.writeShort(this.y);
-            _out.writeShort(this.xRef);
-            _out.writeShort(this.zRef);
-            _out.writeShort(this.yRef);
+            out.writeShort(this.x);
+            out.writeShort(this.z);
+            out.writeShort(this.y);
+            out.writeShort(this.xRef);
+            out.writeShort(this.zRef);
+            out.writeShort(this.yRef);
 
             v.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
 
@@ -296,71 +296,71 @@ public class StencilBrush extends Brush
             this.dataArray = new byte[this.x * this.z * this.y];
             this.runSizeArray = new byte[this.x * this.z * this.y];
 
-            byte _lastid = (byte) (this.getWorld().getBlockTypeIdAt(blockPositionX, blockPositionY, blockPositionZ) - 128);
-            byte _lastdata = (byte) (this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() - 128);
-            byte _thisid;
-            byte _thisdata;
-            int _counter = 0;
-            int _arrayIndex = 0;
-            for (int _y = 0; _y < this.y; _y++)
+            byte lastId = (byte) (this.getWorld().getBlockTypeIdAt(blockPositionX, blockPositionY, blockPositionZ) - 128);
+            byte lastData = (byte) (this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() - 128);
+            byte thisId;
+            byte thisData;
+            int counter = 0;
+            int arrayIndex = 0;
+            for (int y = 0; y < this.y; y++)
             {
-                for (int _z = 0; _z < this.z; _z++)
+                for (int z = 0; z < this.z; z++)
                 {
-                    for (int _x = 0; _x < this.x; _x++)
+                    for (int x = 0; x < this.x; x++)
                     {
-                        Block currentBlock = getWorld().getBlockAt(blockPositionX + _x, blockPositionY + _y, blockPositionZ + _z);
-                        _thisid = (byte) (currentBlock.getTypeId() - 128);
-                        _thisdata = (byte) (currentBlock.getData() - 128);
-                        if (_thisid != _lastid || _thisdata != _lastdata || _counter == 255)
+                        Block currentBlock = getWorld().getBlockAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z);
+                        thisId = (byte) (currentBlock.getTypeId() - 128);
+                        thisData = (byte) (currentBlock.getData() - 128);
+                        if (thisId != lastId || thisData != lastData || counter == 255)
                         {
-                            this.blockArray[_arrayIndex] = _lastid;
-                            this.dataArray[_arrayIndex] = _lastdata;
-                            this.runSizeArray[_arrayIndex] = (byte) (_counter - 128);
-                            _arrayIndex++;
-                            _counter = 1;
-                            _lastid = _thisid;
-                            _lastdata = _thisdata;
+                            this.blockArray[arrayIndex] = lastId;
+                            this.dataArray[arrayIndex] = lastData;
+                            this.runSizeArray[arrayIndex] = (byte) (counter - 128);
+                            arrayIndex++;
+                            counter = 1;
+                            lastId = thisId;
+                            lastData = thisData;
                         }
                         else
                         {
-                            _counter++;
-                            _lastid = _thisid;
-                            _lastdata = _thisdata;
+                            counter++;
+                            lastId = thisId;
+                            lastData = thisData;
                         }
                     }
                 }
             }
-            this.blockArray[_arrayIndex] = _lastid; // saving last run, which will always be left over.
-            this.dataArray[_arrayIndex] = _lastdata;
-            this.runSizeArray[_arrayIndex] = (byte) (_counter - 128);
+            this.blockArray[arrayIndex] = lastId; // saving last run, which will always be left over.
+            this.dataArray[arrayIndex] = lastData;
+            this.runSizeArray[arrayIndex] = (byte) (counter - 128);
 
-            _out.writeInt(_arrayIndex);
+            out.writeInt(arrayIndex);
             // v.sendMessage("number of runs = " + arrayIndex);
-            for (int _i = 0; _i < _arrayIndex + 1; _i++)
+            for (int i = 0; i < arrayIndex + 1; i++)
             {
-                if (this.runSizeArray[_i] > -127)
+                if (this.runSizeArray[i] > -127)
                 {
-                    _out.writeBoolean(true);
-                    _out.writeByte(this.runSizeArray[_i]);
-                    _out.writeByte(this.blockArray[_i]);
-                    _out.writeByte(this.dataArray[_i]);
+                    out.writeBoolean(true);
+                    out.writeByte(this.runSizeArray[i]);
+                    out.writeByte(this.blockArray[i]);
+                    out.writeByte(this.dataArray[i]);
                 }
                 else
                 {
-                    _out.writeBoolean(false);
-                    _out.writeByte(this.blockArray[_i]);
-                    _out.writeByte(this.dataArray[_i]);
+                    out.writeBoolean(false);
+                    out.writeByte(this.blockArray[i]);
+                    out.writeByte(this.dataArray[i]);
                 }
             }
 
             v.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
-            _out.close();
+            out.close();
 
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
             v.sendMessage(ChatColor.RED + "Something went wrong.");
-            _e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -447,8 +447,8 @@ public class StencilBrush extends Brush
         try
         {
             this.filename = par[1 + this.pasteParam];
-            final File _file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
-            if (_file.exists())
+            final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+            if (file.exists())
             {
                 v.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
             }
@@ -457,7 +457,7 @@ public class StencilBrush extends Brush
                 v.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
             }
         }
-        catch (final Exception _ex)
+        catch (final Exception exception)
         {
             v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
         }

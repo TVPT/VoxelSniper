@@ -1,20 +1,19 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Moves a selection blockPositionY a certain amount.
@@ -24,121 +23,6 @@ import org.bukkit.block.BlockState;
  */
 public class MoveBrush extends Brush
 {
-    /**
-     * Selection Helper class.
-     *
-     * @author MikeMatrix
-     */
-    private class Selection
-    {
-        /**
-         * Maximum amount of Blocks allowed blockPositionY the Selection.
-         */
-        private static final int MAX_BLOCK_COUNT = 5000000;
-        /**
-         *
-         */
-        private Location location1 = null;
-        /**
-         *
-         */
-        private Location location2 = null;
-
-        /**
-         * Calculated BlockStates of the selection.
-         */
-        private final ArrayList<BlockState> blockStates = new ArrayList<BlockState>();
-
-        /**
-         * Calculates region, then saves all Blocks as BlockState.
-         *
-         * @return boolean success.
-         *
-         * @throws Exception
-         *         Message to be sent to the player.
-         */
-        public boolean calculateRegion() throws Exception
-        {
-            if (this.location1 != null && this.location2 != null)
-            {
-                if (this.location1.getWorld().equals(this.location2.getWorld()))
-                {
-                    final int _lowx = ((this.location1.getBlockX() <= this.location2.getBlockX()) ? this.location1.getBlockX() : this.location2.getBlockX());
-                    final int _lowy = (this.location1.getBlockY() <= this.location2.getBlockY()) ? this.location1.getBlockY() : this.location2.getBlockY();
-                    final int _lowz = (this.location1.getBlockZ() <= this.location2.getBlockZ()) ? this.location1.getBlockZ() : this.location2.getBlockZ();
-                    final int _highx = (this.location1.getBlockX() >= this.location2.getBlockX()) ? this.location1.getBlockX() : this.location2.getBlockX();
-                    final int _highy = (this.location1.getBlockY() >= this.location2.getBlockY()) ? this.location1.getBlockY() : this.location2.getBlockY();
-                    final int _highz = (this.location1.getBlockZ() >= this.location2.getBlockZ()) ? this.location1.getBlockZ() : this.location2.getBlockZ();
-                    if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > Selection.MAX_BLOCK_COUNT)
-                    {
-                        throw new Exception(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
-                    }
-                    final World _world = this.location1.getWorld();
-                    for (int _y = _lowy; _y <= _highy; _y++)
-                    {
-                        for (int _x = _lowx; _x <= _highx; _x++)
-                        {
-                            for (int _z = _lowz; _z <= _highz; _z++)
-                            {
-                                this.blockStates.add(_world.getBlockAt(_x, _y, _z).getState());
-                            }
-                        }
-                    }
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-         * @return ArrayList<BlockState> calculated BlockStates of defined region.
-         */
-        public ArrayList<BlockState> getBlockStates()
-        {
-            return this.blockStates;
-        }
-
-        /**
-         * @return Location
-         */
-        public Location getLocation1()
-        {
-            return this.location1;
-        }
-
-        /**
-         * @return Location
-         */
-        public Location getLocation2()
-        {
-            return this.location2;
-        }
-
-        /**
-         * @param location1
-         */
-        public void setLocation1(final Location location1)
-        {
-            this.location1 = location1;
-        }
-
-        /**
-         * @param location2
-         */
-        public void setLocation2(final Location location2)
-        {
-            this.location2 = location2;
-        }
-    }
-
-    /**
-     * Saved selection.
-     */
-    private Selection selection = null;
-    /**
-     * Saved direction.
-     */
-    private final int[] moveDirections = { 0, 0, 0 };
     /**
      * Breakable Blocks to determine if no-physics should be used.
      */
@@ -187,6 +71,14 @@ public class MoveBrush extends Brush
     }
 
     private static int timesUsed = 0;
+    /**
+     * Saved direction.
+     */
+    private final int[] moveDirections = {0, 0, 0};
+    /**
+     * Saved selection.
+     */
+    private Selection selection = null;
 
     /**
      *
@@ -195,7 +87,6 @@ public class MoveBrush extends Brush
     {
         this.setName("Move");
     }
-
 
     /**
      * Moves the given selection blockPositionY the amount given in direction and saves an undo for the player.
@@ -208,51 +99,51 @@ public class MoveBrush extends Brush
     {
         if (selection.getBlockStates().size() > 0)
         {
-            final World _world = selection.getBlockStates().get(0).getWorld();
+            final World world = selection.getBlockStates().get(0).getWorld();
 
-            final Undo _vundo = new Undo(_world.getName());
-            final HashSet<Block> _undoSet = new HashSet<Block>();
+            final Undo undo = new Undo(world.getName());
+            final HashSet<Block> undoSet = new HashSet<Block>();
 
-            final Selection _newSelection = new Selection();
-            final Location _movedLocation1 = selection.getLocation1();
-            _movedLocation1.add(direction[0], direction[1], direction[2]);
-            final Location _movedLocation2 = selection.getLocation2();
-            _movedLocation2.add(direction[0], direction[1], direction[2]);
-            _newSelection.setLocation1(_movedLocation1);
-            _newSelection.setLocation2(_movedLocation2);
+            final Selection newSelection = new Selection();
+            final Location movedLocation1 = selection.getLocation1();
+            movedLocation1.add(direction[0], direction[1], direction[2]);
+            final Location movedLocation2 = selection.getLocation2();
+            movedLocation2.add(direction[0], direction[1], direction[2]);
+            newSelection.setLocation1(movedLocation1);
+            newSelection.setLocation2(movedLocation2);
             try
             {
-                _newSelection.calculateRegion();
+                newSelection.calculateRegion();
             }
-            catch (final Exception _ex)
+            catch (final Exception exception)
             {
                 v.getVoxelMessage().brushMessage("The new Selection has more blocks than the original selection. This should never happen!");
             }
 
-            for (final BlockState _blockState : selection.getBlockStates())
+            for (final BlockState blockState : selection.getBlockStates())
             {
-                _undoSet.add(_blockState.getBlock());
+                undoSet.add(blockState.getBlock());
             }
-            for (final BlockState _blockState : _newSelection.getBlockStates())
+            for (final BlockState blockState : newSelection.getBlockStates())
             {
-                _undoSet.add(_blockState.getBlock());
+                undoSet.add(blockState.getBlock());
             }
 
-            for (final Block _block : _undoSet)
+            for (final Block block : undoSet)
             {
-                _vundo.put(_block);
+                undo.put(block);
             }
-            v.storeUndo(_vundo);
+            v.storeUndo(undo);
 
-            for (final BlockState _blockState : selection.getBlockStates())
+            for (final BlockState blockState : selection.getBlockStates())
             {
-                _blockState.getBlock().setType(Material.AIR);
+                blockState.getBlock().setType(Material.AIR);
             }
-            for (final BlockState _blockState : selection.getBlockStates())
+            for (final BlockState blockState : selection.getBlockStates())
             {
-                final Block _affectedBlock = _world.getBlockAt(_blockState.getX() + direction[0], _blockState.getY() + direction[1], _blockState.getZ() + direction[2]);
-                _affectedBlock.setTypeId(_blockState.getTypeId(), !MoveBrush.BREAKABLE_MATERIALS.contains(_blockState.getType()));
-                _affectedBlock.setData(_blockState.getRawData());
+                final Block affectedBlock = world.getBlockAt(blockState.getX() + direction[0], blockState.getY() + direction[1], blockState.getZ() + direction[2]);
+                affectedBlock.setTypeId(blockState.getTypeId(), !MoveBrush.BREAKABLE_MATERIALS.contains(blockState.getType()));
+                affectedBlock.setData(blockState.getRawData());
             }
         }
     }
@@ -275,9 +166,9 @@ public class MoveBrush extends Brush
                 this.selection = null;
             }
         }
-        catch (final Exception _ex)
+        catch (final Exception exception)
         {
-            v.sendMessage(_ex.getMessage());
+            v.sendMessage(exception.getMessage());
         }
     }
 
@@ -299,9 +190,9 @@ public class MoveBrush extends Brush
                 this.selection = null;
             }
         }
-        catch (final Exception _ex)
+        catch (final Exception exception)
         {
-            v.sendMessage(_ex.getMessage());
+            v.sendMessage(exception.getMessage());
         }
     }
 
@@ -315,9 +206,9 @@ public class MoveBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            if (par[_i].equalsIgnoreCase("info"))
+            if (par[i].equalsIgnoreCase("info"))
             {
                 v.getVoxelMessage().custom(ChatColor.GOLD + this.getName() + " Parameters:");
                 v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
@@ -326,7 +217,7 @@ public class MoveBrush extends Brush
                 v.getVoxelMessage().custom(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
                 v.getVoxelMessage().custom(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
             }
-            if (par[_i].equalsIgnoreCase("reset"))
+            if (par[i].equalsIgnoreCase("reset"))
             {
                 this.moveDirections[0] = 0;
                 this.moveDirections[1] = 0;
@@ -335,19 +226,19 @@ public class MoveBrush extends Brush
                 v.getVoxelMessage().custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
                 v.getVoxelMessage().custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
             }
-            if (par[_i].toLowerCase().startsWith("x"))
+            if (par[i].toLowerCase().startsWith("x"))
             {
-                this.moveDirections[0] = Integer.valueOf(par[_i].substring(1));
+                this.moveDirections[0] = Integer.valueOf(par[i].substring(1));
                 v.getVoxelMessage().custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
             }
-            else if (par[_i].toLowerCase().startsWith("y"))
+            else if (par[i].toLowerCase().startsWith("y"))
             {
-                this.moveDirections[1] = Integer.valueOf(par[_i].substring(1));
+                this.moveDirections[1] = Integer.valueOf(par[i].substring(1));
                 v.getVoxelMessage().custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
             }
-            else if (par[_i].toLowerCase().startsWith("z"))
+            else if (par[i].toLowerCase().startsWith("z"))
             {
-                this.moveDirections[2] = Integer.valueOf(par[_i].substring(1));
+                this.moveDirections[2] = Integer.valueOf(par[i].substring(1));
                 v.getVoxelMessage().custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
             }
         }
@@ -363,5 +254,109 @@ public class MoveBrush extends Brush
     public final void setTimesUsed(final int tUsed)
     {
         MoveBrush.timesUsed = tUsed;
+    }
+
+    /**
+     * Selection Helper class.
+     *
+     * @author MikeMatrix
+     */
+    private class Selection
+    {
+        /**
+         * Maximum amount of Blocks allowed blockPositionY the Selection.
+         */
+        private static final int MAX_BLOCK_COUNT = 5000000;
+        /**
+         * Calculated BlockStates of the selection.
+         */
+        private final ArrayList<BlockState> blockStates = new ArrayList<BlockState>();
+        /**
+         *
+         */
+        private Location location1 = null;
+        /**
+         *
+         */
+        private Location location2 = null;
+
+        /**
+         * Calculates region, then saves all Blocks as BlockState.
+         *
+         * @return boolean success.
+         * @throws Exception Message to be sent to the player.
+         */
+        public boolean calculateRegion() throws Exception
+        {
+            if (this.location1 != null && this.location2 != null)
+            {
+                if (this.location1.getWorld().equals(this.location2.getWorld()))
+                {
+                    final int lowX = ((this.location1.getBlockX() <= this.location2.getBlockX()) ? this.location1.getBlockX() : this.location2.getBlockX());
+                    final int lowY = (this.location1.getBlockY() <= this.location2.getBlockY()) ? this.location1.getBlockY() : this.location2.getBlockY();
+                    final int lowZ = (this.location1.getBlockZ() <= this.location2.getBlockZ()) ? this.location1.getBlockZ() : this.location2.getBlockZ();
+                    final int highX = (this.location1.getBlockX() >= this.location2.getBlockX()) ? this.location1.getBlockX() : this.location2.getBlockX();
+                    final int highY = (this.location1.getBlockY() >= this.location2.getBlockY()) ? this.location1.getBlockY() : this.location2.getBlockY();
+                    final int highZ = (this.location1.getBlockZ() >= this.location2.getBlockZ()) ? this.location1.getBlockZ() : this.location2.getBlockZ();
+                    if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > Selection.MAX_BLOCK_COUNT)
+                    {
+                        throw new Exception(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+                    }
+                    final World world = this.location1.getWorld();
+                    for (int y = lowY; y <= highY; y++)
+                    {
+                        for (int x = lowX; x <= highX; x++)
+                        {
+                            for (int z = lowZ; z <= highZ; z++)
+                            {
+                                this.blockStates.add(world.getBlockAt(x, y, z).getState());
+                            }
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * @return ArrayList<BlockState> calculated BlockStates of defined region.
+         */
+        public ArrayList<BlockState> getBlockStates()
+        {
+            return this.blockStates;
+        }
+
+        /**
+         * @return Location
+         */
+        public Location getLocation1()
+        {
+            return this.location1;
+        }
+
+        /**
+         * @param location1
+         */
+        public void setLocation1(final Location location1)
+        {
+            this.location1 = location1;
+        }
+
+        /**
+         * @return Location
+         */
+        public Location getLocation2()
+        {
+            return this.location2;
+        }
+
+        /**
+         * @param location2
+         */
+        public void setLocation2(final Location location2)
+        {
+            this.location2 = location2;
+        }
     }
 }

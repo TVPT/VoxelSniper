@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * A brush that creates a solid ball.
@@ -14,6 +15,8 @@ import org.bukkit.ChatColor;
  */
 public class BallBrush extends PerformBrush
 {
+    public static final double TRUE_CIRCLE_ON_VALUE = 0.5;
+    public static final int TRUE_CIRCLE_OFF_VALUE = 0;
     private static int timesUsed = 0;
     private double trueCircle = 0;
 
@@ -25,56 +28,59 @@ public class BallBrush extends PerformBrush
         this.setName("Ball");
     }
 
-    private void ball(final SnipeData v)
+    private void ball(final SnipeData v, Block targetBlock)
     {
-        final int _bSize = v.getBrushSize();
-        final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 
-        this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ()));
+        int blockPositionX = targetBlock.getX();
+        int blockPositionY = targetBlock.getY();
+        int blockPositionZ = targetBlock.getZ();
+        this.current.perform(targetBlock);
 
-        for (int _z = 1; _z <= _bSize; _z++)
+        for (int z = 1; z <= brushSize; z++)
         {
-            final double _zPow = Math.pow(_z, 2);
+            final double zSquared = Math.pow(z, 2);
 
-            this.current.perform(this.clampY(this.getBlockPositionX() + _z, this.getBlockPositionY(), this.getBlockPositionZ()));
-            this.current.perform(this.clampY(this.getBlockPositionX() - _z, this.getBlockPositionY(), this.getBlockPositionZ()));
-            this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _z, this.getBlockPositionZ()));
-            this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - _z, this.getBlockPositionZ()));
-            this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() + _z));
-            this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() - _z));
+            this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ));
+            this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ));
+            this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ));
+            this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ));
+            this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ + z));
+            this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ - z));
 
-            for (int _x = 1; _x <= _bSize; _x++)
+            for (int x = 1; x <= brushSize; x++)
             {
-                final double _xPow = Math.pow(_x, 2);
+                final double xSquared = Math.pow(x, 2);
 
-                if (_zPow + Math.pow(_x, 2) <= _bPow)
+                if (zSquared + xSquared <= brushSizeSquared)
                 {
-                    this.current.perform(this.clampY(this.getBlockPositionX() + _z, this.getBlockPositionY(), this.getBlockPositionZ() + _x));
-                    this.current.perform(this.clampY(this.getBlockPositionX() + _z, this.getBlockPositionY(), this.getBlockPositionZ() - _x));
-                    this.current.perform(this.clampY(this.getBlockPositionX() - _z, this.getBlockPositionY(), this.getBlockPositionZ() + _x));
-                    this.current.perform(this.clampY(this.getBlockPositionX() - _z, this.getBlockPositionY(), this.getBlockPositionZ() - _x));
-                    this.current.perform(this.clampY(this.getBlockPositionX() + _z, this.getBlockPositionY() + _x, this.getBlockPositionZ()));
-                    this.current.perform(this.clampY(this.getBlockPositionX() + _z, this.getBlockPositionY() - _x, this.getBlockPositionZ()));
-                    this.current.perform(this.clampY(this.getBlockPositionX() - _z, this.getBlockPositionY() + _x, this.getBlockPositionZ()));
-                    this.current.perform(this.clampY(this.getBlockPositionX() - _z, this.getBlockPositionY() - _x, this.getBlockPositionZ()));
-                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _z, this.getBlockPositionZ() + _x));
-                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + _z, this.getBlockPositionZ() - _x));
-                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - _z, this.getBlockPositionZ() + _x));
-                    this.current.perform(this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - _z, this.getBlockPositionZ() - _x));
+                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ + x));
+                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ - x));
+                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ + x));
+                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ - x));
+                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY + x, blockPositionZ));
+                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY - x, blockPositionZ));
+                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY + x, blockPositionZ));
+                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY - x, blockPositionZ));
+                    this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ + x));
+                    this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ - x));
+                    this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ + x));
+                    this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ - x));
                 }
 
-                for (int _y = 1; _y <= _bSize; _y++)
+                for (int y = 1; y <= brushSize; y++)
                 {
-                    if ((_xPow + Math.pow(_y, 2) + _zPow) <= _bPow)
+                    if ((xSquared + Math.pow(y, 2) + zSquared) <= brushSizeSquared)
                     {
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z));
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() - _z));
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _z));
-                        this.current.perform(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _z));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() + _z));
-                        this.current.perform(this.clampY(this.getBlockPositionX() - _x, this.getBlockPositionY() - _y, this.getBlockPositionZ() - _z));
+                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z));
+                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z));
+                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z));
+                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z));
+                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z));
+                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z));
+                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z));
+                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z));
                     }
                 }
             }
@@ -86,13 +92,13 @@ public class BallBrush extends PerformBrush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.ball(v);
+        this.ball(v, this.getTargetBlock());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.ball(v);
+        this.ball(v, this.getLastBlock());
     }
 
     @Override
@@ -105,27 +111,25 @@ public class BallBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
                 return;
             }
-            else if (_param.startsWith("true"))
+            else if (parameter.startsWith("true"))
             {
-                this.trueCircle = 0.5;
+                this.trueCircle = TRUE_CIRCLE_ON_VALUE;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
             }
-            else if (_param.startsWith("false"))
+            else if (parameter.startsWith("false"))
             {
-                this.trueCircle = 0;
+                this.trueCircle = TRUE_CIRCLE_OFF_VALUE;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
             }
             else
             {

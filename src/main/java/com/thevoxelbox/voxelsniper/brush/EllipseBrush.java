@@ -39,35 +39,35 @@ public class EllipseBrush extends PerformBrush
     {
         try
         {
-            for (double _steps = 0; (_steps <= TWO_PI); _steps += stepSize)
+            for (double steps = 0; (steps <= TWO_PI); steps += stepSize)
             {
-                final int _x = (int) Math.round(this.xscl * Math.cos(_steps));
-                final int _y = (int) Math.round(this.yscl * Math.sin(_steps));
+                final int x = (int) Math.round(this.xscl * Math.cos(steps));
+                final int y = (int) Math.round(this.yscl * Math.sin(steps));
 
                 switch (getTargetBlock().getFace(this.getLastBlock()))
                 {
                     case NORTH:
                     case SOUTH:
-                        current.perform(targetBlock.getRelative(0, _x, _y));
+                        current.perform(targetBlock.getRelative(0, x, y));
                         break;
                     case EAST:
                     case WEST:
-                        current.perform(targetBlock.getRelative(_x, _y, 0));
+                        current.perform(targetBlock.getRelative(x, y, 0));
                         break;
                     case UP:
                     case DOWN:
-                        current.perform(targetBlock.getRelative(_x, 0, _y));
+                        current.perform(targetBlock.getRelative(x, 0, y));
                     default:
                         break;
                 }
 
-                if (_steps >= TWO_PI)
+                if (steps >= TWO_PI)
                 {
                     break;
                 }
             }
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
             v.sendMessage(ChatColor.RED + "Invalid target.");
         }
@@ -77,83 +77,83 @@ public class EllipseBrush extends PerformBrush
 
     private void ellipsefill(final SnipeData v, Block targetBlock)
     {
-        int _ix = this.xscl;
-        int _iy = this.yscl;
+        int ix = this.xscl;
+        int iy = this.yscl;
 
         current.perform(targetBlock);
 
         try
         {
-            if (_ix >= _iy)
+            if (ix >= iy)
             { // Need this unless you want weird holes
-                for (_iy = this.yscl; _iy > 0; _iy--)
+                for (iy = this.yscl; iy > 0; iy--)
                 {
-                    for (double _steps = 0; (_steps <= TWO_PI); _steps += stepSize)
+                    for (double steps = 0; (steps <= TWO_PI); steps += stepSize)
                     {
-                        final int _x = (int) Math.round(_ix * Math.cos(_steps));
-                        final int _y = (int) Math.round(_iy * Math.sin(_steps));
+                        final int x = (int) Math.round(ix * Math.cos(steps));
+                        final int y = (int) Math.round(iy * Math.sin(steps));
 
                         switch (getTargetBlock().getFace(this.getLastBlock()))
                         {
                             case NORTH:
                             case SOUTH:
-                                current.perform(targetBlock.getRelative(0, _x, _y));
+                                current.perform(targetBlock.getRelative(0, x, y));
                                 break;
                             case EAST:
                             case WEST:
-                                current.perform(targetBlock.getRelative(_x, _y, 0));
+                                current.perform(targetBlock.getRelative(x, y, 0));
                                 break;
                             case UP:
                             case DOWN:
-                                current.perform(targetBlock.getRelative(_x, 0, _y));
+                                current.perform(targetBlock.getRelative(x, 0, y));
                             default:
                                 break;
                         }
 
-                        if (_steps >= TWO_PI)
+                        if (steps >= TWO_PI)
                         {
                             break;
                         }
                     }
-                    _ix--;
+                    ix--;
                 }
             }
             else
             {
-                for (_ix = this.xscl; _ix > 0; _ix--)
+                for (ix = this.xscl; ix > 0; ix--)
                 {
-                    for (double _steps = 0; (_steps <= TWO_PI); _steps += stepSize)
+                    for (double steps = 0; (steps <= TWO_PI); steps += stepSize)
                     {
-                        final int _x = (int) Math.round(_ix * Math.cos(_steps));
-                        final int _y = (int) Math.round(_iy * Math.sin(_steps));
+                        final int x = (int) Math.round(ix * Math.cos(steps));
+                        final int y = (int) Math.round(iy * Math.sin(steps));
 
                         switch (getTargetBlock().getFace(this.getLastBlock()))
                         {
                             case NORTH:
                             case SOUTH:
-                                current.perform(targetBlock.getRelative(0, _x, _y));
+                                current.perform(targetBlock.getRelative(0, x, y));
                                 break;
                             case EAST:
                             case WEST:
-                                current.perform(targetBlock.getRelative(_x, _y, 0));
+                                current.perform(targetBlock.getRelative(x, y, 0));
                                 break;
                             case UP:
                             case DOWN:
-                                current.perform(targetBlock.getRelative(_x, 0, _y));
+                                current.perform(targetBlock.getRelative(x, 0, y));
                             default:
                                 break;
                         }
 
-                        if (_steps >= TWO_PI)
+                        if (steps >= TWO_PI)
                         {
                             break;
                         }
                     }
-                    _iy--;
+                    iy--;
                 }
             }
         }
-        catch (final Exception _e)
+        catch (final Exception exception)
         {
             v.sendMessage(ChatColor.RED + "Invalid target.");
         }
@@ -222,13 +222,13 @@ public class EllipseBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
             try
             {
-                if (_param.equalsIgnoreCase("info"))
+                if (parameter.equalsIgnoreCase("info"))
                 {
                     v.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
                     v.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
@@ -237,55 +237,50 @@ public class EllipseBrush extends PerformBrush
                     v.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
                     return;
                 }
-                else if (_param.startsWith("x"))
+                else if (parameter.startsWith("x"))
                 {
-                    int _tmpXScl = Integer.parseInt(par[_i].replace("x", ""));
-                    if (_tmpXScl < SCL_MIN || _tmpXScl > SCL_MAX)
+                    int tempXScale = Integer.parseInt(par[i].replace("x", ""));
+                    if (tempXScale < SCL_MIN || tempXScale > SCL_MAX)
                     {
                         v.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
                         continue;
                     }
-                    this.xscl = _tmpXScl;
+                    this.xscl = tempXScale;
                     v.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
-                    continue;
                 }
-                else if (_param.startsWith("y"))
+                else if (parameter.startsWith("y"))
                 {
-                    int _tmpYScl = Integer.parseInt(par[_i].replace("y", ""));
-                    if (_tmpYScl < SCL_MIN || _tmpYScl > SCL_MAX)
+                    int tempYScale = Integer.parseInt(par[i].replace("y", ""));
+                    if (tempYScale < SCL_MIN || tempYScale > SCL_MAX)
                     {
                         v.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
                         continue;
                     }
-                    this.yscl = _tmpYScl;
+                    this.yscl = tempYScale;
                     v.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
-                    continue;
                 }
-                else if (_param.startsWith("t"))
+                else if (parameter.startsWith("t"))
                 {
-                    int _tempSteps = Integer.parseInt(par[_i].replace("t", ""));
-                    if (_tempSteps < STEPS_MIN || _tempSteps > STEPS_MAX)
+                    int tempSteps = Integer.parseInt(par[i].replace("t", ""));
+                    if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX)
                     {
                         v.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
                         continue;
                     }
-                    this.steps = _tempSteps;
+                    this.steps = tempSteps;
                     v.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
-                    continue;
                 }
-                else if (_param.equalsIgnoreCase("fill"))
+                else if (parameter.equalsIgnoreCase("fill"))
                 {
                     if (this.fill)
                     {
                         this.fill = false;
                         v.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
-                        continue;
                     }
                     else
                     {
                         this.fill = true;
                         v.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
-                        continue;
                     }
                 }
                 else
@@ -294,9 +289,9 @@ public class EllipseBrush extends PerformBrush
                 }
 
             }
-            catch (final Exception _e)
+            catch (final Exception exception)
             {
-                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + _param + "\"; use the \"info\" parameter.");
+                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
             }
         }
     }

@@ -173,20 +173,20 @@ public abstract class Brush implements IBrush
         }
         else
         {
-            RangeBlockHelper _hb;
+            RangeBlockHelper rangeBlockHelper;
             if (v.owner().isDistRestrict())
             {
-                _hb = new RangeBlockHelper(v.owner().getPlayer(), v.owner().getPlayer().getWorld(), v.owner().getRange());
-                this.setTargetBlock(_hb.getRangeBlock());
+                rangeBlockHelper = new RangeBlockHelper(v.owner().getPlayer(), v.owner().getPlayer().getWorld(), v.owner().getRange());
+                this.setTargetBlock(rangeBlockHelper.getRangeBlock());
             }
             else
             {
-                _hb = new RangeBlockHelper(v.owner().getPlayer(), v.owner().getPlayer().getWorld());
-                this.setTargetBlock(_hb.getTargetBlock());
+                rangeBlockHelper = new RangeBlockHelper(v.owner().getPlayer(), v.owner().getPlayer().getWorld());
+                this.setTargetBlock(rangeBlockHelper.getTargetBlock());
             }
             if (this.getTargetBlock() != null)
             {
-                this.setLastBlock(_hb.getLastBlock());
+                this.setLastBlock(rangeBlockHelper.getLastBlock());
                 if (this.getLastBlock() == null)
                 {
                     v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");

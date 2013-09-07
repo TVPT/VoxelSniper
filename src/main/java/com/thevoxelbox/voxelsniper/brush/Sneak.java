@@ -4,7 +4,6 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -138,7 +137,6 @@ public class Sneak extends Brush
      * @param v
      * @param clickedBlock
      * @param clickedFace
-     *
      * @return
      */
     protected final boolean getSilentTarget(final Sniper v, final Block clickedBlock, final BlockFace clickedFace)
@@ -159,20 +157,20 @@ public class Sneak extends Brush
         }
         else
         {
-            RangeBlockHelper _hb = null;
+            RangeBlockHelper rangeBlockHelper;
             if (v.isDistRestrict())
             {
-                _hb = new RangeBlockHelper(v.getPlayer(), v.getPlayer().getWorld(), v.getRange());
-                this.setTargetBlock(_hb.getRangeBlock());
+                rangeBlockHelper = new RangeBlockHelper(v.getPlayer(), v.getPlayer().getWorld(), v.getRange());
+                this.setTargetBlock(rangeBlockHelper.getRangeBlock());
             }
             else
             {
-                _hb = new RangeBlockHelper(v.getPlayer(), v.getPlayer().getWorld());
-                this.setTargetBlock(_hb.getTargetBlock());
+                rangeBlockHelper = new RangeBlockHelper(v.getPlayer(), v.getPlayer().getWorld());
+                this.setTargetBlock(rangeBlockHelper.getTargetBlock());
             }
             if (this.getTargetBlock() != null)
             {
-                this.setLastBlock(_hb.getLastBlock());
+                this.setLastBlock(rangeBlockHelper.getLastBlock());
                 if (this.getLastBlock() == null)
                 {
                     return false;
@@ -209,15 +207,14 @@ public class Sneak extends Brush
     }
 
     @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        Sneak.timesUsed = tUsed;
-    }
-
-
-    @Override
     public final int getTimesUsed()
     {
         return Sneak.timesUsed;
+    }
+
+    @Override
+    public final void setTimesUsed(final int tUsed)
+    {
+        Sneak.timesUsed = tUsed;
     }
 }

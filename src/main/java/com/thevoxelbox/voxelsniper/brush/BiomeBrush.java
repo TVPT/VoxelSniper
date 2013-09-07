@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -25,35 +24,35 @@ public class BiomeBrush extends Brush
 
     private void biome(final SnipeData v)
     {
-        final int _bSize = v.getBrushSize();
-        final double _bPow = Math.pow(_bSize, 2);
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize, 2);
 
-        for (int _x = -_bSize; _x <= _bSize; _x++)
+        for (int x = -brushSize; x <= brushSize; x++)
         {
-            final double _xPow = Math.pow(_x, 2);
+            final double xSquared = Math.pow(x, 2);
 
-            for (int _z = -_bSize; _z <= _bSize; _z++)
+            for (int z = -brushSize; z <= brushSize; z++)
             {
-                if ((_xPow + Math.pow(_z, 2)) <= _bPow)
+                if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared)
                 {
-                    this.getWorld().setBiome(this.getBlockPositionX() + _x, this.getBlockPositionZ() + _z, this.selectedBiome);
+                    this.getWorld().setBiome(this.getBlockPositionX() + x, this.getBlockPositionZ() + z, this.selectedBiome);
                 }
             }
         }
 
-        final Block _b1 = this.getWorld().getBlockAt(this.getBlockPositionX() - _bSize, 0, this.getBlockPositionZ() - _bSize);
-        final Block _b2 = this.getWorld().getBlockAt(this.getBlockPositionX() + _bSize, 0, this.getBlockPositionZ() + _bSize);
+        final Block block1 = this.getWorld().getBlockAt(this.getBlockPositionX() - brushSize, 0, this.getBlockPositionZ() - brushSize);
+        final Block block2 = this.getWorld().getBlockAt(this.getBlockPositionX() + brushSize, 0, this.getBlockPositionZ() + brushSize);
 
-        final int _lowX = (_b1.getX() <= _b2.getX()) ? _b1.getChunk().getX() : _b2.getChunk().getX();
-        final int _lowZ = (_b1.getZ() <= _b2.getZ()) ? _b1.getChunk().getZ() : _b2.getChunk().getZ();
-        final int _highX = (_b1.getX() >= _b2.getX()) ? _b1.getChunk().getX() : _b2.getChunk().getX();
-        final int _highZ = (_b1.getZ() >= _b2.getZ()) ? _b1.getChunk().getZ() : _b2.getChunk().getZ();
+        final int lowChunkX = (block1.getX() <= block2.getX()) ? block1.getChunk().getX() : block2.getChunk().getX();
+        final int lowChunkZ = (block1.getZ() <= block2.getZ()) ? block1.getChunk().getZ() : block2.getChunk().getZ();
+        final int highChunkX = (block1.getX() >= block2.getX()) ? block1.getChunk().getX() : block2.getChunk().getX();
+        final int highChunkZ = (block1.getZ() >= block2.getZ()) ? block1.getChunk().getZ() : block2.getChunk().getZ();
 
-        for (int _x = _lowX; _x <= _highX; _x++)
+        for (int x = lowChunkX; x <= highChunkX; x++)
         {
-            for (int _z = _lowZ; _z <= _highZ; _z++)
+            for (int z = lowChunkZ; z <= highChunkZ; z++)
             {
-                this.getWorld().refreshChunk(_x, _z);
+                this.getWorld().refreshChunk(x, z);
             }
         }
     }
@@ -84,34 +83,35 @@ public class BiomeBrush extends Brush
         if (args[1].equalsIgnoreCase("info"))
         {
             v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
-            String _availableBiomes = "";
+            String availableBiomes = "";
 
-            for (final org.bukkit.block.Biome _biome : org.bukkit.block.Biome.values())
+            for (final Biome biome : Biome.values())
             {
-                if (_availableBiomes.isEmpty())
+                if (availableBiomes.isEmpty())
                 {
-                    _availableBiomes = ChatColor.DARK_GREEN + _biome.name();
+                    availableBiomes = ChatColor.DARK_GREEN + biome.name();
                     continue;
                 }
 
-                _availableBiomes += ChatColor.RED + ", " + ChatColor.DARK_GREEN + _biome.name();
+                availableBiomes += ChatColor.RED + ", " + ChatColor.DARK_GREEN + biome.name();
 
             }
-            v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + _availableBiomes);
+            v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
         }
         else
         {
             // allows biome names with spaces in their name
             String biomeName = args[1];
-            for(int i = 2; i < args.length; i++) {
+            for (int i = 2; i < args.length; i++)
+            {
                 biomeName += " " + args[i];
             }
 
-            for (final org.bukkit.block.Biome _bio : org.bukkit.block.Biome.values())
+            for (final Biome biome : Biome.values())
             {
-                if (_bio.name().equalsIgnoreCase(biomeName))
+                if (biome.name().equalsIgnoreCase(biomeName))
                 {
-                    this.selectedBiome = _bio;
+                    this.selectedBiome = biome;
                     break;
                 }
             }

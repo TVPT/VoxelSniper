@@ -40,11 +40,11 @@ public class CopyPastaBrush extends Brush
 
     private void doCopy(final SnipeData v)
     {
-        for (int _i = 0; _i < 3; _i++)
+        for (int i = 0; i < 3; i++)
         {
-            this.arraySize[_i] = Math.abs(this.firstPoint[_i] - this.secondPoint[_i]) + 1;
-            this.minPoint[_i] = Math.min(this.firstPoint[_i], this.secondPoint[_i]);
-            this.offsetPoint[_i] = this.minPoint[_i] - this.firstPoint[_i]; // will always be negative or zero
+            this.arraySize[i] = Math.abs(this.firstPoint[i] - this.secondPoint[i]) + 1;
+            this.minPoint[i] = Math.min(this.firstPoint[i], this.secondPoint[i]);
+            this.offsetPoint[i] = this.minPoint[i] - this.firstPoint[i]; // will always be negative or zero
         }
 
         this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
@@ -54,15 +54,15 @@ public class CopyPastaBrush extends Brush
             this.blockArray = new int[this.numBlocks];
             this.dataArray = new byte[this.numBlocks];
 
-            for (int _i = 0; _i < this.arraySize[0]; _i++)
+            for (int i = 0; i < this.arraySize[0]; i++)
             {
-                for (int _j = 0; _j < this.arraySize[1]; _j++)
+                for (int j = 0; j < this.arraySize[1]; j++)
                 {
-                    for (int _k = 0; _k < this.arraySize[2]; _k++)
+                    for (int k = 0; k < this.arraySize[2]; k++)
                     {
-                        final int _currentPos = _i + this.arraySize[0] * _j + this.arraySize[0] * this.arraySize[1] * _k;
-                        this.blockArray[_currentPos] = this.getWorld().getBlockTypeIdAt(this.minPoint[0] + _i, this.minPoint[1] + _j, this.minPoint[2] + _k);
-                        this.dataArray[_currentPos] = this.clampY(this.minPoint[0] + _i, this.minPoint[1] + _j, this.minPoint[2] + _k).getData();
+                        final int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
+                        this.blockArray[currentPosition] = this.getWorld().getBlockTypeIdAt(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
+                        this.dataArray[currentPosition] = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k).getData();
                     }
                 }
             }
@@ -77,47 +77,47 @@ public class CopyPastaBrush extends Brush
 
     private void doPasta(final SnipeData v)
     {
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _i = 0; _i < this.arraySize[0]; _i++)
+        for (int i = 0; i < this.arraySize[0]; i++)
         {
-            for (int _j = 0; _j < this.arraySize[1]; _j++)
+            for (int j = 0; j < this.arraySize[1]; j++)
             {
-                for (int _k = 0; _k < this.arraySize[2]; _k++)
+                for (int k = 0; k < this.arraySize[2]; k++)
                 {
-                    final int _currentPos = _i + this.arraySize[0] * _j + this.arraySize[0] * this.arraySize[1] * _k;
-                    Block _b = null;
+                    final int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
+                    Block block;
 
                     switch (this.pivot)
                     {
                         case 180:
-                            _b = this.clampY(this.pastePoint[0] - this.offsetPoint[0] - _i, this.pastePoint[1] + this.offsetPoint[1] + _j, this.pastePoint[2] - this.offsetPoint[2] - _k);
+                            block = this.clampY(this.pastePoint[0] - this.offsetPoint[0] - i, this.pastePoint[1] + this.offsetPoint[1] + j, this.pastePoint[2] - this.offsetPoint[2] - k);
                             break;
                         case 270:
-                            _b = this.clampY(this.pastePoint[0] + this.offsetPoint[2] + _k, this.pastePoint[1] + this.offsetPoint[1] + _j, this.pastePoint[2] - this.offsetPoint[0] - _i);
+                            block = this.clampY(this.pastePoint[0] + this.offsetPoint[2] + k, this.pastePoint[1] + this.offsetPoint[1] + j, this.pastePoint[2] - this.offsetPoint[0] - i);
                             break;
                         case 90:
-                            _b = this.clampY(this.pastePoint[0] - this.offsetPoint[2] - _k, this.pastePoint[1] + this.offsetPoint[1] + _j, this.pastePoint[2] + this.offsetPoint[0] + _i);
+                            block = this.clampY(this.pastePoint[0] - this.offsetPoint[2] - k, this.pastePoint[1] + this.offsetPoint[1] + j, this.pastePoint[2] + this.offsetPoint[0] + i);
                             break;
                         default: // assume no rotation
-                            _b = this.clampY(this.pastePoint[0] + this.offsetPoint[0] + _i, this.pastePoint[1] + this.offsetPoint[1] + _j, this.pastePoint[2] + this.offsetPoint[2] + _k);
+                            block = this.clampY(this.pastePoint[0] + this.offsetPoint[0] + i, this.pastePoint[1] + this.offsetPoint[1] + j, this.pastePoint[2] + this.offsetPoint[2] + k);
                             break;
                     }
 
-                    if (!(this.blockArray[_currentPos] == 0 && !this.pasteAir))
+                    if (!(this.blockArray[currentPosition] == 0 && !this.pasteAir))
                     {
-                        if (_b.getTypeId() != this.blockArray[_currentPos] || _b.getData() != this.dataArray[_currentPos])
+                        if (block.getTypeId() != this.blockArray[currentPosition] || block.getData() != this.dataArray[currentPosition])
                         {
-                            _undo.put(_b);
+                            undo.put(block);
                         }
-                        _b.setTypeIdAndData(this.blockArray[_currentPos], this.dataArray[_currentPos], true);
+                        block.setTypeIdAndData(this.blockArray[currentPosition], this.dataArray[currentPosition], true);
                     }
                 }
             }
         }
         v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks pasted.");
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
@@ -189,9 +189,9 @@ public class CopyPastaBrush extends Brush
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v)
     {
-        final String _param = par[1];
+        final String parameter = par[1];
 
-        if (_param.equalsIgnoreCase("info"))
+        if (parameter.equalsIgnoreCase("info"))
         {
             v.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
             v.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
@@ -199,7 +199,7 @@ public class CopyPastaBrush extends Brush
             return;
         }
 
-        if (_param.equalsIgnoreCase("air"))
+        if (parameter.equalsIgnoreCase("air"))
         {
             this.pasteAir = !this.pasteAir;
 
@@ -207,9 +207,9 @@ public class CopyPastaBrush extends Brush
             return;
         }
 
-        if (_param.equalsIgnoreCase("90") || _param.equalsIgnoreCase("180") || _param.equalsIgnoreCase("270") || _param.equalsIgnoreCase("0"))
+        if (parameter.equalsIgnoreCase("90") || parameter.equalsIgnoreCase("180") || parameter.equalsIgnoreCase("270") || parameter.equalsIgnoreCase("0"))
         {
-            this.pivot = Integer.parseInt(_param);
+            this.pivot = Integer.parseInt(parameter);
             v.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
         }
     }

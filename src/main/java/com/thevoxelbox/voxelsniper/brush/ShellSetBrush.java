@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+
+import java.util.ArrayList;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
@@ -17,9 +16,8 @@ import org.bukkit.block.Block;
 public class ShellSetBrush extends Brush
 {
     private static final int MAX_SIZE = 5000000;
-
-    private Block block = null;
     private static int timesUsed = 0;
+    private Block block = null;
 
     /**
      *
@@ -45,75 +43,72 @@ public class ShellSetBrush extends Brush
                 return true;
             }
 
-            final int _voxelMaterialId = v.getVoxelId();
-            final int _voxelReplaceMaterialId = v.getReplaceId();
+            final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+            final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+            final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+            final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+            final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+            final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
 
-            final int _lowx = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-            final int _lowy = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-            final int _lowz = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-            final int _highx = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-            final int _highy = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-            final int _highz = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
-
-            if (Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy) > MAX_SIZE)
+            if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_SIZE)
             {
                 v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             }
             else
             {
-                final ArrayList<Block> _blocks = new ArrayList<Block>(((Math.abs(_highx - _lowx) * Math.abs(_highz - _lowz) * Math.abs(_highy - _lowy)) / 2));
-                for (int _y = _lowy; _y <= _highy; _y++)
+                final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY)) / 2));
+                for (int y = lowY; y <= highY; y++)
                 {
-                    for (int _x = _lowx; _x <= _highx; _x++)
+                    for (int x = lowX; x <= highX; x++)
                     {
-                        for (int _z = _lowz; _z <= _highz; _z++)
+                        for (int z = lowZ; z <= highZ; z++)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(_x, _y, _z) == _voxelReplaceMaterialId)
+                            if (this.getWorld().getBlockTypeIdAt(x, y, z) == v.getReplaceId())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(_x + 1, _y, _z) == _voxelReplaceMaterialId)
+                            else if (this.getWorld().getBlockTypeIdAt(x + 1, y, z) == v.getReplaceId())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(_x - 1, _y, _z) == _voxelReplaceMaterialId)
+                            else if (this.getWorld().getBlockTypeIdAt(x - 1, y, z) == v.getReplaceId())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z + 1) == _voxelReplaceMaterialId)
+                            else if (this.getWorld().getBlockTypeIdAt(x, y, z + 1) == v.getReplaceId())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(_x, _y, _z - 1) == _voxelReplaceMaterialId)
+                            else if (this.getWorld().getBlockTypeIdAt(x, y, z - 1) == v.getReplaceId())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(_x, _y + 1, _z) == _voxelReplaceMaterialId)
+                            else if (this.getWorld().getBlockTypeIdAt(x, y + 1, z) == v.getReplaceId())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(_x, _y - 1, _z) == _voxelReplaceMaterialId)
+                            else if (this.getWorld().getBlockTypeIdAt(x, y - 1, z) == v.getReplaceId())
                             {
                                 continue;
                             }
                             else
                             {
-                                _blocks.add(this.getWorld().getBlockAt(_x, _y, _z));
+                                blocks.add(this.getWorld().getBlockAt(x, y, z));
                             }
                         }
                     }
                 }
 
-                final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
-                for (final Block _block : _blocks)
+                final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+                for (final Block currentBlock : blocks)
                 {
-                    if (_block.getTypeId() != _voxelMaterialId)
+                    if (currentBlock.getTypeId() != v.getVoxelId())
                     {
-                        _undo.put(_block);
-                        _block.setTypeId(_voxelMaterialId);
+                        undo.put(currentBlock);
+                        currentBlock.setTypeId(v.getVoxelId());
                     }
                 }
-                v.storeUndo(_undo);
+                v.storeUndo(undo);
                 v.sendMessage(ChatColor.AQUA + "Shell complete.");
             }
 

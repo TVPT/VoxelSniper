@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -33,20 +32,20 @@ public class ExtrudeBrush extends Brush
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
         Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _x = -brushSize; _x <= brushSize; _x++)
+        for (int x = -brushSize; x <= brushSize; x++)
         {
-            final double xSquared = Math.pow(_x, 2);
-            for (int _z = -brushSize; _z <= brushSize; _z++)
+            final double xSquared = Math.pow(x, 2);
+            for (int z = -brushSize; z <= brushSize; z++)
             {
-                if ((xSquared + Math.pow(_z, 2)) <= brushSizeSquared)
+                if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared)
                 {
                     final int direction = (isUp ? 1 : -1);
-                    for (int _y = 0; _y < Math.abs(v.getVoxelHeight()); _y++)
+                    for (int y = 0; y < Math.abs(v.getVoxelHeight()); y++)
                     {
-                        final int tempY = _y * direction;
+                        final int tempY = y * direction;
                         undo = this.perform(
-                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + tempY, this.getBlockPositionZ() + _z),
-                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + tempY + direction, this.getBlockPositionZ() + _z),
+                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + tempY, this.getBlockPositionZ() + z),
+                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + tempY + direction, this.getBlockPositionZ() + z),
                                 v, undo);
                     }
                 }
@@ -60,59 +59,59 @@ public class ExtrudeBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _x = -brushSize; _x <= brushSize; _x++)
+        for (int x = -brushSize; x <= brushSize; x++)
         {
-            final double xSquared = Math.pow(_x, 2);
-            for (int _y = -brushSize; _y <= brushSize; _y++)
+            final double xSquared = Math.pow(x, 2);
+            for (int y = -brushSize; y <= brushSize; y++)
             {
-                if ((xSquared + Math.pow(_y, 2)) <= brushSizeSquared)
+                if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared)
                 {
                     final int direction = (isSouth) ? 1 : -1;
-                    for (int _z = 0; _z < Math.abs(v.getVoxelHeight()); _z++)
+                    for (int z = 0; z < Math.abs(v.getVoxelHeight()); z++)
                     {
-                        final int tempZ = _z * direction;
-                        _undo = this.perform(
-                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + tempZ),
-                                this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + tempZ + direction),
-                                v, _undo);
+                        final int tempZ = z * direction;
+                        undo = this.perform(
+                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + tempZ),
+                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + tempZ + direction),
+                                v, undo);
                     }
 
                 }
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     private void extrudeEastOrWest(final SnipeData v, boolean isEast)
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _y = -brushSize; _y <= brushSize; _y++)
+        for (int y = -brushSize; y <= brushSize; y++)
         {
-            final double ySquared = Math.pow(_y, 2);
-            for (int _z = -brushSize; _z <= brushSize; _z++)
+            final double ySquared = Math.pow(y, 2);
+            for (int z = -brushSize; z <= brushSize; z++)
             {
-                if ((ySquared + Math.pow(_z, 2)) <= brushSizeSquared)
+                if ((ySquared + Math.pow(z, 2)) <= brushSizeSquared)
                 {
                     final int direction = (isEast) ? 1 : -1;
-                    for (int _x = 0; _x < Math.abs(v.getVoxelHeight()); _x++)
+                    for (int x = 0; x < Math.abs(v.getVoxelHeight()); x++)
                     {
-                        final int tempX = _x * direction;
-                        _undo = this.perform(
-                                this.clampY(this.getBlockPositionX() + tempX, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z),
-                                this.clampY(this.getBlockPositionX() + tempX + direction, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z),
-                                v, _undo);
+                        final int tempX = x * direction;
+                        undo = this.perform(
+                                this.clampY(this.getBlockPositionX() + tempX, this.getBlockPositionY() + y, this.getBlockPositionZ() + z),
+                                this.clampY(this.getBlockPositionX() + tempX + direction, this.getBlockPositionY() + y, this.getBlockPositionZ() + z),
+                                v, undo);
                     }
 
                 }
             }
         }
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo)
@@ -143,7 +142,7 @@ public class ExtrudeBrush extends Brush
                 break;
             case NORTH:
                 tempDirection = !towardsUser;
-            case SOUTH: 
+            case SOUTH:
                 extrudeNorthOrSouth(v, tempDirection);
                 break;
             case WEST:
@@ -182,35 +181,37 @@ public class ExtrudeBrush extends Brush
     @Override
     public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
             try
             {
-                if (_param.equalsIgnoreCase("info"))
+                if (parameter.equalsIgnoreCase("info"))
                 {
                     v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
                     v.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
                     return;
-                } else if (_param.startsWith("true"))
+                }
+                else if (parameter.startsWith("true"))
                 {
                     this.trueCircle = 0.5;
                     v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                    continue;
-                } else if (_param.startsWith("false"))
+                }
+                else if (parameter.startsWith("false"))
                 {
                     this.trueCircle = 0;
                     v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                    continue;
-                } else
+                }
+                else
                 {
                     v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                     return;
                 }
-            } catch (final Exception _e)
+            }
+            catch (final Exception exception)
             {
-                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + _param + "\"; use the \"info\" parameter.");
+                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
             }
         }
     }

@@ -34,55 +34,55 @@ public class CometBrush extends Brush
 
     private void doFireball(final SnipeData v)
     {
-        final Vector _targetCoords = new Vector(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()), this.getTargetBlock().getY() + .5, this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
-        final Location _playerLoc = v.owner().getPlayer().getLocation();
-        final Vector _slope = _targetCoords.subtract(_playerLoc.toVector());
+        final Vector targetCoords = new Vector(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()), this.getTargetBlock().getY() + .5, this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
+        final Location playerLocation = v.owner().getPlayer().getLocation();
+        final Vector slope = targetCoords.subtract(playerLocation.toVector());
 
         if (useBigBalls)
         {
-            final EntityFireball _ballEntity = new EntityLargeFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), _slope.getX(), _slope.getY(), _slope.getZ());
-            final CraftFireball _craftBall = new CraftFireball((CraftServer) v.owner().getPlayer().getServer(), _ballEntity);
-            _craftBall.setVelocity(_slope.normalize());
-            ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(_ballEntity);
+            final EntityFireball ballEntity = new EntityLargeFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), slope.getX(), slope.getY(), slope.getZ());
+            final CraftFireball craftFireball = new CraftFireball((CraftServer) v.owner().getPlayer().getServer(), ballEntity);
+            craftFireball.setVelocity(slope.normalize());
+            ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(ballEntity);
         }
         else
         {
-            final EntitySmallFireball _ballEntity = new EntitySmallFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), _slope.getX(), _slope.getY(), _slope.getZ());
-            final CraftSmallFireball _craftBall = new CraftSmallFireball((CraftServer) v.owner().getPlayer().getServer(), _ballEntity);
-            _craftBall.setVelocity(_slope.normalize());
-            ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(_ballEntity);
+            final EntitySmallFireball ballEntity = new EntitySmallFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), slope.getX(), slope.getY(), slope.getZ());
+            final CraftSmallFireball craftSmallFireball = new CraftSmallFireball((CraftServer) v.owner().getPlayer().getServer(), ballEntity);
+            craftSmallFireball.setVelocity(slope.normalize());
+            ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(ballEntity);
         }
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 0; _i < par.length; ++_i)
+        for (int i = 0; i < par.length; ++i)
         {
-            String _param = par[_i];
+            String parameter = par[i];
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage("Parameters:");
                 v.sendMessage("balls [big|small]  -- Sets your ball size.");
             }
-            if (_param.equalsIgnoreCase("balls"))
+            if (parameter.equalsIgnoreCase("balls"))
             {
-                if (_i + 1 >= par.length)
+                if (i + 1 >= par.length)
                 {
                     v.sendMessage("The balls parameter expects a ball size after it.");
                 }
 
-                String _newBallSize = par[++_i];
-                if (_newBallSize.equalsIgnoreCase("big"))
+                String newBallSize = par[++i];
+                if (newBallSize.equalsIgnoreCase("big"))
                 {
                     useBigBalls = true;
-                    v.sendMessage("Your balls are " + ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+                    v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
                 }
-                else if (_newBallSize.equalsIgnoreCase("small"))
+                else if (newBallSize.equalsIgnoreCase("small"))
                 {
                     useBigBalls = false;
-                    v.sendMessage("Your balls are " + ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+                    v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
                 }
                 else
                 {

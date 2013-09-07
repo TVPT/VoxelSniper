@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.TreeMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.TreeMap;
 
 /**
  * @author MikeMatrix
@@ -16,53 +16,51 @@ public class SniperPermissionHelper
 
     /**
      * @param player
-     *
      * @return {@link Sniper}
      */
     public final Sniper getSniperInstance(final Player player)
     {
         if (this.isSniper(player))
         {
-            Sniper _instance = this.snipers.get(player.getName());
-            if (_instance != null && !(_instance.getClass() == Sniper.class))
+            Sniper instance = this.snipers.get(player.getName());
+            if (instance != null && !(instance.getClass() == Sniper.class))
             {
                 this.snipers.remove(player.getName());
-                _instance = null;
+                instance = null;
             }
-            if (_instance == null)
+            if (instance == null)
             {
-                _instance = new Sniper();
-                _instance.setPlayer(player);
-                _instance.reset();
-                _instance.loadAllPresets();
-                this.snipers.put(player.getName(), _instance);
+                instance = new Sniper();
+                instance.setPlayer(player);
+                instance.reset();
+                instance.loadAllPresets();
+                this.snipers.put(player.getName(), instance);
             }
-            return _instance;
+            return instance;
         }
         else if (this.isLiteSniper(player))
         {
-            Sniper _instance = this.snipers.get(player.getName());
-            if (_instance != null && !(_instance.getClass() == LiteSniper.class))
+            Sniper instance = this.snipers.get(player.getName());
+            if (instance != null && !(instance.getClass() == LiteSniper.class))
             {
                 this.snipers.remove(player.getName());
-                _instance = null;
+                instance = null;
             }
-            if (_instance == null)
+            if (instance == null)
             {
-                _instance = new LiteSniper();
-                _instance.setPlayer(player);
-                _instance.reset();
-                _instance.loadAllPresets();
-                this.snipers.put(player.getName(), _instance);
+                instance = new LiteSniper();
+                instance.setPlayer(player);
+                instance.reset();
+                instance.loadAllPresets();
+                this.snipers.put(player.getName(), instance);
             }
-            return _instance;
+            return instance;
         }
         return null;
     }
 
     /**
      * @param playerName
-     *
      * @return {@link Sniper}
      */
     public final Sniper getSniperInstance(final String playerName)
@@ -72,7 +70,6 @@ public class SniperPermissionHelper
 
     /**
      * @param player
-     *
      * @return boolean
      */
     public final boolean isLiteSniper(final Player player)
@@ -82,7 +79,6 @@ public class SniperPermissionHelper
 
     /**
      * @param playerName
-     *
      * @return boolean
      */
     public final boolean isLiteSniper(final String playerName)
@@ -92,7 +88,6 @@ public class SniperPermissionHelper
 
     /**
      * @param player
-     *
      * @return boolean
      */
     public final boolean isSniper(final Player player)
@@ -102,7 +97,6 @@ public class SniperPermissionHelper
 
     /**
      * @param playerName
-     *
      * @return boolean
      */
     public final boolean isSniper(final String playerName)

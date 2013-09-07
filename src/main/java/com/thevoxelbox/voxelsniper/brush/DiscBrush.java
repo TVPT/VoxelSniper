@@ -33,19 +33,19 @@ public class DiscBrush extends PerformBrush
      */
     private void disc(final SnipeData v, final Block targetBlock)
     {
-        final double _radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
-        final Vector _centerPoint = targetBlock.getLocation().toVector();
-        final Vector _currentPoint = _centerPoint.clone();
+        final double radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
+        final Vector centerPoint = targetBlock.getLocation().toVector();
+        final Vector currentPoint = centerPoint.clone();
 
-        for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++)
+        for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
         {
-            _currentPoint.setX(_centerPoint.getX() + _x);
-            for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++)
+            currentPoint.setX(centerPoint.getX() + x);
+            for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
             {
-                _currentPoint.setZ(_centerPoint.getZ() + _z);
-                if (_centerPoint.distanceSquared(_currentPoint) <= _radiusSquared)
+                currentPoint.setZ(centerPoint.getZ() + z);
+                if (centerPoint.distanceSquared(currentPoint) <= radiusSquared)
                 {
-                    this.current.perform(this.clampY(_currentPoint.getBlockX(), _currentPoint.getBlockY(), _currentPoint.getBlockZ()));
+                    this.current.perform(this.clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ()));
                 }
             }
         }
@@ -81,33 +81,30 @@ public class DiscBrush extends PerformBrush
     {
         vm.brushName(this.getName());
         vm.size();
-        // voxelMessage.voxel();
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i].toLowerCase();
+            final String parameter = par[i].toLowerCase();
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
                 return;
             }
-            else if (_param.startsWith("true"))
+            else if (parameter.startsWith("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
             }
-            else if (_param.startsWith("false"))
+            else if (parameter.startsWith("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
             }
             else
             {

@@ -27,26 +27,26 @@ public class CleanSnowBrush extends Brush
 
     private void cleanSnow(final SnipeData v)
     {
-        final int _bSize = v.getBrushSize();
-        final double _bPow = Math.pow(_bSize + this.trueCircle, 2);
-        final Undo _undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final int brushSize = v.getBrushSize();
+        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
-        for (int _y = (_bSize + 1) * 2; _y >= 0; _y--)
+        for (int y = (brushSize + 1) * 2; y >= 0; y--)
         {
-            final double _yPow = Math.pow(_y - _bSize, 2);
+            final double ySquared = Math.pow(y - brushSize, 2);
 
-            for (int _x = (_bSize + 1) * 2; _x >= 0; _x--)
+            for (int x = (brushSize + 1) * 2; x >= 0; x--)
             {
-                final double _xPow = Math.pow(_x - _bSize, 2);
+                final double xSquared = Math.pow(x - brushSize, 2);
 
-                for (int _z = (_bSize + 1) * 2; _z >= 0; _z--)
+                for (int z = (brushSize + 1) * 2; z >= 0; z--)
                 {
-                    if ((_xPow + Math.pow(_z - _bSize, 2) + _yPow) <= _bPow)
+                    if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared)
                     {
-                        if ((this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, this.getBlockPositionZ() + _y - _bSize).getType() == Material.SNOW) && ((this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize - 1, this.getBlockPositionZ() + _y - _bSize).getType() == Material.SNOW) || (this.clampY(this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize - 1, this.getBlockPositionZ() + _y - _bSize).getType() == Material.AIR)))
+                        if ((this.clampY(this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize, this.getBlockPositionZ() + y - brushSize).getType() == Material.SNOW) && ((this.clampY(this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize - 1, this.getBlockPositionZ() + y - brushSize).getType() == Material.SNOW) || (this.clampY(this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize - 1, this.getBlockPositionZ() + y - brushSize).getType() == Material.AIR)))
                         {
-                            _undo.put(this.clampY(this.getBlockPositionX() + _x, this.getBlockPositionY() + _z, this.getBlockPositionZ() + _y));
-                            this.setBlockIdAt(this.getBlockPositionZ() + _y - _bSize, this.getBlockPositionX() + _x - _bSize, this.getBlockPositionY() + _z - _bSize, 0);
+                            undo.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + z, this.getBlockPositionZ() + y));
+                            this.setBlockIdAt(this.getBlockPositionZ() + y - brushSize, this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize, 0);
                         }
 
                     }
@@ -54,7 +54,7 @@ public class CleanSnowBrush extends Brush
             }
         }
 
-        v.storeUndo(_undo);
+        v.storeUndo(undo);
     }
 
     @Override
@@ -79,27 +79,25 @@ public class CleanSnowBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _i = 1; _i < par.length; _i++)
+        for (int i = 1; i < par.length; i++)
         {
-            final String _param = par[_i];
+            final String parameter = par[i];
 
-            if (_param.equalsIgnoreCase("info"))
+            if (parameter.equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Clean Snow Brush Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b cls true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b cls false will switch back. (false is default)");
                 return;
             }
-            else if (_param.startsWith("true"))
+            else if (parameter.startsWith("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
             }
-            else if (_param.startsWith("false"))
+            else if (parameter.startsWith("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
             }
             else
             {

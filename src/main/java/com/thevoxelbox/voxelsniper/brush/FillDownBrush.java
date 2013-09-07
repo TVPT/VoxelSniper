@@ -77,25 +77,23 @@ public class FillDownBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (int _x = 1; _x < par.length; _x++)
+        for (int i = 1; i < par.length; i++)
         {
-            if (par[_x].equalsIgnoreCase("info"))
+            if (par[i].equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
                 v.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b fd false will switch back. (false is default)");
                 return;
             }
-            else if (par[_x].startsWith("true"))
+            else if (par[i].startsWith("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-                continue;
             }
-            else if (par[_x].startsWith("false"))
+            else if (par[i].startsWith("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-                continue;
             }
             else
             {

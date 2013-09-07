@@ -44,24 +44,24 @@ public class JaggedLineBrush extends PerformBrush
 
     private void jaggedP(final SnipeData v)
     {
-        final Vector _originClone = this.originCoords.clone().add(JaggedLineBrush.HALF_BLOCK_OFFSET);
-        final Vector _targetClone = this.targetCoords.clone().add(JaggedLineBrush.HALF_BLOCK_OFFSET);
+        final Vector originClone = this.originCoords.clone().add(JaggedLineBrush.HALF_BLOCK_OFFSET);
+        final Vector targetClone = this.targetCoords.clone().add(JaggedLineBrush.HALF_BLOCK_OFFSET);
 
-        final Vector _direction = _targetClone.clone().subtract(_originClone);
-        final double _length = this.targetCoords.distance(this.originCoords);
+        final Vector direction = targetClone.clone().subtract(originClone);
+        final double length = this.targetCoords.distance(this.originCoords);
 
-        if (_length == 0)
+        if (length == 0)
         {
             this.current.perform(this.targetCoords.toLocation(this.getWorld()).getBlock());
         }
         else
         {
-            for (final BlockIterator _iterator = new BlockIterator(this.getWorld(), _originClone, _direction, 0, NumberConversions.round(_length)); _iterator.hasNext(); )
+            for (final BlockIterator iterator = new BlockIterator(this.getWorld(), originClone, direction, 0, NumberConversions.round(length)); iterator.hasNext(); )
             {
-                final Block _block = _iterator.next();
-                for (int _i = 0; _i < recursion; _i++)
+                final Block block = iterator.next();
+                for (int i = 0; i < recursion; i++)
                 {
-                    this.current.perform(this.clampY((int) Math.round(_block.getX() + this.random.nextInt(spread * 2) - spread), (int) Math.round(_block.getY() + this.random.nextInt(spread * 2) - spread), (int) Math.round(_block.getZ() + this.random.nextInt(spread * 2) - spread)));
+                    this.current.perform(this.clampY(Math.round(block.getX() + this.random.nextInt(spread * 2) - spread), Math.round(block.getY() + this.random.nextInt(spread * 2) - spread), Math.round(block.getZ() + this.random.nextInt(spread * 2) - spread)));
                 }
             }
         }
@@ -107,23 +107,23 @@ public class JaggedLineBrush extends PerformBrush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        for (final String _param : par)
+        for (final String parameter : par)
         {
             try
             {
-                if (_param.equalsIgnoreCase("info"))
+                if (parameter.equalsIgnoreCase("info"))
                 {
                     v.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
                     v.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
                     v.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
                     return;
                 }
-                if (_param.startsWith("r"))
+                if (parameter.startsWith("r"))
                 {
-                    final int _temp = Integer.parseInt(_param.substring(1));
-                    if (_temp >= RECURSION_MIN && _temp <= RECURSION_MAX)
+                    final int temp = Integer.parseInt(parameter.substring(1));
+                    if (temp >= RECURSION_MIN && temp <= RECURSION_MAX)
                     {
-                        this.recursion = _temp;
+                        this.recursion = temp;
                         v.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
                     }
                     else
@@ -133,17 +133,17 @@ public class JaggedLineBrush extends PerformBrush
 
                     return;
                 }
-                else if (_param.startsWith("s"))
+                else if (parameter.startsWith("s"))
                 {
-                    final int _temp = Integer.parseInt(_param.substring(1));
-                    this.spread = _temp;
+                    final int temp = Integer.parseInt(parameter.substring(1));
+                    this.spread = temp;
                     v.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
                 }
             }
-            catch (Exception _e)
+            catch (Exception exception)
             {
-                v.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", _param));
-                _e.printStackTrace();
+                v.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
+                exception.printStackTrace();
             }
         }
 

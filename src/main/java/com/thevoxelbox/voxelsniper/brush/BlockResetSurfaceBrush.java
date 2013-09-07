@@ -60,86 +60,86 @@ public class BlockResetSurfaceBrush extends Brush
 
     private void applyBrush(final SnipeData v)
     {
-        final World _world = this.getWorld();
+        final World world = this.getWorld();
 
-        for (int _z = -v.getBrushSize(); _z <= v.getBrushSize(); _z++)
+        for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
         {
-            for (int _x = -v.getBrushSize(); _x <= v.getBrushSize(); _x++)
+            for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
             {
-                for (int _y = -v.getBrushSize(); _y <= v.getBrushSize(); _y++)
+                for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
                 {
 
-                    Block _block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                    if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(_block.getType()))
+                    Block block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                    if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(block.getType()))
                     {
                         continue;
                     }
 
-                    boolean _airFound = false;
+                    boolean airFound = false;
 
-                    if (_world.getBlockAt(this.getBlockPositionX() + _x + 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getBlockPositionX() + x + 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z).getTypeId() == 0)
                     {
-                        _block = _world.getBlockAt(this.getBlockPositionX() + _x + 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                        final byte _oldData = _block.getData();
-                        resetBlock(_block, _oldData);
-                        _airFound = true;
+                        block = world.getBlockAt(this.getBlockPositionX() + x + 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                        final byte oldData = block.getData();
+                        resetBlock(block, oldData);
+                        airFound = true;
                     }
 
-                    if (_world.getBlockAt(this.getBlockPositionX() + _x - 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getBlockPositionX() + x - 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z).getTypeId() == 0)
                     {
-                        _block = _world.getBlockAt(this.getBlockPositionX() + _x - 1, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                        final byte _oldData = _block.getData();
-                        resetBlock(_block, _oldData);
-                        _airFound = true;
+                        block = world.getBlockAt(this.getBlockPositionX() + x - 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                        final byte oldData = block.getData();
+                        resetBlock(block, oldData);
+                        airFound = true;
                     }
 
-                    if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y + 1, this.getBlockPositionZ() + _z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y + 1, this.getBlockPositionZ() + z).getTypeId() == 0)
                     {
-                        _block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y + 1, this.getBlockPositionZ() + _z);
-                        final byte _oldData = _block.getData();
-                        resetBlock(_block, _oldData);
-                        _airFound = true;
+                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y + 1, this.getBlockPositionZ() + z);
+                        final byte oldData = block.getData();
+                        resetBlock(block, oldData);
+                        airFound = true;
                     }
 
-                    if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z).getTypeId() == 0)
                     {
-                        _block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y - 1, this.getBlockPositionZ() + _z);
-                        final byte _oldData = _block.getData();
-                        resetBlock(_block, _oldData);
-                        _airFound = true;
+                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z);
+                        final byte oldData = block.getData();
+                        resetBlock(block, oldData);
+                        airFound = true;
                     }
 
-                    if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z + 1).getTypeId() == 0)
+                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z + 1).getTypeId() == 0)
                     {
-                        _block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z + 1);
-                        final byte _oldData = _block.getData();
-                        resetBlock(_block, _oldData);
-                        _airFound = true;
+                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z + 1);
+                        final byte oldData = block.getData();
+                        resetBlock(block, oldData);
+                        airFound = true;
                     }
 
-                    if (_world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z - 1).getTypeId() == 0)
+                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z - 1).getTypeId() == 0)
                     {
-                        _block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z - 1);
-                        final byte _oldData = _block.getData();
-                        resetBlock(_block, _oldData);
-                        _airFound = true;
+                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z - 1);
+                        final byte oldData = block.getData();
+                        resetBlock(block, oldData);
+                        airFound = true;
                     }
 
-                    if (_airFound)
+                    if (airFound)
                     {
-                        _block = _world.getBlockAt(this.getBlockPositionX() + _x, this.getBlockPositionY() + _y, this.getBlockPositionZ() + _z);
-                        final byte _oldData = _block.getData();
-                        resetBlock(_block, _oldData);
+                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                        final byte oldData = block.getData();
+                        resetBlock(block, oldData);
                     }
                 }
             }
         }
     }
 
-    private void resetBlock(Block _block, final byte _oldData)
+    private void resetBlock(Block block, final byte oldData)
     {
-        _block.setTypeIdAndData(_block.getTypeId(), (byte) ((_block.getData() + 1) & 0xf), true);
-        _block.setTypeIdAndData(_block.getTypeId(), _oldData, true);
+        block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
+        block.setTypeIdAndData(block.getTypeId(), oldData, true);
     }
 
     @Override

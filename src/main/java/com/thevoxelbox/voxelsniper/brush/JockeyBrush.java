@@ -1,10 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.List;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -12,6 +9,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import java.util.List;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush
@@ -23,32 +22,8 @@ public class JockeyBrush extends Brush
 {
     private static final int ENTITY_STACK_LIMIT = 50;
     private static int timesUsed = 0;
-
     private JockeyType jockeyType = JockeyType.NORMAL_ALL_ENTITIES;
     private Entity jockeyedEntity = null;
-
-    private enum JockeyType
-    {
-        NORMAL_ALL_ENTITIES("Normal (All)"), NORMAL_PLAYER_ONLY("Normal (Player only)"), INVERSE_ALL_ENTITIES("Inverse (All)"), INVERSE_PLAYER_ONLY("Inverse (Player only)"), STACK_ALL_ENTITIES("Stack (All)"), STACK_PLAYER_ONLY("Stack (Player only)");
-
-        private String name;
-
-        JockeyType(String name)
-        {
-            this.name = name;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-
-        @Override
-        public String toString()
-        {
-            return this.name;
-        }
-    }
 
     /**
      *
@@ -60,63 +35,63 @@ public class JockeyBrush extends Brush
 
     private void sitOn(final SnipeData v)
     {
-        final Chunk _targetChunk = this.getWorld().getChunkAt(this.getTargetBlock().getLocation());
-        final int _targetChunkX = _targetChunk.getX();
-        final int _targetChunkZ = _targetChunk.getZ();
+        final Chunk targetChunk = this.getWorld().getChunkAt(this.getTargetBlock().getLocation());
+        final int targetChunkX = targetChunk.getX();
+        final int targetChunkZ = targetChunk.getZ();
 
-        double _range = Double.MAX_VALUE;
-        Entity _closest = null;
+        double range = Double.MAX_VALUE;
+        Entity closest = null;
 
-        for (int _x = _targetChunkX - 1; _x <= _targetChunkX + 1; _x++)
+        for (int x = targetChunkX - 1; x <= targetChunkX + 1; x++)
         {
-            for (int _y = _targetChunkZ - 1; _y <= _targetChunkZ + 1; _y++)
+            for (int y = targetChunkZ - 1; y <= targetChunkZ + 1; y++)
             {
-                for (final Entity _e : this.getWorld().getChunkAt(_x, _y).getEntities())
+                for (final Entity entity : this.getWorld().getChunkAt(x, y).getEntities())
                 {
-                    if (_e.getEntityId() == v.owner().getPlayer().getEntityId())
+                    if (entity.getEntityId() == v.owner().getPlayer().getEntityId())
                     {
                         continue;
                     }
 
                     if (jockeyType == JockeyType.NORMAL_PLAYER_ONLY || jockeyType == JockeyType.INVERSE_PLAYER_ONLY)
                     {
-                        if (!(_e instanceof Player))
+                        if (!(entity instanceof Player))
                         {
                             continue;
                         }
                     }
 
-                    final Location _entityLocation = _e.getLocation();
-                    final double _entityDistance = _entityLocation.distance(v.owner().getPlayer().getLocation());
+                    final Location entityLocation = entity.getLocation();
+                    final double entityDistance = entityLocation.distance(v.owner().getPlayer().getLocation());
 
-                    if (_entityDistance < _range)
+                    if (entityDistance < range)
                     {
-                        _range = _entityDistance;
-                        _closest = _e;
+                        range = entityDistance;
+                        closest = entity;
                     }
                 }
             }
         }
 
-        if (_closest != null)
+        if (closest != null)
         {
-            final Player _player = v.owner().getPlayer();
-            final PlayerTeleportEvent _teleEvent = new PlayerTeleportEvent(_player, _player.getLocation(), _closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+            final Player player = v.owner().getPlayer();
+            final PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
-            Bukkit.getPluginManager().callEvent(_teleEvent);
+            Bukkit.getPluginManager().callEvent(playerTeleportEvent);
 
-            if (!_teleEvent.isCancelled())
+            if (!playerTeleportEvent.isCancelled())
             {
                 if (jockeyType == JockeyType.INVERSE_PLAYER_ONLY || jockeyType == JockeyType.INVERSE_ALL_ENTITIES)
                 {
-                    _player.setPassenger(_closest);
+                    player.setPassenger(closest);
                 }
                 else
                 {
-                    _closest.setPassenger(_player);
-                    jockeyedEntity = _closest;
+                    closest.setPassenger(player);
+                    jockeyedEntity = closest;
                 }
-                v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + _closest.getEntityId());
+                v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
             }
         }
         else
@@ -127,29 +102,29 @@ public class JockeyBrush extends Brush
 
     private void stack(final SnipeData v)
     {
-        final int _twoTimesBrushSize = v.getBrushSize() * 2;
+        final int brushSizeDoubled = v.getBrushSize() * 2;
 
-        List<Entity> _nearbyEntities = v.owner().getPlayer().getNearbyEntities(_twoTimesBrushSize, _twoTimesBrushSize, _twoTimesBrushSize);
-        Entity _lastEntity = v.owner().getPlayer();
-        int _stackHeight = 0;
+        List<Entity> nearbyEntities = v.owner().getPlayer().getNearbyEntities(brushSizeDoubled, brushSizeDoubled, brushSizeDoubled);
+        Entity lastEntity = v.owner().getPlayer();
+        int stackHeight = 0;
 
-        for (Entity _e : _nearbyEntities)
+        for (Entity entity : nearbyEntities)
         {
-            if (!(_stackHeight >= ENTITY_STACK_LIMIT))
+            if (!(stackHeight >= ENTITY_STACK_LIMIT))
             {
                 if (jockeyType == JockeyType.STACK_ALL_ENTITIES)
                 {
-                    _lastEntity.setPassenger(_e);
-                    _lastEntity = _e;
-                    _stackHeight++;
+                    lastEntity.setPassenger(entity);
+                    lastEntity = entity;
+                    stackHeight++;
                 }
                 else if (jockeyType == JockeyType.STACK_PLAYER_ONLY)
                 {
-                    if (_e instanceof Player)
+                    if (entity instanceof Player)
                     {
-                        _lastEntity.setPassenger(_e);
-                        _lastEntity = _e;
-                        _stackHeight++;
+                        lastEntity.setPassenger(entity);
+                        lastEntity = entity;
+                        stackHeight++;
                     }
                 }
                 else
@@ -209,33 +184,33 @@ public class JockeyBrush extends Brush
     @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
-        boolean _inverse = false;
-        boolean _playerOnly = false;
-        boolean _stack = false;
+        boolean inverse = false;
+        boolean playerOnly = false;
+        boolean stack = false;
 
         try
         {
-            for (String _arg : par)
+            for (String parameter : par)
             {
-                if (_arg.startsWith("-i:"))
+                if (parameter.startsWith("-i:"))
                 {
-                    _inverse = _arg.endsWith("y") ? true : false;
+                    inverse = parameter.endsWith("y");
                 }
 
-                if (_arg.startsWith("-po:"))
+                if (parameter.startsWith("-po:"))
                 {
-                    _playerOnly = _arg.endsWith("y") ? true : false;
+                    playerOnly = parameter.endsWith("y");
                 }
-                if (_arg.startsWith("-s:"))
+                if (parameter.startsWith("-s:"))
                 {
-                    _stack = _arg.endsWith("y") ? true : false;
+                    stack = parameter.endsWith("y");
                 }
 
             }
 
-            if (_inverse)
+            if (inverse)
             {
-                if (_playerOnly)
+                if (playerOnly)
                 {
                     jockeyType = JockeyType.INVERSE_PLAYER_ONLY;
                 }
@@ -244,9 +219,9 @@ public class JockeyBrush extends Brush
                     jockeyType = JockeyType.INVERSE_ALL_ENTITIES;
                 }
             }
-            else if (_stack)
+            else if (stack)
             {
-                if (_playerOnly)
+                if (playerOnly)
                 {
                     jockeyType = JockeyType.STACK_PLAYER_ONLY;
                 }
@@ -257,7 +232,7 @@ public class JockeyBrush extends Brush
             }
             else
             {
-                if (_playerOnly)
+                if (playerOnly)
                 {
                     jockeyType = JockeyType.NORMAL_PLAYER_ONLY;
                 }
@@ -269,10 +244,10 @@ public class JockeyBrush extends Brush
 
             v.sendMessage("Current jockey mode: " + ChatColor.GREEN + jockeyType.toString());
         }
-        catch (Exception _e)
+        catch (Exception exception)
         {
             v.sendMessage("Error while parsing your arguments.");
-            _e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
@@ -286,5 +261,30 @@ public class JockeyBrush extends Brush
     public final void setTimesUsed(final int tUsed)
     {
         JockeyBrush.timesUsed = tUsed;
+    }
+
+    /**
+     * Available types of jockey modes.
+     */
+    private enum JockeyType
+    {
+        NORMAL_ALL_ENTITIES("Normal (All)"), NORMAL_PLAYER_ONLY("Normal (Player only)"), INVERSE_ALL_ENTITIES("Inverse (All)"), INVERSE_PLAYER_ONLY("Inverse (Player only)"), STACK_ALL_ENTITIES("Stack (All)"), STACK_PLAYER_ONLY("Stack (Player only)");
+        private String name;
+
+        JockeyType(String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        @Override
+        public String toString()
+        {
+            return this.name;
+        }
     }
 }
