@@ -1,9 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -75,20 +72,16 @@ public class Undo
         Undo.FALLOFF_MATERIALS.add(Material.WATER_LILY);
         Undo.FALLOFF_MATERIALS.add(Material.NETHER_WARTS);
     }
-
     private final List<BlockState> all;
     private final List<BlockState> falloff;
     private final List<BlockState> dropdown;
-
     private final String worldName;
-
     private final World world;
 
     /**
      * Default constructor of a Undo container.
      *
-     * @param wName
-     *         name of the world the blocks reside in
+     * @param wName name of the world the blocks reside in
      */
     public Undo(final String wName)
     {
@@ -112,13 +105,17 @@ public class Undo
     /**
      * Adds a Block to the collection.
      *
-     * @param b
-     *         Block to be added
+     * @param b Block to be added
      */
     public final void put(final Block b)
     {
+        ListIterator<BlockState> iterator = this.all.listIterator();
+        while(iterator.hasNext()) {
+            if(iterator.next().getLocation().equals(b.getLocation())) {
+                return;
+            }
+        }
         this.all.add(b.getState());
-
         if (Undo.FALLING_MATERIALS.contains(b.getType()))
         {
             this.dropdown.add(b.getState());
@@ -131,7 +128,8 @@ public class Undo
     }
 
     /**
-     * This method begins the process of replacing the blocks stored in this collection.
+     * This method begins the process of replacing the blocks stored in this
+     * collection.
      */
     public final void undo()
     {
@@ -171,8 +169,7 @@ public class Undo
             {
                 ((BrewingStand) _currentState).getInventory().setContents(((BrewingStand) blockState).getInventory().getContents());
             }
-        }
-        else if (blockState instanceof Chest)
+        } else if (blockState instanceof Chest)
         {
             if (_currentState instanceof Chest)
             {
@@ -180,24 +177,21 @@ public class Undo
                 ((Chest) _currentState).getBlockInventory().setContents(((Chest) blockState).getBlockInventory().getContents());
                 _currentState.update();
             }
-        }
-        else if (blockState instanceof CreatureSpawner)
+        } else if (blockState instanceof CreatureSpawner)
         {
             if (_currentState instanceof CreatureSpawner)
             {
                 ((CreatureSpawner) _currentState).setSpawnedType(((CreatureSpawner) _currentState).getSpawnedType());
                 _currentState.update();
             }
-        }
-        else if (blockState instanceof Dispenser)
+        } else if (blockState instanceof Dispenser)
         {
             if (_currentState instanceof Dispenser)
             {
                 ((Dispenser) _currentState).getInventory().setContents(((Dispenser) blockState).getInventory().getContents());
                 _currentState.update();
             }
-        }
-        else if (blockState instanceof Furnace)
+        } else if (blockState instanceof Furnace)
         {
             if (_currentState instanceof Furnace)
             {
@@ -206,16 +200,14 @@ public class Undo
                 ((Furnace) _currentState).setCookTime(((Furnace) blockState).getCookTime());
                 _currentState.update();
             }
-        }
-        else if (blockState instanceof NoteBlock)
+        } else if (blockState instanceof NoteBlock)
         {
             if (_currentState instanceof NoteBlock)
             {
                 ((NoteBlock) _currentState).setNote(((NoteBlock) blockState).getNote());
                 _currentState.update();
             }
-        }
-        else if (blockState instanceof Sign)
+        } else if (blockState instanceof Sign)
         {
             if (_currentState instanceof Sign)
             {

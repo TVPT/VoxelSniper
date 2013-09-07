@@ -3,11 +3,14 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.google.common.base.Objects;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.UndoDelegate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 
 
 /**
@@ -30,11 +33,16 @@ public class TreeSnipeBrush extends Brush
 
     private void single(final SnipeData v, Block targetBlock)
     {
+        UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
         Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
-        Material currentMaterial = blockBelow.getType();
+        BlockState currentState = blockBelow.getState();
+        undoDelegate.setBlock(blockBelow);
         blockBelow.setType(Material.GRASS);
-        this.getWorld().generateTree(targetBlock.getLocation(), this.treeType);
-        blockBelow.setType(currentMaterial);
+        this.getWorld().generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
+        Undo undo = undoDelegate.getUndo();
+        blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
+        undo.put(blockBelow);
+        v.storeUndo(undo);
     }
 
     private int getYOffset()
