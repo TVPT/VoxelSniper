@@ -4,7 +4,6 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
@@ -12,8 +11,10 @@ import org.bukkit.block.Block;
  */
 public class FillDownBrush extends PerformBrush
 {
+
     private static int timesUsed = 0;
     private double trueCircle = 0;
+    private boolean fillLiquid = true;
 
     /**
      *
@@ -27,23 +28,25 @@ public class FillDownBrush extends PerformBrush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-
-        for (int currentX = 0 - brushSize; currentX <= brushSize; currentX++)
+        final Block targetBlock = this.getTargetBlock();
+        for (int x = -brushSize; x <= brushSize; x++)
         {
-            final double currentXSquared = Math.pow(currentX, 2);
+            final double currentXSquared = Math.pow(x, 2);
 
-            for (int currentZ = 0 - brushSize; currentZ <= brushSize; currentZ++)
+            for (int z = -brushSize; z <= brushSize; z++)
             {
-                if (currentXSquared + Math.pow(currentZ, 2) <= brushSizeSquared)
+                if (currentXSquared + Math.pow(z, 2) <= brushSizeSquared)
                 {
-                    for (int currentY = this.getBlockPositionY(); currentY >= 0; --currentY)
+                    for (int y = 0; y >= -targetBlock.getY(); --y)
                     {
-                        final Block currentBlock = this.clampY(this.getBlockPositionX() + currentX, currentY, this.getBlockPositionZ() + currentZ);
-                        if (currentBlock.getType().equals(Material.AIR))
+                        final Block currentBlock = this.getWorld().getBlockAt(
+                                targetBlock.getX() + x,
+                                targetBlock.getY() + y,
+                                targetBlock.getZ() + z);
+                        if (currentBlock.isEmpty() || (fillLiquid && currentBlock.isLiquid()))
                         {
                             this.current.perform(currentBlock);
-                        }
-                        else
+                        } else
                         {
                             break;
                         }
@@ -82,20 +85,29 @@ public class FillDownBrush extends PerformBrush
             if (par[i].equalsIgnoreCase("info"))
             {
                 v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b fd false will switch back. (false is default)");
+                v.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm.");
+                v.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
+                v.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
+                v.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
                 return;
-            }
-            else if (par[i].startsWith("true"))
+            } else if (par[i].equalsIgnoreCase("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-            }
-            else if (par[i].startsWith("false"))
+            } else if (par[i].equalsIgnoreCase("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-            }
-            else
+            } else if (par[i].equalsIgnoreCase("all"))
+            {
+                this.fillLiquid = true;
+                v.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
+            } else if (par[i].equalsIgnoreCase("some"))
+            {
+                this.fillLiquid = false;
+                v.setReplaceId(0);
+                v.sendMessage(ChatColor.AQUA + "Now only filling air.");
+            } else
             {
                 v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
