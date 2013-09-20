@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.number>UNKNOWN</project.build.number>
         <project.build.version>${project.version}</project.build.version>
-        <depversions.bukkit>1.6.2-R0.1</depversions.bukkit>
+        <depversions.bukkit>1.6.4-R0.1-SNAPSHOT</depversions.bukkit>
     </properties>
 
     <profiles>
