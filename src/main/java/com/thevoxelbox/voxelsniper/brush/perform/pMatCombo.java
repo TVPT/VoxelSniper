@@ -50,4 +50,10 @@ public class pMatCombo extends vPerformer
             b.setTypeId(i, true);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

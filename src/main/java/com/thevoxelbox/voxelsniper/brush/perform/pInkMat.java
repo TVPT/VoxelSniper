@@ -47,4 +47,10 @@ public class pInkMat extends vPerformer
             b.setData(d, true);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

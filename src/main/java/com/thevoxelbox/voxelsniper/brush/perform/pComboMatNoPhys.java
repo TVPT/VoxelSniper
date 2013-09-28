@@ -50,4 +50,10 @@ public class pComboMatNoPhys extends vPerformer
             b.setTypeIdAndData(i, d, false);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

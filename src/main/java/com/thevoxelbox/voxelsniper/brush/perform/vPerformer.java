@@ -6,7 +6,6 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -36,5 +35,10 @@ public abstract class vPerformer
         Undo temp = h;
         h = null;
         return temp;
+    }
+
+    public boolean isUsingReplaceMaterial()
+    {
+        return false;
     }
 }

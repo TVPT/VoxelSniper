@@ -64,4 +64,8 @@ public interface IBrush
      */
     void updateScale();
 
+    /**
+     * @return The name of the category the brush is in.
+     */
+    String getBrushCategory();
 }

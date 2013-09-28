@@ -46,4 +46,10 @@ public class pInkComboNoPhys extends vPerformer
             b.setData(d, false);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

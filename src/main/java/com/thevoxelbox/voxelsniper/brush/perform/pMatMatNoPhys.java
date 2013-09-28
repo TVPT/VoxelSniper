@@ -47,4 +47,10 @@ public class pMatMatNoPhys extends vPerformer
             b.setTypeId(i, false);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

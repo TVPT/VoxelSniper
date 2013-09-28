@@ -47,4 +47,10 @@ public class pMatInk extends vPerformer
             b.setTypeId(i, true);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

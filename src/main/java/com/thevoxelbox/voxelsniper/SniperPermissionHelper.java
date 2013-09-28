@@ -16,7 +16,7 @@ public class SniperPermissionHelper
 
     /**
      * @param player
-     * @return {@link Sniper}
+     * @return {@link Sniper} instance or null
      */
     public final Sniper getSniperInstance(final Player player)
     {

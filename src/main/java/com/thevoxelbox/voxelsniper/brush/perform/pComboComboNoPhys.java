@@ -54,4 +54,10 @@ public class pComboComboNoPhys extends vPerformer
             b.setData(d);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

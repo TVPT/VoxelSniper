@@ -6,6 +6,8 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
+import org.bukkit.Bukkit;
 
 /**
  * @author Voxel
@@ -14,6 +16,11 @@ public abstract class PerformBrush extends Brush implements Performer
 {
 
     protected vPerformer current = new pMaterial();
+
+    public vPerformer getCurrentPerformer()
+    {
+        return current;
+    }
 
     @Override
     public void parse(String[] args, com.thevoxelbox.voxelsniper.SnipeData v)
@@ -24,6 +31,8 @@ public abstract class PerformBrush extends Brush implements Performer
             if (p != null)
             {
                 current = p;
+                SniperBrushChangedEvent event = new SniperBrushChangedEvent(v.owner(), this, this);
+                Bukkit.getPluginManager().callEvent(event);
                 info(v.getVoxelMessage());
                 current.info(v.getVoxelMessage());
                 if (args.length > 2)

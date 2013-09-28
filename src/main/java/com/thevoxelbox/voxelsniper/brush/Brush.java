@@ -218,6 +218,12 @@ public abstract class Brush implements IBrush
         this.name = name;
     }
 
+    @Override
+    public String getBrushCategory()
+    {
+        return "General";
+    }
+
     /**
      * @return the targetBlock
      */

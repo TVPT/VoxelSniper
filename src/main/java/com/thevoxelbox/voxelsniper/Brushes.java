@@ -6,7 +6,9 @@ import com.google.common.collect.Multimap;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -81,6 +83,40 @@ public class Brushes
     public static int registeredLiteSniperBrushHandles()
     {
         return LITE_SNIPER_BRUSHES.size();
+    }
+
+    /**
+     * Convinience method to get all possible handles for a given brush class that is registered.
+     *
+     * @param clazz Brush class
+     * @return All Sniper and LiteSniper registered handles the brush is registered under.
+     */
+    public static Set<String> getAllBrushHandles(Class<? extends IBrush> clazz)
+    {
+        Set<String> handles = new HashSet<String>();
+        handles.addAll(getSniperBrushHandles(clazz));
+        handles.addAll(getLiteSniperBrushHandles(clazz));
+        return handles;
+    }
+
+    /**
+     *
+     * @param clazz Brush class
+     * @return All Sniper registered handles for the brush.
+     */
+    public static Set<String> getSniperBrushHandles(Class<? extends IBrush> clazz)
+    {
+        return new HashSet<String>(SNIPER_BRUSHES.get(clazz));
+    }
+
+    /**
+     *
+     * @param clazz Brush class
+     * @return All LiteSniper registered handles for the brush.
+     */
+    public static Set<String> getLiteSniperBrushHandles(Class<? extends IBrush> clazz)
+    {
+        return new HashSet<String>(LITE_SNIPER_BRUSHES.get(clazz));
     }
 
     /**

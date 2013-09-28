@@ -50,4 +50,10 @@ public class pInkCombo extends vPerformer
             b.setData(d);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

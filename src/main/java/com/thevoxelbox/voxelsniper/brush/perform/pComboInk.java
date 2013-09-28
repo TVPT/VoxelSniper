@@ -50,4 +50,10 @@ public class pComboInk extends vPerformer
             b.setTypeIdAndData(i, d, true);
         }
     }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
+    }
 }

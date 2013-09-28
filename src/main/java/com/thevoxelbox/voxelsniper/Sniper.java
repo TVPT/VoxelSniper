@@ -8,12 +8,18 @@ import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.brush.tool.BrushTool;
 import com.thevoxelbox.voxelsniper.brush.tool.SneakBrushTool;
+import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
+import com.thevoxelbox.voxelsniper.event.SniperBrushSizeChangedEvent;
+import com.thevoxelbox.voxelsniper.event.SniperMaterialChangedEvent;
+import com.thevoxelbox.voxelsniper.event.SniperReplaceMaterialChangedEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.material.MaterialData;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -293,17 +299,25 @@ public class Sniper
 
     public IBrush getCurrent()
     {
-        return this.current;
+        return this.getLocalCurrent();
     }
 
     public void setCurrent(final Brush current)
     {
-        this.current = current;
+        this.setLocalCurrent(current);
     }
 
     public SnipeData getData()
     {
-        return this.data;
+        Material itemInHand = this.player.getItemInHand().getType();
+        if (this.brushTools.containsKey(itemInHand))
+        {
+            return brushTools.get(itemInHand).data;
+        }
+        else
+        {
+            return this.data;
+        }
     }
 
     /**
@@ -314,12 +328,16 @@ public class Sniper
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
             final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(brushTool.data.getVoxelId(), dat));
             brushTool.data.setData(dat);
+            Bukkit.getPluginManager().callEvent(event);
             brushTool.data.getVoxelMessage().data();
         }
         else
         {
+            SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, new MaterialData(data.getVoxelId(), data.getData()), new MaterialData(data.getVoxelId(), dat));
             this.data.setData(dat);
+            Bukkit.getPluginManager().callEvent(event);
             this.voxelMessage.data();
         }
     }
@@ -459,10 +477,10 @@ public class Sniper
         }
         else
         {
-            this.current.info(this.voxelMessage);
-            if (this.current instanceof Performer)
+            this.getLocalCurrent().info(this.voxelMessage);
+            if (this.getLocalCurrent() instanceof Performer)
             {
-                ((Performer) this.current).showInfo(this.voxelMessage);
+                ((Performer) this.getLocalCurrent()).showInfo(this.voxelMessage);
             }
         }
     }
@@ -575,11 +593,11 @@ public class Sniper
             final int[] parameterArray = this.brushPresetsParams.get(slot);
 
             final IBrush temp = this.brushPresets.get(slot);
-            if (temp != this.current)
+            if (temp != this.getLocalCurrent())
             {
                 this.twoBack = this.previous;
-                this.previous = this.current;
-                this.current = temp;
+                this.previous = this.getLocalCurrent();
+                this.setLocalCurrent(temp);
             }
             this.fillPrevious();
             this.data.setVoxelId(parameterArray[Sniper.SAVE_ARRAY_VOXEL_ID]);
@@ -611,11 +629,11 @@ public class Sniper
             final int[] parameterArray = this.brushPresetsParamsS.get(slot);
 
             final IBrush temp = this.brushPresetsS.get(slot);
-            if (temp != this.current)
+            if (temp != this.getLocalCurrent())
             {
                 this.twoBack = this.previous;
-                this.previous = this.current;
-                this.current = temp;
+                this.previous = this.getLocalCurrent();
+                this.setLocalCurrent(temp);
             }
             this.fillPrevious();
             this.data.setVoxelId(parameterArray[Sniper.SAVE_ARRAY_VOXEL_ID]);
@@ -642,8 +660,8 @@ public class Sniper
      */
     public final void previousBrush()
     {
-        final IBrush temp = this.current;
-        this.current = this.previous;
+        final IBrush temp = this.getLocalCurrent();
+        this.setLocalCurrent(this.previous);
         this.previous = temp;
 
         this.fillCurrent();
@@ -722,7 +740,7 @@ public class Sniper
         }
         else
         {
-            this.current = new SnipeBrush();
+            this.setLocalCurrent(new SnipeBrush());
             this.fillPrevious();
             this.data.reset();
             this.range = 1;
@@ -798,7 +816,7 @@ public class Sniper
      */
     public final void savePreset(final int slot)
     {
-        this.brushPresets.put(slot, this.current);
+        this.brushPresets.put(slot, this.getLocalCurrent());
         this.fillCurrent();
         this.brushPresetsParams.put(slot, this.brushPresetsParamsS.get("current@"));
         this.saveAllPresets();
@@ -810,7 +828,7 @@ public class Sniper
      */
     public final void savePreset(final String slot)
     { // string version
-        this.brushPresetsS.put(slot, this.current);
+        this.brushPresetsS.put(slot, this.getLocalCurrent());
         this.fillCurrent();
         this.brushPresetsParamsS.put(slot, this.brushPresetsParamsS.get("current@"));
         this.saveAllPresets();
@@ -843,8 +861,8 @@ public class Sniper
                     this.fillPrevious();
 
                     this.twoBack = this.previous;
-                    this.previous = this.current;
-                    this.current = this.myBrushes.get(args[0]);
+                    this.previous = this.getLocalCurrent();
+                    this.setLocalCurrent(this.myBrushes.get(args[0]));
                 }
             }
             else
@@ -866,13 +884,13 @@ public class Sniper
                     }
                     else
                     {
-                        if (this.current instanceof Performer)
+                        if (this.getLocalCurrent() instanceof Performer)
                         {
-                            ((Performer) this.current).parse(argumentsParsed, this.data);
+                            ((Performer) this.getLocalCurrent()).parse(argumentsParsed, this.data);
                         }
                         else
                         {
-                            this.current.parameters(argumentsParsed, this.data);
+                            this.getLocalCurrent().parameters(argumentsParsed, this.data);
                         }
                     }
                     return true;
@@ -883,7 +901,7 @@ public class Sniper
                     this.player.sendMessage(ChatColor.DARK_PURPLE + "" + this.fromArgs(argumentsParsed));
                     this.player.sendMessage(ChatColor.RED + "Is not a valid statement");
                     this.player.sendMessage(ChatColor.DARK_BLUE + "" + exception.getMessage());
-                    VoxelSniper.LOG.warning("[VoxelSniper] Exception while receiving parameters: \n(" + this.player.getName() + " " + this.current.getName() + ") par[ " + this.fromArgs(argumentsParsed) + "]");
+                    VoxelSniper.LOG.warning("[VoxelSniper] Exception while receiving parameters: \n(" + this.player.getName() + " " + this.getLocalCurrent().getName() + ") par[ " + this.fromArgs(argumentsParsed) + "]");
                     VoxelSniper.LOG.log(Level.SEVERE, null, exception);
                     return false;
                 }
@@ -907,12 +925,16 @@ public class Sniper
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
             final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            SniperBrushSizeChangedEvent event = new SniperBrushSizeChangedEvent(this, brushTool.data.getBrushSize(), size);
             brushTool.data.setBrushSize(size);
+            Bukkit.getPluginManager().callEvent(event);
             brushTool.data.getVoxelMessage().size();
         }
         else
         {
+            SniperBrushSizeChangedEvent event = new SniperBrushSizeChangedEvent(this, this.data.getBrushSize(), size);
             this.data.setBrushSize(size);
+            Bukkit.getPluginManager().callEvent(event);
             this.voxelMessage.size();
         }
     }
@@ -968,9 +990,9 @@ public class Sniper
         }
         else
         {
-            if (this.current instanceof Performer)
+            if (this.getLocalCurrent() instanceof Performer)
             {
-                ((Performer) this.current).parse(parameters, this.data);
+                ((Performer) this.getLocalCurrent()).parse(parameters, this.data);
             }
             else
             {
@@ -987,12 +1009,16 @@ public class Sniper
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
             final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            SniperMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(replace, brushTool.data.getData()));
             brushTool.data.setReplaceId(replace);
+            Bukkit.getPluginManager().callEvent(event);
             brushTool.data.getVoxelMessage().replace();
         }
         else
         {
+            SniperMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, new MaterialData(data.getVoxelId(), data.getData()), new MaterialData(replace, data.getData()));
             this.data.setReplaceId(replace);
+            Bukkit.getPluginManager().callEvent(event);
             this.voxelMessage.replace();
         }
     }
@@ -1005,12 +1031,16 @@ public class Sniper
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
             final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            SniperMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(brushTool.data.getVoxelId(), dat));
             brushTool.data.setReplaceData(dat);
+            Bukkit.getPluginManager().callEvent(event);
             brushTool.data.getVoxelMessage().replaceData();
         }
         else
         {
+            SniperMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, new MaterialData(data.getVoxelId(), data.getData()), new MaterialData(data.getVoxelId(), dat));
             this.data.setReplaceData(dat);
+            Bukkit.getPluginManager().callEvent(event);
             this.voxelMessage.replaceData();
         }
     }
@@ -1023,12 +1053,16 @@ public class Sniper
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
             final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(voxel, brushTool.data.getData()));
             brushTool.data.setVoxelId(voxel);
+            Bukkit.getPluginManager().callEvent(event);
             brushTool.data.getVoxelMessage().voxel();
         }
         else
         {
+            SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, new MaterialData(data.getVoxelId(), data.getData()), new MaterialData(voxel, data.getData()));
             this.data.setVoxelId(voxel);
+            Bukkit.getPluginManager().callEvent(event);
             this.voxelMessage.voxel();
         }
     }
@@ -1060,7 +1094,7 @@ public class Sniper
                     return success;
                 }
 
-                success = this.current.perform(action, this.data, itemInHand, clickedBlock, clickedFace);
+                success = this.getLocalCurrent().perform(action, this.data, itemInHand, clickedBlock, clickedFace);
             }
         }
         catch (final Exception exception)
@@ -1072,7 +1106,7 @@ public class Sniper
             {
                 this.player.sendMessage(ChatColor.DARK_GRAY + stackTraceElement.getClassName() + ChatColor.DARK_GREEN + " : " + ChatColor.DARK_GRAY + stackTraceElement.getLineNumber());
             }
-            VoxelSniper.LOG.warning("[VoxelSniper] Exception while sniping: (" + this.player.getName() + " " + this.current.getName() + ")");
+            VoxelSniper.LOG.warning("[VoxelSniper] Exception while sniping: (" + this.player.getName() + " " + this.getLocalCurrent().getName() + ")");
             VoxelSniper.LOG.log(Level.SEVERE, null, exception);
             return false;
         }
@@ -1122,9 +1156,9 @@ public class Sniper
     public final void twoBackBrush()
     {
         this.fillCurrent();
-        final IBrush temp = this.current;
+        final IBrush temp = this.getLocalCurrent();
         final IBrush tempTwo = this.previous;
-        this.current = this.twoBack;
+        this.setLocalCurrent(this.twoBack);
         this.previous = temp;
         this.twoBack = tempTwo;
 
@@ -1273,5 +1307,27 @@ public class Sniper
         this.data.setcCen(currentP[Sniper.SAVE_ARRAY_CENTROID]);
         this.data.setReplaceData((byte) currentP[Sniper.SAVE_ARRAY_REPLACE_DATA_VALUE]);
         this.range = currentP[Sniper.SAVE_ARRAY_RANGE];
+    }
+
+    /**
+     * Ugly accessor monitor.
+     *
+     * @return {@link Sniper#current}
+     */
+    protected IBrush getLocalCurrent()
+    {
+        return current;
+    }
+
+    /**
+     * Ugly accessor monitor.
+     *
+     * @param current Brush to be set.
+     */
+    protected void setLocalCurrent(IBrush current)
+    {
+        SniperBrushChangedEvent event = new SniperBrushChangedEvent(this, this.current, current);
+        this.current = current;
+        Bukkit.getPluginManager().callEvent(event);
     }
 }
