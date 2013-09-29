@@ -16,14 +16,14 @@ public class UndoDelegate implements BlockChangeDelegate
         
     public Undo getUndo() {
         final Undo pastUndo = currentUndo;
-        currentUndo = new Undo(targetWorld.getName());
+        currentUndo = new Undo();
         return pastUndo;
     }
 
     public UndoDelegate(World targetWorld)
     {
         this.targetWorld = targetWorld;
-        this.currentUndo = new Undo(targetWorld.getName());
+        this.currentUndo = new Undo();
     }
 
     @SuppressWarnings("deprecation")

@@ -169,7 +169,7 @@ public class StampBrush extends Brush
      */
     protected final void stamp(final SnipeData v)
     {
-        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo();
 
         if (this.sorted)
         {
@@ -227,7 +227,7 @@ public class StampBrush extends Brush
     protected final void stampFill(final SnipeData v)
     {
 
-        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo();
 
         if (this.sorted)
         {
@@ -285,7 +285,7 @@ public class StampBrush extends Brush
     protected final void stampNoAir(final SnipeData v)
     {
 
-        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo();
 
         if (this.sorted)
         {

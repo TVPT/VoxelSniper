@@ -102,7 +102,7 @@ public class ShellVoxelBrush extends Brush
         }
 
         // Make the changes
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int x = brushSizeSquared; x >= 0; x--)
         {

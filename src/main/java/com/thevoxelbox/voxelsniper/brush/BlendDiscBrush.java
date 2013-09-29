@@ -95,7 +95,7 @@ public class BlendDiscBrush extends BlendBrushBase
             }
         }
 
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         final double rSquared = Math.pow(brushSize + 1, 2);
 
         // Make the changes

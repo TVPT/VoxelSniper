@@ -79,7 +79,7 @@ public class CopyPastaBrush extends Brush
     @SuppressWarnings("deprecation")
 	private void doPasta(final SnipeData v)
     {
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int i = 0; i < this.arraySize[0]; i++)
         {

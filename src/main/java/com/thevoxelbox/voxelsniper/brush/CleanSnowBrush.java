@@ -29,7 +29,7 @@ public class CleanSnowBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int y = (brushSize + 1) * 2; y >= 0; y--)
         {

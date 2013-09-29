@@ -37,7 +37,7 @@ public class EraserBrush extends Brush
         final int brushSize = v.getBrushSize();
         final int brushSizeDoubled = 2 * brushSize;
         World world = this.getTargetBlock().getWorld();
-        final Undo undo = new Undo(world.getName());
+        final Undo undo = new Undo();
 
         for (int x = brushSizeDoubled; x >= 0; x--)
         {

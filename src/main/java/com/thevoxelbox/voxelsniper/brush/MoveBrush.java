@@ -102,7 +102,7 @@ public class MoveBrush extends Brush
         {
             final World world = selection.getBlockStates().get(0).getWorld();
 
-            final Undo undo = new Undo(world.getName());
+            final Undo undo = new Undo();
             final HashSet<Block> undoSet = new HashSet<Block>();
 
             final Selection newSelection = new Selection();

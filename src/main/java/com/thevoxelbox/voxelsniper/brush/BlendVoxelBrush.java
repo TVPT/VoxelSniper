@@ -109,7 +109,7 @@ public class BlendVoxelBrush extends BlendBrushBase
             }
         }
 
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         // Make the changes
         for (int x = brushSizeDoubled; x >= 0; x--)

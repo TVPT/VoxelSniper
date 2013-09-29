@@ -278,7 +278,7 @@ public class SpiralStaircaseBrush extends Brush
             }
         }
 
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
         // Make the changes
 
         for (int x = 2 * v.getBrushSize(); x >= 0; x--)
@@ -655,7 +655,7 @@ public class SpiralStaircaseBrush extends Brush
 
         }
 
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
         // Make the changes
 
         for (int x = 2 * v.getBrushSize(); x >= 0; x--)

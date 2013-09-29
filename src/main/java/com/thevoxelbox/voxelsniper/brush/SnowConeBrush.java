@@ -123,7 +123,7 @@ public class SnowConeBrush extends Brush
             }
         }
 
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int x = 0; x <= brushSizeDoubled; x++)
         {

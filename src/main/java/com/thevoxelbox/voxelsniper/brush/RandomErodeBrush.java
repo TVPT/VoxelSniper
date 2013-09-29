@@ -174,7 +174,7 @@ public class RandomErodeBrush extends Brush
     @SuppressWarnings("deprecation")
 	private void rerosion(final SnipeData v)
     {
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         if (this.erodeFace >= 0 && this.erodeFace <= 6)
         {
@@ -258,7 +258,7 @@ public class RandomErodeBrush extends Brush
     @SuppressWarnings("deprecation")
 	private void rfilling(final SnipeData v)
     {
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         if (this.fillFace >= 0 && this.fillFace <= 6)
         {

@@ -109,7 +109,7 @@ public class BlendBallBrush extends BlendBrushBase
             }
         }
 
-        final Undo undo = new Undo(this.getWorld().getName());
+        final Undo undo = new Undo();
         final double rSquared = Math.pow(brushSize + 1, 2);
 
         // Make the changes  

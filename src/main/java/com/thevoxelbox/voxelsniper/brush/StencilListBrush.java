@@ -80,7 +80,7 @@ public class StencilListBrush extends Brush
         final String stencilName = this.readRandomStencil(v);
         v.sendMessage(stencilName);
 
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (file.exists())
@@ -283,7 +283,7 @@ public class StencilListBrush extends Brush
 
         final String stencilName = this.readRandomStencil(v);
 
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (file.exists())
@@ -486,7 +486,7 @@ public class StencilListBrush extends Brush
 
         final String stencilName = this.readRandomStencil(v);
 
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (file.exists())
@@ -697,7 +697,7 @@ public class StencilListBrush extends Brush
 
         final String stencilName = this.readRandomStencil(v);
 
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 
         if (file.exists())

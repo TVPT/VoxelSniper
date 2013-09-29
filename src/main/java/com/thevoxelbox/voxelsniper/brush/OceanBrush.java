@@ -141,7 +141,7 @@ public class OceanBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
         this.oceanator(v, undo);
         v.storeUndo(undo);
     }

@@ -158,7 +158,7 @@ public class Rot3DBrush extends Brush
         final double cosRoll = Math.cos(this.seRoll);
         final double sinRoll = Math.sin(this.seRoll);
         final boolean[][][] doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int x = 0; x < this.snap.length; x++)
         {

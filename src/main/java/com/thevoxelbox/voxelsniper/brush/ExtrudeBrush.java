@@ -30,7 +30,7 @@ public class ExtrudeBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
 
         for (int x = -brushSize; x <= brushSize; x++)
         {
@@ -59,7 +59,7 @@ public class ExtrudeBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
 
         for (int x = -brushSize; x <= brushSize; x++)
         {
@@ -89,7 +89,7 @@ public class ExtrudeBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
 
         for (int y = -brushSize; y <= brushSize; y++)
         {

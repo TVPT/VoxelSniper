@@ -32,7 +32,7 @@ public class DrainBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         if (this.disc)
         {

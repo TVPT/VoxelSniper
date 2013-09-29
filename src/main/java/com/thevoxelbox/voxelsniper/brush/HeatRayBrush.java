@@ -78,7 +78,7 @@ public class HeatRayBrush extends Brush
 
         final Vector targetLocation = this.getTargetBlock().getLocation().toVector();
         final Location currentLocation = new Location(this.getTargetBlock().getWorld(), 0, 0, 0);
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         Block currentBlock;
 
         for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--)

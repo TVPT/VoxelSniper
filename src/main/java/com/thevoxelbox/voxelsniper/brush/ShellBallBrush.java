@@ -104,7 +104,7 @@ public class ShellBallBrush extends Brush
         }
 
         // Make the changes
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
         final double rSquared = Math.pow(brushSize + 0.5, 2);
 
         for (int x = brushSizeDoubled; x >= 0; x--)

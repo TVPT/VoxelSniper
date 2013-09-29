@@ -529,7 +529,7 @@ public class GenerateTreeBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo();
 
         this.branchBlocks.clear();
 

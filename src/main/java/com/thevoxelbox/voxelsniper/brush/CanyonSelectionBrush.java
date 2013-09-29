@@ -49,7 +49,7 @@ public class CanyonSelectionBrush extends CanyonBrush
 
     private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final SnipeData v)
     {
-        final Undo undo = new Undo(getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int x = lowX; x <= highX; x++)
         {

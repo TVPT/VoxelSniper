@@ -72,7 +72,7 @@ public class CanyonBrush extends Brush
     @Override
     protected void arrow(final SnipeData v)
     {
-        final Undo undo = new Undo(this.getWorld().getName());
+        final Undo undo = new Undo();
 
         canyon(getTargetBlock().getChunk(), undo);
 
@@ -82,7 +82,7 @@ public class CanyonBrush extends Brush
     @Override
     protected void powder(final SnipeData v)
     {
-        final Undo undo = new Undo(this.getWorld().getName());
+        final Undo undo = new Undo();
 
         Chunk targetChunk = getTargetBlock().getChunk();
         for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++)

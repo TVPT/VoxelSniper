@@ -100,7 +100,7 @@ public class ShellSetBrush extends Brush
                     }
                 }
 
-                final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+                final Undo undo = new Undo();
                 for (final Block currentBlock : blocks)
                 {
                     if (currentBlock.getTypeId() != v.getVoxelId())

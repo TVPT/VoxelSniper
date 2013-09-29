@@ -66,7 +66,7 @@ public class StencilBrush extends Brush
             return;
         }
 
-        final Undo undo = new Undo(getWorld().getName());
+        final Undo undo = new Undo();
         final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 
         if (file.exists())

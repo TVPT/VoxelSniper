@@ -101,7 +101,7 @@ public class ErodeBrush extends Brush
             fillIteration(v, erosionPreset, blockChangeTracker, targetBlockVector);
         }
 
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         for (final BlockWrapper blockWrapper : blockChangeTracker.getAll())
         {
             undo.put(blockWrapper.getBlock());
