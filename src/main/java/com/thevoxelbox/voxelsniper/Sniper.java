@@ -877,14 +877,13 @@ public class Sniper
                     }
                     return true;
                 }
-                catch (final Exception exception)
+                catch (Exception exception)
                 {
                     this.player.sendMessage(ChatColor.RED + "Invalid parameters! (Parameter error)");
                     this.player.sendMessage(ChatColor.DARK_PURPLE + "" + this.fromArgs(argumentsParsed));
                     this.player.sendMessage(ChatColor.RED + "Is not a valid statement");
                     this.player.sendMessage(ChatColor.DARK_BLUE + "" + exception.getMessage());
-                    VoxelSniper.LOG.warning("[VoxelSniper] Exception while receiving parameters: \n(" + this.player.getName() + " " + this.current.getName() + ") par[ " + this.fromArgs(argumentsParsed) + "]");
-                    VoxelSniper.LOG.log(Level.SEVERE, null, exception);
+                    VoxelSniper.getInstance().getLogger().log(Level.SEVERE, "Exception while receiving parameters: (" + this.player.getName() + " " + this.current.getName() + ") par[ " + this.fromArgs(argumentsParsed) + "]", exception);
                     return false;
                 }
             }
@@ -1063,17 +1062,10 @@ public class Sniper
                 success = this.current.perform(action, this.data, itemInHand, clickedBlock, clickedFace);
             }
         }
-        catch (final Exception exception)
+        catch (Exception exception)
         {
-            this.player.sendMessage(ChatColor.RED + "An Exception has occured! (Sniping error)");
-            this.player.sendMessage(ChatColor.RED + "" + exception.toString());
-            final StackTraceElement[] stackTrace = exception.getStackTrace();
-            for (final StackTraceElement stackTraceElement : stackTrace)
-            {
-                this.player.sendMessage(ChatColor.DARK_GRAY + stackTraceElement.getClassName() + ChatColor.DARK_GREEN + " : " + ChatColor.DARK_GRAY + stackTraceElement.getLineNumber());
-            }
-            VoxelSniper.LOG.warning("[VoxelSniper] Exception while sniping: (" + this.player.getName() + " " + this.current.getName() + ")");
-            VoxelSniper.LOG.log(Level.SEVERE, null, exception);
+            player.sendMessage(ChatColor.RED + "An Exception has been caught while trying to execute snipe. (Details in server log)");
+            VoxelSniper.getInstance().getLogger().log(Level.SEVERE, "Exception while sniping: (" + player.getName() + " " + current.getName() + ")", exception);
             return false;
         }
         return success;

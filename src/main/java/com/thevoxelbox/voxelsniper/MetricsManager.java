@@ -73,7 +73,7 @@ public final class MetricsManager
                     int count = 0;
                     for (final Player player : Bukkit.getOnlinePlayers())
                     {
-                        if (VoxelSniper.getSniperPermissionHelper().isSniper(player))
+                        if (VoxelSniper.getInstance().getSniperPermissionHelper().isSniper(player))
                         {
                             count++;
                         }
@@ -90,7 +90,7 @@ public final class MetricsManager
                     int count = 0;
                     for (final Player player : Bukkit.getOnlinePlayers())
                     {
-                        if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
+                        if (VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player))
                         {
                             count++;
                         }

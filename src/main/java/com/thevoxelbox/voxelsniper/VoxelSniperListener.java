@@ -37,89 +37,89 @@ public class VoxelSniperListener implements Listener
      * @param command
      * @return boolean Success.
      */
-    public static boolean onCommand(final Player player, final String[] split, final String command)
+    public boolean onCommand(final Player player, final String[] split, final String command)
     {
         if (command.equalsIgnoreCase("vchunk"))
         {
-            return VoxelSniperListener.commandVChunk(player);
+            return commandVChunk(player);
         }
         else if (command.equalsIgnoreCase("paint"))
         {
-            return VoxelSniperListener.commandPaint(player, split);
+            return commandPaint(player, split);
         }
-        else if (command.equalsIgnoreCase("goto") && VoxelSniper.getSniperPermissionHelper().isSniper(player))
+        else if (command.equalsIgnoreCase("goto") && VoxelSniper.getInstance().getSniperPermissionHelper().isSniper(player))
         {
-            return VoxelSniperListener.commandGoto(player, split);
+            return commandGoto(player, split);
         }
-        else if (VoxelSniper.getSniperPermissionHelper().isSniper(player) || VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
+        else if (VoxelSniper.getInstance().getSniperPermissionHelper().isSniper(player) || VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player))
         {
             if (command.equalsIgnoreCase("btool"))
             {
-                return VoxelSniperListener.commandSniperBTool(player, split);
+                return commandSniperBTool(player, split);
             }
             else if (command.equalsIgnoreCase("uuu"))
             {
-                return VoxelSniperListener.commandSniperUUU(player);
+                return commandSniperUUU(player);
             }
             else if (command.equalsIgnoreCase("uu"))
             {
-                return VoxelSniperListener.commandSniperUU(player, split);
+                return commandSniperUU(player, split);
             }
             else if (command.equalsIgnoreCase("u"))
             {
-                return VoxelSniperListener.commandSniperU(player, split);
+                return commandSniperU(player, split);
             }
             else if (command.equalsIgnoreCase("d"))
             {
-                return VoxelSniperListener.commandSniperD(player);
+                return commandSniperD(player);
             }
             else if (command.equalsIgnoreCase("vs"))
             {
-                return VoxelSniperListener.commandSniperVs(player, split);
+                return commandSniperVs(player, split);
             }
             else if (command.equalsIgnoreCase("vc"))
             {
-                return VoxelSniperListener.commandSniperVc(player, split);
+                return commandSniperVc(player, split);
             }
             else if (command.equalsIgnoreCase("vh"))
             {
-                return VoxelSniperListener.commandSniperVh(player, split);
+                return commandSniperVh(player, split);
             }
             else if (command.equalsIgnoreCase("vi"))
             {
-                return VoxelSniperListener.commandSniperVi(player, split);
+                return commandSniperVi(player, split);
             }
             else if (command.equalsIgnoreCase("vir"))
             {
-                return VoxelSniperListener.commandSniperVir(player, split);
+                return commandSniperVir(player, split);
             }
             else if (command.equalsIgnoreCase("vr"))
             {
-                return VoxelSniperListener.commandSniperVr(player, split);
+                return commandSniperVr(player, split);
             }
             else if (command.equalsIgnoreCase("vl"))
             {
-                return VoxelSniperListener.commandSniperVl(player, split);
+                return commandSniperVl(player, split);
             }
             else if (command.equalsIgnoreCase("v"))
             {
-                return VoxelSniperListener.commandSniperV(player, split);
+                return commandSniperV(player, split);
             }
             else if (command.equalsIgnoreCase("b"))
             {
-                return VoxelSniperListener.commandSniperB(player, split);
+                return commandSniperB(player, split);
             }
             else if (command.equalsIgnoreCase("p"))
             {
-                return VoxelSniperListener.commandSniperP(player, split);
+                return commandSniperP(player, split);
             }
             else if (command.equalsIgnoreCase("bms"))
             {
-                return VoxelSniperListener.commandSniperBms(player, split);
+                return commandSniperBms(player, split);
             }
             else if (command.equalsIgnoreCase("bml"))
             {
-                return VoxelSniperListener.commandSniperBml(player, split);
+                return commandSniperBml(player, split);
             }
         }
         return false;
@@ -130,9 +130,9 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandGoto(final Player player, final String[] split)
+    private boolean commandGoto(final Player player, final String[] split)
     {
-        if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
+        if (VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player))
         {
             player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use this command.");
             return true;
@@ -157,7 +157,7 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandPaint(final Player player, final String[] split)
+    private boolean commandPaint(final Player player, final String[] split)
     {
         if (split.length == 1)
         {
@@ -184,11 +184,11 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperB(final Player player, final String[] split)
+    private boolean commandSniperB(final Player player, final String[] split)
     {
         try
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             try
             {
                 if (split == null || split.length == 0)
@@ -210,10 +210,9 @@ public class VoxelSniperListener implements Listener
                 return true;
             }
         }
-        catch (final Exception exception)
+        catch (Exception exception)
         {
-            VoxelSniper.LOG.log(Level.WARNING, "[VoxelSniper] Command error from " + player.getName());
-            exception.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Command error from " + player.getName(), exception);
             return true;
         }
     }
@@ -223,17 +222,17 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperBml(final Player player, final String[] split)
+    private boolean commandSniperBml(final Player player, final String[] split)
     {
         try
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             sniper.loadPreset(Integer.parseInt(split[0]));
             return true;
         }
         catch (final Exception exception)
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             sniper.loadPreset(split[0]);
             return true;
         }
@@ -244,17 +243,17 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperBms(final Player player, final String[] split)
+    private boolean commandSniperBms(final Player player, final String[] split)
     {
         try
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             sniper.savePreset(Integer.parseInt(split[0]));
             return true;
         }
         catch (final Exception exception)
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             sniper.savePreset(split[0]);
             return true;
         }
@@ -265,7 +264,7 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperBTool(final Player player, final String[] split)
+    private boolean commandSniperBTool(final Player player, final String[] split)
     {
         if (split != null && split.length > 0)
         {
@@ -275,11 +274,11 @@ public class VoxelSniperListener implements Listener
                 {
                     if (split[1].equals("-arrow"))
                     {
-                        VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).addBrushTool(true);
+                        VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).addBrushTool(true);
                     }
                     else if (split[1].equals("-powder"))
                     {
-                        VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).addBrushTool(false);
+                        VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).addBrushTool(false);
                     }
                     else
                     {
@@ -288,12 +287,12 @@ public class VoxelSniperListener implements Listener
                 }
                 else
                 {
-                    VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).addBrushTool();
+                    VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).addBrushTool();
                 }
             }
             else if (split[0].equalsIgnoreCase("remove"))
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).removeBrushTool();
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).removeBrushTool();
             }
             else
             {
@@ -313,11 +312,11 @@ public class VoxelSniperListener implements Listener
      * @param player
      * @return
      */
-    private static boolean commandSniperD(final Player player)
+    private boolean commandSniperD(final Player player)
     {
         try
         {
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).reset();
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).reset();
             player.sendMessage(ChatColor.AQUA + "Brush settings reset to their default values.");
             return true;
         }
@@ -333,11 +332,11 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperP(final Player player, final String[] split)
+    private boolean commandSniperP(final Player player, final String[] split)
     {
         try
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             if (split == null || split.length == 0)
             {
                 sniper.setPerformer(new String[]{"", "m"});
@@ -348,10 +347,9 @@ public class VoxelSniperListener implements Listener
             }
             return true;
         }
-        catch (final Exception exception)
+        catch (Exception exception)
         {
-            VoxelSniper.LOG.log(Level.WARNING, "[VoxelSniper] Command error from " + player.getName());
-            exception.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Command error from " + player.getName(), exception);
             return true;
         }
     }
@@ -361,9 +359,9 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperU(final Player player, final String[] split)
+    private boolean commandSniperU(final Player player, final String[] split)
     {
-        final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+        final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
         try
         {
             final int r = Integer.parseInt(split[0]);
@@ -373,7 +371,7 @@ public class VoxelSniperListener implements Listener
         {
             sniper.doUndo();
         }
-        VoxelSniper.LOG.log(Level.INFO, "[VoxelSniper] Player \"" + player.getName() + "\" used /u");
+        plugin.getLogger().info("Player \"" + player.getName() + "\" used /u");
         return true;
     }
 
@@ -382,11 +380,11 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperUU(final Player player, final String[] split)
+    private boolean commandSniperUU(final Player player, final String[] split)
     {
         try
         {
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(Bukkit.getPlayer(split[0]).getName()).doUndo();
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(Bukkit.getPlayer(split[0]).getName()).doUndo();
             return true;
         }
         catch (final Exception exception)
@@ -400,11 +398,11 @@ public class VoxelSniperListener implements Listener
      * @param player
      * @return
      */
-    private static boolean commandSniperUUU(final Player player)
+    private boolean commandSniperUUU(final Player player)
     {
         try
         {
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).doUndo();
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).doUndo();
             return true;
         }
         catch (final Exception exception)
@@ -420,14 +418,14 @@ public class VoxelSniperListener implements Listener
      * @return
      */
     @SuppressWarnings("deprecation")
-	private static boolean commandSniperV(final Player player, final String[] split)
+	private boolean commandSniperV(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
             final Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
             if (targetBlock != null)
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setVoxel(targetBlock.getTypeId());
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setVoxel(targetBlock.getTypeId());
             }
             return true;
         }
@@ -435,7 +433,7 @@ public class VoxelSniperListener implements Listener
         Material material = Material.matchMaterial(split[0]);
         if (material != null)
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             if (material.isBlock())
             {
                 sniper.setVoxel(material.getId());
@@ -456,7 +454,7 @@ public class VoxelSniperListener implements Listener
                 return true;
             }
 
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
 
             if (material1.isBlock())
             {
@@ -476,16 +474,16 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperVc(final Player player, final String[] split)
+    private boolean commandSniperVc(final Player player, final String[] split)
     {
         try
         {
             if (split.length == 0)
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setCentroid(0);
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setCentroid(0);
                 return true;
             }
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setCentroid(Integer.parseInt(split[0]));
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setCentroid(Integer.parseInt(split[0]));
             return true;
         }
         catch (final Exception exception)
@@ -500,11 +498,11 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperVh(final Player player, final String[] split)
+    private boolean commandSniperVh(final Player player, final String[] split)
     {
         try
         {
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setHeigth(Integer.parseInt(split[0]));
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setHeigth(Integer.parseInt(split[0]));
             return true;
         }
         catch (final Exception exception)
@@ -520,20 +518,20 @@ public class VoxelSniperListener implements Listener
      * @return
      */
     @SuppressWarnings("deprecation")
-	private static boolean commandSniperVi(final Player player, final String[] split)
+	private boolean commandSniperVi(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
             final Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
             if (targetBlock != null)
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setData(targetBlock.getData());
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setData(targetBlock.getData());
             }
             return true;
         }
         try
         {
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setData((byte) Integer.parseInt(split[0]));
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setData((byte) Integer.parseInt(split[0]));
             return true;
         }
         catch (final Exception exception)
@@ -549,20 +547,20 @@ public class VoxelSniperListener implements Listener
      * @return
      */
     @SuppressWarnings("deprecation")
-	private static boolean commandSniperVir(final Player player, final String[] split)
+	private boolean commandSniperVir(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
             final Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
             if (targetBlock != null)
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setReplaceData(targetBlock.getData());
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setReplaceData(targetBlock.getData());
             }
             return true;
         }
         try
         {
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setReplaceData((byte) Integer.parseInt(split[0]));
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setReplaceData((byte) Integer.parseInt(split[0]));
             return true;
         }
         catch (final Exception exception)
@@ -578,7 +576,7 @@ public class VoxelSniperListener implements Listener
      * @return
      */
     @SuppressWarnings("deprecation")
-	private static boolean commandSniperVl(final Player player, final String[] split)
+	private boolean commandSniperVl(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
@@ -586,7 +584,7 @@ public class VoxelSniperListener implements Listener
             final Block targetBlock = rangeBlockHelper.getTargetBlock();
             try
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).addVoxelToList(new int[] {targetBlock.getTypeId(), targetBlock.getData()});
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).addVoxelToList(new int[] {targetBlock.getTypeId(), targetBlock.getData()});
 
                 return true;
             }
@@ -599,12 +597,12 @@ public class VoxelSniperListener implements Listener
         {
             if (split[0].equalsIgnoreCase("clear"))
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).clearVoxelList();
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).clearVoxelList();
                 return true;
             }
         }
 
-        final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+        final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
         boolean remove = false;
 
         for (final String string : split)
@@ -634,7 +632,7 @@ public class VoxelSniperListener implements Listener
                 	xdat = -1;
                 }
 
-                if (VoxelSniper.isValidItem(xint) && Material.getMaterial(xint).isBlock())
+                if (Material.getMaterial(xint) != null && Material.getMaterial(xint).isBlock())
                 {
                     if (!remove)
                     {
@@ -661,14 +659,14 @@ public class VoxelSniperListener implements Listener
      * @return
      */
     @SuppressWarnings("deprecation")
-	private static boolean commandSniperVr(final Player player, final String[] split)
+	private boolean commandSniperVr(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
             final Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
             if (targetBlock != null)
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setReplace(targetBlock.getTypeId());
+                VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setReplace(targetBlock.getTypeId());
             }
             return true;
         }
@@ -676,7 +674,7 @@ public class VoxelSniperListener implements Listener
         Material material = Material.matchMaterial(split[0]);
         if (material != null)
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             if (material.isBlock())
             {
                 sniper.setReplace(material.getId());
@@ -697,7 +695,7 @@ public class VoxelSniperListener implements Listener
                 return true;
             }
 
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
 
             if (material1.isBlock())
             {
@@ -717,7 +715,7 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperVs(final Player player, final String[] split)
+    private boolean commandSniperVs(final Player player, final String[] split)
     {
         try
         {
@@ -725,27 +723,27 @@ public class VoxelSniperListener implements Listener
             {
                 if (split[0].equalsIgnoreCase("brushes"))
                 {
-                    VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).printBrushes();
+                    VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).printBrushes();
                     return true;
                 }
                 else if (split[0].equalsIgnoreCase("printout"))
                 {
-                    VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).togglePrintout();
+                    VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).togglePrintout();
                     return true;
                 }
                 else if (split[0].equalsIgnoreCase("lightning"))
                 {
-                    if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
+                    if (VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player))
                     {
                         player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use this command.");
                         return true;
                     }
-                    VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).toggleLightning();
+                    VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).toggleLightning();
                     return true;
                 }
                 else if (split[0].equalsIgnoreCase("weather"))
                 {
-                    if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
+                    if (VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player))
                     {
                         player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use this command.");
                         return true;
@@ -760,17 +758,17 @@ public class VoxelSniperListener implements Listener
                     if (split.length == 2)
                     {
                         final double i = Double.parseDouble(split[1]);
-                        if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player) && (i > 12 || i < -12))
+                        if (VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player) && (i > 12 || i < -12))
                         {
                             player.sendMessage(ChatColor.RED + "LiteSnipers are not permitted to use ranges over 12.");
                             return true;
                         }
-                        VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setRange(i);
+                        VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setRange(i);
                         return true;
                     }
                     else
                     {
-                        VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).setRange(-1);
+                        VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).setRange(-1);
                         return true;
                     }
                 }
@@ -788,28 +786,28 @@ public class VoxelSniperListener implements Listener
                 }
                 else if (split[0].equalsIgnoreCase("enable"))
                 {
-                    Sniper sniperInstance = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                    Sniper sniperInstance = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
                     sniperInstance.setEnabled(true);
                     sniperInstance.getVoxelMessage().brushMessage("VoxelSniper is " + (sniperInstance.isEnabled() ? "enabled" : "disabled"));
                     return true;
                 }
                 else if (split[0].equalsIgnoreCase("disable"))
                 {
-                    Sniper sniperInstance = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                    Sniper sniperInstance = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
                     sniperInstance.setEnabled(false);
                     sniperInstance.getVoxelMessage().brushMessage("VoxelSniper is " + (sniperInstance.isEnabled() ? "enabled" : "disabled"));
                     return true;
                 }
                 else if (split[0].equalsIgnoreCase("toggle"))
                 {
-                    Sniper sniperInstance = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                    Sniper sniperInstance = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
                     sniperInstance.setEnabled(!sniperInstance.isEnabled());
                     sniperInstance.getVoxelMessage().brushMessage("VoxelSniper is " + (sniperInstance.isEnabled() ? "enabled" : "disabled"));
                     return true;
                 }
             }
             player.sendMessage(ChatColor.DARK_RED + "VoxelSniper - Current Brush Settings:");
-            VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).info();
+            VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player).info();
             return true;
         }
         catch (final Exception exception)
@@ -823,7 +821,7 @@ public class VoxelSniperListener implements Listener
      * @param player
      * @return
      */
-    private static boolean commandVChunk(final Player player)
+    private boolean commandVChunk(final Player player)
     {
         player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
         return true;
@@ -851,7 +849,7 @@ public class VoxelSniperListener implements Listener
 
         try
         {
-            final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+            final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
             if (sniper != null)
             {
                 if (sniper.isEnabled() && sniper.snipe(player, event.getAction(), event.getMaterial(), event.getClickedBlock(), event.getBlockFace()))
@@ -874,11 +872,11 @@ public class VoxelSniperListener implements Listener
     {
         final Player player = event.getPlayer();
         player.getName();
-        if (VoxelSniper.getSniperPermissionHelper().isSniper(player))
+        if (VoxelSniper.getInstance().getSniperPermissionHelper().isSniper(player))
         {
             try
             {
-                final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
                 sniper.setPlayer(player);
                 sniper.info();
                 return;
@@ -888,11 +886,11 @@ public class VoxelSniperListener implements Listener
                 return;
             }
         }
-        if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
+        if (VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player))
         {
             try
             {
-                final Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+                final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
                 if (sniper instanceof LiteSniper)
                 {
                     sniper.setPlayer(player);
