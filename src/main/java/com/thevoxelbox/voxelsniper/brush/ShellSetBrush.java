@@ -27,7 +27,8 @@ public class ShellSetBrush extends Brush
         this.setName("Shell Set");
     }
 
-    private boolean set(final Block bl, final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private boolean set(final Block bl, final SnipeData v)
     {
         if (this.block == null)
         {

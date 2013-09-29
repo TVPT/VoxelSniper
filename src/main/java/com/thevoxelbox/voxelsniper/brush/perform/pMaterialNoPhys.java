@@ -34,7 +34,8 @@ public class pMaterialNoPhys extends vPerformer
         vm.voxel();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
         if (b.getTypeId() != i)

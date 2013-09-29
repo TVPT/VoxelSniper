@@ -76,7 +76,8 @@ public class Undo
     private final List<BlockState> falloff;
     private final List<BlockState> dropdown;
     private final String worldName;
-    private final World world;
+    @SuppressWarnings("unused")
+	private final World world;
 
     /**
      * Default constructor of a Undo container.
@@ -131,7 +132,8 @@ public class Undo
      * This method begins the process of replacing the blocks stored in this
      * collection.
      */
-    public final void undo()
+    @SuppressWarnings("deprecation")
+	public final void undo()
     {
 
         for (final BlockState _blockState : this.all)

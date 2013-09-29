@@ -4,62 +4,68 @@
  */
 package com.thevoxelbox.voxelsniper.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author Voxel
  */
 public class VoxelList
 {
 
-    private int[] col = new int[100];
-    private int vir = 0;
+    private List<int[]> col = new ArrayList<int[]>();
 
     /**
      * @param i
      */
-    public final void add(final int i)
+    public final void add(final int[] i)
     {
-        if (!contains(i))
-        {
-            col[vir++] = i;
-        }
-    }
-
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final boolean removeValue(final int i)
-    {
-        if (isEmpty())
-        {
-            return false;
-        }
-        else
-        {
-            return removeFrom(getIndexOf(i));
-        }
-    }
-
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final boolean removeFrom(final int i)
-    {
-        if (i >= 0 && i < vir)
-        {
-            for (int x = i; x < vir; x++)
+    	if(i[1] == -1) {
+    		if (!col.contains(i))
             {
-                col[x] = col[x + 1];
+	    		for(Iterator<int[]> it = col.iterator(); it.hasNext();) {
+	    			int[] in = it.next();
+	    			if(in[0] == i[0]) {
+	    				it.remove();
+	    			}
+	    		}
+	    		col.add(i);
             }
-            vir--;
-            return true;
+    	} else {
+    		if (!col.contains(i))
+            {
+                col.add(i);
+            }
+    	}
+    }
+
+    /**
+     * @param i
+     *
+     * @return
+     */
+    public final boolean removeValue(final int[] i)
+    {
+        if (col.isEmpty())
+        {
+            return false;
         }
         else
         {
-            return false;
+        	boolean ret = false;
+        	if(i[1] == -1) {
+        		for(Iterator<int[]> it = col.iterator(); it.hasNext();) {
+        			int[] in = it.next();
+        			if(in[0] == i[0]) {
+        				it.remove();
+        				ret = true;
+        			}
+        		}
+        	} else {
+        		ret = col.remove(i);
+        	}
+            return ret;
         }
     }
 
@@ -68,124 +74,33 @@ public class VoxelList
      *
      * @return
      */
-    public final boolean contains(final int i)
+    public final boolean contains(final int[] i)
     {
-        if (isEmpty())
-        {
-            return false;
-        }
-        else
-        {
-            for (int x = 0; x < vir; x++)
-            {
-                if (col[x] == i)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+    	for(Iterator<int[]> it = col.iterator(); it.hasNext();) {
+    		int[] in = it.next();
+    		if(in[0] == i[0] && (in[1] == i[1] || in[1] == -1)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 
     /**
-     * @return
-     */
-    public final boolean isEmpty()
-    {
-        return vir == 0;
-    }
-
-    /**
-     *
+     * clears the voxelList
      */
     public final void clear()
     {
-        vir = 0;
+        col.clear();
     }
+    
+	public boolean isEmpty() {
+		return col.isEmpty();
+	}
 
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final int getIndexOf(final int i)
-    {
-        if (isEmpty())
-        {
-            return -1;
-        }
-        else
-        {
-            for (int x = 0; x < vir; x++)
-            {
-                if (col[x] == i)
-                {
-                    return x;
-                }
-            }
-            return -1;
-        }
-    }
+	public List<int[]> getList() {
+		return col;
+	}
 
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final int getFrom(final int i)
-    {
-        if (i >= 0 && i < vir)
-        {
-            return col[i];
-        }
-        else
-        {
-            return -1;
-        }
-    }
 
-    /**
-     * @return
-     */
-    public final VoxIterator getIterator()
-    {
-        return new VoxIterator(col, vir);
-    }
 
-    /**
-     * @author Voxel
-     */
-    public class VoxIterator
-    {
-
-        private int[] col;
-        private int vir;
-        private int cur = 0;
-
-        /**
-         * @param collection
-         * @param virtual
-         */
-        public VoxIterator(int[] collection, int virtual)
-        {
-            col = collection;
-            vir = virtual;
-        }
-
-        /**
-         * @return
-         */
-        public final boolean hasNext()
-        {
-            return cur < vir;
-        }
-
-        /**
-         * @return
-         */
-        public final int next()
-        {
-            return col[cur++];
-        }
-    }
 }

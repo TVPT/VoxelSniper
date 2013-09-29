@@ -38,23 +38,23 @@ public class OverlayBrush extends PerformBrush
             {
                 // check if column is valid
                 // column is valid if it has no solid block right above the clicked layer
-                final int materialId = this.getBlockIdAt(this.getBlockPositionX() + x, this.getBlockPositionY() + 1, this.getBlockPositionZ() + z);
+                final int materialId = this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + 1, this.getTargetBlock().getZ() + z);
                 if (isIgnoredBlock(materialId))
                 {
                     if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared)
                     {
-                        for (int y = this.getBlockPositionY(); y > 0; y--)
+                        for (int y = this.getTargetBlock().getY(); y > 0; y--)
                         {
                             // check for surface
-                            final int layerBlockId = this.getBlockIdAt(this.getBlockPositionX() + x, y, this.getBlockPositionZ() + z);
+                            final int layerBlockId = this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z);
                             if (!isIgnoredBlock(layerBlockId))
                             {
                                 for (int currentDepth = y; y - currentDepth < depth; currentDepth--)
                                 {
-                                    final int currentBlockId = this.getBlockIdAt(this.getBlockPositionX() + x, currentDepth, this.getBlockPositionZ() + z);
+                                    final int currentBlockId = this.getBlockIdAt(this.getTargetBlock().getX() + x, currentDepth, this.getTargetBlock().getZ() + z);
                                     if (isOverrideableMaterial(currentBlockId))
                                     {
-                                        this.current.perform(this.clampY(this.getBlockPositionX() + x, currentDepth, this.getBlockPositionZ() + z));
+                                        this.current.perform(this.clampY(this.getTargetBlock().getX() + x, currentDepth, this.getTargetBlock().getZ() + z));
                                     }
                                 }
                                 break;
@@ -68,12 +68,14 @@ public class OverlayBrush extends PerformBrush
         v.storeUndo(this.current.getUndo());
     }
 
-    private boolean isIgnoredBlock(int materialId)
+    @SuppressWarnings("deprecation")
+	private boolean isIgnoredBlock(int materialId)
     {
         return materialId == 9 || materialId == 8 || Material.getMaterial(materialId).isTransparent() || materialId == Material.CACTUS.getId();
     }
 
-    private boolean isOverrideableMaterial(int materialId)
+    @SuppressWarnings("deprecation")
+	private boolean isOverrideableMaterial(int materialId)
     {
         if (allBlocks && !(materialId == Material.AIR.getId()))
         {
@@ -110,21 +112,21 @@ public class OverlayBrush extends PerformBrush
             for (int x = brushSize; x >= -brushSize; x--)
             {
                 boolean surfaceFound = false;
-                for (int y = this.getBlockPositionY(); y > 0 && !surfaceFound; y--)
+                for (int y = this.getTargetBlock().getY(); y > 0 && !surfaceFound; y--)
                 { // start scanning from the height you clicked at
                     if (memory[x + brushSize][z + brushSize] != 1)
                     { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared)
                         { // if inside of the column...
-                            if (this.getBlockIdAt(this.getBlockPositionX() + x, y - 1, this.getBlockPositionZ() + z) != 0)
+                            if (this.getBlockIdAt(this.getTargetBlock().getX() + x, y - 1, this.getTargetBlock().getZ() + z) != 0)
                             { // if not a floating block (like one of Notch'world pools)
-                                if (this.getBlockIdAt(this.getBlockPositionX() + x, y + 1, this.getBlockPositionZ() + z) == 0)
+                                if (this.getBlockIdAt(this.getTargetBlock().getX() + x, y + 1, this.getTargetBlock().getZ() + z) == 0)
                                 { // must start at surface... this prevents it filling stuff in if
                                     // you click in a wall and it starts out below surface.
                                     if (!this.allBlocks)
                                     { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                        switch (this.getBlockIdAt(this.getBlockPositionX() + x, y, this.getBlockPositionZ() + z))
+                                        switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
                                         {
                                             case 1:
                                             case 2:
@@ -141,7 +143,7 @@ public class OverlayBrush extends PerformBrush
                                             case 78:
                                                 for (int d = 1; (d < this.depth + 1); d++)
                                                 {
-                                                    this.current.perform(this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify
+                                                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify
                                                     // in parameters
                                                     memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                                 }
@@ -156,7 +158,7 @@ public class OverlayBrush extends PerformBrush
                                     {
                                         for (int d = 1; (d < this.depth + 1); d++)
                                         {
-                                            this.current.perform(this.clampY(this.getBlockPositionX() + x, y + d, this.getBlockPositionZ() + z)); // fills down as many layers as you specify in
+                                            this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
                                             // parameters
                                             memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                         }

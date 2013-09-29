@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.util.VoxelList.VoxIterator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -100,7 +99,8 @@ public class Message
     /**
      * Displaye replace material.
      */
-    public final void replace()
+    @SuppressWarnings("deprecation")
+	public final void replace()
     {
         if (this.v.owner().isPrintout())
         {
@@ -158,7 +158,8 @@ public class Message
     /**
      * Display voxel type.
      */
-    public final void voxel()
+    @SuppressWarnings("deprecation")
+	public final void voxel()
     {
         if (this.v.owner().isPrintout())
         {
@@ -179,11 +180,10 @@ public class Message
             }
             else
             {
-                final VoxIterator it = this.v.getVoxelList().getIterator();
                 String pre = ChatColor.DARK_GREEN + "Block Types Selected: " + ChatColor.AQUA;
-                while (it.hasNext())
-                {
-                    pre = pre + it.next() + " ";
+                
+                for(int[] it: v.getVoxelList().getList()) {
+                    pre = pre + it[0] + (it[1] == -1 ? "" : ":" + it[1]) + " ";
                 }
 
                 this.v.sendMessage(pre);

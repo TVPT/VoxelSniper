@@ -162,7 +162,7 @@ public class Sniper
     /**
      * @param i
      */
-    public final void addVoxelToList(final int i)
+    public final void addVoxelToList(final int[] i)
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
@@ -685,7 +685,7 @@ public class Sniper
     /**
      * @param i
      */
-    public final void removeVoxelFromList(final int i)
+    public final void removeVoxelFromList(final int[] i)
     {
         if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
         {
@@ -1233,7 +1233,8 @@ public class Sniper
     /**
      * Reads parameters from the current key in the {@link HashMap}.
      */
-    private void readCurrent()
+    @SuppressWarnings("unused")
+	private void readCurrent()
     {
         final int[] currentP = this.brushPresetsParamsS.get("current@");
         this.data.setVoxelId(currentP[Sniper.SAVE_ARRAY_VOXEL_ID]);

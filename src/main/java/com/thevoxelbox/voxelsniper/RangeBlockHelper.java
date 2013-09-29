@@ -164,7 +164,8 @@ public class RangeBlockHelper
      *
      * @return Block
      */
-    public final Block getFaceBlock()
+    @SuppressWarnings("deprecation")
+	public final Block getFaceBlock()
     {
         while ((this.getNextBlock() != null) && (this.getCurBlock().getTypeId() == 0))
         {
@@ -250,7 +251,8 @@ public class RangeBlockHelper
      *
      * @return Block
      */
-    public final Block getTargetBlock()
+    @SuppressWarnings("deprecation")
+	public final Block getTargetBlock()
     {
         this.fromOffworld();
         while ((this.getNextBlock() != null) && (this.getCurBlock().getTypeId() == 0))
@@ -265,7 +267,8 @@ public class RangeBlockHelper
      *
      * @param type
      */
-    public final void setCurBlock(final int type)
+    @SuppressWarnings("deprecation")
+	public final void setCurBlock(final int type)
     {
         if (this.getCurBlock() != null)
         {
@@ -278,7 +281,8 @@ public class RangeBlockHelper
      *
      * @param type
      */
-    public final void setFaceBlock(final int type)
+    @SuppressWarnings("deprecation")
+	public final void setFaceBlock(final int type)
     {
         while ((this.getNextBlock() != null) && (this.getCurBlock().getTypeId() == 0))
         {
@@ -295,7 +299,8 @@ public class RangeBlockHelper
      *
      * @param type
      */
-    public final void setLastBlock(final int type)
+    @SuppressWarnings("deprecation")
+	public final void setLastBlock(final int type)
     {
         if (this.getLastBlock() != null)
         {
@@ -308,7 +313,8 @@ public class RangeBlockHelper
      *
      * @param type
      */
-    public final void setTargetBlock(final int type)
+    @SuppressWarnings("deprecation")
+	public final void setTargetBlock(final int type)
     {
         while ((this.getNextBlock() != null) && (this.getCurBlock().getTypeId() == 0))
         {
@@ -320,7 +326,8 @@ public class RangeBlockHelper
         }
     }
 
-    private Block getRange()
+    @SuppressWarnings("deprecation")
+	private Block getRange()
     {
         this.lastX = this.targetX;
         this.lastY = this.targetY;

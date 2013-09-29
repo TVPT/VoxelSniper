@@ -38,7 +38,8 @@ public class pComboNoPhys extends vPerformer
         d = v.getData();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
         h.put(b);

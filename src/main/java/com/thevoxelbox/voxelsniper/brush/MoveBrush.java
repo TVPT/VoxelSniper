@@ -95,7 +95,8 @@ public class MoveBrush extends Brush
      * @param selection
      * @param direction
      */
-    private void moveSelection(final SnipeData v, final Selection selection, final int[] direction)
+    @SuppressWarnings("deprecation")
+	private void moveSelection(final SnipeData v, final Selection selection, final int[] direction)
     {
         if (selection.getBlockStates().size() > 0)
         {

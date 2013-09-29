@@ -28,24 +28,25 @@ public class Rot2DBrush extends Brush
         this.setName("2D Rotation");
     }
 
-    private void getMatrix()
+    @SuppressWarnings("deprecation")
+	private void getMatrix()
     {
         this.brushSize = (this.bSize * 2) + 1;
 
         this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
         final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
-        int sx = this.getBlockPositionX() - this.bSize;
-        int sy = this.getBlockPositionY() - this.bSize;
-        int sz = this.getBlockPositionZ() - this.bSize;
+        int sx = this.getTargetBlock().getX() - this.bSize;
+        int sy = this.getTargetBlock().getY() - this.bSize;
+        int sz = this.getTargetBlock().getZ() - this.bSize;
 
         for (int x = 0; x < this.snap.length; x++)
         {
-            sz = this.getBlockPositionZ() - this.bSize;
+            sz = this.getTargetBlock().getZ() - this.bSize;
             final double xSquared = Math.pow(x - this.bSize, 2);
             for (int y = 0; y < this.snap.length; y++)
             {
-                sy = this.getBlockPositionY() - this.bSize;
+                sy = this.getTargetBlock().getY() - this.bSize;
                 if (xSquared + Math.pow(y - this.bSize, 2) <= brushSizeSquared)
                 {
                     for (int z = 0; z < this.snap.length; z++)
@@ -97,7 +98,7 @@ public class Rot2DBrush extends Brush
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getBlockPositionX() + (int) newX, this.getBlockPositionY() + yy, this.getBlockPositionZ() + (int) newZ, block.getId(), block.getData());
+                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + (int) newX, this.getTargetBlock().getY() + yy, this.getTargetBlock().getZ() + (int) newZ, block.getId(), block.getData());
                     }
                 }
             }
@@ -105,13 +106,13 @@ public class Rot2DBrush extends Brush
         for (int x = 0; x < this.snap.length; x++)
         {
             final double xSquared = Math.pow(x - this.bSize, 2);
-            final int fx = x + this.getBlockPositionX() - this.bSize;
+            final int fx = x + this.getTargetBlock().getX() - this.bSize;
 
             for (int z = 0; z < this.snap.length; z++)
             {
                 if (xSquared + Math.pow(z - this.bSize, 2) <= brushSiyeSquared)
                 {
-                    final int fz = z + this.getBlockPositionZ() - this.bSize;
+                    final int fz = z + this.getTargetBlock().getZ() - this.bSize;
 
                     if (!doNotFill[x][z])
                     {
@@ -119,14 +120,13 @@ public class Rot2DBrush extends Brush
 
                         for (int y = 0; y < this.snap.length; y++)
                         {
-                            final int fy = y + this.getBlockPositionY() - this.bSize;
+                            final int fy = y + this.getTargetBlock().getY() - this.bSize;
 
                             final int a = this.getBlockIdAt(fx + 1, fy, fz);
                             final byte aData = this.getBlockDataAt(fx + 1, fy, fz);
                             final int d = this.getBlockIdAt(fx - 1, fy, fz);
                             final byte dData = this.getBlockDataAt(fx - 1, fy, fz);
                             final int c = this.getBlockIdAt(fx, fy, fz + 1);
-                            final byte cData = this.getBlockDataAt(fx, fy, fz + 1);
                             final int b = this.getBlockIdAt(fx, fy, fz - 1);
                             final byte bData = this.getBlockDataAt(fx, fy, fz - 1);
 

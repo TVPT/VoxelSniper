@@ -41,13 +41,13 @@ public class EraserBrush extends Brush
 
         for (int x = brushSizeDoubled; x >= 0; x--)
         {
-            int currentX = this.getBlockPositionX() - brushSize + x;
+            int currentX = this.getTargetBlock().getX() - brushSize + x;
             for (int y = 0; y <= brushSizeDoubled; y++)
             {
-                int currentY = this.getBlockPositionY() - brushSize + y;
+                int currentY = this.getTargetBlock().getY() - brushSize + y;
                 for (int z = brushSizeDoubled; z >= 0; z--)
                 {
-                    int currentZ = this.getBlockPositionZ() - brushSize + z;
+                    int currentZ = this.getTargetBlock().getZ() - brushSize + z;
                     Block currentBlock = world.getBlockAt(currentX, currentY, currentZ);
                     if (EXCLUSIVE_MATERIALS.contains(currentBlock.getType())
                             || (keepWater && EXCLUSIVE_LIQUIDS.contains(currentBlock.getType())))

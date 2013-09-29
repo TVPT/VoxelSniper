@@ -33,7 +33,8 @@ public class StampBrush extends Brush
          * @param bly
          * @param blz
          */
-        public BlockWrapper(final Block b, final int blx, final int bly, final int blz)
+        @SuppressWarnings("deprecation")
+		public BlockWrapper(final Block b, final int blx, final int bly, final int blz)
         {
             this.id = b.getTypeId();
             this.d = b.getData();
@@ -131,9 +132,10 @@ public class StampBrush extends Brush
     /**
      *
      */
-    protected final void setBlock(final BlockWrapper cb)
+    @SuppressWarnings("deprecation")
+	protected final void setBlock(final BlockWrapper cb)
     {
-        final Block block = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
+        final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         this.undo.put(block);
         block.setTypeId(cb.id);
         block.setData(cb.d);
@@ -142,9 +144,10 @@ public class StampBrush extends Brush
     /**
      * @param cb
      */
-    protected final void setBlockFill(final BlockWrapper cb)
+    @SuppressWarnings("deprecation")
+	protected final void setBlockFill(final BlockWrapper cb)
     {
-        final Block block = this.clampY(this.getBlockPositionX() + cb.x, this.getBlockPositionY() + cb.y, this.getBlockPositionZ() + cb.z);
+        final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         if (block.getTypeId() == 0)
         {
             this.undo.put(block);

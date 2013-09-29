@@ -39,10 +39,11 @@ public class pExcludeMat extends vPerformer
         excludeList = v.getVoxelList();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
-        if (!excludeList.contains(b.getTypeId()))
+        if (!excludeList.contains(new int[] {b.getTypeId(), b.getData()}))
         {
             h.put(b);
             b.setTypeId(id);

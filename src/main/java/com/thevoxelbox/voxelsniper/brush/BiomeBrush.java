@@ -35,13 +35,13 @@ public class BiomeBrush extends Brush
             {
                 if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared)
                 {
-                    this.getWorld().setBiome(this.getBlockPositionX() + x, this.getBlockPositionZ() + z, this.selectedBiome);
+                    this.getWorld().setBiome(this.getTargetBlock().getX() + x, this.getTargetBlock().getZ() + z, this.selectedBiome);
                 }
             }
         }
 
-        final Block block1 = this.getWorld().getBlockAt(this.getBlockPositionX() - brushSize, 0, this.getBlockPositionZ() - brushSize);
-        final Block block2 = this.getWorld().getBlockAt(this.getBlockPositionX() + brushSize, 0, this.getBlockPositionZ() + brushSize);
+        final Block block1 = this.getWorld().getBlockAt(this.getTargetBlock().getX() - brushSize, 0, this.getTargetBlock().getZ() - brushSize);
+        final Block block2 = this.getWorld().getBlockAt(this.getTargetBlock().getX() + brushSize, 0, this.getTargetBlock().getZ() + brushSize);
 
         final int lowChunkX = (block1.getX() <= block2.getX()) ? block1.getChunk().getX() : block2.getChunk().getX();
         final int lowChunkZ = (block1.getZ() <= block2.getZ()) ? block1.getChunk().getZ() : block2.getChunk().getZ();

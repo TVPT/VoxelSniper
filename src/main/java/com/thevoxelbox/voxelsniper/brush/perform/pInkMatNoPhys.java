@@ -34,7 +34,8 @@ public class pInkMatNoPhys extends vPerformer
         vm.replace();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
         if (b.getTypeId() == ir)

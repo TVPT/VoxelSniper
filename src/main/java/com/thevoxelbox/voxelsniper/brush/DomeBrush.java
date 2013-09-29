@@ -54,7 +54,8 @@ public class DomeBrush extends Brush
      * @param v
      * @param targetBlock
      */
-    private void generateDome(final SnipeData v, final Block targetBlock)
+    @SuppressWarnings("deprecation")
+	private void generateDome(final SnipeData v, final Block targetBlock)
     {
 
         if (v.getVoxelHeight() == 0)

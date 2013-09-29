@@ -250,7 +250,8 @@ public abstract class Brush implements IBrush
      * @param z Z coordinate
      * @return Type ID of Block at given coordinates in the world of the targeted Block.
      */
-    protected int getBlockIdAt(int x, int y, int z)
+    @SuppressWarnings("deprecation")
+	protected int getBlockIdAt(int x, int y, int z)
     {
         return getWorld().getBlockTypeIdAt(x, y, z);
     }
@@ -263,39 +264,10 @@ public abstract class Brush implements IBrush
      * @param z Z coordinate
      * @return Block Data Value of Block at given coordinates in the world of the targeted Block.
      */
-    protected byte getBlockDataAt(int x, int y, int z)
+    @SuppressWarnings("deprecation")
+	protected byte getBlockDataAt(int x, int y, int z)
     {
         return this.getWorld().getBlockAt(x, y, z).getData();
-    }
-
-    /**
-     * @return Target Block X coordinate
-     * @deprecated Use {@link #getTargetBlock()}'s {@link org.bukkit.block.Block#getX()} instead.
-     */
-    @Deprecated
-    protected final int getBlockPositionX()
-    {
-        return targetBlock.getX();
-    }
-
-    /**
-     * @return Target Block Y coordinate
-     * @deprecated Use {@link #getTargetBlock()}'s {@link org.bukkit.block.Block#getY()} instead.
-     */
-    @Deprecated
-    protected final int getBlockPositionY()
-    {
-        return targetBlock.getY();
-    }
-
-    /**
-     * @return Target Block Z coordinate
-     * @deprecated Use {@link #getTargetBlock()}'s {@link org.bukkit.block.Block#getZ()} instead.
-     */
-    @Deprecated
-    protected final int getBlockPositionZ()
-    {
-        return targetBlock.getZ();
     }
 
     /**
@@ -339,7 +311,8 @@ public abstract class Brush implements IBrush
      * @param y  Y coordinate
      * @param id The id the block will be set to
      */
-    protected final void setBlockIdAt(int z, int x, int y, int id)
+    @SuppressWarnings("deprecation")
+	protected final void setBlockIdAt(int z, int x, int y, int id)
     {
         this.getWorld().getBlockAt(x, y, z).setTypeId(id);
     }
@@ -353,7 +326,8 @@ public abstract class Brush implements IBrush
      * @param id   The id the block will be set to
      * @param data The data value the block will be set to
      */
-    protected final void setBlockIdAndDataAt(int x, int y, int z, int id, byte data)
+    @SuppressWarnings("deprecation")
+	protected final void setBlockIdAndDataAt(int x, int y, int z, int id, byte data)
     {
         this.getWorld().getBlockAt(x, y, z).setTypeIdAndData(id, data, true);
     }

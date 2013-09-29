@@ -144,7 +144,7 @@ public class BlobBrush extends PerformBrush
                 {
                     if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared)
                     {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - brushSize + x, this.getBlockPositionY() - brushSize + z, this.getBlockPositionZ() - brushSize + y));
+                        this.current.perform(this.clampY(this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY() - brushSize + z, this.getTargetBlock().getZ() - brushSize + y));
                     }
                 }
             }
@@ -242,7 +242,7 @@ public class BlobBrush extends PerformBrush
                 {
                     if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared)
                     {
-                        this.current.perform(this.clampY(this.getBlockPositionX() - brushSize + x, this.getBlockPositionY() - brushSize + z, this.getBlockPositionZ() - brushSize + y));
+                        this.current.perform(this.clampY(this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY() - brushSize + z, this.getTargetBlock().getZ() - brushSize + y));
                     }
                 }
             }

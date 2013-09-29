@@ -48,7 +48,8 @@ public class PunishBrush extends PerformBrush
         this.setName("Punish");
     }
 
-    private void applyPunishment(final LivingEntity entity, final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void applyPunishment(final LivingEntity entity, final SnipeData v)
     {
         switch (this.punishment)
         {
@@ -125,7 +126,7 @@ public class PunishBrush extends PerformBrush
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, PunishBrush.TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
                 break;
             case KILL:
-                entity.setHealth(0);
+                entity.setHealth(0d);
                 break;
             case RANDOMTP:
                 final Random random = new Random();

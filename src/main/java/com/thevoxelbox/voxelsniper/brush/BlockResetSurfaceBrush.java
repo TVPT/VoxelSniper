@@ -58,7 +58,8 @@ public class BlockResetSurfaceBrush extends Brush
         this.setName("Block Reset Brush Surface Only");
     }
 
-    private void applyBrush(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void applyBrush(final SnipeData v)
     {
         final World world = this.getWorld();
 
@@ -69,7 +70,7 @@ public class BlockResetSurfaceBrush extends Brush
                 for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
                 {
 
-                    Block block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                    Block block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                     if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(block.getType()))
                     {
                         continue;
@@ -77,49 +78,49 @@ public class BlockResetSurfaceBrush extends Brush
 
                     boolean airFound = false;
 
-                    if (world.getBlockAt(this.getBlockPositionX() + x + 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getTargetBlock().getX() + x + 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z).getTypeId() == 0)
                     {
-                        block = world.getBlockAt(this.getBlockPositionX() + x + 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                        block = world.getBlockAt(this.getTargetBlock().getX() + x + 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
                         resetBlock(block, oldData);
                         airFound = true;
                     }
 
-                    if (world.getBlockAt(this.getBlockPositionX() + x - 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getTargetBlock().getX() + x - 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z).getTypeId() == 0)
                     {
-                        block = world.getBlockAt(this.getBlockPositionX() + x - 1, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                        block = world.getBlockAt(this.getTargetBlock().getX() + x - 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
                         resetBlock(block, oldData);
                         airFound = true;
                     }
 
-                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y + 1, this.getBlockPositionZ() + z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y + 1, this.getTargetBlock().getZ() + z).getTypeId() == 0)
                     {
-                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y + 1, this.getBlockPositionZ() + z);
+                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y + 1, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
                         resetBlock(block, oldData);
                         airFound = true;
                     }
 
-                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z).getTypeId() == 0)
+                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y - 1, this.getTargetBlock().getZ() + z).getTypeId() == 0)
                     {
-                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y - 1, this.getBlockPositionZ() + z);
+                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y - 1, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
                         resetBlock(block, oldData);
                         airFound = true;
                     }
 
-                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z + 1).getTypeId() == 0)
+                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z + 1).getTypeId() == 0)
                     {
-                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z + 1);
+                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z + 1);
                         final byte oldData = block.getData();
                         resetBlock(block, oldData);
                         airFound = true;
                     }
 
-                    if (world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z - 1).getTypeId() == 0)
+                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z - 1).getTypeId() == 0)
                     {
-                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z - 1);
+                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z - 1);
                         final byte oldData = block.getData();
                         resetBlock(block, oldData);
                         airFound = true;
@@ -127,7 +128,7 @@ public class BlockResetSurfaceBrush extends Brush
 
                     if (airFound)
                     {
-                        block = world.getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
                         resetBlock(block, oldData);
                     }
@@ -136,7 +137,8 @@ public class BlockResetSurfaceBrush extends Brush
         }
     }
 
-    private void resetBlock(Block block, final byte oldData)
+    @SuppressWarnings("deprecation")
+	private void resetBlock(Block block, final byte oldData)
     {
         block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
         block.setTypeIdAndData(block.getTypeId(), oldData, true);

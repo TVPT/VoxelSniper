@@ -86,19 +86,19 @@ public class PullBrush extends Brush
         for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
         {
             final double zSquared = Math.pow(z, 2);
-            final int actualZ = this.getBlockPositionZ() + z;
+            final int actualZ = this.getTargetBlock().getZ() + z;
             for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
             {
                 final double xSquared = Math.pow(x, 2);
-                final int actualX = this.getBlockPositionX() + x;
+                final int actualX = this.getTargetBlock().getX() + x;
                 for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
                 {
                     final double volume = (xSquared + Math.pow(y, 2) + zSquared);
                     if (volume <= bSquared)
                     {
-                        if (this.isSurface(actualX, this.getBlockPositionY() + y, actualZ))
+                        if (this.isSurface(actualX, this.getTargetBlock().getY() + y, actualZ))
                         {
-                            this.surface.add(new BlockWrapper(this.clampY(actualX, this.getBlockPositionY() + y, actualZ), this.getStr(((volume / bSquared)))));
+                            this.surface.add(new BlockWrapper(this.clampY(actualX, this.getTargetBlock().getY() + y, actualZ), this.getStr(((volume / bSquared)))));
                         }
                     }
                 }
@@ -118,7 +118,8 @@ public class PullBrush extends Brush
 
     }
 
-    private void setBlock(final BlockWrapper block)
+    @SuppressWarnings("deprecation")
+	private void setBlock(final BlockWrapper block)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
         if (this.getBlockIdAt(block.getX(), block.getY() - 1, block.getZ()) == 0)
@@ -143,7 +144,8 @@ public class PullBrush extends Brush
         }
     }
 
-    private void setBlockDown(final BlockWrapper block)
+    @SuppressWarnings("deprecation")
+	private void setBlockDown(final BlockWrapper block)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
         currentBlock.setTypeId(block.getId());
@@ -177,7 +179,8 @@ public class PullBrush extends Brush
         }
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     protected final void powder(final SnipeData v)
     {
         this.vh = v.getVoxelHeight();
@@ -201,14 +204,14 @@ public class PullBrush extends Brush
             {
 
                 final int zSquared = z * z;
-                final int actualZ = this.getBlockPositionZ() + z;
+                final int actualZ = this.getTargetBlock().getZ() + z;
 
                 // X - Axis
                 for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
                 {
 
                     final int xSquared = x * x;
-                    final int actualX = this.getBlockPositionX() + x;
+                    final int actualX = this.getTargetBlock().getX() + x;
 
                     // Down the Y - Axis
                     for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
@@ -217,10 +220,10 @@ public class PullBrush extends Brush
                         final double volume = zSquared + xSquared + (y * y);
 
                         // Is this in the range of the brush?
-                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getBlockPositionY() + y, actualZ) != 0)
+                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getTargetBlock().getY() + y, actualZ) != 0)
                         {
 
-                            int actualY = this.getBlockPositionY() + y;
+                            int actualY = this.getTargetBlock().getY() + y;
 
                             // Starting strength and new Position
                             str = this.getStr(volume / brushSizeSquared);
@@ -236,7 +239,7 @@ public class PullBrush extends Brush
 
                             while (lastStr > 0)
                             {
-                                if (actualY < this.getBlockPositionY())
+                                if (actualY < this.getTargetBlock().getY())
                                 {
                                     str = str * str;
                                 }
@@ -261,25 +264,25 @@ public class PullBrush extends Brush
             for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
             {
                 final double zSquared = Math.pow(z, 2);
-                final int actualZ = this.getBlockPositionZ() + z;
+                final int actualZ = this.getTargetBlock().getZ() + z;
                 for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
                 {
                     final double xSquared = Math.pow(x, 2);
-                    final int actualX = this.getBlockPositionX() + x;
+                    final int actualX = this.getTargetBlock().getX() + x;
                     for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
                     {
                         double volume = (xSquared + Math.pow(y, 2) + zSquared);
-                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getBlockPositionY() + y, actualZ) != 0)
+                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getTargetBlock().getY() + y, actualZ) != 0)
                         {
-                            final int actualY = this.getBlockPositionY() + y;
+                            final int actualY = this.getTargetBlock().getY() + y;
                             lastY = actualY + (int) (this.vh * this.getStr(volume / brushSizeSquared));
                             this.clampY(actualX, lastY, actualZ).setTypeId(this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ));
                             y++;
                             volume = (xSquared + Math.pow(y, 2) + zSquared);
                             while (volume <= brushSizeSquared)
                             {
-                                final int blockY = this.getBlockPositionY() + y + (int) (this.vh * this.getStr(volume / brushSizeSquared));
-                                final int blockId = this.getWorld().getBlockTypeIdAt(actualX, this.getBlockPositionY() + y, actualZ);
+                                final int blockY = this.getTargetBlock().getY() + y + (int) (this.vh * this.getStr(volume / brushSizeSquared));
+                                final int blockId = this.getWorld().getBlockTypeIdAt(actualX, this.getTargetBlock().getY() + y, actualZ);
                                 for (int i = blockY; i < lastY; i++)
                                 {
                                     this.clampY(actualX, i, actualZ).setTypeId(blockId);
@@ -313,7 +316,8 @@ public class PullBrush extends Brush
          * @param block
          * @param st
          */
-        public BlockWrapper(final Block block, final double st)
+        @SuppressWarnings("deprecation")
+		public BlockWrapper(final Block block, final double st)
         {
             this.id = block.getTypeId();
             this.d = block.getData();

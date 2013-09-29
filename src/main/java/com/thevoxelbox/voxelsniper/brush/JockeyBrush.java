@@ -276,11 +276,6 @@ public class JockeyBrush extends Brush
             this.name = name;
         }
 
-        public String getName()
-        {
-            return this.name;
-        }
-
         @Override
         public String toString()
         {

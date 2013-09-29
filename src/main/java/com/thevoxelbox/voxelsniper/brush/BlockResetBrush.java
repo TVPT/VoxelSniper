@@ -44,7 +44,8 @@ public class BlockResetBrush extends Brush
         this.setName("Block Reset Brush");
     }
 
-    private void applyBrush(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void applyBrush(final SnipeData v)
     {
         for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
         {
@@ -52,7 +53,7 @@ public class BlockResetBrush extends Brush
             {
                 for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
                 {
-                    final Block block = this.getWorld().getBlockAt(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + z);
+                    final Block block = this.getWorld().getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                     if (BlockResetBrush.DENIED_UPDATES.contains(block.getType()))
                     {
                         continue;

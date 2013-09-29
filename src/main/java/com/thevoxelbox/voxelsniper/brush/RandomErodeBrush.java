@@ -72,7 +72,8 @@ public class RandomErodeBrush extends Brush
         }
     }
 
-    private boolean fill(final int x, final int y, final int z)
+    @SuppressWarnings("deprecation")
+	private boolean fill(final int x, final int y, final int z)
     {
         if (this.snap[x][y][z].isSolid())
         {
@@ -123,16 +124,16 @@ public class RandomErodeBrush extends Brush
         {
             this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-            int sx = this.getBlockPositionX() - (this.bsize + 1);
-            int sy = this.getBlockPositionY() - (this.bsize + 1);
-            int sz = this.getBlockPositionZ() - (this.bsize + 1);
+            int sx = this.getTargetBlock().getX() - (this.bsize + 1);
+            int sy = this.getTargetBlock().getY() - (this.bsize + 1);
+            int sz = this.getTargetBlock().getZ() - (this.bsize + 1);
 
             for (int x = 0; x < this.snap.length; x++)
             {
-                sz = this.getBlockPositionZ() - (this.bsize + 1);
+                sz = this.getTargetBlock().getZ() - (this.bsize + 1);
                 for (int z = 0; z < this.snap.length; z++)
                 {
-                    sy = this.getBlockPositionY() - (this.bsize + 1);
+                    sy = this.getTargetBlock().getY() - (this.bsize + 1);
                     for (int y = 0; y < this.snap.length; y++)
                     {
                         this.snap[x][y][z] = new BlockWrapper(this.clampY(sx, sy, sz));
@@ -148,16 +149,16 @@ public class RandomErodeBrush extends Brush
         {
             this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-            int sx = this.getBlockPositionX() - (this.bsize + 1);
-            int sy = this.getBlockPositionY() - (this.bsize + 1);
-            int sz = this.getBlockPositionZ() - (this.bsize + 1);
+            int sx = this.getTargetBlock().getX() - (this.bsize + 1);
+            int sy = this.getTargetBlock().getY() - (this.bsize + 1);
+            int sz = this.getTargetBlock().getZ() - (this.bsize + 1);
 
             for (int x = 0; x < this.snap.length; x++)
             {
-                sz = this.getBlockPositionZ() - (this.bsize + 1);
+                sz = this.getTargetBlock().getZ() - (this.bsize + 1);
                 for (int z = 0; z < this.snap.length; z++)
                 {
-                    sy = this.getBlockPositionY() - (this.bsize + 1);
+                    sy = this.getTargetBlock().getY() - (this.bsize + 1);
                     for (int y = 0; y < this.snap.length; y++)
                     {
                         this.snap[x][y][z] = new BlockWrapper(this.clampY(sx, sy, sz));
@@ -170,7 +171,8 @@ public class RandomErodeBrush extends Brush
         }
     }
 
-    private void rerosion(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void rerosion(final SnipeData v)
     {
         final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
@@ -253,7 +255,8 @@ public class RandomErodeBrush extends Brush
         v.storeUndo(undo);
     }
 
-    private void rfilling(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void rfilling(final SnipeData v)
     {
         final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
 
@@ -409,7 +412,8 @@ public class RandomErodeBrush extends Brush
         /**
          * @param bl
          */
-        public BlockWrapper(final Block bl)
+        @SuppressWarnings("deprecation")
+		public BlockWrapper(final Block bl)
         {
             this.setNativeBlock(bl);
             this.setI(bl.getTypeId());

@@ -419,7 +419,8 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperV(final Player player, final String[] split)
+    @SuppressWarnings("deprecation")
+	private static boolean commandSniperV(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
@@ -518,7 +519,8 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperVi(final Player player, final String[] split)
+    @SuppressWarnings("deprecation")
+	private static boolean commandSniperVi(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
@@ -546,7 +548,8 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperVir(final Player player, final String[] split)
+    @SuppressWarnings("deprecation")
+	private static boolean commandSniperVir(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
@@ -574,7 +577,8 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperVl(final Player player, final String[] split)
+    @SuppressWarnings("deprecation")
+	private static boolean commandSniperVl(final Player player, final String[] split)
     {
         if (split.length == 0)
         {
@@ -582,7 +586,7 @@ public class VoxelSniperListener implements Listener
             final Block targetBlock = rangeBlockHelper.getTargetBlock();
             try
             {
-                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).addVoxelToList(targetBlock.getTypeId());
+                VoxelSniper.getSniperPermissionHelper().getSniperInstance(player).addVoxelToList(new int[] {targetBlock.getTypeId(), targetBlock.getData()});
 
                 return true;
             }
@@ -607,66 +611,45 @@ public class VoxelSniperListener implements Listener
         {
             String tmpint;
             Integer xint;
-
+            Integer xdat;
+            
+            if (string.startsWith("-"))
+            {
+                remove = true;
+                tmpint = string.replaceAll("-", "");
+            }
+            else
+            {
+                tmpint = string;
+            }
+            
             try
             {
-                if (string.startsWith("-"))
-                {
-                    remove = true;
-                    tmpint = string.replaceAll("-", "");
+                if(tmpint.contains(":")) {
+                	String[] tempintsplit = tmpint.split(":");
+                	xint = Integer.parseInt(tempintsplit[0]);
+                	xdat = Integer.parseInt(tempintsplit[1]);
+                } else {
+                	xint = Integer.parseInt(tmpint);
+                	xdat = -1;
                 }
-                else
-                {
-                    tmpint = string;
-                }
-
-                xint = Integer.parseInt(tmpint);
 
                 if (VoxelSniper.isValidItem(xint) && Material.getMaterial(xint).isBlock())
                 {
                     if (!remove)
                     {
-                        sniper.addVoxelToList(xint);
+                        sniper.addVoxelToList(new int[]{xint, xdat});
                     }
                     else
                     {
-                        sniper.removeVoxelFromList(xint);
+                        sniper.removeVoxelFromList(new int[]{xint, xdat});
                     }
                 }
 
             }
             catch (final NumberFormatException exception)
             {
-                try
-                {
-                    String tmpstr;
-                    Integer xstr;
-                    remove = false;
-
-                    if (string.startsWith("-"))
-                    {
-                        remove = true;
-                        tmpstr = string.replaceAll("-", "");
-                    }
-                    else
-                    {
-                        tmpstr = string;
-                    }
-
-                    xstr = Material.matchMaterial(tmpstr).getId();
-
-                    if (!remove)
-                    {
-                        sniper.addVoxelToList(xstr);
-                    }
-                    else
-                    {
-                        sniper.removeVoxelFromList(xstr);
-                    }
-                }
-                catch (final Exception ignored)
-                {
-                }
+                
             }
         }
         return true;
@@ -677,7 +660,8 @@ public class VoxelSniperListener implements Listener
      * @param split
      * @return
      */
-    private static boolean commandSniperVr(final Player player, final String[] split)
+    @SuppressWarnings("deprecation")
+	private static boolean commandSniperVr(final Player player, final String[] split)
     {
         if (split.length == 0)
         {

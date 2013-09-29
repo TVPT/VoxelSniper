@@ -31,7 +31,8 @@ public class pInkNoPhys extends vPerformer
         vm.data();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
         h.put(b);

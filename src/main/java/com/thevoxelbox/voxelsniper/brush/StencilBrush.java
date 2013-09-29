@@ -57,7 +57,8 @@ public class StencilBrush extends Brush
         this.setName("Stencil");
     }
 
-    private void stencilPaste(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void stencilPaste(final SnipeData v)
     {
         if (this.filename.matches("NoFileLoaded"))
         {
@@ -258,7 +259,8 @@ public class StencilBrush extends Brush
         }
     }
 
-    private void stencilSave(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void stencilSave(final SnipeData v)
     {
 
         final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");

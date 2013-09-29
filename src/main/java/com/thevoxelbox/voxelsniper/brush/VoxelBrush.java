@@ -29,7 +29,7 @@ public class VoxelBrush extends PerformBrush
             {
                 for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
                 {
-                    this.current.perform(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + z, this.getBlockPositionZ() + y));
+                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + z, this.getTargetBlock().getZ() + y));
                 }
             }
         }
