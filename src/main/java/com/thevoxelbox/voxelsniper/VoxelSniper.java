@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 /**
  * @author Voxel
  */
+@SuppressWarnings("restriction")
 public class VoxelSniper extends JavaPlugin
 {
     public static final Logger LOG = Logger.getLogger("Minecraft");
@@ -66,6 +67,7 @@ public class VoxelSniper extends JavaPlugin
      * @param itemId
      * @return boolean
      */
+    @SuppressWarnings("deprecation")
     public static boolean isValidItem(final int itemId)
     {
         return Material.getMaterial(itemId) != null;
@@ -319,6 +321,7 @@ public class VoxelSniper extends JavaPlugin
         Brushes.registerSniperBrush(DomeBrush.class, Brushes.BrushAvailability.ALL, "dome", "domebrush");
         Brushes.registerSniperBrush(DrainBrush.class, Brushes.BrushAvailability.ALL, "drain");
         Brushes.registerSniperBrush(EllipseBrush.class, Brushes.BrushAvailability.ALL, "el", "ellipse");
+        Brushes.registerSniperBrush(EllipsoidBrush.class, Brushes.BrushAvailability.ALL, "elo", "ellipsoid");
         Brushes.registerSniperBrush(EntityBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "en", "entity");
         Brushes.registerSniperBrush(EntityRemovalBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "er", "entityremoval");
         Brushes.registerSniperBrush(EraserBrush.class, Brushes.BrushAvailability.ALL, "erase", "eraser");
