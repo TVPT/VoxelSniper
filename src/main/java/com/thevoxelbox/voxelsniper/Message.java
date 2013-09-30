@@ -98,7 +98,8 @@ public class Message
     /**
      * Displaye replace material.
      */
-    public void replace()
+    @SuppressWarnings("deprecation")
+	public void replace()
     {
         if (snipeData.owner().isPrintout())
         {
@@ -156,7 +157,8 @@ public class Message
     /**
      * Display voxel type.
      */
-    public void voxel()
+    @SuppressWarnings("deprecation")
+	public void voxel()
     {
         if (snipeData.owner().isPrintout())
         {
