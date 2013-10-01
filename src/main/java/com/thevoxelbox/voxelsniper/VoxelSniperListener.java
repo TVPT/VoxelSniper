@@ -128,7 +128,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandGoto(final Player player, final String[] split)
     {
@@ -155,7 +155,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandPaint(final Player player, final String[] split)
     {
@@ -182,7 +182,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperB(final Player player, final String[] split)
     {
@@ -220,7 +220,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperBml(final Player player, final String[] split)
     {
@@ -241,7 +241,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperBms(final Player player, final String[] split)
     {
@@ -262,7 +262,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperBTool(final Player player, final String[] split)
     {
@@ -310,7 +310,7 @@ public class VoxelSniperListener implements Listener
 
     /**
      * @param player
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperD(final Player player)
     {
@@ -330,7 +330,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperP(final Player player, final String[] split)
     {
@@ -357,7 +357,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperU(final Player player, final String[] split)
     {
@@ -378,7 +378,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperUU(final Player player, final String[] split)
     {
@@ -396,7 +396,7 @@ public class VoxelSniperListener implements Listener
 
     /**
      * @param player
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperUUU(final Player player)
     {
@@ -415,7 +415,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     @SuppressWarnings("deprecation")
 	private boolean commandSniperV(final Player player, final String[] split)
@@ -472,7 +472,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperVc(final Player player, final String[] split)
     {
@@ -496,7 +496,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperVh(final Player player, final String[] split)
     {
@@ -515,7 +515,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     @SuppressWarnings("deprecation")
 	private boolean commandSniperVi(final Player player, final String[] split)
@@ -544,7 +544,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     @SuppressWarnings("deprecation")
 	private boolean commandSniperVir(final Player player, final String[] split)
@@ -573,7 +573,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     @SuppressWarnings("deprecation")
 	private boolean commandSniperVl(final Player player, final String[] split)
@@ -623,11 +623,14 @@ public class VoxelSniperListener implements Listener
             
             try
             {
-                if(tmpint.contains(":")) {
+                if (tmpint.contains(":"))
+                {
                 	String[] tempintsplit = tmpint.split(":");
                 	xint = Integer.parseInt(tempintsplit[0]);
                 	xdat = Integer.parseInt(tempintsplit[1]);
-                } else {
+                }
+                else
+                {
                 	xint = Integer.parseInt(tmpint);
                 	xdat = -1;
                 }
@@ -645,9 +648,8 @@ public class VoxelSniperListener implements Listener
                 }
 
             }
-            catch (final NumberFormatException exception)
+            catch (NumberFormatException ignored)
             {
-                
             }
         }
         return true;
@@ -656,7 +658,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     @SuppressWarnings("deprecation")
 	private boolean commandSniperVr(final Player player, final String[] split)
@@ -713,7 +715,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param player
      * @param split
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandSniperVs(final Player player, final String[] split)
     {
@@ -819,7 +821,7 @@ public class VoxelSniperListener implements Listener
 
     /**
      * @param player
-     * @return
+     * @return true if command was processed, false otherwise
      */
     private boolean commandVChunk(final Player player)
     {
@@ -881,7 +883,7 @@ public class VoxelSniperListener implements Listener
                 sniper.info();
                 return;
             }
-            catch (final Exception ignored)
+            catch (Exception ignored)
             {
                 return;
             }
@@ -897,7 +899,7 @@ public class VoxelSniperListener implements Listener
                     sniper.info();
                 }
             }
-            catch (final Exception ignored)
+            catch (Exception ignored)
             {
             }
         }
