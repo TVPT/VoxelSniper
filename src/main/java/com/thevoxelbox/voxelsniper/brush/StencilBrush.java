@@ -41,9 +41,6 @@ public class StencilBrush extends Brush
     private short zRef;
     private short yRef;
     private byte pasteParam = 0;
-    private byte[] blockArray;
-    private byte[] dataArray;
-    private byte[] runSizeArray;
     private int[] firstPoint = new int[3];
     private int[] secondPoint = new int[3];
     private int[] pastePoint = new int[3];
@@ -296,9 +293,9 @@ public class StencilBrush extends Brush
 
             v.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
 
-            this.blockArray = new byte[this.x * this.z * this.y];
-            this.dataArray = new byte[this.x * this.z * this.y];
-            this.runSizeArray = new byte[this.x * this.z * this.y];
+            byte[] blockArray = new byte[this.x * this.z * this.y];
+            byte[] dataArray = new byte[this.x * this.z * this.y];
+            byte[] runSizeArray = new byte[this.x * this.z * this.y];
 
             byte lastId = (byte) (this.getWorld().getBlockTypeIdAt(blockPositionX, blockPositionY, blockPositionZ) - 128);
             byte lastData = (byte) (this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() - 128);
@@ -317,9 +314,9 @@ public class StencilBrush extends Brush
                         thisData = (byte) (currentBlock.getData() - 128);
                         if (thisId != lastId || thisData != lastData || counter == 255)
                         {
-                            this.blockArray[arrayIndex] = lastId;
-                            this.dataArray[arrayIndex] = lastData;
-                            this.runSizeArray[arrayIndex] = (byte) (counter - 128);
+                            blockArray[arrayIndex] = lastId;
+                            dataArray[arrayIndex] = lastData;
+                            runSizeArray[arrayIndex] = (byte) (counter - 128);
                             arrayIndex++;
                             counter = 1;
                             lastId = thisId;
@@ -334,26 +331,26 @@ public class StencilBrush extends Brush
                     }
                 }
             }
-            this.blockArray[arrayIndex] = lastId; // saving last run, which will always be left over.
-            this.dataArray[arrayIndex] = lastData;
-            this.runSizeArray[arrayIndex] = (byte) (counter - 128);
+            blockArray[arrayIndex] = lastId; // saving last run, which will always be left over.
+            dataArray[arrayIndex] = lastData;
+            runSizeArray[arrayIndex] = (byte) (counter - 128);
 
-            out.writeInt(arrayIndex+1);
+            out.writeInt(arrayIndex + 1);
             // v.sendMessage("number of runs = " + arrayIndex);
             for (int i = 0; i < arrayIndex + 1; i++)
             {
-                if (this.runSizeArray[i] > -127)
+                if (runSizeArray[i] > -127)
                 {
                     out.writeBoolean(true);
-                    out.writeByte(this.runSizeArray[i]);
-                    out.writeByte(this.blockArray[i]);
-                    out.writeByte(this.dataArray[i]);
+                    out.writeByte(runSizeArray[i]);
+                    out.writeByte(blockArray[i]);
+                    out.writeByte(dataArray[i]);
                 }
                 else
                 {
                     out.writeBoolean(false);
-                    out.writeByte(this.blockArray[i]);
-                    out.writeByte(this.dataArray[i]);
+                    out.writeByte(blockArray[i]);
+                    out.writeByte(dataArray[i]);
                 }
             }
 

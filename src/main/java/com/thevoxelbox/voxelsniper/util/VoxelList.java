@@ -12,7 +12,7 @@ import java.util.List;
 public class VoxelList
 {
 
-    private List<int[]> col = new ArrayList<int[]>();
+    private List<int[]> valuePairs = new ArrayList<int[]>();
 
     /**
      * Adds the specified id, data value pair to the VoxelList. A data value of -1 will operate on all data values of that id.
@@ -23,9 +23,9 @@ public class VoxelList
     {
         if (i[1] == -1)
         {
-            if (!col.contains(i))
+            if (!valuePairs.contains(i))
             {
-                for (Iterator<int[]> it = col.iterator(); it.hasNext(); )
+                for (Iterator<int[]> it = valuePairs.iterator(); it.hasNext(); )
                 {
                     int[] in = it.next();
                     if (in[0] == i[0])
@@ -33,14 +33,14 @@ public class VoxelList
                         it.remove();
                     }
                 }
-                col.add(i);
+                valuePairs.add(i);
             }
         }
         else
         {
-            if (!col.contains(i))
+            if (!valuePairs.contains(i))
             {
-                col.add(i);
+                valuePairs.add(i);
             }
         }
     }
@@ -53,7 +53,7 @@ public class VoxelList
      */
     public boolean removeValue(final int[] i)
     {
-        if (col.isEmpty())
+        if (valuePairs.isEmpty())
         {
             return false;
         }
@@ -62,7 +62,7 @@ public class VoxelList
             boolean ret = false;
             if (i[1] == -1)
             {
-                for (Iterator<int[]> it = col.iterator(); it.hasNext(); )
+                for (Iterator<int[]> it = valuePairs.iterator(); it.hasNext(); )
                 {
                     int[] in = it.next();
                     if (in[0] == i[0])
@@ -74,7 +74,7 @@ public class VoxelList
             }
             else
             {
-                ret = col.remove(i);
+                ret = valuePairs.remove(i);
             }
             return ret;
         }
@@ -86,7 +86,7 @@ public class VoxelList
      */
     public boolean contains(final int[] i)
     {
-        for (int[] in : col)
+        for (int[] in : valuePairs)
         {
             if (in[0] == i[0] && (in[1] == i[1] || in[1] == -1))
             {
@@ -101,7 +101,7 @@ public class VoxelList
      */
     public void clear()
     {
-        col.clear();
+        valuePairs.clear();
     }
 
     /**
@@ -111,7 +111,7 @@ public class VoxelList
      */
     public boolean isEmpty()
     {
-        return col.isEmpty();
+        return valuePairs.isEmpty();
     }
 
     /**
@@ -121,7 +121,7 @@ public class VoxelList
      */
     public List<int[]> getList()
     {
-        return ImmutableList.copyOf(col);
+        return ImmutableList.copyOf(valuePairs);
     }
 
 
