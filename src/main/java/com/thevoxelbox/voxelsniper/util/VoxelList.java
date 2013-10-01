@@ -15,6 +15,8 @@ public class VoxelList
     private List<int[]> col = new ArrayList<int[]>();
 
     /**
+     * Adds the specified id, data value pair to the VoxelList. A data value of -1 will operate on all data values of that id.
+     * 
      * @param i
      */
     public void add(int[] i)
@@ -44,6 +46,8 @@ public class VoxelList
     }
 
     /**
+     * Removes the specified id, data value pair from the VoxelList.
+     * 
      * @param i
      * @return true if this list contained the specified element
      */

@@ -24,6 +24,8 @@ import org.bukkit.block.Block;
  * to be size 1, which in Minecraft is almost definitely true. IF boolean was true, next unsigned byte stores the number of consecutive blocks of the same type,
  * up to 256. IF boolean was false, there is no byte here, goes straight to ID and data instead, which applies to just one block. 2 bytes to identify type of
  * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true. )
+ * 
+ * TODO: Make limit a config option
  *
  * @author Gavjenks
  */
@@ -336,7 +338,7 @@ public class StencilBrush extends Brush
             this.dataArray[arrayIndex] = lastData;
             this.runSizeArray[arrayIndex] = (byte) (counter - 128);
 
-            out.writeInt(arrayIndex);
+            out.writeInt(arrayIndex+1);
             // v.sendMessage("number of runs = " + arrayIndex);
             for (int i = 0; i < arrayIndex + 1; i++)
             {
