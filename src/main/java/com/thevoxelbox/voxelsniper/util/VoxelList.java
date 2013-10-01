@@ -1,15 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.util;
+
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author Voxel
+ * Container class for multiple ID/Datavalue pairs.
  */
 public class VoxelList
 {
@@ -19,33 +17,37 @@ public class VoxelList
     /**
      * @param i
      */
-    public final void add(final int[] i)
+    public void add(int[] i)
     {
-    	if(i[1] == -1) {
-    		if (!col.contains(i))
+        if (i[1] == -1)
+        {
+            if (!col.contains(i))
             {
-	    		for(Iterator<int[]> it = col.iterator(); it.hasNext();) {
-	    			int[] in = it.next();
-	    			if(in[0] == i[0]) {
-	    				it.remove();
-	    			}
-	    		}
-	    		col.add(i);
+                for (Iterator<int[]> it = col.iterator(); it.hasNext(); )
+                {
+                    int[] in = it.next();
+                    if (in[0] == i[0])
+                    {
+                        it.remove();
+                    }
+                }
+                col.add(i);
             }
-    	} else {
-    		if (!col.contains(i))
+        }
+        else
+        {
+            if (!col.contains(i))
             {
                 col.add(i);
             }
-    	}
+        }
     }
 
     /**
      * @param i
-     *
-     * @return
+     * @return true if this list contained the specified element
      */
-    public final boolean removeValue(final int[] i)
+    public boolean removeValue(final int[] i)
     {
         if (col.isEmpty())
         {
@@ -53,54 +55,70 @@ public class VoxelList
         }
         else
         {
-        	boolean ret = false;
-        	if(i[1] == -1) {
-        		for(Iterator<int[]> it = col.iterator(); it.hasNext();) {
-        			int[] in = it.next();
-        			if(in[0] == i[0]) {
-        				it.remove();
-        				ret = true;
-        			}
-        		}
-        	} else {
-        		ret = col.remove(i);
-        	}
+            boolean ret = false;
+            if (i[1] == -1)
+            {
+                for (Iterator<int[]> it = col.iterator(); it.hasNext(); )
+                {
+                    int[] in = it.next();
+                    if (in[0] == i[0])
+                    {
+                        it.remove();
+                        ret = true;
+                    }
+                }
+            }
+            else
+            {
+                ret = col.remove(i);
+            }
             return ret;
         }
     }
 
     /**
      * @param i
-     *
-     * @return
+     * @return true if this list contains the specified element
      */
-    public final boolean contains(final int[] i)
+    public boolean contains(final int[] i)
     {
-    	for(Iterator<int[]> it = col.iterator(); it.hasNext();) {
-    		int[] in = it.next();
-    		if(in[0] == i[0] && (in[1] == i[1] || in[1] == -1)) {
-    			return true;
-    		}
-    	}
-    	return false;
+        for (int[] in : col)
+        {
+            if (in[0] == i[0] && (in[1] == i[1] || in[1] == -1))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * clears the voxelList
+     * Clears the VoxelList.
      */
-    public final void clear()
+    public void clear()
     {
         col.clear();
     }
-    
-	public boolean isEmpty() {
-		return col.isEmpty();
-	}
 
-	public List<int[]> getList() {
-		return col;
-	}
+    /**
+     * Returns true if this list contains no elements.
+     *
+     * @return true if this list contains no elements
+     */
+    public boolean isEmpty()
+    {
+        return col.isEmpty();
+    }
 
+    /**
+     * Returns a defensive copy of the List with pairs.
+     *
+     * @return defensive copy of the List with pairs
+     */
+    public List<int[]> getList()
+    {
+        return ImmutableList.copyOf(col);
+    }
 
 
 }
