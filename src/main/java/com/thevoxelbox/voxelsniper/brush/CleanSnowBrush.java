@@ -29,7 +29,7 @@ public class CleanSnowBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int y = (brushSize + 1) * 2; y >= 0; y--)
         {
@@ -43,10 +43,10 @@ public class CleanSnowBrush extends Brush
                 {
                     if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared)
                     {
-                        if ((this.clampY(this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize, this.getBlockPositionZ() + y - brushSize).getType() == Material.SNOW) && ((this.clampY(this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize - 1, this.getBlockPositionZ() + y - brushSize).getType() == Material.SNOW) || (this.clampY(this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize - 1, this.getBlockPositionZ() + y - brushSize).getType() == Material.AIR)))
+                        if ((this.clampY(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, this.getTargetBlock().getZ() + y - brushSize).getType() == Material.SNOW) && ((this.clampY(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize - 1, this.getTargetBlock().getZ() + y - brushSize).getType() == Material.SNOW) || (this.clampY(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize - 1, this.getTargetBlock().getZ() + y - brushSize).getType() == Material.AIR)))
                         {
-                            undo.put(this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + z, this.getBlockPositionZ() + y));
-                            this.setBlockIdAt(this.getBlockPositionZ() + y - brushSize, this.getBlockPositionX() + x - brushSize, this.getBlockPositionY() + z - brushSize, 0);
+                            undo.put(this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + z, this.getTargetBlock().getZ() + y));
+                            this.setBlockIdAt(this.getTargetBlock().getZ() + y - brushSize, this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, 0);
                         }
 
                     }

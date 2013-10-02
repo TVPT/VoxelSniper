@@ -55,7 +55,8 @@ public class GenerateTreeBrush extends Brush
     }
 
     // Branch Creation based on direction chosen from the parameters passed.
-    private void branchCreate(final int xDirection, final int zDirection)
+    @SuppressWarnings("deprecation")
+	private void branchCreate(final int xDirection, final int zDirection)
     {
 
         // Sets branch origin.
@@ -104,7 +105,8 @@ public class GenerateTreeBrush extends Brush
         blockPositionZ = originZ;
     }
 
-    private void leafNodeCreate()
+    @SuppressWarnings("deprecation")
+	private void leafNodeCreate()
     {
         // Generates the node size.
         final int nodeRadius = this.randGenerator.nextInt(this.nodeMax - this.nodeMin + 1) + this.nodeMin;
@@ -230,7 +232,8 @@ public class GenerateTreeBrush extends Brush
      * @param xDirection
      * @param zDirection
      */
-    private void rootCreate(final int xDirection, final int zDirection)
+    @SuppressWarnings("deprecation")
+	private void rootCreate(final int xDirection, final int zDirection)
     {
         // Sets Origin.
         final int originX = blockPositionX;
@@ -336,7 +339,8 @@ public class GenerateTreeBrush extends Brush
         this.rootCreate(-1, -1);
     }
 
-    private void trunkCreate()
+    @SuppressWarnings("deprecation")
+	private void trunkCreate()
     {
         // Creates true circle discs of the set size using the wood type selected.
         final double bSquared = Math.pow(this.thickness + 0.5, 2);
@@ -525,7 +529,7 @@ public class GenerateTreeBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.undo = new Undo(this.getTargetBlock().getWorld().getName());
+        this.undo = new Undo();
 
         this.branchBlocks.clear();
 

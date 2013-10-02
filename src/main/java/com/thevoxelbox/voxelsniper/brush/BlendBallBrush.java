@@ -21,7 +21,8 @@ public class BlendBallBrush extends BlendBrushBase
         this.setName("Blend Ball");
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     protected final void blend(final SnipeData v)
     {
         final int brushSize = v.getBrushSize();
@@ -38,7 +39,7 @@ public class BlendBallBrush extends BlendBrushBase
             {
                 for (int z = 0; z <= 2 * (brushSize + 1); z++)
                 {
-                    oldMaterials[x][y][z] = this.getBlockIdAt(this.getBlockPositionX() - brushSize - 1 + x, this.getBlockPositionY() - brushSize - 1 + y, this.getBlockPositionZ() - brushSize - 1 + z);
+                    oldMaterials[x][y][z] = this.getBlockIdAt(this.getTargetBlock().getX() - brushSize - 1 + x, this.getTargetBlock().getY() - brushSize - 1 + y, this.getTargetBlock().getZ() - brushSize - 1 + z);
                 }
             }
         }
@@ -108,7 +109,7 @@ public class BlendBallBrush extends BlendBrushBase
             }
         }
 
-        final Undo undo = new Undo(this.getWorld().getName());
+        final Undo undo = new Undo();
         final double rSquared = Math.pow(brushSize + 1, 2);
 
         // Make the changes  
@@ -126,11 +127,11 @@ public class BlendBallBrush extends BlendBrushBase
                     {
                         if (!(this.excludeAir && newMaterials[x][y][z] == Material.AIR.getId()) && !(this.excludeWater && (newMaterials[x][y][z] == Material.WATER.getId() || newMaterials[x][y][z] == Material.STATIONARY_WATER.getId())))
                         {
-                            if (this.getBlockIdAt(this.getBlockPositionX() - brushSize + x, this.getBlockPositionY() - brushSize + y, this.getBlockPositionZ() - brushSize + z) != newMaterials[x][y][z])
+                            if (this.getBlockIdAt(this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY() - brushSize + y, this.getTargetBlock().getZ() - brushSize + z) != newMaterials[x][y][z])
                             {
-                                undo.put(this.clampY(this.getBlockPositionX() - brushSize + x, this.getBlockPositionY() - brushSize + y, this.getBlockPositionZ() - brushSize + z));
+                                undo.put(this.clampY(this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY() - brushSize + y, this.getTargetBlock().getZ() - brushSize + z));
                             }
-                            this.setBlockIdAt(this.getBlockPositionZ() - brushSize + z, this.getBlockPositionX() - brushSize + x, this.getBlockPositionY() - brushSize + y, newMaterials[x][y][z]);
+                            this.setBlockIdAt(this.getTargetBlock().getZ() - brushSize + z, this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY() - brushSize + y, newMaterials[x][y][z]);
                         }
                     }
                 }

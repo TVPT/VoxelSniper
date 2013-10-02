@@ -13,7 +13,8 @@ import com.martiansoftware.jsap.StringParser;
 public class NullableIntegerStringParser extends StringParser
 {
 
-    private static final NullableIntegerStringParser INSTANCE = new NullableIntegerStringParser();
+    @SuppressWarnings("unused")
+	private static final NullableIntegerStringParser INSTANCE = new NullableIntegerStringParser();
 
     /**
      * Returns a {@link com.thevoxelbox.voxelsniper.jsap.NullableIntegerStringParser}.

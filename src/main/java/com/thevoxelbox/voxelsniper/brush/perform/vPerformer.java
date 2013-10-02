@@ -25,7 +25,7 @@ public abstract class vPerformer
 
     public void setUndo()
     {
-        h = new Undo(w.getName());
+        h = new Undo();
     }
 
     public abstract void perform(Block b);

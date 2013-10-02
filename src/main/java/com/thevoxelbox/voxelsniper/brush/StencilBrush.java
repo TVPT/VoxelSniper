@@ -24,6 +24,8 @@ import org.bukkit.block.Block;
  * to be size 1, which in Minecraft is almost definitely true. IF boolean was true, next unsigned byte stores the number of consecutive blocks of the same type,
  * up to 256. IF boolean was false, there is no byte here, goes straight to ID and data instead, which applies to just one block. 2 bytes to identify type of
  * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true. )
+ * 
+ * TODO: Make limit a config option
  *
  * @author Gavjenks
  */
@@ -39,9 +41,6 @@ public class StencilBrush extends Brush
     private short zRef;
     private short yRef;
     private byte pasteParam = 0;
-    private byte[] blockArray;
-    private byte[] dataArray;
-    private byte[] runSizeArray;
     private int[] firstPoint = new int[3];
     private int[] secondPoint = new int[3];
     private int[] pastePoint = new int[3];
@@ -57,7 +56,8 @@ public class StencilBrush extends Brush
         this.setName("Stencil");
     }
 
-    private void stencilPaste(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void stencilPaste(final SnipeData v)
     {
         if (this.filename.matches("NoFileLoaded"))
         {
@@ -65,7 +65,7 @@ public class StencilBrush extends Brush
             return;
         }
 
-        final Undo undo = new Undo(getWorld().getName());
+        final Undo undo = new Undo();
         final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 
         if (file.exists())
@@ -258,7 +258,8 @@ public class StencilBrush extends Brush
         }
     }
 
-    private void stencilSave(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void stencilSave(final SnipeData v)
     {
 
         final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
@@ -292,9 +293,9 @@ public class StencilBrush extends Brush
 
             v.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
 
-            this.blockArray = new byte[this.x * this.z * this.y];
-            this.dataArray = new byte[this.x * this.z * this.y];
-            this.runSizeArray = new byte[this.x * this.z * this.y];
+            byte[] blockArray = new byte[this.x * this.z * this.y];
+            byte[] dataArray = new byte[this.x * this.z * this.y];
+            byte[] runSizeArray = new byte[this.x * this.z * this.y];
 
             byte lastId = (byte) (this.getWorld().getBlockTypeIdAt(blockPositionX, blockPositionY, blockPositionZ) - 128);
             byte lastData = (byte) (this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() - 128);
@@ -313,9 +314,9 @@ public class StencilBrush extends Brush
                         thisData = (byte) (currentBlock.getData() - 128);
                         if (thisId != lastId || thisData != lastData || counter == 255)
                         {
-                            this.blockArray[arrayIndex] = lastId;
-                            this.dataArray[arrayIndex] = lastData;
-                            this.runSizeArray[arrayIndex] = (byte) (counter - 128);
+                            blockArray[arrayIndex] = lastId;
+                            dataArray[arrayIndex] = lastData;
+                            runSizeArray[arrayIndex] = (byte) (counter - 128);
                             arrayIndex++;
                             counter = 1;
                             lastId = thisId;
@@ -330,26 +331,26 @@ public class StencilBrush extends Brush
                     }
                 }
             }
-            this.blockArray[arrayIndex] = lastId; // saving last run, which will always be left over.
-            this.dataArray[arrayIndex] = lastData;
-            this.runSizeArray[arrayIndex] = (byte) (counter - 128);
+            blockArray[arrayIndex] = lastId; // saving last run, which will always be left over.
+            dataArray[arrayIndex] = lastData;
+            runSizeArray[arrayIndex] = (byte) (counter - 128);
 
-            out.writeInt(arrayIndex);
+            out.writeInt(arrayIndex + 1);
             // v.sendMessage("number of runs = " + arrayIndex);
             for (int i = 0; i < arrayIndex + 1; i++)
             {
-                if (this.runSizeArray[i] > -127)
+                if (runSizeArray[i] > -127)
                 {
                     out.writeBoolean(true);
-                    out.writeByte(this.runSizeArray[i]);
-                    out.writeByte(this.blockArray[i]);
-                    out.writeByte(this.dataArray[i]);
+                    out.writeByte(runSizeArray[i]);
+                    out.writeByte(blockArray[i]);
+                    out.writeByte(dataArray[i]);
                 }
                 else
                 {
                     out.writeBoolean(false);
-                    out.writeByte(this.blockArray[i]);
-                    out.writeByte(this.dataArray[i]);
+                    out.writeByte(blockArray[i]);
+                    out.writeByte(dataArray[i]);
                 }
             }
 

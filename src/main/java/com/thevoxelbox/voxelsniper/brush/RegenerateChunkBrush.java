@@ -25,7 +25,7 @@ public class RegenerateChunkBrush extends Brush
     private void generateChunk(final SnipeData v)
     {
         final Chunk chunk = this.getTargetBlock().getChunk();
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int z = CHUNK_SIZE; z >= 0; z--)
         {

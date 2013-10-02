@@ -19,7 +19,8 @@ public class BlockWrapper
     /**
      * @param block
      */
-    public BlockWrapper(final Block block)
+    @SuppressWarnings("deprecation")
+	public BlockWrapper(final Block block)
     {
         this.setId(block.getTypeId());
         this.setX(block.getX());

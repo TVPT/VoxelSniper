@@ -28,7 +28,8 @@ public class Sneak extends Brush
     /**
      * @return
      */
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public final boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace)
     {
         switch (action)

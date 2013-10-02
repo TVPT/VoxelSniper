@@ -30,7 +30,7 @@ public class ExtrudeBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
 
         for (int x = -brushSize; x <= brushSize; x++)
         {
@@ -44,8 +44,8 @@ public class ExtrudeBrush extends Brush
                     {
                         final int tempY = y * direction;
                         undo = this.perform(
-                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + tempY, this.getBlockPositionZ() + z),
-                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + tempY + direction, this.getBlockPositionZ() + z),
+                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + tempY, this.getTargetBlock().getZ() + z),
+                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + tempY + direction, this.getTargetBlock().getZ() + z),
                                 v, undo);
                     }
                 }
@@ -59,7 +59,7 @@ public class ExtrudeBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
 
         for (int x = -brushSize; x <= brushSize; x++)
         {
@@ -73,8 +73,8 @@ public class ExtrudeBrush extends Brush
                     {
                         final int tempZ = z * direction;
                         undo = this.perform(
-                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + tempZ),
-                                this.clampY(this.getBlockPositionX() + x, this.getBlockPositionY() + y, this.getBlockPositionZ() + tempZ + direction),
+                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + tempZ),
+                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + tempZ + direction),
                                 v, undo);
                     }
 
@@ -89,7 +89,7 @@ public class ExtrudeBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
 
         for (int y = -brushSize; y <= brushSize; y++)
         {
@@ -103,8 +103,8 @@ public class ExtrudeBrush extends Brush
                     {
                         final int tempX = x * direction;
                         undo = this.perform(
-                                this.clampY(this.getBlockPositionX() + tempX, this.getBlockPositionY() + y, this.getBlockPositionZ() + z),
-                                this.clampY(this.getBlockPositionX() + tempX + direction, this.getBlockPositionY() + y, this.getBlockPositionZ() + z),
+                                this.clampY(this.getTargetBlock().getX() + tempX, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z),
+                                this.clampY(this.getTargetBlock().getX() + tempX + direction, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z),
                                 v, undo);
                     }
 
@@ -114,9 +114,10 @@ public class ExtrudeBrush extends Brush
         v.storeUndo(undo);
     }
 
-    private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo)
+    @SuppressWarnings("deprecation")
+	private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo)
     {
-        if (v.getVoxelList().contains(this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ())))
+        if (v.getVoxelList().contains(new int[]{this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), this.getBlockDataAt(b1.getX(), b1.getY(), b1.getZ())}))
         {
             undo.put(b2);
             this.setBlockIdAt(b2.getZ(), b2.getX(), b2.getY(), this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()));

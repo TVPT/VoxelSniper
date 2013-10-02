@@ -78,7 +78,8 @@ public class OceanBrush extends Brush
     /**
      * @param v
      */
-    protected final void oceanator(final SnipeData v, final Undo undo)
+    @SuppressWarnings("deprecation")
+	protected final void oceanator(final SnipeData v, final Undo undo)
     {
         final World world = this.getWorld();
 
@@ -140,7 +141,7 @@ public class OceanBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        Undo undo = new Undo();
         this.oceanator(v, undo);
         v.storeUndo(undo);
     }

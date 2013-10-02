@@ -41,7 +41,8 @@ public class pComboMatNoPhys extends vPerformer
         vm.data();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
         if (b.getTypeId() == ir)

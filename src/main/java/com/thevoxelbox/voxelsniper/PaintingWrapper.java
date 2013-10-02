@@ -42,7 +42,8 @@ public final class PaintingWrapper
      * @param choice
      *         Chosen index to set the painting to
      */
-    public static void paint(final Player p, final boolean auto, final boolean back, final int choice)
+    @SuppressWarnings("deprecation")
+	public static void paint(final Player p, final boolean auto, final boolean back, final int choice)
     {
         final Location location = p.getTargetBlock(null, 4).getLocation();
         final Location location2 = p.getLocation();

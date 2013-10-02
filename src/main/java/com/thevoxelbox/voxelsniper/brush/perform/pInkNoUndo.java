@@ -35,7 +35,8 @@ public class pInkNoUndo extends vPerformer
         vm.data();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
         if (b.getData() != d)

@@ -33,7 +33,7 @@ public class SetRedstoneRotateBrush extends Brush
         }
         else
         {
-            this.undo = new Undo(this.block.getWorld().getName());
+            this.undo = new Undo();
             final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
             final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
             final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
@@ -56,7 +56,8 @@ public class SetRedstoneRotateBrush extends Brush
         }
     }
 
-    private void perform(final Block bl)
+    @SuppressWarnings("deprecation")
+	private void perform(final Block bl)
     {
         if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF)
         {

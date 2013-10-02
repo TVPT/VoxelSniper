@@ -38,7 +38,8 @@ public class CopyPastaBrush extends Brush
         this.setName("CopyPasta");
     }
 
-    private void doCopy(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void doCopy(final SnipeData v)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -75,9 +76,10 @@ public class CopyPastaBrush extends Brush
         }
     }
 
-    private void doPasta(final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private void doPasta(final SnipeData v)
     {
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int i = 0; i < this.arraySize[0]; i++)
         {

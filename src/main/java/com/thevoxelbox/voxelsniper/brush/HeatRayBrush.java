@@ -78,7 +78,7 @@ public class HeatRayBrush extends Brush
 
         final Vector targetLocation = this.getTargetBlock().getLocation().toVector();
         final Location currentLocation = new Location(this.getTargetBlock().getWorld(), 0, 0, 0);
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
         Block currentBlock;
 
         for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--)
@@ -87,9 +87,9 @@ public class HeatRayBrush extends Brush
             {
                 for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
                 {
-                    currentLocation.setX(this.getBlockPositionX() + x);
-                    currentLocation.setY(this.getBlockPositionY() + y);
-                    currentLocation.setZ(this.getBlockPositionZ() + z);
+                    currentLocation.setX(this.getTargetBlock().getX() + x);
+                    currentLocation.setY(this.getTargetBlock().getY() + y);
+                    currentLocation.setZ(this.getTargetBlock().getZ() + z);
 
                     if (currentLocation.toVector().isInSphere(targetLocation, v.getBrushSize()))
                     {

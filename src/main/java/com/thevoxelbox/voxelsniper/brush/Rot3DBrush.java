@@ -100,26 +100,27 @@ public class Rot3DBrush extends Brush
         Rot3DBrush.timesUsed = tUsed;
     }
 
-    private void getMatrix()
+    @SuppressWarnings("deprecation")
+	private void getMatrix()
     { // only need to do once. But y needs to change + sphere
         final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
         this.brushSize = (this.bSize * 2) + 1;
 
         this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-        int sx = this.getBlockPositionX() - this.bSize;
-        int sy = this.getBlockPositionY() - this.bSize;
-        int sz = this.getBlockPositionZ() - this.bSize;
+        int sx = this.getTargetBlock().getX() - this.bSize;
+        //int sy = this.getTargetBlock().getY() - this.bSize; Not used
+        int sz = this.getTargetBlock().getZ() - this.bSize;
 
         for (int x = 0; x < this.snap.length; x++)
         {
             final double xSquared = Math.pow(x - this.bSize, 2);
-            sz = this.getBlockPositionZ() - this.bSize;
+            sz = this.getTargetBlock().getZ() - this.bSize;
 
             for (int z = 0; z < this.snap.length; z++)
             {
                 final double zSquared = Math.pow(z - this.bSize, 2);
-                sz = this.getBlockPositionY() - this.bSize;
+                sz = this.getTargetBlock().getY() - this.bSize;
 
                 for (int y = 0; y < this.snap.length; y++)
                 {
@@ -157,7 +158,7 @@ public class Rot3DBrush extends Brush
         final double cosRoll = Math.cos(this.seRoll);
         final double sinRoll = Math.sin(this.seRoll);
         final boolean[][][] doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
-        final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int x = 0; x < this.snap.length; x++)
         {
@@ -176,7 +177,7 @@ public class Rot3DBrush extends Brush
                     final int yy = y - this.bSize;
                     if (xSquared + zSquared + Math.pow(yy, 2) <= brushSizeSquared)
                     {
-                        undo.put(this.clampY(this.getBlockPositionX() + xx, this.getBlockPositionY() + yy, this.getBlockPositionZ() + zz)); // just store
+                        undo.put(this.clampY(this.getTargetBlock().getX() + xx, this.getTargetBlock().getY() + yy, this.getTargetBlock().getZ() + zz)); // just store
                         // whole sphere in undo, too complicated otherwise, since this brush both adds and remos things unpredictably.
 
                         final double newxyX = (newxzX * cosPitch) - (yy * sinPitch);
@@ -193,7 +194,7 @@ public class Rot3DBrush extends Brush
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getBlockPositionX() + (int) newxyX, this.getBlockPositionY() + (int) newyzY, this.getBlockPositionZ() + (int) newyzZ, block.getId(), block.getData());
+                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + (int) newxyX, this.getTargetBlock().getY() + (int) newyzY, this.getTargetBlock().getZ() + (int) newyzZ, block.getId(), block.getData());
                     }
                 }
             }
@@ -202,12 +203,12 @@ public class Rot3DBrush extends Brush
         for (int x = 0; x < this.snap.length; x++)
         {
             final double xSquared = Math.pow(x - this.bSize, 2);
-            final int fx = x + this.getBlockPositionX() - this.bSize;
+            final int fx = x + this.getTargetBlock().getX() - this.bSize;
 
             for (int z = 0; z < this.snap.length; z++)
             {
                 final double zSquared = Math.pow(z - this.bSize, 2);
-                final int fz = z + this.getBlockPositionZ() - this.bSize;
+                final int fz = z + this.getTargetBlock().getZ() - this.bSize;
 
                 for (int y = 0; y < this.snap.length; y++)
                 {
@@ -216,7 +217,7 @@ public class Rot3DBrush extends Brush
                         if (!doNotFill[x][y][z])
                         {
                             // smart fill stuff
-                            final int fy = y + this.getBlockPositionY() - this.bSize;
+                            final int fy = y + this.getTargetBlock().getY() - this.bSize;
                             final int a = this.getBlockIdAt(fx + 1, fy, fz);
                             final byte aData = this.getBlockDataAt(fx + 1, fy, fz);
                             final int d = this.getBlockIdAt(fx - 1, fy, fz);

@@ -6,7 +6,6 @@ import com.thevoxelbox.voxelsniper.brush.*;
 import com.thevoxelbox.voxelsniper.common.VoxelSniperCommon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,21 +30,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author Voxel
+ * Bukkit extension point.
  */
 public class VoxelSniper extends JavaPlugin
 {
-    public static final Logger LOG = Logger.getLogger("Minecraft");
-    protected static final Object ITEM_LOCK = new Object();
     private static final String PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML = "plugins/VoxelSniper/SniperConfig.xml";
-    private static final SniperPermissionHelper SNIPER_PERMISSION_HELPER = new SniperPermissionHelper();
     private static VoxelSniper instance;
+    private final SniperPermissionHelper sniperPermissionHelper = new SniperPermissionHelper();
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener(this);
     private final ArrayList<Integer> liteRestricted = new ArrayList<Integer>();
-    private int liteMaxBrush = 5;
+    private int liteSniperMaxBrushSize = 5;
 
     /**
      * @return {@link VoxelSniper}
@@ -58,69 +54,58 @@ public class VoxelSniper extends JavaPlugin
     /**
      * @return {@link SniperPermissionHelper}
      */
-    public static SniperPermissionHelper getSniperPermissionHelper()
+    public SniperPermissionHelper getSniperPermissionHelper()
     {
-        return VoxelSniper.SNIPER_PERMISSION_HELPER;
-    }
-
-    /**
-     * Validate if item id is valid.
-     *
-     * @param itemId
-     * @return boolean
-     */
-    public static boolean isValidItem(final int itemId)
-    {
-        return Material.getMaterial(itemId) != null;
+        return sniperPermissionHelper;
     }
 
     /**
      * @return int
      */
-    public final int getLiteMaxBrush()
+    public int getLiteSniperMaxBrushSize()
     {
-        return this.liteMaxBrush;
+        return liteSniperMaxBrushSize;
     }
 
     /**
-     * @param liteMaxBrush
+     * @param liteSniperMaxBrushSize
      */
-    public final void setLiteMaxBrush(final int liteMaxBrush)
+    public void setLiteSniperMaxBrushSize(int liteSniperMaxBrushSize)
     {
-        this.liteMaxBrush = liteMaxBrush;
+        this.liteSniperMaxBrushSize = liteSniperMaxBrushSize;
     }
 
     /**
      * @return ArrayList<Integer>
      */
-    public final ArrayList<Integer> getLiteRestricted()
+    public ArrayList<Integer> getLiteRestricted()
     {
-        return this.liteRestricted;
+        return liteRestricted;
     }
 
     /**
      * Load configuration.
      */
-    public final void loadSniperConfiguration()
+    public void loadSniperConfiguration()
     {
         try
         {
-            final File configurationFile = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
+            File configurationFile = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
 
             if (!configurationFile.exists())
             {
-                this.saveSniperConfig();
+                saveSniperConfig();
             }
 
-            final DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            final Document document = docBuilder.parse(configurationFile);
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document document = docBuilder.parse(configurationFile);
             document.normalize();
-            final Node root = document.getFirstChild();
-            final NodeList rootChildNodes = root.getChildNodes();
+            Node root = document.getFirstChild();
+            NodeList rootChildNodes = root.getChildNodes();
             for (int x = 0; x < rootChildNodes.getLength(); x++)
             {
-                final Node n = rootChildNodes.item(x);
+                Node n = rootChildNodes.item(x);
 
                 if (!n.hasChildNodes())
                 {
@@ -129,22 +114,22 @@ public class VoxelSniper extends JavaPlugin
 
                 if (n.getNodeName().equals("LiteSniperBannedIDs"))
                 {
-                    this.liteRestricted.clear();
-                    final NodeList idn = n.getChildNodes();
+                    liteRestricted.clear();
+                    NodeList idn = n.getChildNodes();
                     for (int y = 0; y < idn.getLength(); y++)
                     {
                         if (idn.item(y).getNodeName().equals("id"))
                         {
                             if (idn.item(y).hasChildNodes())
                             {
-                                this.liteRestricted.add(Integer.parseInt(idn.item(y).getFirstChild().getNodeValue()));
+                                liteRestricted.add(Integer.parseInt(idn.item(y).getFirstChild().getNodeValue()));
                             }
                         }
                     }
                 }
                 else if (n.getNodeName().equals("MaxLiteBrushSize"))
                 {
-                    this.liteMaxBrush = Integer.parseInt(n.getFirstChild().getNodeValue());
+                    liteSniperMaxBrushSize = Integer.parseInt(n.getFirstChild().getNodeValue());
                 }
                 else if (n.getNodeName().equals("SniperUndoCache"))
                 {
@@ -152,22 +137,22 @@ public class VoxelSniper extends JavaPlugin
                 }
             }
         }
-        catch (final SAXException exception)
+        catch (SAXException exception)
         {
-            this.getLogger().log(Level.SEVERE, null, exception);
+            getLogger().log(Level.SEVERE, "Error during configuration load.", exception);
         }
-        catch (final IOException exception)
+        catch (IOException exception)
         {
-            this.getLogger().log(Level.SEVERE, null, exception);
+            getLogger().log(Level.SEVERE, "Error during configuration load.", exception);
         }
-        catch (final ParserConfigurationException exception)
+        catch (ParserConfigurationException exception)
         {
-            this.getLogger().log(Level.SEVERE, null, exception);
+            getLogger().log(Level.SEVERE, "Error during configuration load.", exception);
         }
     }
 
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args)
     {
         if (sender instanceof Player)
         {
@@ -175,11 +160,11 @@ public class VoxelSniper extends JavaPlugin
             final String commandName = command.getName();
             if (args == null)
             {
-                if (!VoxelSniperListener.onCommand(player, new String[0], commandName))
+                if (!voxelSniperListener.onCommand(player, new String[0], commandName))
                 {
                     if (player.isOp())
                     {
-                        player.sendMessage(ChatColor.RED + "Your name is not listed on the snipers.txt or you haven't /reload 'ed the server yet.");
+                        player.sendMessage(ChatColor.RED + "Command failed.");
                         return true;
                     }
                     else
@@ -194,11 +179,11 @@ public class VoxelSniper extends JavaPlugin
             }
             else
             {
-                if (!VoxelSniperListener.onCommand(player, args, commandName))
+                if (!voxelSniperListener.onCommand(player, args, commandName))
                 {
                     if (player.isOp())
                     {
-                        player.sendMessage(ChatColor.RED + "Your name is not listed on the snipers.txt or you haven't /reload 'ed the server yet.");
+                        player.sendMessage(ChatColor.RED + "Command failed.");
                         return true;
                     }
                     else
@@ -213,13 +198,12 @@ public class VoxelSniper extends JavaPlugin
             }
         }
 
-        System.out.println("Not instanceof Player!");
-
+        getLogger().info("Only Players can execute commands.");
         return false;
     }
 
     @Override
-    public final void onEnable()
+    public void onEnable()
     {
         VoxelSniper.instance = this;
 
@@ -229,7 +213,7 @@ public class VoxelSniper extends JavaPlugin
 
         MetricsManager.getInstance().start();
 
-        this.loadSniperConfiguration();
+        loadSniperConfiguration();
 
         Bukkit.getPluginManager().registerEvents(this.voxelSniperListener, this);
         getLogger().info("Registered Sniper Listener.");
@@ -247,61 +231,65 @@ public class VoxelSniper extends JavaPlugin
     /**
      * Save configuration.
      */
-    public final void saveSniperConfig()
+    public void saveSniperConfig()
     {
         try
         {
-            VoxelSniper.LOG.info("[VoxelSniper] Saving Configuration.....");
+            getLogger().info("Saving Configuration...");
 
-            final File file = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
-            file.getParentFile().mkdirs();
+            File file = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
+            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
+            {
+                getLogger().severe("Could not create parent directories for configuration file.");
+                return;
+            }
 
-            final DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            final Document document = docBuilder.newDocument();
-            final Element voxelSniperElement = document.createElement("VoxelSniper");
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document document = docBuilder.newDocument();
+            Element voxelSniperElement = document.createElement("VoxelSniper");
 
-            final Element liteUnusable = document.createElement("LiteSniperBannedIDs");
-            if (!this.liteRestricted.isEmpty())
+            Element liteUnusable = document.createElement("LiteSniperBannedIDs");
+            if (!liteRestricted.isEmpty())
             {
                 for (Integer liteRestrictedElement : this.liteRestricted)
                 {
-                    final int id = liteRestrictedElement;
-                    final Element idElement = document.createElement("id");
+                    int id = liteRestrictedElement;
+                    Element idElement = document.createElement("id");
                     idElement.appendChild(document.createTextNode(id + ""));
                     liteUnusable.appendChild(idElement);
                 }
             }
             voxelSniperElement.appendChild(liteUnusable);
 
-            final Element maxLiteBrushSize = document.createElement("MaxLiteBrushSize");
-            maxLiteBrushSize.appendChild(document.createTextNode(this.liteMaxBrush + ""));
+            Element maxLiteBrushSize = document.createElement("MaxLiteBrushSize");
+            maxLiteBrushSize.appendChild(document.createTextNode(this.liteSniperMaxBrushSize + ""));
             voxelSniperElement.appendChild(maxLiteBrushSize);
 
-            final Element sniperUndoCache = document.createElement("SniperUndoCache");
+            Element sniperUndoCache = document.createElement("SniperUndoCache");
             sniperUndoCache.appendChild(document.createTextNode(Sniper.getUndoCacheSize() + ""));
             voxelSniperElement.appendChild(sniperUndoCache);
             voxelSniperElement.normalize();
 
-            final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute("indent-number", 4);
-            final Transformer transformer = transformerFactory.newTransformer();
+            Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "4");
-            final DOMSource source = new DOMSource(voxelSniperElement);
-            final StreamResult result = new StreamResult(file);
+            DOMSource source = new DOMSource(voxelSniperElement);
+            StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
 
-            VoxelSniper.LOG.info("[VoxelSniper] Configuration Saved!!");
+            getLogger().info("Configuration Saved!");
         }
-        catch (final TransformerException exception)
+        catch (TransformerException exception)
         {
-            Logger.getLogger(VoxelSniperListener.class.getName()).log(Level.SEVERE, null, exception);
+            getLogger().log(Level.SEVERE, "Error during configuration save.", exception);
         }
-        catch (final ParserConfigurationException exception)
+        catch (ParserConfigurationException exception)
         {
-            Logger.getLogger(VoxelSniperListener.class.getName()).log(Level.SEVERE, null, exception);
+            getLogger().log(Level.SEVERE, "Error during configuration save.", exception);
         }
     }
 
@@ -332,6 +320,7 @@ public class VoxelSniper extends JavaPlugin
         Brushes.registerSniperBrush(DomeBrush.class, Brushes.BrushAvailability.ALL, "dome", "domebrush");
         Brushes.registerSniperBrush(DrainBrush.class, Brushes.BrushAvailability.ALL, "drain");
         Brushes.registerSniperBrush(EllipseBrush.class, Brushes.BrushAvailability.ALL, "el", "ellipse");
+        Brushes.registerSniperBrush(EllipsoidBrush.class, Brushes.BrushAvailability.ALL, "elo", "ellipsoid");
         Brushes.registerSniperBrush(EntityBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "en", "entity");
         Brushes.registerSniperBrush(EntityRemovalBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "er", "entityremoval");
         Brushes.registerSniperBrush(EraserBrush.class, Brushes.BrushAvailability.ALL, "erase", "eraser");

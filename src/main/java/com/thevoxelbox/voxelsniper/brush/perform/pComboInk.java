@@ -41,7 +41,8 @@ public class pComboInk extends vPerformer
         vm.replaceData();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
         if (b.getData() == dr)

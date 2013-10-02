@@ -31,23 +31,24 @@ public class Rot2DvertBrush extends Brush
         this.setName("2D Rotation");
     }
 
-    private void getMatrix()
+    @SuppressWarnings("deprecation")
+	private void getMatrix()
     {
         this.brushSize = (this.bSize * 2) + 1;
 
         this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
 
-        int sx = this.getBlockPositionX() - this.bSize;
-        int sy = this.getBlockPositionY() - this.bSize;
-        int sz = this.getBlockPositionZ() - this.bSize;
+        int sx = this.getTargetBlock().getX() - this.bSize;
+        int sy = this.getTargetBlock().getY() - this.bSize;
+        int sz = this.getTargetBlock().getZ() - this.bSize;
 
         for (int x = 0; x < this.snap.length; x++)
         {
-            sz = this.getBlockPositionZ() - this.bSize;
+            sz = this.getTargetBlock().getZ() - this.bSize;
 
             for (int z = 0; z < this.snap.length; z++)
             {
-                sy = this.getBlockPositionY() - this.bSize;
+                sy = this.getTargetBlock().getY() - this.bSize;
 
                 for (int y = 0; y < this.snap.length; y++)
                 {
@@ -98,7 +99,7 @@ public class Rot2DvertBrush extends Brush
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getBlockPositionX() + yy, this.getBlockPositionY() + (int) newX, this.getBlockPositionZ() + (int) newZ, block.getId(), block.getData());
+                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + yy, this.getTargetBlock().getY() + (int) newX, this.getTargetBlock().getZ() + (int) newZ, block.getId(), block.getData());
                     }
                 }
             }
@@ -107,27 +108,26 @@ public class Rot2DvertBrush extends Brush
         for (int x = 0; x < this.snap.length; x++)
         {
             final double xSquared = Math.pow(x - this.bSize, 2);
-            final int fx = x + this.getBlockPositionX() - this.bSize;
+            final int fx = x + this.getTargetBlock().getX() - this.bSize;
 
             for (int z = 0; z < this.snap.length; z++)
             {
                 if (xSquared + Math.pow(z - this.bSize, 2) <= brushSizeSquared)
                 {
-                    final int fz = z + this.getBlockPositionZ() - this.bSize;
+                    final int fz = z + this.getTargetBlock().getZ() - this.bSize;
 
                     if (!doNotFill[x][z])
                     {
                         // smart fill stuff
                         for (int y = 0; y < this.snap.length; y++)
                         {
-                            final int fy = y + this.getBlockPositionY() - this.bSize;
+                            final int fy = y + this.getTargetBlock().getY() - this.bSize;
 
                             final int a = this.getBlockIdAt(fy, fx + 1, fz);
                             final byte aData = this.getBlockDataAt(fy, fx + 1, fz);
                             final int d = this.getBlockIdAt(fy, fx - 1, fz);
                             final byte dData = this.getBlockDataAt(fy, fx - 1, fz);
                             final int c = this.getBlockIdAt(fy, fx, fz + 1);
-                            final byte cData = this.getBlockDataAt(fy, fx, fz + 1);
                             final int b = this.getBlockIdAt(fy, fx, fz - 1);
                             final byte bData = this.getBlockDataAt(fy, fx, fz - 1);
 

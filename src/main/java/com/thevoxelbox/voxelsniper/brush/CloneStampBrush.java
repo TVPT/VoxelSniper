@@ -41,8 +41,8 @@ public class CloneStampBrush extends StampBrush
         this.solid.clear();
         this.sorted = false;
 
-        int yStartingPoint = this.getBlockPositionY() + v.getcCen();
-        int yEndPoint = this.getBlockPositionY() + v.getVoxelHeight() + v.getcCen();
+        int yStartingPoint = this.getTargetBlock().getY() + v.getcCen();
+        int yEndPoint = this.getTargetBlock().getY() + v.getVoxelHeight() + v.getcCen();
 
         if (yStartingPoint < 0)
         {
@@ -70,13 +70,13 @@ public class CloneStampBrush extends StampBrush
 
         for (int z = yStartingPoint; z < yEndPoint; z++)
         {
-            this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ()), 0, z - yStartingPoint, 0));
+            this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX(), z, this.getTargetBlock().getZ()), 0, z - yStartingPoint, 0));
             for (int y = 1; y <= brushSize; y++)
             {
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ() + y), 0, z - yStartingPoint, y));
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX(), z, this.getBlockPositionZ() - y), 0, z - yStartingPoint, -y));
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + y, z, this.getBlockPositionZ()), y, z - yStartingPoint, 0));
-                this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - y, z, this.getBlockPositionZ()), -y, z - yStartingPoint, 0));
+                this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX(), z, this.getTargetBlock().getZ() + y), 0, z - yStartingPoint, y));
+                this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX(), z, this.getTargetBlock().getZ() - y), 0, z - yStartingPoint, -y));
+                this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX() + y, z, this.getTargetBlock().getZ()), y, z - yStartingPoint, 0));
+                this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX() - y, z, this.getTargetBlock().getZ()), -y, z - yStartingPoint, 0));
             }
             for (int x = 1; x <= brushSize; x++)
             {
@@ -85,10 +85,10 @@ public class CloneStampBrush extends StampBrush
                 {
                     if ((xSquared + Math.pow(y, 2)) <= bSquared)
                     {
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + x, z, this.getBlockPositionZ() + y), x, z - yStartingPoint, y));
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() + x, z, this.getBlockPositionZ() - y), x, z - yStartingPoint, -y));
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - x, z, this.getBlockPositionZ() + y), -x, z - yStartingPoint, y));
-                        this.clone.add(new BlockWrapper(this.clampY(this.getBlockPositionX() - x, z, this.getBlockPositionZ() - y), -x, z - yStartingPoint, -y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX() + x, z, this.getTargetBlock().getZ() + y), x, z - yStartingPoint, y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX() + x, z, this.getTargetBlock().getZ() - y), x, z - yStartingPoint, -y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX() - x, z, this.getTargetBlock().getZ() + y), -x, z - yStartingPoint, y));
+                        this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock().getX() - x, z, this.getTargetBlock().getZ() - y), -x, z - yStartingPoint, -y));
                     }
                 }
             }

@@ -58,7 +58,7 @@ public class ScannerBrush extends Brush
                 // Scan south
                 for (int i = 1; i < this.depth + 1; i++)
                 {
-                    if (this.clampY(this.getBlockPositionX() + i, this.getBlockPositionY(), this.getBlockPositionZ()).getType() == this.checkFor)
+                    if (this.clampY(this.getTargetBlock().getX() + i, this.getTargetBlock().getY(), this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
                         v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
@@ -71,7 +71,7 @@ public class ScannerBrush extends Brush
                 // Scan north
                 for (int i = 1; i < this.depth + 1; i++)
                 {
-                    if (this.clampY(this.getBlockPositionX() - i, this.getBlockPositionY(), this.getBlockPositionZ()).getType() == this.checkFor)
+                    if (this.clampY(this.getTargetBlock().getX() - i, this.getTargetBlock().getY(), this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
                         v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
@@ -84,7 +84,7 @@ public class ScannerBrush extends Brush
                 // Scan west
                 for (int i = 1; i < this.depth + 1; i++)
                 {
-                    if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() + i).getType() == this.checkFor)
+                    if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ() + i).getType() == this.checkFor)
                     {
                         v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
@@ -97,7 +97,7 @@ public class ScannerBrush extends Brush
                 // Scan east
                 for (int i = 1; i < this.depth + 1; i++)
                 {
-                    if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY(), this.getBlockPositionZ() - i).getType() == this.checkFor)
+                    if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ() - i).getType() == this.checkFor)
                     {
                         v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
@@ -110,11 +110,11 @@ public class ScannerBrush extends Brush
                 // Scan down
                 for (int i = 1; i < this.depth + 1; i++)
                 {
-                    if ((this.getBlockPositionY() - i) <= 0)
+                    if ((this.getTargetBlock().getY() - i) <= 0)
                     {
                         break;
                     }
-                    if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() - i, this.getBlockPositionZ()).getType() == this.checkFor)
+                    if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY() - i, this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
                         v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
@@ -127,11 +127,11 @@ public class ScannerBrush extends Brush
                 // Scan up
                 for (int i = 1; i < this.depth + 1; i++)
                 {
-                    if ((this.getBlockPositionY() + i) >= v.getWorld().getMaxHeight())
+                    if ((this.getTargetBlock().getY() + i) >= v.getWorld().getMaxHeight())
                     {
                         break;
                     }
-                    if (this.clampY(this.getBlockPositionX(), this.getBlockPositionY() + i, this.getBlockPositionZ()).getType() == this.checkFor)
+                    if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY() + i, this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
                         v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
@@ -145,14 +145,16 @@ public class ScannerBrush extends Brush
         }
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     protected final void arrow(final SnipeData v)
     {
         this.checkFor = Material.getMaterial(v.getVoxelId());
         this.scan(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     protected final void powder(final SnipeData v)
     {
         this.checkFor = Material.getMaterial(v.getVoxelId());

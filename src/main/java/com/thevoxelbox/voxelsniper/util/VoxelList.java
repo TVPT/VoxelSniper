@@ -1,191 +1,128 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.util;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
- * @author Voxel
+ * Container class for multiple ID/Datavalue pairs.
  */
 public class VoxelList
 {
 
-    private int[] col = new int[100];
-    private int vir = 0;
+    private List<int[]> valuePairs = new ArrayList<int[]>();
 
     /**
+     * Adds the specified id, data value pair to the VoxelList. A data value of -1 will operate on all data values of that id.
+     * 
      * @param i
      */
-    public final void add(final int i)
+    public void add(int[] i)
     {
-        if (!contains(i))
+        if (i[1] == -1)
         {
-            col[vir++] = i;
-        }
-    }
-
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final boolean removeValue(final int i)
-    {
-        if (isEmpty())
-        {
-            return false;
-        }
-        else
-        {
-            return removeFrom(getIndexOf(i));
-        }
-    }
-
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final boolean removeFrom(final int i)
-    {
-        if (i >= 0 && i < vir)
-        {
-            for (int x = i; x < vir; x++)
+            if (!valuePairs.contains(i))
             {
-                col[x] = col[x + 1];
-            }
-            vir--;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final boolean contains(final int i)
-    {
-        if (isEmpty())
-        {
-            return false;
-        }
-        else
-        {
-            for (int x = 0; x < vir; x++)
-            {
-                if (col[x] == i)
+                for (Iterator<int[]> it = valuePairs.iterator(); it.hasNext(); )
                 {
-                    return true;
+                    int[] in = it.next();
+                    if (in[0] == i[0])
+                    {
+                        it.remove();
+                    }
+                }
+                valuePairs.add(i);
+            }
+        }
+        else
+        {
+            if (!valuePairs.contains(i))
+            {
+                valuePairs.add(i);
+            }
+        }
+    }
+
+    /**
+     * Removes the specified id, data value pair from the VoxelList.
+     * 
+     * @param i
+     * @return true if this list contained the specified element
+     */
+    public boolean removeValue(final int[] i)
+    {
+        if (valuePairs.isEmpty())
+        {
+            return false;
+        }
+        else
+        {
+            boolean ret = false;
+            if (i[1] == -1)
+            {
+                for (Iterator<int[]> it = valuePairs.iterator(); it.hasNext(); )
+                {
+                    int[] in = it.next();
+                    if (in[0] == i[0])
+                    {
+                        it.remove();
+                        ret = true;
+                    }
                 }
             }
-            return false;
-        }
-    }
-
-    /**
-     * @return
-     */
-    public final boolean isEmpty()
-    {
-        return vir == 0;
-    }
-
-    /**
-     *
-     */
-    public final void clear()
-    {
-        vir = 0;
-    }
-
-    /**
-     * @param i
-     *
-     * @return
-     */
-    public final int getIndexOf(final int i)
-    {
-        if (isEmpty())
-        {
-            return -1;
-        }
-        else
-        {
-            for (int x = 0; x < vir; x++)
+            else
             {
-                if (col[x] == i)
-                {
-                    return x;
-                }
+                ret = valuePairs.remove(i);
             }
-            return -1;
+            return ret;
         }
     }
 
     /**
      * @param i
+     * @return true if this list contains the specified element
+     */
+    public boolean contains(final int[] i)
+    {
+        for (int[] in : valuePairs)
+        {
+            if (in[0] == i[0] && (in[1] == i[1] || in[1] == -1))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Clears the VoxelList.
+     */
+    public void clear()
+    {
+        valuePairs.clear();
+    }
+
+    /**
+     * Returns true if this list contains no elements.
      *
-     * @return
+     * @return true if this list contains no elements
      */
-    public final int getFrom(final int i)
+    public boolean isEmpty()
     {
-        if (i >= 0 && i < vir)
-        {
-            return col[i];
-        }
-        else
-        {
-            return -1;
-        }
+        return valuePairs.isEmpty();
     }
 
     /**
-     * @return
+     * Returns a defensive copy of the List with pairs.
+     *
+     * @return defensive copy of the List with pairs
      */
-    public final VoxIterator getIterator()
+    public List<int[]> getList()
     {
-        return new VoxIterator(col, vir);
+        return ImmutableList.copyOf(valuePairs);
     }
 
-    /**
-     * @author Voxel
-     */
-    public class VoxIterator
-    {
 
-        private int[] col;
-        private int vir;
-        private int cur = 0;
-
-        /**
-         * @param collection
-         * @param virtual
-         */
-        public VoxIterator(int[] collection, int virtual)
-        {
-            col = collection;
-            vir = virtual;
-        }
-
-        /**
-         * @return
-         */
-        public final boolean hasNext()
-        {
-            return cur < vir;
-        }
-
-        /**
-         * @return
-         */
-        public final int next()
-        {
-            return col[cur++];
-        }
-    }
 }

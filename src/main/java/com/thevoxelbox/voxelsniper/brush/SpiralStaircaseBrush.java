@@ -26,7 +26,8 @@ public class SpiralStaircaseBrush extends Brush
         this.setName("Spiral Staircase");
     }
 
-    private void buildStairWell(final SnipeData v, Block targetBlock)
+    @SuppressWarnings("deprecation")
+	private void buildStairWell(final SnipeData v, Block targetBlock)
     {
         if (v.getVoxelHeight() < 1)
         {
@@ -277,7 +278,7 @@ public class SpiralStaircaseBrush extends Brush
             }
         }
 
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
         // Make the changes
 
         for (int x = 2 * v.getBrushSize(); x >= 0; x--)
@@ -398,7 +399,8 @@ public class SpiralStaircaseBrush extends Brush
         v.storeUndo(undo);
     }
 
-    private void digStairWell(final SnipeData v, Block targetBlock)
+    @SuppressWarnings("deprecation")
+	private void digStairWell(final SnipeData v, Block targetBlock)
     {
         if (v.getVoxelHeight() < 1)
         {
@@ -653,7 +655,7 @@ public class SpiralStaircaseBrush extends Brush
 
         }
 
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
         // Make the changes
 
         for (int x = 2 * v.getBrushSize(); x >= 0; x--)

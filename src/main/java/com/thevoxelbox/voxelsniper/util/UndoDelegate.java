@@ -16,52 +16,58 @@ public class UndoDelegate implements BlockChangeDelegate
         
     public Undo getUndo() {
         final Undo pastUndo = currentUndo;
-        currentUndo = new Undo(targetWorld.getName());
+        currentUndo = new Undo();
         return pastUndo;
     }
 
     public UndoDelegate(World targetWorld)
     {
         this.targetWorld = targetWorld;
-        this.currentUndo = new Undo(targetWorld.getName());
+        this.currentUndo = new Undo();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public boolean setRawTypeId(int x, int y, int z, int typeId)
     {
         this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
         return this.targetWorld.getBlockAt(x, y, z).setTypeId(typeId, false);        
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public boolean setRawTypeIdAndData(int x, int y, int z, int typeId, int data)
     {
         this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
         return this.targetWorld.getBlockAt(x, y, z).setTypeIdAndData(typeId, (byte) data, false);
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public boolean setTypeId(int x, int y, int z, int typeId)
     {
         this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
         return this.targetWorld.getBlockAt(x, y, z).setTypeId(typeId);
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public boolean setTypeIdAndData(int x, int y, int z, int typeId, int data)
     {
         this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
         return this.targetWorld.getBlockAt(x, y, z).setTypeIdAndData(typeId, (byte) data, true);
     }
     
-    public boolean setBlock(Block b)
+    @SuppressWarnings("deprecation")
+	public boolean setBlock(Block b)
     {
         this.currentUndo.put(this.targetWorld.getBlockAt(b.getLocation()));
         return this.targetWorld.getBlockAt(b.getLocation()).setTypeIdAndData(b.getTypeId(), b.getData(), true);
     }
     
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public int getTypeId(int x, int y, int z)
     {
         return this.targetWorld.getBlockAt(x, y, z).getTypeId();

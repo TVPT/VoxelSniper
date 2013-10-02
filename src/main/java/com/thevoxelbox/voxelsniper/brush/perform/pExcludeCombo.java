@@ -42,10 +42,11 @@ public class pExcludeCombo extends vPerformer
         excludeList = v.getVoxelList();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
-        if (!excludeList.contains(b.getTypeId()))
+        if (!excludeList.contains(new int[] {b.getTypeId(), b.getData()}))
         {
             h.put(b);
             b.setTypeIdAndData(id, data, true);

@@ -35,7 +35,7 @@ public class LiteSniper extends Sniper
     @Override
     public final void setBrushSize(final int size)
     {
-        if (size <= VoxelSniper.getInstance().getLiteMaxBrush() && size >= 0)
+        if (size <= VoxelSniper.getInstance().getLiteSniperMaxBrushSize() && size >= 0)
         {
             super.setBrushSize(size);
         }
@@ -48,7 +48,7 @@ public class LiteSniper extends Sniper
     @Override
     public final void setHeigth(final int heigth)
     {
-        if (heigth <= (VoxelSniper.getInstance().getLiteMaxBrush() * 2 + 1) && heigth >= 0)
+        if (heigth <= (VoxelSniper.getInstance().getLiteSniperMaxBrushSize() * 2 + 1) && heigth >= 0)
         {
             super.setHeigth(heigth);
         }

@@ -54,13 +54,13 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
         ArrayList<BrushInfo> availableBrushes = new ArrayList<BrushInfo>();
         BrushInfo currentBrush = null;
 
-        Sniper sniperInstance = VoxelSniper.getSniperPermissionHelper().getSniperInstance(player);
+        Sniper sniperInstance = plugin.getSniperPermissionHelper().getSniperInstance(player);
 
-        if (VoxelSniper.getSniperPermissionHelper().isSniper(player))
+        if (plugin.getSniperPermissionHelper().isSniper(player))
         {
             sniperLevel = 2;
         }
-        else if (VoxelSniper.getSniperPermissionHelper().isLiteSniper(player))
+        else if (plugin.getSniperPermissionHelper().isLiteSniper(player))
         {
             sniperLevel = 1;
         }
@@ -180,7 +180,7 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
         if (voxelMessage.hasShortCode(VoxelSniperCommon.BRUSH_UPDATE_REQUEST_CHANNEL_SHORTCODE) && voxelMessage.dataInstanceOf(VoxelSniperPacket2BrushUpdateRequest.class))
         {
             VoxelSniperPacket2BrushUpdateRequest payload = voxelMessage.data();
-            Sniper sniper = VoxelSniper.getSniperPermissionHelper().getSniperInstance(voxelMessage.sender.getBukkitEntity());
+            Sniper sniper = plugin.getSniperPermissionHelper().getSniperInstance(voxelMessage.sender.getBukkitEntity());
 
 
             if (payload.getSize() > -1)

@@ -42,10 +42,11 @@ public class pIncludeCombo extends vPerformer
         includeList = v.getVoxelList();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void perform(Block b)
     {
-        if (includeList.contains(b.getTypeId()))
+        if (includeList.contains(new int[] {b.getTypeId(), b.getData()}))
         {
             h.put(b);
             b.setTypeIdAndData(id, data, true);

@@ -27,7 +27,8 @@ public class ShellSetBrush extends Brush
         this.setName("Shell Set");
     }
 
-    private boolean set(final Block bl, final SnipeData v)
+    @SuppressWarnings("deprecation")
+	private boolean set(final Block bl, final SnipeData v)
     {
         if (this.block == null)
         {
@@ -99,7 +100,7 @@ public class ShellSetBrush extends Brush
                     }
                 }
 
-                final Undo undo = new Undo(this.getTargetBlock().getWorld().getName());
+                final Undo undo = new Undo();
                 for (final Block currentBlock : blocks)
                 {
                     if (currentBlock.getTypeId() != v.getVoxelId())

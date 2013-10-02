@@ -18,7 +18,8 @@ public class SnowConeBrush extends Brush
 {
     private static int timesUsed = 0;
 
-    private void addSnow(final SnipeData v, Block targetBlock)
+    @SuppressWarnings("deprecation")
+	private void addSnow(final SnipeData v, Block targetBlock)
     {
         int brushSize;
         int blockPositionX = targetBlock.getX();
@@ -122,7 +123,7 @@ public class SnowConeBrush extends Brush
             }
         }
 
-        final Undo undo = new Undo(targetBlock.getWorld().getName());
+        final Undo undo = new Undo();
 
         for (int x = 0; x <= brushSizeDoubled; x++)
         {
