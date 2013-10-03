@@ -1123,7 +1123,7 @@ public class Sniper
         }
         if (undo != null && undo.getSize() > 0)
         {
-            while (this.undoList.size() > Sniper.undoCacheSize)
+            while (this.undoList.size() >= Sniper.undoCacheSize)
             {
                 this.undoList.pop();
             }
