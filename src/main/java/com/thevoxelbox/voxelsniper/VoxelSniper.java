@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelpacket.server.VoxelPacketServer;
 import com.thevoxelbox.voxelsniper.brush.*;
 import com.thevoxelbox.voxelsniper.common.VoxelSniperCommon;
@@ -11,24 +11,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -40,8 +32,7 @@ public class VoxelSniper extends JavaPlugin
     private static VoxelSniper instance;
     private final SniperPermissionHelper sniperPermissionHelper = new SniperPermissionHelper();
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener(this);
-    private final ArrayList<Integer> liteRestricted = new ArrayList<Integer>();
-    private int liteSniperMaxBrushSize = 5;
+    private VoxelSniperConfiguration voxelSniperConfiguration;
 
     /**
      * @return {@link VoxelSniper}
@@ -49,6 +40,16 @@ public class VoxelSniper extends JavaPlugin
     public static VoxelSniper getInstance()
     {
         return VoxelSniper.instance;
+    }
+
+    /**
+     * Returns object for accessing global VoxelSniper options.
+     *
+     * @return {@link VoxelSniperConfiguration} object for accessing global VoxelSniper options.
+     */
+    public VoxelSniperConfiguration getVoxelSniperConfiguration()
+    {
+        return voxelSniperConfiguration;
     }
 
     /**
@@ -61,93 +62,84 @@ public class VoxelSniper extends JavaPlugin
 
     /**
      * @return int
+     * @deprecated Use {@link com.thevoxelbox.voxelsniper.VoxelSniperConfiguration#getLiteSniperMaxBrushSize()}
      */
+    @Deprecated
     public int getLiteSniperMaxBrushSize()
     {
-        return liteSniperMaxBrushSize;
+        return voxelSniperConfiguration.getLiteSniperMaxBrushSize();
     }
 
     /**
      * @param liteSniperMaxBrushSize
+     * @deprecated Use {@link VoxelSniperConfiguration#setLiteSniperMaxBrushSize(int)}
      */
+    @Deprecated
     public void setLiteSniperMaxBrushSize(int liteSniperMaxBrushSize)
     {
-        this.liteSniperMaxBrushSize = liteSniperMaxBrushSize;
+        this.voxelSniperConfiguration.setLiteSniperMaxBrushSize(liteSniperMaxBrushSize);
     }
 
     /**
      * @return ArrayList<Integer>
+     * @deprecated Use {@link com.thevoxelbox.voxelsniper.VoxelSniperConfiguration#getLiteSniperRestrictedItems()}
      */
-    public ArrayList<Integer> getLiteRestricted()
+    @Deprecated
+    public List<Integer> getLiteRestricted()
     {
-        return liteRestricted;
+        return voxelSniperConfiguration.getLiteSniperRestrictedItems();
     }
 
     /**
-     * Load configuration.
+     * Load and migrate legacy configuration.
      */
     public void loadSniperConfiguration()
     {
+        File configurationFile = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
+
+        if (!configurationFile.exists())
+        {
+            return;
+        }
+
+        JAXBContext context;
+        Unmarshaller unmarshaller;
         try
         {
-            File configurationFile = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
-
-            if (!configurationFile.exists())
-            {
-                saveSniperConfig();
-            }
-
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document document = docBuilder.parse(configurationFile);
-            document.normalize();
-            Node root = document.getFirstChild();
-            NodeList rootChildNodes = root.getChildNodes();
-            for (int x = 0; x < rootChildNodes.getLength(); x++)
-            {
-                Node n = rootChildNodes.item(x);
-
-                if (!n.hasChildNodes())
-                {
-                    continue;
-                }
-
-                if (n.getNodeName().equals("LiteSniperBannedIDs"))
-                {
-                    liteRestricted.clear();
-                    NodeList idn = n.getChildNodes();
-                    for (int y = 0; y < idn.getLength(); y++)
-                    {
-                        if (idn.item(y).getNodeName().equals("id"))
-                        {
-                            if (idn.item(y).hasChildNodes())
-                            {
-                                liteRestricted.add(Integer.parseInt(idn.item(y).getFirstChild().getNodeValue()));
-                            }
-                        }
-                    }
-                }
-                else if (n.getNodeName().equals("MaxLiteBrushSize"))
-                {
-                    liteSniperMaxBrushSize = Integer.parseInt(n.getFirstChild().getNodeValue());
-                }
-                else if (n.getNodeName().equals("SniperUndoCache"))
-                {
-                    Sniper.setUndoCacheSize(Integer.parseInt(n.getFirstChild().getNodeValue()));
-                }
-            }
+            context = JAXBContext.newInstance(LegacyConfigurationContainer.class);
+            unmarshaller = context.createUnmarshaller();
         }
-        catch (SAXException exception)
+        catch (JAXBException exception)
         {
-            getLogger().log(Level.SEVERE, "Error during configuration load.", exception);
+            getLogger().log(Level.SEVERE, "Couldn't create Unmarshaller, while attempting to load legacy configuration.", exception);
+            return;
         }
-        catch (IOException exception)
+
+        try
         {
-            getLogger().log(Level.SEVERE, "Error during configuration load.", exception);
+            Object unmarshal = unmarshaller.unmarshal(configurationFile);
+            Preconditions.checkState(unmarshal instanceof LegacyConfigurationContainer, "Unmarshalled object is not of expected type.");
+            LegacyConfigurationContainer legacyConfiguration = (LegacyConfigurationContainer) unmarshal;
+            voxelSniperConfiguration.setUndoCacheSize(legacyConfiguration.undoCacheSize);
+            voxelSniperConfiguration.setLitesniperRestrictedItems(legacyConfiguration.LitesniperRestrictedItems);
+            voxelSniperConfiguration.setLiteSniperMaxBrushSize(legacyConfiguration.liteSniperMaxBrushSize);
         }
-        catch (ParserConfigurationException exception)
+        catch (JAXBException exception)
         {
-            getLogger().log(Level.SEVERE, "Error during configuration load.", exception);
+            getLogger().log(Level.SEVERE, "Couldn't unmarshall legacy configuration.", exception);
+            return;
+        }
+        catch (IllegalStateException exception)
+        {
+            getLogger().log(Level.SEVERE, exception.getMessage(), exception);
+            return;
+        }
+
+        if (configurationFile.delete())
+        {
+            saveConfig();
+            reloadConfig();
+            getLogger().info("Migrated legacy configuration file.");
         }
     }
 
@@ -213,6 +205,9 @@ public class VoxelSniper extends JavaPlugin
 
         MetricsManager.getInstance().start();
 
+
+        saveDefaultConfig();
+        voxelSniperConfiguration = new VoxelSniperConfiguration(getConfig());
         loadSniperConfiguration();
 
         Bukkit.getPluginManager().registerEvents(this.voxelSniperListener, this);
@@ -225,71 +220,6 @@ public class VoxelSniper extends JavaPlugin
             Bukkit.getPluginManager().registerEvents(voxelSniperGuiListener, this);
             VoxelPacketServer.getInstance().subscribe(voxelSniperGuiListener, VoxelSniperCommon.BRUSH_UPDATE_REQUEST_CHANNEL_SHORTCODE);
             getLogger().info("Registered VoxelSniperGUI Listener.");
-        }
-    }
-
-    /**
-     * Save configuration.
-     */
-    public void saveSniperConfig()
-    {
-        try
-        {
-            getLogger().info("Saving Configuration...");
-
-            File file = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
-            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
-            {
-                getLogger().severe("Could not create parent directories for configuration file.");
-                return;
-            }
-
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document document = docBuilder.newDocument();
-            Element voxelSniperElement = document.createElement("VoxelSniper");
-
-            Element liteUnusable = document.createElement("LiteSniperBannedIDs");
-            if (!liteRestricted.isEmpty())
-            {
-                for (Integer liteRestrictedElement : this.liteRestricted)
-                {
-                    int id = liteRestrictedElement;
-                    Element idElement = document.createElement("id");
-                    idElement.appendChild(document.createTextNode(id + ""));
-                    liteUnusable.appendChild(idElement);
-                }
-            }
-            voxelSniperElement.appendChild(liteUnusable);
-
-            Element maxLiteBrushSize = document.createElement("MaxLiteBrushSize");
-            maxLiteBrushSize.appendChild(document.createTextNode(this.liteSniperMaxBrushSize + ""));
-            voxelSniperElement.appendChild(maxLiteBrushSize);
-
-            Element sniperUndoCache = document.createElement("SniperUndoCache");
-            sniperUndoCache.appendChild(document.createTextNode(Sniper.getUndoCacheSize() + ""));
-            voxelSniperElement.appendChild(sniperUndoCache);
-            voxelSniperElement.normalize();
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute("indent-number", 4);
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "4");
-            DOMSource source = new DOMSource(voxelSniperElement);
-            StreamResult result = new StreamResult(file);
-            transformer.transform(source, result);
-
-            getLogger().info("Configuration Saved!");
-        }
-        catch (TransformerException exception)
-        {
-            getLogger().log(Level.SEVERE, "Error during configuration save.", exception);
-        }
-        catch (ParserConfigurationException exception)
-        {
-            getLogger().log(Level.SEVERE, "Error during configuration save.", exception);
         }
     }
 
@@ -374,5 +304,17 @@ public class VoxelSniper extends JavaPlugin
         Brushes.registerSniperBrush(VoxelDiscBrush.class, Brushes.BrushAvailability.ALL, "vd", "voxeldisc");
         Brushes.registerSniperBrush(VoxelDiscFaceBrush.class, Brushes.BrushAvailability.ALL, "vdf", "voxeldiscface");
         Brushes.registerSniperBrush(WarpBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "w", "warp");
+    }
+
+    @XmlRootElement(name = "VoxelSniper")
+    private class LegacyConfigurationContainer
+    {
+        @XmlElementWrapper(name = "LiteSniperBannedIDs")
+        @XmlElement(name = "id")
+        List<Integer> LitesniperRestrictedItems = new ArrayList<Integer>();
+        @XmlElement(name = "MaxLiteBrushSize", required = true, defaultValue = "5")
+        int liteSniperMaxBrushSize = 5;
+        @XmlElement(name = "SniperUndoCache", required = true, defaultValue = "20")
+        int undoCacheSize = 20;
     }
 }

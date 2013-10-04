@@ -45,7 +45,6 @@ public class Sniper
     private static final int SAVE_ARRAY_DATA_VALUE = 2;
     private static final int SAVE_ARRAY_REPLACE_VOXEL_ID = 1;
     private static final int SAVE_ARRAY_VOXEL_ID = 0;
-    private static int undoCacheSize = 20;
     private final LinkedList<Undo> undoList = new LinkedList<Undo>();
     private final EnumMap<Material, BrushTool> brushTools = new EnumMap<Material, BrushTool>(Material.class);
     private final HashMap<Integer, IBrush> brushPresets = new HashMap<Integer, IBrush>();
@@ -99,18 +98,22 @@ public class Sniper
 
     /**
      * @return int
+     * @deprecated Use {@link com.thevoxelbox.voxelsniper.VoxelSniperConfiguration#getUndoCacheSize()}
      */
+    @Deprecated
     public static int getUndoCacheSize()
     {
-        return Sniper.undoCacheSize;
+        return VoxelSniper.getInstance().getVoxelSniperConfiguration().getUndoCacheSize();
     }
 
     /**
      * @param undoChacheSize
+     * @deprecated Use {@link VoxelSniperConfiguration#setUndoCacheSize(int)}
      */
+    @Deprecated
     public static void setUndoCacheSize(final int undoChacheSize)
     {
-        Sniper.undoCacheSize = undoChacheSize;
+        VoxelSniper.getInstance().getVoxelSniperConfiguration().setUndoCacheSize(undoChacheSize);
     }
 
     /**
@@ -1117,13 +1120,13 @@ public class Sniper
      */
     public final void storeUndo(final Undo undo)
     {
-        if (Sniper.undoCacheSize <= 0)
+        if (VoxelSniper.getInstance().getVoxelSniperConfiguration().getUndoCacheSize() <= 0)
         {
             return;
         }
         if (undo != null && undo.getSize() > 0)
         {
-            while (this.undoList.size() >= Sniper.undoCacheSize)
+            while (this.undoList.size() >= VoxelSniper.getInstance().getVoxelSniperConfiguration().getUndoCacheSize())
             {
                 this.undoList.pop();
             }
