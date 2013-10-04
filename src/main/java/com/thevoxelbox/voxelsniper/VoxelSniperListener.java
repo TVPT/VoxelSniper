@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
+import com.thevoxelbox.voxelsniper.util.PlayerPrintStream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -873,7 +874,6 @@ public class VoxelSniperListener implements Listener
     public final void onPlayerJoin(final PlayerJoinEvent event)
     {
         final Player player = event.getPlayer();
-        player.getName();
         if (VoxelSniper.getInstance().getSniperPermissionHelper().isSniper(player))
         {
             try
