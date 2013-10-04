@@ -144,54 +144,22 @@ public class VoxelSniper extends JavaPlugin
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args)
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
     {
         if (sender instanceof Player)
         {
-            final Player player = (Player) sender;
-            final String commandName = command.getName();
-            if (args == null)
+            String[] arguments = args;
+
+            if (arguments == null)
             {
-                if (!voxelSniperListener.onCommand(player, new String[0], commandName))
-                {
-                    if (player.isOp())
-                    {
-                        player.sendMessage(ChatColor.RED + "Command failed.");
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
+                arguments = new String[0];
             }
-            else
-            {
-                if (!voxelSniperListener.onCommand(player, args, commandName))
-                {
-                    if (player.isOp())
-                    {
-                        player.sendMessage(ChatColor.RED + "Command failed.");
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
-            }
+
+            return voxelSniperListener.onCommand((Player) sender, arguments, command.getName());
         }
 
         getLogger().info("Only Players can execute commands.");
-        return false;
+        return true;
     }
 
     @Override
