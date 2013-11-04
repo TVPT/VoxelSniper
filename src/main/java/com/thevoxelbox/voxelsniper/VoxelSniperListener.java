@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
-import com.thevoxelbox.voxelsniper.util.PlayerPrintStream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
