@@ -19,6 +19,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import java.io.File;
@@ -141,13 +142,20 @@ public class Sniper
      */
     public final void addBrushTool()
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand == null)
+        {
+            return;
+        }
+
+        if (this.brushTools.containsKey(itemInHand))
         {
             this.player.sendMessage(ChatColor.DARK_GREEN + "That brush tool already exists!");
         }
         else
         {
-            this.brushTools.put(this.player.getItemInHand().getType(), new BrushTool(this));
+            this.brushTools.put(itemInHand, new BrushTool(this));
             this.player.sendMessage(ChatColor.GOLD + "Brush tool has been added.");
         }
     }
@@ -157,13 +165,20 @@ public class Sniper
      */
     public final void addBrushTool(final boolean arrow)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand == null)
+        {
+            return;
+        }
+
+        if (this.brushTools.containsKey(itemInHand))
         {
             this.player.sendMessage(ChatColor.DARK_GREEN + "That brush tool already exists!");
         }
         else
         {
-            this.brushTools.put(this.player.getItemInHand().getType(), new SneakBrushTool(this, arrow));
+            this.brushTools.put(itemInHand, new SneakBrushTool(this, arrow));
             this.player.sendMessage(ChatColor.GOLD + "Brush tool has been added.");
         }
     }
@@ -173,9 +188,11 @@ public class Sniper
      */
     public final void addVoxelToList(final int[] i)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.data.getVoxelList().add(i);
             brushTool.data.getVoxelMessage().voxelList();
         }
@@ -191,9 +208,11 @@ public class Sniper
      */
     public final void clearVoxelList()
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.data.getVoxelList().clear();
             brushTool.data.getVoxelMessage().voxelList();
         }
@@ -312,8 +331,9 @@ public class Sniper
 
     public SnipeData getData()
     {
-        Material itemInHand = this.player.getItemInHand().getType();
-        if (this.brushTools.containsKey(itemInHand))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
             return brushTools.get(itemInHand).data;
         }
@@ -328,9 +348,11 @@ public class Sniper
      */
     public final void setData(final byte dat)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(brushTool.data.getVoxelId(), dat));
             brushTool.data.setData(dat);
             Bukkit.getPluginManager().callEvent(event);
@@ -473,9 +495,11 @@ public class Sniper
      */
     public final void info()
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.info();
         }
         else
@@ -692,9 +716,11 @@ public class Sniper
      */
     public final void removeBrushTool()
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            this.brushTools.remove(this.player.getItemInHand().getType());
+            this.brushTools.remove(itemInHand);
             this.player.sendMessage(ChatColor.GOLD + "Brush tool has been removed.");
         }
         else
@@ -708,9 +734,11 @@ public class Sniper
      */
     public final void removeVoxelFromList(final int[] i)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.data.getVoxelList().removeValue(i);
             brushTool.data.getVoxelMessage().voxelList();
         }
@@ -735,9 +763,11 @@ public class Sniper
             this.myBrushes = Brushes.getNewSniperBrushInstances();
         }
 
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.setBrush(new SnipeBrush());
             brushTool.data.reset();
         }
@@ -853,9 +883,11 @@ public class Sniper
             }
             if (this.myBrushes.containsKey(args[0]))
             {
-                if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+                ItemStack itemStackInHand = this.player.getItemInHand();
+                Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+                if (itemInHand != null && this.brushTools.containsKey(itemInHand))
                 {
-                    final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+                    final BrushTool brushTool = this.brushTools.get(itemInHand);
                     brushTool.setBrush(Brushes.getNewSniperBrushInstance(args[0]));
                 }
                 else
@@ -880,9 +912,11 @@ public class Sniper
             {
                 try
                 {
-                    if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+                    ItemStack itemStackInHand = this.player.getItemInHand();
+                    Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+                    if (itemInHand != null && this.brushTools.containsKey(itemInHand))
                     {
-                        final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+                        final BrushTool brushTool = this.brushTools.get(itemInHand);
                         brushTool.parse(argumentsParsed);
                     }
                     else
@@ -924,9 +958,11 @@ public class Sniper
      */
     public void setBrushSize(final int size)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             SniperBrushSizeChangedEvent event = new SniperBrushSizeChangedEvent(this, brushTool.data.getBrushSize(), size);
             brushTool.data.setBrushSize(size);
             Bukkit.getPluginManager().callEvent(event);
@@ -946,9 +982,11 @@ public class Sniper
      */
     public final void setCentroid(final int centroid)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.data.setcCen(centroid);
             brushTool.data.getVoxelMessage().center();
         }
@@ -964,9 +1002,11 @@ public class Sniper
      */
     public void setHeigth(final int heigth)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.data.setVoxelHeight(heigth);
             brushTool.data.getVoxelMessage().height();
         }
@@ -985,9 +1025,12 @@ public class Sniper
         final String[] parameters = new String[args.length + 1];
         parameters[0] = "";
         System.arraycopy(args, 0, parameters, 1, args.length);
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             brushTool.setPerformer(parameters);
         }
         else
@@ -1008,9 +1051,11 @@ public class Sniper
      */
     public void setReplace(final int replace)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             SniperMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(replace, brushTool.data.getData()));
             brushTool.data.setReplaceId(replace);
             Bukkit.getPluginManager().callEvent(event);
@@ -1030,9 +1075,11 @@ public class Sniper
      */
     public final void setReplaceData(final byte dat)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             SniperMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(brushTool.data.getVoxelId(), dat));
             brushTool.data.setReplaceData(dat);
             Bukkit.getPluginManager().callEvent(event);
@@ -1052,9 +1099,11 @@ public class Sniper
      */
     public void setVoxel(final int voxel)
     {
-        if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+        ItemStack itemStackInHand = this.player.getItemInHand();
+        Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
+        if (itemInHand != null && this.brushTools.containsKey(itemInHand))
         {
-            final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
+            final BrushTool brushTool = this.brushTools.get(itemInHand);
             SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, new MaterialData(brushTool.data.getVoxelId(), brushTool.data.getData()), new MaterialData(voxel, brushTool.data.getData()));
             brushTool.data.setVoxelId(voxel);
             Bukkit.getPluginManager().callEvent(event);
@@ -1070,23 +1119,23 @@ public class Sniper
     }
 
     /**
-     * @param playr
+     * @param player
      * @param action
      * @param itemInHand
      * @param clickedBlock
      * @param clickedFace
      * @return boolean Success.
      */
-    public final boolean snipe(final Player playr, final Action action, final Material itemInHand, final Block clickedBlock, final BlockFace clickedFace)
+    public final boolean snipe(final Player player, final Action action, final Material itemInHand, final Block clickedBlock, final BlockFace clickedFace)
     {
         boolean success = false;
         try
         {
-            this.player = playr;
-            if (this.brushTools.containsKey(this.player.getItemInHand().getType()))
+            this.player = player;
+            if (this.brushTools.containsKey(itemInHand))
             {
-                final BrushTool brushTool = this.brushTools.get(this.player.getItemInHand().getType());
-                success = brushTool.snipe(playr, action, itemInHand, clickedBlock, clickedFace);
+                final BrushTool brushTool = this.brushTools.get(itemInHand);
+                success = brushTool.snipe(player, action, itemInHand, clickedBlock, clickedFace);
             }
             else
             {
@@ -1108,8 +1157,8 @@ public class Sniper
             {
                 this.player.sendMessage(ChatColor.DARK_GRAY + stackTraceElement.getClassName() + ChatColor.DARK_GREEN + " : " + ChatColor.DARK_GRAY + stackTraceElement.getLineNumber());
             }
-            player.sendMessage(ChatColor.RED + "An Exception has been caught while trying to execute snipe. (Details in server log)");
-            VoxelSniper.getInstance().getLogger().log(Level.SEVERE, "Exception while sniping: (" + player.getName() + " " + current.getName() + ")", exception);
+            this.player.sendMessage(ChatColor.RED + "An Exception has been caught while trying to execute snipe. (Details in server log)");
+            VoxelSniper.getInstance().getLogger().log(Level.SEVERE, "Exception while sniping: (" + this.player.getName() + " " + current.getName() + ")", exception);
             return false;
         }
         return success;
