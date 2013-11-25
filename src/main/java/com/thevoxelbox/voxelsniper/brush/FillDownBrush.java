@@ -15,6 +15,7 @@ public class FillDownBrush extends PerformBrush
     private static int timesUsed = 0;
     private double trueCircle = 0;
     private boolean fillLiquid = true;
+    private boolean fromExisting = false;
 
     /**
      *
@@ -37,7 +38,23 @@ public class FillDownBrush extends PerformBrush
             {
                 if (currentXSquared + Math.pow(z, 2) <= brushSizeSquared)
                 {
-                    for (int y = 0; y >= -targetBlock.getY(); --y)
+                	int y = 0;
+                	boolean found = false;
+                	if(this.fromExisting) {
+                		for(y = -v.getVoxelHeight(); y < v.getVoxelHeight(); y++) {
+                			final Block currentBlock = this.getWorld().getBlockAt(
+	                                targetBlock.getX() + x,
+	                                targetBlock.getY() + y,
+	                                targetBlock.getZ() + z);
+                			if(!currentBlock.isEmpty()) {
+                    			found = true;
+                				break;
+                			}
+                		}
+                    	if(!found) continue;
+                    	y--;
+                	}
+            		for (; y >= -targetBlock.getY(); --y)
                     {
                         final Block currentBlock = this.getWorld().getBlockAt(
                                 targetBlock.getX() + x,
@@ -107,6 +124,9 @@ public class FillDownBrush extends PerformBrush
                 this.fillLiquid = false;
                 v.setReplaceId(0);
                 v.sendMessage(ChatColor.AQUA + "Now only filling air.");
+            } else if (par[i].equalsIgnoreCase("-e")) {
+            	this.fromExisting = true;
+            	v.sendMessage(ChatColor.AQUA + "Now filling down from existing blocks.");
             } else
             {
                 v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
