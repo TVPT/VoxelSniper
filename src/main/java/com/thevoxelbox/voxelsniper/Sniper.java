@@ -55,7 +55,7 @@ public class Sniper
     private IBrush readingBrush;
     private String readingString;
     private Player player;
-    private SnipeData data = new SnipeData(this);
+    protected SnipeData data = new SnipeData(this);
     private Message voxelMessage;
     private boolean lightning = false;
     private boolean enabled = true;

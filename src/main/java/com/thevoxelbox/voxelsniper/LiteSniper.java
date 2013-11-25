@@ -14,8 +14,8 @@ public class LiteSniper extends Sniper
     public LiteSniper()
     {
         this.setMyBrushes(Brushes.getNewLiteSniperBrushInstances());
-        this.setVoxelMessage(new Message(this.getData()));
-        this.getData().setVoxelMessage(this.getVoxelMessage());
+        this.setVoxelMessage(new Message(this.data));
+        this.data.setVoxelMessage(this.getVoxelMessage());
         // defaults
         final int[] currentP = new int[8];
         currentP[0] = 0;
