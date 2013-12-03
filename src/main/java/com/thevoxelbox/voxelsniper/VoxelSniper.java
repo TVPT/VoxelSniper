@@ -121,7 +121,7 @@ public class VoxelSniper extends JavaPlugin
             Preconditions.checkState(unmarshal instanceof LegacyConfigurationContainer, "Unmarshalled object is not of expected type.");
             LegacyConfigurationContainer legacyConfiguration = (LegacyConfigurationContainer) unmarshal;
             voxelSniperConfiguration.setUndoCacheSize(legacyConfiguration.undoCacheSize);
-            voxelSniperConfiguration.setLitesniperRestrictedItems(legacyConfiguration.LitesniperRestrictedItems);
+            voxelSniperConfiguration.setLitesniperRestrictedItems(legacyConfiguration.litesniperRestrictedItems);
             voxelSniperConfiguration.setLiteSniperMaxBrushSize(legacyConfiguration.liteSniperMaxBrushSize);
         }
         catch (JAXBException exception)
@@ -275,11 +275,15 @@ public class VoxelSniper extends JavaPlugin
     }
 
     @XmlRootElement(name = "VoxelSniper")
-    private class LegacyConfigurationContainer
+    private static class LegacyConfigurationContainer
     {
-        @XmlElementWrapper(name = "LiteSniperBannedIDs")
-        @XmlElement(name = "id")
-        List<Integer> LitesniperRestrictedItems = new ArrayList<Integer>();
+        private LegacyConfigurationContainer()
+        {
+        }
+
+        @XmlElementWrapper(name = "LiteSniperBannedIDs", required = false)
+        @XmlElement(name = "id", type = Integer.class)
+        List<Integer> litesniperRestrictedItems = new ArrayList<Integer>();
         @XmlElement(name = "MaxLiteBrushSize", required = true, defaultValue = "5")
         int liteSniperMaxBrushSize = 5;
         @XmlElement(name = "SniperUndoCache", required = true, defaultValue = "20")
