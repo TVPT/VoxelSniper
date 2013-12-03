@@ -180,7 +180,7 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
         if (voxelMessage.hasShortCode(VoxelSniperCommon.BRUSH_UPDATE_REQUEST_CHANNEL_SHORTCODE) && voxelMessage.dataInstanceOf(VoxelSniperPacket2BrushUpdateRequest.class))
         {
             VoxelSniperPacket2BrushUpdateRequest payload = voxelMessage.data();
-            Sniper sniper = plugin.getSniperPermissionHelper().getSniperInstance(voxelMessage.sender.getBukkitEntity());
+            Sniper sniper = plugin.getSniperPermissionHelper().getSniperInstance(voxelMessage.getSender());
 
 
             if (payload.getSize() > -1)

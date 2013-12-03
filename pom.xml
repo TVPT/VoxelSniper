@@ -4,7 +4,7 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelSniper</artifactId>
-    <version>5.168.8-SNAPSHOT</version>
+    <version>5.168.9-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>VoxelSniper</name>
@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.number>UNKNOWN</project.build.number>
         <project.build.version>${project.version}</project.build.version>
-        <depversions.bukkit>1.6.4-R0.1-SNAPSHOT</depversions.bukkit>
+        <depversions.bukkit>1.7.2-R0.1-SNAPSHOT</depversions.bukkit>
     </properties>
 
     <profiles>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>com.thevoxelbox</groupId>
             <artifactId>VoxelPacketPlugin</artifactId>
-            <version>2.0.4</version>
+            <version>2.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -155,7 +155,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.6</version>
+                <version>1.7.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
