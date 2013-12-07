@@ -1,17 +1,13 @@
 package com.thevoxelbox.voxelsniper;
 
-import net.minecraft.server.v1_7_R1.AxisAlignedBB;
-import net.minecraft.server.v1_7_R1.EntityPainting;
-import net.minecraft.server.v1_7_R1.EnumArt;
+import org.bukkit.Art;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Painting state change handler.
@@ -25,10 +21,6 @@ public final class PaintingWrapper
     {
     }
 
-    /**
-     * ArrayList of Notch's paintings from the EnumArt enum Stored here for easy access, also EnumArt doesn't have a .get.
-     */
-    public static final ArrayList<EnumArt> PAINTINGS = new ArrayList<EnumArt>(Arrays.asList(EnumArt.values()));
 
     /**
      * The paint method used to scroll or set a painting to a specific type.
@@ -43,44 +35,58 @@ public final class PaintingWrapper
      *         Chosen index to set the painting to
      */
     @SuppressWarnings("deprecation")
-	public static void paint(final Player p, final boolean auto, final boolean back, final int choice)
+    public static void paint(final Player p, final boolean auto, final boolean back, final int choice)
     {
-        final Location location = p.getTargetBlock(null, 4).getLocation();
-        final Location location2 = p.getLocation();
-        final CraftWorld craftWorld = (CraftWorld) p.getWorld();
-        final double x1 = location.getX() + 0.4D;
-        final double y1 = location.getY() + 0.4D;
-        final double z1 = location.getZ() + 0.4D;
-        final double x2 = location2.getX();
-        final double y2 = location.getY() + 0.6D;
-        final double z2 = location2.getZ();
+        Location targetLocation = p.getTargetBlock(null, 4).getLocation();
+        Chunk paintingChunk = p.getTargetBlock(null, 4).getLocation().getChunk();
 
-        final AxisAlignedBB bb = AxisAlignedBB.a(Math.min(x1, x2), y1, Math.min(z1, z2), Math.max(x1, x2), y2, Math.max(z1, z2));
+        Double bestDistanceMatch = 50D;
+        Painting bestMatch = null;
 
-        final List<?> entities = craftWorld.getHandle().getEntities(((CraftPlayer) p).getHandle(), bb);
-        if ((entities.size() == 1) && ((entities.get(0) instanceof EntityPainting)))
+        for (Entity entity : paintingChunk.getEntities())
         {
-            final EntityPainting oldPainting = (EntityPainting) entities.get(0);
-            final EntityPainting newPainting = new EntityPainting(craftWorld.getHandle(), oldPainting.x, oldPainting.y, oldPainting.z, oldPainting.direction % 4);
+            if (entity.getType() == EntityType.PAINTING)
+            {
+                Double distance = targetLocation.distanceSquared(entity.getLocation());
 
-            newPainting.art = oldPainting.art;
-            oldPainting.dead = true;
+                if (distance <= 4 && distance < bestDistanceMatch)
+                {
+                    bestDistanceMatch = distance;
+                    bestMatch = (Painting) entity;
+                }
+            }
+        }
 
+        if (bestMatch != null)
+        {
             if (auto)
             {
-                final int i = (PaintingWrapper.PAINTINGS.indexOf(newPainting.art) + (back ? -1 : 1) + PaintingWrapper.PAINTINGS.size()) % PaintingWrapper.PAINTINGS.size();
-                newPainting.art = (PaintingWrapper.PAINTINGS.get(i));
-                newPainting.setDirection(newPainting.direction);
-                newPainting.world.addEntity(newPainting);
-                p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (i));
+                try
+                {
+                    final int i = bestMatch.getArt().getId() + (back ? -1 : 1) + Art.values().length % Art.values().length;
+                    Art art = Art.getById(i);
+
+                    if (art == null)
+                    {
+                        p.sendMessage(ChatColor.RED + "This is the final painting, try scrolling to the other direction.");
+                        return;
+                    }
+
+                    bestMatch.setArt(art);
+                    p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (i));
+                }
+                catch (final Exception e)
+                {
+                    p.sendMessage(ChatColor.RED + "Oops. Something went wrong.");
+                }
             }
             else
             {
                 try
                 {
-                    newPainting.art = (PaintingWrapper.PAINTINGS.get(choice));
-                    newPainting.setDirection(newPainting.direction);
-                    newPainting.world.addEntity(newPainting);
+                    Art art = Art.getById(choice);
+
+                    bestMatch.setArt(art);
                     p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);
                 }
                 catch (final Exception exception)
