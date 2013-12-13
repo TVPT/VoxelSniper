@@ -80,11 +80,6 @@
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>${depversions.bukkit}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>${depversions.bukkit}</version>
         </dependency>

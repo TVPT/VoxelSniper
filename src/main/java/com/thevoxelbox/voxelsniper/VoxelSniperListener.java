@@ -161,15 +161,23 @@ public class VoxelSniperListener implements Listener
     {
         if (split.length == 1)
         {
-            try
+            if (split[0].equalsIgnoreCase("back"))
             {
-                PaintingWrapper.paint(player, false, false, Integer.parseInt(split[0]));
+                PaintingWrapper.paint(player, true, true, 0);
                 return true;
             }
-            catch (final Exception exception)
+            else
             {
-                player.sendMessage(ChatColor.RED + "Invalid input.");
-                return true;
+                try
+                {
+                    PaintingWrapper.paint(player, false, false, Integer.parseInt(split[0]));
+                    return true;
+                }
+                catch (final Exception exception)
+                {
+                    player.sendMessage(ChatColor.RED + "Invalid input.");
+                    return true;
+                }
             }
         }
         else

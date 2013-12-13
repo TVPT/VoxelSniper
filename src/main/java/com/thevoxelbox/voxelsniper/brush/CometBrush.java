@@ -1,18 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import net.minecraft.server.v1_7_R1.EntityFireball;
-import net.minecraft.server.v1_7_R1.EntityLargeFireball;
-import net.minecraft.server.v1_7_R1.EntitySmallFireball;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftFireball;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSmallFireball;
+import org.bukkit.entity.LargeFireball;
+import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
+
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * @author Gavjenks Heavily revamped from ruler brush blockPositionY
@@ -40,17 +35,11 @@ public class CometBrush extends Brush
 
         if (useBigBalls)
         {
-            final EntityFireball ballEntity = new EntityLargeFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), slope.getX(), slope.getY(), slope.getZ());
-            final CraftFireball craftFireball = new CraftFireball((CraftServer) v.owner().getPlayer().getServer(), ballEntity);
-            craftFireball.setVelocity(slope.normalize());
-            ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(ballEntity);
+            v.owner().getPlayer().launchProjectile(LargeFireball.class).setVelocity(slope.normalize());
         }
         else
         {
-            final EntitySmallFireball ballEntity = new EntitySmallFireball(((CraftWorld) v.owner().getPlayer().getWorld()).getHandle(), ((CraftPlayer) v.owner().getPlayer()).getHandle(), slope.getX(), slope.getY(), slope.getZ());
-            final CraftSmallFireball craftSmallFireball = new CraftSmallFireball((CraftServer) v.owner().getPlayer().getServer(), ballEntity);
-            craftSmallFireball.setVelocity(slope.normalize());
-            ((CraftWorld) v.owner().getPlayer().getWorld()).getHandle().addEntity(ballEntity);
+            v.owner().getPlayer().launchProjectile(SmallFireball.class).setVelocity(slope.normalize());
         }
     }
 
