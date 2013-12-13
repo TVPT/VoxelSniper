@@ -848,7 +848,7 @@ public class VoxelSniperListener implements Listener
     /**
      * @param event
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = false)
     public final void onPlayerInteract(final PlayerInteractEvent event)
     {
         if (event.isBlockInHand())
