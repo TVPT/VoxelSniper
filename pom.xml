@@ -21,7 +21,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.number>UNKNOWN</project.build.number>
         <project.build.version>${project.version}</project.build.version>
-        <depversions.bukkit>1.7.2-R0.1-SNAPSHOT</depversions.bukkit>
     </properties>
 
     <profiles>
@@ -81,7 +80,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>${depversions.bukkit}</version>
+            <version>1.7.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mcstats.bukkit</groupId>
