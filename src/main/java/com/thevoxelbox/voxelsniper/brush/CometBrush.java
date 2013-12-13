@@ -30,7 +30,7 @@ public class CometBrush extends Brush
     private void doFireball(final SnipeData v)
     {
         final Vector targetCoords = new Vector(this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()), this.getTargetBlock().getY() + .5, this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ()));
-        final Location playerLocation = v.owner().getPlayer().getLocation();
+        final Location playerLocation = v.owner().getPlayer().getEyeLocation();
         final Vector slope = targetCoords.subtract(playerLocation.toVector());
 
         if (useBigBalls)
