@@ -54,6 +54,7 @@ public class Undo
             Material.WOOD_PLATE,
             Material.REDSTONE_TORCH_OFF,
             Material.REDSTONE_TORCH_ON,
+            Material.REDSTONE_WIRE,
             Material.STONE_BUTTON,
             Material.SNOW,
             Material.CACTUS,
