@@ -106,28 +106,36 @@ public class FillDownBrush extends PerformBrush
                 v.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
                 v.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
                 v.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
+                v.sendMessage(ChatColor.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
                 return;
-            } else if (par[i].equalsIgnoreCase("true"))
+            }
+            else if (par[i].equalsIgnoreCase("true"))
             {
                 this.trueCircle = 0.5;
                 v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-            } else if (par[i].equalsIgnoreCase("false"))
+            }
+            else if (par[i].equalsIgnoreCase("false"))
             {
                 this.trueCircle = 0;
                 v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-            } else if (par[i].equalsIgnoreCase("all"))
+            }
+            else if (par[i].equalsIgnoreCase("all"))
             {
                 this.fillLiquid = true;
                 v.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
-            } else if (par[i].equalsIgnoreCase("some"))
+            }
+            else if (par[i].equalsIgnoreCase("some"))
             {
                 this.fillLiquid = false;
                 v.setReplaceId(0);
                 v.sendMessage(ChatColor.AQUA + "Now only filling air.");
-            } else if (par[i].equalsIgnoreCase("-e")) {
-            	this.fromExisting = true;
-            	v.sendMessage(ChatColor.AQUA + "Now filling down from existing blocks.");
-            } else
+            }
+            else if (par[i].equalsIgnoreCase("-e"))
+            {
+            	this.fromExisting = !this.fromExisting;
+            	v.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
+            }
+            else
             {
                 v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }

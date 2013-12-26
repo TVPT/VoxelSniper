@@ -881,7 +881,7 @@ public class Sniper
                 this.player.sendMessage(ChatColor.RED + "Invalid input.");
                 return false;
             }
-            if (this.myBrushes.containsKey(args[0]))
+            if (this.myBrushes.containsKey(args[0].toLowerCase()))
             {
                 ItemStack itemStackInHand = this.player.getItemInHand();
                 Material itemInHand = itemStackInHand == null ? null : itemStackInHand.getType();
@@ -1280,10 +1280,6 @@ public class Sniper
                         case 'l':
                             this.toggleLightning();
                             toRemove[x] = true;
-                            break;
-
-                        case 'e':
-                            this.player.chat("/ve " + arg.substring(2));
                             break;
                         default:
                             break;
