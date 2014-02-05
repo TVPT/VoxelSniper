@@ -887,7 +887,10 @@ public class VoxelSniperListener implements Listener
             {
                 final Sniper sniper = VoxelSniper.getInstance().getSniperPermissionHelper().getSniperInstance(player);
                 sniper.setPlayer(player);
-                sniper.info();
+                if (plugin.getVoxelSniperConfiguration().isMessageOnLoginEnabled())
+                {
+                    sniper.info();
+                }
                 return;
             }
             catch (Exception ignored)
@@ -903,7 +906,10 @@ public class VoxelSniperListener implements Listener
                 if (sniper instanceof LiteSniper)
                 {
                     sniper.setPlayer(player);
-                    sniper.info();
+                    if (plugin.getVoxelSniperConfiguration().isMessageOnLoginEnabled())
+                    {
+                        sniper.info();
+                    }
                 }
             }
             catch (Exception ignored)
