@@ -197,7 +197,7 @@ public class VoxelSniper extends JavaPlugin
     public void registerBrushes()
     {
         Brushes.registerSniperBrush(BallBrush.class, Brushes.BrushAvailability.ALL, "b", "ball");
-        Brushes.registerSniperBrush(BiomeBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "bio", "biome");
+        Brushes.registerSniperBrush(BiomeBrush.class, Brushes.BrushAvailability.ALL, "bio", "biome");
         Brushes.registerSniperBrush(BlendBallBrush.class, Brushes.BrushAvailability.ALL, "bb", "blendball");
         Brushes.registerSniperBrush(BlendDiscBrush.class, Brushes.BrushAvailability.ALL, "bd", "blenddisc");
         Brushes.registerSniperBrush(BlendVoxelBrush.class, Brushes.BrushAvailability.ALL, "bv", "blendvoxel");
