@@ -227,7 +227,7 @@ public class VoxelSniper extends JavaPlugin
         Brushes.registerSniperBrush(FillDownBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "fd", "filldown");
         Brushes.registerSniperBrush(FlatOceanBrush.class, Brushes.BrushAvailability.ALL, "fo", "flatocean");
         Brushes.registerSniperBrush(GenerateTreeBrush.class, Brushes.BrushAvailability.ALL, "gt", "generatetree");
-        Brushes.registerSniperBrush(HeatRayBrush.class, Brushes.BrushAvailability.ALL, "hr", "heatray");
+        Brushes.registerSniperBrush(HeatRayBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "hr", "heatray");
         Brushes.registerSniperBrush(JaggedLineBrush.class, Brushes.BrushAvailability.ALL, "j", "jagged");
         Brushes.registerSniperBrush(JockeyBrush.class, Brushes.BrushAvailability.SNIPER_ONLY, "jockey");
         Brushes.registerSniperBrush(LightningBrush.class, Brushes.BrushAvailability.ALL, "light", "lightning");
