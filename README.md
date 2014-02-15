@@ -26,7 +26,7 @@ How do I create a ticket the right way?
 ### Bug Report
 
 Make sure to not tell us your story of life. We want brief descriptions of what's wrong to get directly to fixing.
-Also try to make the title describe briefly what's wrong.
+Also try to make the title describe briefly what's wrong and attach things like logs or screenshots to help illustrate the issue further.
 
 Here is an example, where an imaginary brush that should create a ball, creates a cube:
 
