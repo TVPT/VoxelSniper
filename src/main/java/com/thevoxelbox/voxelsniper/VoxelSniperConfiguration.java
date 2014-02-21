@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper;
 import com.google.common.base.Preconditions;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -66,8 +65,8 @@ public class VoxelSniperConfiguration
     public void setLiteSniperMaxBrushSize(int size)
     {
         configuration.set(CONFIG_IDENTIFIER_LITESNIPER_MAX_BRUSH_SIZE, size);
-
     }
+
     /**
      * Returns List of restricted Litesniper Items.
      *
@@ -94,10 +93,16 @@ public class VoxelSniperConfiguration
      *
      * @return true if message on login is enabled, false otherwise.
      */
-    public boolean isMessageOnLoginEnabled() {
-        return configuration.getBoolean(CONFIG_IDENTIFIER_MESSAGE_ON_LOGIN_ENABLED);
+    public boolean isMessageOnLoginEnabled()
+    {
+        return configuration.getBoolean(CONFIG_IDENTIFIER_MESSAGE_ON_LOGIN_ENABLED, DEFAULT_MESSAGE_ON_LOGIN_ENABLED);
     }
 
+    /**
+     * Set the message on login to be enabled or disabled.
+     *
+     * @param enabled Message on Login enabled
+     */
     public void setMessageOnLoginEnabled(boolean enabled)
     {
         configuration.set(CONFIG_IDENTIFIER_MESSAGE_ON_LOGIN_ENABLED, enabled);
