@@ -17,7 +17,6 @@ import java.util.Scanner;
  */
 public class StencilListBrush extends Brush
 {
-
     private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
     private String filename = "NoFileLoaded";
     private short x;
@@ -28,7 +27,6 @@ public class StencilListBrush extends Brush
     private short yRef;
     private byte pasteParam = 0;
     private HashMap<Integer, String> stencilList = new HashMap<Integer, String>();
-    private static int timesUsed = 0;
 
     /**
      *
@@ -257,7 +255,7 @@ public class StencilListBrush extends Brush
                     }
                 }
                 in.close();
-                v.storeUndo(undo);
+                v.owner().storeUndo(undo);
 
             }
             catch (final Exception exception)
@@ -460,7 +458,7 @@ public class StencilListBrush extends Brush
                     }
                 }
                 in.close();
-                v.storeUndo(undo);
+                v.owner().storeUndo(undo);
 
             }
             catch (final Exception exception)
@@ -671,7 +669,7 @@ public class StencilListBrush extends Brush
                     }
                 }
                 in.close();
-                v.storeUndo(undo);
+                v.owner().storeUndo(undo);
 
             }
             catch (final Exception exception)
@@ -874,7 +872,7 @@ public class StencilListBrush extends Brush
                     }
                 }
                 in.close();
-                v.storeUndo(undo);
+                v.owner().storeUndo(undo);
 
             }
             catch (final Exception exception)
@@ -979,14 +977,8 @@ public class StencilListBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return StencilListBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        StencilListBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.stencillist";
     }
 }

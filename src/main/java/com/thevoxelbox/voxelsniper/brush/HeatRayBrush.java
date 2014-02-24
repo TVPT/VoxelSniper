@@ -44,7 +44,6 @@ public class HeatRayBrush extends Brush
 
     private static final ArrayList<Material> FLAMABLE_BLOCKS = new ArrayList<Material>();
 
-    private static int timesUsed = 0;
     private int octaves = 5;
     private double frequency = 1;
 
@@ -159,7 +158,7 @@ public class HeatRayBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -217,14 +216,8 @@ public class HeatRayBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return HeatRayBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        HeatRayBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.heatray";
     }
 }

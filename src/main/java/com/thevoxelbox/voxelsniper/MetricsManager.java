@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.google.common.collect.Maps;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import org.mcstats.Metrics.Graph;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * @author Monofraps
@@ -18,6 +20,7 @@ public final class MetricsManager
     private static int snipesDone = 0;
     private static long snipeCounterInitTimeStamp = 0;
     private static MetricsManager instance;
+    private static Map<String, Integer> brushUsageCounter = Maps.newHashMap();
 
     private MetricsManager()
     {
@@ -45,6 +48,20 @@ public final class MetricsManager
     }
 
     /**
+     * Increase usage for a specific brush.
+     *
+     * @param brushName Name of the Brush
+     */
+    public static void increaseBrushUsage(String brushName)
+    {
+        if (brushUsageCounter.get(brushName) == null)
+        {
+            brushUsageCounter.put(brushName, 0);
+        }
+        brushUsageCounter.put(brushName, brushUsageCounter.get(brushName));
+    }
+
+    /**
      * Set Initialization time for reference when calculating average Snipes per Minute.
      *
      * @param currentTimeMillis
@@ -62,42 +79,6 @@ public final class MetricsManager
         try
         {
             final Metrics metrics = new Metrics(VoxelSniper.getInstance());
-
-            final Graph snipersOnlineGraph = metrics.createGraph("Snipers Online");
-            snipersOnlineGraph.addPlotter(new Metrics.Plotter("Snipers Online")
-            {
-
-                @Override
-                public int getValue()
-                {
-                    int count = 0;
-                    for (final Player player : Bukkit.getOnlinePlayers())
-                    {
-                        if (VoxelSniper.getInstance().getSniperPermissionHelper().isSniper(player))
-                        {
-                            count++;
-                        }
-                    }
-                    return count;
-                }
-            });
-            snipersOnlineGraph.addPlotter(new Metrics.Plotter("Litesnipers Online")
-            {
-
-                @Override
-                public int getValue()
-                {
-                    int count = 0;
-                    for (final Player player : Bukkit.getOnlinePlayers())
-                    {
-                        if (VoxelSniper.getInstance().getSniperPermissionHelper().isLiteSniper(player))
-                        {
-                            count++;
-                        }
-                    }
-                    return count;
-                }
-            });
 
             final Graph defaultGraph = metrics.createGraph("Default");
             defaultGraph.addPlotter(new Metrics.Plotter("Average Snipes per Minute")
@@ -134,22 +115,20 @@ public final class MetricsManager
 
             final Graph brushUsageGraph = metrics.createGraph("Brush Usage");
 
-            final HashSet<IBrush> brushes = new HashSet<IBrush>(Brushes.getNewSniperBrushInstances().values());
-
-            for (final IBrush brush : brushes)
+            for (final Map.Entry<String, Integer> entry : brushUsageCounter.entrySet())
             {
-                brushUsageGraph.addPlotter(new Metrics.Plotter(brush.getName())
+                brushUsageGraph.addPlotter(new Metrics.Plotter(entry.getKey())
                 {
                     @Override
                     public int getValue()
                     {
-                        return brush.getTimesUsed();
+                        return entry.getValue();
                     }
 
                     @Override
                     public void reset()
                     {
-                        brush.setTimesUsed(0);
+                        brushUsageCounter.remove(entry.getKey());
                     }
                 });
             }

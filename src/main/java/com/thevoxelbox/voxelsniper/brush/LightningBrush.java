@@ -8,27 +8,12 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  */
 public class LightningBrush extends Brush
 {
-
-    private static int timesUsed = 0;
-
     /**
      *
      */
     public LightningBrush()
     {
         this.setName("Lightning");
-    }
-
-    @Override
-    public final int getTimesUsed()
-    {
-        return LightningBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        LightningBrush.timesUsed = tUsed;
     }
 
     @Override
@@ -48,5 +33,11 @@ public class LightningBrush extends Brush
     protected final void powder(final SnipeData v)
     {
         this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.lightning";
     }
 }

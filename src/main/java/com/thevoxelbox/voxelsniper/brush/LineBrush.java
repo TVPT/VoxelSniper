@@ -20,7 +20,6 @@ import org.bukkit.util.Vector;
 public class LineBrush extends PerformBrush
 {
     private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
-    private static int timesUsed = 0;
     private Vector originCoords = null;
     private Vector targetCoords = new Vector();
     private World targetWorld;
@@ -31,18 +30,6 @@ public class LineBrush extends PerformBrush
     public LineBrush()
     {
         this.setName("Line");
-    }
-
-    @Override
-    public final int getTimesUsed()
-    {
-        return LineBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        LineBrush.timesUsed = tUsed;
     }
 
     @Override
@@ -81,7 +68,7 @@ public class LineBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -104,5 +91,11 @@ public class LineBrush extends PerformBrush
             this.targetCoords = this.getTargetBlock().getLocation().toVector();
             this.linePowder(v);
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.line";
     }
 }

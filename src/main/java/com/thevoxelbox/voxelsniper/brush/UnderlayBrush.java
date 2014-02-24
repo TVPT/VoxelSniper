@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 public class UnderlayBrush extends PerformBrush
 {
     private static final int DEFAULT_DEPTH = 3;
-    private static int timesUsed = 0;
     private int depth = DEFAULT_DEPTH;
     private boolean allBlocks = false;
 
@@ -90,7 +89,7 @@ public class UnderlayBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     private void underlay2(final SnipeData v)
@@ -154,7 +153,7 @@ public class UnderlayBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -215,14 +214,8 @@ public class UnderlayBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return UnderlayBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        UnderlayBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.underlay";
     }
 }

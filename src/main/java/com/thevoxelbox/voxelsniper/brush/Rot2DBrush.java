@@ -12,8 +12,6 @@ import org.bukkit.block.Block;
  */
 public class Rot2DBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     private int mode = 0;
     private int bSize;
     private int brushSize;
@@ -209,14 +207,8 @@ public class Rot2DBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return Rot2DBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        Rot2DBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.rot2d";
     }
 }

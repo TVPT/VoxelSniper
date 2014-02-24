@@ -11,7 +11,6 @@ import org.bukkit.block.Block;
  */
 public class CylinderBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
     private double trueCircle = 0;
 
     /**
@@ -73,7 +72,7 @@ public class CylinderBrush extends PerformBrush
                 }
             }
         }
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -140,14 +139,8 @@ public class CylinderBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return CylinderBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        CylinderBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.cylinder";
     }
 }

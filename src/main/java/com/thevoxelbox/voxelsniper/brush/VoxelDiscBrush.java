@@ -12,8 +12,6 @@ import org.bukkit.block.Block;
  */
 public class VoxelDiscBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -31,7 +29,7 @@ public class VoxelDiscBrush extends PerformBrush
                 current.perform(targetBlock.getRelative(x, 0, z));
             }
         }
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -54,14 +52,8 @@ public class VoxelDiscBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return VoxelDiscBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        VoxelDiscBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.voxeldisc";
     }
 }

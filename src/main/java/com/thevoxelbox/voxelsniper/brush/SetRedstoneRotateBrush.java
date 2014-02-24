@@ -11,8 +11,7 @@ import org.bukkit.block.Block;
  * @author Voxel
  */
 public class SetRedstoneRotateBrush extends Brush
-{ // Is this used anymore? -psa No worldEdit rotates properly, although it still doesn't flip -Deamon
-    private static int timesUsed = 0;
+{
     private Block block = null;
     private Undo undo;
 
@@ -75,7 +74,7 @@ public class SetRedstoneRotateBrush extends Brush
         }
         else
         {
-            v.storeUndo(this.undo);
+            v.owner().storeUndo(this.undo);
         }
     }
 
@@ -88,7 +87,7 @@ public class SetRedstoneRotateBrush extends Brush
         }
         else
         {
-            v.storeUndo(this.undo);
+            v.owner().storeUndo(this.undo);
         }
     }
 
@@ -106,14 +105,8 @@ public class SetRedstoneRotateBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SetRedstoneRotateBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SetRedstoneRotateBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.setredstonerotate";
     }
 }

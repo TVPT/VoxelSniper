@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class ShellSetBrush extends Brush
 {
     private static final int MAX_SIZE = 5000000;
-    private static int timesUsed = 0;
     private Block block = null;
 
     /**
@@ -109,7 +108,7 @@ public class ShellSetBrush extends Brush
                         currentBlock.setTypeId(v.getVoxelId());
                     }
                 }
-                v.storeUndo(undo);
+                v.owner().storeUndo(undo);
                 v.sendMessage(ChatColor.AQUA + "Shell complete.");
             }
 
@@ -146,14 +145,8 @@ public class ShellSetBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return ShellSetBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        ShellSetBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.shellset";
     }
 }

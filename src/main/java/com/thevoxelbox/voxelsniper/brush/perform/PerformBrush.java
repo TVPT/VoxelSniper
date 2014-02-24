@@ -9,6 +9,8 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
 import org.bukkit.Bukkit;
 
+import java.util.Arrays;
+
 /**
  * @author Voxel
  */
@@ -25,36 +27,49 @@ public abstract class PerformBrush extends Brush implements Performer
     @Override
     public void parse(String[] args, com.thevoxelbox.voxelsniper.SnipeData v)
     {
-        if (PerformerE.has(args[1]))
+        String handle = args[0];
+        if (PerformerE.has(handle))
         {
-            vPerformer p = PerformerE.getPerformer(args[1]);
+            vPerformer p = PerformerE.getPerformer(handle);
             if (p != null)
             {
                 current = p;
-                SniperBrushChangedEvent event = new SniperBrushChangedEvent(v.owner(), this, this);
+                SniperBrushChangedEvent event = new SniperBrushChangedEvent(v.owner(), v.owner().getCurrentToolId(), this, this);
                 Bukkit.getPluginManager().callEvent(event);
                 info(v.getVoxelMessage());
                 current.info(v.getVoxelMessage());
-                if (args.length > 2)
+                if (args.length > 1)
                 {
-                    String[] t = new String[args.length - 1];
-                    t[0] = args[0];
-                    for (int x = 2; x < args.length; x++)
-                    {
-                        t[x - 1] = args[x];
-                    }
-                    parameters(t, v);
+                    String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
+                    parameters(hackTheArray(additionalArguments), v);
                 }
             }
             else
             {
-                parameters(args, v);
+                parameters(hackTheArray(args), v);
             }
         }
         else
         {
-            parameters(args, v);
+            parameters(hackTheArray(args), v);
         }
+    }
+
+    /**
+     * Padds an empty String to the front of the array.
+     *
+     * @param args Array to pad empty string in front of
+     * @return padded array
+     */
+    private String[] hackTheArray(String[] args)
+    {
+        String[] returnValue = new String[args.length + 1];
+        for (int i = 0, argsLength = args.length; i < argsLength; i++)
+        {
+            String arg = args[i];
+            returnValue[i + 1] = arg;
+        }
+        return returnValue;
     }
 
     public void initP(com.thevoxelbox.voxelsniper.SnipeData v)

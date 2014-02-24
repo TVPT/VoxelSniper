@@ -24,7 +24,6 @@ public class SplatterDiscBrush extends PerformBrush
     private static final int SPLATREC_PERCENT_MIN = 1;
     private static final int SPLATREC_PERCENT_DEFAULT = 3;
     private static final int SPLATREC_PERCENT_MAX = 10;
-    private static int timesUsed = 0;
     private int seedPercent; // Chance block on first pass is made active
     private int growPercent; // chance block on recursion pass is made active
     private int splatterRecursions; // How many times you grow the seeds
@@ -147,7 +146,7 @@ public class SplatterDiscBrush extends PerformBrush
                 }
             }
         }
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -246,14 +245,8 @@ public class SplatterDiscBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SplatterDiscBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SplatterDiscBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.splatterdisc";
     }
 }

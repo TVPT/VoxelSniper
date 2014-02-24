@@ -10,9 +10,6 @@ import org.bukkit.entity.Player;
  */
 public class WarpBrush extends Brush
 {
-
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -54,15 +51,8 @@ public class WarpBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return timesUsed;
+        return "voxelsniper.brush.warp";
     }
-
-    @Override
-    public final void setTimesUsed(final int timesUsed)
-    {
-        WarpBrush.timesUsed = timesUsed;
-    }
-
 }

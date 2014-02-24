@@ -2,15 +2,14 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
+import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.event.block.Action;
 
 /**
  * Abstract implementation of the {@link IBrush} interface.
@@ -54,10 +53,8 @@ public abstract class Brush implements IBrush
 
     private boolean preparePerform(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace)
     {
-        this.setTimesUsed(this.getTimesUsed() + 1);
         if (this.getTarget(v, clickedBlock, clickedFace))
         {
-            this.updateScale();
             if (this instanceof PerformBrush)
             {
                 ((PerformBrush) this).initP(v);
@@ -69,54 +66,21 @@ public abstract class Brush implements IBrush
     }
 
     @Override
-    public boolean perform(final Action action, final SnipeData v, final Material heldItem, final Block clickedBlock, final BlockFace clickedFace)
+    public boolean perform(SnipeAction action, SnipeData data, Block targetBlock, Block lastBlock)
     {
+        this.setTargetBlock(targetBlock);
+        this.setLastBlock(lastBlock);
         switch (action)
         {
-            case RIGHT_CLICK_AIR:
-            case RIGHT_CLICK_BLOCK:
-                switch (heldItem)
-                {
-                    case ARROW:
-                        if (this.preparePerform(v, clickedBlock, clickedFace))
-                        {
-                            this.arrow(v);
-                            return true;
-                        }
-                        break;
-
-                    case SULPHUR:
-                        if (this.preparePerform(v, clickedBlock, clickedFace))
-                        {
-                            this.powder(v);
-                            return true;
-                        }
-                        break;
-
-                    default:
-                        return false;
-                }
-                break;
-
-            case LEFT_CLICK_AIR:
-                break;
-
-            case LEFT_CLICK_BLOCK:
-                break;
-
-            case PHYSICAL:
-                break;
-
-            default:
-                v.sendMessage(ChatColor.RED + "Something is not right. Report this to przerwap. (Perform Error)");
+            case ARROW:
+                this.arrow(data);
                 return true;
+            case GUNPOWDER:
+                this.powder(data);
+                return true;
+            default:
+                return false;
         }
-        return false;
-    }
-
-    @Override
-    public void updateScale()
-    {
     }
 
     /**
@@ -165,7 +129,7 @@ public abstract class Brush implements IBrush
                 v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                 return false;
             }
-            if (v.owner().isLightning())
+            if (v.owner().getSnipeData(v.owner().getCurrentToolId()).isLightningEnabled())
             {
                 this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
             }
@@ -174,9 +138,9 @@ public abstract class Brush implements IBrush
         else
         {
             RangeBlockHelper rangeBlockHelper;
-            if (v.owner().isDistRestrict())
+            if (v.owner().getSnipeData(v.owner().getCurrentToolId()).isRanged())
             {
-                rangeBlockHelper = new RangeBlockHelper(v.owner().getPlayer(), v.owner().getPlayer().getWorld(), v.owner().getRange());
+                rangeBlockHelper = new RangeBlockHelper(v.owner().getPlayer(), v.owner().getPlayer().getWorld(), (double) v.owner().getSnipeData(v.owner().getCurrentToolId()).getRange());
                 this.setTargetBlock(rangeBlockHelper.getRangeBlock());
             }
             else
@@ -192,7 +156,7 @@ public abstract class Brush implements IBrush
                     v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                     return false;
                 }
-                if (v.owner().isLightning())
+                if (v.owner().getSnipeData(v.owner().getCurrentToolId()).isLightningEnabled())
                 {
                     this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
                 }
@@ -292,12 +256,6 @@ public abstract class Brush implements IBrush
         this.lastBlock = lastBlock;
     }
 
-    @Override
-    public abstract int getTimesUsed();
-
-    @Override
-    public abstract void setTimesUsed(int timesUsed);
-
     /**
      * Set block data with supplied data over BlockWrapper.
      *
@@ -337,5 +295,4 @@ public abstract class Brush implements IBrush
     {
         this.getWorld().getBlockAt(x, y, z).setTypeIdAndData(id, data, true);
     }
-
 }

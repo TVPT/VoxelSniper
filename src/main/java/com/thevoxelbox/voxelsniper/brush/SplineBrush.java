@@ -16,8 +16,6 @@ import java.util.ArrayList;
  */
 public class SplineBrush extends PerformBrush
 {
-
-    private static int timesUsed = 0;
     private final ArrayList<Block> endPts = new ArrayList<Block>();
     private final ArrayList<Block> ctrlPts = new ArrayList<Block>();
     protected ArrayList<Point> spline = new ArrayList<Point>();
@@ -124,7 +122,7 @@ public class SplineBrush extends PerformBrush
             this.current.perform(this.clampY(point.getX(), point.getY(), point.getZ()));
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -240,18 +238,6 @@ public class SplineBrush extends PerformBrush
         }
     }
 
-    @Override
-    public final int getTimesUsed()
-    {
-        return SplineBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SplineBrush.timesUsed = tUsed;
-    }
-
     // Vector class for splines
     protected class Point
     {
@@ -317,5 +303,11 @@ public class SplineBrush extends PerformBrush
         {
             this.z = z;
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.spline";
     }
 }

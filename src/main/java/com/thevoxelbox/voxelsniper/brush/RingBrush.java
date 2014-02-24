@@ -13,7 +13,6 @@ import org.bukkit.block.Block;
  */
 public class RingBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
     private double trueCircle = 0;
     private double innerSize = 0;
 
@@ -47,7 +46,7 @@ public class RingBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -113,14 +112,8 @@ public class RingBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return RingBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        RingBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.ring";
     }
 }

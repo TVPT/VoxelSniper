@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.google.common.base.Objects;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
@@ -33,7 +34,6 @@ import java.util.Map;
 public class ErodeBrush extends Brush
 {
     private static final Vector[] FACES_TO_CHECK = {new Vector(0, 0, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), new Vector(0, -1, 0), new Vector(1, 0, 0), new Vector(-1, 0, 0)};
-    private static int timesUsed = 0;
     private final HelpJSAP parser = new HelpJSAP("/b e", "Brush for eroding landscape.", ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH);
     private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
 
@@ -108,7 +108,7 @@ public class ErodeBrush extends Brush
             blockWrapper.getBlock().setTypeIdAndData(blockWrapper.getMaterial().getId(), blockWrapper.getData(), true);
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     private void fillIteration(final SnipeData v, final ErosionPreset erosionPreset, final BlockChangeTracker blockChangeTracker, final Vector targetBlockVector)
@@ -303,18 +303,6 @@ public class ErodeBrush extends Brush
         }
     }
 
-    @Override
-    public final int getTimesUsed()
-    {
-        return ErodeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        ErodeBrush.timesUsed = tUsed;
-    }
-
     /**
      * @author MikeMatrix
      */
@@ -473,11 +461,7 @@ public class ErodeBrush extends Brush
          */
         public boolean isEmpty()
         {
-            if (this.material == Material.AIR)
-            {
-                return true;
-            }
-            return false;
+            return this.material == Material.AIR;
         }
 
         /**
@@ -520,13 +504,7 @@ public class ErodeBrush extends Brush
         @Override
         public int hashCode()
         {
-            int hash = 1;
-            hash = hash * 17 + erosionFaces;
-            hash = hash * 47 + erosionRecursion;
-            hash = hash * 59 + fillFaces;
-            hash = hash * 61 + fillRecursion;
-
-            return hash;
+            return Objects.hashCode(erosionFaces, erosionRecursion, fillFaces, fillRecursion);
         }
 
         @Override
@@ -535,8 +513,7 @@ public class ErodeBrush extends Brush
             if (obj instanceof ErosionPreset)
             {
                 ErosionPreset other = (ErosionPreset) obj;
-
-                return this.erosionFaces == other.erosionFaces && this.erosionRecursion == other.erosionRecursion && this.fillFaces == other.fillFaces && this.fillRecursion == other.fillRecursion;
+                return Objects.equal(this.erosionFaces, other.erosionFaces) && Objects.equal(this.erosionRecursion, other.erosionRecursion) && Objects.equal(this.fillFaces, other.fillFaces) && Objects.equal(this.fillRecursion, other.fillRecursion);
             }
             return false;
         }
@@ -577,7 +554,11 @@ public class ErodeBrush extends Brush
         {
             return new ErosionPreset(this.fillFaces, this.fillRecursion, this.erosionFaces, this.erosionRecursion);
         }
+    }
 
-
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.erode";
     }
 }

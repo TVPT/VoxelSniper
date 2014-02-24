@@ -11,8 +11,6 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  */
 public class VoxelBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -33,7 +31,7 @@ public class VoxelBrush extends PerformBrush
                 }
             }
         }
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -56,14 +54,8 @@ public class VoxelBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return VoxelBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        VoxelBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.voxel";
     }
 }

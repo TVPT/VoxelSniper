@@ -25,13 +25,11 @@ import java.util.Random;
  */
 public class PunishBrush extends PerformBrush
 {
-
     private static final int MAXIMAL_RANDOM_TELEPORTATION_RANGE = 400;
     private static final int TICKS_PER_SECOND = 20;
     private static final int INFINIPUNISH_SIZE = -3;
     private static final int DEFAULT_PUNISH_LEVEL = 10;
     private static final int DEFAULT_PUSNIH_DURATION = 60;
-    private static int timesUsed = 0;
     private Punishment punishment = Punishment.FIRE;
     private int punishLevel = DEFAULT_PUNISH_LEVEL;
     private int punishDuration = DEFAULT_PUSNIH_DURATION;
@@ -357,18 +355,6 @@ public class PunishBrush extends PerformBrush
 
     }
 
-    @Override
-    public final int getTimesUsed()
-    {
-        return PunishBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        PunishBrush.timesUsed = tUsed;
-    }
-
     /**
      * @author Monofraps
      */
@@ -381,5 +367,11 @@ public class PunishBrush extends PerformBrush
         SATURATION, SLOW_DIGGING, SPEED, WATER_BREATHING, WEAKNESS, WITHER,
         // MikeMatrix
         FORCE, HYPNO
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.punish";
     }
 }

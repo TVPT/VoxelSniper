@@ -11,7 +11,6 @@ import org.bukkit.block.Block;
  */
 public class BiomeBrush extends Brush
 {
-    private static int timesUsed = 0;
     private Biome selectedBiome = Biome.PLAINS;
 
     /**
@@ -120,14 +119,8 @@ public class BiomeBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return BiomeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        BiomeBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.biome";
     }
 }

@@ -14,7 +14,6 @@ import org.bukkit.block.BlockFace;
  */
 public class DiscFaceBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
     private double trueCircle = 0;
 
     /**
@@ -46,7 +45,7 @@ public class DiscFaceBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     private void discNS(final SnipeData v, Block targetBlock)
@@ -69,7 +68,7 @@ public class DiscFaceBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     private void discEW(final SnipeData v, Block targetBlock)
@@ -92,7 +91,7 @@ public class DiscFaceBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     private void pre(final SnipeData v, Block targetBlock)
@@ -174,14 +173,8 @@ public class DiscFaceBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return DiscFaceBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        DiscFaceBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.discface";
     }
 }

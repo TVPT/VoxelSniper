@@ -13,7 +13,6 @@ import org.bukkit.block.Block;
  */
 public class SpiralStaircaseBrush extends Brush
 {
-    private static int timesUsed = 0;
     private String stairtype = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
     private String sdirect = "c"; // "c" clockwise (default), "cc" counter-clockwise
     private String sopen = "n"; // "n" north (default), "e" east, "world" south, "world" west
@@ -396,7 +395,7 @@ public class SpiralStaircaseBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @SuppressWarnings("deprecation")
@@ -759,7 +758,7 @@ public class SpiralStaircaseBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -824,14 +823,8 @@ public class SpiralStaircaseBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SpiralStaircaseBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SpiralStaircaseBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.spiralstaircase";
     }
 }

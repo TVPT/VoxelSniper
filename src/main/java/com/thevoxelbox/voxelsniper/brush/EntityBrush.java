@@ -13,7 +13,6 @@ import org.bukkit.entity.EntityType;
  */
 public class EntityBrush extends Brush
 {
-    private static int timesUsed = 0;
     private EntityType entityType = EntityType.ZOMBIE;
 
     /**
@@ -92,14 +91,8 @@ public class EntityBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return EntityBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        EntityBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.entity";
     }
 }

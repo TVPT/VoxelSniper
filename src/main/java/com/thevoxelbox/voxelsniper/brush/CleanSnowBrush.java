@@ -14,7 +14,6 @@ import org.bukkit.Material;
  */
 public class CleanSnowBrush extends Brush
 {
-    private static int timesUsed = 0;
     private double trueCircle = 0;
 
     /**
@@ -54,7 +53,7 @@ public class CleanSnowBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -107,14 +106,8 @@ public class CleanSnowBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return CleanSnowBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        CleanSnowBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.cleansnow";
     }
 }

@@ -70,7 +70,6 @@ public class MoveBrush extends Brush
         MoveBrush.BREAKABLE_MATERIALS.add(Material.NETHER_WARTS);
     }
 
-    private static int timesUsed = 0;
     /**
      * Saved direction.
      */
@@ -134,7 +133,7 @@ public class MoveBrush extends Brush
             {
                 undo.put(block);
             }
-            v.storeUndo(undo);
+            v.owner().storeUndo(undo);
 
             for (final BlockState blockState : selection.getBlockStates())
             {
@@ -245,18 +244,6 @@ public class MoveBrush extends Brush
         }
     }
 
-    @Override
-    public final int getTimesUsed()
-    {
-        return MoveBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        MoveBrush.timesUsed = tUsed;
-    }
-
     /**
      * Selection Helper class.
      *
@@ -359,5 +346,11 @@ public class MoveBrush extends Brush
         {
             this.location2 = location2;
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.move";
     }
 }

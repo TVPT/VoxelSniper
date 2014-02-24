@@ -15,8 +15,6 @@ import org.bukkit.block.Block;
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 public class Rot2DvertBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     private int mode = 0;
     private int bSize;
     private int brushSize;
@@ -218,14 +216,8 @@ public class Rot2DvertBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return Rot2DvertBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        Rot2DvertBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.rot2dvert";
     }
 }

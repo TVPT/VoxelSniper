@@ -14,8 +14,6 @@ import org.bukkit.block.BlockFace;
  */
 public class ExtrudeBrush extends Brush
 {
-
-    private static int timesUsed = 0;
     private double trueCircle;
 
     /**
@@ -52,7 +50,7 @@ public class ExtrudeBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     private void extrudeNorthOrSouth(final SnipeData v, boolean isSouth)
@@ -82,7 +80,7 @@ public class ExtrudeBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     private void extrudeEastOrWest(final SnipeData v, boolean isEast)
@@ -111,7 +109,7 @@ public class ExtrudeBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @SuppressWarnings("deprecation")
@@ -218,14 +216,8 @@ public class ExtrudeBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return ExtrudeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        ExtrudeBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.extrude";
     }
 }

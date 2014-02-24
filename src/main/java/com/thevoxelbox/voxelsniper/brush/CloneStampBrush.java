@@ -13,8 +13,6 @@ import org.bukkit.ChatColor;
  */
 public class CloneStampBrush extends StampBrush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -167,14 +165,8 @@ public class CloneStampBrush extends StampBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return CloneStampBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        CloneStampBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.clonestamp";
     }
 }

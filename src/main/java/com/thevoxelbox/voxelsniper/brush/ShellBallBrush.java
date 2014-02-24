@@ -14,8 +14,6 @@ import org.bukkit.block.Block;
  */
 public class ShellBallBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -128,7 +126,7 @@ public class ShellBallBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
 
         // This is needed because most uses of this brush will not be sible to the sniper.
         v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Shell complete.");
@@ -156,14 +154,8 @@ public class ShellBallBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return ShellBallBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        ShellBallBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.shellball";
     }
 }

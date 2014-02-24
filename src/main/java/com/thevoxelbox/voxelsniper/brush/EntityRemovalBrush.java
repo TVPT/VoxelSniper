@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
  */
 public class EntityRemovalBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -32,9 +30,11 @@ public class EntityRemovalBrush extends Brush
 
         entityCount += removeEntities(targetChunk);
 
-        for (int x = targetChunk.getX() - v.getBrushSize(); x <= targetChunk.getX() + v.getBrushSize(); x++)
+        int radius = Math.round(v.getBrushSize() / 16);
+
+        for (int x = targetChunk.getX() - radius; x <= targetChunk.getX() + radius; x++)
         {
-            for (int z = targetChunk.getZ() - v.getBrushSize(); z <= targetChunk.getZ() + v.getBrushSize(); z++)
+            for (int z = targetChunk.getZ() - radius; z <= targetChunk.getZ() + radius; z++)
             {
                 entityCount += removeEntities(getWorld().getChunkAt(x, z));
                 chunkCount++;
@@ -80,14 +80,8 @@ public class EntityRemovalBrush extends Brush
     }
 
     @Override
-    public int getTimesUsed()
+    public String getPermissionNode()
     {
-        return EntityRemovalBrush.timesUsed;
-    }
-
-    @Override
-    public void setTimesUsed(int tUsed)
-    {
-        EntityRemovalBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.entityremoval";
     }
 }

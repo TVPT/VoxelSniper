@@ -13,7 +13,7 @@ public final class BrushInfoFactory
 {
     public static BrushInfo createBrushInfo(IBrush brush)
     {
-        TreeSet<String> sniperBrushHandles = new TreeSet<String>(Brushes.getAllBrushHandles(brush.getClass()));
+        TreeSet<String> sniperBrushHandles = new TreeSet<String>(Brushes.getSniperBrushHandles(brush.getClass()));
         return new BrushInfo(brush.getName(), brush.getBrushCategory(), sniperBrushHandles.first());
     }
 }

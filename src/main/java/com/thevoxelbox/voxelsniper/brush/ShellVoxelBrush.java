@@ -14,8 +14,6 @@ import org.bukkit.block.Block;
  */
 public class ShellVoxelBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -118,7 +116,7 @@ public class ShellVoxelBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
 
         v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Shell complete.");
     }
@@ -158,14 +156,8 @@ public class ShellVoxelBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return ShellVoxelBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        ShellVoxelBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.shellvoxel";
     }
 }

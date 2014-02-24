@@ -15,7 +15,6 @@ import org.bukkit.util.Vector;
  */
 public class DiscBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
     private double trueCircle = 0;
 
     /**
@@ -49,7 +48,7 @@ public class DiscBrush extends PerformBrush
                 }
             }
         }
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -62,18 +61,6 @@ public class DiscBrush extends PerformBrush
     protected final void powder(final SnipeData v)
     {
         this.disc(v, this.getLastBlock());
-    }
-
-    @Override
-    public final int getTimesUsed()
-    {
-        return DiscBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        DiscBrush.timesUsed = tUsed;
     }
 
     @Override
@@ -111,5 +98,11 @@ public class DiscBrush extends PerformBrush
                 v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.disc";
     }
 }

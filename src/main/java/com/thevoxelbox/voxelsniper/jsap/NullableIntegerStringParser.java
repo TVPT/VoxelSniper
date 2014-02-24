@@ -58,7 +58,7 @@ public class NullableIntegerStringParser extends StringParser
     {
         if (arg == null)
         {
-            return arg;
+            return null;
         }
 
         Integer result;

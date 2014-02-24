@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
  */
 public class EllipsoidBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
     private double xRad;
     private double yRad;
     private double zRad;
@@ -65,7 +64,7 @@ public class EllipsoidBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -140,14 +139,8 @@ public class EllipsoidBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return EllipsoidBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        EllipsoidBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.ellipsoid";
     }
 }

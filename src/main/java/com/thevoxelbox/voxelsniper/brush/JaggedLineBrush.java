@@ -66,7 +66,7 @@ public class JaggedLineBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -86,7 +86,6 @@ public class JaggedLineBrush extends PerformBrush
         if (originCoords == null)
         {
             v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
-            return;
         }
         else
         {
@@ -150,14 +149,8 @@ public class JaggedLineBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return JaggedLineBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        JaggedLineBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.jaggedline";
     }
 }

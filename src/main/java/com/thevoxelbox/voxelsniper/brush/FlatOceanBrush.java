@@ -13,7 +13,6 @@ public class FlatOceanBrush extends Brush
 {
     private static final int DEFAULT_WATER_LEVEL = 29;
     private static final int DEFAULT_FLOOR_LEVEL = 8;
-    private static int timesUsed = 0;
     private int waterLevel = DEFAULT_WATER_LEVEL;
     private int floorLevel = DEFAULT_FLOOR_LEVEL;
 
@@ -121,14 +120,8 @@ public class FlatOceanBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return FlatOceanBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        FlatOceanBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.flatocean";
     }
 }

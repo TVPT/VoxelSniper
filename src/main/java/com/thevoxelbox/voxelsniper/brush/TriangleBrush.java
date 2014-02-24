@@ -12,7 +12,6 @@ import org.bukkit.ChatColor;
  */
 public class TriangleBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
     private double[] coordsOne = new double[3]; // Three corners
     private double[] coordsTwo = new double[3];
     private double[] coordsThree = new double[3];
@@ -280,7 +279,7 @@ public class TriangleBrush extends PerformBrush
                 }
             } // END Z DEPENDENT
 
-            v.storeUndo(this.current.getUndo());
+            v.owner().storeUndo(this.current.getUndo());
 
         }
 
@@ -328,14 +327,8 @@ public class TriangleBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return TriangleBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        TriangleBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.triangle";
     }
 }

@@ -52,6 +52,9 @@ public class SnipeData
      * Voxel centroid -- set Cylynder center /vc #.
      */
     private int cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
+    private int range = 0;
+    private boolean ranged = false;
+    private boolean lightning = false;
 
     /**
      * @param vs
@@ -253,11 +256,33 @@ public class SnipeData
         this.voxelMessage = voxelMessage;
     }
 
-    /**
-     * @param vundo
-     */
-    public final void storeUndo(final com.thevoxelbox.voxelsniper.Undo vundo)
+    public int getRange()
     {
-        this.owner.storeUndo(vundo);
+        return range;
+    }
+
+    public void setRange(int range)
+    {
+        this.range = range;
+    }
+
+    public boolean isRanged()
+    {
+        return ranged;
+    }
+
+    public void setRanged(boolean ranged)
+    {
+        this.ranged = ranged;
+    }
+
+    public boolean isLightningEnabled()
+    {
+        return lightning;
+    }
+
+    public void setLightningEnabled(boolean lightning)
+    {
+        this.lightning = lightning;
     }
 }

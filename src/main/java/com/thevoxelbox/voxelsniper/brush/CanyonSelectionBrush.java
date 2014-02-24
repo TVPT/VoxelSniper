@@ -13,7 +13,6 @@ import org.bukkit.Chunk;
  */
 public class CanyonSelectionBrush extends CanyonBrush
 {
-    private static int timesUsed = 0;
     private boolean first = true;
     private int fx;
     private int fz;
@@ -59,7 +58,7 @@ public class CanyonSelectionBrush extends CanyonBrush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -82,14 +81,8 @@ public class CanyonSelectionBrush extends CanyonBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return CanyonSelectionBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        CanyonSelectionBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.canyonselection";
     }
 }

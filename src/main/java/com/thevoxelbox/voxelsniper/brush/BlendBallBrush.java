@@ -11,8 +11,6 @@ import org.bukkit.Material;
  */
 public class BlendBallBrush extends BlendBrushBase
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -137,7 +135,7 @@ public class BlendBallBrush extends BlendBrushBase
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -154,14 +152,8 @@ public class BlendBallBrush extends BlendBrushBase
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return BlendBallBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        BlendBallBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.blendball";
     }
 }

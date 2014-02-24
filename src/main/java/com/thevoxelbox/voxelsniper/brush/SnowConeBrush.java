@@ -16,8 +16,6 @@ import org.bukkit.block.BlockFace;
  */
 public class SnowConeBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     @SuppressWarnings("deprecation")
 	private void addSnow(final SnipeData v, Block targetBlock)
     {
@@ -139,7 +137,7 @@ public class SnowConeBrush extends Brush
 
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -185,14 +183,8 @@ public class SnowConeBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SnowConeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SnowConeBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.snowcone";
     }
 }

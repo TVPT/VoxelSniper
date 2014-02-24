@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
  */
 public class CheckerVoxelDiscBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
     private boolean useWorldCoordinates = true;
 
     /**
@@ -40,7 +39,7 @@ public class CheckerVoxelDiscBrush extends PerformBrush
                 }
             }
         }
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -95,14 +94,8 @@ public class CheckerVoxelDiscBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return CheckerVoxelDiscBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        CheckerVoxelDiscBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.checkervoxeldisc";
     }
 }

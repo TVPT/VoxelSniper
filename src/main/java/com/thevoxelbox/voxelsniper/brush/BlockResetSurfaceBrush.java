@@ -26,7 +26,6 @@ import org.bukkit.block.Block;
  */
 public class BlockResetSurfaceBrush extends Brush
 {
-    private static int timesUsed = 0;
     private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
 
     static
@@ -163,14 +162,8 @@ public class BlockResetSurfaceBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return BlockResetSurfaceBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        BlockResetSurfaceBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.blockresetsurface";
     }
 }

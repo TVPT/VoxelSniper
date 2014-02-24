@@ -29,7 +29,6 @@ public class SignOverwriteBrush extends Brush
     private static final int SIGN_LINE_2 = 2;
     private static final int SIGN_LINE_3 = 3;
     private static final int SIGN_LINE_4 = 4;
-    private static int timesUsed = 0;
     private String[] signTextLines = new String[NUM_SIGN_LINES];
     private boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
     private boolean rangedMode = false;
@@ -478,15 +477,8 @@ public class SignOverwriteBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SignOverwriteBrush.timesUsed;
+        return "voxelsniper.brush.signoverwrite";
     }
-
-    @Override
-    public final void setTimesUsed(final int timesUsed)
-    {
-        SignOverwriteBrush.timesUsed = timesUsed;
-    }
-
 }

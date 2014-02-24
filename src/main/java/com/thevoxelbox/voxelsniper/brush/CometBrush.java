@@ -16,7 +16,6 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  */
 public class CometBrush extends Brush
 {
-    private static int timesUsed = 0;
     private boolean useBigBalls = false;
 
     /**
@@ -102,14 +101,8 @@ public class CometBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return CometBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        CometBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.comet";
     }
 }

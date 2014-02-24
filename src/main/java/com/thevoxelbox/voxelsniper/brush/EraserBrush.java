@@ -22,7 +22,6 @@ public class EraserBrush extends Brush
             Material.AIR, Material.STONE, Material.GRASS, Material.DIRT, Material.SAND, Material.GRAVEL, Material.SANDSTONE);
     private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(
             Material.WATER, Material.STATIONARY_WATER, Material.LAVA, Material.STATIONARY_LAVA);
-    private static int timesUsed = 0;
 
     /**
      *
@@ -59,7 +58,7 @@ public class EraserBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -82,14 +81,8 @@ public class EraserBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return EraserBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        EraserBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.eraser";
     }
 }

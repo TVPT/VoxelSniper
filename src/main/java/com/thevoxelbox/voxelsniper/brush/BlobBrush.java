@@ -19,7 +19,6 @@ public class BlobBrush extends PerformBrush
     private static final int GROW_PERCENT_MIN = 1;
     private static final int GROW_PERCENT_MAX = 9999;
 
-    private static int timesUsed = 0;
     private Random randomGenerator = new Random();
     private int growPercent = GROW_PERCENT_DEFAULT; // chance block on recursion pass is made active
 
@@ -150,7 +149,7 @@ public class BlobBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     private void growBlob(final SnipeData v)
@@ -248,7 +247,7 @@ public class BlobBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -307,14 +306,8 @@ public class BlobBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return BlobBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        BlobBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.blob";
     }
 }

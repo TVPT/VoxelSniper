@@ -13,8 +13,6 @@ import org.bukkit.block.BlockFace;
  */
 public class VoltMeterBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -65,14 +63,8 @@ public class VoltMeterBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return VoltMeterBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        VoltMeterBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.voltmeter";
     }
 }

@@ -15,7 +15,6 @@ import org.bukkit.Material;
  */
 public class DrainBrush extends Brush
 {
-    private static int timesUsed = 0;
     private double trueCircle = 0;
     private boolean disc = false;
 
@@ -96,7 +95,7 @@ public class DrainBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -166,14 +165,8 @@ public class DrainBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return DrainBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        DrainBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.drain";
     }
 }

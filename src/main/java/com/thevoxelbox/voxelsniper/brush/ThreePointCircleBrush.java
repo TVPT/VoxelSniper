@@ -14,8 +14,6 @@ import org.bukkit.util.Vector;
  */
 public class ThreePointCircleBrush extends PerformBrush
 {
-
-    private static int timesUsed = 0;
     private Vector coordsOne;
     private Vector coordsTwo;
     private Vector coordsThree;
@@ -145,7 +143,7 @@ public class ThreePointCircleBrush extends PerformBrush
         }
 
         v.sendMessage(ChatColor.GREEN + "Done.");
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
 
         // Reset Brush
         this.coordsOne = null;
@@ -211,18 +209,6 @@ public class ThreePointCircleBrush extends PerformBrush
         }
     }
 
-    @Override
-    public final int getTimesUsed()
-    {
-        return ThreePointCircleBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        ThreePointCircleBrush.timesUsed = tUsed;
-    }
-
     /**
      * Enumeration on Tolerance values.
      *
@@ -242,5 +228,11 @@ public class ThreePointCircleBrush extends PerformBrush
         {
             return this.value;
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.threepointcircle";
     }
 }

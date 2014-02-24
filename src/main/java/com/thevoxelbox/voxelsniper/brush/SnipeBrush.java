@@ -11,8 +11,6 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  */
 public class SnipeBrush extends PerformBrush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -25,14 +23,14 @@ public class SnipeBrush extends PerformBrush
     protected final void arrow(final SnipeData v)
     {
         this.current.perform(this.getTargetBlock());
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
         this.current.perform(this.getLastBlock());
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -42,14 +40,8 @@ public class SnipeBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SnipeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SnipeBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.snipe";
     }
 }

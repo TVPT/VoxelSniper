@@ -26,10 +26,7 @@ public class Message
      */
     public void brushMessage(String brushMessage)
     {
-        if (snipeData.owner().isPrintout())
-        {
-            snipeData.sendMessage(ChatColor.LIGHT_PURPLE + brushMessage);
-        }
+        snipeData.sendMessage(ChatColor.LIGHT_PURPLE + brushMessage);
     }
 
     /**
@@ -47,10 +44,7 @@ public class Message
      */
     public void center()
     {
-        if (snipeData.owner().isPrintout())
-        {
-            snipeData.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + snipeData.getcCen());
-        }
+        snipeData.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + snipeData.getcCen());
     }
 
     /**
@@ -68,10 +62,7 @@ public class Message
      */
     public void data()
     {
-        if (snipeData.owner().isPrintout())
-        {
-            snipeData.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + snipeData.getData());
-        }
+        snipeData.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + snipeData.getData());
     }
 
     /**
@@ -79,10 +70,7 @@ public class Message
      */
     public void height()
     {
-        if (snipeData.owner().isPrintout())
-        {
-            snipeData.sendMessage(ChatColor.DARK_AQUA + "Brush Height: " + ChatColor.DARK_RED + snipeData.getVoxelHeight());
-        }
+        snipeData.sendMessage(ChatColor.DARK_AQUA + "Brush Height: " + ChatColor.DARK_RED + snipeData.getVoxelHeight());
     }
 
     /**
@@ -99,12 +87,9 @@ public class Message
      * Displaye replace material.
      */
     @SuppressWarnings("deprecation")
-	public void replace()
+    public void replace()
     {
-        if (snipeData.owner().isPrintout())
-        {
-            snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getReplaceId()).toString() + ")");
-        }
+        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getReplaceId()).toString() + ")");
     }
 
     /**
@@ -112,10 +97,7 @@ public class Message
      */
     public void replaceData()
     {
-        if (snipeData.owner().isPrintout())
-        {
-            snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + snipeData.getReplaceData());
-        }
+        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + snipeData.getReplaceData());
     }
 
     /**
@@ -135,7 +117,7 @@ public class Message
      */
     public void toggleLightning()
     {
-        snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((snipeData.owner().isLightning()) ? "on" : "off"));
+        snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).isLightningEnabled()) ? "on" : "off"));
     }
 
     /**
@@ -143,7 +125,7 @@ public class Message
      */
     public final void togglePrintout()
     {
-        snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((snipeData.owner().isLightning()) ? "on" : "off"));
+        snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).isLightningEnabled()) ? "on" : "off"));
     }
 
     /**
@@ -151,19 +133,16 @@ public class Message
      */
     public void toggleRange()
     {
-        snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((snipeData.owner().isDistRestrict()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + snipeData.owner().getRange());
+        snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).isRanged()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + (double) snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).getRange());
     }
 
     /**
      * Display voxel type.
      */
     @SuppressWarnings("deprecation")
-	public void voxel()
+    public void voxel()
     {
-        if (snipeData.owner().isPrintout())
-        {
-            snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getVoxelId()).toString() + ")");
-        }
+        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getVoxelId()).toString() + ")");
     }
 
     /**
@@ -171,32 +150,29 @@ public class Message
      */
     public void voxelList()
     {
-        if (snipeData.owner().isPrintout())
+        if (snipeData.getVoxelList().isEmpty())
         {
-            if (snipeData.getVoxelList().isEmpty())
-            {
-                snipeData.sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
-            }
-            else
-            {
-                StringBuilder returnValueBuilder = new StringBuilder();
-                returnValueBuilder.append(ChatColor.DARK_GREEN);
-                returnValueBuilder.append("Block Types Selected: ");
-                returnValueBuilder.append(ChatColor.AQUA);
+            snipeData.sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
+        }
+        else
+        {
+            StringBuilder returnValueBuilder = new StringBuilder();
+            returnValueBuilder.append(ChatColor.DARK_GREEN);
+            returnValueBuilder.append("Block Types Selected: ");
+            returnValueBuilder.append(ChatColor.AQUA);
 
-                for (int[] valuePair : snipeData.getVoxelList().getList())
+            for (int[] valuePair : snipeData.getVoxelList().getList())
+            {
+                returnValueBuilder.append(valuePair[0]);
+                if (valuePair[1] != -1)
                 {
-                    returnValueBuilder.append(valuePair[0]);
-                    if (valuePair[1] != -1)
-                    {
-                        returnValueBuilder.append(":");
-                        returnValueBuilder.append(valuePair[1]);
-                    }
-                    returnValueBuilder.append(" ");
+                    returnValueBuilder.append(":");
+                    returnValueBuilder.append(valuePair[1]);
                 }
-
-                snipeData.sendMessage(returnValueBuilder.toString());
+                returnValueBuilder.append(" ");
             }
+
+            snipeData.sendMessage(returnValueBuilder.toString());
         }
     }
 }

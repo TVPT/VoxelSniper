@@ -19,8 +19,6 @@ import org.bukkit.util.Vector;
  */
 public class DomeBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -30,24 +28,12 @@ public class DomeBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
-    {
-        return DomeBrush.timesUsed;
-    }
-
-    @Override
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
         vm.size();
         vm.voxel();
         vm.height();
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        DomeBrush.timesUsed = tUsed;
     }
 
     /**
@@ -109,7 +95,7 @@ public class DomeBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -122,5 +108,11 @@ public class DomeBrush extends Brush
     protected final void powder(final SnipeData v)
     {
         this.generateDome(v, this.getLastBlock());
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.dome";
     }
 }

@@ -17,7 +17,6 @@ public class CanyonBrush extends Brush
 {
     private static final int SHIFT_LEVEL_MIN = 10;
     private static final int SHIFT_LEVEL_MAX = 60;
-    private static int timesUsed = 0;
     private int yLevel = 10;
 
     /**
@@ -76,7 +75,7 @@ public class CanyonBrush extends Brush
 
         canyon(getTargetBlock().getChunk(), undo);
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class CanyonBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -126,18 +125,6 @@ public class CanyonBrush extends Brush
         }
     }
 
-    @Override
-    public int getTimesUsed()
-    {
-        return CanyonBrush.timesUsed;
-    }
-
-    @Override
-    public void setTimesUsed(final int tUsed)
-    {
-        CanyonBrush.timesUsed = tUsed;
-    }
-
     protected final int getYLevel()
     {
         return yLevel;
@@ -146,5 +133,11 @@ public class CanyonBrush extends Brush
     protected final void setYLevel(int yLevel)
     {
         this.yLevel = yLevel;
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.canyon";
     }
 }

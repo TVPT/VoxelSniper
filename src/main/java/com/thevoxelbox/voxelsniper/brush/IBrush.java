@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,17 +28,7 @@ public interface IBrush
      */
     void parameters(String[] par, SnipeData v);
 
-    /**
-     * Handle brush actions and pass through to other methods.
-     *
-     * @param action Click action performed
-     * @param v Snipe Data
-     * @param heldItem Item in hand
-     * @param clickedBlock Block clicked
-     * @param clickedFace Face clicked
-     * @return True on success, false otherwise
-     */
-    boolean perform(Action action, SnipeData v, Material heldItem, Block clickedBlock, BlockFace clickedFace);
+    boolean perform(SnipeAction action, SnipeData data, Block targetBlock, Block lastBlock);
 
     /**
      * @return The name of the Brush
@@ -50,22 +41,12 @@ public interface IBrush
     void setName(String name);
 
     /**
-     * @return Times the brush has been used
-     */
-    int getTimesUsed();
-
-    /**
-     * @param timesUsed Set the amount of times the brush has been used
-     */
-    void setTimesUsed(int timesUsed);
-
-    /**
-     *
-     */
-    void updateScale();
-
-    /**
      * @return The name of the category the brush is in.
      */
     String getBrushCategory();
+
+    /**
+     * @return Permission node required to use this brush
+     */
+    String getPermissionNode();
 }

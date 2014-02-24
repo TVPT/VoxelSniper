@@ -14,12 +14,14 @@ public class SniperBrushSizeChangedEvent extends Event
     private final Sniper sniper;
     private final int originalSize;
     private final int newSize;
+    private final String toolId;
 
-    public SniperBrushSizeChangedEvent(Sniper sniper, int originalSize, int newSize)
+    public SniperBrushSizeChangedEvent(Sniper sniper, String toolId, int originalSize, int newSize)
     {
         this.sniper = sniper;
         this.originalSize = originalSize;
         this.newSize = newSize;
+        this.toolId = toolId;
     }
 
     public static HandlerList getHandlerList()
@@ -40,6 +42,11 @@ public class SniperBrushSizeChangedEvent extends Event
     public Sniper getSniper()
     {
         return sniper;
+    }
+
+    public String getToolId()
+    {
+        return toolId;
     }
 
     @Override

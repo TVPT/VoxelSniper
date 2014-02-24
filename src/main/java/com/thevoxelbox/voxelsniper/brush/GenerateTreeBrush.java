@@ -41,7 +41,6 @@ public class GenerateTreeBrush extends Brush
     private int nodeMax = 4;
     private int nodeMin = 3;
 
-    private static int timesUsed = 0;
     private int blockPositionX;
     private int blockPositionY;
     private int blockPositionZ;
@@ -555,7 +554,7 @@ public class GenerateTreeBrush extends Brush
         }
 
         // Ends the undo function and mos on.
-        v.storeUndo(this.undo);
+        v.owner().storeUndo(this.undo);
     }
 
     // The Powder currently does nothing extra.
@@ -745,14 +744,8 @@ public class GenerateTreeBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return GenerateTreeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        GenerateTreeBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.generatetree";
     }
 }

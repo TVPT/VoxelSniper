@@ -20,7 +20,6 @@ public class EllipseBrush extends PerformBrush
     private static final int STEPS_MIN = 1;
     private static final int STEPS_MAX = 2000;
     private static final int STEPS_DEFAULT = 200;
-    private static int timesUsed = 0;
     private int xscl;
     private int yscl;
     private int steps;
@@ -72,7 +71,7 @@ public class EllipseBrush extends PerformBrush
             v.sendMessage(ChatColor.RED + "Invalid target.");
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     private void ellipsefill(final SnipeData v, Block targetBlock)
@@ -158,7 +157,7 @@ public class EllipseBrush extends PerformBrush
             v.sendMessage(ChatColor.RED + "Invalid target.");
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     private void execute(final SnipeData v, Block targetBlock)
@@ -297,14 +296,8 @@ public class EllipseBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return EllipseBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        EllipseBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.ellipse";
     }
 }

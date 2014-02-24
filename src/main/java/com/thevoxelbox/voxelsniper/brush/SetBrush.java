@@ -14,7 +14,6 @@ import org.bukkit.block.Block;
 public class SetBrush extends PerformBrush
 {
     private static final int SELECTION_SIZE_MAX = 5000000;
-    private static int timesUsed = 0;
     private Block block = null;
 
     /**
@@ -79,7 +78,7 @@ public class SetBrush extends PerformBrush
         }
         else
         {
-            v.storeUndo(this.current.getUndo());
+            v.owner().storeUndo(this.current.getUndo());
         }
     }
 
@@ -92,7 +91,7 @@ public class SetBrush extends PerformBrush
         }
         else
         {
-            v.storeUndo(this.current.getUndo());
+            v.owner().storeUndo(this.current.getUndo());
         }
     }
 
@@ -110,14 +109,8 @@ public class SetBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SetBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SetBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.set";
     }
 }

@@ -14,7 +14,6 @@ import org.bukkit.block.Block;
  */
 public class CopyPastaBrush extends Brush
 {
-    private static int timesUsed = 0;
     private static final int BLOCK_LIMIT = 10000;
 
     private boolean pasteAir = true; // False = no air, true = air
@@ -119,7 +118,7 @@ public class CopyPastaBrush extends Brush
         }
         v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks pasted.");
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -217,14 +216,8 @@ public class CopyPastaBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return CopyPastaBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        CopyPastaBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.copypasta";
     }
 }

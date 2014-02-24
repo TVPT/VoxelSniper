@@ -14,8 +14,6 @@ import org.bukkit.util.Vector;
  */
 public class RulerBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     private boolean first = true;
     private Vector coords = new Vector(0, 0, 0);
 
@@ -48,7 +46,7 @@ public class RulerBrush extends Brush
 
             undo.put(this.clampY(this.getTargetBlock().getX() + this.xOff, this.getTargetBlock().getY() + this.yOff, this.getTargetBlock().getZ() + this.zOff));
             this.setBlockIdAt(this.getTargetBlock().getZ() + this.zOff, this.getTargetBlock().getX() + this.xOff, this.getTargetBlock().getY() + this.yOff, voxelMaterialId);
-            v.storeUndo(undo);
+            v.owner().storeUndo(undo);
         }
     }
 
@@ -124,14 +122,8 @@ public class RulerBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return RulerBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        RulerBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.ruler";
     }
 }

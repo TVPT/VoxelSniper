@@ -15,7 +15,6 @@ import java.util.Random;
  */
 public class RandomErodeBrush extends Brush
 {
-    private static int timesUsed = 0;
     private final double trueCircle = 0.5;
     private BlockWrapper[][][] snap;
     private BlockWrapper[][][] firstSnap;
@@ -252,7 +251,7 @@ public class RandomErodeBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @SuppressWarnings("deprecation")
@@ -334,7 +333,7 @@ public class RandomErodeBrush extends Brush
             }
         }
 
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -385,18 +384,6 @@ public class RandomErodeBrush extends Brush
     {
         vm.brushName(this.getName());
         vm.size();
-    }
-
-    @Override
-    public final int getTimesUsed()
-    {
-        return RandomErodeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        RandomErodeBrush.timesUsed = tUsed;
     }
 
     /**
@@ -482,5 +469,11 @@ public class RandomErodeBrush extends Brush
         {
             this.i = i;
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.randomerode";
     }
 }

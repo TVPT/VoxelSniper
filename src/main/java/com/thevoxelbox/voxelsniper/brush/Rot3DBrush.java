@@ -13,8 +13,6 @@ import org.bukkit.block.Block;
  */
 public class Rot3DBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     private final int mode = 0;
     private int bSize;
     private int brushSize;
@@ -29,12 +27,6 @@ public class Rot3DBrush extends Brush
     public Rot3DBrush()
     {
         this.setName("3D Rotation");
-    }
-
-    @Override
-    public final int getTimesUsed()
-    {
-        return Rot3DBrush.timesUsed;
     }
 
     @Override
@@ -92,12 +84,6 @@ public class Rot3DBrush extends Brush
                 }
             }
         }
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        Rot3DBrush.timesUsed = tUsed;
     }
 
     @SuppressWarnings("deprecation")
@@ -253,7 +239,7 @@ public class Rot3DBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -290,5 +276,11 @@ public class Rot3DBrush extends Brush
                 v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
                 break;
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.rot3d";
     }
 }

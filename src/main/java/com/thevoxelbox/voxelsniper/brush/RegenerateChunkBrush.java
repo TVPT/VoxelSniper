@@ -12,8 +12,6 @@ import org.bukkit.Chunk;
  */
 public class RegenerateChunkBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -37,7 +35,7 @@ public class RegenerateChunkBrush extends Brush
                 }
             }
         }
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
 
         v.sendMessage("Generate that chunk! " + chunk.getX() + " " + chunk.getZ());
         this.getWorld().regenerateChunk(chunk.getX(), chunk.getZ());
@@ -65,14 +63,8 @@ public class RegenerateChunkBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return RegenerateChunkBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        RegenerateChunkBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.regeneratechunk";
     }
 }

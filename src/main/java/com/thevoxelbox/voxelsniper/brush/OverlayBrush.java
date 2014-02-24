@@ -14,7 +14,6 @@ import org.bukkit.Material;
 public class OverlayBrush extends PerformBrush
 {
     private static final int DEFAULT_DEPTH = 3;
-    private static int timesUsed = 0;
     private int depth = DEFAULT_DEPTH;
     private boolean allBlocks = false;
 
@@ -65,7 +64,7 @@ public class OverlayBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @SuppressWarnings("deprecation")
@@ -173,7 +172,7 @@ public class OverlayBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -236,14 +235,8 @@ public class OverlayBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return OverlayBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        OverlayBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.overlay";
     }
 }

@@ -50,7 +50,6 @@ public class OceanBrush extends Brush
         EXCLUDED_MATERIALS.add(Material.SNOW);
     }
 
-    private static int timesUsed = 0;
     private int waterLevel = WATER_LEVEL_DEFAULT;
     private boolean coverFloor = false;
 
@@ -143,7 +142,7 @@ public class OceanBrush extends Brush
     {
         Undo undo = new Undo();
         this.oceanator(v, undo);
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     @Override
@@ -215,14 +214,8 @@ public class OceanBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return OceanBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        OceanBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.ocean";
     }
 }

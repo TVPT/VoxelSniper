@@ -17,7 +17,6 @@ public class BallBrush extends PerformBrush
 {
     public static final double TRUE_CIRCLE_ON_VALUE = 0.5;
     public static final int TRUE_CIRCLE_OFF_VALUE = 0;
-    private static int timesUsed = 0;
     private double trueCircle = 0;
 
     /**
@@ -86,7 +85,7 @@ public class BallBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -139,14 +138,8 @@ public class BallBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return BallBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        BallBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.ball";
     }
 }

@@ -21,7 +21,6 @@ import java.util.List;
 public class JockeyBrush extends Brush
 {
     private static final int ENTITY_STACK_LIMIT = 50;
-    private static int timesUsed = 0;
     private JockeyType jockeyType = JockeyType.NORMAL_ALL_ENTITIES;
     private Entity jockeyedEntity = null;
 
@@ -251,18 +250,6 @@ public class JockeyBrush extends Brush
         }
     }
 
-    @Override
-    public final int getTimesUsed()
-    {
-        return JockeyBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        JockeyBrush.timesUsed = tUsed;
-    }
-
     /**
      * Available types of jockey modes.
      */
@@ -281,5 +268,11 @@ public class JockeyBrush extends Brush
         {
             return this.name;
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.jockey";
     }
 }

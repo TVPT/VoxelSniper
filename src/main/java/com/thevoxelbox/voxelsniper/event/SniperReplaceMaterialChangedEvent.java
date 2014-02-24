@@ -11,9 +11,9 @@ public class SniperReplaceMaterialChangedEvent extends SniperMaterialChangedEven
 {
     private static final HandlerList handlers = new HandlerList();
 
-    public SniperReplaceMaterialChangedEvent(Sniper sniper, MaterialData originalMaterial, MaterialData newMaterial)
+    public SniperReplaceMaterialChangedEvent(Sniper sniper, String toolId, MaterialData originalMaterial, MaterialData newMaterial)
     {
-        super(sniper, originalMaterial, newMaterial);
+        super(sniper, toolId, originalMaterial, newMaterial);
     }
 
     public static HandlerList getHandlerList()

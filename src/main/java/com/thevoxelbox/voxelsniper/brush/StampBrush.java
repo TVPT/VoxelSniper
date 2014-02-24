@@ -52,8 +52,6 @@ public class StampBrush extends Brush
         NO_AIR, FILL, DEFAULT
     }
 
-    private static int timesUsed = 0;
-
     protected HashSet<BlockWrapper> clone = new HashSet<BlockWrapper>();
     protected HashSet<BlockWrapper> fall = new HashSet<BlockWrapper>();
     protected HashSet<BlockWrapper> drop = new HashSet<BlockWrapper>();
@@ -218,7 +216,7 @@ public class StampBrush extends Brush
             this.sorted = true;
         }
 
-        v.storeUndo(this.undo);
+        v.owner().storeUndo(this.undo);
     }
 
     /**
@@ -276,7 +274,7 @@ public class StampBrush extends Brush
             this.sorted = true;
         }
 
-        v.storeUndo(this.undo);
+        v.owner().storeUndo(this.undo);
     }
 
     /**
@@ -334,7 +332,7 @@ public class StampBrush extends Brush
             this.sorted = true;
         }
 
-        v.storeUndo(this.undo);
+        v.owner().storeUndo(this.undo);
     }
 
     @Override
@@ -373,14 +371,8 @@ public class StampBrush extends Brush
     }
 
     @Override
-    public int getTimesUsed()
+    public String getPermissionNode()
     {
-        return StampBrush.timesUsed;
-    }
-
-    @Override
-    public void setTimesUsed(final int tUsed)
-    {
-        StampBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.stamp";
     }
 }

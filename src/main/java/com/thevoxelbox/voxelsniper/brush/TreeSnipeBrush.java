@@ -20,7 +20,6 @@ import org.bukkit.block.BlockState;
  */
 public class TreeSnipeBrush extends Brush
 {
-    private static int timesUsed = 0;
     private TreeType treeType = TreeType.TREE;
 
     /**
@@ -43,7 +42,7 @@ public class TreeSnipeBrush extends Brush
         Undo undo = undoDelegate.getUndo();
         blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
         undo.put(blockBelow);
-        v.storeUndo(undo);
+        v.owner().storeUndo(undo);
     }
 
     private int getYOffset()
@@ -124,14 +123,8 @@ public class TreeSnipeBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return TreeSnipeBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        TreeSnipeBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.treesnipe";
     }
 }

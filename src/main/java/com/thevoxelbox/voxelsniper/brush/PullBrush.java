@@ -12,8 +12,6 @@ import java.util.HashSet;
  */
 public class PullBrush extends Brush
 {
-
-    private static int timesUsed = 0;
     private final HashSet<BlockWrapper> surface = new HashSet<BlockWrapper>();
     private int vh;
     private double c1 = 1;
@@ -25,18 +23,6 @@ public class PullBrush extends Brush
     public PullBrush()
     {
         this.setName("Soft Selection");
-    }
-
-    @Override
-    public final int getTimesUsed()
-    {
-        return PullBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        PullBrush.timesUsed = tUsed;
     }
 
     @Override
@@ -374,5 +360,11 @@ public class PullBrush extends Brush
         {
             return this.z;
         }
+    }
+
+    @Override
+    public String getPermissionNode()
+    {
+        return "voxelsniper.brush.pull";
     }
 }

@@ -11,8 +11,6 @@ import org.bukkit.block.Block;
  */
 public class FillDownBrush extends PerformBrush
 {
-
-    private static int timesUsed = 0;
     private double trueCircle = 0;
     private boolean fillLiquid = true;
     private boolean fromExisting = false;
@@ -72,7 +70,7 @@ public class FillDownBrush extends PerformBrush
             }
         }
 
-        v.storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
@@ -143,14 +141,8 @@ public class FillDownBrush extends PerformBrush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return FillDownBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        FillDownBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.filldown";
     }
 }

@@ -16,8 +16,6 @@ public class ScannerBrush extends Brush
     private static final int DEPTH_DEFAULT = 24;
     private static final int DEPTH_MAX = 64;
 
-    private static int timesUsed = 0;
-
     private int depth = DEPTH_DEFAULT;
     private Material checkFor = Material.AIR;
 
@@ -193,14 +191,8 @@ public class ScannerBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return ScannerBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        ScannerBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.scanner";
     }
 }

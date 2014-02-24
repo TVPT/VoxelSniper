@@ -15,12 +15,14 @@ public class SniperMaterialChangedEvent extends Event
     private final Sniper sniper;
     private final MaterialData originalMaterial;
     private final MaterialData newMaterial;
+    private final String toolId;
 
-    public SniperMaterialChangedEvent(Sniper sniper, MaterialData originalMaterial, MaterialData newMaterial)
+    public SniperMaterialChangedEvent(Sniper sniper, String toolId, MaterialData originalMaterial, MaterialData newMaterial)
     {
         this.sniper = sniper;
         this.originalMaterial = originalMaterial;
         this.newMaterial = newMaterial;
+        this.toolId = toolId;
     }
 
     public static HandlerList getHandlerList()
@@ -41,6 +43,11 @@ public class SniperMaterialChangedEvent extends Event
     public Sniper getSniper()
     {
         return sniper;
+    }
+
+    public String getToolId()
+    {
+        return toolId;
     }
 
     @Override

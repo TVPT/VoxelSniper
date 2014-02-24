@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
  */
 public class SetRedstoneFlipBrush extends Brush
 {
-    private static int timesUsed = 0;
     private Block block = null;
     private Undo undo;
     private boolean northSouth = true;
@@ -100,7 +99,7 @@ public class SetRedstoneFlipBrush extends Brush
         }
         else
         {
-            v.storeUndo(this.undo);
+            v.owner().storeUndo(this.undo);
         }
     }
 
@@ -113,7 +112,7 @@ public class SetRedstoneFlipBrush extends Brush
         }
         else
         {
-            v.storeUndo(this.undo);
+            v.owner().storeUndo(this.undo);
         }
     }
 
@@ -153,14 +152,8 @@ public class SetRedstoneFlipBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return SetRedstoneFlipBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        SetRedstoneFlipBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.setredstoneflip";
     }
 }

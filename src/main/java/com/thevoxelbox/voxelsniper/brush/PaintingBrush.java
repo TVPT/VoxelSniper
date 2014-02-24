@@ -12,8 +12,6 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  */
 public class PaintingBrush extends Brush
 {
-    private static int timesUsed = 0;
-
     /**
      *
      */
@@ -51,14 +49,8 @@ public class PaintingBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return PaintingBrush.timesUsed;
-    }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        PaintingBrush.timesUsed = tUsed;
+        return "voxelsniper.brush.painting";
     }
 }

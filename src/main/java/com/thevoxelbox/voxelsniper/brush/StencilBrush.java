@@ -31,7 +31,6 @@ import org.bukkit.block.Block;
  */
 public class StencilBrush extends Brush
 {
-
     private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
     private String filename = "NoFileLoaded";
     private short x;
@@ -45,8 +44,6 @@ public class StencilBrush extends Brush
     private int[] secondPoint = new int[3];
     private int[] pastePoint = new int[3];
     private byte point = 1;
-
-    private static int timesUsed = 0;
 
     /**
      *
@@ -243,7 +240,7 @@ public class StencilBrush extends Brush
                     }
                 }
                 in.close();
-                v.storeUndo(undo);
+                v.owner().storeUndo(undo);
 
             }
             catch (final Exception exception)
@@ -465,15 +462,8 @@ public class StencilBrush extends Brush
     }
 
     @Override
-    public final int getTimesUsed()
+    public String getPermissionNode()
     {
-        return StencilBrush.timesUsed;
+        return "voxelsniper.brush.stencil";
     }
-
-    @Override
-    public final void setTimesUsed(final int tUsed)
-    {
-        StencilBrush.timesUsed = tUsed;
-    }
-
 }
