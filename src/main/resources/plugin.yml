@@ -119,84 +119,84 @@ permissions:
   voxelsniper.brush.*:
     default: op
     children:
-      voxelsniper.brush.ball
-      voxelsniper.brush.biome
-      voxelsniper.brush.blendball
-      voxelsniper.brush.blenddisc
-      voxelsniper.brush.blendvoxel
-      voxelsniper.brush.blendvoxeldisc
-      voxelsniper.brush.blob
-      voxelsniper.brush.blockreset
-      voxelsniper.brush.blockresetsurface
-      voxelsniper.brush.canyon
-      voxelsniper.brush.canyonselection
-      voxelsniper.brush.checkervoxeldisc
-      voxelsniper.brush.cleansnow
-      voxelsniper.brush.clonestamp
-      voxelsniper.brush.comet
-      voxelsniper.brush.copypasta
-      voxelsniper.brush.cylinder
-      voxelsniper.brush.disc
-      voxelsniper.brush.discface
-      voxelsniper.brush.dome
-      voxelsniper.brush.drain
-      voxelsniper.brush.ellipse
-      voxelsniper.brush.ellipsoid
-      voxelsniper.brush.entity
-      voxelsniper.brush.entityremoval
-      voxelsniper.brush.eraser
-      voxelsniper.brush.erode
-      voxelsniper.brush.extrude
-      voxelsniper.brush.filldown
-      voxelsniper.brush.flatocean
-      voxelsniper.brush.generatetree
-      voxelsniper.brush.heatray
-      voxelsniper.brush.jaggedline
-      voxelsniper.brush.jockey
-      voxelsniper.brush.lightning
-      voxelsniper.brush.line
-      voxelsniper.brush.move
-      voxelsniper.brush.ocean
-      voxelsniper.brush.overlay
-      voxelsniper.brush.painting
-      voxelsniper.brush.pull
-      voxelsniper.brush.punish
-      voxelsniper.brush.randomerode
-      voxelsniper.brush.regeneratechunk
-      voxelsniper.brush.ring
-      voxelsniper.brush.rot2d
-      voxelsniper.brush.rot2dvert
-      voxelsniper.brush.rot3d
-      voxelsniper.brush.ruler
-      voxelsniper.brush.scanner
-      voxelsniper.brush.set
-      voxelsniper.brush.setredstoneflip
-      voxelsniper.brush.setredstonerotate
-      voxelsniper.brush.shellball
-      voxelsniper.brush.shellset
-      voxelsniper.brush.shellvoxel
-      voxelsniper.brush.signoverwrite
-      voxelsniper.brush.snipe
-      voxelsniper.brush.snowcone
-      voxelsniper.brush.spiralstaircase
-      voxelsniper.brush.splatterball
-      voxelsniper.brush.splatterdisc
-      voxelsniper.brush.splatteroverlay
-      voxelsniper.brush.splattervoxel
-      voxelsniper.brush.splattervoxeldisc
-      voxelsniper.brush.spline
-      voxelsniper.brush.stamp
-      voxelsniper.brush.stencil
-      voxelsniper.brush.stencillist
-      voxelsniper.brush.threepointcircle
-      voxelsniper.brush.treesnipe
-      voxelsniper.brush.triangle
-      voxelsniper.brush.underlay
-      voxelsniper.brush.voltmeter
-      voxelsniper.brush.voxel
-      voxelsniper.brush.voxeldisc
-      voxelsniper.brush.voxeldiscface
-      voxelsniper.brush.warp
+      voxelsniper.brush.ball: true
+      voxelsniper.brush.biome: true
+      voxelsniper.brush.blendball: true
+      voxelsniper.brush.blenddisc: true
+      voxelsniper.brush.blendvoxel: true
+      voxelsniper.brush.blendvoxeldisc: true
+      voxelsniper.brush.blob: true
+      voxelsniper.brush.blockreset: true
+      voxelsniper.brush.blockresetsurface: true
+      voxelsniper.brush.canyon: true
+      voxelsniper.brush.canyonselection: true
+      voxelsniper.brush.checkervoxeldisc: true
+      voxelsniper.brush.cleansnow: true
+      voxelsniper.brush.clonestamp: true
+      voxelsniper.brush.comet: true
+      voxelsniper.brush.copypasta: true
+      voxelsniper.brush.cylinder: true
+      voxelsniper.brush.disc: true
+      voxelsniper.brush.discface: true
+      voxelsniper.brush.dome: true
+      voxelsniper.brush.drain: true
+      voxelsniper.brush.ellipse: true
+      voxelsniper.brush.ellipsoid: true
+      voxelsniper.brush.entity: true
+      voxelsniper.brush.entityremoval: true
+      voxelsniper.brush.eraser: true
+      voxelsniper.brush.erode: true
+      voxelsniper.brush.extrude: true
+      voxelsniper.brush.filldown: true
+      voxelsniper.brush.flatocean: true
+      voxelsniper.brush.generatetree: true
+      voxelsniper.brush.heatray: true
+      voxelsniper.brush.jaggedline: true
+      voxelsniper.brush.jockey: true
+      voxelsniper.brush.lightning: true
+      voxelsniper.brush.line: true
+      voxelsniper.brush.move: true
+      voxelsniper.brush.ocean: true
+      voxelsniper.brush.overlay: true
+      voxelsniper.brush.painting: true
+      voxelsniper.brush.pull: true
+      voxelsniper.brush.punish: true
+      voxelsniper.brush.randomerode: true
+      voxelsniper.brush.regeneratechunk: true
+      voxelsniper.brush.ring: true
+      voxelsniper.brush.rot2d: true
+      voxelsniper.brush.rot2dvert: true
+      voxelsniper.brush.rot3d: true
+      voxelsniper.brush.ruler: true
+      voxelsniper.brush.scanner: true
+      voxelsniper.brush.set: true
+      voxelsniper.brush.setredstoneflip: true
+      voxelsniper.brush.setredstonerotate: true
+      voxelsniper.brush.shellball: true
+      voxelsniper.brush.shellset: true
+      voxelsniper.brush.shellvoxel: true
+      voxelsniper.brush.signoverwrite: true
+      voxelsniper.brush.snipe: true
+      voxelsniper.brush.snowcone: true
+      voxelsniper.brush.spiralstaircase: true
+      voxelsniper.brush.splatterball: true
+      voxelsniper.brush.splatterdisc: true
+      voxelsniper.brush.splatteroverlay: true
+      voxelsniper.brush.splattervoxel: true
+      voxelsniper.brush.splattervoxeldisc: true
+      voxelsniper.brush.spline: true
+      voxelsniper.brush.stamp: true
+      voxelsniper.brush.stencil: true
+      voxelsniper.brush.stencillist: true
+      voxelsniper.brush.threepointcircle: true
+      voxelsniper.brush.treesnipe: true
+      voxelsniper.brush.triangle: true
+      voxelsniper.brush.underlay: true
+      voxelsniper.brush.voltmeter: true
+      voxelsniper.brush.voxel: true
+      voxelsniper.brush.voxeldisc: true
+      voxelsniper.brush.voxeldiscface: true
+      voxelsniper.brush.warp: true
   voxelsniper.brush.ball:
     default: op
   voxelsniper.brush.biome:
