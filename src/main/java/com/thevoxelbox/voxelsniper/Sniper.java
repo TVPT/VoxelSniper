@@ -510,6 +510,10 @@ public class Sniper
 
         public IBrush getCurrentBrush()
         {
+            if (currentBrush == null)
+            {
+                return null;
+            }
             return brushes.getInstance(currentBrush);
         }
 
