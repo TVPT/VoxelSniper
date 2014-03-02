@@ -34,6 +34,18 @@ public class VoxelSniper extends JavaPlugin
     private VoxelSniperConfiguration voxelSniperConfiguration;
 
     /**
+     * Returns {@link com.thevoxelbox.voxelsniper.Brushes} for current instance.
+     *
+     * @return Brush Manager for current instance.
+     */
+    public Brushes getBrushManager()
+    {
+        return brushManager;
+    }
+
+    private Brushes brushManager = new Brushes();
+
+    /**
      * @return {@link VoxelSniper}
      */
     public static VoxelSniper getInstance()
@@ -51,6 +63,11 @@ public class VoxelSniper extends JavaPlugin
         return voxelSniperConfiguration;
     }
 
+    /**
+     * Returns {@link com.thevoxelbox.voxelsniper.SniperManager} for current instance.
+     *
+     * @return SniperManager
+     */
     public SniperManager getSniperManager()
     {
         return sniperManager;
@@ -134,7 +151,7 @@ public class VoxelSniper extends JavaPlugin
         VoxelSniper.instance = this;
 
         registerBrushes();
-        getLogger().info("Registered " + Brushes.registeredSniperBrushes() + " Sniper Brushes with " + Brushes.registeredSniperBrushHandles() + " handles.");
+        getLogger().info("Registered " + brushManager.registeredSniperBrushes() + " Sniper Brushes with " + brushManager.registeredSniperBrushHandles() + " handles.");
 
         MetricsManager.getInstance().start();
 
@@ -161,82 +178,82 @@ public class VoxelSniper extends JavaPlugin
      */
     public void registerBrushes()
     {
-        Brushes.registerSniperBrush(BallBrush.class, "b", "ball");
-        Brushes.registerSniperBrush(BiomeBrush.class, "bio", "biome");
-        Brushes.registerSniperBrush(BlendBallBrush.class, "bb", "blendball");
-        Brushes.registerSniperBrush(BlendDiscBrush.class, "bd", "blenddisc");
-        Brushes.registerSniperBrush(BlendVoxelBrush.class, "bv", "blendvoxel");
-        Brushes.registerSniperBrush(BlendVoxelDiscBrush.class, "bvd", "blendvoxeldisc");
-        Brushes.registerSniperBrush(BlobBrush.class, "blob", "splatblob");
-        Brushes.registerSniperBrush(BlockResetBrush.class, "brb", "blockresetbrush");
-        Brushes.registerSniperBrush(BlockResetSurfaceBrush.class, "brbs", "blockresetbrushsurface");
-        Brushes.registerSniperBrush(CanyonBrush.class, "ca", "canyon");
-        Brushes.registerSniperBrush(CanyonSelectionBrush.class, "cas", "canyonselection");
-        Brushes.registerSniperBrush(CheckerVoxelDiscBrush.class, "cvd", "checkervoxeldisc");
-        Brushes.registerSniperBrush(CleanSnowBrush.class, "cls", "cleansnow");
-        Brushes.registerSniperBrush(CloneStampBrush.class, "cs", "clonestamp");
-        Brushes.registerSniperBrush(CometBrush.class, "com", "comet");
-        Brushes.registerSniperBrush(CopyPastaBrush.class, "cp", "copypasta");
-        Brushes.registerSniperBrush(CylinderBrush.class, "c", "cylinder");
-        Brushes.registerSniperBrush(DiscBrush.class, "d", "disc");
-        Brushes.registerSniperBrush(DiscFaceBrush.class, "df", "discface");
-        Brushes.registerSniperBrush(DomeBrush.class, "dome", "domebrush");
-        Brushes.registerSniperBrush(DrainBrush.class, "drain");
-        Brushes.registerSniperBrush(EllipseBrush.class, "el", "ellipse");
-        Brushes.registerSniperBrush(EllipsoidBrush.class, "elo", "ellipsoid");
-        Brushes.registerSniperBrush(EntityBrush.class, "en", "entity");
-        Brushes.registerSniperBrush(EntityRemovalBrush.class, "er", "entityremoval");
-        Brushes.registerSniperBrush(EraserBrush.class, "erase", "eraser");
-        Brushes.registerSniperBrush(ErodeBrush.class, "e", "erode");
-        Brushes.registerSniperBrush(ExtrudeBrush.class, "ex", "extrude");
-        Brushes.registerSniperBrush(FillDownBrush.class, "fd", "filldown");
-        Brushes.registerSniperBrush(FlatOceanBrush.class, "fo", "flatocean");
-        Brushes.registerSniperBrush(GenerateTreeBrush.class, "gt", "generatetree");
-        Brushes.registerSniperBrush(HeatRayBrush.class, "hr", "heatray");
-        Brushes.registerSniperBrush(JaggedLineBrush.class, "j", "jagged");
-        Brushes.registerSniperBrush(JockeyBrush.class, "jockey");
-        Brushes.registerSniperBrush(LightningBrush.class, "light", "lightning");
-        Brushes.registerSniperBrush(LineBrush.class, "l", "line");
-        Brushes.registerSniperBrush(MoveBrush.class, "mv", "move");
-        Brushes.registerSniperBrush(OceanBrush.class, "o", "ocean");
-        Brushes.registerSniperBrush(OverlayBrush.class, "over", "overlay");
-        Brushes.registerSniperBrush(PaintingBrush.class, "paint", "painting");
-        Brushes.registerSniperBrush(PullBrush.class, "pull");
-        Brushes.registerSniperBrush(PunishBrush.class, "p", "punish");
-        Brushes.registerSniperBrush(RandomErodeBrush.class, "re", "randomerode");
-        Brushes.registerSniperBrush(RegenerateChunkBrush.class, "gc", "generatechunk");
-        Brushes.registerSniperBrush(RingBrush.class, "ri", "ring");
-        Brushes.registerSniperBrush(Rot2DBrush.class, "rot2", "rotation2d");
-        Brushes.registerSniperBrush(Rot2DvertBrush.class, "rot2v", "rotation2dvertical");
-        Brushes.registerSniperBrush(Rot3DBrush.class, "rot3", "rotation3d");
-        Brushes.registerSniperBrush(RulerBrush.class, "r", "ruler");
-        Brushes.registerSniperBrush(ScannerBrush.class, "sc", "scanner");
-        Brushes.registerSniperBrush(SetBrush.class, "set");
-        Brushes.registerSniperBrush(SetRedstoneFlipBrush.class, "setrf", "setredstoneflip");
-        Brushes.registerSniperBrush(ShellBallBrush.class, "shb", "shellball");
-        Brushes.registerSniperBrush(ShellSetBrush.class, "shs", "shellset");
-        Brushes.registerSniperBrush(ShellVoxelBrush.class, "shv", "shellvoxel");
-        Brushes.registerSniperBrush(SignOverwriteBrush.class, "sio", "signoverwriter");
-        Brushes.registerSniperBrush(SnipeBrush.class, "s", "snipe");
-        Brushes.registerSniperBrush(SnowConeBrush.class, "snow", "snowcone");
-        Brushes.registerSniperBrush(SpiralStaircaseBrush.class, "sstair", "spiralstaircase");
-        Brushes.registerSniperBrush(SplatterBallBrush.class, "sb", "splatball");
-        Brushes.registerSniperBrush(SplatterDiscBrush.class, "sd", "splatdisc");
-        Brushes.registerSniperBrush(SplatterOverlayBrush.class, "sover", "splatteroverlay");
-        Brushes.registerSniperBrush(SplatterVoxelBrush.class, "sv", "splattervoxel");
-        Brushes.registerSniperBrush(SplatterDiscBrush.class, "svd", "splatvoxeldisc");
-        Brushes.registerSniperBrush(SplineBrush.class, "sp", "spline");
-        Brushes.registerSniperBrush(StencilBrush.class, "st", "stencil");
-        Brushes.registerSniperBrush(StencilListBrush.class, "sl", "stencillist");
-        Brushes.registerSniperBrush(ThreePointCircleBrush.class, "tpc", "threepointcircle");
-        Brushes.registerSniperBrush(TreeSnipeBrush.class, "t", "tree", "treesnipe");
-        Brushes.registerSniperBrush(TriangleBrush.class, "tri", "triangle");
-        Brushes.registerSniperBrush(UnderlayBrush.class, "under", "underlay");
-        Brushes.registerSniperBrush(VoltMeterBrush.class, "volt", "voltmeter");
-        Brushes.registerSniperBrush(VoxelBrush.class, "v", "voxel");
-        Brushes.registerSniperBrush(VoxelDiscBrush.class, "vd", "voxeldisc");
-        Brushes.registerSniperBrush(VoxelDiscFaceBrush.class, "vdf", "voxeldiscface");
-        Brushes.registerSniperBrush(WarpBrush.class, "w", "warp");
+        brushManager.registerSniperBrush(BallBrush.class, "b", "ball");
+        brushManager.registerSniperBrush(BiomeBrush.class, "bio", "biome");
+        brushManager.registerSniperBrush(BlendBallBrush.class, "bb", "blendball");
+        brushManager.registerSniperBrush(BlendDiscBrush.class, "bd", "blenddisc");
+        brushManager.registerSniperBrush(BlendVoxelBrush.class, "bv", "blendvoxel");
+        brushManager.registerSniperBrush(BlendVoxelDiscBrush.class, "bvd", "blendvoxeldisc");
+        brushManager.registerSniperBrush(BlobBrush.class, "blob", "splatblob");
+        brushManager.registerSniperBrush(BlockResetBrush.class, "brb", "blockresetbrush");
+        brushManager.registerSniperBrush(BlockResetSurfaceBrush.class, "brbs", "blockresetbrushsurface");
+        brushManager.registerSniperBrush(CanyonBrush.class, "ca", "canyon");
+        brushManager.registerSniperBrush(CanyonSelectionBrush.class, "cas", "canyonselection");
+        brushManager.registerSniperBrush(CheckerVoxelDiscBrush.class, "cvd", "checkervoxeldisc");
+        brushManager.registerSniperBrush(CleanSnowBrush.class, "cls", "cleansnow");
+        brushManager.registerSniperBrush(CloneStampBrush.class, "cs", "clonestamp");
+        brushManager.registerSniperBrush(CometBrush.class, "com", "comet");
+        brushManager.registerSniperBrush(CopyPastaBrush.class, "cp", "copypasta");
+        brushManager.registerSniperBrush(CylinderBrush.class, "c", "cylinder");
+        brushManager.registerSniperBrush(DiscBrush.class, "d", "disc");
+        brushManager.registerSniperBrush(DiscFaceBrush.class, "df", "discface");
+        brushManager.registerSniperBrush(DomeBrush.class, "dome", "domebrush");
+        brushManager.registerSniperBrush(DrainBrush.class, "drain");
+        brushManager.registerSniperBrush(EllipseBrush.class, "el", "ellipse");
+        brushManager.registerSniperBrush(EllipsoidBrush.class, "elo", "ellipsoid");
+        brushManager.registerSniperBrush(EntityBrush.class, "en", "entity");
+        brushManager.registerSniperBrush(EntityRemovalBrush.class, "er", "entityremoval");
+        brushManager.registerSniperBrush(EraserBrush.class, "erase", "eraser");
+        brushManager.registerSniperBrush(ErodeBrush.class, "e", "erode");
+        brushManager.registerSniperBrush(ExtrudeBrush.class, "ex", "extrude");
+        brushManager.registerSniperBrush(FillDownBrush.class, "fd", "filldown");
+        brushManager.registerSniperBrush(FlatOceanBrush.class, "fo", "flatocean");
+        brushManager.registerSniperBrush(GenerateTreeBrush.class, "gt", "generatetree");
+        brushManager.registerSniperBrush(HeatRayBrush.class, "hr", "heatray");
+        brushManager.registerSniperBrush(JaggedLineBrush.class, "j", "jagged");
+        brushManager.registerSniperBrush(JockeyBrush.class, "jockey");
+        brushManager.registerSniperBrush(LightningBrush.class, "light", "lightning");
+        brushManager.registerSniperBrush(LineBrush.class, "l", "line");
+        brushManager.registerSniperBrush(MoveBrush.class, "mv", "move");
+        brushManager.registerSniperBrush(OceanBrush.class, "o", "ocean");
+        brushManager.registerSniperBrush(OverlayBrush.class, "over", "overlay");
+        brushManager.registerSniperBrush(PaintingBrush.class, "paint", "painting");
+        brushManager.registerSniperBrush(PullBrush.class, "pull");
+        brushManager.registerSniperBrush(PunishBrush.class, "p", "punish");
+        brushManager.registerSniperBrush(RandomErodeBrush.class, "re", "randomerode");
+        brushManager.registerSniperBrush(RegenerateChunkBrush.class, "gc", "generatechunk");
+        brushManager.registerSniperBrush(RingBrush.class, "ri", "ring");
+        brushManager.registerSniperBrush(Rot2DBrush.class, "rot2", "rotation2d");
+        brushManager.registerSniperBrush(Rot2DvertBrush.class, "rot2v", "rotation2dvertical");
+        brushManager.registerSniperBrush(Rot3DBrush.class, "rot3", "rotation3d");
+        brushManager.registerSniperBrush(RulerBrush.class, "r", "ruler");
+        brushManager.registerSniperBrush(ScannerBrush.class, "sc", "scanner");
+        brushManager.registerSniperBrush(SetBrush.class, "set");
+        brushManager.registerSniperBrush(SetRedstoneFlipBrush.class, "setrf", "setredstoneflip");
+        brushManager.registerSniperBrush(ShellBallBrush.class, "shb", "shellball");
+        brushManager.registerSniperBrush(ShellSetBrush.class, "shs", "shellset");
+        brushManager.registerSniperBrush(ShellVoxelBrush.class, "shv", "shellvoxel");
+        brushManager.registerSniperBrush(SignOverwriteBrush.class, "sio", "signoverwriter");
+        brushManager.registerSniperBrush(SnipeBrush.class, "s", "snipe");
+        brushManager.registerSniperBrush(SnowConeBrush.class, "snow", "snowcone");
+        brushManager.registerSniperBrush(SpiralStaircaseBrush.class, "sstair", "spiralstaircase");
+        brushManager.registerSniperBrush(SplatterBallBrush.class, "sb", "splatball");
+        brushManager.registerSniperBrush(SplatterDiscBrush.class, "sd", "splatdisc");
+        brushManager.registerSniperBrush(SplatterOverlayBrush.class, "sover", "splatteroverlay");
+        brushManager.registerSniperBrush(SplatterVoxelBrush.class, "sv", "splattervoxel");
+        brushManager.registerSniperBrush(SplatterDiscBrush.class, "svd", "splatvoxeldisc");
+        brushManager.registerSniperBrush(SplineBrush.class, "sp", "spline");
+        brushManager.registerSniperBrush(StencilBrush.class, "st", "stencil");
+        brushManager.registerSniperBrush(StencilListBrush.class, "sl", "stencillist");
+        brushManager.registerSniperBrush(ThreePointCircleBrush.class, "tpc", "threepointcircle");
+        brushManager.registerSniperBrush(TreeSnipeBrush.class, "t", "tree", "treesnipe");
+        brushManager.registerSniperBrush(TriangleBrush.class, "tri", "triangle");
+        brushManager.registerSniperBrush(UnderlayBrush.class, "under", "underlay");
+        brushManager.registerSniperBrush(VoltMeterBrush.class, "volt", "voltmeter");
+        brushManager.registerSniperBrush(VoxelBrush.class, "v", "voxel");
+        brushManager.registerSniperBrush(VoxelDiscBrush.class, "vd", "voxeldisc");
+        brushManager.registerSniperBrush(VoxelDiscFaceBrush.class, "vdf", "voxeldiscface");
+        brushManager.registerSniperBrush(WarpBrush.class, "w", "warp");
     }
 
     @XmlRootElement(name = "VoxelSniper")

@@ -227,7 +227,7 @@ public class VoxelSniperListener implements Listener
             {
             }
 
-            Class<? extends IBrush> brush = Brushes.getBrushForHandle(split[0]);
+            Class<? extends IBrush> brush = plugin.getBrushManager().getBrushForHandle(split[0]);
             if (brush != null)
             {
                 IBrush orignalBrush = sniper.getBrush(currentToolId);
@@ -856,7 +856,7 @@ public class VoxelSniperListener implements Listener
         {
             if (split[0].equalsIgnoreCase("brushes"))
             {
-                Multimap<Class<? extends IBrush>, String> registeredBrushesMultimap = Brushes.getRegisteredBrushesMultimap();
+                Multimap<Class<? extends IBrush>, String> registeredBrushesMultimap = plugin.getBrushManager().getRegisteredBrushesMultimap();
                 List<String> allHandles = Lists.newLinkedList();
                 for (Class<? extends IBrush> brushClass : registeredBrushesMultimap.keySet())
                 {

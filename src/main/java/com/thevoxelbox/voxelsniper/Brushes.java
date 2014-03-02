@@ -6,22 +6,16 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Brush registration manager.
  */
 public class Brushes
 {
-    private static final Multimap<Class<? extends IBrush>, String> SNIPER_BRUSHES = HashMultimap.create();
-
-    private Brushes()
-    {
-    }
+    private Multimap<Class<? extends IBrush>, String> brushes = HashMultimap.create();
 
     /**
      * Register a brush for VoxelSniper to be able to use.
@@ -29,12 +23,12 @@ public class Brushes
      * @param clazz        Brush implementing IBrush interface.
      * @param handles      Handles under which the brush can be accessed ingame.
      */
-    public static void registerSniperBrush(Class<? extends IBrush> clazz, String... handles)
+    public void registerSniperBrush(Class<? extends IBrush> clazz, String... handles)
     {
         Preconditions.checkNotNull(clazz, "Cannot register null as a class.");
         for (String handle : handles)
         {
-            SNIPER_BRUSHES.put(clazz, handle.toLowerCase());
+            brushes.put(clazz, handle.toLowerCase());
         }
     }
 
@@ -44,15 +38,15 @@ public class Brushes
      * @param handle Case insensitive brush handle
      * @return Brush class
      */
-    public static Class<? extends IBrush> getBrushForHandle(String handle)
+    public Class<? extends IBrush> getBrushForHandle(String handle)
     {
         Preconditions.checkNotNull(handle, "Brushhandle can not be null.");
-        if (!SNIPER_BRUSHES.containsValue(handle.toLowerCase()))
+        if (!brushes.containsValue(handle.toLowerCase()))
         {
             return null;
         }
 
-        for (Map.Entry<Class<? extends IBrush>, String> entry : SNIPER_BRUSHES.entries())
+        for (Map.Entry<Class<? extends IBrush>, String> entry : brushes.entries())
         {
             if (entry.getValue().equalsIgnoreCase(handle))
             {
@@ -65,17 +59,17 @@ public class Brushes
     /**
      * @return Amount of IBrush classes registered with the system under Sniper visibility.
      */
-    public static int registeredSniperBrushes()
+    public int registeredSniperBrushes()
     {
-        return SNIPER_BRUSHES.keySet().size();
+        return brushes.keySet().size();
     }
 
     /**
      * @return Amount of handles registered with the system under Sniper visibility.
      */
-    public static int registeredSniperBrushHandles()
+    public int registeredSniperBrushHandles()
     {
-        return SNIPER_BRUSHES.size();
+        return brushes.size();
     }
 
     /**
@@ -83,13 +77,16 @@ public class Brushes
      * @param clazz Brush class
      * @return All Sniper registered handles for the brush.
      */
-    public static Set<String> getSniperBrushHandles(Class<? extends IBrush> clazz)
+    public Set<String> getSniperBrushHandles(Class<? extends IBrush> clazz)
     {
-        return new HashSet<String>(SNIPER_BRUSHES.get(clazz));
+        return new HashSet<String>(brushes.get(clazz));
     }
 
-    public static Multimap<Class<?extends IBrush>, String> getRegisteredBrushesMultimap()
+    /**
+     * @return Immutable Multimap copy of all the registered brushes
+     */
+    public Multimap<Class<?extends IBrush>, String> getRegisteredBrushesMultimap()
     {
-        return ImmutableMultimap.copyOf(SNIPER_BRUSHES);
+        return ImmutableMultimap.copyOf(brushes);
     }
 }

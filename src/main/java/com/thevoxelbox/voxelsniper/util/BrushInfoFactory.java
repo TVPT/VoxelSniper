@@ -11,9 +11,13 @@ import java.util.TreeSet;
  */
 public final class BrushInfoFactory
 {
-    public static BrushInfo createBrushInfo(IBrush brush)
+    private BrushInfoFactory()
     {
-        TreeSet<String> sniperBrushHandles = new TreeSet<String>(Brushes.getSniperBrushHandles(brush.getClass()));
+    }
+
+    public static BrushInfo createBrushInfo(Brushes brushes, IBrush brush)
+    {
+        TreeSet<String> sniperBrushHandles = new TreeSet<String>(brushes.getSniperBrushHandles(brush.getClass()));
         return new BrushInfo(brush.getName(), brush.getBrushCategory(), sniperBrushHandles.first());
     }
 }

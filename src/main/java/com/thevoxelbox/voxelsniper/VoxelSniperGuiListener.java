@@ -61,10 +61,10 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
 
         if (sniper != null)
         {
-            for (Class<? extends IBrush> brushClass : Brushes.getRegisteredBrushesMultimap().keySet())
+            for (Class<? extends IBrush> brushClass : plugin.getBrushManager().getRegisteredBrushesMultimap().keySet())
             {
                 IBrush brush = instanciateBrush(brushClass);
-                BrushInfo brushInfo = BrushInfoFactory.createBrushInfo(brush);
+                BrushInfo brushInfo = BrushInfoFactory.createBrushInfo(plugin.getBrushManager(), brush);
                 availableBrushes.add(brushInfo);
                 if (brushClass == sniper.getBrush(null).getClass())
                 {
@@ -133,7 +133,7 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
         boolean usesMask = (brush instanceof PerformBrush && ((PerformBrush) brush).getCurrentPerformer().isUsingReplaceMaterial());
         SendableItemInfo material = new SendableItemInfo(sniperData.getVoxelId(), sniperData.getData());
         SendableItemInfo mask = new SendableItemInfo(usesMask ? sniperData.getReplaceId() : -1, sniperData.getReplaceData());
-        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(brush), sniperData.getBrushSize(), material, mask);
+        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(plugin.getBrushManager(), brush), sniperData.getBrushSize(), material, mask);
         sendBrushUpdatePayload(event.getSniper().getPlayer(), payload);
     }
 
@@ -150,7 +150,7 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
         boolean usesMask = (brush instanceof PerformBrush && ((PerformBrush) brush).getCurrentPerformer().isUsingReplaceMaterial());
         SendableItemInfo material = new SendableItemInfo(sniperData.getVoxelId(), sniperData.getData());
         SendableItemInfo mask = new SendableItemInfo(usesMask ? sniperData.getReplaceId() : -1, sniperData.getReplaceData());
-        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(brush), event.getNewSize(), material, mask);
+        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(plugin.getBrushManager(), brush), event.getNewSize(), material, mask);
         sendBrushUpdatePayload(event.getSniper().getPlayer(), payload);
     }
 
@@ -167,7 +167,7 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
         boolean usesMask = (brush instanceof PerformBrush && ((PerformBrush) brush).getCurrentPerformer().isUsingReplaceMaterial());
         SendableItemInfo material = new SendableItemInfo(event.getNewMaterial().getItemTypeId(), event.getNewMaterial().getData());
         SendableItemInfo mask = new SendableItemInfo(usesMask ? sniperData.getReplaceId() : -1, sniperData.getReplaceData());
-        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(brush), sniperData.getBrushSize(), material, mask);
+        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(plugin.getBrushManager(), brush), sniperData.getBrushSize(), material, mask);
         sendBrushUpdatePayload(event.getSniper().getPlayer(), payload);
     }
 
@@ -184,7 +184,7 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
         boolean usesMask = (brush instanceof PerformBrush && ((PerformBrush) brush).getCurrentPerformer().isUsingReplaceMaterial());
         SendableItemInfo material = new SendableItemInfo(sniperData.getVoxelId(), sniperData.getData());
         SendableItemInfo mask = new SendableItemInfo(usesMask ? event.getNewMaterial().getItemTypeId() : -1, event.getNewMaterial().getData());
-        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(brush), sniperData.getBrushSize(), material, mask);
+        VoxelSniperPacket2BrushUpdateRequest payload = new VoxelSniperPacket2BrushUpdateRequest(BrushInfoFactory.createBrushInfo(plugin.getBrushManager(), brush), sniperData.getBrushSize(), material, mask);
         sendBrushUpdatePayload(event.getSniper().getPlayer(), payload);
     }
 
@@ -235,7 +235,7 @@ public class VoxelSniperGuiListener implements Listener, IVoxelMessageSubscriber
             if (payload.getBrushInfo() != null)
             {
                 IBrush brush = sniper.getBrush(null);
-                Class<? extends IBrush> brushClass = Brushes.getBrushForHandle(payload.getBrushInfo().getBrushCode());
+                Class<? extends IBrush> brushClass = plugin.getBrushManager().getBrushForHandle(payload.getBrushInfo().getBrushCode());
                 sniper.setBrush(null, brushClass);
                 SniperBrushChangedEvent event = new SniperBrushChangedEvent(sniper, null, brush, sniper.getBrush(null));
                 Bukkit.getPluginManager().callEvent(event);
