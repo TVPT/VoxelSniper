@@ -10,9 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
 /**
- * @author Voxel
- *         <p/>
- *         Would it be possible to make this a performer brush, so people can use the Inclusion and Exclusion performers? -psa
+ *
  */
 public class StampBrush extends Brush
 {
@@ -128,7 +126,7 @@ public class StampBrush extends Brush
     }
 
     /**
-     *
+     * @param cb
      */
     @SuppressWarnings("deprecation")
 	protected final void setBlock(final BlockWrapper cb)

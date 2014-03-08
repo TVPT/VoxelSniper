@@ -7,14 +7,15 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 /**
- * @author Featherblade <Featherbld@gmail.com>
+ *
  */
 public class UndoDelegate implements BlockChangeDelegate
 {
     private final World targetWorld;
     private Undo currentUndo;
         
-    public Undo getUndo() {
+    public Undo getUndo()
+    {
         final Undo pastUndo = currentUndo;
         currentUndo = new Undo();
         return pastUndo;

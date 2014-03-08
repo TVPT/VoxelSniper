@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
 /**
- * @author Gavjenks (from Gavjenks & Piotr'world 2D brush)
+ *
  */
 public class Rot3DBrush extends Brush
 {

@@ -7,7 +7,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 
 /**
- * @author Piotr <przerwap@gmail.com>
+ *
  */
 public class BiomeBrush extends Brush
 {

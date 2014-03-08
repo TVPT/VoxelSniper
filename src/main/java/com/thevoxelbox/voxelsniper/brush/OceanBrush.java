@@ -76,6 +76,7 @@ public class OceanBrush extends Brush
 
     /**
      * @param v
+     * @param undo
      */
     @SuppressWarnings("deprecation")
 	protected final void oceanator(final SnipeData v, final Undo undo)

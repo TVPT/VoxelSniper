@@ -18,8 +18,8 @@ public class NullableIntegerStringParser extends StringParser
 
     /**
      * Returns a {@link com.thevoxelbox.voxelsniper.jsap.NullableIntegerStringParser}.
-     * <p/>
-     * <p/>
+     *
+     *
      * Convenient access to the only instance returned by this method is available through {@link com.martiansoftware.jsap.JSAP#INTEGER_PARSER}.
      *
      * @return a {@link com.thevoxelbox.voxelsniper.jsap.NullableIntegerStringParser}.
