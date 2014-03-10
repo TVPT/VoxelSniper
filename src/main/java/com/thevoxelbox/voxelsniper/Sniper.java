@@ -428,6 +428,11 @@ public class Sniper
         SniperTool sniperTool = tools.get(currentToolId);
         IBrush brush = sniperTool.getCurrentBrush();
         player.sendMessage("Current Tool: " + ((currentToolId != null) ? currentToolId : "Default Tool"));
+        if (brush == null)
+        {
+            player.sendMessage("No brush selected.");
+            return;
+        }
         brush.info(sniperTool.getMessageHelper());
         if (brush instanceof Performer)
         {
