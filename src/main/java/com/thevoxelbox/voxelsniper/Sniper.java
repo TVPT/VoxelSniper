@@ -388,7 +388,7 @@ public class Sniper
         }
         else
         {
-            for (int x = 0; x < amount; x++)
+            for (int x = 0; x < amount && !undoList.isEmpty(); x++)
             {
                 Undo undo = this.undoList.pop();
                 if (undo != null)
