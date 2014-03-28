@@ -87,20 +87,31 @@ public class Sniper
         String toolId = getToolId(itemInHand);
         SniperTool sniperTool = tools.get(toolId);
 
-        if (sniperTool.getCurrentBrush() == null)
+        switch (action)
         {
-            player.sendMessage("No Brush selected.");
-            return true;
-        }
-
-        if (!player.hasPermission(sniperTool.getCurrentBrush().getPermissionNode()))
-        {
-            player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + sniperTool.getCurrentBrush().getPermissionNode() + "'");
-            return true;
+            case LEFT_CLICK_AIR:
+            case LEFT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR:
+            case RIGHT_CLICK_BLOCK:
+                break;
+            default:
+                return false;
         }
 
         if (sniperTool.hasToolAssigned(itemInHand))
         {
+            if (sniperTool.getCurrentBrush() == null)
+            {
+                player.sendMessage("No Brush selected.");
+                return true;
+            }
+
+            if (!player.hasPermission(sniperTool.getCurrentBrush().getPermissionNode()))
+            {
+                player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + sniperTool.getCurrentBrush().getPermissionNode() + "'");
+                return true;
+            }
+
             SnipeData snipeData = sniperTool.getSnipeData();
             if (player.isSneaking())
             {
