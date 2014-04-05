@@ -69,6 +69,7 @@ public abstract class VoxelCommand
     protected String[] hackTheArray(String[] args)
     {
         String[] returnValue = new String[args.length + 1];
+        returnValue[0] = "";
         for (int i = 0, argsLength = args.length; i < argsLength; i++)
         {
             String arg = args[i];
