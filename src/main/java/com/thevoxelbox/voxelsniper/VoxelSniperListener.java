@@ -67,7 +67,8 @@ public class VoxelSniperListener implements Listener
             return false;
         }
 
-        if (!hasPermission(found, player)) {
+        if (!hasPermission(found, player))
+        {
             player.sendMessage(ChatColor.RED + "Insufficient Permissions.");
             return true;
         }
@@ -77,7 +78,8 @@ public class VoxelSniperListener implements Listener
 
     private boolean hasPermission(final VoxelCommand command, final Player player)
     {
-        if (command == null || player == null) {
+        if (command == null || player == null)
+        {
             // Just a usual check for nulls
             return false;
         }
