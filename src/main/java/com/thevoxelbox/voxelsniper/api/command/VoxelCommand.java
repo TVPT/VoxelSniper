@@ -50,9 +50,9 @@ public abstract class VoxelCommand
         return this.identifier;
     }
 
-    public void setIdentifier(String ident)
+    public void setIdentifier(String identifier)
     {
-        this.identifier = ident;
+        this.identifier = identifier;
     }
 
     public boolean isIdentifier(String offered)
