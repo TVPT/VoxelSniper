@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.command;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,9 +11,9 @@ import org.bukkit.entity.Player;
 
 public class VoxelListCommand extends VoxelCommand
 {
-    public VoxelListCommand()
+    public VoxelListCommand(final VoxelSniper plugin)
     {
-        super("VoxelList");
+        super("VoxelList", plugin);
         setIdentifier("vl");
         setPermission("voxelsniper.sniper");
     }

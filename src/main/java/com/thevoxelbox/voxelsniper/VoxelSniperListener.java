@@ -29,23 +29,23 @@ public class VoxelSniperListener implements Listener
     {
         this.plugin = plugin;
         MetricsManager.setSnipeCounterInitTimeStamp(System.currentTimeMillis());
-        addCommand(new VoxelBrushCommand());
-        addCommand(new VoxelBrushToolCommand());
-        addCommand(new VoxelCenterCommand());
-        addCommand(new VoxelChunkCommand());
-        addCommand(new VoxelDefaultCommand());
-        addCommand(new VoxelGoToCommand());
-        addCommand(new VoxelHeightCommand());
-        addCommand(new VoxelInkCommand());
-        addCommand(new VoxelInkReplaceCommand());
-        addCommand(new VoxelListCommand());
-        addCommand(new VoxelPaintCommand());
-        addCommand(new VoxelPerformerCommand());
-        addCommand(new VoxelReplaceCommand());
-        addCommand(new VoxelSniperCommand());
-        addCommand(new VoxelUndoCommand());
-        addCommand(new VoxelUndoUserCommand());
-        addCommand(new VoxelVoxelCommand());
+        addCommand(new VoxelBrushCommand(plugin));
+        addCommand(new VoxelBrushToolCommand(plugin));
+        addCommand(new VoxelCenterCommand(plugin));
+        addCommand(new VoxelChunkCommand(plugin));
+        addCommand(new VoxelDefaultCommand(plugin));
+        addCommand(new VoxelGoToCommand(plugin));
+        addCommand(new VoxelHeightCommand(plugin));
+        addCommand(new VoxelInkCommand(plugin));
+        addCommand(new VoxelInkReplaceCommand(plugin));
+        addCommand(new VoxelListCommand(plugin));
+        addCommand(new VoxelPaintCommand(plugin));
+        addCommand(new VoxelPerformerCommand(plugin));
+        addCommand(new VoxelReplaceCommand(plugin));
+        addCommand(new VoxelSniperCommand(plugin));
+        addCommand(new VoxelUndoCommand(plugin));
+        addCommand(new VoxelUndoUserCommand(plugin));
+        addCommand(new VoxelVoxelCommand(plugin));
     }
 
     private void addCommand(final VoxelCommand command)

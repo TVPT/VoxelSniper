@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,9 +8,9 @@ import org.bukkit.entity.Player;
 
 public class VoxelUndoUserCommand extends VoxelCommand
 {
-    public VoxelUndoUserCommand()
+    public VoxelUndoUserCommand(final VoxelSniper plugin)
     {
-        super("VoxelUndoUser");
+        super("VoxelUndoUser", plugin);
         setIdentifier("uu");
         setPermission("voxelsniper.sniper");
     }

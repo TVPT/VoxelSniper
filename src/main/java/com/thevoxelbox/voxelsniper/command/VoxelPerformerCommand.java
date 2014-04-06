@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
@@ -11,9 +12,9 @@ import java.util.logging.Level;
 
 public class VoxelPerformerCommand extends VoxelCommand
 {
-    public VoxelPerformerCommand()
+    public VoxelPerformerCommand(final VoxelSniper plugin)
     {
-        super("VoxelPerformer");
+        super("VoxelPerformer", plugin);
         setIdentifier("p");
         setPermission("voxelsniper.sniper");
     }

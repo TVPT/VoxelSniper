@@ -2,15 +2,16 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class VoxelHeightCommand extends VoxelCommand
 {
-    public VoxelHeightCommand()
+    public VoxelHeightCommand(final VoxelSniper plugin)
     {
-        super("VoxelHeight");
+        super("VoxelHeight", plugin);
         setIdentifier("vh");
         setPermission("voxelsniper.sniper");
     }

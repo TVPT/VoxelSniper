@@ -1,15 +1,16 @@
 package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.PaintingWrapper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class VoxelPaintCommand extends VoxelCommand
 {
-    public VoxelPaintCommand()
+    public VoxelPaintCommand(final VoxelSniper plugin)
     {
-        super("VoxelPaint");
+        super("VoxelPaint", plugin);
         setIdentifier("paint");
         setPermission("voxelsniper.paint");
     }

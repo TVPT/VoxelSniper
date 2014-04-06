@@ -3,15 +3,16 @@ package com.thevoxelbox.voxelsniper.command;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class VoxelInkReplaceCommand extends VoxelCommand
 {
-    public VoxelInkReplaceCommand()
+    public VoxelInkReplaceCommand(final VoxelSniper plugin)
     {
-        super("VoxelInkReplace");
+        super("VoxelInkReplace", plugin);
         setIdentifier("vir");
         setPermission("voxelsniper.sniper");
     }

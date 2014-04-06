@@ -2,15 +2,16 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class VoxelBrushToolCommand extends VoxelCommand
 {
-    public VoxelBrushToolCommand()
+    public VoxelBrushToolCommand(final VoxelSniper plugin)
     {
-        super("VoxelBrushTool");
+        super("VoxelBrushTool", plugin);
         setIdentifier("btool");
         setPermission("voxelsniper.sniper");
     }

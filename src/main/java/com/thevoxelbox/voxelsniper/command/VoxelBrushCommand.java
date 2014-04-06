@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
@@ -14,9 +15,9 @@ import java.util.Arrays;
 
 public class VoxelBrushCommand extends VoxelCommand
 {
-    public VoxelBrushCommand()
+    public VoxelBrushCommand(final VoxelSniper plugin)
     {
-        super("VoxelBrush");
+        super("VoxelBrush", plugin);
         setIdentifier("b");
         setPermission("voxelsniper.sniper");
     }

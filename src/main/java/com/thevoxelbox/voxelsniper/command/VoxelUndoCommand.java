@@ -1,14 +1,15 @@
 package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.entity.Player;
 
 public class VoxelUndoCommand extends VoxelCommand
 {
-    public VoxelUndoCommand()
+    public VoxelUndoCommand(final VoxelSniper plugin)
     {
-        super("VoxelUndo");
+        super("VoxelUndo", plugin);
         setIdentifier("u");
         setPermission("voxelsniper.sniper");
     }

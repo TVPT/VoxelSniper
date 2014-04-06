@@ -17,10 +17,10 @@ import java.util.List;
 public class VoxelSniperCommand extends VoxelCommand
 {
 
-    public VoxelSniperCommand()
+    public VoxelSniperCommand(final VoxelSniper plugin)
     {
 
-        super("VoxelSniper");
+        super("VoxelSniper", plugin);
         setIdentifier("vs");
         setPermission("voxelsniper.sniper");
     }

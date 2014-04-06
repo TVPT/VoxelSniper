@@ -1,13 +1,14 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.entity.Player;
 
 public class VoxelChunkCommand extends VoxelCommand
 {
-    public VoxelChunkCommand()
+    public VoxelChunkCommand(final VoxelSniper plugin)
     {
-        super("VoxelChunk");
+        super("VoxelChunk", plugin);
         setIdentifier("vchunk");
     }
 

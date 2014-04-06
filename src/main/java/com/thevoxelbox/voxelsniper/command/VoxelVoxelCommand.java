@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.command;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,9 +12,9 @@ import org.bukkit.entity.Player;
 
 public class VoxelVoxelCommand extends VoxelCommand
 {
-    public VoxelVoxelCommand()
+    public VoxelVoxelCommand(final VoxelSniper plugin)
     {
-        super("VoxelVoxel");
+        super("VoxelVoxel", plugin);
         setIdentifier("v");
         setPermission("voxelsniper.sniper");
     }

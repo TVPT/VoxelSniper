@@ -2,15 +2,16 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class VoxelCenterCommand extends VoxelCommand
 {
-    public VoxelCenterCommand()
+    public VoxelCenterCommand(final VoxelSniper plugin)
     {
-        super("VoxelCenter");
+        super("VoxelCenter", plugin);
         setIdentifier("vc");
         setPermission("voxelsniper.sniper");
     }

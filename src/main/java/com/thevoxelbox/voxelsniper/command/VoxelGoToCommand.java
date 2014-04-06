@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -7,9 +8,9 @@ import org.bukkit.entity.Player;
 
 public class VoxelGoToCommand extends VoxelCommand
 {
-    public VoxelGoToCommand()
+    public VoxelGoToCommand(final VoxelSniper plugin)
     {
-        super("VoxelGoTo");
+        super("VoxelGoTo", plugin);
         setIdentifier("goto");
         setPermission("voxelsniper.sniper");
     }

@@ -12,10 +12,10 @@ public abstract class VoxelCommand
     private String identifier = "";
     protected final VoxelSniper plugin;
 
-    public VoxelCommand(String name)
+    public VoxelCommand(String name, final VoxelSniper plugin)
     {
         this.name = name;
-        this.plugin = VoxelSniper.getInstance();
+        this.plugin = plugin;
     }
 
     public abstract boolean onCommand(final Player player, final String[] args);
