@@ -205,6 +205,7 @@ public class VoxelSniper extends JavaPlugin
         brushManager.registerSniperBrush(EntityRemovalBrush.class, "er", "entityremoval");
         brushManager.registerSniperBrush(EraserBrush.class, "erase", "eraser");
         brushManager.registerSniperBrush(ErodeBrush.class, "e", "erode");
+        brushManager.registerSniperBrush(ErodeExtendedBrush.class, "ee", "erodeextended");
         brushManager.registerSniperBrush(ExtrudeBrush.class, "ex", "extrude");
         brushManager.registerSniperBrush(FillDownBrush.class, "fd", "filldown");
         brushManager.registerSniperBrush(FlatOceanBrush.class, "fo", "flatocean");
