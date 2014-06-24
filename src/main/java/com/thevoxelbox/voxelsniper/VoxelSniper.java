@@ -1,14 +1,11 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.google.common.base.Preconditions;
-import com.thevoxelbox.voxelpacket.server.VoxelPacketServer;
 import com.thevoxelbox.voxelsniper.brush.*;
-import com.thevoxelbox.voxelsniper.common.VoxelSniperCommon;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.xml.bind.JAXBContext;
@@ -162,15 +159,6 @@ public class VoxelSniper extends JavaPlugin
 
         Bukkit.getPluginManager().registerEvents(this.voxelSniperListener, this);
         getLogger().info("Registered Sniper Listener.");
-
-        Plugin voxelModPackPlugin = Bukkit.getPluginManager().getPlugin("VoxelModPackPlugin");
-        if (voxelModPackPlugin != null && voxelModPackPlugin.isEnabled())
-        {
-            VoxelSniperGuiListener voxelSniperGuiListener = new VoxelSniperGuiListener(this);
-            Bukkit.getPluginManager().registerEvents(voxelSniperGuiListener, this);
-            VoxelPacketServer.getInstance().subscribe(voxelSniperGuiListener, VoxelSniperCommon.BRUSH_UPDATE_REQUEST_CHANNEL_SHORTCODE);
-            getLogger().info("Registered VoxelSniperGUI Listener.");
-        }
     }
 
     /**

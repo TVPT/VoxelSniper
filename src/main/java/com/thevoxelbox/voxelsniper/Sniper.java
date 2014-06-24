@@ -22,8 +22,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.material.MaterialData;
 
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -31,7 +33,7 @@ import java.util.Map;
 public class Sniper
 {
     private VoxelSniper plugin;
-    private final Player player;
+    private final UUID player;
     private boolean enabled = true;
     private LinkedList<Undo> undoList = new LinkedList<Undo>();
     private Map<String, SniperTool> tools = Maps.newHashMap();
@@ -39,7 +41,7 @@ public class Sniper
     public Sniper(VoxelSniper plugin, Player player)
     {
         this.plugin = plugin;
-        this.player = player;
+        this.player = player.getUniqueId();
         SniperTool sniperTool = new SniperTool(this);
         sniperTool.assignAction(SnipeAction.ARROW, Material.ARROW);
         sniperTool.assignAction(SnipeAction.GUNPOWDER, Material.SULPHUR);
@@ -48,7 +50,7 @@ public class Sniper
 
     public String getCurrentToolId()
     {
-        return getToolId((player.getItemInHand() != null) ? player.getItemInHand().getType() : null);
+        return getToolId((getPlayer().getItemInHand() != null) ? getPlayer().getItemInHand().getType() : null);
     }
 
     public String getToolId(Material itemInHand)
@@ -70,7 +72,7 @@ public class Sniper
 
     public Player getPlayer()
     {
-        return player;
+        return Bukkit.getPlayer(player);
     }
 
     /**
@@ -102,18 +104,18 @@ public class Sniper
         {
             if (sniperTool.getCurrentBrush() == null)
             {
-                player.sendMessage("No Brush selected.");
+                getPlayer().sendMessage("No Brush selected.");
                 return true;
             }
 
-            if (!player.hasPermission(sniperTool.getCurrentBrush().getPermissionNode()))
+            if (!getPlayer().hasPermission(sniperTool.getCurrentBrush().getPermissionNode()))
             {
-                player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + sniperTool.getCurrentBrush().getPermissionNode() + "'");
+                getPlayer().sendMessage("You are not allowed to use this brush. You're missing the permission node '" + sniperTool.getCurrentBrush().getPermissionNode() + "'");
                 return true;
             }
 
             SnipeData snipeData = sniperTool.getSnipeData();
-            if (player.isSneaking())
+            if (getPlayer().isSneaking())
             {
                 Block targetBlock;
                 SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
@@ -128,7 +130,7 @@ public class Sniper
                         }
                         else
                         {
-                            RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
+                            RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(getPlayer(), getPlayer().getWorld(), snipeData.getRange()) : new RangeBlockHelper(getPlayer(), getPlayer().getWorld());
                             targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
                         }
 
@@ -184,7 +186,7 @@ public class Sniper
                         }
                         else
                         {
-                            RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
+                            RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(getPlayer(), getPlayer().getWorld(), snipeData.getRange()) : new RangeBlockHelper(getPlayer(), getPlayer().getWorld());
                             targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
                         }
 
@@ -257,19 +259,19 @@ public class Sniper
                     lastBlock = clickedBlock.getRelative(clickedFace);
                     if (lastBlock == null)
                     {
-                        player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+                        getPlayer().sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                         return true;
                     }
                 }
                 else
                 {
-                    RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
+                    RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(getPlayer(), getPlayer().getWorld(), snipeData.getRange()) : new RangeBlockHelper(getPlayer(), getPlayer().getWorld());
                     targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
                     lastBlock = rangeBlockHelper.getLastBlock();
 
                     if (targetBlock == null || lastBlock == null)
                     {
-                        player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+                        getPlayer().sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                         return true;
                     }
                 }
@@ -395,7 +397,7 @@ public class Sniper
         int sum = 0;
         if (this.undoList.isEmpty())
         {
-            this.player.sendMessage(ChatColor.GREEN + "There's nothing to undo.");
+            getPlayer().sendMessage(ChatColor.GREEN + "There's nothing to undo.");
         }
         else
         {
@@ -412,7 +414,7 @@ public class Sniper
                     break;
                 }
             }
-            this.player.sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
+            getPlayer().sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
         }
     }
 
@@ -438,10 +440,10 @@ public class Sniper
         String currentToolId = getCurrentToolId();
         SniperTool sniperTool = tools.get(currentToolId);
         IBrush brush = sniperTool.getCurrentBrush();
-        player.sendMessage("Current Tool: " + ((currentToolId != null) ? currentToolId : "Default Tool"));
+        getPlayer().sendMessage("Current Tool: " + ((currentToolId != null) ? currentToolId : "Default Tool"));
         if (brush == null)
         {
-            player.sendMessage("No brush selected.");
+            getPlayer().sendMessage("No brush selected.");
             return;
         }
         brush.info(sniperTool.getMessageHelper());
