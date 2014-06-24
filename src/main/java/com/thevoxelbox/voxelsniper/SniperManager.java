@@ -4,13 +4,14 @@ import com.google.common.collect.Maps;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
  */
 public class SniperManager
 {
-    private Map<Player, Sniper> sniperInstances = Maps.newHashMap();
+    private Map<UUID, Sniper> sniperInstances = Maps.newHashMap();
     private VoxelSniper plugin;
 
     public SniperManager(VoxelSniper plugin)
@@ -20,10 +21,10 @@ public class SniperManager
 
     public Sniper getSniperForPlayer(Player player)
     {
-        if (sniperInstances.get(player) == null)
+        if (sniperInstances.get(player.getUniqueId()) == null)
         {
-            sniperInstances.put(player, new Sniper(plugin, player));
+            sniperInstances.put(player.getUniqueId(), new Sniper(plugin, player));
         }
-        return sniperInstances.get(player);
+        return sniperInstances.get(player.getUniqueId());
     }
 }
