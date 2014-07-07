@@ -210,11 +210,17 @@ public class OverlayBrush extends PerformBrush
             }
             if (parameter.startsWith("d"))
             {
-                this.depth = Integer.parseInt(parameter.replace("d", ""));
-                v.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
-                if (this.depth < 1)
-                {
-                    this.depth = 1;
+                try {
+                    this.depth = Integer.parseInt(parameter.replace("d", ""));
+
+                    if (this.depth < 1)
+                    {
+                        this.depth = 1;
+                    }
+
+                    v.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+                } catch (NumberFormatException e)  {
+                    v.sendMessage(ChatColor.RED + "Depth isn't a number.");
                 }
             }
             else if (parameter.startsWith("all"))
