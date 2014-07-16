@@ -53,12 +53,14 @@ public class CometBrush extends Brush
             {
                 v.sendMessage("Parameters:");
                 v.sendMessage("balls [big|small]  -- Sets your ball size.");
+                return;
             }
             if (parameter.equalsIgnoreCase("balls"))
             {
                 if (i + 1 >= par.length)
                 {
                     v.sendMessage("The balls parameter expects a ball size after it.");
+                    return;
                 }
 
                 String newBallSize = par[++i];
@@ -75,6 +77,7 @@ public class CometBrush extends Brush
                 else
                 {
                     v.sendMessage("Unknown ball size.");
+                    return;
                 }
             }
         }
