@@ -42,12 +42,12 @@
         <snapshotRepository>
             <id>tvpt-repo</id>
             <name>TVPT Snapshot Repository</name>
-            <url>http://repo.thevoxelbox.com/content/repositories/snapshots</url>
+            <url>http://vault.voxelmodpack.com/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>tvpt-repo</id>
             <name>TVPT Release Repository</name>
-            <url>http://repo.thevoxelbox.com/content/repositories/releases</url>
+            <url>http://vault.voxelmodpack.com/content/repositories/releases</url>
         </repository>
     </distributionManagement>
 
@@ -62,7 +62,7 @@
         </repository>
         <repository>
             <id>tvpt-repo</id>
-            <url>http://repo.thevoxelbox.com/content/groups/public/</url>
+            <url>http://vault.voxelmodpack.com/content/groups/public/</url>
         </repository>
     </repositories>
 
