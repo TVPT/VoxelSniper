@@ -37,6 +37,7 @@ public class pExcludeMat extends vPerformer
         w = v.getWorld();
         id = v.getVoxelId();
         excludeList = v.getVoxelList();
+        p = v.owner().getPlayer().getName();
     }
 
     @SuppressWarnings("deprecation")
@@ -46,7 +47,9 @@ public class pExcludeMat extends vPerformer
         if (!excludeList.contains(new int[] {b.getTypeId(), b.getData()}))
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(id);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }
