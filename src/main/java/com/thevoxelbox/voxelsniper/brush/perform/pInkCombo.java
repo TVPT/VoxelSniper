@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -30,6 +31,7 @@ public class pInkCombo extends vPerformer
         d = v.getData();
         dr = v.getReplaceData();
         ir = v.getReplaceId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -48,7 +50,9 @@ public class pInkCombo extends vPerformer
         if (b.getTypeId() == ir && b.getData() == dr)
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setData(d);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
