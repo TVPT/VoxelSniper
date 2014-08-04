@@ -25,6 +25,7 @@ public class pMaterialNoPhys extends vPerformer
     {
         w = v.getWorld();
         i = v.getVoxelId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -41,7 +42,9 @@ public class pMaterialNoPhys extends vPerformer
         if (b.getTypeId() != i)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(i, false);
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }
