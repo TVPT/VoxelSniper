@@ -28,6 +28,7 @@ public class pComboNoUndo extends vPerformer
         w = v.getWorld();
         i = v.getVoxelId();
         d = v.getData();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -44,7 +45,9 @@ public class pComboNoUndo extends vPerformer
     {
         if (b.getTypeId() != i || b.getData() != d)
         {
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeIdAndData(i, d, true);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }
