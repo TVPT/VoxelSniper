@@ -36,6 +36,7 @@ public class pComboNoPhys extends vPerformer
         w = v.getWorld();
         i = v.getVoxelId();
         d = v.getData();
+        p = v.owner().getPlayer().getName();
     }
 
     @SuppressWarnings("deprecation")
@@ -43,6 +44,8 @@ public class pComboNoPhys extends vPerformer
     public void perform(Block b)
     {
         h.put(b);
+	CoreProtectUtils.logBlockRemove(b, p);
         b.setTypeIdAndData(i, d, false);
+	CoreProtectUtils.logBlockPlace(b, p);
     }
 }
