@@ -28,6 +28,7 @@ public class pMatInk extends vPerformer
         w = v.getWorld();
         i = v.getVoxelId();
         dr = v.getReplaceData();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -45,7 +46,9 @@ public class pMatInk extends vPerformer
         if (b.getData() == dr)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(i, true);
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
