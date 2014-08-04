@@ -24,6 +24,7 @@ public class pInkInkNoPhys extends vPerformer
         w = v.getWorld();
         d = v.getData();
         dr = v.getReplaceData();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -41,7 +42,9 @@ public class pInkInkNoPhys extends vPerformer
         if (b.getData() == dr)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setData(d, false);
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
