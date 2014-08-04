@@ -30,6 +30,7 @@ public class pComboMatNoPhys extends vPerformer
         d = v.getData();
         i = v.getVoxelId();
         ir = v.getReplaceId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -48,7 +49,9 @@ public class pComboMatNoPhys extends vPerformer
         if (b.getTypeId() == ir)
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeIdAndData(i, d, false);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
