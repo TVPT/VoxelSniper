@@ -18,6 +18,7 @@ public abstract class vPerformer
     public String name = "Performer";
     protected Undo h;
     protected World w;
+    protected String p;
 
     public abstract void info(Message vm);
 
