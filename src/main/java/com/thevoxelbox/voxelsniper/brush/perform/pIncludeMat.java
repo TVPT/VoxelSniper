@@ -37,6 +37,7 @@ public class pIncludeMat extends vPerformer
         w = v.getWorld();
         id = v.getVoxelId();
         includeList = v.getVoxelList();
+        p = v.owner().getPlayer().getName();
     }
 
     @SuppressWarnings("deprecation")
@@ -46,7 +47,9 @@ public class pIncludeMat extends vPerformer
         if (includeList.contains(new int[]{b.getTypeId(), b.getData()}))
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(id);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }
