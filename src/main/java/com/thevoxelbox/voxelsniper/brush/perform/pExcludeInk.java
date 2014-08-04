@@ -6,6 +6,7 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
