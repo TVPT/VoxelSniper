@@ -40,6 +40,7 @@ public class pIncludeCombo extends vPerformer
         id = v.getVoxelId();
         data = v.getData();
         includeList = v.getVoxelList();
+        p = v.owner().getPlayer().getName();
     }
 
     @SuppressWarnings("deprecation")
@@ -49,7 +50,9 @@ public class pIncludeCombo extends vPerformer
         if (includeList.contains(new int[] {b.getTypeId(), b.getData()}))
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeIdAndData(id, data, true);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }
