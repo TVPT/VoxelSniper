@@ -28,6 +28,7 @@ public class pMatMat extends vPerformer
         w = v.getWorld();
         i = v.getVoxelId();
         r = v.getReplaceId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -45,7 +46,9 @@ public class pMatMat extends vPerformer
         if (b.getTypeId() == r)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(i);
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
