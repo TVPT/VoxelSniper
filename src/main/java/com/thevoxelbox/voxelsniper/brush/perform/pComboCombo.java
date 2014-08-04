@@ -32,6 +32,7 @@ public class pComboCombo extends vPerformer
         dr = v.getReplaceData();
         i = v.getVoxelId();
         ir = v.getReplaceId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -51,7 +52,9 @@ public class pComboCombo extends vPerformer
         if (b.getTypeId() == ir && b.getData() == dr)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeIdAndData(i, d, true);
+            CoreProtectUtils.logBlockPlace(b, p)
         }
     }
 
