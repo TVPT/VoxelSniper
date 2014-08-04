@@ -28,6 +28,7 @@ public class pInkMat extends vPerformer
         w = v.getWorld();
         d = v.getData();
         ir = v.getReplaceId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -45,7 +46,9 @@ public class pInkMat extends vPerformer
         if (b.getTypeId() == ir)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setData(d, true);
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
