@@ -30,6 +30,7 @@ public class pComboInkNoPhys extends vPerformer
         d = v.getData();
         dr = v.getReplaceData();
         i = v.getVoxelId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -48,7 +49,9 @@ public class pComboInkNoPhys extends vPerformer
         if (b.getData() == dr)
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeIdAndData(i, d, false);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
