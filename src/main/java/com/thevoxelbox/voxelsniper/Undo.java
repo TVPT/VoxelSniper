@@ -132,20 +132,26 @@ public class Undo
             {
                 continue;
             }
+            CoreProtectUtils.logBlockRemove(blockState.getBlock(), name);
             blockState.update(true, false);
             updateSpecialBlocks(blockState);
+            CoreProtectUtils.logBlockPlace(blockState, name);
         }
 
         for (BlockState blockState : falloff)
         {
+            CoreProtectUtils.logBlockRemove(blockState.getBlock(), name);
             blockState.update(true, false);
             updateSpecialBlocks(blockState);
+            CoreProtectUtils.logBlockPlace(blockState, name);
         }
 
         for (BlockState blockState : dropdown)
         {
+            CoreProtectUtils.logBlockRemove(blockState.getBlock(), name);
             blockState.update(true, false);
             updateSpecialBlocks(blockState);
+            CoreProtectUtils.logBlockPlace(blockState, name);
         }
     }
 
