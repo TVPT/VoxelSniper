@@ -147,6 +147,10 @@ public class VoxelSniper extends JavaPlugin
     {
         VoxelSniper.instance = this;
 
+    	CoreProtectUtils.init();
+    	if (CoreProtectUtils.CoreProtectExists)
+    		getLogger().info("CoreProtect found, enabling block logging.");
+
         registerBrushes();
         getLogger().info("Registered " + brushManager.registeredSniperBrushes() + " Sniper Brushes with " + brushManager.registeredSniperBrushHandles() + " handles.");
 
