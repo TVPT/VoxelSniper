@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -105,7 +107,9 @@ public class OceanBrush extends Brush
                     if (!block.getType().equals(Material.AIR))
                     {
                         undo.put(block);
+                        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
                         block.setType(Material.AIR);
+                	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
                     }
                 }
 
@@ -120,7 +124,9 @@ public class OceanBrush extends Brush
                         {
                             undo.put(block);
                         }
+                        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
                         block.setType(Material.STATIONARY_WATER);
+                	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
                     }
                 }
 
@@ -131,7 +137,9 @@ public class OceanBrush extends Brush
                     if (block.getTypeId() != v.getVoxelId())
                     {
                         undo.put(block);
+                        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
                         block.setTypeId(v.getVoxelId());
+                	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
                     }
                 }
             }
