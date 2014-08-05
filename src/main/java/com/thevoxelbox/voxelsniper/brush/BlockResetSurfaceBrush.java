@@ -82,7 +82,7 @@ public class BlockResetSurfaceBrush extends Brush
                     {
                         block = world.getBlockAt(this.getTargetBlock().getX() + x + 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
-                        resetBlock(block, oldData);
+                        resetBlock(block, oldData, v);
                         airFound = true;
                     }
 
@@ -90,7 +90,7 @@ public class BlockResetSurfaceBrush extends Brush
                     {
                         block = world.getBlockAt(this.getTargetBlock().getX() + x - 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
-                        resetBlock(block, oldData);
+                        resetBlock(block, oldData, v);
                         airFound = true;
                     }
 
@@ -98,7 +98,7 @@ public class BlockResetSurfaceBrush extends Brush
                     {
                         block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y + 1, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
-                        resetBlock(block, oldData);
+                        resetBlock(block, oldData, v);
                         airFound = true;
                     }
 
@@ -106,7 +106,7 @@ public class BlockResetSurfaceBrush extends Brush
                     {
                         block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y - 1, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
-                        resetBlock(block, oldData);
+                        resetBlock(block, oldData, v);
                         airFound = true;
                     }
 
@@ -114,7 +114,7 @@ public class BlockResetSurfaceBrush extends Brush
                     {
                         block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z + 1);
                         final byte oldData = block.getData();
-                        resetBlock(block, oldData);
+                        resetBlock(block, oldData, v);
                         airFound = true;
                     }
 
@@ -122,7 +122,7 @@ public class BlockResetSurfaceBrush extends Brush
                     {
                         block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z - 1);
                         final byte oldData = block.getData();
-                        resetBlock(block, oldData);
+                        resetBlock(block, oldData, v);
                         airFound = true;
                     }
 
@@ -130,7 +130,7 @@ public class BlockResetSurfaceBrush extends Brush
                     {
                         block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
                         final byte oldData = block.getData();
-                        resetBlock(block, oldData);
+                        resetBlock(block, oldData, v);
                     }
                 }
             }
@@ -138,7 +138,7 @@ public class BlockResetSurfaceBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void resetBlock(Block block, final byte oldData)
+	private void resetBlock(Block block, final byte oldData, SnipeData v)
     {
         CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
         block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
