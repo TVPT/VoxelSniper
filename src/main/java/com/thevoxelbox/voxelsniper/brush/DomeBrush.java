@@ -6,6 +6,7 @@ import java.util.Set;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
@@ -91,7 +92,9 @@ public class DomeBrush extends Brush
             if (currentTargetBlock.getTypeId() != v.getVoxelId() || currentTargetBlock.getData() != v.getData())
             {
                 undo.put(currentTargetBlock);
+                CoreProtectUtils.logBlockRemove(currentTargetBlock, v.owner().getPlayer().getName());
                 currentTargetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
+        	    CoreProtectUtils.logBlockPlace(currentTargetBlock, v.owner().getPlayer().getName());
             }
         }
 
