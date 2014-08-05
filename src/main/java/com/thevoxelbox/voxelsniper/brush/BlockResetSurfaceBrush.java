@@ -1,172 +1,153 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
 /**
- * This brush only looks for solid blocks, and then changes those plus any air blocks touching them. If it works, this brush should be faster than the original
- * blockPositionY an amount proportional to the volume of a snipe selection area / the number of blocks touching air in the selection. This is because every solid block
- * surrounded blockPositionY others should take equally long to check and not change as it would take MC to change them and then check and find no lighting to update. For
- * air blocks surrounded blockPositionY other air blocks, this brush saves about 80-100 checks blockPositionY not updating them or their lighting. And for air blocks touching solids,
- * this brush is slower, because it replaces the air once per solid block it is touching. I assume on average this is about 2 blocks. So every air block
- * touching a solid negates one air block floating in air. Thus, for selections that have more air blocks surrounded blockPositionY air than air blocks touching solids,
- * this brush will be faster, which is almost always the case, especially for undeveloped terrain and for larger brush sizes (unlike the original brush, this
- * should only slow down blockPositionY the square of the brush size, not the cube of the brush size). For typical terrain, blockPositionY my calculations, overall speed increase is
- * about a factor of 5-6 for a size 20 brush. For a complicated city or ship, etc., this may be only a factor of about 2. In a hypothetical worst case scenario
- * of a 3d checkerboard of stone and air every other block, this brush should only be about 1.5x slower than the original brush. Savings increase for larger
- * brushes.
+ * http://www.voxelwiki.com/minecraft/Voxelsniper#The_CANYONATOR
  *
- * @author GavJenks
+ * @author Voxel
  */
-public class BlockResetSurfaceBrush extends Brush
+public class CanyonBrush extends Brush
 {
-    private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
-
-    static
-    {
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN_POST);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WALL_SIGN);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.CHEST);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FURNACE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.BURNING_FURNACE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_WIRE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_OFF);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_ON);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOODEN_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOOD_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR_BLOCK);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.AIR);
-    }
+    private static final int SHIFT_LEVEL_MIN = 10;
+    private static final int SHIFT_LEVEL_MAX = 60;
+    private int yLevel = 10;
 
     /**
      *
      */
-    public BlockResetSurfaceBrush()
+    public CanyonBrush()
     {
-        this.setName("Block Reset Brush Surface Only");
+        this.setName("Canyon");
     }
 
+    /**
+     * @param chunk
+     * @param undo
+     */
     @SuppressWarnings("deprecation")
-	private void applyBrush(final SnipeData v)
+	protected final void canyon(final Chunk chunk, final Undo undo, final SnipeData v)
     {
-        final World world = this.getWorld();
-
-        for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
+        for (int x = 0; x < CHUNK_SIZE; x++)
         {
-            for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
+            for (int z = 0; z < CHUNK_SIZE; z++)
             {
-                for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
+                int currentYLevel = this.yLevel;
+
+                for (int y = 63; y < this.getWorld().getMaxHeight(); y++)
                 {
+                    final Block block = chunk.getBlock(x, y, z);
+                    final Block currentYLevelBlock = chunk.getBlock(x, currentYLevel, z);
 
-                    Block block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                    if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(block.getType()))
-                    {
-                        continue;
-                    }
+                    undo.put(block);
+                    undo.put(currentYLevelBlock);
 
-                    boolean airFound = false;
+                    CoreProtectUtils.logBlockRemove(currentYLevelBlock, v.owner().getPlayer().getName());
+                    currentYLevelBlock.setTypeId(currentYLevelBlock.getTypeId(), false);
+            	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
+                    CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
+                    block.setType(Material.AIR);
+            	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
 
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x + 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x + 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData, v);
-                        airFound = true;
-                    }
+                    currentYLevel++;
+                }
 
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x - 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x - 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData, v);
-                        airFound = true;
-                    }
+                final Block block = chunk.getBlock(x, 0, z);
+                undo.put(block);
+                CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
+                block.setTypeId(Material.BEDROCK.getId());
+        	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
 
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y + 1, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y + 1, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData, v);
-                        airFound = true;
-                    }
-
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y - 1, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y - 1, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData, v);
-                        airFound = true;
-                    }
-
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z + 1).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z + 1);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData, v);
-                        airFound = true;
-                    }
-
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z - 1).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z - 1);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData, v);
-                        airFound = true;
-                    }
-
-                    if (airFound)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData, v);
-                    }
+                for (int y = 1; y < SHIFT_LEVEL_MIN; y++)
+                {
+                    final Block currentBlock = chunk.getBlock(x, y, z);
+                    undo.put(currentBlock);
+                    CoreProtectUtils.logBlockRemove(currentBlock, v.owner().getPlayer().getName());
+                    currentBlock.setType(Material.STONE);
+            	    CoreProtectUtils.logBlockPlace(currentBlock, v.owner().getPlayer().getName());
                 }
             }
         }
     }
 
-    @SuppressWarnings("deprecation")
-	private void resetBlock(Block block, final byte oldData, SnipeData v)
+    @Override
+    protected void arrow(final SnipeData v)
     {
-        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
-        block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
-        block.setTypeIdAndData(block.getTypeId(), oldData, true);
-	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
+        final Undo undo = new Undo();
+
+        canyon(getTargetBlock().getChunk(), undo, v);
+
+        v.owner().storeUndo(undo);
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
+    protected void powder(final SnipeData v)
     {
-        applyBrush(v);
+        final Undo undo = new Undo();
+
+        Chunk targetChunk = getTargetBlock().getChunk();
+        for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++)
+        {
+            for (int z = targetChunk.getX() - 1; z <= targetChunk.getX() + 1; z++)
+            {
+                canyon(getWorld().getChunkAt(x, z), undo, v);
+            }
+        }
+
+        v.owner().storeUndo(undo);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        applyBrush(v);
-    }
-
-    @Override
-    public final void info(final Message vm)
+    public void info(final Message vm)
     {
         vm.brushName(this.getName());
+        vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+    }
+
+    @Override
+    public final void parameters(final String[] par, final SnipeData v)
+    {
+        if (par[1].equalsIgnoreCase("info"))
+        {
+            v.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
+        }
+        if (par[1].startsWith("y"))
+        {
+            int _i = Integer.parseInt(par[1].replace("y", ""));
+            if (_i < SHIFT_LEVEL_MIN)
+            {
+                _i = SHIFT_LEVEL_MIN;
+            }
+            else if (_i > SHIFT_LEVEL_MAX)
+            {
+                _i = SHIFT_LEVEL_MAX;
+            }
+            this.yLevel = _i;
+            v.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+        }
+    }
+
+    protected final int getYLevel()
+    {
+        return yLevel;
+    }
+
+    protected final void setYLevel(int yLevel)
+    {
+        this.yLevel = yLevel;
     }
 
     @Override
     public String getPermissionNode()
     {
-        return "voxelsniper.brush.blockresetsurface";
+        return "voxelsniper.brush.canyon";
     }
 }
