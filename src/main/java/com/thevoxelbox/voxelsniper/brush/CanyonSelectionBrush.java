@@ -54,7 +54,7 @@ public class CanyonSelectionBrush extends CanyonBrush
         {
             for (int z = lowZ; z <= highZ; z++)
             {
-                canyon(getWorld().getChunkAt(x, z), undo);
+                canyon(getWorld().getChunkAt(x, z), undo, v);
             }
         }
 
