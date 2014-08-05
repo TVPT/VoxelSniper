@@ -6,6 +6,7 @@ import java.util.Random;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -55,7 +56,7 @@ public class GenerateTreeBrush extends Brush
 
     // Branch Creation based on direction chosen from the parameters passed.
     @SuppressWarnings("deprecation")
-	private void branchCreate(final int xDirection, final int zDirection)
+	private void branchCreate(final int xDirection, final int zDirection, final SnipeData v)
     {
 
         // Sets branch origin.
@@ -94,7 +95,9 @@ public class GenerateTreeBrush extends Brush
             }
 
             // Creates a branch block.
+            CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX, blockPositionY, blockPositionZ), v.owner().getPlayer().getName());
             this.clampY(blockPositionX, blockPositionY, blockPositionZ).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+    	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX, blockPositionY, blockPositionZ), v.owner().getPlayer().getName());
             this.branchBlocks.add(this.clampY(blockPositionX, blockPositionY, blockPositionZ));
         }
 
@@ -105,7 +108,7 @@ public class GenerateTreeBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void leafNodeCreate()
+	private void leafNodeCreate(final SnipeData v)
     {
         // Generates the node size.
         final int nodeRadius = this.randGenerator.nextInt(this.nodeMax - this.nodeMin + 1) + this.nodeMin;
@@ -139,7 +142,9 @@ public class GenerateTreeBrush extends Brush
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z));
                                 }
                                 // Creates block.
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z), v.owner().getPlayer().getName());
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
@@ -150,7 +155,9 @@ public class GenerateTreeBrush extends Brush
                                 {
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z));
                                 }
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z), v.owner().getPlayer().getName());
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
@@ -161,7 +168,9 @@ public class GenerateTreeBrush extends Brush
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z));
                                 }
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z), v.owner().getPlayer().getName());
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
@@ -172,7 +181,9 @@ public class GenerateTreeBrush extends Brush
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z));
                                 }
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z), v.owner().getPlayer().getName());
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
@@ -183,7 +194,9 @@ public class GenerateTreeBrush extends Brush
                                 {
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z));
                                 }
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z), v.owner().getPlayer().getName());
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
@@ -194,7 +207,9 @@ public class GenerateTreeBrush extends Brush
                                 {
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z));
                                 }
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z), v.owner().getPlayer().getName());
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
@@ -205,7 +220,9 @@ public class GenerateTreeBrush extends Brush
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z));
                                 }
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z), v.owner().getPlayer().getName());
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
@@ -216,7 +233,9 @@ public class GenerateTreeBrush extends Brush
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z));
                                 }
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z), v.owner().getPlayer().getName());
                             }
                         }
                     }
@@ -232,7 +251,7 @@ public class GenerateTreeBrush extends Brush
      * @param zDirection
      */
     @SuppressWarnings("deprecation")
-	private void rootCreate(final int xDirection, final int zDirection)
+	private void rootCreate(final int xDirection, final int zDirection, final SnipeData v)
     {
         // Sets Origin.
         final int originX = blockPositionX;
@@ -270,7 +289,9 @@ public class GenerateTreeBrush extends Brush
                     this.undo.put(this.clampY(blockPositionX, blockPositionY, blockPositionZ));
 
                     // Place log block.
+                    CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX, blockPositionY, blockPositionZ), v.owner().getPlayer().getName());
                     this.clampY(blockPositionX, blockPositionY, blockPositionZ).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+            	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX, blockPositionY, blockPositionZ), v.owner().getPlayer().getName());
                 }
                 else
                 {
@@ -323,23 +344,23 @@ public class GenerateTreeBrush extends Brush
         }
     }
 
-    private void rootGen()
+    private void rootGen(final SnipeData v)
     {
         // Quadrant 1
-        this.rootCreate(1, 1);
+        this.rootCreate(1, 1, v);
 
         // Quadrant 2
-        this.rootCreate(-1, 1);
+        this.rootCreate(-1, 1, v);
 
         // Quadrant 3
-        this.rootCreate(1, -1);
+        this.rootCreate(1, -1, v);
 
         // Quadrant 4
-        this.rootCreate(-1, -1);
+        this.rootCreate(-1, -1, v);
     }
 
     @SuppressWarnings("deprecation")
-	private void trunkCreate()
+	private void trunkCreate(final SnipeData v)
     {
         // Creates true circle discs of the set size using the wood type selected.
         final double bSquared = Math.pow(this.thickness + 0.5, 2);
@@ -361,7 +382,9 @@ public class GenerateTreeBrush extends Brush
                             this.undo.put(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ + z));
                         }
                         // Creates block.
+                        CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ + z), v.owner().getPlayer().getName());
                         this.clampY(blockPositionX + x, blockPositionY, blockPositionZ + z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ + z), v.owner().getPlayer().getName());
                     }
                     if (this.getWorld().getBlockTypeIdAt(blockPositionX + x, blockPositionY, blockPositionZ - z) == Material.AIR.getId())
                     {
@@ -369,7 +392,9 @@ public class GenerateTreeBrush extends Brush
                         {
                             this.undo.put(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ - z));
                         }
+                        CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ - z), v.owner().getPlayer().getName());
                         this.clampY(blockPositionX + x, blockPositionY, blockPositionZ - z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ - z), v.owner().getPlayer().getName());
                     }
                     if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY, blockPositionZ + z) == Material.AIR.getId())
                     {
@@ -377,7 +402,9 @@ public class GenerateTreeBrush extends Brush
                         {
                             this.undo.put(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ + z));
                         }
+                        CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ + z), v.owner().getPlayer().getName());
                         this.clampY(blockPositionX - x, blockPositionY, blockPositionZ + z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ + z), v.owner().getPlayer().getName());
                     }
                     if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY, blockPositionZ - z) == Material.AIR.getId())
                     {
@@ -385,7 +412,9 @@ public class GenerateTreeBrush extends Brush
                         {
                             this.undo.put(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ - z));
                         }
+                        CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ - z), v.owner().getPlayer().getName());
                         this.clampY(blockPositionX - x, blockPositionY, blockPositionZ - z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ - z), v.owner().getPlayer().getName());
                     }
                 }
             }
@@ -396,7 +425,7 @@ public class GenerateTreeBrush extends Brush
      * 
      * Code Concerning Trunk Generation
      */
-    private void trunkGen()
+    private void trunkGen(final SnipeData v)
     {
         // Sets Origin
         final int originX = blockPositionX;
@@ -449,17 +478,17 @@ public class GenerateTreeBrush extends Brush
             }
 
             // Creates trunk section
-            this.trunkCreate();
+            this.trunkCreate(v);
 
             // Mos up for next section
             blockPositionY = blockPositionY + 1;
         }
 
         // Generates branchs at top of trunk for each quadrant.
-        this.branchCreate(1, 1);
-        this.branchCreate(-1, 1);
-        this.branchCreate(1, -1);
-        this.branchCreate(-1, -1);
+        this.branchCreate(1, 1, v);
+        this.branchCreate(-1, 1, v);
+        this.branchCreate(1, -1, v);
+        this.branchCreate(-1, -1, v);
 
         // Reset Origin for next trunk.
         blockPositionX = originX;
@@ -511,17 +540,17 @@ public class GenerateTreeBrush extends Brush
                 }
 
                 // Creates a trunk section
-                this.trunkCreate();
+                this.trunkCreate(v);
 
                 // Mos up for next section
                 blockPositionY = blockPositionY + 1;
             }
 
             // Generates branchs at top of trunk for each quadrant.
-            this.branchCreate(1, 1);
-            this.branchCreate(-1, 1);
-            this.branchCreate(1, -1);
-            this.branchCreate(-1, -1);
+            this.branchCreate(1, 1, v);
+            this.branchCreate(-1, 1, v);
+            this.branchCreate(1, -1, v);
+            this.branchCreate(-1, -1, v);
         }
     }
 
@@ -538,10 +567,10 @@ public class GenerateTreeBrush extends Brush
         blockPositionZ = this.getTargetBlock().getZ();
 
         // Generates the roots.
-        this.rootGen();
+        this.rootGen(v);
 
         // Generates the trunk, which also generates branches.
-        this.trunkGen();
+        this.trunkGen(v);
 
         // Each branch block was saved in an array. This is now fed through an array.
         // This array takes each branch block and constructs a leaf node around it.
@@ -550,7 +579,7 @@ public class GenerateTreeBrush extends Brush
             blockPositionX = block.getX();
             blockPositionY = block.getY();
             blockPositionZ = block.getZ();
-            this.leafNodeCreate();
+            this.leafNodeCreate(v);
         }
 
         // Ends the undo function and mos on.
