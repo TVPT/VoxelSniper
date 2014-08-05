@@ -55,7 +55,7 @@ public class pComboCombo extends vPerformer
             h.put(b);
             CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeIdAndData(i, d, true);
-            CoreProtectUtils.logBlockPlace(b, p)
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
