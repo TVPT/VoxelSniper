@@ -5,6 +5,7 @@ import java.util.HashSet;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -129,26 +130,30 @@ public class StampBrush extends Brush
      * @param cb
      */
     @SuppressWarnings("deprecation")
-	protected final void setBlock(final BlockWrapper cb)
+	protected final void setBlock(final BlockWrapper cb, final SnipeData v)
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         this.undo.put(block);
+        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
         block.setTypeId(cb.id);
         block.setData(cb.d);
+	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
     }
 
     /**
      * @param cb
      */
     @SuppressWarnings("deprecation")
-	protected final void setBlockFill(final BlockWrapper cb)
+	protected final void setBlockFill(final BlockWrapper cb, final SnipeData v)
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         if (block.getTypeId() == 0)
         {
             this.undo.put(block);
+            CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
             block.setTypeId(cb.id);
             block.setData(cb.d);
+    	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
         }
     }
 
@@ -171,15 +176,15 @@ public class StampBrush extends Brush
         {
             for (final BlockWrapper block : this.solid)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
         }
         else
@@ -200,16 +205,16 @@ public class StampBrush extends Brush
                 else
                 {
                     this.solid.add(block);
-                    this.setBlock(block);
+                    this.setBlock(block, v);
                 }
             }
             for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             this.sorted = true;
         }
@@ -229,15 +234,15 @@ public class StampBrush extends Brush
         {
             for (final BlockWrapper block : this.solid)
             {
-                this.setBlockFill(block);
+                this.setBlockFill(block, v);
             }
             for (final BlockWrapper block : this.drop)
             {
-                this.setBlockFill(block);
+                this.setBlockFill(block, v);
             }
             for (final BlockWrapper block : this.fall)
             {
-                this.setBlockFill(block);
+                this.setBlockFill(block, v);
             }
         }
         else
@@ -258,16 +263,16 @@ public class StampBrush extends Brush
                 else if (block.id != 0)
                 {
                     this.solid.add(block);
-                    this.setBlockFill(block);
+                    this.setBlockFill(block, v);
                 }
             }
             for (final BlockWrapper block : this.drop)
             {
-                this.setBlockFill(block);
+                this.setBlockFill(block, v);
             }
             for (final BlockWrapper block : this.fall)
             {
-                this.setBlockFill(block);
+                this.setBlockFill(block, v);
             }
             this.sorted = true;
         }
@@ -287,15 +292,15 @@ public class StampBrush extends Brush
         {
             for (final BlockWrapper block : this.solid)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
         }
         else
@@ -316,16 +321,16 @@ public class StampBrush extends Brush
                 else if (block.id != 0)
                 {
                     this.solid.add(block);
-                    this.setBlock(block);
+                    this.setBlock(block, v);
                 }
             }
             for (final BlockWrapper block : this.drop)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             for (final BlockWrapper block : this.fall)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
             this.sorted = true;
         }
