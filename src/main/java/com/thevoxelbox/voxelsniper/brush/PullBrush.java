@@ -148,7 +148,7 @@ public class PullBrush extends Brush
 	    CoreProtectUtils.logBlockPlace(currentBlock, v.owner().getPlayer().getName());
         for (int y = block.getY(); y > currentBlock.getY(); y--)
         {
-            this.setBlockIdAt(block.getZ(), block.getX(), y, 0);
+            this.setBlockIdAt(block.getZ(), block.getX(), y, 0, v);
         }
         // }
     }
