@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -105,7 +107,9 @@ public class ShellSetBrush extends Brush
                     if (currentBlock.getTypeId() != v.getVoxelId())
                     {
                         undo.put(currentBlock);
+                        CoreProtectUtils.logBlockRemove(currentBlock, v.owner().getPlayer().getName());
                         currentBlock.setTypeId(v.getVoxelId());
+                	    CoreProtectUtils.logBlockPlace(currentBlock, v.owner().getPlayer().getName());
                     }
                 }
                 v.owner().storeUndo(undo);
