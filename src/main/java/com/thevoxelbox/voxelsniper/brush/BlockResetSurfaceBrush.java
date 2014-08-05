@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -139,8 +140,10 @@ public class BlockResetSurfaceBrush extends Brush
     @SuppressWarnings("deprecation")
 	private void resetBlock(Block block, final byte oldData)
     {
+        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
         block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
         block.setTypeIdAndData(block.getTypeId(), oldData, true);
+	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
     }
 
     @Override
