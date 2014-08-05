@@ -11,6 +11,8 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
 
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -123,7 +125,7 @@ public class Undo
     /**
      * Set the blockstates of all recorded blocks back to the state when they were inserted.
      */
-    public void undo()
+    public void undo(String name)
     {
 
         for (BlockState blockState : all)
@@ -132,20 +134,26 @@ public class Undo
             {
                 continue;
             }
+            CoreProtectUtils.logBlockRemove(blockState.getBlock(), name);
             blockState.update(true, false);
             updateSpecialBlocks(blockState);
+            CoreProtectUtils.logBlockPlace(blockState, name);
         }
 
         for (BlockState blockState : falloff)
         {
+            CoreProtectUtils.logBlockRemove(blockState.getBlock(), name);
             blockState.update(true, false);
             updateSpecialBlocks(blockState);
+            CoreProtectUtils.logBlockPlace(blockState, name);
         }
 
         for (BlockState blockState : dropdown)
         {
+            CoreProtectUtils.logBlockRemove(blockState.getBlock(), name);
             blockState.update(true, false);
             updateSpecialBlocks(blockState);
+            CoreProtectUtils.logBlockPlace(blockState, name);
         }
     }
 

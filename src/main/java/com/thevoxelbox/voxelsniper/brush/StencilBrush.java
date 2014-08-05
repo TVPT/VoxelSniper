@@ -12,6 +12,7 @@ import com.google.common.io.Files;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -102,7 +103,9 @@ public class StencilBrush extends Brush
                             for (int j = 0; j < numLoops; j++)
                             {
                                 undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                 currX++;
                                 if (currX == this.x - this.xRef)
                                 {
@@ -119,7 +122,9 @@ public class StencilBrush extends Brush
                         else
                         {
                             undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                            CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                             this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData((in.readByte() + 128), (byte) (in.readByte() + 128), false);
+                    	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                             currX++;
                             if (currX == this.x - this.xRef)
                             {
@@ -148,7 +153,9 @@ public class StencilBrush extends Brush
                                 if (id != 0 && this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).getTypeId() == 0)
                                 {
                                     undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                    CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                     this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
+                            	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                 }
                                 currX++;
                                 if (currX == this.x - this.xRef)
@@ -171,7 +178,9 @@ public class StencilBrush extends Brush
                             {
                                 undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
                                 // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                             }
                             currX++;
                             if (currX == this.x - this.xRef)
@@ -201,7 +210,9 @@ public class StencilBrush extends Brush
                                 if (id != 0)
                                 {
                                     undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                    CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                     this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
+                            	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                 }
                                 currX++;
                                 if (currX == this.x - this.xRef)
@@ -223,7 +234,9 @@ public class StencilBrush extends Brush
                             if (id != 0)
                             {
                                 undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ), v.owner().getPlayer().getName());
                             }
                             currX++;
                             if (currX == this.x)

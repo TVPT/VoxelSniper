@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -25,6 +26,7 @@ public class pMaterialNoPhys extends vPerformer
     {
         w = v.getWorld();
         i = v.getVoxelId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -41,7 +43,9 @@ public class pMaterialNoPhys extends vPerformer
         if (b.getTypeId() != i)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(i, false);
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }

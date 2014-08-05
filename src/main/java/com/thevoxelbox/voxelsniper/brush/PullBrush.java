@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -105,40 +107,48 @@ public class PullBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void setBlock(final BlockWrapper block)
+	private void setBlock(final BlockWrapper block, final SnipeData v)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
         if (this.getBlockIdAt(block.getX(), block.getY() - 1, block.getZ()) == 0)
         {
+            CoreProtectUtils.logBlockRemove(currentBlock, v.owner().getPlayer().getName());
             currentBlock.setTypeId(block.getId());
             currentBlock.setData(block.getD());
+    	    CoreProtectUtils.logBlockPlace(currentBlock, v.owner().getPlayer().getName());
             for (int y = block.getY(); y < currentBlock.getY(); y++)
             {
-                this.setBlockIdAt(block.getZ(), block.getX(), y, 0);
+                this.setBlockIdAt(block.getZ(), block.getX(), y, 0, v);
             }
         }
         else
         {
+            CoreProtectUtils.logBlockRemove(currentBlock, v.owner().getPlayer().getName());
             currentBlock.setTypeId(block.getId());
             currentBlock.setData(block.getD());
+    	    CoreProtectUtils.logBlockPlace(currentBlock, v.owner().getPlayer().getName());
             for (int y = block.getY() - 1; y < currentBlock.getY(); y++)
             {
                 final Block current = this.clampY(block.getX(), y, block.getZ());
+                CoreProtectUtils.logBlockRemove(current, v.owner().getPlayer().getName());
                 current.setTypeId(block.getId());
                 current.setData(block.getD());
+        	    CoreProtectUtils.logBlockPlace(current, v.owner().getPlayer().getName());
             }
         }
     }
 
     @SuppressWarnings("deprecation")
-	private void setBlockDown(final BlockWrapper block)
+	private void setBlockDown(final BlockWrapper block, final SnipeData v)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
+        CoreProtectUtils.logBlockRemove(currentBlock, v.owner().getPlayer().getName());
         currentBlock.setTypeId(block.getId());
         currentBlock.setData(block.getD());
+	    CoreProtectUtils.logBlockPlace(currentBlock, v.owner().getPlayer().getName());
         for (int y = block.getY(); y > currentBlock.getY(); y--)
         {
-            this.setBlockIdAt(block.getZ(), block.getX(), y, 0);
+            this.setBlockIdAt(block.getZ(), block.getX(), y, 0, v);
         }
         // }
     }
@@ -153,14 +163,14 @@ public class PullBrush extends Brush
         {
             for (final BlockWrapper block : this.surface)
             {
-                this.setBlock(block);
+                this.setBlock(block, v);
             }
         }
         else if (this.vh < 0)
         {
             for (final BlockWrapper block : this.surface)
             {
-                this.setBlockDown(block);
+                this.setBlockDown(block, v);
             }
         }
     }
@@ -216,7 +226,9 @@ public class PullBrush extends Brush
                             lastStr = (int) (this.vh * str);
                             lastY = actualY + lastStr;
 
+                            CoreProtectUtils.logBlockRemove(this.clampY(actualX, lastY, actualZ), v.owner().getPlayer().getName());
                             this.clampY(actualX, lastY, actualZ).setTypeId(this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ));
+                    	    CoreProtectUtils.logBlockPlace(this.clampY(actualX, lastY, actualZ), v.owner().getPlayer().getName());
 
                             if (str == 1)
                             {
@@ -234,7 +246,9 @@ public class PullBrush extends Brush
                                 id = this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ);
                                 for (int i = newY; i < lastY; i++)
                                 {
+                                    CoreProtectUtils.logBlockRemove(this.clampY(actualX, i, actualZ), v.owner().getPlayer().getName());
                                     this.clampY(actualX, i, actualZ).setTypeId(id);
+                            	    CoreProtectUtils.logBlockPlace(this.clampY(actualX, i, actualZ), v.owner().getPlayer().getName());
                                 }
                                 lastY = newY;
                                 actualY--;
@@ -262,7 +276,9 @@ public class PullBrush extends Brush
                         {
                             final int actualY = this.getTargetBlock().getY() + y;
                             lastY = actualY + (int) (this.vh * this.getStr(volume / brushSizeSquared));
+                            CoreProtectUtils.logBlockRemove(this.clampY(actualX, lastY, actualZ), v.owner().getPlayer().getName());
                             this.clampY(actualX, lastY, actualZ).setTypeId(this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ));
+                    	    CoreProtectUtils.logBlockPlace(this.clampY(actualX, lastY, actualZ), v.owner().getPlayer().getName());
                             y++;
                             volume = (xSquared + Math.pow(y, 2) + zSquared);
                             while (volume <= brushSizeSquared)
@@ -271,7 +287,9 @@ public class PullBrush extends Brush
                                 final int blockId = this.getWorld().getBlockTypeIdAt(actualX, this.getTargetBlock().getY() + y, actualZ);
                                 for (int i = blockY; i < lastY; i++)
                                 {
+                                    CoreProtectUtils.logBlockRemove(this.clampY(actualX, i, actualZ), v.owner().getPlayer().getName());
                                     this.clampY(actualX, i, actualZ).setTypeId(blockId);
+                            	    CoreProtectUtils.logBlockPlace(this.clampY(actualX, i, actualZ), v.owner().getPlayer().getName());
                                 }
                                 lastY = blockY;
                                 y++;

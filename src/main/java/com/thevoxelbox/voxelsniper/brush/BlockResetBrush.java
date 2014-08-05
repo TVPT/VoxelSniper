@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -58,9 +59,11 @@ public class BlockResetBrush extends Brush
                         continue;
                     }
 
+            	    CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
                     final byte oldData = block.getData();
                     block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
                     block.setTypeIdAndData(block.getTypeId(), oldData, true);
+            	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
                 }
             }
         }

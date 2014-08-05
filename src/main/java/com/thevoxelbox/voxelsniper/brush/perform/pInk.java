@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -26,6 +27,7 @@ public class pInk extends vPerformer
     {
         w = v.getWorld();
         d = v.getData();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -40,6 +42,8 @@ public class pInk extends vPerformer
     public void perform(Block b)
     {
         h.put(b);
+	CoreProtectUtils.logBlockRemove(b, p);
         b.setData(d);
+	CoreProtectUtils.logBlockPlace(b, p);
     }
 }

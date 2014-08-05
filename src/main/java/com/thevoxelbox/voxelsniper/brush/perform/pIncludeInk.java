@@ -6,6 +6,7 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -37,6 +38,7 @@ public class pIncludeInk extends vPerformer
         w = v.getWorld();
         data = v.getData();
         includeList = v.getVoxelList();
+        p = v.owner().getPlayer().getName();
     }
 
     @SuppressWarnings("deprecation")
@@ -46,7 +48,9 @@ public class pIncludeInk extends vPerformer
         if (includeList.contains(new int[]{b.getTypeId(), b.getData()}))
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setData(data);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }

@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -146,6 +148,10 @@ public class VoxelSniper extends JavaPlugin
     public void onEnable()
     {
         VoxelSniper.instance = this;
+
+    	CoreProtectUtils.init();
+    	if (CoreProtectUtils.CoreProtectExists)
+    		getLogger().info("CoreProtect found, enabling block logging.");
 
         registerBrushes();
         getLogger().info("Registered " + brushManager.registeredSniperBrushes() + " Sniper Brushes with " + brushManager.registeredSniperBrushHandles() + " handles.");

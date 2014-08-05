@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,7 +26,7 @@ public class SetRedstoneFlipBrush extends Brush
         this.setName("Set Redstone Flip");
     }
 
-    private boolean set(final Block bl)
+    private boolean set(final Block bl, final SnipeData v)
     {
         if (this.block == null)
         {
@@ -47,7 +49,7 @@ public class SetRedstoneFlipBrush extends Brush
                 {
                     for (int z = lowZ; z <= highZ; z++)
                     {
-                        this.perform(this.clampY(x, y, z));
+                        this.perform(this.clampY(x, y, z), v);
                     }
                 }
             }
@@ -57,7 +59,7 @@ public class SetRedstoneFlipBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void perform(final Block bl)
+	private void perform(final Block bl, final SnipeData v)
     {
         if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF)
         {
@@ -66,12 +68,16 @@ public class SetRedstoneFlipBrush extends Brush
                 if ((bl.getData() % 4) == 1)
                 {
                     this.undo.put(bl);
+                    CoreProtectUtils.logBlockRemove(bl, v.owner().getPlayer().getName());
                     bl.setData((byte) (bl.getData() + 2));
+            	    CoreProtectUtils.logBlockPlace(bl, v.owner().getPlayer().getName());
                 }
                 else if ((bl.getData() % 4) == 3)
                 {
                     this.undo.put(bl);
+                    CoreProtectUtils.logBlockRemove(bl, v.owner().getPlayer().getName());
                     bl.setData((byte) (bl.getData() - 2));
+            	    CoreProtectUtils.logBlockPlace(bl, v.owner().getPlayer().getName());
                 }
             }
             else
@@ -93,7 +99,7 @@ public class SetRedstoneFlipBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        if (this.set(this.getTargetBlock()))
+        if (this.set(this.getTargetBlock(), v))
         {
             v.sendMessage(ChatColor.GRAY + "Point one");
         }
@@ -106,7 +112,7 @@ public class SetRedstoneFlipBrush extends Brush
     @Override
     protected final void powder(final SnipeData v)
     {
-        if (this.set(this.getLastBlock()))
+        if (this.set(this.getLastBlock(), v))
         {
             v.sendMessage(ChatColor.GRAY + "Point one");
         }

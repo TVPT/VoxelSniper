@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -36,6 +37,7 @@ public class pCombo extends vPerformer
         w = v.getWorld();
         i = v.getVoxelId();
         d = v.getData();
+        p = v.owner().getPlayer().getName();
     }
 
     @SuppressWarnings("deprecation")
@@ -43,6 +45,8 @@ public class pCombo extends vPerformer
     public void perform(Block b)
     {
         h.put(b);
+        CoreProtectUtils.logBlockRemove(b, p);
         b.setTypeIdAndData(i, d, true);
+	CoreProtectUtils.logBlockPlace(b, p);
     }
 }

@@ -406,7 +406,7 @@ public class Sniper
                 Undo undo = this.undoList.pop();
                 if (undo != null)
                 {
-                    undo.undo();
+                    undo.undo(Bukkit.getPlayer(this.player).getName());
                     sum += undo.getSize();
                 }
                 else

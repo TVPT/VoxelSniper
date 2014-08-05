@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -87,7 +88,7 @@ public class Rot3DBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void getMatrix()
+	private void getMatrix(final SnipeData v)
     { // only need to do once. But y needs to change + sphere
         final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
         this.brushSize = (this.bSize * 2) + 1;
@@ -114,7 +115,9 @@ public class Rot3DBrush extends Brush
                     {
                         final Block block = this.clampY(sx, sz, sz);
                         this.snap[x][y][z] = new BlockWrapper(block);
+                        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
                         block.setTypeId(0);
+                	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
                         sz++;
                     }
                 }
@@ -180,7 +183,7 @@ public class Rot3DBrush extends Brush
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + (int) newxyX, this.getTargetBlock().getY() + (int) newyzY, this.getTargetBlock().getZ() + (int) newyzZ, block.getId(), block.getData());
+                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + (int) newxyX, this.getTargetBlock().getY() + (int) newyzY, this.getTargetBlock().getZ() + (int) newyzZ, block.getId(), block.getData(), v);
                     }
                 }
             }
@@ -233,7 +236,7 @@ public class Rot3DBrush extends Brush
                                 winnerData = bData;
                             }
 
-                            this.setBlockIdAndDataAt(fx, fy, fz, winner, winnerData);
+                            this.setBlockIdAndDataAt(fx, fy, fz, winner, winnerData, v);
                         }
                     }
                 }
@@ -250,7 +253,7 @@ public class Rot3DBrush extends Brush
         switch (this.mode)
         {
             case 0:
-                this.getMatrix();
+                this.getMatrix(v);
                 this.rotate(v);
                 break;
 
@@ -268,7 +271,7 @@ public class Rot3DBrush extends Brush
         switch (this.mode)
         {
             case 0:
-                this.getMatrix();
+                this.getMatrix(v);
                 this.rotate(v);
                 break;
 

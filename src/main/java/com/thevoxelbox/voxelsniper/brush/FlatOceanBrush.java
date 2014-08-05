@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -25,7 +27,7 @@ public class FlatOceanBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void flatOcean(final Chunk chunk)
+	private void flatOcean(final Chunk chunk, final SnipeData v)
     {
         for (int x = 0; x < CHUNK_SIZE; x++)
         {
@@ -39,11 +41,15 @@ public class FlatOceanBrush extends Brush
                     }
                     else if (y <= this.waterLevel)
                     {
+                        CoreProtectUtils.logBlockRemove(chunk.getBlock(x, y, z), v.owner().getPlayer().getName());
                         chunk.getBlock(x, y, z).setTypeId(Material.STATIONARY_WATER.getId(), false);
+                	    CoreProtectUtils.logBlockPlace(chunk.getBlock(x, y, z), v.owner().getPlayer().getName());
                     }
                     else
                     {
+                        CoreProtectUtils.logBlockRemove(chunk.getBlock(x, y, z), v.owner().getPlayer().getName());
                         chunk.getBlock(x, y, z).setTypeId(Material.AIR.getId(), false);
+                	    CoreProtectUtils.logBlockPlace(chunk.getBlock(x, y, z), v.owner().getPlayer().getName());
                     }
                 }
             }
@@ -53,21 +59,21 @@ public class FlatOceanBrush extends Brush
     @Override
     protected final void arrow(final SnipeData v)
     {
-        this.flatOcean(this.getWorld().getChunkAt(this.getTargetBlock()));
+        this.flatOcean(this.getWorld().getChunkAt(this.getTargetBlock()), v);
     }
 
     @Override
     protected final void powder(final SnipeData v)
     {
-        this.flatOcean(this.getWorld().getChunkAt(this.getTargetBlock()));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() + CHUNK_SIZE, 1, this.getTargetBlock().getZ())));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() + CHUNK_SIZE, 1, this.getTargetBlock().getZ() + CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX(), 1, this.getTargetBlock().getZ() + CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() - CHUNK_SIZE, 1, this.getTargetBlock().getZ() + CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() - CHUNK_SIZE, 1, this.getTargetBlock().getZ())));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() - CHUNK_SIZE, 1, this.getTargetBlock().getZ() - CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX(), 1, this.getTargetBlock().getZ() - CHUNK_SIZE)));
-        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() + CHUNK_SIZE, 1, this.getTargetBlock().getZ() - CHUNK_SIZE)));
+        this.flatOcean(this.getWorld().getChunkAt(this.getTargetBlock()), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() + CHUNK_SIZE, 1, this.getTargetBlock().getZ())), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() + CHUNK_SIZE, 1, this.getTargetBlock().getZ() + CHUNK_SIZE)), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX(), 1, this.getTargetBlock().getZ() + CHUNK_SIZE)), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() - CHUNK_SIZE, 1, this.getTargetBlock().getZ() + CHUNK_SIZE)), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() - CHUNK_SIZE, 1, this.getTargetBlock().getZ())), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() - CHUNK_SIZE, 1, this.getTargetBlock().getZ() - CHUNK_SIZE)), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX(), 1, this.getTargetBlock().getZ() - CHUNK_SIZE)), v);
+        this.flatOcean(this.getWorld().getChunkAt(this.clampY(this.getTargetBlock().getX() + CHUNK_SIZE, 1, this.getTargetBlock().getZ() - CHUNK_SIZE)), v);
     }
 
     @Override

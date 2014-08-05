@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -27,7 +28,7 @@ public class Rot2DBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void getMatrix()
+	private void getMatrix(final SnipeData v)
     {
         this.brushSize = (this.bSize * 2) + 1;
 
@@ -51,7 +52,9 @@ public class Rot2DBrush extends Brush
                     {
                         final Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
                         this.snap[x][z][y] = new BlockWrapper(block);
+                        CoreProtectUtils.logBlockRemove(block, v.owner().getPlayer().getName());
                         block.setTypeId(0);
+                	    CoreProtectUtils.logBlockPlace(block, v.owner().getPlayer().getName());
                         sy++;
                     }
                 }
@@ -96,7 +99,7 @@ public class Rot2DBrush extends Brush
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + (int) newX, this.getTargetBlock().getY() + yy, this.getTargetBlock().getZ() + (int) newZ, block.getId(), block.getData());
+                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + (int) newX, this.getTargetBlock().getY() + yy, this.getTargetBlock().getZ() + (int) newZ, block.getId(), block.getData(), v);
                     }
                 }
             }
@@ -149,7 +152,7 @@ public class Rot2DBrush extends Brush
                                 winnerData = bData;
                             }
 
-                            this.setBlockIdAndDataAt(fx, fy, fz, winner, winnerData);
+                            this.setBlockIdAndDataAt(fx, fy, fz, winner, winnerData, v);
                         }
                     }
                 }
@@ -165,7 +168,7 @@ public class Rot2DBrush extends Brush
         switch (this.mode)
         {
             case 0:
-                this.getMatrix();
+                this.getMatrix(v);
                 this.rotate(v);
                 break;
 
@@ -183,7 +186,7 @@ public class Rot2DBrush extends Brush
         switch (this.mode)
         {
             case 0:
-                this.getMatrix();
+                this.getMatrix(v);
                 this.rotate(v);
                 break;
 

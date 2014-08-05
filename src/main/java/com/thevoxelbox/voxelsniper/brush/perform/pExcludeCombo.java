@@ -6,6 +6,7 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -40,6 +41,7 @@ public class pExcludeCombo extends vPerformer
         id = v.getVoxelId();
         data = v.getData();
         excludeList = v.getVoxelList();
+        p = v.owner().getPlayer().getName();
     }
 
     @SuppressWarnings("deprecation")
@@ -49,7 +51,9 @@ public class pExcludeCombo extends vPerformer
         if (!excludeList.contains(new int[] {b.getTypeId(), b.getData()}))
         {
             h.put(b);
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeIdAndData(id, data, true);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }

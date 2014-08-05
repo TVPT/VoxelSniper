@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -26,6 +27,7 @@ public class pNoUndo extends vPerformer
     {
         w = v.getWorld();
         i = v.getVoxelId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -41,7 +43,9 @@ public class pNoUndo extends vPerformer
     {
         if (b.getTypeId() != i)
         {
+	    CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(i);
+	    CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 }

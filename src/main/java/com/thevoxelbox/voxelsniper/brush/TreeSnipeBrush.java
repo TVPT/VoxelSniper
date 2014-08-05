@@ -4,7 +4,9 @@ import com.google.common.base.Objects;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 import com.thevoxelbox.voxelsniper.util.UndoDelegate;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
@@ -40,7 +42,9 @@ public class TreeSnipeBrush extends Brush
         blockBelow.setType(Material.GRASS);
         this.getWorld().generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
         Undo undo = undoDelegate.getUndo();
+        CoreProtectUtils.logBlockRemove(blockBelow, v.owner().getPlayer().getName());
         blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
+	    CoreProtectUtils.logBlockPlace(blockBelow, v.owner().getPlayer().getName());
         undo.put(blockBelow);
         v.owner().storeUndo(undo);
     }

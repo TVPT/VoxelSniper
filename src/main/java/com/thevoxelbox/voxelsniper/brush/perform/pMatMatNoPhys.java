@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
 
 import org.bukkit.block.Block;
 
@@ -28,6 +29,7 @@ public class pMatMatNoPhys extends vPerformer
         w = v.getWorld();
         i = v.getVoxelId();
         r = v.getReplaceId();
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
@@ -45,7 +47,9 @@ public class pMatMatNoPhys extends vPerformer
         if (b.getTypeId() == r)
         {
             h.put(b);
+            CoreProtectUtils.logBlockRemove(b, p);
             b.setTypeId(i, false);
+            CoreProtectUtils.logBlockPlace(b, p);
         }
     }
 
