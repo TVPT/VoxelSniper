@@ -6,6 +6,8 @@ import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -262,9 +264,11 @@ public abstract class Brush implements IBrush
      * @param blockWrapper Block data wrapper
      */
     @Deprecated
-    protected final void setBlock(BlockWrapper blockWrapper)
+    protected final void setBlock(BlockWrapper blockWrapper, SnipeData v)
     {
+	    CoreProtectUtils.logBlockRemove(this.getWorld().getBlockAt(blockWrapper.getX(), blockWrapper.getY(), blockWrapper.getZ()), v.owner().getPlayer().getName());
         this.getWorld().getBlockAt(blockWrapper.getX(), blockWrapper.getY(), blockWrapper.getZ()).setTypeId(blockWrapper.getId());
+	    CoreProtectUtils.logBlockPlace(this.getWorld().getBlockAt(blockWrapper.getX(), blockWrapper.getY(), blockWrapper.getZ()), v.owner().getPlayer().getName());
     }
 
     /**
@@ -276,9 +280,11 @@ public abstract class Brush implements IBrush
      * @param id The id the block will be set to
      */
     @SuppressWarnings("deprecation")
-	protected final void setBlockIdAt(int z, int x, int y, int id)
+	protected final void setBlockIdAt(int z, int x, int y, int id, SnipeData v)
     {
+	    CoreProtectUtils.logBlockRemove(this.getWorld().getBlockAt(x, y, z), v.owner().getPlayer().getName());
         this.getWorld().getBlockAt(x, y, z).setTypeId(id);
+	    CoreProtectUtils.logBlockPlace(this.getWorld().getBlockAt(x, y, z), v.owner().getPlayer().getName());
     }
 
     /**
@@ -291,8 +297,10 @@ public abstract class Brush implements IBrush
      * @param data The data value the block will be set to
      */
     @SuppressWarnings("deprecation")
-	protected final void setBlockIdAndDataAt(int x, int y, int z, int id, byte data)
+	protected final void setBlockIdAndDataAt(int x, int y, int z, int id, byte data, SnipeData v)
     {
+	    CoreProtectUtils.logBlockRemove(this.getWorld().getBlockAt(x, y, z), v.owner().getPlayer().getName());
         this.getWorld().getBlockAt(x, y, z).setTypeIdAndData(id, data, true);
+	    CoreProtectUtils.logBlockPlace(this.getWorld().getBlockAt(x, y, z), v.owner().getPlayer().getName());
     }
 }
