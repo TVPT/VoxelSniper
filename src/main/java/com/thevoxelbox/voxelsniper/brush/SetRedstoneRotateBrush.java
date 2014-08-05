@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,7 +25,7 @@ public class SetRedstoneRotateBrush extends Brush
         this.setName("Set Redstone Rotate");
     }
 
-    private boolean set(final Block bl)
+    private boolean set(final Block bl, final SnipeData v)
     {
         if (this.block == null)
         {
@@ -46,7 +48,7 @@ public class SetRedstoneRotateBrush extends Brush
                 {
                     for (int z = lowZ; z <= highZ; z++)
                     {
-                        this.perform(this.clampY(x, y, z));
+                        this.perform(this.clampY(x, y, z), v);
                     }
                 }
             }
@@ -56,19 +58,21 @@ public class SetRedstoneRotateBrush extends Brush
     }
 
     @SuppressWarnings("deprecation")
-	private void perform(final Block bl)
+	private void perform(final Block bl, final SnipeData v)
     {
         if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF)
         {
             this.undo.put(bl);
+            CoreProtectUtils.logBlockRemove(bl, v.owner().getPlayer().getName());
             bl.setData((((bl.getData() % 4) + 1 < 5) ? (byte) (bl.getData() + 1) : (byte) (bl.getData() - 4)));
+    	    CoreProtectUtils.logBlockPlace(bl, v.owner().getPlayer().getName());
         }
     }
 
     @Override
     protected final void arrow(final SnipeData v)
     {
-        if (this.set(this.getTargetBlock()))
+        if (this.set(this.getTargetBlock(), v))
         {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
@@ -81,7 +85,7 @@ public class SetRedstoneRotateBrush extends Brush
     @Override
     protected final void powder(final SnipeData v)
     {
-        if (this.set(this.getLastBlock()))
+        if (this.set(this.getLastBlock(), v))
         {
             v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
         }
