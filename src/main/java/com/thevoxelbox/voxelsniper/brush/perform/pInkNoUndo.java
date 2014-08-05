@@ -27,7 +27,7 @@ public class pInkNoUndo extends vPerformer
     {
         w = v.getWorld();
         d = v.getData();
-        p = v.owner().getPlayer().getName()
+        p = v.owner().getPlayer().getName();
     }
 
     @Override
