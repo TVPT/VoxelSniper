@@ -11,6 +11,8 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.jsap.HelpJSAP;
 import com.thevoxelbox.voxelsniper.jsap.NullableIntegerStringParser;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -105,7 +107,9 @@ public class ErodeBrush extends Brush
         for (final BlockWrapper blockWrapper : blockChangeTracker.getAll())
         {
             undo.put(blockWrapper.getBlock());
+            CoreProtectUtils.logBlockRemove(blockWrapper.getBlock(), v.owner().getPlayer().getName());
             blockWrapper.getBlock().setTypeIdAndData(blockWrapper.getMaterial().getId(), blockWrapper.getData(), true);
+    	    CoreProtectUtils.logBlockPlace(blockWrapper.getBlock(), v.owner().getPlayer().getName());
         }
 
         v.owner().storeUndo(undo);
