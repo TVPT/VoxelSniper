@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -119,7 +121,9 @@ public class ExtrudeBrush extends Brush
         {
             undo.put(b2);
             this.setBlockIdAt(b2.getZ(), b2.getX(), b2.getY(), this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()));
+            CoreProtectUtils.logBlockRemove(this.clampY(b2.getX(), b2.getY(), b2.getZ()), v.owner().getPlayer().getName());
             this.clampY(b2.getX(), b2.getY(), b2.getZ()).setData(this.clampY(b1.getX(), b1.getY(), b1.getZ()).getData());
+            CoreProtectUtils.logBlockPlace(this.clampY(b2.getX(), b2.getY(), b2.getZ()), v.owner().getPlayer().getName());
         }
 
         return undo;
