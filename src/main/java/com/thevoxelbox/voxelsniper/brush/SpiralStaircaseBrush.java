@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.CoreProtectUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -330,7 +332,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY + i, 44);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z).setData(v.getData());
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
@@ -350,7 +354,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY + i, 43);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z).setData(v.getData());
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair"))
                             {
@@ -359,7 +365,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY + i, 53);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z).setData((byte) 0);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
@@ -368,7 +376,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY + i, 67);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z).setData((byte) 0);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             break;
                         default:
@@ -379,7 +389,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY + i, 53);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z).setData((byte) (spiral[x][i][z] - 2));
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
@@ -388,7 +400,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY + i, 67);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z).setData((byte) (spiral[x][i][z] - 2));
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             break;
                     }
@@ -694,7 +708,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY - i, 44);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z).setData(v.getData());
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair") || this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
@@ -713,7 +729,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY - i, 43);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z).setData(v.getData());
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("woodstair"))
                             {
@@ -722,7 +740,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() - x, blockPositionY + i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY - i, 53);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z).setData((byte) 0);
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
@@ -731,6 +751,7 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY - i, 67);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z).setData((byte) 0);
                             }
                             break;
@@ -742,7 +763,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY - i, 53);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z).setData((byte) (spiral[x][i][z] - 2));
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             else if (this.stairtype.equalsIgnoreCase("cobblestair"))
                             {
@@ -751,7 +774,9 @@ public class SpiralStaircaseBrush extends Brush
                                     undo.put(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z));
                                 }
                                 this.setBlockIdAt(blockPositionZ - v.getBrushSize() + z, blockPositionX - v.getBrushSize() + x, blockPositionY - i, 67);
+                                CoreProtectUtils.logBlockRemove(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                                 this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z).setData((byte) (spiral[x][i][z] - 2));
+                        	    CoreProtectUtils.logBlockPlace(this.clampY(blockPositionX - v.getBrushSize() + x, blockPositionY - i, blockPositionZ - v.getBrushSize() + z), v.owner().getPlayer().getName());
                             }
                             break;
                     }
