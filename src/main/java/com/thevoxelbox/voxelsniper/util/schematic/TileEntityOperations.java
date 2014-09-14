@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.Note;
@@ -75,9 +74,9 @@ public class TileEntityOperations
             int slot = 0;
             for (ItemStack i: dropper.getInventory().getContents())
             {
-                slot++;
                 if (i == null)
                 {
+                    slot++;
                     continue;
                 }
                 Map<String, Tag<?>> item = new HashMap<String, Tag<?>>();
@@ -86,6 +85,7 @@ public class TileEntityOperations
                 item.put("Count", new ByteTag("Count", (byte) i.getAmount()));
                 item.put("Slot", new ByteTag("Slot", (byte) slot));
                 items.add(new CompoundTag("item", new CompoundMap(item)));
+                slot++;
             }
             tile.put("Items", new ListTag<CompoundTag>("Items", CompoundTag.class, items));
         }
@@ -98,9 +98,9 @@ public class TileEntityOperations
             int slot = 0;
             for (ItemStack i: dropper.getInventory().getContents())
             {
-                slot++;
                 if (i == null)
                 {
+                    slot++;
                     continue;
                 }
                 Map<String, Tag<?>> item = new HashMap<String, Tag<?>>();
@@ -109,6 +109,7 @@ public class TileEntityOperations
                 item.put("Count", new ByteTag("Count", (byte) i.getAmount()));
                 item.put("Slot", new ByteTag("Slot", (byte) slot));
                 items.add(new CompoundTag("item", new CompoundMap(item)));
+                slot++;
             }
             tile.put("Items", new ListTag<CompoundTag>("Items", CompoundTag.class, items));
 
@@ -160,9 +161,9 @@ public class TileEntityOperations
             int slot = 0;
             for (ItemStack i: stand.getInventory().getContents())
             {
-                slot++;
                 if (i == null)
                 {
+                    slot++;
                     continue;
                 }
                 Map<String, Tag<?>> item = new HashMap<String, Tag<?>>();
@@ -171,6 +172,7 @@ public class TileEntityOperations
                 item.put("Count", new ByteTag("Count", (byte) i.getAmount()));
                 item.put("Slot", new ByteTag("Slot", (byte) slot));
                 items.add(new CompoundTag("item", new CompoundMap(item)));
+                slot++;
             }
             tile.put("Items", new ListTag<CompoundTag>("Items", CompoundTag.class, items));
             tile.put("BrewTime", new IntTag("BrewTime", stand.getBrewingTime()));
@@ -183,9 +185,9 @@ public class TileEntityOperations
             int slot = 0;
             for (ItemStack i: chest.getInventory().getContents())
             {
-                slot++;
                 if (i == null)
                 {
+                    slot++;
                     continue;
                 }
                 Map<String, Tag<?>> item = new HashMap<String, Tag<?>>();
@@ -194,6 +196,7 @@ public class TileEntityOperations
                 item.put("Count", new ByteTag("Count", (byte) i.getAmount()));
                 item.put("Slot", new ByteTag("Slot", (byte) slot));
                 items.add(new CompoundTag("item", new CompoundMap(item)));
+                slot++;
             }
             tile.put("Items", new ListTag<CompoundTag>("Items", CompoundTag.class, items));
         }
@@ -212,9 +215,9 @@ public class TileEntityOperations
             int slot = 0;
             for (ItemStack i: furnace.getInventory().getContents())
             {
-                slot++;
                 if (i == null)
                 {
+                    slot++;
                     continue;
                 }
                 Map<String, Tag<?>> item = new HashMap<String, Tag<?>>();
@@ -223,6 +226,7 @@ public class TileEntityOperations
                 item.put("Count", new ByteTag("Count", (byte) i.getAmount()));
                 item.put("Slot", new ByteTag("Slot", (byte) slot));
                 items.add(new CompoundTag("item", new CompoundMap(item)));
+                slot++;
             }
             tile.put("Items", new ListTag<CompoundTag>("Items", CompoundTag.class, items));
             tile.put("BurnTime", new ShortTag("BurnTime", furnace.getBurnTime()));
@@ -236,9 +240,9 @@ public class TileEntityOperations
             int slot = 0;
             for (ItemStack i: hopper.getInventory().getContents())
             {
-                slot++;
                 if (i == null)
                 {
+                    slot++;
                     continue;
                 }
                 Map<String, Tag<?>> item = new HashMap<String, Tag<?>>();
@@ -247,6 +251,7 @@ public class TileEntityOperations
                 item.put("Count", new ByteTag("Count", (byte) i.getAmount()));
                 item.put("Slot", new ByteTag("Slot", (byte) slot));
                 items.add(new CompoundTag("item", new CompoundMap(item)));
+                slot++;
             }
             tile.put("Items", new ListTag<CompoundTag>("Items", CompoundTag.class, items));
         }
@@ -258,7 +263,6 @@ public class TileEntityOperations
             tile.put("Delay", new ShortTag("Delay", (short) spawner.getDelay()));
 
         }
-
         return new CompoundTag("TileEntity", new CompoundMap(tile));
     }
 
@@ -277,11 +281,11 @@ public class TileEntityOperations
     @SuppressWarnings("deprecation")
     public static void createTileEntity(World world, int x, int y, int z, CompoundTag nbtValues, short blockID, byte blockData) throws InvalidFormatException
     {
-        Set<String> nbtNames = nbtValues.getValue().keySet();
+        Map<String, Tag<?>> tags = nbtValues.getValue();
         String entityName = "";
-        if (nbtNames.contains("id"))
+        if (tags.keySet().contains("id"))
         {
-            entityName = (String) getTag(nbtValues, "id", StringTag.class).getValue();
+            entityName = (String) tags.get("id").getValue();
             if (entityName.equals("Cauldron")) // Actually a brewing stand...
             {
                 // Start by setting the block to the correct blockID and data value
@@ -289,22 +293,23 @@ public class TileEntityOperations
                 block.setTypeIdAndData(blockID, blockData, false);
                 // fetch the TileEntityClass
                 BrewingStand brewingStand = (BrewingStand) block.getState();
+                brewingStand.update();
                 // brewing stands have inventories so load the list of items to place into it
                 @SuppressWarnings("unchecked")
-                List<CompoundTag> itemsList = (List<CompoundTag>) getTag(nbtValues, "Items", ListTag.class).getValue();
+                List<CompoundTag> itemsList = (List<CompoundTag>) tags.get("Items").getValue();
                 for (CompoundTag item: itemsList)
                 {
                     // fetch the sub-map of values about the this item
-                    short type = (Short) getTag(item, "id", ShortTag.class).getValue();
-                    short damage = (Short) getTag(item, "Damage", ShortTag.class).getValue();
-                    byte amount = (Byte) getTag(item, "Count", ByteTag.class).getValue();
+                    short type = (Short) item.getValue().get("id").getValue();
+                    short damage = (Short) item.getValue().get("Damage").getValue();
+                    byte amount = (Byte) item.getValue().get("Count").getValue();
                     // create the item
                     ItemStack itemObject = new ItemStack(type, amount, damage);
-                    int slot = (Integer) getTag(item, "Slot", ByteTag.class).getValue();
+                    byte slot = (Byte) item.getValue().get("Slot").getValue();
                     // place it into the inventory
                     brewingStand.getInventory().setItem(slot, itemObject);
                 }
-                short time = (Short) getTag(nbtValues, "BrewTime", ShortTag.class).getValue();
+                short time = (Short) tags.get("BrewTime").getValue();
                 brewingStand.setBrewingTime(time);
                 // Update this Tile Entity so changes are recorded and pushed to the client
                 brewingStand.update();
@@ -315,14 +320,14 @@ public class TileEntityOperations
                 block.setTypeIdAndData(blockID, blockData, false);
                 Chest chest = (Chest) block.getState();
                 @SuppressWarnings("unchecked")
-                List<CompoundTag> itemsList = (List<CompoundTag>) getTag(nbtValues, "Items", ListTag.class).getValue();
+                List<CompoundTag> itemsList = (List<CompoundTag>) tags.get("Items").getValue();
                 for (CompoundTag item: itemsList)
                 {
-                    short type = (Short) getTag(item, "id", ShortTag.class).getValue();
-                    short damage = (Short) getTag(item, "Damage", ShortTag.class).getValue();
-                    byte amount = (Byte) getTag(item, "Count", ByteTag.class).getValue();
+                    short type = (Short) item.getValue().get("id").getValue();
+                    short damage = (Short) item.getValue().get("Damage").getValue();
+                    byte amount = (Byte) item.getValue().get("Count").getValue();
                     ItemStack itemObject = new ItemStack(type, amount, damage);
-                    int slot = (Integer) getTag(item, "Slot", ByteTag.class).getValue();
+                    byte slot = (Byte) item.getValue().get("Slot").getValue();
                     chest.getInventory().setItem(slot, itemObject);
                 }
                 chest.update();
@@ -332,7 +337,7 @@ public class TileEntityOperations
                 Block block = world.getBlockAt(x, y, z);
                 block.setTypeIdAndData(blockID, blockData, false);
                 CommandBlock commandBlock = (CommandBlock) block.getState();
-                commandBlock.setCommand((String) getTag(nbtValues, "Command", StringTag.class).getValue());
+                commandBlock.setCommand((String) tags.get("Command").getValue());
                 commandBlock.update();
             }
             if (entityName.equals("Furnace"))
@@ -341,18 +346,18 @@ public class TileEntityOperations
                 block.setTypeIdAndData(blockID, blockData, false);
                 Furnace furnace = (Furnace) block.getState();
                 @SuppressWarnings("unchecked")
-                List<CompoundTag> itemsList = (List<CompoundTag>) getTag(nbtValues, "Items", ListTag.class).getValue();
+                List<CompoundTag> itemsList = (List<CompoundTag>) tags.get("Items").getValue();
                 for (CompoundTag item: itemsList)
                 {
-                    short type = (Short) getTag(item, "id", ShortTag.class).getValue();
-                    short damage = (Short) getTag(item, "Damage", ShortTag.class).getValue();
-                    byte amount = (Byte) getTag(item, "Count", ByteTag.class).getValue();
+                    short type = (Short) item.getValue().get("id").getValue();
+                    short damage = (Short) item.getValue().get("Damage").getValue();
+                    byte amount = (Byte) item.getValue().get("Count").getValue();
                     ItemStack itemObject = new ItemStack(type, amount, damage);
-                    int slot = (Integer) getTag(item, "Slot", ByteTag.class).getValue();
+                    byte slot = (Byte) item.getValue().get("Slot").getValue();
                     furnace.getInventory().setItem(slot, itemObject);
                 }
-                short time = (Short) getTag(nbtValues, "BurnTime", ShortTag.class).getValue();
-                short time0 = (Short) getTag(nbtValues, "CookTime", ShortTag.class).getValue();
+                short time = (Short) tags.get("BurnTime").getValue();
+                short time0 = (Short) tags.get("CookTime").getValue();
                 furnace.setBurnTime(time);
                 furnace.setCookTime(time0);
                 furnace.update();
@@ -363,14 +368,14 @@ public class TileEntityOperations
                 block.setTypeIdAndData(blockID, blockData, false);
                 Hopper hopper = (Hopper) block.getState();
                 @SuppressWarnings("unchecked")
-                List<CompoundTag> itemsList = (List<CompoundTag>) getTag(nbtValues, "Items", ListTag.class).getValue();
+                List<CompoundTag> itemsList = (List<CompoundTag>) tags.get("Items").getValue();
                 for (CompoundTag item: itemsList)
                 {
-                    short type = (Short) getTag(item, "id", ShortTag.class).getValue();
-                    short damage = (Short) getTag(item, "Damage", ShortTag.class).getValue();
-                    byte amount = (Byte) getTag(item, "Count", ByteTag.class).getValue();
+                    short type = (Short) item.getValue().get("id").getValue();
+                    short damage = (Short) item.getValue().get("Damage").getValue();
+                    byte amount = (Byte) item.getValue().get("Count").getValue();
                     ItemStack itemObject = new ItemStack(type, amount, damage);
-                    int slot = (Integer) getTag(item, "Slot", ByteTag.class).getValue();
+                    byte slot = (Byte) item.getValue().get("Slot").getValue();
                     hopper.getInventory().setItem(slot, itemObject);
                 }
                 hopper.update();
@@ -380,8 +385,8 @@ public class TileEntityOperations
                 Block block = world.getBlockAt(x, y, z);
                 block.setTypeIdAndData(blockID, blockData, false);
                 CreatureSpawner spawner = (CreatureSpawner) block.getState();
-                spawner.setCreatureTypeByName((String) getTag(nbtValues, "EntityId", StringTag.class).getValue());
-                spawner.setDelay((Integer) getTag(nbtValues, "Delay", ShortTag.class).getValue());
+                spawner.setCreatureTypeByName((String) tags.get("EntityId").getValue());
+                spawner.setDelay((Integer) tags.get("Delay").getValue());
                 spawner.update();
             }
             if (entityName.equals("Music")) // note blocks
@@ -389,7 +394,7 @@ public class TileEntityOperations
                 Block block = world.getBlockAt(x, y, z);
                 block.setTypeIdAndData(blockID, blockData, false);
                 NoteBlock noteBlock = (NoteBlock) block.getState();
-                noteBlock.setNote(new Note((Integer) getTag(nbtValues, "note", ByteTag.class).getValue()));
+                noteBlock.setNote(new Note((Integer) tags.get("note").getValue()));
                 noteBlock.update();
             }
             if (entityName.equals("RecordPlayer"))
@@ -397,7 +402,7 @@ public class TileEntityOperations
                 Block block = world.getBlockAt(x, y, z);
                 block.setTypeIdAndData(blockID, blockData, false);
                 Jukebox jukebox = (Jukebox) block.getState();
-                jukebox.setPlaying(Material.getMaterial((Integer) getTag(nbtValues, "Record", IntTag.class).getValue()));
+                jukebox.setPlaying(Material.getMaterial((Integer) tags.get("Record").getValue()));
                 jukebox.update();
             }
             if (entityName.equals("Sign"))
@@ -405,10 +410,10 @@ public class TileEntityOperations
                 Block block = world.getBlockAt(x, y, z);
                 block.setTypeIdAndData(blockID, blockData, false);
                 Sign sign = (Sign) block.getState();
-                sign.setLine(0, (String) getTag(nbtValues, "Text1", StringTag.class).getValue());
-                sign.setLine(1, (String) getTag(nbtValues, "Text2", StringTag.class).getValue());
-                sign.setLine(2, (String) getTag(nbtValues, "Text3", StringTag.class).getValue());
-                sign.setLine(3, (String) getTag(nbtValues, "Text4", StringTag.class).getValue());
+                sign.setLine(0, (String) tags.get("Text1").getValue());
+                sign.setLine(1, (String) tags.get("Text2").getValue());
+                sign.setLine(2, (String) tags.get("Text3").getValue());
+                sign.setLine(3, (String) tags.get("Text4").getValue());
                 sign.update();
             }
             if (entityName.equals("Skull"))
@@ -416,9 +421,9 @@ public class TileEntityOperations
                 Block block = world.getBlockAt(x, y, z);
                 block.setTypeIdAndData(blockID, blockData, false);
                 Skull skull = (Skull) block.getState();
-                skull.setSkullType(getSkullType((Byte) getTag(nbtValues, "SkullType", ByteTag.class).getValue()));
-                skull.setRotation(getSkullRot((Byte) getTag(nbtValues, "Rot", ByteTag.class).getValue()));
-                String owner = (String) getTag(nbtValues, "ExtraType", StringTag.class).getValue();
+                skull.setSkullType(getSkullType((Byte) tags.get("SkullType").getValue()));
+                skull.setRotation(getSkullRot((Byte) tags.get("Rot").getValue()));
+                String owner = (String) tags.get("ExtraType").getValue();
                 if (owner.equals(""))
                 {
                     owner = "Player";
@@ -431,15 +436,16 @@ public class TileEntityOperations
                 Block block = world.getBlockAt(x, y, z);
                 block.setTypeIdAndData(blockID, blockData, false);
                 Dispenser dispenser = (Dispenser) block.getState();
+                dispenser.update(); // Update before data
                 @SuppressWarnings("unchecked")
-                List<CompoundTag> itemsList = (List<CompoundTag>) getTag(nbtValues, "Items", ListTag.class).getValue();
+                List<CompoundTag> itemsList = (List<CompoundTag>) tags.get("Items").getValue();
                 for (CompoundTag item: itemsList)
                 {
-                    short type = (Short) getTag(item, "id", ShortTag.class).getValue();
-                    short damage = (Short) getTag(item, "Damage", ShortTag.class).getValue();
-                    byte amount = (Byte) getTag(item, "Count", ByteTag.class).getValue();
+                    short type = (Short) item.getValue().get("id").getValue();
+                    short damage = (Short) item.getValue().get("Damage").getValue();
+                    byte amount = (Byte) item.getValue().get("Count").getValue();
                     ItemStack itemObject = new ItemStack(type, amount, damage);
-                    byte slot = (Byte) getTag(item, "Slot", ByteTag.class).getValue();
+                    byte slot = (Byte) item.getValue().get("Slot").getValue();
                     dispenser.getInventory().setItem(slot, itemObject);
                 }
                 dispenser.update();
@@ -450,35 +456,19 @@ public class TileEntityOperations
                 block.setTypeIdAndData(blockID, blockData, false);
                 Dropper dropper = (Dropper) block.getState();
                 @SuppressWarnings("unchecked")
-                List<CompoundTag> itemsList = (List<CompoundTag>) getTag(nbtValues, "Items", ListTag.class).getValue();
+                List<CompoundTag> itemsList = (List<CompoundTag>) tags.get("Items").getValue();
                 for (CompoundTag item: itemsList)
                 {
-                    short type = (Short) getTag(item, "id", ShortTag.class).getValue();
-                    short damage = (Short) getTag(item, "Damage", ShortTag.class).getValue();
-                    byte amount = (Byte) getTag(item, "Count", ByteTag.class).getValue();
+                    short type = (Short) item.getValue().get("id").getValue();
+                    short damage = (Short) item.getValue().get("Damage").getValue();
+                    byte amount = (Byte) item.getValue().get("Count").getValue();
                     ItemStack itemObject = new ItemStack(type, amount, damage);
-                    int slot = (Integer) getTag(item, "Slot", ByteTag.class).getValue();
+                    byte slot = (Byte) item.getValue().get("Slot").getValue();
                     dropper.getInventory().setItem(slot, itemObject);
                 }
                 dropper.update();
             }
         }
-    }
-
-    @SuppressWarnings("rawtypes")
-    private static Tag<?> getTag(CompoundTag tag, String key, Class<? extends Tag> expected) throws InvalidFormatException
-    {
-        CompoundMap value = tag.getValue();
-        if (!value.containsKey(key))
-        {
-            throw new InvalidFormatException("Tag " + tag.getName() + " is missing a tag " + key + "!");
-        }
-        Tag<?> target = value.get(key);
-        if (!expected.isInstance(target))
-        {
-            throw new InvalidFormatException("Tag " + key + " in " + tag.getName() + " is not of the expected type " + expected.getName() + "!");
-        }
-        return expected.cast(target);
     }
 
     /**

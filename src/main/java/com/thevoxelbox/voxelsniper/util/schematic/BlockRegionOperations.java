@@ -83,6 +83,7 @@ public class BlockRegionOperations
                         {
                             short id = ids[_x + _z * region.getWidth() + _y * region.getWidth() * region.getLength()];
                             byte d = data[_x + _z * region.getWidth() + _y * region.getWidth() * region.getLength()];
+                            d = MetadataRotation.getData(id, d, (int) yaw);
                             undo.put(current);
                             current.setTypeIdAndData(id, d, false);
                         }
@@ -93,6 +94,7 @@ public class BlockRegionOperations
                         {
                             short id = ids[_x + _z * region.getWidth() + _y * region.getWidth() * region.getLength()];
                             byte d = data[_x + _z * region.getWidth() + _y * region.getWidth() * region.getLength()];
+                            d = MetadataRotation.getData(id, d, (int) yaw);
                             undo.put(current);
                             current.setTypeIdAndData(id, d, false);
                         }
@@ -101,6 +103,7 @@ public class BlockRegionOperations
                     {
                         short id = ids[_x + _z * region.getWidth() + _y * region.getWidth() * region.getLength()];
                         byte d = data[_x + _z * region.getWidth() + _y * region.getWidth() * region.getLength()];
+                        d = MetadataRotation.getData(id, d, (int) yaw);
                         undo.put(current);
                         current.setTypeIdAndData(id, d, false);
                     }
@@ -113,6 +116,7 @@ public class BlockRegionOperations
             CompoundTag tile = region.getTileEntities().get(v);
             short id = ids[v.getBlockX() + v.getBlockZ() * region.getWidth() + v.getBlockY() * region.getWidth() * region.getLength()];
             byte d = data[v.getBlockX() + v.getBlockZ() * region.getWidth() + v.getBlockY() * region.getWidth() * region.getLength()];
+            d = MetadataRotation.getData(id, d, (int) yaw);
             int _x0 = xFlipped ? region.getWidth() - v.getBlockX() - 1 : v.getBlockX();
             int _y0 = yFlipped ? region.getHeight() - v.getBlockY() - 1 : v.getBlockY();
             int _z0 = zFlipped ? region.getLength() - v.getBlockZ() - 1 : v.getBlockZ();

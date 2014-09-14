@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -154,38 +153,37 @@ public class MCEditSchematic
             throw new InvalidFormatException("Could not find \"Schematic\" tag in " + schematicFile.getName());
         }
 
-        Set<String> tags = schematicTag.getValue().keySet();
-
+        Map<String, Tag<?>> tags = schematicTag.getValue();
         // if the file doesn't contain any blocks then why are we loading it...
-        if (!tags.contains("Blocks"))
+        if (!tags.keySet().contains("Blocks"))
         {
             throw new InvalidFormatException("Could not find \"Blocks\" tag in " + schematicFile.getName());
         }
 
         // check if the materials are of the only supported format, I wonder if this will actually get used with the removal of magic numbers
         // we'll probably end up having to store some kind of dictionary of block names to local ids used in the serialization of the region
-        if (!getTag(schematicTag, "Materials", StringTag.class).getValue().equals("Alpha"))
+        if (!tags.get("Materials").getValue().equals("Alpha"))
         {
             throw new InvalidFormatException("Schematic " + schematicFile.getName() + " uses an unknown \"Materials\" type.");
         }
 
         // extract the width (x axis size), length (z axis size), and height (y axis size) of the schematic
-        int width = (Integer) getTag(schematicTag, "Width", IntTag.class).getValue();
-        int height = (Integer) getTag(schematicTag, "Height", IntTag.class).getValue();
-        int length = (Integer) getTag(schematicTag, "Length", IntTag.class).getValue();
+        int width = (Integer) tags.get("Width").getValue();
+        int height = (Integer) tags.get("Height").getValue();
+        int length = (Integer) tags.get("Length").getValue();
 
         // extract the block ids and block data values
         // all of these arrays are index by the following key
         // index = x + z * width + y * width * length
-        byte[] byteBlockIds = (byte[]) getTag(schematicTag, "Blocks", ByteArrayTag.class).getValue();
-        byte[] blockData = (byte[]) getTag(schematicTag, "Data", ByteArrayTag.class).getValue();
+        byte[] byteBlockIds = (byte[]) tags.get("Blocks").getValue();
+        byte[] blockData = (byte[]) tags.get("Data").getValue();
         // Ultimately the block ids end up in a short array as ids can be up to 12 bits in size
         short[] blockIds = new short[byteBlockIds.length];
         // the nibble of the block id above 8 bits (if it exists) is stored in another byte array tag called 'AddBlocks'
         // the format of the array is that it is Blocks.length/2 size and each byte of the array is packed with two concurrent nibbles of additional id data
-        if (tags.contains("AddBlocks"))
+        if (tags.keySet().contains("AddBlocks"))
         {
-            byte[] additionalIds = (byte[]) getTag(schematicTag, "AddBlocks", ByteArrayTag.class).getValue();
+            byte[] additionalIds = (byte[]) tags.get("AddBlocks").getValue();
             for (int i = 0; i < byteBlockIds.length; i++)
             {
                 if (i >> 1 > additionalIds.length)
@@ -217,7 +215,7 @@ public class MCEditSchematic
 
         Map<BlockVector, CompoundTag> tileEntites = new HashMap<BlockVector, CompoundTag>();
 
-        if (tags.contains("TileEntities"))
+        if (tags.keySet().contains("TileEntities"))
         {
             @SuppressWarnings("unchecked")
             List<CompoundTag> tiles = (List<CompoundTag>) schematicTag.getValue().get("TileEntities").getValue();
@@ -265,39 +263,23 @@ public class MCEditSchematic
         BlockRegion region = new BlockRegion(width, height, length, blockIds, blockData, tileEntites);
 
         // We'll support WorldEdit styled offsets for the sake of compatibility
-        if (tags.contains("WEOffsetX"))
+        if (tags.keySet().contains("WEOffsetX"))
         {
-            region.setxOffset((Integer) getTag(schematicTag, "WEOffsetX", IntTag.class).getValue());
+            region.setxOffset((Integer) tags.get("WEOffsetX").getValue());
         }
-        if (tags.contains("WEOffsetY"))
+        if (tags.keySet().contains("WEOffsetY"))
         {
-            region.setyOffset((Integer) getTag(schematicTag, "WEOffsetY", IntTag.class).getValue());
+            region.setyOffset((Integer) tags.get("WEOffsetY").getValue());
         }
-        if (tags.contains("WEOffsetZ"))
+        if (tags.keySet().contains("WEOffsetZ"))
         {
-            region.setzOffset((Integer) getTag(schematicTag, "WEOffsetZ", IntTag.class).getValue());
+            region.setzOffset((Integer) tags.get("WEOffsetZ").getValue());
         }
 
         // set the name in case we ever want to save it again after some editing perhaps
         region.setName(schematicFile.getName().replace(SCHEMATIC_EXTENSION, ""));
         region.setLastChanged(schematicFile.lastModified());
         return region;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private static Tag<?> getTag(CompoundTag tag, String key, Class<? extends Tag> expected) throws InvalidFormatException
-    {
-        CompoundMap value = tag.getValue();
-        if (!value.containsKey(key))
-        {
-            throw new InvalidFormatException("Tag " + tag.getName() + " is missing a tag " + key + "!");
-        }
-        Tag<?> target = value.get(key);
-        if (!expected.isInstance(target))
-        {
-            throw new InvalidFormatException("Tag " + key + " in " + tag.getName() + " is not of the expected type " + expected.getName() + "!");
-        }
-        return expected.cast(target);
     }
 
     public static BlockRegion load(String name) throws IOException, InvalidFormatException
