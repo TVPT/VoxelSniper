@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 The Voxel Plugin Team
+ * Copyright (c) 2014 The Voxel Plugineering Team
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,14 @@
  */
 package com.voxelplugineering.voxelsniper;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.IBrushManager;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.api.ISniperManager;
@@ -36,29 +39,41 @@ import com.voxelplugineering.voxelsniper.bukkit.BukkitWorldFactory;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.common.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.common.factory.CommonWorldFactory;
+import com.voxelplugineering.voxelsniper.perms.VaultPermissionProxy;
 
 public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
 {
     public static VoxelSniperBukkit voxelsniper;
-    
-    ISniperManager<Player> sniperManager;
-    IBrushManager brushManager;
-    
+
+    SniperManagerBukkit sniperManager;
+    BrushManagerBukkit brushManager;
+
     @Override
     public void onEnable()
     {
         voxelsniper = this;
+        Gunsmith.setPlugin(this);
         CommonWorldFactory.setFactory(new BukkitWorldFactory(this.getServer()));
         this.sniperManager = new SniperManagerBukkit();
         this.sniperManager.init();
         this.brushManager = new BrushManagerBukkit();
+        Gunsmith.setBrushManager(this.brushManager);
         this.brushManager.init();
-        
+        setupPermissions();
         CommandHandler.create();
         CommandHandler.COMMAND_HANDLER.setRegistrar(new BukkitCommandRegistrar());
+        Gunsmith.finish();
         
     }
-    
+
+    private void setupPermissions()
+    {
+        Plugin vault = Bukkit.getPluginManager().getPlugin("Vault");
+        if (vault != null) {
+            Gunsmith.setPermissionProxy(new VaultPermissionProxy());
+        }
+    }
+
     @Override
     public void onDisable()
     {
@@ -75,19 +90,15 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     }
 
     @Override
-    public ISniperManager<Player> getSniperManager()
+    public SniperManagerBukkit getSniperManager()
     {
         return this.sniperManager;
     }
 
     @Override
-    public IBrushManager getBrushManager()
+    public BrushManagerBukkit getBrushManager()
     {
         return this.brushManager;
     }
 
-    public ISniperManager<Player> getSniperHandler()
-    {
-        return this.sniperManager;
-    }
 }

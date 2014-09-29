@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 The Voxel Plugin Team
+ * Copyright (c) 2014 The Voxel Plugineering Team
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.api.ISniperManager;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
 
-public class SniperManagerBukkit implements ISniperManager<Player>, IPermissionProxy
+public class SniperManagerBukkit implements ISniperManager<Player>
 {
     
     private Map<Player, BukkitSniper> players = new WeakHashMap<Player, BukkitSniper>();
@@ -47,7 +47,7 @@ public class SniperManagerBukkit implements ISniperManager<Player>, IPermissionP
     @Override
     public void stop()
     {
-        players.clear();
+        this.players.clear();
     }
 
     @Override
@@ -60,24 +60,17 @@ public class SniperManagerBukkit implements ISniperManager<Player>, IPermissionP
     @Override
     public ISniper getSniper(Player player)
     {
-        if(!players.containsKey(player))
+        if(!this.players.containsKey(player))
         {
-            players.put(player, new BukkitSniper(player));
+            this.players.put(player, new BukkitSniper(player));
         }
-        return players.get(player);
+        return this.players.get(player);
     }
 
     @Override
     public Class<Player> getPlayerClass()
     {
         return Player.class;
-    }
-
-    @Override
-    public boolean hasPermission(ISniper sniper, String permission)
-    {
-        Player p = (Player) sniper.getPlayer();
-        return p.hasPermission(permission);
     }
 
 }

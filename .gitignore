@@ -1,1 +1,21 @@
-/bin/
+#Folders to ignore
+bin/
+target/
+build/
+.externalToolBuilders/
+.manifest
+buildLocal.xml
+
+#Files to ignore
+# -Eclipse-
+.settings
+.project
+.classpath
+
+# -IntelliJ-
+*.iml
+*.ipr
+*.iws
+.idea/
+
+#Specific files to the project

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 The Voxel Plugin Team
+ * Copyright (c) 2014 The Voxel Plugineering Team
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,22 +48,26 @@ public class BukkitWorld extends CommonWorld
         this.world = new WeakReference<World>(w);
     }
 
+    public World getWorld() {
+        return this.world.get();
+    }
+
     @Override
     public CommonChunk getChunkAt(int x, int y, int z)
     {
-        Chunk chunk = this.world.get().getChunkAt(x, z);
+        Chunk chunk = this.getWorld().getChunkAt(x, z);
         if(chunk == null) return null;
-        if(!chunks.containsKey(chunk))
+        if(!this.chunks.containsKey(chunk))
         {
-            chunks.put(chunk, new BukkitChunk(chunk));
+            this.chunks.put(chunk, new BukkitChunk(chunk));
         }
-        return chunks.get(chunk);
+        return this.chunks.get(chunk);
     }
 
     @Override
     public CommonBlock getBlockAt(int x, int y, int z)
     {
-        return new CommonBlock(new CommonLocation(this, x, y, z), new BukkitMaterial(this.world.get().getBlockAt(x, y, z).getType()));
+        return new CommonBlock(new CommonLocation(this, x, y, z), new BukkitMaterial(this.getWorld().getBlockAt(x, y, z).getType()));
     }
 
     @Override
@@ -74,7 +78,7 @@ public class BukkitWorld extends CommonWorld
             return;
         }
         Material mat = ((BukkitMaterial) material).getValue();
-        this.world.get().getBlockAt(x, y, z).setType(mat);
+        this.getWorld().getBlockAt(x, y, z).setType(mat);
     }
     
 }

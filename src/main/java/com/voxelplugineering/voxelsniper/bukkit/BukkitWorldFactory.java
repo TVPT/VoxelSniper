@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 The Voxel Plugin Team
+ * Copyright (c) 2014 The Voxel Plugineering Team
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,11 +49,11 @@ public class BukkitWorldFactory extends CommonWorldFactory
     {
         World world = this.server.getWorld(name);
         if(world == null) return null;
-        if(!worlds.containsKey(world))
+        if(!this.worlds.containsKey(world))
         {
-            worlds.put(world, new BukkitWorld(world));
+            this.worlds.put(world, new BukkitWorld(world));
         }
-        return worlds.get(world);
+        return this.worlds.get(world);
     }
 
 }
