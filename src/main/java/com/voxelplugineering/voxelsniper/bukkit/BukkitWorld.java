@@ -53,6 +53,12 @@ public class BukkitWorld extends CommonWorld
     }
 
     @Override
+    public String getName()
+    {
+        return this.getWorld().getName();
+    }
+
+    @Override
     public CommonChunk getChunkAt(int x, int y, int z)
     {
         Chunk chunk = this.getWorld().getChunkAt(x, z);
