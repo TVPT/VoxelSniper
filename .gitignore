@@ -3,19 +3,29 @@ bin/
 target/
 build/
 .externalToolBuilders/
-.manifest
-buildLocal.xml
+.DS_Store
 
-#Files to ignore
-# -Eclipse-
+#Gradle
+.gradle/
+artifacts/
+gradle-app.setting
+
+#Maven
+dependency-reduced-pom.xml
+
+# Eclipse
 .settings
 .project
 .classpath
+.manifest
 
-# -IntelliJ-
+# IntelliJ
 *.iml
 *.ipr
 *.iws
 .idea/
+
+#Maven files
+dependency-reduced-pom.xml
 
 #Specific files to the project

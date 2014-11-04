@@ -26,14 +26,10 @@ package com.voxelplugineering.voxelsniper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.voxelplugineering.voxelsniper.api.Gunsmith;
-import com.voxelplugineering.voxelsniper.api.IBrushManager;
-import com.voxelplugineering.voxelsniper.api.ISniper;
-import com.voxelplugineering.voxelsniper.api.ISniperManager;
 import com.voxelplugineering.voxelsniper.api.IVoxelSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitWorldFactory;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;

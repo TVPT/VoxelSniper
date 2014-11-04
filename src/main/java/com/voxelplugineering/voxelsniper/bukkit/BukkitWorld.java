@@ -48,7 +48,8 @@ public class BukkitWorld extends CommonWorld
         this.world = new WeakReference<World>(w);
     }
 
-    public World getWorld() {
+    public World getWorld()
+    {
         return this.world.get();
     }
 
@@ -62,8 +63,11 @@ public class BukkitWorld extends CommonWorld
     public CommonChunk getChunkAt(int x, int y, int z)
     {
         Chunk chunk = this.getWorld().getChunkAt(x, z);
-        if(chunk == null) return null;
-        if(!this.chunks.containsKey(chunk))
+        if (chunk == null)
+        {
+            return null;
+        }
+        if (!this.chunks.containsKey(chunk))
         {
             this.chunks.put(chunk, new BukkitChunk(chunk));
         }
@@ -79,7 +83,7 @@ public class BukkitWorld extends CommonWorld
     @Override
     public void setBlockAt(int x, int y, int z, CommonMaterial<?> material)
     {
-        if(!(material instanceof BukkitMaterial))
+        if (!(material instanceof BukkitMaterial))
         {
             return;
         }

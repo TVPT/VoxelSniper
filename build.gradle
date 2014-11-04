@@ -1,0 +1,195 @@
+// Gradle dependencies
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url "http://repository.jboss.org/nexus/content/groups/public/"
+        }
+
+    }
+    dependencies {
+        classpath 'org.hibernate.build.gradle:gradle-maven-publish-auth:2.0.1'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.1.1'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
+    }
+}
+
+// Plugins
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'license'
+apply plugin: 'checkstyle'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven-publish-auth'
+apply plugin: 'signing'
+
+defaultTasks 'clean', 'licenseFormat', 'check', 'build'
+
+group 'com.voxelplugineering'
+archivesBaseName = 'VoxelSniper-Bukkit'
+version '7.0.0-SNAPSHOT'
+
+// Minimum version of Java required
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+// Project dependencies
+repositories {
+    mavenCentral()
+    maven {
+        url "http://vault.voxelmodpack.com/content/groups/public/"
+    }
+    maven {
+        url "http://nexus.afterkraft.com/content/groups/public/"
+    }
+}
+
+dependencies {
+    compile 'com.google.guava:guava:18.0'
+    compile 'com.voxelplugineering:VoxelGunsmith:2.0.0-SNAPSHOT'
+    compile 'org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT'
+    compile 'net.milkbowl.vault:VaultAPI:1.4'
+}
+
+// Generates sources.jar
+task sourceJar(type: Jar) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+ext {
+    projectName = 'VoxelSniper-Bukkit'
+    inceptionYear = '2014'
+    packaging = 'jar'
+    url = 'http://voxelplugineering.com/'
+    description = "Implementation of VoxelSniper for Bukkit"
+    organization = 'The VoxelPlugineering Team'
+    pomFile = file("${project.projectDir}/pom.xml")
+    buildNumber = project.hasProperty("buildNumber") ? buildNumber : '0'
+    ciSystem = project.hasProperty("ciSystem") ? ciSystem : 'unknown'
+    commit = project.hasProperty("commit") ? commit : 'unknown'
+}
+
+configurations {
+    pom
+}
+
+artifacts {
+    archives jar
+    archives sourceJar
+}
+
+def sonatypeUser = hasProperty('sonatypeUser') ? sonatypeUser : System.getenv('sonatypeUser')
+def sonatypePassword = hasProperty('sonatypePassword') ? sonatypePassword : System.getenv('sonatypePassword')
+// Vault
+uploadArchives {
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment ->
+            signing.signPom(deployment)
+        }
+        repository(id: 'tvpt-repo', url: "http://vault.voxelmodpack.com/content/repositories/releases") {
+            authentication(userName: sonatypeUser, password: sonatypePassword)
+
+        }
+        snapshotRepository(id: 'tvpt-repo', url: "http://vault.voxelmodpack.com/content/repositories/snapshots") {
+            authentication(userName: sonatypeUser, password: sonatypePassword)
+        }
+        pom {
+            groupId = project.group
+            version = project.version
+            artifactId = project.archivesBaseName
+            project {
+                name project.archivesBaseName
+                packaging 'jar'
+                description 'Implementation of VoxelSniper for Bukkit'
+                url 'http://voxelmodpack.com/'
+                scm {
+                    url 'https://github.com/tvpt/voxelgunsmith'
+                    connection 'git'
+                    developerConnection 'git@github.com:tvpt/VoxelSniper-Bukkit.git'
+                }
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'gabizou'
+                        name 'Gabriel Harris-Rouquette'
+                        email 'gabizou@me.com'
+                    }
+                    developer {
+                        id 'Deamon5550'
+                        name 'Nick Conde'
+                        email 'nick@budgiehouse.com'
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required {
+        gradle.taskGraph.hasTask("uploadArchives")
+    }
+    sign configurations.archives
+}
+
+processResources {
+    from 'LICENSE'
+}
+
+license {
+    ext.name = project.name
+    ext.organization = project.organization
+    ext.url = project.url
+    ext.year = project.inceptionYear
+    exclude "**/*.info"
+    exclude "assets/**"
+    header file("LICENSE")
+    sourceSets = project.sourceSets
+    ignoreFailures false
+    strictCheck true
+    mapping {
+        java = 'SLASHSTAR_STYLE'
+    }
+}
+
+checkstyle {
+    configProperties = [
+            "name"        : project.name,
+            "organization": project.organization,
+            "url"         : project.url,
+            "year"        : project.inceptionYear
+    ]
+    configFile = file("checkstyle.xml")
+}
+
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": project.name,
+                "Implementation-Version": version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commit,
+                "Built-By": System.properties['user.name'],
+                "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+                "Implementation-Vendor": url
+        )
+    }
+    from ("${projectDir}") {
+        include('LICENSE', 'README.md')
+    }
+}
+
+configure([compileJava, compileTestJava]) {
+    options.compilerArgs += ['-Xlint:all', '-Xlint:-path']
+    options.deprecation = true
+    options.encoding = 'utf8'
+}

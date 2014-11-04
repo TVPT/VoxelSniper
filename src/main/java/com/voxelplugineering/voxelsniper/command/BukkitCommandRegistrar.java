@@ -43,8 +43,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
             Field cmap = Class.forName(CraftBukkitFetcher.CRAFTBUKKIT_PACKAGE + ".CraftServer").getDeclaredField("commandMap");
             cmap.setAccessible(true);
             this.commands = (CommandMap) cmap.get(Bukkit.getServer());
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             System.out.println("Error setting up bukkit command registrar: " + e.getMessage());
         }
@@ -53,7 +52,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
     @Override
     public void registerCommand(Command cmd)
     {
-        for(String alias: cmd.getAllAliases())
+        for (String alias: cmd.getAllAliases())
         {
             BukkitCommand bcmd = new BukkitCommand(alias, cmd);
         }

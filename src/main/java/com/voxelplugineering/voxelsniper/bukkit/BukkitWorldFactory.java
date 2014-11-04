@@ -48,8 +48,11 @@ public class BukkitWorldFactory extends CommonWorldFactory
     protected CommonWorld getWorldRaw(String name)
     {
         World world = this.server.getWorld(name);
-        if(world == null) return null;
-        if(!this.worlds.containsKey(world))
+        if (world == null)
+        {
+            return null;
+        }
+        if (!this.worlds.containsKey(world))
         {
             this.worlds.put(world, new BukkitWorld(world));
         }

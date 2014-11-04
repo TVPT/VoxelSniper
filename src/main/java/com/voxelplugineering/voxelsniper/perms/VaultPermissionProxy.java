@@ -59,7 +59,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public boolean hasWorldPermission(ISniper sniper, CommonWorld world, String permission)
     {
-        return sniper instanceof BukkitSniper && permissionService.playerHas(world.getName(), ((BukkitSniper) sniper).getPlayerReference(),  permission);
+        return sniper instanceof BukkitSniper && permissionService.playerHas(world.getName(),
+                ((BukkitSniper) sniper).getPlayerReference(), permission);
     }
 
     @Override
@@ -71,7 +72,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void addGlobalPermission(ISniper sniper, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerAdd(((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -79,7 +81,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void addWorldPermission(ISniper sniper, CommonWorld world, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerAdd(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -87,7 +90,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void addWorldPermission(ISniper sniper, String worldName, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerAdd(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -95,7 +99,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void addTransientGlobalPermission(ISniper sniper, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerAddTransient(((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -103,7 +108,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void addTransientWorldPermission(ISniper sniper, CommonWorld world, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerAddTransient(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -111,7 +117,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void addTransientWorldPermission(ISniper sniper, String worldName, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerAddTransient(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -119,7 +126,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void removeGlobalPermission(ISniper sniper, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerRemove(((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -127,7 +135,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void removeWorldPermission(ISniper sniper, CommonWorld world, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerRemove(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -135,7 +144,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void removeWorldPermission(ISniper sniper, String worldName, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerRemove(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -143,7 +153,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void removeTransientGlobalPermission(ISniper sniper, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerRemoveTransient(((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -151,7 +162,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void removeTransientWorldPermission(ISniper sniper, CommonWorld world, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerRemoveTransient(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }
@@ -159,7 +171,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public void removeTransientWorldPermission(ISniper sniper, String worldName, String permission)
     {
-        if (sniper instanceof BukkitSniper) {
+        if (sniper instanceof BukkitSniper)
+        {
             permissionService.playerRemoveTransient(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
         }
     }

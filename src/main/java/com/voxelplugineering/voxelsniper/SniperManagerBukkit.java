@@ -28,7 +28,6 @@ import java.util.WeakHashMap;
 
 import org.bukkit.entity.Player;
 
-import com.voxelplugineering.voxelsniper.api.IPermissionProxy;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.api.ISniperManager;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
@@ -60,7 +59,7 @@ public class SniperManagerBukkit implements ISniperManager<Player>
     @Override
     public ISniper getSniper(Player player)
     {
-        if(!this.players.containsKey(player))
+        if (!this.players.containsKey(player))
         {
             this.players.put(player, new BukkitSniper(player));
         }
