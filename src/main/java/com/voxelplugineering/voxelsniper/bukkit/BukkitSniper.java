@@ -23,16 +23,23 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
-import org.bukkit.entity.Player;
+import java.io.File;
 
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import com.voxelplugineering.voxelsniper.api.Gunsmith;
+import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonPlayer;
+import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
 
 public class BukkitSniper extends CommonPlayer<Player>
 {
-
+	
     public BukkitSniper(Player player)
     {
         super(player);
+        this.getPersonalBrushManager().addLoader(new FileBrushLoader(new File(((JavaPlugin) Gunsmith.getVoxelSniper()).getDataFolder(), "brushes" + File.separator + this.getName())));
     }
 
     @Override
@@ -57,6 +64,12 @@ public class BukkitSniper extends CommonPlayer<Player>
     public void sendMessage(String msg)
     {
         getPlayerReference().sendMessage(msg);
+    }
+
+    @Override
+    public CommonLocation getLocation()
+    {
+        return new CommonLocation(Gunsmith.getWorldFactory().getWorld(getPlayerReference().getLocation().getWorld().getName()), getPlayerReference().getLocation().getBlockX(), getPlayerReference().getLocation().getBlockY(), getPlayerReference().getLocation().getBlockZ());
     }
 
 }

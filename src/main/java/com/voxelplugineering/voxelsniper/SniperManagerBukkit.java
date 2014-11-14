@@ -26,16 +26,24 @@ package com.voxelplugineering.voxelsniper;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 
+import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.api.ISniperManager;
+import com.voxelplugineering.voxelsniper.bukkit.BukkitConsoleSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
+import com.voxelplugineering.voxelsniper.common.CommonVector;
+import com.voxelplugineering.voxelsniper.common.event.SnipeEvent;
+import com.voxelplugineering.voxelsniper.common.event.SniperCreateEvent;
 
 public class SniperManagerBukkit implements ISniperManager<Player>
 {
     
     private Map<Player, BukkitSniper> players = new WeakHashMap<Player, BukkitSniper>();
+    private BukkitConsoleSniper console = new BukkitConsoleSniper(Bukkit.getConsoleSender());
 
     @Override
     public void init()
@@ -70,6 +78,31 @@ public class SniperManagerBukkit implements ISniperManager<Player>
     public Class<Player> getPlayerClass()
     {
         return Player.class;
+    }
+
+    public ISniper getConsoleSniperProxy()
+    {
+        return this.console;
+    }
+    
+    @EventHandler
+    public boolean onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
+    {
+    	ISniper s = getSniper(event.getPlayer());
+    	SniperCreateEvent sce = new SniperCreateEvent(s);
+    	Gunsmith.getEventBus().post(sce);
+		return true;
+    }
+    
+    @EventHandler
+    public boolean onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
+    {
+    	Player p = event.getPlayer();
+    	ISniper s = getSniper(p);
+    	CommonVector dir = new CommonVector(p.getLocation().getYaw(), p.getLocation().getPitch(), 0);
+    	SnipeEvent se = new SnipeEvent(s, dir);
+    	Gunsmith.getEventBus().post(se);
+		return true;
     }
 
 }

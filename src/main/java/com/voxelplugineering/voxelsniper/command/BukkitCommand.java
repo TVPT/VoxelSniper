@@ -43,7 +43,22 @@ public class BukkitCommand extends org.bukkit.command.Command
     @Override
     public boolean execute(CommandSender sender, String command, String[] args)
     {
-        return this.cmd.execute(VoxelSniperBukkit.voxelsniper.getSniperManager().getSniper((Player) sender), args);
+        if(sender instanceof Player)
+        {
+            return this.cmd.execute(VoxelSniperBukkit.voxelsniper.getSniperManager().getSniper((Player) sender), args);
+        }
+        else
+        {
+            if(cmd.isPlayerOnly())
+            {
+                sender.sendMessage("Sorry this is a player only command.");
+                return true;
+            }
+            else
+            {
+                return this.cmd.execute(VoxelSniperBukkit.voxelsniper.getSniperManager().getConsoleSniperProxy(), args);
+            }
+        }
     }
 
 }

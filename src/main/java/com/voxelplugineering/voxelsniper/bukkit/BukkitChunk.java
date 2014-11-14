@@ -27,10 +27,10 @@ import java.lang.ref.WeakReference;
 
 import org.bukkit.Chunk;
 
+import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonChunk;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
-import com.voxelplugineering.voxelsniper.common.factory.CommonWorldFactory;
 
 public class BukkitChunk extends CommonChunk
 {
@@ -45,7 +45,7 @@ public class BukkitChunk extends CommonChunk
     @Override
     public CommonWorld getCommonWorld()
     {
-        return CommonWorldFactory.getWorld(this.chunk.get().getWorld().getName());
+        return Gunsmith.getWorldFactory().getWorld(this.chunk.get().getWorld().getName());
     }
 
     @Override

@@ -30,21 +30,45 @@ import com.voxelplugineering.voxelsniper.common.CommonMaterial;
 public class BukkitMaterial extends CommonMaterial<Material>
 {
 
-    protected BukkitMaterial(Material value)
+    public BukkitMaterial(Material value)
     {
         super(value);
-    }
-
-    @Override
-    public BukkitMaterial getDefault()
-    {
-        return new BukkitMaterial(Material.AIR);
     }
 
     @Override
     public String toString()
     {
         return this.getValue().name();
+    }
+
+    @Override
+    public boolean isBlock()
+    {
+        return this.getValue().isBlock();
+    }
+
+    @Override
+    public boolean hasGravity()
+    {
+        return this.getValue().hasGravity();
+    }
+
+    @Override
+    public boolean isSolid()
+    {
+        return this.getValue().isSolid();
+    }
+
+    @Override
+    public boolean isTransparent()
+    {
+        return this.getValue().isTransparent();
+    }
+
+    @Override
+    public boolean isFlammable()
+    {
+        return this.getValue().isFlammable();
     }
 
 }

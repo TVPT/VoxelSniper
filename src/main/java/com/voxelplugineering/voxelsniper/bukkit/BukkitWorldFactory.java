@@ -29,10 +29,10 @@ import java.util.WeakHashMap;
 import org.bukkit.Server;
 import org.bukkit.World;
 
+import com.voxelplugineering.voxelsniper.api.IWorldFactory;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
-import com.voxelplugineering.voxelsniper.common.factory.CommonWorldFactory;
 
-public class BukkitWorldFactory extends CommonWorldFactory
+public class BukkitWorldFactory implements IWorldFactory
 {
     
     Server server;
@@ -45,7 +45,7 @@ public class BukkitWorldFactory extends CommonWorldFactory
     }
 
     @Override
-    protected CommonWorld getWorldRaw(String name)
+    public CommonWorld getWorld(String name)
     {
         World world = this.server.getWorld(name);
         if (world == null)

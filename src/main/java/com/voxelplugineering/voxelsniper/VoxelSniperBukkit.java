@@ -23,41 +23,76 @@
  */
 package com.voxelplugineering.voxelsniper;
 
+import java.io.File;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.voxelplugineering.voxelsniper.api.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.IBrushLoader;
+import com.voxelplugineering.voxelsniper.api.IBrushManager;
+import com.voxelplugineering.voxelsniper.api.IMaterialFactory;
 import com.voxelplugineering.voxelsniper.api.IVoxelSniper;
+import com.voxelplugineering.voxelsniper.api.IWorldFactory;
+import com.voxelplugineering.voxelsniper.bukkit.BukkitMaterial;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitWorldFactory;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
+import com.voxelplugineering.voxelsniper.common.CommonBrushManager;
+import com.voxelplugineering.voxelsniper.common.CommonMaterialFactory;
+import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.common.command.CommandHandler;
-import com.voxelplugineering.voxelsniper.common.factory.CommonWorldFactory;
+import com.voxelplugineering.voxelsniper.common.commands.BrushCommand;
 import com.voxelplugineering.voxelsniper.perms.VaultPermissionProxy;
 
 public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
 {
     public static VoxelSniperBukkit voxelsniper;
 
-    SniperManagerBukkit sniperManager;
-    BrushManagerBukkit brushManager;
+    private SniperManagerBukkit sniperManager;
+    private IBrushManager brushManager;
+    private IBrushLoader brushLoader;
+    private IMaterialFactory<Material> materialFactory;
+    private CommandHandler commandHandler;
+    private IWorldFactory worldFactory;
 
     @Override
     public void onEnable()
     {
+        
+        Gunsmith.beginInit();
+
         voxelsniper = this;
         Gunsmith.setPlugin(this);
-        CommonWorldFactory.setFactory(new BukkitWorldFactory(this.getServer()));
+        
+        this.worldFactory = new BukkitWorldFactory(this.getServer());
+        Gunsmith.setWorldFactory(this.worldFactory);
+        
         this.sniperManager = new SniperManagerBukkit();
         this.sniperManager.init();
-        this.brushManager = new BrushManagerBukkit();
-        Gunsmith.setBrushManager(this.brushManager);
+        Gunsmith.setSniperManager(this.sniperManager);
+        
+        this.brushLoader = new FileBrushLoader(new File(this.getDataFolder(), "brushes"));
+        Gunsmith.setDefaultBrushLoader(this.brushLoader);
+        
+        this.brushManager = new CommonBrushManager();
         this.brushManager.init();
+        Gunsmith.setGlobalBrushManager(this.brushManager);
+        
         setupPermissions();
-        CommandHandler.create();
-        CommandHandler.COMMAND_HANDLER.setRegistrar(new BukkitCommandRegistrar());
+        
+        this.materialFactory = new CommonMaterialFactory<Material>();
+        Gunsmith.setMaterialFactory(this.materialFactory);
+        setupMaterials();
+        
+        this.commandHandler = new CommandHandler();
+        Gunsmith.setCommandHandler(this.commandHandler);
+        Gunsmith.getCommandHandler().setRegistrar(new BukkitCommandRegistrar());
+        setupCommands();
+        
         Gunsmith.finish();
         
     }
@@ -69,12 +104,24 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
             Gunsmith.setPermissionProxy(new VaultPermissionProxy());
         }
     }
+    
+    public void setupCommands()
+    {
+        Gunsmith.getCommandHandler().registerCommand(new BrushCommand());
+    }
+    
+    public void setupMaterials()
+    {
+        for(Material m: Material.values())
+        {
+            this.materialFactory.registerMaterial(m.name(), new BukkitMaterial(m));
+        }
+    }
 
     @Override
     public void onDisable()
     {
-        this.sniperManager.stop();
-        this.brushManager.stop();
+        Gunsmith.stop();
     }
     
     @Override
@@ -92,7 +139,7 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     }
 
     @Override
-    public BrushManagerBukkit getBrushManager()
+    public IBrushManager getBrushManager()
     {
         return this.brushManager;
     }

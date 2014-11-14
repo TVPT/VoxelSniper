@@ -55,6 +55,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
         for (String alias: cmd.getAllAliases())
         {
             BukkitCommand bcmd = new BukkitCommand(alias, cmd);
+            commands.register("voxelsniper", bcmd);
         }
     }
 
