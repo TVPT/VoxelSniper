@@ -34,11 +34,11 @@ import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
 public class BukkitWorldFactory implements IWorldFactory
 {
-    
+
     Server server;
-    
+
     Map<World, CommonWorld> worlds = new WeakHashMap<World, CommonWorld>();
-    
+
     public BukkitWorldFactory(Server s)
     {
         this.server = s;

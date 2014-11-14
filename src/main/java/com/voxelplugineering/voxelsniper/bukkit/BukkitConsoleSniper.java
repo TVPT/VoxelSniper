@@ -9,9 +9,9 @@ import com.voxelplugineering.voxelsniper.common.CommonLocation;
 
 public class BukkitConsoleSniper implements ISniper
 {
-    
+
     CommandSender console;
-    
+
     public BukkitConsoleSniper(CommandSender c)
     {
         this.console = c;
@@ -41,11 +41,11 @@ public class BukkitConsoleSniper implements ISniper
         this.console.sendMessage(msg);
     }
 
-	@Override
-	public IBrushManager getPersonalBrushManager()
-	{
-		return Gunsmith.getGlobalBrushManager();
-	}
+    @Override
+    public IBrushManager getPersonalBrushManager()
+    {
+        return Gunsmith.getGlobalBrushManager();
+    }
 
     @Override
     public CommonLocation getLocation()

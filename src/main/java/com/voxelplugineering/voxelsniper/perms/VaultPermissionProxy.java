@@ -59,8 +59,8 @@ public class VaultPermissionProxy implements IPermissionProxy
     @Override
     public boolean hasWorldPermission(ISniper sniper, CommonWorld world, String permission)
     {
-        return sniper instanceof BukkitSniper && permissionService.playerHas(world.getName(),
-                ((BukkitSniper) sniper).getPlayerReference(), permission);
+        return sniper instanceof BukkitSniper
+                && permissionService.playerHas(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
     }
 
     @Override

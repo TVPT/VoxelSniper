@@ -23,8 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
+import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
+import com.voxelplugineering.voxelsniper.common.CommonMaterial;
 
 public class BukkitBlock extends CommonBlock
 {
@@ -32,5 +34,15 @@ public class BukkitBlock extends CommonBlock
     public BukkitBlock(CommonLocation location, BukkitMaterial material)
     {
         super(location, material);
+    }
+
+    public CommonMaterial<?> getMaterial()
+    {
+        CommonMaterial<?> mat =
+                Gunsmith.getMaterialFactory().getMaterial(
+                        ((BukkitWorld) this.getLocation().getWorld()).localGetMaterialAt(this.getLocation().getFlooredX(),
+                                this.getLocation().getFlooredY(), this.getLocation().getFlooredZ()).name());
+        localSetMaterial(mat);
+        return mat;
     }
 }

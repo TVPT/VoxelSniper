@@ -39,10 +39,10 @@ import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
 public class BukkitWorld extends CommonWorld
 {
-    
+
     private WeakReference<World> world;
     private Map<Chunk, CommonChunk> chunks = new WeakHashMap<Chunk, CommonChunk>();
-    
+
     protected BukkitWorld(World w)
     {
         this.world = new WeakReference<World>(w);
@@ -90,5 +90,10 @@ public class BukkitWorld extends CommonWorld
         Material mat = ((BukkitMaterial) material).getValue();
         this.getWorld().getBlockAt(x, y, z).setType(mat);
     }
-    
+
+    protected Material localGetMaterialAt(int x, int y, int z)
+    {
+        return this.world.get().getBlockAt(x, y, z).getType();
+    }
+
 }

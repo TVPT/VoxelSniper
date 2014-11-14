@@ -34,9 +34,9 @@ import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
 public class BukkitChunk extends CommonChunk
 {
-    
+
     private WeakReference<Chunk> chunk;
-    
+
     public BukkitChunk(Chunk c)
     {
         this.chunk = new WeakReference<Chunk>(c);

@@ -52,7 +52,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
     @Override
     public void registerCommand(Command cmd)
     {
-        for (String alias: cmd.getAllAliases())
+        for (String alias : cmd.getAllAliases())
         {
             BukkitCommand bcmd = new BukkitCommand(alias, cmd);
             commands.register("voxelsniper", bcmd);

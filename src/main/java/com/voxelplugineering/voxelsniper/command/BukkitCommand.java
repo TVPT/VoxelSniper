@@ -31,7 +31,7 @@ import com.voxelplugineering.voxelsniper.common.command.Command;
 
 public class BukkitCommand extends org.bukkit.command.Command
 {
-    
+
     Command cmd;
 
     protected BukkitCommand(String name, Command cmd)
@@ -43,18 +43,16 @@ public class BukkitCommand extends org.bukkit.command.Command
     @Override
     public boolean execute(CommandSender sender, String command, String[] args)
     {
-        if(sender instanceof Player)
+        if (sender instanceof Player)
         {
             return this.cmd.execute(VoxelSniperBukkit.voxelsniper.getSniperManager().getSniper((Player) sender), args);
-        }
-        else
+        } else
         {
-            if(cmd.isPlayerOnly())
+            if (cmd.isPlayerOnly())
             {
                 sender.sendMessage("Sorry this is a player only command.");
                 return true;
-            }
-            else
+            } else
             {
                 return this.cmd.execute(VoxelSniperBukkit.voxelsniper.getSniperManager().getConsoleSniperProxy(), args);
             }
