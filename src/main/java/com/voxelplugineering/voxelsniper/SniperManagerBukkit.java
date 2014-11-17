@@ -27,19 +27,20 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.api.ISniperFactory;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitConsoleSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
-import com.voxelplugineering.voxelsniper.common.CommonVector;
 import com.voxelplugineering.voxelsniper.common.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.common.event.SniperCreateEvent;
 
-public class SniperManagerBukkit implements ISniperFactory<Player>
+public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
 {
 
     private Map<Player, BukkitSniper> players = new WeakHashMap<Player, BukkitSniper>();
@@ -98,10 +99,13 @@ public class SniperManagerBukkit implements ISniperFactory<Player>
     public boolean onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
         Player p = event.getPlayer();
-        ISniper s = getSniper(p);
-        CommonVector dir = new CommonVector(p.getLocation().getYaw(), p.getLocation().getPitch(), 0);
-        SnipeEvent se = new SnipeEvent(s, dir);
-        Gunsmith.getEventBus().post(se);
+        System.out.println("PlayerInteractEvent for " + p.getName());
+        if(p.getItemInHand().getType() == ((Material) Gunsmith.getConfiguration().get("ARROW_MATERIAL")))
+        {
+            ISniper s = getSniper(p);
+            SnipeEvent se = new SnipeEvent(s, p.getLocation().getYaw(), p.getLocation().getPitch());
+            Gunsmith.getEventBus().post(se);
+        }
         return true;
     }
 

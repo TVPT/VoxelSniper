@@ -36,12 +36,15 @@ import com.voxelplugineering.voxelsniper.common.CommonWorld;
 public class VaultPermissionProxy implements IPermissionProxy
 {
 
-    private static Permission permissionService;
+    private static Permission permissionService = null;
 
     public VaultPermissionProxy()
     {
         RegisteredServiceProvider<Permission> rsp = Bukkit.getServicesManager().getRegistration(Permission.class);
-        permissionService = rsp.getProvider();
+        if(rsp != null)
+        {
+            permissionService = rsp.getProvider();
+        }
     }
 
     @Override

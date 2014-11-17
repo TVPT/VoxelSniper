@@ -65,10 +65,4 @@ public class BukkitMaterial extends CommonMaterial<Material>
         return this.getValue().isTransparent();
     }
 
-    @Override
-    public boolean isFlammable()
-    {
-        return this.getValue().isFlammable();
-    }
-
 }

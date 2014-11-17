@@ -44,18 +44,6 @@ public class BukkitSniper extends CommonPlayer<Player>
     }
 
     @Override
-    public String getCurrentToolId()
-    {
-        return null;
-    }
-
-    @Override
-    public String getToolId(Object object)
-    {
-        return null;
-    }
-
-    @Override
     public String getName()
     {
         return getPlayerReference().getName();
@@ -71,7 +59,7 @@ public class BukkitSniper extends CommonPlayer<Player>
     public CommonLocation getLocation()
     {
         return new CommonLocation(Gunsmith.getWorldFactory().getWorld(getPlayerReference().getLocation().getWorld().getName()), getPlayerReference()
-                .getLocation().getBlockX(), getPlayerReference().getLocation().getBlockY(), getPlayerReference().getLocation().getBlockZ());
+                .getLocation().getX(), getPlayerReference().getLocation().getY(), getPlayerReference().getLocation().getZ());
     }
 
 }

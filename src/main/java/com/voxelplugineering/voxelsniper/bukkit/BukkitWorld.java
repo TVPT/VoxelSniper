@@ -31,6 +31,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 
+import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonChunk;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
@@ -77,7 +78,7 @@ public class BukkitWorld extends CommonWorld
     @Override
     public CommonBlock getBlockAt(int x, int y, int z)
     {
-        return new CommonBlock(new CommonLocation(this, x, y, z), new BukkitMaterial(this.getWorld().getBlockAt(x, y, z).getType()));
+        return new CommonBlock(new CommonLocation(this, x, y, z), Gunsmith.getMaterialFactory().getMaterial(this.getWorld().getBlockAt(x, y, z).getType().name()));
     }
 
     @Override
@@ -88,6 +89,7 @@ public class BukkitWorld extends CommonWorld
             return;
         }
         Material mat = ((BukkitMaterial) material).getValue();
+        //System.out.println("Setting block at " + x + " " + y + " " + z + " to " + mat.name());
         this.getWorld().getBlockAt(x, y, z).setType(mat);
     }
 
