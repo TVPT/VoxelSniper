@@ -89,7 +89,7 @@ public class BukkitWorld extends CommonWorld
             return;
         }
         Material mat = ((BukkitMaterial) material).getValue();
-        //System.out.println("Setting block at " + x + " " + y + " " + z + " to " + mat.name());
+        //Gunsmith.getLogger().debug("Setting block at " + x + " " + y + " " + z + " to " + mat.name());
         this.getWorld().getBlockAt(x, y, z).setType(mat);
     }
 

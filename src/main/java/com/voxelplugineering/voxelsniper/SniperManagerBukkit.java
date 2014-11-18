@@ -99,7 +99,7 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
     public boolean onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
         Player p = event.getPlayer();
-        System.out.println("PlayerInteractEvent for " + p.getName());
+        Gunsmith.getLogger().debug("PlayerInteractEvent for " + p.getName());
         if(p.getItemInHand().getType() == ((Material) Gunsmith.getConfiguration().get("ARROW_MATERIAL")))
         {
             ISniper s = getSniper(p);

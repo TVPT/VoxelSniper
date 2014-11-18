@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
+import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.ICommandRegistrar;
 import com.voxelplugineering.voxelsniper.common.command.Command;
 import com.voxelplugineering.voxelsniper.util.CraftBukkitFetcher;
@@ -45,7 +46,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
             this.commands = (CommandMap) cmap.get(Bukkit.getServer());
         } catch (Exception e)
         {
-            System.out.println("Error setting up bukkit command registrar: " + e.getMessage());
+            Gunsmith.getLogger().error(e, "Error setting up bukkit command registrar");
         }
     }
 

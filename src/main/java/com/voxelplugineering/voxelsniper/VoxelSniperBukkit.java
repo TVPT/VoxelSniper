@@ -45,6 +45,7 @@ import com.voxelplugineering.voxelsniper.common.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.common.commands.BrushCommand;
 import com.voxelplugineering.voxelsniper.common.commands.MaterialCommand;
 import com.voxelplugineering.voxelsniper.config.BukkitConfiguration;
+import com.voxelplugineering.voxelsniper.logging.BukkitLogger;
 import com.voxelplugineering.voxelsniper.perms.VaultPermissionProxy;
 import com.voxelplugineering.voxelsniper.util.TemporaryBrushBuilder;
 
@@ -68,6 +69,8 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
 
         voxelsniper = this;
         Gunsmith.setPlugin(this);
+        
+        Gunsmith.getLoggingDistributor().registerLogger(new BukkitLogger(), "bukkit");
         
         Gunsmith.getConfiguration().registerContainer(BukkitConfiguration.class);
 
