@@ -27,7 +27,7 @@ public class BukkitLogger implements ILogger
     }
 
     @Override
-    public void warning(String msg)
+    public void warn(String msg)
     {
         ((VoxelSniperBukkit) Gunsmith.getVoxelSniper()).getLogger().log(Level.WARNING, msg);
     }

@@ -60,10 +60,12 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     private CommandHandler commandHandler;
     private BukkitWorldFactory worldFactory;
     private VaultPermissionProxy permissionProxy;
+    private Thread mainThread;
 
     @Override
     public void onEnable()
     {
+        mainThread = Thread.currentThread();
 
         Gunsmith.beginInit();
 
@@ -164,6 +166,12 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     public ClassLoader getGunsmithClassLoader()
     {
         return this.getClassLoader();
+    }
+
+    @Override
+    public Thread getMainThread()
+    {
+        return this.mainThread;
     }
 
 }
