@@ -86,7 +86,8 @@ public class BukkitWorld extends CommonWorld
     @Override
     public CommonBlock getBlockAt(int x, int y, int z)
     {
-        return new CommonBlock(new CommonLocation(this, x, y, z), Gunsmith.getMaterialFactory().getMaterial(this.getWorld().getBlockAt(x, y, z).getType().name()));
+        return new CommonBlock(new CommonLocation(this, x, y, z), Gunsmith.getMaterialFactory().getMaterial(
+                this.getWorld().getBlockAt(x, y, z).getType().name()));
     }
 
     @Override
@@ -100,8 +101,7 @@ public class BukkitWorld extends CommonWorld
         if (Thread.currentThread() == Gunsmith.getVoxelSniper().getMainThread())
         {
             this.getWorld().getBlockAt(x, y, z).setType(mat);
-        }
-        else
+        } else
         {
             this.task.addChange(x, y, z, mat);
         }
@@ -116,22 +116,22 @@ public class BukkitWorld extends CommonWorld
 
 class OutOfThreadBlockPlaceTask implements Runnable
 {
-    
+
     private BukkitTask task = null;
     private WeakReference<World> world;
     Queue<BlockChange> pending;
-    
+
     public OutOfThreadBlockPlaceTask(WeakReference<World> w)
     {
         this.world = w;
         this.pending = new LinkedList<BlockChange>();
     }
-    
+
     public void setTaskHolder(BukkitTask task)
     {
         this.task = task;
     }
-    
+
     public void addChange(int x, int y, int z, Material m)
     {
         this.pending.add(new BlockChange(x, y, z, m));
@@ -140,16 +140,16 @@ class OutOfThreadBlockPlaceTask implements Runnable
     @Override
     public void run()
     {
-        int count = ((Integer) Gunsmith.getConfiguration().get("BLOCK_CHANGES_PER_SECOND"))/4;
+        int count = ((Integer) Gunsmith.getConfiguration().get("BLOCK_CHANGES_PER_SECOND")) / 4;
         World w = this.world.get();
-        if(w == null)
+        if (w == null)
         {
             Gunsmith.getLogger().warn("Founding pending changes on world which no longer is referenced!");
             this.pending.clear();
-            if(this.task != null) this.task.cancel();
+            if (this.task != null) this.task.cancel();
             return;
         }
-        while(count > 0 && !this.pending.isEmpty())
+        while (count > 0 && !this.pending.isEmpty())
         {
             BlockChange next = this.pending.poll();
             w.getBlockAt(next.getX(), next.getY(), next.getZ()).setType(next.getMaterial());
@@ -164,7 +164,7 @@ class BlockChange
     int y;
     int z;
     Material material;
-    
+
     public BlockChange(int x, int y, int z, Material m)
     {
         this.x = x;
@@ -172,25 +172,25 @@ class BlockChange
         this.z = z;
         this.material = m;
     }
-    
+
     public int getX()
     {
         return this.x;
     }
-    
+
     public int getY()
     {
         return this.y;
     }
-    
+
     public int getZ()
     {
         return this.z;
     }
-    
+
     public Material getMaterial()
     {
         return this.material;
     }
-    
+
 }

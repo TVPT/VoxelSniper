@@ -61,4 +61,10 @@ public class BukkitConsoleSniper implements ISniper
         throw new UnsupportedOperationException("Cannot get brush settings from the console");
     }
 
+    @Override
+    public void resetSettings()
+    {
+
+    }
+
 }

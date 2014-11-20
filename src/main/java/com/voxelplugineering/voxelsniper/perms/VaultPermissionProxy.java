@@ -41,7 +41,7 @@ public class VaultPermissionProxy implements IPermissionProxy
     public VaultPermissionProxy()
     {
         RegisteredServiceProvider<Permission> rsp = Bukkit.getServicesManager().getRegistration(Permission.class);
-        if(rsp != null)
+        if (rsp != null)
         {
             permissionService = rsp.getProvider();
         }

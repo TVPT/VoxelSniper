@@ -8,10 +8,10 @@ import com.voxelplugineering.voxelsniper.api.ILogger;
 
 public class BukkitLogger implements ILogger
 {
-    
+
     public BukkitLogger()
     {
-        
+
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BukkitLogger implements ILogger
     public void error(Exception e, String msg)
     {
         ((VoxelSniperBukkit) Gunsmith.getVoxelSniper()).getLogger().log(Level.SEVERE, msg, e);
-        
+
     }
 
 }

@@ -71,9 +71,9 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
 
         voxelsniper = this;
         Gunsmith.setPlugin(this);
-        
+
         Gunsmith.getLoggingDistributor().registerLogger(new BukkitLogger(), "bukkit");
-        
+
         Gunsmith.getConfiguration().registerContainer(BukkitConfiguration.class);
 
         this.worldFactory = new BukkitWorldFactory(this.getServer());
