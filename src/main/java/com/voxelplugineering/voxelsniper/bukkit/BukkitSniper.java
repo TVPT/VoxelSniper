@@ -25,12 +25,14 @@ package com.voxelplugineering.voxelsniper.bukkit;
 
 import java.io.File;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonPlayer;
+import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
 
 public class BukkitSniper extends CommonPlayer<Player>
@@ -39,8 +41,9 @@ public class BukkitSniper extends CommonPlayer<Player>
     public BukkitSniper(Player player)
     {
         super(player);
-        this.getPersonalBrushManager().addLoader(
-                new FileBrushLoader(new File(((JavaPlugin) Gunsmith.getVoxelSniper()).getDataFolder(), "brushes" + File.separator + this.getName())));
+        //TODO: Change the call to getDataFolder() to a configuration value for the Gunsmith folder
+        File personalFolder = new File(((JavaPlugin) Gunsmith.getVoxelSniper()).getDataFolder(), "brushes" + File.separator + this.getName());
+        this.getPersonalBrushManager().addLoader(new FileBrushLoader(personalFolder));
     }
 
     @Override
@@ -58,8 +61,15 @@ public class BukkitSniper extends CommonPlayer<Player>
     @Override
     public CommonLocation getLocation()
     {
-        return new CommonLocation(Gunsmith.getWorldFactory().getWorld(getPlayerReference().getLocation().getWorld().getName()), getPlayerReference()
-                .getLocation().getX(), getPlayerReference().getLocation().getY(), getPlayerReference().getLocation().getZ());
+        Location location = getPlayerReference().getLocation();
+        CommonWorld world = Gunsmith.getWorldFactory().getWorld(location.getWorld().getName());
+        return new CommonLocation(world, location.getX(), location.getY(), location.getZ());
+    }
+
+    @Override
+    public CommonWorld getWorld()
+    {
+        return Gunsmith.getWorldFactory().getWorld(getPlayerReference().getWorld().getName());
     }
 
 }

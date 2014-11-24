@@ -59,4 +59,16 @@ public class BukkitWorldFactory implements IWorldFactory
         return this.worlds.get(world);
     }
 
+    @Override
+    public CommonWorld[] getAllLoadedWorlds()
+    {
+        CommonWorld[] wor = new CommonWorld[worlds.keySet().size()];
+        int i = 0;
+        for (World w : worlds.keySet())
+        {
+            wor[i++] = worlds.get(w);
+        }
+        return wor;
+    }
+
 }

@@ -24,6 +24,7 @@
 package com.voxelplugineering.voxelsniper;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,6 +32,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.IBrushManager;
@@ -40,6 +42,7 @@ import com.voxelplugineering.voxelsniper.bukkit.BukkitWorldFactory;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.common.CommonBrushManager;
 import com.voxelplugineering.voxelsniper.common.CommonMaterialFactory;
+import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.common.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.common.commands.BrushCommand;
@@ -62,10 +65,13 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     private VaultPermissionProxy permissionProxy;
     private Thread mainThread;
 
+    private BukkitTask worldTick;
+
     @Override
     public void onEnable()
     {
         mainThread = Thread.currentThread();
+        getLogger().setLevel(Level.FINE);
 
         Gunsmith.beginInit();
 
@@ -109,6 +115,21 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         Gunsmith.finish();
 
         TemporaryBrushBuilder.buildBrushes();
+        TemporaryBrushBuilder.saveAll(new File(getDataFolder(), "brushes"));
+
+        this.worldTick = this.getServer().getScheduler().runTaskTimer(this, new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+                for (CommonWorld world : Gunsmith.getWorldFactory().getAllLoadedWorlds())
+                {
+                    world.tickChanges();
+                }
+            }
+
+        }, 0, 5);
     }
 
     private void setupPermissions()

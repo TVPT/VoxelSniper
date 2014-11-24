@@ -88,26 +88,25 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
     }
 
     @EventHandler
-    public boolean onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
+    public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
     {
         ISniper s = getSniper(event.getPlayer());
         SniperCreateEvent sce = new SniperCreateEvent(s);
         Gunsmith.getEventBus().post(sce);
-        return true;
     }
 
     @EventHandler
-    public boolean onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
+    public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
         Player p = event.getPlayer();
         Gunsmith.getLogger().debug("PlayerInteractEvent for " + p.getName());
-        if (p.getItemInHand().getType() == ((Material) Gunsmith.getConfiguration().get("ARROW_MATERIAL")) && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR))
+        if (p.getItemInHand().getType() == ((Material) Gunsmith.getConfiguration().get("ARROW_MATERIAL"))
+                && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR))
         {
             ISniper s = getSniper(p);
             SnipeEvent se = new SnipeEvent(s, p.getLocation().getYaw(), p.getLocation().getPitch());
             Gunsmith.getEventBus().post(se);
         }
-        return true;
     }
 
 }

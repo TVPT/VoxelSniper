@@ -8,6 +8,8 @@ import com.voxelplugineering.voxelsniper.api.IBrush;
 import com.voxelplugineering.voxelsniper.api.IBrushManager;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
+import com.voxelplugineering.voxelsniper.common.CommonWorld;
+import com.voxelplugineering.voxelsniper.world.BlockChangeQueue;
 
 public class BukkitConsoleSniper implements ISniper
 {
@@ -65,6 +67,30 @@ public class BukkitConsoleSniper implements ISniper
     public void resetSettings()
     {
 
+    }
+
+    @Override
+    public void addHistory(BlockChangeQueue invert)
+    {
+        throw new UnsupportedOperationException("Console has no change queue");
+    }
+
+    @Override
+    public void resetPersonalQueue()
+    {
+        throw new UnsupportedOperationException("Console has no change queue");
+    }
+
+    @Override
+    public CommonWorld getWorld()
+    {
+        return null;
+    }
+
+    @Override
+    public BlockChangeQueue getPersonalQueue()
+    {
+        return null;
     }
 
 }
