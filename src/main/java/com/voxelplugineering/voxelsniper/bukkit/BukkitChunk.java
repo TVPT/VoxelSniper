@@ -23,6 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.lang.ref.WeakReference;
 
 import org.bukkit.Chunk;
@@ -32,22 +33,40 @@ import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonChunk;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
+/**
+ * A bukkit wrapper for {@link CommonChunk}.
+ */
 public class BukkitChunk extends CommonChunk
 {
 
+    /**
+     * A {@link WeakReference} to the chunk underpinning this wrapper.
+     */
     private WeakReference<Chunk> chunk;
 
-    public BukkitChunk(Chunk c)
+    /**
+     * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}.
+     * 
+     * @param chunk the chunk to wrap, cannot be null
+     */
+    public BukkitChunk(Chunk chunk)
     {
-        this.chunk = new WeakReference<Chunk>(c);
+        checkNotNull(chunk, "Chunk cannot be null");
+        this.chunk = new WeakReference<Chunk>(chunk);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonWorld getCommonWorld()
     {
         return Gunsmith.getWorldFactory().getWorld(this.chunk.get().getWorld().getName());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonBlock getRelativeBlockAt(int x, int y, int z)
     {

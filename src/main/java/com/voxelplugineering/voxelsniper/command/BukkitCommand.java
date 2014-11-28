@@ -23,23 +23,40 @@
  */
 package com.voxelplugineering.voxelsniper.command;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.voxelplugineering.voxelsniper.VoxelSniperBukkit;
 import com.voxelplugineering.voxelsniper.common.command.Command;
 
+/**
+ * A wrapper for Gunsmith's commands which may be registered into the bukkit command handler.
+ */
 public class BukkitCommand extends org.bukkit.command.Command
 {
 
+    /**
+     * The Gunsmith command underpinning this command.
+     */
     Command cmd;
 
+    /**
+     * Creates a new {@link BukkitCommand}.
+     * 
+     * @param name the command name, cannot be null or empty
+     * @param cmd the command, cannot be null
+     */
     protected BukkitCommand(String name, Command cmd)
     {
         super(name);
+        checkNotNull(cmd, "Command cannot be null");
         this.cmd = cmd;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean execute(CommandSender sender, String command, String[] args)
     {

@@ -33,10 +33,21 @@ import com.voxelplugineering.voxelsniper.api.ICommandRegistrar;
 import com.voxelplugineering.voxelsniper.common.command.Command;
 import com.voxelplugineering.voxelsniper.util.CraftBukkitFetcher;
 
+/**
+ * A registrar for registering Gunsmith command within the bukkit command handler.
+ */
 public class BukkitCommandRegistrar implements ICommandRegistrar
 {
+    /**
+     * A reference to bukkit's {@link CommandMap}.
+     * <p>
+     * TODO: possible memory leak if bukkit attempts to recreate this map, perhaps across reloads.
+     */
     CommandMap commands;
 
+    /**
+     * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's {@link CommandMap} via reflection for use to register commands.
+     */
     public BukkitCommandRegistrar()
     {
         try
@@ -50,6 +61,9 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void registerCommand(Command cmd)
     {

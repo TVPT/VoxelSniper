@@ -38,28 +38,53 @@ import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonMaterial;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
+/**
+ * A wrapper for bukkit's {@link World}s.
+ */
 public class BukkitWorld extends CommonWorld
 {
 
+    /**
+     * A {@link WeakReference} to the {@link World} underpinning this world.
+     */
     private WeakReference<World> world;
+    /**
+     * A {@link WeakHashMap} of chunks contained in this world.
+     */
     private Map<Chunk, CommonChunk> chunks = new WeakHashMap<Chunk, CommonChunk>();
 
-    protected BukkitWorld(World w)
+    /**
+     * Creates a new {@link BukkitWorld}.
+     * 
+     * @param world the world
+     */
+    protected BukkitWorld(World world)
     {
-        this.world = new WeakReference<World>(w);
+        this.world = new WeakReference<World>(world);
     }
 
+    /**
+     * Returns the bukkit specific world.
+     * 
+     * @return the world
+     */
     public World getWorld()
     {
         return this.world.get();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName()
     {
         return this.getWorld().getName();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonChunk getChunkAt(int x, int y, int z)
     {
@@ -75,6 +100,9 @@ public class BukkitWorld extends CommonWorld
         return this.chunks.get(chunk);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonBlock getBlockAt(int x, int y, int z)
     {
@@ -82,6 +110,9 @@ public class BukkitWorld extends CommonWorld
                 this.getWorld().getBlockAt(x, y, z).getType().name()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBlockAt(int x, int y, int z, CommonMaterial<?> material)
     {
@@ -96,6 +127,14 @@ public class BukkitWorld extends CommonWorld
         }
     }
 
+    /**
+     * Returns the bukkit specific {@link Material} at the given location.
+     * 
+     * @param x the x position
+     * @param y the y position
+     * @param z the z position
+     * @return the material
+     */
     protected Material localGetMaterialAt(int x, int y, int z)
     {
         return this.world.get().getBlockAt(x, y, z).getType();

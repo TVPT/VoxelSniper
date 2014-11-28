@@ -32,7 +32,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.IBrushManager;
@@ -42,7 +41,6 @@ import com.voxelplugineering.voxelsniper.bukkit.BukkitWorldFactory;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.common.CommonBrushManager;
 import com.voxelplugineering.voxelsniper.common.CommonMaterialFactory;
-import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.common.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.common.commands.BrushCommand;
@@ -52,8 +50,15 @@ import com.voxelplugineering.voxelsniper.logging.BukkitLogger;
 import com.voxelplugineering.voxelsniper.perms.VaultPermissionProxy;
 import com.voxelplugineering.voxelsniper.util.TemporaryBrushBuilder;
 
+/**
+ * The Main class for the bukkit specific implementation.
+ */
 public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
 {
+
+    /**
+     * The main plugin instance.
+     */
     public static VoxelSniperBukkit voxelsniper;
 
     private SniperManagerBukkit sniperManager;
@@ -63,10 +68,15 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     private CommandHandler commandHandler;
     private BukkitWorldFactory worldFactory;
     private VaultPermissionProxy permissionProxy;
+    
+    /**
+     * The main server thread to check synchronous accesses.
+     */
     private Thread mainThread;
 
-    private BukkitTask worldTick;
-
+    /**
+     * The main enabling sequence.
+     */
     @Override
     public void onEnable()
     {
@@ -117,21 +127,11 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         TemporaryBrushBuilder.buildBrushes();
         TemporaryBrushBuilder.saveAll(new File(getDataFolder(), "brushes"));
 
-        this.worldTick = this.getServer().getScheduler().runTaskTimer(this, new Runnable()
-        {
-
-            @Override
-            public void run()
-            {
-                for (CommonWorld world : Gunsmith.getWorldFactory().getAllLoadedWorlds())
-                {
-                    world.tickChanges();
-                }
-            }
-
-        }, 0, 5);
     }
 
+    /**
+     * Sets up the permissions.
+     */
     private void setupPermissions()
     {
         Plugin vault = Bukkit.getPluginManager().getPlugin("Vault");
@@ -141,12 +141,18 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         }
     }
 
+    /**
+     * Registers commands.
+     */
     public void setupCommands()
     {
         Gunsmith.getCommandHandler().registerCommand(new BrushCommand());
         Gunsmith.getCommandHandler().registerCommand(new MaterialCommand());
     }
 
+    /**
+     * Registers the materials into the material factory.
+     */
     public void setupMaterials()
     {
         for (Material m : Material.values())
@@ -155,6 +161,9 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         }
     }
 
+    /**
+     * The disabling sequence for Gunsmith.
+     */
     @Override
     public void onDisable()
     {
@@ -164,31 +173,36 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         }
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-
-        return false;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SniperManagerBukkit getSniperManager()
     {
         return this.sniperManager;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IBrushManager getBrushManager()
     {
         return this.brushManager;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ClassLoader getGunsmithClassLoader()
     {
         return this.getClassLoader();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Thread getMainThread()
     {

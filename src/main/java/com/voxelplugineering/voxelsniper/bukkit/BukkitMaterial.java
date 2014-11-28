@@ -30,10 +30,19 @@ import org.bukkit.Material;
 
 import com.voxelplugineering.voxelsniper.common.CommonMaterial;
 
+/**
+ * A wrapper for bukkit {@link Material}s.
+ */
 public class BukkitMaterial extends CommonMaterial<Material>
 {
 
+    /**
+     * A static set of materials which are liquids.
+     */
     private static Set<Material> LIQUIDS = new HashSet<Material>();
+    /**
+     * A static set of materials which can break on physics updates.
+     */
     private static Set<Material> FALLOFF_MATERIALS = new HashSet<Material>();
 
     static
@@ -93,47 +102,73 @@ public class BukkitMaterial extends CommonMaterial<Material>
 
     }
 
+    /**
+     * Creates a new {@link BukkitMaterial}.
+     * 
+     * @param value the material to wrap, cannot be null
+     */
     public BukkitMaterial(Material value)
     {
         super(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString()
     {
         return this.getValue().name();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isBlock()
     {
         return this.getValue().isBlock();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasGravity()
     {
         return this.getValue().hasGravity();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isSolid()
     {
         return this.getValue().isSolid();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isTransparent()
     {
         return this.getValue().isTransparent();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isLiquid()
     {
         return LIQUIDS.contains(this.getValue());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isReliantOnEnvironment()
     {

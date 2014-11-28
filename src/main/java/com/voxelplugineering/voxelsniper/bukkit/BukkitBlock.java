@@ -28,14 +28,39 @@ import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonMaterial;
 
+/**
+ * A bukkit wrapper for {@link CommonBlock}s.
+ */
 public class BukkitBlock extends CommonBlock
 {
 
+    /**
+     * Creates a new {@link BukkitBlock}.
+     * 
+     * @param location the location of the block, cannot be null
+     * @param material the material of the block, cannot be null
+     */
     public BukkitBlock(CommonLocation location, BukkitMaterial material)
     {
         super(location, material);
     }
 
+    /**
+     * Creates a new {@link BukkitBlock}. The material is set to the current material at the given location.
+     * 
+     * @param location the location of the block, cannot be null
+     */
+    public BukkitBlock(CommonLocation location)
+    {
+        super(location, Gunsmith.getMaterialFactory()
+                .getMaterial(
+                        ((BukkitWorld) location.getWorld())
+                                .localGetMaterialAt(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ()).name()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public CommonMaterial<?> getMaterial()
     {
         CommonMaterial<?> mat =

@@ -35,9 +35,17 @@ import com.voxelplugineering.voxelsniper.common.CommonPlayer;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
 
+/**
+ * A wrapper for bukkit's {@link Player}s.
+ */
 public class BukkitSniper extends CommonPlayer<Player>
 {
 
+    /**
+     * Creates a new {@link BukkitSniper}.
+     * 
+     * @param player the player to wrap, cannot be null
+     */
     public BukkitSniper(Player player)
     {
         super(player);
@@ -46,18 +54,27 @@ public class BukkitSniper extends CommonPlayer<Player>
         this.getPersonalBrushManager().addLoader(new FileBrushLoader(personalFolder));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName()
     {
         return getPlayerReference().getName();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendMessage(String msg)
     {
         getPlayerReference().sendMessage(msg);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonLocation getLocation()
     {
@@ -66,10 +83,14 @@ public class BukkitSniper extends CommonPlayer<Player>
         return new CommonLocation(world, location.getX(), location.getY(), location.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonWorld getWorld()
     {
         return Gunsmith.getWorldFactory().getWorld(getPlayerReference().getWorld().getName());
     }
+
 
 }

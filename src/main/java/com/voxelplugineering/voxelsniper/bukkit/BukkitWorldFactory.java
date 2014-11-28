@@ -32,18 +32,34 @@ import org.bukkit.World;
 import com.voxelplugineering.voxelsniper.api.IWorldFactory;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
+/**
+ * A world for {@link BukkitWorld}s.
+ */
 public class BukkitWorldFactory implements IWorldFactory
 {
 
+    /**
+     * A reference to the server.
+     */
     Server server;
-
+    /**
+     * A weak mapping of the bukkit {@link World}s to the Gunsmith wrappers.
+     */
     Map<World, CommonWorld> worlds = new WeakHashMap<World, CommonWorld>();
 
-    public BukkitWorldFactory(Server s)
+    /**
+     * Creates a new {@link BukkitWorldFactory}.
+     * 
+     * @param server the server
+     */
+    public BukkitWorldFactory(Server server)
     {
-        this.server = s;
+        this.server = server;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonWorld getWorld(String name)
     {
@@ -59,6 +75,9 @@ public class BukkitWorldFactory implements IWorldFactory
         return this.worlds.get(world);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CommonWorld[] getAllLoadedWorlds()
     {
