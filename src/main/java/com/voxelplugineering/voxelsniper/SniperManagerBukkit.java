@@ -75,6 +75,7 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
             @Override
             public void run()
             {
+                long start = System.currentTimeMillis();
                 int n = 0;
                 for(Player p: players.keySet())
                 {
@@ -112,9 +113,10 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
                         break;
                     }
                 }
+                Gunsmith.getLogger().info("Change queue tick length: " + (System.currentTimeMillis() - start) + " ms");
             }
 
-        }, 0, 5);
+        }, 0, 10);
     }
 
     /**

@@ -123,7 +123,10 @@ public class BukkitWorld extends CommonWorld
         Material mat = ((BukkitMaterial) material).getValue();
         if (Thread.currentThread() == Gunsmith.getVoxelSniper().getMainThread())
         {
-            this.getWorld().getBlockAt(x, y, z).setType(mat);
+            if(y >= 0 || y < 256)
+            {
+                this.getWorld().getBlockAt(x, y, z).setType(mat);
+            }
         }
     }
 

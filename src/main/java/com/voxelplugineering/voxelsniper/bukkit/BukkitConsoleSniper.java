@@ -1,6 +1,7 @@
 package com.voxelplugineering.voxelsniper.bukkit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.bukkit.command.CommandSender;
 
 import com.thevoxelbox.vsl.api.IVariableScope;
@@ -11,6 +12,7 @@ import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.world.BlockChangeQueue;
+import com.voxelplugineering.voxelsniper.world.ChangeQueue;
 
 /**
  * A stripped out {@link ISniper} implementation to act as a proxy for the console.
@@ -58,7 +60,7 @@ public class BukkitConsoleSniper implements ISniper
     @Override
     public IBrushManager getPersonalBrushManager()
     {
-        return Gunsmith.getGlobalBrushManager();
+        throw new UnsupportedOperationException("Console has no brush manager.");
     }
 
     /**
@@ -67,7 +69,7 @@ public class BukkitConsoleSniper implements ISniper
     @Override
     public CommonLocation getLocation()
     {
-        return null;
+        throw new UnsupportedOperationException("Console has no location.");
     }
 
     /**
@@ -76,7 +78,7 @@ public class BukkitConsoleSniper implements ISniper
     @Override
     public void setCurrentBrush(IBrush brush)
     {
-        throw new UnsupportedOperationException("Cannot set a brush on the console");
+        return;
     }
 
     /**
@@ -103,16 +105,7 @@ public class BukkitConsoleSniper implements ISniper
     @Override
     public void resetSettings()
     {
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addHistory(BlockChangeQueue invert)
-    {
-        throw new UnsupportedOperationException("Console has no change queue");
+        return;
     }
 
     /**
@@ -121,16 +114,7 @@ public class BukkitConsoleSniper implements ISniper
     @Override
     public void undoHistory(int n)
     {
-        throw new UnsupportedOperationException("Console has no change queue");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void resetPersonalQueue()
-    {
-        throw new UnsupportedOperationException("Console has no change queue");
+        return;
     }
 
     /**
@@ -139,16 +123,7 @@ public class BukkitConsoleSniper implements ISniper
     @Override
     public CommonWorld getWorld()
     {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BlockChangeQueue getActiveQueue()
-    {
-        throw new UnsupportedOperationException("Console has no change queue");
+        throw new UnsupportedOperationException("Console has no world");
     }
 
     /**
@@ -157,7 +132,7 @@ public class BukkitConsoleSniper implements ISniper
     @Override
     public boolean hasPendingChanges()
     {
-        throw new UnsupportedOperationException("Console has no change queue");
+        return false;
     }
 
     /**
@@ -173,9 +148,21 @@ public class BukkitConsoleSniper implements ISniper
      * {@inheritDoc}
      */
     @Override
-    public void addPending(BlockChangeQueue blockChangeQueue)
+    public void clearNextPending()
     {
-        throw new UnsupportedOperationException("Console has no change queue");
+        return;
+    }
+
+    @Override
+    public void addHistory(ChangeQueue invert)
+    {
+        return;
+    }
+
+    @Override
+    public void addPending(ChangeQueue blockChangeQueue)
+    {
+        return;
     }
 
 }

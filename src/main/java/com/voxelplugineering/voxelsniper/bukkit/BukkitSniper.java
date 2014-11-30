@@ -34,6 +34,7 @@ import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonPlayer;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
+import com.voxelplugineering.voxelsniper.world.ChangeQueue;
 
 /**
  * A wrapper for bukkit's {@link Player}s.
@@ -91,6 +92,5 @@ public class BukkitSniper extends CommonPlayer<Player>
     {
         return Gunsmith.getWorldFactory().getWorld(getPlayerReference().getWorld().getName());
     }
-
-
+    
 }
