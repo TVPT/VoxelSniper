@@ -25,7 +25,7 @@ package com.voxelplugineering.voxelsniper.util;
 
 import org.bukkit.Bukkit;
 
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
+import com.voxelplugineering.voxelsniper.Gunsmith;
 
 /**
  * A utility class to fetch the current craftbukkit package for this version. TODO: replace with a cleaner way, here as a placeholder

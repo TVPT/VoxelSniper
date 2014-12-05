@@ -118,7 +118,7 @@ public class BukkitMaterial extends CommonMaterial<Material>
     @Override
     public String toString()
     {
-        return this.getValue().name();
+        return this.getThis().name();
     }
 
     /**
@@ -127,7 +127,7 @@ public class BukkitMaterial extends CommonMaterial<Material>
     @Override
     public boolean isBlock()
     {
-        return this.getValue().isBlock();
+        return this.getThis().isBlock();
     }
 
     /**
@@ -136,7 +136,7 @@ public class BukkitMaterial extends CommonMaterial<Material>
     @Override
     public boolean hasGravity()
     {
-        return this.getValue().hasGravity();
+        return this.getThis().hasGravity();
     }
 
     /**
@@ -145,7 +145,7 @@ public class BukkitMaterial extends CommonMaterial<Material>
     @Override
     public boolean isSolid()
     {
-        return this.getValue().isSolid();
+        return this.getThis().isSolid();
     }
 
     /**
@@ -154,7 +154,7 @@ public class BukkitMaterial extends CommonMaterial<Material>
     @Override
     public boolean isTransparent()
     {
-        return this.getValue().isTransparent();
+        return this.getThis().isTransparent();
     }
 
     /**
@@ -163,7 +163,7 @@ public class BukkitMaterial extends CommonMaterial<Material>
     @Override
     public boolean isLiquid()
     {
-        return LIQUIDS.contains(this.getValue());
+        return LIQUIDS.contains(this.getThis());
     }
 
     /**
@@ -172,7 +172,13 @@ public class BukkitMaterial extends CommonMaterial<Material>
     @Override
     public boolean isReliantOnEnvironment()
     {
-        return FALLOFF_MATERIALS.contains(this.getValue());
+        return FALLOFF_MATERIALS.contains(this.getThis());
+    }
+
+    @Override
+    public String getName()
+    {
+        return getThis().name();
     }
 
 }

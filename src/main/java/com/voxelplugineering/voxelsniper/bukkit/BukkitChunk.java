@@ -23,45 +23,27 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import java.lang.ref.WeakReference;
-
 import org.bukkit.Chunk;
+import org.bukkit.block.Block;
 
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonChunk;
-import com.voxelplugineering.voxelsniper.common.CommonWorld;
+import com.voxelplugineering.voxelsniper.common.CommonLocation;
 
 /**
  * A bukkit wrapper for {@link CommonChunk}.
  */
-public class BukkitChunk extends CommonChunk
+public class BukkitChunk extends CommonChunk<Chunk>
 {
-
-    /**
-     * A {@link WeakReference} to the chunk underpinning this wrapper.
-     */
-    private WeakReference<Chunk> chunk;
 
     /**
      * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}.
      * 
      * @param chunk the chunk to wrap, cannot be null
      */
-    public BukkitChunk(Chunk chunk)
+    public BukkitChunk(Chunk chunk, BukkitWorld world)
     {
-        checkNotNull(chunk, "Chunk cannot be null");
-        this.chunk = new WeakReference<Chunk>(chunk);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public CommonWorld getCommonWorld()
-    {
-        return Gunsmith.getWorldFactory().getWorld(this.chunk.get().getWorld().getName());
+        super(chunk, world);
     }
 
     /**
@@ -70,7 +52,9 @@ public class BukkitChunk extends CommonChunk
     @Override
     public CommonBlock getRelativeBlockAt(int x, int y, int z)
     {
-        return null;
+        Block b = getThis().getBlock(x, y, z);
+        CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
+        return new CommonBlock(l, this.getWorld().getMaterialRegistry().get(b.getType().name()));
     }
 
 }

@@ -23,8 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.perms;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
@@ -65,7 +65,7 @@ public class VaultPermissionProxy implements IPermissionProxy
     public boolean isOp(ISniper sniper)
     {
         checkNotNull(sniper, "Sniper cannot be null");
-        return sniper instanceof BukkitSniper && ((BukkitSniper) sniper).getPlayerReference().isOp();
+        return sniper instanceof BukkitSniper && ((BukkitSniper) sniper).getThis().isOp();
     }
 
     /**
@@ -77,21 +77,21 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(permission, "Permission cannot be null!");
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
-        return sniper instanceof BukkitSniper && permissionService.playerHas(((BukkitSniper) sniper).getPlayerReference(), permission);
+        return sniper instanceof BukkitSniper && permissionService.playerHas(((BukkitSniper) sniper).getThis(), permission);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean hasWorldPermission(ISniper sniper, CommonWorld world, String permission)
+    public boolean hasWorldPermission(ISniper sniper, CommonWorld<?> world, String permission)
     {
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(world, "World cannot be null");
         checkNotNull(permission, "Permission cannot be null!");
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         return sniper instanceof BukkitSniper
-                && permissionService.playerHas(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
+                && permissionService.playerHas(world.getName(), ((BukkitSniper) sniper).getThis(), permission);
     }
 
     /**
@@ -105,7 +105,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!worldName.isEmpty(), "World name cannot be empty");
         checkNotNull(permission, "Permission cannot be null!");
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
-        return sniper instanceof BukkitSniper && permissionService.playerHas(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
+        return sniper instanceof BukkitSniper && permissionService.playerHas(worldName, ((BukkitSniper) sniper).getThis(), permission);
     }
 
     /**
@@ -119,7 +119,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerAdd(((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerAdd(((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -127,7 +127,7 @@ public class VaultPermissionProxy implements IPermissionProxy
      * {@inheritDoc}
      */
     @Override
-    public void addWorldPermission(ISniper sniper, CommonWorld world, String permission)
+    public void addWorldPermission(ISniper sniper, CommonWorld<?> world, String permission)
     {
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(world, "World cannot be null");
@@ -135,7 +135,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerAdd(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerAdd(world.getName(), ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -152,7 +152,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerAdd(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerAdd(worldName, ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -167,7 +167,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerAddTransient(((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerAddTransient(((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -175,7 +175,7 @@ public class VaultPermissionProxy implements IPermissionProxy
      * {@inheritDoc}
      */
     @Override
-    public void addTransientWorldPermission(ISniper sniper, CommonWorld world, String permission)
+    public void addTransientWorldPermission(ISniper sniper, CommonWorld<?> world, String permission)
     {
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(world, "World cannot be null");
@@ -183,7 +183,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerAddTransient(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerAddTransient(world.getName(), ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -200,7 +200,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerAddTransient(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerAddTransient(worldName, ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -215,7 +215,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerRemove(((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerRemove(((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -223,7 +223,7 @@ public class VaultPermissionProxy implements IPermissionProxy
      * {@inheritDoc}
      */
     @Override
-    public void removeWorldPermission(ISniper sniper, CommonWorld world, String permission)
+    public void removeWorldPermission(ISniper sniper, CommonWorld<?> world, String permission)
     {
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(world, "World cannot be null");
@@ -231,7 +231,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerRemove(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerRemove(world.getName(), ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -248,7 +248,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerRemove(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerRemove(worldName, ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -263,7 +263,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerRemoveTransient(((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerRemoveTransient(((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -271,7 +271,7 @@ public class VaultPermissionProxy implements IPermissionProxy
      * {@inheritDoc}
      */
     @Override
-    public void removeTransientWorldPermission(ISniper sniper, CommonWorld world, String permission)
+    public void removeTransientWorldPermission(ISniper sniper, CommonWorld<?> world, String permission)
     {
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(world, "World cannot be null");
@@ -279,7 +279,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerRemoveTransient(world.getName(), ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerRemoveTransient(world.getName(), ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 
@@ -296,7 +296,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
         if (sniper instanceof BukkitSniper)
         {
-            permissionService.playerRemoveTransient(worldName, ((BukkitSniper) sniper).getPlayerReference(), permission);
+            permissionService.playerRemoveTransient(worldName, ((BukkitSniper) sniper).getThis(), permission);
         }
     }
 }

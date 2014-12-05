@@ -24,10 +24,11 @@
 package com.voxelplugineering.voxelsniper.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.voxelplugineering.voxelsniper.VoxelSniperBukkit;
+import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
 import com.voxelplugineering.voxelsniper.common.command.Command;
 
 /**
@@ -40,18 +41,22 @@ public class BukkitCommand extends org.bukkit.command.Command
      * The Gunsmith command underpinning this command.
      */
     Command cmd;
+    
+    private ISniperRegistry<Player> playerRegistry;
 
     /**
      * Creates a new {@link BukkitCommand}.
      * 
      * @param name the command name, cannot be null or empty
      * @param cmd the command, cannot be null
+     * @param playerRegistry the player registry
      */
-    protected BukkitCommand(String name, Command cmd)
+    protected BukkitCommand(String name, Command cmd, ISniperRegistry<Player> playerRegistry)
     {
         super(name);
         checkNotNull(cmd, "Command cannot be null");
         this.cmd = cmd;
+        this.playerRegistry = playerRegistry;
     }
 
     /**
@@ -62,7 +67,7 @@ public class BukkitCommand extends org.bukkit.command.Command
     {
         if (sender instanceof Player)
         {
-            return this.cmd.execute(VoxelSniperBukkit.voxelsniper.getSniperManager().getSniper((Player) sender), args);
+            return this.cmd.execute(playerRegistry.get((Player) sender), args);
         } else
         {
             if (cmd.isPlayerOnly())
@@ -71,7 +76,7 @@ public class BukkitCommand extends org.bukkit.command.Command
                 return true;
             } else
             {
-                return this.cmd.execute(VoxelSniperBukkit.voxelsniper.getSniperManager().getConsoleSniperProxy(), args);
+                return this.cmd.execute(playerRegistry.getConsoleSniperProxy(), args);
             }
         }
     }

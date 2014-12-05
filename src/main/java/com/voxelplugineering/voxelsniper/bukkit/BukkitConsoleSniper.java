@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.bukkit.command.CommandSender;
 
 import com.thevoxelbox.vsl.api.IVariableScope;
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.IBrush;
 import com.voxelplugineering.voxelsniper.api.IBrushManager;
 import com.voxelplugineering.voxelsniper.api.ISniper;
@@ -57,6 +56,14 @@ public class BukkitConsoleSniper implements ISniper
     /**
      * {@inheritDoc}
      */
+    public void sendMessage(String format, Object... args)
+    {
+        sendMessage(String.format(format, args));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IBrushManager getPersonalBrushManager()
     {
@@ -103,15 +110,6 @@ public class BukkitConsoleSniper implements ISniper
      * {@inheritDoc}
      */
     @Override
-    public void resetSettings()
-    {
-        return;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void undoHistory(int n)
     {
         return;
@@ -121,7 +119,7 @@ public class BukkitConsoleSniper implements ISniper
      * {@inheritDoc}
      */
     @Override
-    public CommonWorld getWorld()
+    public CommonWorld<?> getWorld()
     {
         throw new UnsupportedOperationException("Console has no world");
     }

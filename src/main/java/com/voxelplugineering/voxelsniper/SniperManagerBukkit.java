@@ -23,37 +23,52 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.IRegistry;
 import com.voxelplugineering.voxelsniper.api.ISniper;
-import com.voxelplugineering.voxelsniper.api.ISniperFactory;
+import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
+import com.voxelplugineering.voxelsniper.api.IVoxelSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitConsoleSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
-import com.voxelplugineering.voxelsniper.common.event.SnipeEvent;
-import com.voxelplugineering.voxelsniper.common.event.SniperCreateEvent;
+import com.voxelplugineering.voxelsniper.bukkit.BukkitWorld;
+import com.voxelplugineering.voxelsniper.common.CommonPlayer;
+import com.voxelplugineering.voxelsniper.common.factory.ProvidedWeakRegistry;
+import com.voxelplugineering.voxelsniper.common.factory.RegistryProvider;
+import com.voxelplugineering.voxelsniper.util.Pair;
 
 /**
  * The sniper manager for the bukkit specific implementation.
  */
-public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
+public class SniperManagerBukkit extends ProvidedWeakRegistry<Player, CommonPlayer<Player>> implements ISniperRegistry<Player>
 {
+    private int blockChangesPerSecond;
 
-    /**
-     * A weak Map of bukkit's {@link Player}s to their Gunsmith equivalents.
-     */
-    private final Map<Player, BukkitSniper> players = new WeakHashMap<Player, BukkitSniper>();
+    public SniperManagerBukkit(final IRegistry<World, BukkitWorld> world, int changesPerSecond, final IVoxelSniper access)
+    {
+        super(new RegistryProvider<Player, CommonPlayer<Player>>()
+        {
+
+            @Override
+            public Pair<Player, CommonPlayer<Player>> get(String name)
+            {
+                @SuppressWarnings("deprecation")
+                Player player = Bukkit.getPlayer(name);
+                if (player == null)
+                {
+                    return null;
+                }
+                BukkitSniper sniper = new BukkitSniper(player, world, access.getGlobalBrushManager(), access.getDefaultBrushLoader(), (Integer) access.getGunsmith().getConfiguration().get("UNDO_HISTORY_SIZE"), access.getDataFolder());
+                //TODO set sniper settings to initial values
+                return new Pair<Player, CommonPlayer<Player>>(player, sniper);
+            }
+        });
+        this.blockChangesPerSecond = changesPerSecond;
+    }
+
     /**
      * A special {@link ISniper} to represent the console in operations.
      */
@@ -77,38 +92,37 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
             {
                 long start = System.currentTimeMillis();
                 int n = 0;
-                for(Player p: players.keySet())
+                for (CommonPlayer<Player> p : getRegisteredValues())
                 {
-                    BukkitSniper sniper = players.get(p);
-                    if(sniper.hasPendingChanges())
+                    if (p.hasPendingChanges())
                     {
                         n++;
                     }
                 }
-                if(n == 0)
+                if (n == 0)
                 {
                     return;
                 }
-                int remaining = (Integer) Gunsmith.getConfiguration().get("BLOCK_CHANGES_PER_TICK");
-                for(Player p: players.keySet())
+                int remaining = blockChangesPerSecond;
+                remaining /= 10;
+                for (CommonPlayer<Player> p : getRegisteredValues())
                 {
-                    BukkitSniper sniper = players.get(p);
-                    if(!sniper.hasPendingChanges())
+                    if (!p.hasPendingChanges())
                     {
                         continue;
                     }
-                    int allocation = remaining/(n--);
+                    int allocation = remaining / (n--);
                     int actual = 0;
-                    while(sniper.hasPendingChanges() && actual < allocation)
+                    while (p.hasPendingChanges() && actual < allocation)
                     {
-                        actual += sniper.getNextPendingChange().perform(allocation);
-                        if(sniper.getNextPendingChange().isFinished())
+                        actual += p.getNextPendingChange().perform(allocation);
+                        if (p.getNextPendingChange().isFinished())
                         {
-                            sniper.clearNextPending();
+                            p.clearNextPending();
                         }
                     }
                     remaining -= actual;
-                    if(remaining <= 0)
+                    if (remaining <= 0)
                     {
                         break;
                     }
@@ -116,7 +130,7 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
                 Gunsmith.getLogger().info("Change queue tick length: " + (System.currentTimeMillis() - start) + " ms");
             }
 
-        }, 0, 10);
+        }, 0, 2);
     }
 
     /**
@@ -125,7 +139,6 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
     @Override
     public void stop()
     {
-        this.players.clear();
         this.worldTick.cancel();
     }
 
@@ -143,63 +156,9 @@ public class SniperManagerBukkit implements ISniperFactory<Player>, Listener
      * {@inheritDoc}
      */
     @Override
-    public ISniper getSniper(Player player)
-    {
-        if (!this.players.containsKey(player))
-        {
-            this.players.put(player, new BukkitSniper(player));
-        }
-        return this.players.get(player);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Class<Player> getPlayerClass()
-    {
-        return Player.class;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ISniper getConsoleSniperProxy()
     {
         return this.console;
-    }
-
-    /**
-     * An event handler for player join events.
-     * 
-     * @param event the {@link PlayerJoinEvent}
-     */
-    @EventHandler
-    public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
-    {
-        ISniper s = getSniper(event.getPlayer());
-        SniperCreateEvent sce = new SniperCreateEvent(s);
-        Gunsmith.getEventBus().post(sce);
-    }
-
-    /**
-     * An event handler for player interact events.
-     * 
-     * @param event the {@link PlayerInteractEvent}
-     */
-    @EventHandler
-    public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
-    {
-        Player p = event.getPlayer();
-        Gunsmith.getLogger().debug("PlayerInteractEvent for " + p.getName());
-        if (p.getItemInHand().getType() == ((Material) Gunsmith.getConfiguration().get("ARROW_MATERIAL"))
-                && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR))
-        {
-            ISniper s = getSniper(p);
-            SnipeEvent se = new SnipeEvent(s, p.getLocation().getYaw(), p.getLocation().getPitch());
-            Gunsmith.getEventBus().post(se);
-        }
     }
 
 }

@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonMaterial;
@@ -52,10 +51,11 @@ public class BukkitBlock extends CommonBlock
      */
     public BukkitBlock(CommonLocation location)
     {
-        super(location, Gunsmith.getMaterialFactory()
-                .getMaterial(
-                        ((BukkitWorld) location.getWorld())
-                                .localGetMaterialAt(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ()).name()));
+        super(location, location
+                .getWorld()
+                .getMaterialRegistry()
+                .get(((BukkitWorld) location.getWorld()).localGetMaterialAt(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ())
+                        .name()));
     }
 
     /**
@@ -64,8 +64,10 @@ public class BukkitBlock extends CommonBlock
     public CommonMaterial<?> getMaterial()
     {
         CommonMaterial<?> mat =
-                Gunsmith.getMaterialFactory().getMaterial(
-                        ((BukkitWorld) this.getLocation().getWorld()).localGetMaterialAt(this.getLocation().getFlooredX(),
+                getLocation()
+                        .getWorld()
+                        .getMaterialRegistry()
+                        .get(((BukkitWorld) this.getLocation().getWorld()).localGetMaterialAt(this.getLocation().getFlooredX(),
                                 this.getLocation().getFlooredY(), this.getLocation().getFlooredZ()).name());
         localSetMaterial(mat);
         return mat;

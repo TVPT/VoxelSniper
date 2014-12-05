@@ -27,9 +27,11 @@ import java.lang.reflect.Field;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
+import org.bukkit.entity.Player;
 
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.ICommandRegistrar;
+import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
 import com.voxelplugineering.voxelsniper.common.command.Command;
 import com.voxelplugineering.voxelsniper.util.CraftBukkitFetcher;
 
@@ -43,13 +45,21 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
      * <p>
      * TODO: possible memory leak if bukkit attempts to recreate this map, perhaps across reloads.
      */
-    CommandMap commands;
+    private CommandMap commands;
+    
+    /**
+     * The player registry.
+     */
+    private ISniperRegistry<Player> playerRegistry;
 
     /**
      * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's {@link CommandMap} via reflection for use to register commands.
+     * 
+     * @param playerRegistry the player registry
      */
-    public BukkitCommandRegistrar()
+    public BukkitCommandRegistrar(ISniperRegistry<Player> playerRegistry)
     {
+        this.playerRegistry = playerRegistry;
         try
         {
             Field cmap = Class.forName(CraftBukkitFetcher.CRAFTBUKKIT_PACKAGE + ".CraftServer").getDeclaredField("commandMap");
@@ -69,7 +79,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
     {
         for (String alias : cmd.getAllAliases())
         {
-            BukkitCommand bcmd = new BukkitCommand(alias, cmd);
+            BukkitCommand bcmd = new BukkitCommand(alias, cmd, playerRegistry);
             commands.register("voxelsniper", bcmd);
         }
     }

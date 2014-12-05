@@ -23,15 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
-import java.lang.ref.WeakReference;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.IMaterialRegistry;
+import com.voxelplugineering.voxelsniper.common.CommonBiome;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonChunk;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
@@ -41,36 +37,23 @@ import com.voxelplugineering.voxelsniper.common.CommonWorld;
 /**
  * A wrapper for bukkit's {@link World}s.
  */
-public class BukkitWorld extends CommonWorld
+public class BukkitWorld extends CommonWorld<World>
 {
 
     /**
-     * A {@link WeakReference} to the {@link World} underpinning this world.
+     * The {@link Thread} from which all changes to this world must be synchronized with.
      */
-    private WeakReference<World> world;
-    /**
-     * A {@link WeakHashMap} of chunks contained in this world.
-     */
-    private Map<Chunk, CommonChunk> chunks = new WeakHashMap<Chunk, CommonChunk>();
+    private Thread lock;
 
     /**
      * Creates a new {@link BukkitWorld}.
      * 
      * @param world the world
      */
-    protected BukkitWorld(World world)
+    public BukkitWorld(World world, IMaterialRegistry<Material> mats, Thread lock)
     {
-        this.world = new WeakReference<World>(world);
-    }
-
-    /**
-     * Returns the bukkit specific world.
-     * 
-     * @return the world
-     */
-    public World getWorld()
-    {
-        return this.world.get();
+        super(world, mats);
+        this.lock = lock;
     }
 
     /**
@@ -79,25 +62,17 @@ public class BukkitWorld extends CommonWorld
     @Override
     public String getName()
     {
-        return this.getWorld().getName();
+        return this.getThis().getName();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public CommonChunk getChunkAt(int x, int y, int z)
+    public CommonChunk<?> getChunkAt(int x, int y, int z)
     {
-        Chunk chunk = this.getWorld().getChunkAt(x, z);
-        if (chunk == null)
-        {
-            return null;
-        }
-        if (!this.chunks.containsKey(chunk))
-        {
-            this.chunks.put(chunk, new BukkitChunk(chunk));
-        }
-        return this.chunks.get(chunk);
+
+        return null;
     }
 
     /**
@@ -106,8 +81,7 @@ public class BukkitWorld extends CommonWorld
     @Override
     public CommonBlock getBlockAt(int x, int y, int z)
     {
-        return new CommonBlock(new CommonLocation(this, x, y, z), Gunsmith.getMaterialFactory().getMaterial(
-                this.getWorld().getBlockAt(x, y, z).getType().name()));
+        return new CommonBlock(new CommonLocation(this, x, y, z), this.getMaterialRegistry().get(this.getThis().getBlockAt(x, y, z).getType().name()));
     }
 
     /**
@@ -120,12 +94,12 @@ public class BukkitWorld extends CommonWorld
         {
             return;
         }
-        Material mat = ((BukkitMaterial) material).getValue();
-        if (Thread.currentThread() == Gunsmith.getVoxelSniper().getMainThread())
+        Material mat = ((BukkitMaterial) material).getThis();
+        if (Thread.currentThread() == this.lock)
         {
-            if(y >= 0 || y < 256)
+            if (y >= 0 && y < 256)
             {
-                this.getWorld().getBlockAt(x, y, z).setType(mat);
+                this.getThis().getBlockAt(x, y, z).setType(mat);
             }
         }
     }
@@ -140,7 +114,16 @@ public class BukkitWorld extends CommonWorld
      */
     protected Material localGetMaterialAt(int x, int y, int z)
     {
-        return this.world.get().getBlockAt(x, y, z).getType();
+        return this.getThis().getBlockAt(x, y, z).getType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setBiomeAt(int x, int z, CommonBiome<?> biomeName)
+    {
+        // TODO setBiomeAt
     }
 
 }

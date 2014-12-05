@@ -26,33 +26,37 @@ package com.voxelplugineering.voxelsniper.bukkit;
 import java.io.File;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import com.voxelplugineering.voxelsniper.api.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.IBrushLoader;
+import com.voxelplugineering.voxelsniper.api.IBrushManager;
+import com.voxelplugineering.voxelsniper.api.IRegistry;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonPlayer;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
-import com.voxelplugineering.voxelsniper.world.ChangeQueue;
 
 /**
  * A wrapper for bukkit's {@link Player}s.
  */
 public class BukkitSniper extends CommonPlayer<Player>
 {
+    
+    private IRegistry<World, BukkitWorld> worldRegistry;
 
     /**
      * Creates a new {@link BukkitSniper}.
      * 
      * @param player the player to wrap, cannot be null
      */
-    public BukkitSniper(Player player)
+    public BukkitSniper(Player player, IRegistry<World, BukkitWorld> world, IBrushManager parentManager, IBrushLoader loader, int history, File dataFolder)
     {
-        super(player);
+        super(player, parentManager, loader, history);
         //TODO: Change the call to getDataFolder() to a configuration value for the Gunsmith folder
-        File personalFolder = new File(((JavaPlugin) Gunsmith.getVoxelSniper()).getDataFolder(), "brushes" + File.separator + this.getName());
+        File personalFolder = new File(dataFolder, "brushes" + File.separator + this.getName());
         this.getPersonalBrushManager().addLoader(new FileBrushLoader(personalFolder));
+        this.worldRegistry = world;
     }
 
     /**
@@ -61,7 +65,7 @@ public class BukkitSniper extends CommonPlayer<Player>
     @Override
     public String getName()
     {
-        return getPlayerReference().getName();
+        return getThis().getName();
     }
 
     /**
@@ -70,7 +74,15 @@ public class BukkitSniper extends CommonPlayer<Player>
     @Override
     public void sendMessage(String msg)
     {
-        getPlayerReference().sendMessage(msg);
+        getThis().sendMessage(msg);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void sendMessage(String format, Object... args)
+    {
+        sendMessage(String.format(format, args));
     }
 
     /**
@@ -79,8 +91,8 @@ public class BukkitSniper extends CommonPlayer<Player>
     @Override
     public CommonLocation getLocation()
     {
-        Location location = getPlayerReference().getLocation();
-        CommonWorld world = Gunsmith.getWorldFactory().getWorld(location.getWorld().getName());
+        Location location = getThis().getLocation();
+        CommonWorld<?> world = worldRegistry.get(location.getWorld());
         return new CommonLocation(world, location.getX(), location.getY(), location.getZ());
     }
 
@@ -88,9 +100,9 @@ public class BukkitSniper extends CommonPlayer<Player>
      * {@inheritDoc}
      */
     @Override
-    public CommonWorld getWorld()
+    public CommonWorld<?> getWorld()
     {
-        return Gunsmith.getWorldFactory().getWorld(getPlayerReference().getWorld().getName());
+        return worldRegistry.get(getThis().getWorld());
     }
     
 }
