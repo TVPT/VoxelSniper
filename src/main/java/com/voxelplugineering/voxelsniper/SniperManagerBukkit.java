@@ -24,17 +24,14 @@
 package com.voxelplugineering.voxelsniper;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.voxelplugineering.voxelsniper.api.IRegistry;
+import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
-import com.voxelplugineering.voxelsniper.api.IVoxelSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitConsoleSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
-import com.voxelplugineering.voxelsniper.bukkit.BukkitWorld;
 import com.voxelplugineering.voxelsniper.common.CommonPlayer;
 import com.voxelplugineering.voxelsniper.common.factory.ProvidedWeakRegistry;
 import com.voxelplugineering.voxelsniper.common.factory.RegistryProvider;
@@ -45,28 +42,25 @@ import com.voxelplugineering.voxelsniper.util.Pair;
  */
 public class SniperManagerBukkit extends ProvidedWeakRegistry<Player, CommonPlayer<Player>> implements ISniperRegistry<Player>
 {
-    private int blockChangesPerSecond;
 
-    public SniperManagerBukkit(final IRegistry<World, BukkitWorld> world, int changesPerSecond, final IVoxelSniper access)
+    public SniperManagerBukkit()
     {
         super(new RegistryProvider<Player, CommonPlayer<Player>>()
         {
 
             @Override
-            public Pair<Player, CommonPlayer<Player>> get(String name)
+            public Optional<Pair<Player, CommonPlayer<Player>>> get(String name)
             {
                 @SuppressWarnings("deprecation")
                 Player player = Bukkit.getPlayer(name);
                 if (player == null)
                 {
-                    return null;
+                    return Optional.absent();
                 }
-                BukkitSniper sniper = new BukkitSniper(player, world, access.getGlobalBrushManager(), access.getDefaultBrushLoader(), (Integer) access.getGunsmith().getConfiguration().get("UNDO_HISTORY_SIZE"), access.getDataFolder());
-                //TODO set sniper settings to initial values
-                return new Pair<Player, CommonPlayer<Player>>(player, sniper);
+                BukkitSniper sniper = new BukkitSniper(player);
+                return Optional.of(new Pair<Player, CommonPlayer<Player>>(player, sniper));
             }
         });
-        this.blockChangesPerSecond = changesPerSecond;
     }
 
     /**
@@ -103,7 +97,7 @@ public class SniperManagerBukkit extends ProvidedWeakRegistry<Player, CommonPlay
                 {
                     return;
                 }
-                int remaining = blockChangesPerSecond;
+                int remaining = (Integer) Gunsmith.getConfiguration().get("BLOCK_CHANGES_PER_SECOND").get();
                 remaining /= 10;
                 for (CommonPlayer<Player> p : getRegisteredValues())
                 {
@@ -115,8 +109,8 @@ public class SniperManagerBukkit extends ProvidedWeakRegistry<Player, CommonPlay
                     int actual = 0;
                     while (p.hasPendingChanges() && actual < allocation)
                     {
-                        actual += p.getNextPendingChange().perform(allocation);
-                        if (p.getNextPendingChange().isFinished())
+                        actual += p.getNextPendingChange().get().perform(allocation);
+                        if (p.getNextPendingChange().get().isFinished())
                         {
                             p.clearNextPending();
                         }

@@ -24,6 +24,7 @@
 package com.voxelplugineering.voxelsniper;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,20 +32,23 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.voxelplugineering.voxelsniper.api.IBrushLoader;
-import com.voxelplugineering.voxelsniper.api.IBrushManager;
+import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.api.IMaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.IPermissionProxy;
 import com.voxelplugineering.voxelsniper.api.IRegistry;
+import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
 import com.voxelplugineering.voxelsniper.api.IVoxelSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitMaterial;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitWorld;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.common.CommonBrushManager;
+import com.voxelplugineering.voxelsniper.common.CommonWorld;
 import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.common.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.common.commands.BrushCommand;
 import com.voxelplugineering.voxelsniper.common.commands.MaskMaterialCommand;
 import com.voxelplugineering.voxelsniper.common.commands.MaterialCommand;
-import com.voxelplugineering.voxelsniper.common.event.CommonEventHandler;
+import com.voxelplugineering.voxelsniper.common.commands.VSCommand;
 import com.voxelplugineering.voxelsniper.common.factory.CommonMaterialRegistry;
 import com.voxelplugineering.voxelsniper.common.factory.ProvidedWeakRegistry;
 import com.voxelplugineering.voxelsniper.common.factory.RegistryProvider;
@@ -65,48 +69,15 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
      */
     public static VoxelSniperBukkit voxelsniper;
 
-    /**
-     * The sniper manager.
-     */
-    private SniperManagerBukkit sniperManager;
-    /**
-     * The global brush manager.
-     */
-    private CommonBrushManager brushManager;
-    /**
-     * The default brush loader.
-     */
-    private FileBrushLoader brushLoader;
-    /**
-     * The standard material registry.
-     */
-    private CommonMaterialRegistry<Material> materialRegistry;
-    /**
-     * The command handler.
-     */
-    private CommandHandler commandHandler;
-    /**
-     * The permissions proxy.
-     */
-    private VaultPermissionProxy permissionProxy;
-    /**
-     * The world registry.
-     */
     private IRegistry<World, BukkitWorld> worldRegistry;
-    /**
-     * The default event handler for Gunsmith events.
-     */
-    private CommonEventHandler defaultEventHandler;
-    /**
-     * The bukkit event handler.
-     */
+    private IMaterialRegistry<Material> materialRegistry;
+    private IPermissionProxy permissions = null;
+    private SniperManagerBukkit sniperManager;
     private BukkitEventHandler bukkitEvents;
-    
-    /**
-     * Gunsmith's manager.
-     */
-    private Gunsmith gunsmith;
-    
+    private FileBrushLoader brushLoader;
+    private CommonBrushManager brushManager;
+    private CommandHandler commandHandler;
+
     /**
      * The main server thread to check synchronous accesses.
      */
@@ -118,57 +89,58 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     @Override
     public void onEnable()
     {
-        gunsmith = new Gunsmith();
-        
         mainThread = Thread.currentThread();
+        getLogger().setLevel(Level.FINE);
 
-        gunsmith.beginInit();
+        Gunsmith.beginInit();
 
         voxelsniper = this;
+        Gunsmith.setPlugin(this);
 
-        gunsmith.getLoggingDistributor().registerLogger(new JavaUtilLogger(this.getLogger()), "bukkit");
+        Gunsmith.getLoggingDistributor().registerLogger(new JavaUtilLogger(this.getLogger()), "bukkit");
 
-        gunsmith.getConfiguration().registerContainer(BukkitConfiguration.class);
+        Gunsmith.getConfiguration().registerContainer(BukkitConfiguration.class);
+
+        this.materialRegistry = new CommonMaterialRegistry<Material>();
+        setupMaterials();
 
         worldRegistry = new ProvidedWeakRegistry<World, BukkitWorld>(new RegistryProvider<World, BukkitWorld>()
         {
 
             @Override
-            public Pair<World, BukkitWorld> get(String name)
+            public Optional<Pair<World, BukkitWorld>> get(String name)
             {
                 World world = Bukkit.getWorld(name);
-                if(world == null)
+                if (world == null)
                 {
-                    return null;
+                    return Optional.absent();
                 }
-                return new Pair<World, BukkitWorld>(world, new BukkitWorld(world, materialRegistry, mainThread));
+                return Optional.of(new Pair<World, BukkitWorld>(world, new BukkitWorld(world, materialRegistry, mainThread)));
             }
         });
-        
-        this.permissionProxy = new VaultPermissionProxy();
-
-        this.sniperManager = new SniperManagerBukkit(this.worldRegistry, (Integer) gunsmith.getConfiguration().get("BLOCK_CHANGES_PER_SECOND"), this);
-        this.sniperManager.init();
-
-        this.brushLoader = new FileBrushLoader(new File(this.getDataFolder(), "brushes"));
-
-        this.brushManager = new CommonBrushManager(brushLoader, this.getClassLoader(), gunsmith.getCompilerFactory());
 
         setupPermissions();
 
-        this.materialRegistry = new CommonMaterialRegistry<Material>();
-        setupMaterials();
-        
-        defaultEventHandler = new CommonEventHandler(materialRegistry.getAirMaterial(), gunsmith.getConfiguration());
-        gunsmith.getEventBus().register(defaultEventHandler);
-        bukkitEvents = new BukkitEventHandler(gunsmith.getEventBus(), this.sniperManager, (Material) gunsmith.getConfiguration().get("ARROW_MATERIAL"));
+        this.sniperManager = new SniperManagerBukkit();
+        this.sniperManager.init();
+
+        this.bukkitEvents =
+                new BukkitEventHandler(Gunsmith.getEventBus(), this.sniperManager, (Material) Gunsmith.getConfiguration().get("ARROW_MATERIAL").get());
         Bukkit.getPluginManager().registerEvents(this.bukkitEvents, this);
 
-        this.commandHandler = new CommandHandler(this.permissionProxy, gunsmith.getConfiguration());
-        this.commandHandler.setRegistrar(new BukkitCommandRegistrar(this.sniperManager));
+        this.brushLoader = new FileBrushLoader(new File(this.getDataFolder(), "brushes"));
+        Gunsmith.setDefaultBrushLoader(this.brushLoader);
+
+        this.brushManager = new CommonBrushManager();
+        this.brushManager.init();
+        Gunsmith.setGlobalBrushManager(this.brushManager);
+
+        this.commandHandler = new CommandHandler();
+        Gunsmith.setCommandHandler(this.commandHandler);
+        Gunsmith.getCommandHandler().setRegistrar(new BukkitCommandRegistrar());
         setupCommands();
 
-        gunsmith.finishInit();
+        Gunsmith.finish();
 
         TemporaryBrushBuilder.buildBrushes();
         TemporaryBrushBuilder.saveAll(new File(getDataFolder(), "brushes"));
@@ -183,8 +155,8 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         Plugin vault = Bukkit.getPluginManager().getPlugin("Vault");
         if (vault != null)
         {
-            this.permissionProxy = new VaultPermissionProxy();
-        }
+            this.permissions = new VaultPermissionProxy();
+        }//TODO if vault not found need to create trivial permission proxy
     }
 
     /**
@@ -192,9 +164,10 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
      */
     public void setupCommands()
     {
-        this.commandHandler.registerCommand(new BrushCommand(gunsmith.getConfiguration()));
-        this.commandHandler.registerCommand(new MaterialCommand(this.materialRegistry, gunsmith.getConfiguration()));
-        this.commandHandler.registerCommand(new MaskMaterialCommand(this.materialRegistry, gunsmith.getConfiguration()));
+        Gunsmith.getCommandHandler().registerCommand(new BrushCommand());
+        Gunsmith.getCommandHandler().registerCommand(new MaterialCommand(this.materialRegistry));
+        Gunsmith.getCommandHandler().registerCommand(new MaskMaterialCommand(this.materialRegistry));
+        Gunsmith.getCommandHandler().registerCommand(new VSCommand());
     }
 
     /**
@@ -214,9 +187,9 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     @Override
     public void onDisable()
     {
-        if (gunsmith.isEnabled())
+        if (Gunsmith.isEnabled())
         {
-            gunsmith.stop();
+            Gunsmith.stop();
         }
     }
 
@@ -238,31 +211,22 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         return this.mainThread;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public IBrushManager getGlobalBrushManager()
+    public IPermissionProxy getPermissionProxy()
     {
-        return this.brushManager;
+        return this.permissions;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public IBrushLoader getDefaultBrushLoader()
+    public IRegistry<?, ? extends CommonWorld<?>> getWorldRegistry()
     {
-        return this.brushLoader;
+        return this.worldRegistry;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Gunsmith getGunsmith()
+    public ISniperRegistry<?> getPlayerRegistry()
     {
-        return this.gunsmith;
+        return this.sniperManager;
     }
 
 }

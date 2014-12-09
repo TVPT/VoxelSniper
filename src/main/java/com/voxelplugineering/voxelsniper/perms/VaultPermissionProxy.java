@@ -90,8 +90,7 @@ public class VaultPermissionProxy implements IPermissionProxy
         checkNotNull(world, "World cannot be null");
         checkNotNull(permission, "Permission cannot be null!");
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
-        return sniper instanceof BukkitSniper
-                && permissionService.playerHas(world.getName(), ((BukkitSniper) sniper).getThis(), permission);
+        return sniper instanceof BukkitSniper && permissionService.playerHas(world.getName(), ((BukkitSniper) sniper).getThis(), permission);
     }
 
     /**

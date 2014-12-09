@@ -26,9 +26,11 @@ package com.voxelplugineering.voxelsniper.bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 
+import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
 import com.voxelplugineering.voxelsniper.common.CommonChunk;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
+import com.voxelplugineering.voxelsniper.common.CommonMaterial;
 
 /**
  * A bukkit wrapper for {@link CommonChunk}.
@@ -50,11 +52,16 @@ public class BukkitChunk extends CommonChunk<Chunk>
      * {@inheritDoc}
      */
     @Override
-    public CommonBlock getRelativeBlockAt(int x, int y, int z)
+    public Optional<CommonBlock> getRelativeBlockAt(int x, int y, int z)
     {
         Block b = getThis().getBlock(x, y, z);
         CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
-        return new CommonBlock(l, this.getWorld().getMaterialRegistry().get(b.getType().name()));
+        Optional<?> m = this.getWorld().getMaterialRegistry().get(b.getType().name());
+        if (!m.isPresent())
+        {
+            return Optional.absent();
+        }
+        return Optional.of(new CommonBlock(l, (CommonMaterial<?>) m.get()));
     }
 
 }

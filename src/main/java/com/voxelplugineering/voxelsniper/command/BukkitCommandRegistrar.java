@@ -46,20 +46,14 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
      * TODO: possible memory leak if bukkit attempts to recreate this map, perhaps across reloads.
      */
     private CommandMap commands;
-    
-    /**
-     * The player registry.
-     */
-    private ISniperRegistry<Player> playerRegistry;
 
     /**
      * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's {@link CommandMap} via reflection for use to register commands.
      * 
      * @param playerRegistry the player registry
      */
-    public BukkitCommandRegistrar(ISniperRegistry<Player> playerRegistry)
+    public BukkitCommandRegistrar()
     {
-        this.playerRegistry = playerRegistry;
         try
         {
             Field cmap = Class.forName(CraftBukkitFetcher.CRAFTBUKKIT_PACKAGE + ".CraftServer").getDeclaredField("commandMap");
@@ -79,7 +73,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
     {
         for (String alias : cmd.getAllAliases())
         {
-            BukkitCommand bcmd = new BukkitCommand(alias, cmd, playerRegistry);
+            BukkitCommand bcmd = new BukkitCommand(alias, cmd);
             commands.register("voxelsniper", bcmd);
         }
     }

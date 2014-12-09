@@ -8,9 +8,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
-import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
+import com.voxelplugineering.voxelsniper.common.CommonPlayer;
 import com.voxelplugineering.voxelsniper.common.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.common.event.SniperCreateEvent;
 
@@ -55,9 +56,12 @@ public class BukkitEventHandler implements Listener
     @EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
     {
-        ISniper s = sniperRegistry.get(event.getPlayer());
-        SniperCreateEvent sce = new SniperCreateEvent(s);
-        gunsmithEventBus.post(sce);
+        Optional<CommonPlayer<Player>> s = sniperRegistry.get(event.getPlayer());
+        if (s.isPresent())
+        {
+            SniperCreateEvent sce = new SniperCreateEvent(s.get());
+            gunsmithEventBus.post(sce);
+        }
     }
 
     /**
@@ -73,9 +77,12 @@ public class BukkitEventHandler implements Listener
         if (p.getItemInHand().getType() == this.tool
                 && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR))
         {
-            ISniper s = sniperRegistry.get(p);
-            SnipeEvent se = new SnipeEvent(s, p.getLocation().getYaw(), p.getLocation().getPitch());
-            gunsmithEventBus.post(se);
+            Optional<CommonPlayer<Player>> s = sniperRegistry.get(p);
+            if (s.isPresent())
+            {
+                SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch());
+                gunsmithEventBus.post(se);
+            }
         }
     }
 }

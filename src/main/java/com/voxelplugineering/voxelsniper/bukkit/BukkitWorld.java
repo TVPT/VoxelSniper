@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 
+import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.IMaterialRegistry;
 import com.voxelplugineering.voxelsniper.common.CommonBiome;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
@@ -69,19 +70,24 @@ public class BukkitWorld extends CommonWorld<World>
      * {@inheritDoc}
      */
     @Override
-    public CommonChunk<?> getChunkAt(int x, int y, int z)
+    public Optional<CommonChunk<?>> getChunkAt(int x, int y, int z)
     {
 
-        return null;
+        return Optional.absent();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public CommonBlock getBlockAt(int x, int y, int z)
+    public Optional<CommonBlock> getBlockAt(int x, int y, int z)
     {
-        return new CommonBlock(new CommonLocation(this, x, y, z), this.getMaterialRegistry().get(this.getThis().getBlockAt(x, y, z).getType().name()));
+        Optional<?> m = this.getMaterialRegistry().get(this.getThis().getBlockAt(x, y, z).getType().name());
+        if (!m.isPresent())
+        {
+            return Optional.absent();
+        }
+        return Optional.of(new CommonBlock(new CommonLocation(this, x, y, z), (CommonMaterial<?>) m.get()));
     }
 
     /**

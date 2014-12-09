@@ -55,7 +55,7 @@ public class BukkitBlock extends CommonBlock
                 .getWorld()
                 .getMaterialRegistry()
                 .get(((BukkitWorld) location.getWorld()).localGetMaterialAt(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ())
-                        .name()));
+                        .name()).get());
     }
 
     /**
@@ -68,7 +68,7 @@ public class BukkitBlock extends CommonBlock
                         .getWorld()
                         .getMaterialRegistry()
                         .get(((BukkitWorld) this.getLocation().getWorld()).localGetMaterialAt(this.getLocation().getFlooredX(),
-                                this.getLocation().getFlooredY(), this.getLocation().getFlooredZ()).name());
+                                this.getLocation().getFlooredY(), this.getLocation().getFlooredZ()).name()).get();
         localSetMaterial(mat);
         return mat;
     }
