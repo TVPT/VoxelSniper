@@ -27,6 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.IMaterialRegistry;
 import com.voxelplugineering.voxelsniper.common.CommonBiome;
 import com.voxelplugineering.voxelsniper.common.CommonBlock;
@@ -42,19 +43,13 @@ public class BukkitWorld extends CommonWorld<World>
 {
 
     /**
-     * The {@link Thread} from which all changes to this world must be synchronized with.
-     */
-    private Thread lock;
-
-    /**
      * Creates a new {@link BukkitWorld}.
      * 
      * @param world the world
      */
-    public BukkitWorld(World world, IMaterialRegistry<Material> mats, Thread lock)
+    public BukkitWorld(World world, IMaterialRegistry<Material> materialRegistry)
     {
-        super(world, mats);
-        this.lock = lock;
+        super(world, materialRegistry);
     }
 
     /**
@@ -101,7 +96,7 @@ public class BukkitWorld extends CommonWorld<World>
             return;
         }
         Material mat = ((BukkitMaterial) material).getThis();
-        if (Thread.currentThread() == this.lock)
+        if (Thread.currentThread() == Gunsmith.getVoxelSniper().getMainThread())
         {
             if (y >= 0 && y < 256)
             {

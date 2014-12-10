@@ -27,11 +27,9 @@ import java.lang.reflect.Field;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
-import org.bukkit.entity.Player;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.ICommandRegistrar;
-import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
 import com.voxelplugineering.voxelsniper.common.command.Command;
 import com.voxelplugineering.voxelsniper.util.CraftBukkitFetcher;
 
