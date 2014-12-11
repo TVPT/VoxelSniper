@@ -32,7 +32,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.common.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.common.event.SniperCreateEvent;

@@ -29,11 +29,13 @@ import org.bukkit.command.CommandSender;
 
 import com.google.common.base.Optional;
 import com.thevoxelbox.vsl.api.IVariableScope;
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.IBrush;
 import com.voxelplugineering.voxelsniper.api.IBrushManager;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.common.CommonLocation;
 import com.voxelplugineering.voxelsniper.common.CommonWorld;
+import com.voxelplugineering.voxelsniper.common.alias.AliasHandler;
 import com.voxelplugineering.voxelsniper.world.ChangeQueue;
 
 /**
@@ -199,6 +201,15 @@ public class BukkitConsoleSniper implements ISniper
     public void resetSettings()
     {
         return;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AliasHandler getPersonalAliasHandler()
+    {
+        return Gunsmith.getGlobalAliasHandler();
     }
 
 }

@@ -33,7 +33,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import com.voxelplugineering.voxelsniper.api.IPermissionProxy;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
-import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
 /**
  * A permission proxy for Vault permissions.
