@@ -1,0 +1,8 @@
+language: java
+notifications:
+  email: false
+install: true
+jdk:
+  - oraclejdk7
+before_script: ./gradlew setupCIWorkspace
+script: ./gradlew

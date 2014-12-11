@@ -54,6 +54,7 @@ import com.voxelplugineering.voxelsniper.common.factory.ProvidedWeakRegistry;
 import com.voxelplugineering.voxelsniper.common.factory.RegistryProvider;
 import com.voxelplugineering.voxelsniper.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.logging.JavaUtilLogger;
+import com.voxelplugineering.voxelsniper.perms.SuperPermsPermissionProxy;
 import com.voxelplugineering.voxelsniper.perms.VaultPermissionProxy;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.util.TemporaryBrushBuilder;
@@ -89,7 +90,7 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     @Override
     public void onEnable()
     {
-        mainThread = Thread.currentThread();
+        this.mainThread = Thread.currentThread();
         getLogger().setLevel(Level.FINE);
         getDataFolder().mkdirs();
 
@@ -105,7 +106,7 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         this.materialRegistry = new CommonMaterialRegistry<Material>();
         setupMaterials();
 
-        worldRegistry = new ProvidedWeakRegistry<World, BukkitWorld>(new WorldRegistryProvider(this.materialRegistry));
+        this.worldRegistry = new ProvidedWeakRegistry<World, BukkitWorld>(new WorldRegistryProvider(this.materialRegistry));
 
         setupPermissions();
 
@@ -143,7 +144,10 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         if (vault != null)
         {
             this.permissions = new VaultPermissionProxy();
-        }//TODO if vault not found need to create trivial permission proxy
+        } else
+        {
+            this.permissions = new SuperPermsPermissionProxy();
+        }
     }
 
     /**
@@ -236,7 +240,7 @@ class WorldRegistryProvider implements RegistryProvider<World, BukkitWorld>
         {
             return Optional.absent();
         }
-        return Optional.of(new Pair<World, BukkitWorld>(world, new BukkitWorld(world, materials)));
+        return Optional.of(new Pair<World, BukkitWorld>(world, new BukkitWorld(world, this.materials)));
     }
 
 }

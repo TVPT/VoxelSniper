@@ -42,6 +42,7 @@ public class BukkitChunk extends CommonChunk<Chunk>
      * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}.
      * 
      * @param chunk the chunk to wrap, cannot be null
+     * @param world The world to wrap
      */
     public BukkitChunk(Chunk chunk, BukkitWorld world)
     {

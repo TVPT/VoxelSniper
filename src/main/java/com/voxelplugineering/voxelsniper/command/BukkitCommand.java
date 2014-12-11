@@ -47,7 +47,6 @@ public class BukkitCommand extends org.bukkit.command.Command
      * 
      * @param name the command name, cannot be null or empty
      * @param cmd the command, cannot be null
-     * @param playerRegistry the player registry
      */
     protected BukkitCommand(String name, Command cmd)
     {
@@ -67,7 +66,7 @@ public class BukkitCommand extends org.bukkit.command.Command
             return this.cmd.execute(Gunsmith.getVoxelSniper().getPlayerRegistry().get(sender.getName()).get(), args);
         } else
         {
-            if (cmd.isPlayerOnly())
+            if (this.cmd.isPlayerOnly())
             {
                 sender.sendMessage("Sorry this is a player only command.");
                 return true;

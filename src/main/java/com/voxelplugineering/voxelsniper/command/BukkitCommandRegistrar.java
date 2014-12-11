@@ -47,8 +47,6 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
 
     /**
      * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's {@link CommandMap} via reflection for use to register commands.
-     * 
-     * @param playerRegistry the player registry
      */
     public BukkitCommandRegistrar()
     {
@@ -72,7 +70,7 @@ public class BukkitCommandRegistrar implements ICommandRegistrar
         for (String alias : cmd.getAllAliases())
         {
             BukkitCommand bcmd = new BukkitCommand(alias, cmd);
-            commands.register("voxelsniper", bcmd);
+            this.commands.register("voxelsniper", bcmd);
         }
     }
 

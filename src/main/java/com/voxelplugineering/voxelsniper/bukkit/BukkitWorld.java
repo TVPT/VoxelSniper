@@ -46,6 +46,7 @@ public class BukkitWorld extends CommonWorld<World>
      * Creates a new {@link BukkitWorld}.
      * 
      * @param world the world
+     * @param materialRegistry the registry
      */
     public BukkitWorld(World world, IMaterialRegistry<Material> materialRegistry)
     {

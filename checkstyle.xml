@@ -154,10 +154,37 @@
             <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="customImportOrderRules" value="STATIC###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE"/>
         </module>-->
+
+        <module name="JavadocMethod">
+            <property name="scope" value="protected"/>
+            <property name="severity" value="warning"/>
+            <property name="allowMissingJavadoc" value="false"/>
+            <property name="allowMissingParamTags" value="false"/>
+            <property name="allowMissingReturnTag" value="false"/>
+            <property name="allowMissingThrowsTags" value="false"/>
+            <property name="allowThrowsTagsForSubclasses" value="false"/>
+            <property name="allowUndeclaredRTE" value="true"/>
+        </module>
+
+        <module name="JavadocType">
+            <property name="scope" value="protected"/>
+            <property name="severity" value="error"/>
+        </module>
+
+        <module name="JavadocStyle">
+            <property name="severity" value="warning"/>
+            <property name="checkFirstSentence" value="false"/>
+        </module>
+
         <module name="MethodParamPad"/>
+
         <module name="OperatorWrap">
             <property name="option" value="NL"/>
             <property name="tokens" value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR "/>
+        </module>
+
+        <module name="RequireThis">
+            <property name="checkMethods" value="false"/>
         </module>
     </module>
 </module>

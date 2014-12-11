@@ -43,6 +43,9 @@ import com.voxelplugineering.voxelsniper.util.Pair;
 public class SniperManagerBukkit extends ProvidedWeakRegistry<Player, CommonPlayer<Player>> implements ISniperRegistry<Player>
 {
 
+    /**
+     * Creates a SniperManager for Bukkit.
+     */
     public SniperManagerBukkit()
     {
         super(new RegistryProvider<Player, CommonPlayer<Player>>()

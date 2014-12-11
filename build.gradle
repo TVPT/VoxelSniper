@@ -24,6 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish-auth'
 apply plugin: 'signing'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 defaultTasks 'clean', 'licenseFormat', 'check', 'build'
 
@@ -38,19 +39,25 @@ targetCompatibility = 1.6
 // Project dependencies
 repositories {
 	mavenLocal()
-//    mavenCentral()
-//    maven {
-//        url "http://vault.voxelmodpack.com/content/groups/public/"
-//    }
-//    maven {
-//        url "http://nexus.afterkraft.com/content/groups/public/"
-//    }
+    mavenCentral()
+    maven {
+        url "http://vault.voxelmodpack.com/content/groups/public/"
+    }
+    maven {
+        url "http://nexus.afterkraft.com/content/groups/public/"
+    }
+    maven {
+        url "http://repo.budgiehouse.com:8081/nexus/content/repositories/VBpublic/"
+    }
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/groups/public/"
+    }
 }
 
 dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'com.voxelplugineering:VoxelGunsmith:2.0.0-SNAPSHOT'
-    compile 'org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT'
+    compile 'org.bukkit:bukkit:1.8-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.4'
 }
 
@@ -194,3 +201,16 @@ configure([compileJava, compileTestJava]) {
     options.deprecation = true
     options.encoding = 'utf8'
 }
+
+shadowJar {
+    relocate 'com.google', 'com.voxelplugineering.voxelsniper.libs.com.google'
+    dependencies {
+        include(dependency('com.google.guava:guava:18.0'))
+        include(dependency('com.voxelplugineering:VoxelGunsmith:2.0.0-SNAPSHOT'))
+        include(dependency('com.thevoxelbox:VisualScripting:0.1.12-SNAPSHOT'))
+        include(dependency('com.google.code.gson:gson:2.3'))
+        include(dependency('org.ow2.asm:asm:5.0.3'))
+    }
+}
+
+build.dependsOn shadowJar

@@ -23,60 +23,25 @@
  */
 package com.voxelplugineering.voxelsniper.perms;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import net.milkbowl.vault.permission.Permission;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.RegisteredServiceProvider;
-
 import com.voxelplugineering.voxelsniper.api.IPermissionProxy;
 import com.voxelplugineering.voxelsniper.api.ISniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
-import com.voxelplugineering.voxelsniper.common.CommonWorld;
 
 /**
- * A permission proxy for Vault permissions.
+ * PermissionProxy for super perms of bukkit.
  */
-public class VaultPermissionProxy implements IPermissionProxy
+public class SuperPermsPermissionProxy implements IPermissionProxy
 {
-
-    /**
-     * A reference to Vault's permission service.
-     */
-    private static Permission permissionService = null;
-
-    /**
-     * Creates a new {@link VaultPermissionProxy}.
-     */
-    public VaultPermissionProxy()
-    {
-        RegisteredServiceProvider<Permission> rsp = Bukkit.getServicesManager().getRegistration(Permission.class);
-        if (rsp != null)
-        {
-            permissionService = rsp.getProvider();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isOp(ISniper sniper)
     {
-        checkNotNull(sniper, "Sniper cannot be null");
         return sniper instanceof BukkitSniper && ((BukkitSniper) sniper).getThis().isOp();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasPermission(ISniper sniper, String permission)
     {
-        checkNotNull(sniper, "Sniper cannot be null");
-        checkNotNull(permission, "Permission cannot be null!");
-        checkArgument(!permission.isEmpty(), "Permission cannot be empty");
-        return sniper instanceof BukkitSniper && permissionService.playerHas(((BukkitSniper) sniper).getThis(), permission);
+        return sniper instanceof BukkitSniper && ((BukkitSniper) sniper).getThis().hasPermission(permission);
     }
+
 }
