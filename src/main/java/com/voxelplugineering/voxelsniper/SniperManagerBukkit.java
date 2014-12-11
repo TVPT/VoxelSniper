@@ -97,7 +97,7 @@ public class SniperManagerBukkit extends ProvidedWeakRegistry<Player, CommonPlay
                 {
                     return;
                 }
-                int remaining = (Integer) Gunsmith.getConfiguration().get("BLOCK_CHANGES_PER_SECOND").get();
+                int remaining = (Integer) Gunsmith.getConfiguration().get("blockChangesPerSecond").get();
                 remaining /= 10;
                 for (CommonPlayer<Player> p : getRegisteredValues())
                 {

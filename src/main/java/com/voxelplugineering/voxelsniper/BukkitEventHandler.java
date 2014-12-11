@@ -29,7 +29,7 @@ public class BukkitEventHandler implements Listener
      */
     public BukkitEventHandler()
     {
-        
+
     }
 
     /**

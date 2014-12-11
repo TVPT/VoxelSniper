@@ -37,13 +37,14 @@ targetCompatibility = 1.6
 
 // Project dependencies
 repositories {
-    mavenCentral()
-    maven {
-        url "http://vault.voxelmodpack.com/content/groups/public/"
-    }
-    maven {
-        url "http://nexus.afterkraft.com/content/groups/public/"
-    }
+	mavenLocal()
+//    mavenCentral()
+//    maven {
+//        url "http://vault.voxelmodpack.com/content/groups/public/"
+//    }
+//    maven {
+//        url "http://nexus.afterkraft.com/content/groups/public/"
+//    }
 }
 
 dependencies {

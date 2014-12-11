@@ -151,14 +151,29 @@ public class BukkitConsoleSniper implements ISniper
         return;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addHistory(ChangeQueue invert)
     {
         return;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addPending(ChangeQueue blockChangeQueue)
+    {
+        return;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void resetSettings()
     {
         return;
     }
