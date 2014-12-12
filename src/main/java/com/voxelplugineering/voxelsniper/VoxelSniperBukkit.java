@@ -24,7 +24,6 @@
 package com.voxelplugineering.voxelsniper;
 
 import java.io.File;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -36,6 +35,7 @@ import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.IMaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.IPermissionProxy;
 import com.voxelplugineering.voxelsniper.api.IRegistry;
+import com.voxelplugineering.voxelsniper.api.ISchedulerProxy;
 import com.voxelplugineering.voxelsniper.api.ISniperRegistry;
 import com.voxelplugineering.voxelsniper.api.IVoxelSniper;
 import com.voxelplugineering.voxelsniper.bukkit.BukkitMaterial;
@@ -91,7 +91,6 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     public void onEnable()
     {
         this.mainThread = Thread.currentThread();
-        getLogger().setLevel(Level.FINE);
         getDataFolder().mkdirs();
 
         Gunsmith.beginInit(getDataFolder());
@@ -111,7 +110,6 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         setupPermissions();
 
         this.sniperManager = new SniperManagerBukkit();
-        this.sniperManager.init();
 
         this.bukkitEvents = new BukkitEventHandler();
         Bukkit.getPluginManager().registerEvents(this.bukkitEvents, this);
@@ -202,36 +200,66 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         return this.mainThread;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IPermissionProxy getPermissionProxy()
     {
         return this.permissions;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IRegistry<?, ? extends CommonWorld<?>> getWorldRegistry()
     {
         return this.worldRegistry;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISniperRegistry<?> getPlayerRegistry()
     {
         return this.sniperManager;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ISchedulerProxy getSchedulerProxy()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
 
+/**
+ * A provider for {@link BukkitWorld}s.
+ */
 class WorldRegistryProvider implements RegistryProvider<World, BukkitWorld>
 {
 
     IMaterialRegistry<Material> materials;
 
+    /**
+     * Creates a new {@link WorldRegistryProvider}.
+     * 
+     * @param materials the material registry
+     */
     public WorldRegistryProvider(IMaterialRegistry<Material> materials)
     {
         this.materials = materials;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Pair<World, BukkitWorld>> get(String name)
     {

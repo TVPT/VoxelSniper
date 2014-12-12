@@ -25,7 +25,6 @@ package com.voxelplugineering.voxelsniper;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.ISniper;
@@ -70,84 +69,6 @@ public class SniperManagerBukkit extends ProvidedWeakRegistry<Player, CommonPlay
      * A special {@link ISniper} to represent the console in operations.
      */
     private BukkitConsoleSniper console = new BukkitConsoleSniper(Bukkit.getConsoleSender());
-    /**
-     * A task to tick all player change queues 5x per second.
-     */
-    private BukkitTask worldTick;
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init()
-    {
-        this.worldTick = VoxelSniperBukkit.voxelsniper.getServer().getScheduler().runTaskTimer(VoxelSniperBukkit.voxelsniper, new Runnable()
-        {
-
-            @Override
-            public void run()
-            {
-                long start = System.currentTimeMillis();
-                int n = 0;
-                for (CommonPlayer<Player> p : getRegisteredValues())
-                {
-                    if (p.hasPendingChanges())
-                    {
-                        n++;
-                    }
-                }
-                if (n == 0)
-                {
-                    return;
-                }
-                int remaining = (Integer) Gunsmith.getConfiguration().get("blockChangesPerSecond").get();
-                remaining /= 10;
-                for (CommonPlayer<Player> p : getRegisteredValues())
-                {
-                    if (!p.hasPendingChanges())
-                    {
-                        continue;
-                    }
-                    int allocation = remaining / (n--);
-                    int actual = 0;
-                    while (p.hasPendingChanges() && actual < allocation)
-                    {
-                        actual += p.getNextPendingChange().get().perform(allocation);
-                        if (p.getNextPendingChange().get().isFinished())
-                        {
-                            p.clearNextPending();
-                        }
-                    }
-                    remaining -= actual;
-                    if (remaining <= 0)
-                    {
-                        break;
-                    }
-                }
-                Gunsmith.getLogger().info("Change queue tick length: " + (System.currentTimeMillis() - start) + " ms");
-            }
-
-        }, 0, 2);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void stop()
-    {
-        this.worldTick.cancel();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void restart()
-    {
-        stop();
-        init();
-    }
 
     /**
      * {@inheritDoc}
