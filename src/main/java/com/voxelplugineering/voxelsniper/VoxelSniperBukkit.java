@@ -78,6 +78,7 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     private FileBrushLoader brushLoader;
     private CommonBrushManager brushManager;
     private CommandHandler commandHandler;
+    private BukkitPlatformProxy platformProxy;
 
     /**
      * The main server thread to check synchronous accesses.
@@ -99,6 +100,9 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         Gunsmith.setPlugin(this);
 
         Gunsmith.getLoggingDistributor().registerLogger(new JavaUtilLogger(this.getLogger()), "bukkit");
+        
+        this.platformProxy = new BukkitPlatformProxy(this.mainThread, getDataFolder(), getClassLoader());
+        Gunsmith.setPlatform(this.platformProxy);
 
         Gunsmith.getConfiguration().registerContainer(BukkitConfiguration.class);
 
@@ -186,24 +190,6 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
      * {@inheritDoc}
      */
     @Override
-    public ClassLoader getGunsmithClassLoader()
-    {
-        return this.getClassLoader();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Thread getMainThread()
-    {
-        return this.mainThread;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public IPermissionProxy getPermissionProxy()
     {
         return this.permissions;
@@ -233,7 +219,6 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     @Override
     public ISchedulerProxy getSchedulerProxy()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 

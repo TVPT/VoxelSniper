@@ -97,7 +97,7 @@ public class BukkitWorld extends CommonWorld<World>
             return;
         }
         Material mat = ((BukkitMaterial) material).getThis();
-        if (Thread.currentThread() == Gunsmith.getVoxelSniper().getMainThread())
+        if (Thread.currentThread() == Gunsmith.getPlatformProxy().getMainThread())
         {
             if (y >= 0 && y < 256)
             {

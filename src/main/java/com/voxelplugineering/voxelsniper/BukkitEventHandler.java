@@ -28,9 +28,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.ISniper;
@@ -74,7 +71,7 @@ public class BukkitEventHandler implements Listener
      * @param event the event
      */
     @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event)
+    public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event)
     {
         Optional<?> s = Gunsmith.getVoxelSniper().getPlayerRegistry().get(event.getPlayer().getName());
         if (s.isPresent())
