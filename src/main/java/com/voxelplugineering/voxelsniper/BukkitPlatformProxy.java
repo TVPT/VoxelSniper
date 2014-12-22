@@ -51,7 +51,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         this.mainThread = thread;
         this.dataFolder = data;
-        this.metrics = new File(data, "metrics.properties"); //TODO what is the metrics config file?
+        this.metrics = new File(data.getParentFile(), "PluginMetrics/config.yml");
         this.classloader = cl;
     }
     
