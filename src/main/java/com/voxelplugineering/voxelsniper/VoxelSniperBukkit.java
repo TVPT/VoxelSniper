@@ -56,6 +56,7 @@ import com.voxelplugineering.voxelsniper.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.logging.JavaUtilLogger;
 import com.voxelplugineering.voxelsniper.perms.SuperPermsPermissionProxy;
 import com.voxelplugineering.voxelsniper.perms.VaultPermissionProxy;
+import com.voxelplugineering.voxelsniper.scheduler.BukkitSchedulerProxy;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.util.TemporaryBrushBuilder;
 
@@ -79,6 +80,7 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     private CommonBrushManager brushManager;
     private CommandHandler commandHandler;
     private BukkitPlatformProxy platformProxy;
+    private BukkitSchedulerProxy scheduler;
 
     /**
      * The main server thread to check synchronous accesses.
@@ -129,6 +131,8 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
         Gunsmith.setCommandHandler(this.commandHandler);
         Gunsmith.getCommandHandler().setRegistrar(new BukkitCommandRegistrar());
         setupCommands();
+        
+        this.scheduler = new BukkitSchedulerProxy();
 
         Gunsmith.finish();
 
@@ -219,7 +223,16 @@ public class VoxelSniperBukkit extends JavaPlugin implements IVoxelSniper
     @Override
     public ISchedulerProxy getSchedulerProxy()
     {
-        return null;
+        return this.scheduler;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<IMaterialRegistry<?>> getMaterialRegistry(CommonWorld<?> world)
+    {
+        return Optional.<IMaterialRegistry<?>>of(this.materialRegistry);
     }
 
 }

@@ -152,15 +152,6 @@ public class BukkitMaterial extends CommonMaterial<Material>
      * {@inheritDoc}
      */
     @Override
-    public boolean isTransparent()
-    {
-        return this.getThis().isTransparent();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean isLiquid()
     {
         return LIQUIDS.contains(this.getThis());
@@ -175,6 +166,9 @@ public class BukkitMaterial extends CommonMaterial<Material>
         return FALLOFF_MATERIALS.contains(this.getThis());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName()
     {
