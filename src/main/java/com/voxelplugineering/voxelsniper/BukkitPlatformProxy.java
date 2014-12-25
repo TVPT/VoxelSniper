@@ -27,19 +27,19 @@ import java.io.File;
 
 import org.bukkit.Bukkit;
 
-import com.voxelplugineering.voxelsniper.api.IPlatformProxy;
+import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 
 /**
  * A proxy for Bukkit's platform.
  */
-public class BukkitPlatformProxy implements IPlatformProxy
+public class BukkitPlatformProxy implements PlatformProxy
 {
-    
+
     private Thread mainThread;
     private File dataFolder;
     private File metrics;
     private ClassLoader classloader;
-    
+
     /**
      * Creates a new {@link BukkitPlatformProxy}.
      * 
@@ -54,7 +54,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
         this.metrics = new File(data.getParentFile(), "PluginMetrics/config.yml");
         this.classloader = cl;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -63,7 +63,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         return Bukkit.getName();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -72,7 +72,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         return Bukkit.getVersion();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -81,7 +81,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         return Bukkit.getBukkitVersion();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -90,7 +90,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         return this.mainThread;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -99,7 +99,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         return this.dataFolder;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -108,7 +108,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         return this.classloader;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -117,7 +117,7 @@ public class BukkitPlatformProxy implements IPlatformProxy
     {
         return this.metrics;
     }
-    
+
     /**
      * {@inheritDoc}
      */

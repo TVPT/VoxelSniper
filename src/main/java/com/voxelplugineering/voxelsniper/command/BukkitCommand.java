@@ -29,7 +29,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.common.command.Command;
+import com.voxelplugineering.voxelsniper.command.Command;
 
 /**
  * A wrapper for Gunsmith's commands which may be registered into the bukkit command handler.
@@ -63,7 +63,7 @@ public class BukkitCommand extends org.bukkit.command.Command
     {
         if (sender instanceof Player)
         {
-            return this.cmd.execute(Gunsmith.getVoxelSniper().getPlayerRegistry().get(sender.getName()).get(), args);
+            return this.cmd.execute(Gunsmith.getPlayerRegistry().getPlayer(sender.getName()).get(), args);
         } else
         {
             if (this.cmd.isPlayerOnly())
@@ -72,7 +72,7 @@ public class BukkitCommand extends org.bukkit.command.Command
                 return true;
             } else
             {
-                return this.cmd.execute(Gunsmith.getVoxelSniper().getPlayerRegistry().getConsoleSniperProxy(), args);
+                return this.cmd.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
             }
         }
     }

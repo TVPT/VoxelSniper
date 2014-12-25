@@ -21,51 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.bukkit;
+package com.voxelplugineering.voxelsniper.entity.living;
 
 import java.io.File;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.common.CommonLocation;
-import com.voxelplugineering.voxelsniper.common.CommonPlayer;
-import com.voxelplugineering.voxelsniper.common.CommonWorld;
-import com.voxelplugineering.voxelsniper.common.FileBrushLoader;
+import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.world.World;
+import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
+import com.voxelplugineering.voxelsniper.util.BukkitUtility;
 
 /**
  * A wrapper for bukkit's {@link Player}s.
  */
-public class BukkitSniper extends CommonPlayer<Player>
+public class BukkitPlayer extends AbstractPlayer<Player>
 {
 
     /**
-     * Creates a new {@link BukkitSniper}.
+     * Creates a new {@link BukkitPlayer}.
      * 
      * @param player the player to wrap, cannot be null
      */
-    public BukkitSniper(Player player)
+    public BukkitPlayer(Player player)
     {
         super(player);
         //TODO: Change the call to getDataFolder() to a configuration value for the Gunsmith folder
-        File personalFolder = new File(((JavaPlugin) Gunsmith.getVoxelSniper()).getDataFolder(), "brushes" + File.separator + this.getName());
+        File personalFolder = new File(Gunsmith.getDataFolder(), "brushes" + File.separator + this.getName());
         this.getPersonalBrushManager().addLoader(new FileBrushLoader(personalFolder));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName()
-    {
-        return getThis().getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
@@ -78,24 +64,46 @@ public class BukkitSniper extends CommonPlayer<Player>
         sendMessage(String.format(format, args));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public CommonLocation getLocation()
+    public World getWorld()
     {
-        Location location = getThis().getLocation();
-        CommonWorld<?> world = Gunsmith.getVoxelSniper().getWorldRegistry().get(location.getWorld().getName()).get();
-        return new CommonLocation(world, location.getX(), location.getY(), location.getZ());
+        return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public CommonWorld<?> getWorld()
+    public String getName()
     {
-        return Gunsmith.getVoxelSniper().getWorldRegistry().get(getThis().getWorld().getName()).get();
+        return getThis().getName();
+    }
+
+    @Override
+    public EntityType getType()
+    {
+        return null;
+    }
+
+    @Override
+    public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
+    {
+        return BukkitUtility.getGunsmithLocation(getThis().getLocation());
+    }
+
+    @Override
+    public void setLocation(com.voxelplugineering.voxelsniper.api.world.Location newLocation)
+    {
+        getThis().teleport(BukkitUtility.getBukkitLocation(newLocation));
+    }
+
+    @Override
+    public boolean isPlayer()
+    {
+        return true;
+    }
+
+    @Override
+    public double getHealth()
+    {
+        return getThis().getHealth();
     }
 
 }

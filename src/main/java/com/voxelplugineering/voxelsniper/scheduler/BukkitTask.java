@@ -23,11 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.scheduler;
 
-import com.voxelplugineering.voxelsniper.api.ISchedulerProxy;
-import com.voxelplugineering.voxelsniper.util.Task;
+import com.voxelplugineering.voxelsniper.api.scheduler.Scheduler;
 
 /**
- * A wrapper for bukkit task's for Gunsmith's {@link ISchedulerProxy}.
+ * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.
  */
 public class BukkitTask extends Task
 {

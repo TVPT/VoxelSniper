@@ -21,29 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.bukkit;
+package com.voxelplugineering.voxelsniper.bukkit.world.material;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.bukkit.Material;
 
-import com.voxelplugineering.voxelsniper.common.CommonMaterial;
+import com.google.common.collect.Lists;
+import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 
 /**
  * A wrapper for bukkit {@link Material}s.
  */
-public class BukkitMaterial extends CommonMaterial<Material>
+public class BukkitMaterial extends WeakWrapper<Material> implements com.voxelplugineering.voxelsniper.api.world.material.Material
 {
 
     /**
      * A static set of materials which are liquids.
      */
-    private static Set<Material> LIQUIDS = new HashSet<Material>();
+    private static List<Material> LIQUIDS = Lists.newArrayListWithCapacity(4);
     /**
      * A static set of materials which can break on physics updates.
      */
-    private static Set<Material> FALLOFF_MATERIALS = new HashSet<Material>();
+    private static List<Material> FALLOFF_MATERIALS = Lists.newArrayListWithCapacity(47);
 
     static
     {
@@ -112,67 +112,40 @@ public class BukkitMaterial extends CommonMaterial<Material>
         super(value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString()
-    {
-        return this.getThis().name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isBlock()
-    {
-        return this.getThis().isBlock();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasGravity()
-    {
-        return this.getThis().hasGravity();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isSolid()
-    {
-        return this.getThis().isSolid();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isLiquid()
-    {
-        return LIQUIDS.contains(this.getThis());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isReliantOnEnvironment()
-    {
-        return FALLOFF_MATERIALS.contains(this.getThis());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().name();
+    }
+
+    @Override
+    public boolean isBlock()
+    {
+        return getThis().isBlock();
+    }
+
+    @Override
+    public boolean isAffectedByGravity()
+    {
+        return getThis().hasGravity();
+    }
+
+    @Override
+    public boolean isSolid()
+    {
+        return getThis().isSolid();
+    }
+
+    @Override
+    public boolean isLiquid()
+    {
+        return LIQUIDS.contains(getThis());
+    }
+
+    @Override
+    public boolean isReliantOnEnvironment()
+    {
+        return FALLOFF_MATERIALS.contains(getThis());
     }
 
 }

@@ -21,48 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.bukkit;
+package com.voxelplugineering.voxelsniper.bukkit.world;
 
-import org.bukkit.Chunk;
-import org.bukkit.block.Block;
+import org.bukkit.block.Biome;
 
-import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.common.CommonBlock;
-import com.voxelplugineering.voxelsniper.common.CommonChunk;
-import com.voxelplugineering.voxelsniper.common.CommonLocation;
-import com.voxelplugineering.voxelsniper.common.CommonMaterial;
+import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 
 /**
- * A bukkit wrapper for {@link CommonChunk}.
+ * A bukkit wrapper for gunsmith's {@link com.voxelplugineering.voxelsniper.api.world.biome.Biome}
  */
-public class BukkitChunk extends CommonChunk<Chunk>
+public class BukkitBiome extends WeakWrapper<Biome> implements com.voxelplugineering.voxelsniper.api.world.biome.Biome
 {
 
     /**
-     * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}.
+     * Creates a new {@link BukkitBiome}.
      * 
-     * @param chunk the chunk to wrap, cannot be null
-     * @param world The world to wrap
+     * @param value The biome to wrap
      */
-    public BukkitChunk(Chunk chunk, BukkitWorld world)
+    public BukkitBiome(Biome value)
     {
-        super(chunk, world);
+        super(value);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<CommonBlock> getRelativeBlockAt(int x, int y, int z)
+    public String getName()
     {
-        Block b = getThis().getBlock(x, y, z);
-        CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
-        Optional<?> m = this.getWorld().getMaterialRegistry().get(b.getType().name());
-        if (!m.isPresent())
-        {
-            return Optional.absent();
-        }
-        return Optional.of(new CommonBlock(l, (CommonMaterial<?>) m.get()));
+        return getThis().name();
     }
 
 }

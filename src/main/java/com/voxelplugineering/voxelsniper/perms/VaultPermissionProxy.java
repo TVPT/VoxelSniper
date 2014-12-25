@@ -30,14 +30,14 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import com.voxelplugineering.voxelsniper.api.IPermissionProxy;
-import com.voxelplugineering.voxelsniper.api.ISniper;
-import com.voxelplugineering.voxelsniper.bukkit.BukkitSniper;
+import com.voxelplugineering.voxelsniper.api.entity.living.Player;
+import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
 
 /**
  * A permission proxy for Vault permissions.
  */
-public class VaultPermissionProxy implements IPermissionProxy
+public class VaultPermissionProxy implements PermissionProxy
 {
 
     /**
@@ -61,21 +61,21 @@ public class VaultPermissionProxy implements IPermissionProxy
      * {@inheritDoc}
      */
     @Override
-    public boolean isOp(ISniper sniper)
+    public boolean isOp(Player sniper)
     {
         checkNotNull(sniper, "Sniper cannot be null");
-        return sniper instanceof BukkitSniper && ((BukkitSniper) sniper).getThis().isOp();
+        return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean hasPermission(ISniper sniper, String permission)
+    public boolean hasPermission(Player sniper, String permission)
     {
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(permission, "Permission cannot be null!");
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
-        return sniper instanceof BukkitSniper && permissionService.playerHas(((BukkitSniper) sniper).getThis(), permission);
+        return sniper instanceof BukkitPlayer && permissionService.playerHas(((BukkitPlayer) sniper).getThis(), permission);
     }
 }

@@ -209,7 +209,7 @@ shadowJar {
         include(dependency('com.voxelplugineering:VoxelGunsmith:2.0.0-SNAPSHOT'))
         include(dependency('com.thevoxelbox:VisualScripting:0.1.13-SNAPSHOT'))
         include(dependency('com.google.code.gson:gson:2.3'))
-        include(dependency('org.ow2.asm:asm:5.0.3'))
+        include(dependency('org.ow2.asm:asm-all:5.0.3'))
     }
 }
 

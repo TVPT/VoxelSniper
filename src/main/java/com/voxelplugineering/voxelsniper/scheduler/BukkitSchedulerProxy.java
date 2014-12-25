@@ -23,19 +23,35 @@
  */
 package com.voxelplugineering.voxelsniper.scheduler;
 
+import java.lang.ref.WeakReference;
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.api.ISchedulerProxy;
-import com.voxelplugineering.voxelsniper.util.Task;
+import com.google.common.collect.Lists;
+import com.voxelplugineering.voxelsniper.api.scheduler.Scheduler;
 
 /**
  * A proxy for Bukkit's {@link BukkitScheduler}.
  */
-public class BukkitSchedulerProxy implements ISchedulerProxy
+public class BukkitSchedulerProxy implements Scheduler
 {
+
+    private List<WeakReference<BukkitTask>> tasks = Lists.newArrayList();
+    private Plugin plugin;
+
+    /**
+     * Creates a new {@link BukkitSchedulerProxy}.
+     * 
+     * @param plugin The plugin
+     */
+    public BukkitSchedulerProxy(Plugin plugin)
+    {
+        this.plugin = plugin;
+    }
 
     /**
      * {@inheritDoc}
@@ -43,7 +59,28 @@ public class BukkitSchedulerProxy implements ISchedulerProxy
     @Override
     public Task startSynchronousTask(Runnable runnable, int interval)
     {
-        return new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimer((Plugin) Gunsmith.getVoxelSniper(), runnable, 0, interval / 50));
+        BukkitTask newTask = new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimer(this.plugin, runnable, 0, interval / 50));
+        this.tasks.add(new WeakReference<BukkitTask>(newTask));
+        return newTask;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stopAllTasks()
+    {
+        for (Iterator<WeakReference<BukkitTask>> iter = this.tasks.iterator(); iter.hasNext();)
+        {
+            WeakReference<BukkitTask> task = iter.next();
+            if (task.get() == null)
+            {
+                iter.remove();
+                continue;
+            }
+            task.get().cancel();
+            iter.remove();
+        }
     }
 
 }

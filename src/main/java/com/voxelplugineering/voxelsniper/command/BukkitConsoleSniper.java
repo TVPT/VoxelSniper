@@ -21,27 +21,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.perms;
+package com.voxelplugineering.voxelsniper.command;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.bukkit.command.CommandSender;
 
 import com.voxelplugineering.voxelsniper.api.entity.living.Player;
-import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
-import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
 
 /**
- * PermissionProxy for super perms of bukkit.
+ * A stripped out {@link Player} implementation to act as a proxy for the console.
  */
-public class SuperPermsPermissionProxy implements PermissionProxy
+public class BukkitConsoleSniper implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
 {
-    @Override
-    public boolean isOp(Player sniper)
+
+    /**
+     * The console's bukkit {@link CommandSender}.
+     */
+    CommandSender console;
+
+    /**
+     * Creates a new console proxy wrapping the given {@link CommandSender}.
+     * 
+     * @param console the console, cannot be null
+     */
+    public BukkitConsoleSniper(CommandSender console)
     {
-        return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
+        checkNotNull(console, "Console cannot be null");
+        this.console = console;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean hasPermission(Player sniper, String permission)
+    public void sendMessage(String msg)
     {
-        return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().hasPermission(permission);
+        this.console.sendMessage(msg);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void sendMessage(String format, Object... args)
+    {
+        sendMessage(String.format(format, args));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isPlayer()
+    {
+        return false;
     }
 
 }
