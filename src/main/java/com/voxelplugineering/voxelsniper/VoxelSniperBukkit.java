@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import java.io.File;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.voxelplugineering.voxelsniper.util.vsl.TemporaryBrushBuilder;
@@ -49,9 +47,12 @@ public class VoxelSniperBukkit extends JavaPlugin
         Gunsmith.beginInit(getDataFolder(), new BukkitPlatformProvider(this));
 
         TemporaryBrushBuilder.buildBrushes();
-        TemporaryBrushBuilder.saveAll(new File(getDataFolder(), "brushes"));
+        TemporaryBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
     }
 
+    /**
+     * The disabling sequence
+     */
     @Override
     public void onDisable()
     {

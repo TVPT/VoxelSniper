@@ -38,7 +38,6 @@ public class BukkitPlatformProxy implements PlatformProxy
     private Thread mainThread;
     private File dataFolder;
     private File metrics;
-    private ClassLoader classloader;
 
     /**
      * Creates a new {@link BukkitPlatformProxy}.
@@ -47,12 +46,11 @@ public class BukkitPlatformProxy implements PlatformProxy
      * @param data The data folder
      * @param cl The classloader
      */
-    protected BukkitPlatformProxy(Thread thread, File data, ClassLoader cl)
+    protected BukkitPlatformProxy(Thread thread, File data)
     {
         this.mainThread = thread;
         this.dataFolder = data;
         this.metrics = new File(data.getParentFile(), "PluginMetrics/config.yml");
-        this.classloader = cl;
     }
 
     /**
@@ -98,15 +96,6 @@ public class BukkitPlatformProxy implements PlatformProxy
     public File getDataFolder()
     {
         return this.dataFolder;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ClassLoader getGunsmithClassLoader()
-    {
-        return this.classloader;
     }
 
     /**

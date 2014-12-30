@@ -34,7 +34,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.base.Optional;
-import com.thevoxelbox.vsl.type.Type;
 import com.voxelplugineering.voxelsniper.api.brushes.BrushLoader;
 import com.voxelplugineering.voxelsniper.api.brushes.BrushManager;
 import com.voxelplugineering.voxelsniper.api.logging.ILogger;
@@ -118,7 +117,7 @@ public class BukkitPlatformProvider implements PlatformProvider
     public PlatformProxy getPlatformProxy()
     {
         check();
-        return new BukkitPlatformProxy(Gunsmith.getMainThread(), Gunsmith.getDataFolder(), Gunsmith.getClassLoader());
+        return new BukkitPlatformProxy(Gunsmith.getMainThread(), Gunsmith.getDataFolder());
     }
 
     /**
@@ -262,12 +261,6 @@ public class BukkitPlatformProvider implements PlatformProvider
             reg.registerBiome(b.name(), b, new BukkitBiome(b));
         }
         return reg;
-    }
-
-    @Override
-    public void registerTypes()
-    {
-        //Type.registerType("BLOCK", org.objectweb.asm.Type.getInternalName(Bukkit))
     }
 
 }
