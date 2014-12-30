@@ -51,13 +51,13 @@ public class BukkitConsoleSniper implements com.voxelplugineering.voxelsniper.ap
         this.console = console;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
-        this.console.sendMessage(msg);
+        for(String message: msg.split("\n"))
+        {
+            this.console.sendMessage(message);
+        }
     }
 
     /**
