@@ -26,7 +26,7 @@ package com.voxelplugineering.voxelsniper.util;
 import org.bukkit.Location;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
+import com.voxelplugineering.voxelsniper.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 
 /**

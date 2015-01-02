@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.bukkit.world.material;
+package com.voxelplugineering.voxelsniper.world.material;
 
 import java.util.List;
 

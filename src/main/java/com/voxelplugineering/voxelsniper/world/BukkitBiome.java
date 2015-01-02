@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.bukkit.world;
+package com.voxelplugineering.voxelsniper.world;
 
 import org.bukkit.block.Biome;
 

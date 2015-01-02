@@ -49,9 +49,6 @@ import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
 import com.voxelplugineering.voxelsniper.brushes.CommonBrushManager;
 import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
-import com.voxelplugineering.voxelsniper.bukkit.world.BukkitBiome;
-import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
-import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.command.BukkitConsoleSniper;
 import com.voxelplugineering.voxelsniper.command.CommandHandler;
@@ -73,6 +70,9 @@ import com.voxelplugineering.voxelsniper.registry.CommonWorldRegistry;
 import com.voxelplugineering.voxelsniper.scheduler.BukkitSchedulerProxy;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.util.text.BukkitTextFormatProxy;
+import com.voxelplugineering.voxelsniper.world.BukkitBiome;
+import com.voxelplugineering.voxelsniper.world.BukkitWorld;
+import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**
  * A provider for bukkit's initialization values.
