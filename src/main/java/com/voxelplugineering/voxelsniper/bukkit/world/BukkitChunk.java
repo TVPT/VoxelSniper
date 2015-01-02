@@ -57,6 +57,9 @@ public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelpluginee
         this.world = world;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
@@ -70,6 +73,9 @@ public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelpluginee
         return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(Location location)
     {
@@ -80,12 +86,18 @@ public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelpluginee
         return getBlock(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(Vector3i vector)
     {
         return getBlock(vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
@@ -97,28 +109,49 @@ public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelpluginee
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBlock(Material material, Location location)
     {
         setBlock(material, location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBlock(Material material, Vector3i vector)
     {
         setBlock(material, vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public World getWorld()
     {
         return this.world;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
         return null; //TODO
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refreshChunk()
+    {
+        ((BukkitWorld) this.world).getThis().refreshChunk(getThis().getX(), getThis().getZ());
     }
 
 }

@@ -56,8 +56,7 @@ public class BukkitEventHandler implements Listener
     @EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
     {
-        Optional<com.voxelplugineering.voxelsniper.api.entity.living.Player> s =
-                Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer().getName());
+        Optional<com.voxelplugineering.voxelsniper.api.entity.living.Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer().getName());
         if (s.isPresent())
         {
             SniperCreateEvent sce = new SniperCreateEvent(s.get());

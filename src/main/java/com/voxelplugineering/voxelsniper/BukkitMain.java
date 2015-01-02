@@ -21,38 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.scheduler;
+package com.voxelplugineering.voxelsniper;
 
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-
-/**
- * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.
- */
-public class BukkitTask extends Task
+public class BukkitMain extends GunsmithMain
 {
 
-    private org.bukkit.scheduler.BukkitTask task;
-
-    /**
-     * Creates a new {@link BukkitTask}.
-     * 
-     * @param runnable the runnable
-     * @param interval the interval, in milliseconds
-     * @param task the underlying {@link org.bukkit.scheduler.BukkitTask}
-     */
-    public BukkitTask(Runnable runnable, int interval, org.bukkit.scheduler.BukkitTask task)
+    public static void main(String[] args)
     {
-        super(runnable, interval);
-        this.task = task;
+        GunsmithMain.main(args);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void cancel()
-    {
-        this.task.cancel();
-    }
-
+    
 }

@@ -188,7 +188,8 @@ jar {
                 "Implementation-Version": version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commit,
                 "Built-By": System.properties['user.name'],
                 "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-                "Implementation-Vendor": url
+                "Implementation-Vendor": url,
+				"Main-Class": "com.voxelplugineering.voxelsniper.BukkitMain"
         )
     }
     from ("${projectDir}") {
@@ -207,7 +208,7 @@ shadowJar {
     dependencies {
         include(dependency('com.google.guava:guava:18.0'))
         include(dependency('com.voxelplugineering:VoxelGunsmith:2.0.0-SNAPSHOT'))
-        include(dependency('com.thevoxelbox:VisualScripting:0.2.2-SNAPSHOT'))
+        include(dependency('com.thevoxelbox:VisualScripting:0.2.3-SNAPSHOT'))
         include(dependency('com.google.code.gson:gson:2.3'))
         include(dependency('org.ow2.asm:asm-all:5.0.3'))
     }

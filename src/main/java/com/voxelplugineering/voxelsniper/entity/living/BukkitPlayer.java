@@ -55,7 +55,7 @@ public class BukkitPlayer extends AbstractPlayer<Player>
     @Override
     public void sendMessage(String msg)
     {
-        for(String message: msg.split("\n"))
+        for (String message : msg.split("\n"))
         {
             getThis().sendMessage(message);
         }

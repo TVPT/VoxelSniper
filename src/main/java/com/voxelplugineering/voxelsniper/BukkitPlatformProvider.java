@@ -43,8 +43,9 @@ import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.brushes.CommonBrushManager;
 import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitBiome;
@@ -68,7 +69,6 @@ import com.voxelplugineering.voxelsniper.registry.CommonBiomeRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonMaterialRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonPlayerRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonWorldRegistry;
-import com.voxelplugineering.voxelsniper.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.scheduler.BukkitSchedulerProxy;
 import com.voxelplugineering.voxelsniper.util.Pair;
 

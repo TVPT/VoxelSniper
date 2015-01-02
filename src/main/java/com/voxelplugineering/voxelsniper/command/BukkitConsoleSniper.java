@@ -54,7 +54,7 @@ public class BukkitConsoleSniper implements com.voxelplugineering.voxelsniper.ap
     @Override
     public void sendMessage(String msg)
     {
-        for(String message: msg.split("\n"))
+        for (String message : msg.split("\n"))
         {
             this.console.sendMessage(message);
         }

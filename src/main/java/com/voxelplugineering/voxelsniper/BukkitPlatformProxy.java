@@ -44,7 +44,6 @@ public class BukkitPlatformProxy implements PlatformProxy
      * 
      * @param thread The main thread
      * @param data The data folder
-     * @param cl The classloader
      */
     protected BukkitPlatformProxy(Thread thread, File data)
     {

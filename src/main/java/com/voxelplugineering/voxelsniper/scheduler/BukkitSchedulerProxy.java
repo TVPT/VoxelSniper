@@ -32,7 +32,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 
 /**
  * A proxy for Bukkit's {@link BukkitScheduler}.

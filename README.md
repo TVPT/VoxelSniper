@@ -58,6 +58,6 @@ Some rough guidelines for now:
 - Try to submit one change in one pull request and try to link it to the issue in the tracker if possible.
 
 [VoxelSniperWiki]: http://voxelwiki.com/minecraft/VoxelSniper/
-[JenkinsJob]: http://ci.voxelmodpack.com/job/VoxelSniper-Bukkit/
+[JenkinsJob]: http://ci.voxelmodpack.com/view/VoxelSniper/
 [Bukkit]: http://bukkit.org/
 [Gradle]: https://www.gradle.org

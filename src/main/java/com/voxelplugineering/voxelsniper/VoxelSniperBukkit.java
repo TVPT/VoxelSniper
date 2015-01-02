@@ -25,7 +25,7 @@ package com.voxelplugineering.voxelsniper;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.voxelplugineering.voxelsniper.util.vsl.TemporaryBrushBuilder;
+import com.voxelplugineering.voxelsniper.util.vsl.DefaultBrushBuilder;
 
 /**
  * The Main class for the bukkit specific implementation.
@@ -46,8 +46,8 @@ public class VoxelSniperBukkit extends JavaPlugin
     {
         Gunsmith.beginInit(getDataFolder(), new BukkitPlatformProvider(this));
 
-        TemporaryBrushBuilder.buildBrushes();
-        TemporaryBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
+        DefaultBrushBuilder.buildBrushes();
+        DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
     }
 
     /**
