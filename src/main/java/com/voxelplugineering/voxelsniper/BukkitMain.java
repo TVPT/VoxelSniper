@@ -23,9 +23,17 @@
  */
 package com.voxelplugineering.voxelsniper;
 
+/**
+ * The main class for utility functions.
+ */
 public class BukkitMain extends GunsmithMain
 {
 
+    /**
+     * The main method.
+     * 
+     * @param args The program arguments
+     */
     public static void main(String[] args)
     {
         GunsmithMain.main(args);
