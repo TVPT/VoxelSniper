@@ -68,6 +68,18 @@ public class BukkitSchedulerProxy implements Scheduler
      * {@inheritDoc}
      */
     @Override
+    public Task startAsynchronousTask(Runnable runnable, int interval)
+    {
+        BukkitTask newTask = new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, runnable, 0, interval / 50));
+        this.tasks.add(new WeakReference<BukkitTask>(newTask));
+        return newTask;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void stopAllTasks()
     {
         for (Iterator<WeakReference<BukkitTask>> iter = this.tasks.iterator(); iter.hasNext();)
@@ -82,5 +94,4 @@ public class BukkitSchedulerProxy implements Scheduler
             iter.remove();
         }
     }
-
 }
