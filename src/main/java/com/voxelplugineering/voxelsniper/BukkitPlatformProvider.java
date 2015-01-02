@@ -46,6 +46,7 @@ import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
 import com.voxelplugineering.voxelsniper.brushes.CommonBrushManager;
 import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitBiome;
@@ -71,6 +72,7 @@ import com.voxelplugineering.voxelsniper.registry.CommonPlayerRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonWorldRegistry;
 import com.voxelplugineering.voxelsniper.scheduler.BukkitSchedulerProxy;
 import com.voxelplugineering.voxelsniper.util.Pair;
+import com.voxelplugineering.voxelsniper.util.text.BukkitTextFormatProxy;
 
 /**
  * A provider for bukkit's initialization values.
@@ -263,6 +265,12 @@ public class BukkitPlatformProvider implements PlatformProvider
             reg.registerBiome(b.name(), b, new BukkitBiome(b));
         }
         return reg;
+    }
+
+    @Override
+    public TextFormatProxy getFormatProxy()
+    {
+        return new BukkitTextFormatProxy();
     }
 
 }
