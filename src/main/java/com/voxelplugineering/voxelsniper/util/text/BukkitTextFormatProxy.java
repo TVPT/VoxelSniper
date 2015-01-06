@@ -34,10 +34,13 @@ import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
 public class BukkitTextFormatProxy implements TextFormatProxy
 {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getFormat(TextFormat format)
     {
-        switch(format)
+        switch (format)
         {
         case BLACK:
             return ChatColor.BLACK.toString();

@@ -38,5 +38,5 @@ public class BukkitMain extends GunsmithMain
     {
         GunsmithMain.main(args);
     }
-    
+
 }

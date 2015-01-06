@@ -36,7 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.brushes.BrushLoader;
 import com.voxelplugineering.voxelsniper.api.brushes.BrushManager;
-import com.voxelplugineering.voxelsniper.api.logging.ILogger;
+import com.voxelplugineering.voxelsniper.api.logging.Logger;
 import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
 import com.voxelplugineering.voxelsniper.api.platform.PlatformProvider;
 import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
@@ -50,13 +50,15 @@ import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
 import com.voxelplugineering.voxelsniper.brushes.CommonBrushManager;
 import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
-import com.voxelplugineering.voxelsniper.command.BukkitConsoleSniper;
+import com.voxelplugineering.voxelsniper.command.BukkitConsoleSender;
 import com.voxelplugineering.voxelsniper.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.commands.AliasCommand;
 import com.voxelplugineering.voxelsniper.commands.BrushCommand;
 import com.voxelplugineering.voxelsniper.commands.HelpCommand;
 import com.voxelplugineering.voxelsniper.commands.MaskMaterialCommand;
 import com.voxelplugineering.voxelsniper.commands.MaterialCommand;
+import com.voxelplugineering.voxelsniper.commands.ResetCommand;
+import com.voxelplugineering.voxelsniper.commands.UndoCommand;
 import com.voxelplugineering.voxelsniper.commands.VSCommand;
 import com.voxelplugineering.voxelsniper.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
@@ -97,7 +99,7 @@ public class BukkitPlatformProvider implements PlatformProvider
      * {@inheritDoc}
      */
     @Override
-    public ILogger getLogger()
+    public Logger getLogger()
     {
         check();
         return new JavaUtilLogger(this.plugin.getLogger());
@@ -182,7 +184,7 @@ public class BukkitPlatformProvider implements PlatformProvider
     public PlayerRegistry<?> getSniperRegistry()
     {
         check();
-        return new CommonPlayerRegistry<Player>(new PlayerRegistryProvider(), new BukkitConsoleSniper(Bukkit.getConsoleSender()));
+        return new CommonPlayerRegistry<Player>(new PlayerRegistryProvider(), new BukkitConsoleSender(Bukkit.getConsoleSender()));
     }
 
     /**
@@ -231,6 +233,8 @@ public class BukkitPlatformProvider implements PlatformProvider
         cmd.registerCommand(new VSCommand());
         cmd.registerCommand(new AliasCommand());
         cmd.registerCommand(new HelpCommand());
+        cmd.registerCommand(new ResetCommand());
+        cmd.registerCommand(new UndoCommand());
 
         return cmd;
     }
@@ -267,6 +271,9 @@ public class BukkitPlatformProvider implements PlatformProvider
         return reg;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TextFormatProxy getFormatProxy()
     {
@@ -284,7 +291,7 @@ class WorldRegistryProvider implements RegistryProvider<World, com.voxelpluginee
     MaterialRegistry<?> materials;
 
     /**
-     * Creates a new {@link WorldRegistryProvider}.
+     * Creates a new WorldRegistryProvider.
      * 
      * @param materials the material registry
      */

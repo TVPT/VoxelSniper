@@ -70,11 +70,11 @@ public class BukkitSchedulerProxy implements Scheduler
     @Override
     public Task startAsynchronousTask(Runnable runnable, int interval)
     {
-        BukkitTask newTask = new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, runnable, 0, interval / 50));
+        BukkitTask newTask =
+                new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, runnable, 0, interval / 50));
         this.tasks.add(new WeakReference<BukkitTask>(newTask));
         return newTask;
     }
-
 
     /**
      * {@inheritDoc}

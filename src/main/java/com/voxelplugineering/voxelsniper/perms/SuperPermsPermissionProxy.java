@@ -32,12 +32,19 @@ import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
  */
 public class SuperPermsPermissionProxy implements PermissionProxy
 {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isOp(Player sniper)
     {
         return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {

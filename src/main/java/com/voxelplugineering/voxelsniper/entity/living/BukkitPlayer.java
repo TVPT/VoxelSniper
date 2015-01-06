@@ -52,6 +52,9 @@ public class BukkitPlayer extends AbstractPlayer<Player>
         this.getPersonalBrushManager().addLoader(new FileBrushLoader(personalFolder));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendMessage(String msg)
     {
@@ -61,48 +64,72 @@ public class BukkitPlayer extends AbstractPlayer<Player>
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendMessage(String format, Object... args)
     {
         sendMessage(String.format(format, args));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName()
     {
         return getThis().getName();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EntityType getType()
     {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
     {
         return BukkitUtility.getGunsmithLocation(getThis().getLocation());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLocation(com.voxelplugineering.voxelsniper.api.world.Location newLocation)
     {
         getThis().teleport(BukkitUtility.getBukkitLocation(newLocation));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayer()
     {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getHealth()
     {

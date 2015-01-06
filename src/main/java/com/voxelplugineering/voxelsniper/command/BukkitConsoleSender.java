@@ -32,7 +32,7 @@ import com.voxelplugineering.voxelsniper.api.entity.living.Player;
 /**
  * A stripped out {@link Player} implementation to act as a proxy for the console.
  */
-public class BukkitConsoleSniper implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
+public class BukkitConsoleSender implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
 {
 
     /**
@@ -45,12 +45,15 @@ public class BukkitConsoleSniper implements com.voxelplugineering.voxelsniper.ap
      * 
      * @param console the console, cannot be null
      */
-    public BukkitConsoleSniper(CommandSender console)
+    public BukkitConsoleSender(CommandSender console)
     {
         checkNotNull(console, "Console cannot be null");
         this.console = console;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendMessage(String msg)
     {
@@ -63,6 +66,7 @@ public class BukkitConsoleSniper implements com.voxelplugineering.voxelsniper.ap
     /**
      * {@inheritDoc}
      */
+    @Override
     public void sendMessage(String format, Object... args)
     {
         sendMessage(String.format(format, args));

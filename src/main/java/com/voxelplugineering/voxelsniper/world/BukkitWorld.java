@@ -24,12 +24,12 @@
 package com.voxelplugineering.voxelsniper.world;
 
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.bukkit.Material;
 import org.bukkit.World;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
@@ -37,9 +37,9 @@ import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.shape.MaterialShape;
+import com.voxelplugineering.voxelsniper.shape.Shape;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**
@@ -61,7 +61,7 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
     {
         super(world);
         this.materials = materialRegistry;
-        this.chunks = new WeakHashMap<org.bukkit.Chunk, Chunk>();
+        this.chunks = new MapMaker().weakKeys().weakValues().makeMap();
     }
 
     /**
@@ -73,6 +73,9 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         return this.getThis().getName();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Chunk> getChunk(int x, int y, int z)
     {
@@ -86,12 +89,18 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         return Optional.<Chunk>of(newChunk);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Chunk> getChunk(Vector3i vector)
     {
         return getChunk(vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
@@ -105,6 +114,9 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(Location location)
     {
@@ -115,12 +127,18 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         return getBlock(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(Vector3i vector)
     {
         return getBlock(vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBlock(com.voxelplugineering.voxelsniper.api.world.material.Material material, int x, int y, int z)
     {
@@ -132,18 +150,27 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBlock(com.voxelplugineering.voxelsniper.api.world.material.Material material, Location location)
     {
         setBlock(material, location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBlock(com.voxelplugineering.voxelsniper.api.world.material.Material material, Vector3i vector)
     {
         setBlock(material, vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Biome> getBiome(int x, int y, int z)
     {
@@ -151,6 +178,9 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         return Gunsmith.getBiomeRegistry().getBiome(biome.name());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Biome> getBiome(Location location)
     {
@@ -161,12 +191,18 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         return getBiome(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Biome> getBiome(Vector3i vector)
     {
         return getBiome(vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBiome(Biome biome, int x, int y, int z)
     {
@@ -177,6 +213,9 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBiome(Biome biome, Location location)
     {
@@ -187,22 +226,58 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         setBiome(biome, location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBiome(Biome biome, Vector3i vector)
     {
         setBiome(biome, vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MaterialRegistry<?> getMaterialRegistry()
     {
         return this.materials;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
         return null;//TODO
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MaterialShape getShapeFromWorld(Location origin, Shape shape)
+    {
+        MaterialShape mat = new MaterialShape(shape.clone(), Gunsmith.getDefaultMaterialRegistry().getAirMaterial());
+        for (int x = 0; x < shape.getWidth(); x++)
+        {
+            int ox = x - origin.getFlooredX();
+            for (int y = 0; y < shape.getHeight(); y++)
+            {
+                int oy = y - origin.getFlooredY();
+                for (int z = 0; z < shape.getLength(); z++)
+                {
+                    int oz = z - origin.getFlooredZ();
+                    System.out.println(String.format("Checking %d %d %d\n", ox, oy, oz));
+                    if (shape.get(x, y, z, false))
+                    {
+                        mat.set(x, y, z, false, getBlock(ox, oy, oz).get().getMaterial());
+                    }
+                }
+            }
+        }
+        return mat;
     }
 
 }

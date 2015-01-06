@@ -31,8 +31,8 @@ import org.bukkit.event.block.Action;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
-import com.voxelplugineering.voxelsniper.event.SniperCreateEvent;
-import com.voxelplugineering.voxelsniper.event.SniperDestroyEvent;
+import com.voxelplugineering.voxelsniper.event.SniperEvent;
+import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
 
 /**
  * An event handler for bukkit's events to post the events to Gunsmith from.
@@ -59,7 +59,7 @@ public class BukkitEventHandler implements Listener
         Optional<com.voxelplugineering.voxelsniper.api.entity.living.Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer().getName());
         if (s.isPresent())
         {
-            SniperCreateEvent sce = new SniperCreateEvent(s.get());
+            SniperEvent.SniperCreateEvent sce = new SniperEvent.SniperCreateEvent(s.get());
             Gunsmith.getEventBus().post(sce);
         }
     }
@@ -75,7 +75,7 @@ public class BukkitEventHandler implements Listener
         Optional<com.voxelplugineering.voxelsniper.api.entity.living.Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
         if (s.isPresent())
         {
-            SniperDestroyEvent sde = new SniperDestroyEvent(s.get());
+            SniperEvent.SniperDestroyEvent sde = new SniperEvent.SniperDestroyEvent(s.get());
             Gunsmith.getEventBus().post(sde);
         }
     }

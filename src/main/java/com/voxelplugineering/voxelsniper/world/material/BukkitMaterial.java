@@ -112,36 +112,54 @@ public class BukkitMaterial extends WeakWrapper<Material> implements com.voxelpl
         super(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName()
     {
         return getThis().name();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isBlock()
     {
         return getThis().isBlock();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAffectedByGravity()
     {
         return getThis().hasGravity();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isSolid()
     {
         return getThis().isSolid();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isLiquid()
     {
         return LIQUIDS.contains(getThis());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isReliantOnEnvironment()
     {
