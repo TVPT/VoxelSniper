@@ -91,7 +91,7 @@ public class BukkitEventHandler implements Listener
         Player p = event.getPlayer();
         Gunsmith.getLogger().debug("PlayerInteractEvent for " + p.getName());
         if (p.getItemInHand().getType() == (Material) Gunsmith.getConfiguration().get("arrowMaterial").get()
-                && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR))
+                && (event.getAction() == Action.RIGHT_CLICK_AIR))
         {
             Optional<com.voxelplugineering.voxelsniper.api.entity.living.Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
             if (s.isPresent())

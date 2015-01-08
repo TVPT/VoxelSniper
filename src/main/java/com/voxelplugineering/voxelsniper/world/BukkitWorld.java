@@ -262,14 +262,13 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         MaterialShape mat = new MaterialShape(shape.clone(), Gunsmith.getDefaultMaterialRegistry().getAirMaterial());
         for (int x = 0; x < shape.getWidth(); x++)
         {
-            int ox = x - origin.getFlooredX();
+            int ox = x + origin.getFlooredX();
             for (int y = 0; y < shape.getHeight(); y++)
             {
-                int oy = y - origin.getFlooredY();
+                int oy = y + origin.getFlooredY();
                 for (int z = 0; z < shape.getLength(); z++)
                 {
-                    int oz = z - origin.getFlooredZ();
-                    System.out.println(String.format("Checking %d %d %d\n", ox, oy, oz));
+                    int oz = z + origin.getFlooredZ();
                     if (shape.get(x, y, z, false))
                     {
                         mat.set(x, y, z, false, getBlock(ox, oy, oz).get().getMaterial());

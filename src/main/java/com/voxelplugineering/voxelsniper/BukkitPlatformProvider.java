@@ -147,7 +147,7 @@ public class BukkitPlatformProvider implements PlatformProvider
         {
             registry.registerMaterial(m.name(), m, new BukkitMaterial(m));
         }
-        return (CommonMaterialRegistry<?>) registry;
+        return registry;
     }
 
     /**
