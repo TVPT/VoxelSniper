@@ -57,6 +57,7 @@ import com.voxelplugineering.voxelsniper.commands.BrushCommand;
 import com.voxelplugineering.voxelsniper.commands.HelpCommand;
 import com.voxelplugineering.voxelsniper.commands.MaskMaterialCommand;
 import com.voxelplugineering.voxelsniper.commands.MaterialCommand;
+import com.voxelplugineering.voxelsniper.commands.RedoCommand;
 import com.voxelplugineering.voxelsniper.commands.ResetCommand;
 import com.voxelplugineering.voxelsniper.commands.UndoCommand;
 import com.voxelplugineering.voxelsniper.commands.VSCommand;
@@ -235,6 +236,7 @@ public class BukkitPlatformProvider implements PlatformProvider
         cmd.registerCommand(new HelpCommand());
         cmd.registerCommand(new ResetCommand());
         cmd.registerCommand(new UndoCommand());
+        cmd.registerCommand(new RedoCommand());
 
         return cmd;
     }
