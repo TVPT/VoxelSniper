@@ -315,7 +315,7 @@ class WorldRegistryProvider implements RegistryProvider<World, com.voxelpluginee
             return Optional.absent();
         }
         return Optional.of(new Pair<World, com.voxelplugineering.voxelsniper.api.world.World>(world, new BukkitWorld(world,
-                (MaterialRegistry<Material>) this.materials)));
+                (MaterialRegistry<Material>) this.materials, Thread.currentThread())));
     }
 
 }

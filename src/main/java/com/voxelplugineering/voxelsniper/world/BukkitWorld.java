@@ -33,6 +33,7 @@ import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.world.Block;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
@@ -50,18 +51,21 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
 
     private final MaterialRegistry<Material> materials;
     private final Map<org.bukkit.Chunk, Chunk> chunks;
+    private final Thread worldThread;
 
     /**
      * Creates a new {@link BukkitWorld}.
      * 
      * @param world the world
      * @param materialRegistry the registry
+     * @param thread The world Thread
      */
-    public BukkitWorld(World world, MaterialRegistry<Material> materialRegistry)
+    public BukkitWorld(World world, MaterialRegistry<Material> materialRegistry, Thread thread)
     {
         super(world);
         this.materials = materialRegistry;
         this.chunks = new MapMaker().weakKeys().weakValues().makeMap();
+        this.worldThread = thread;
     }
 
     /**
@@ -79,6 +83,10 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
     @Override
     public Optional<Chunk> getChunk(int x, int y, int z)
     {
+        if (!checkAsyncChunkAccess(x, y, z))
+        {
+            return Optional.absent();
+        }
         org.bukkit.Chunk chunk = getThis().getChunkAt(x, z);
         if (this.chunks.containsKey(chunk))
         {
@@ -87,6 +95,18 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
         BukkitChunk newChunk = new BukkitChunk(chunk, this);
         this.chunks.put(chunk, newChunk);
         return Optional.<Chunk>of(newChunk);
+    }
+
+    private boolean checkAsyncChunkAccess(int x, int y, int z)
+    {
+        if (Thread.currentThread() != this.worldThread)
+        {
+            if (!getThis().isChunkLoaded(x, z))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -104,6 +124,10 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
+        if (!checkAsyncBlockAccess(x, y, z))
+        {
+            return Optional.absent();
+        }
         org.bukkit.block.Block b = getThis().getBlockAt(x, y, z);
         CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
         Optional<com.voxelplugineering.voxelsniper.api.world.material.Material> m = this.materials.getMaterial(b.getType().name());
@@ -112,6 +136,20 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
             return Optional.absent();
         }
         return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
+    }
+
+    private boolean checkAsyncBlockAccess(int x, int y, int z)
+    {
+        if (Thread.currentThread() != this.worldThread)
+        {
+            int cx = x < 0 ? (x / 16 - 1) : x / 16;
+            int cz = z < 0 ? (z / 16 - 1) : z / 16;
+            if (!getThis().isChunkLoaded(cx, cz))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -271,7 +309,14 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
                     int oz = z + origin.getFlooredZ() - shape.getOrigin().getZ();
                     if (shape.get(x, y, z, false))
                     {
-                        mat.set(x, y, z, false, getBlock(ox, oy, oz).get().getMaterial());
+                        Optional<Block> block = getBlock(ox, oy, oz);
+                        if (!block.isPresent())
+                        {
+                            shape.unset(x, y, z, false);
+                        } else
+                        {
+                            mat.set(x, y, z, false, block.get().getMaterial());
+                        }
                     }
                 }
             }
