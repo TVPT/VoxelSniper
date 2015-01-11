@@ -33,13 +33,14 @@ import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.shape.MaterialShape;
+import com.voxelplugineering.voxelsniper.api.shape.Shape;
 import com.voxelplugineering.voxelsniper.api.world.Block;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
-import com.voxelplugineering.voxelsniper.shape.MaterialShape;
-import com.voxelplugineering.voxelsniper.shape.Shape;
+import com.voxelplugineering.voxelsniper.shape.ComplexMaterialShape;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
@@ -297,7 +298,7 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
     @Override
     public MaterialShape getShapeFromWorld(Location origin, Shape shape)
     {
-        MaterialShape mat = new MaterialShape(shape.clone(), Gunsmith.getDefaultMaterialRegistry().getAirMaterial());
+        MaterialShape mat = new ComplexMaterialShape(shape, Gunsmith.getDefaultMaterialRegistry().getAirMaterial());
         for (int x = 0; x < shape.getWidth(); x++)
         {
             int ox = x + origin.getFlooredX() - shape.getOrigin().getX();
@@ -315,7 +316,7 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
                             shape.unset(x, y, z, false);
                         } else
                         {
-                            mat.set(x, y, z, false, block.get().getMaterial());
+                            mat.setMaterial(x, y, z, false, block.get().getMaterial());
                         }
                     }
                 }
