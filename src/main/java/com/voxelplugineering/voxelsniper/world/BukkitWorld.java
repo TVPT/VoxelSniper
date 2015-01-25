@@ -181,7 +181,10 @@ public class BukkitWorld extends WeakWrapper<World> implements com.voxelpluginee
     @Override
     public void setBlock(com.voxelplugineering.voxelsniper.api.world.material.Material material, int x, int y, int z)
     {
-        //TODO range checks
+        if(y < 0 || y >= 256)
+        {
+            return;
+        }
         if (material instanceof BukkitMaterial)
         {
             BukkitMaterial bukkitMaterial = (BukkitMaterial) material;

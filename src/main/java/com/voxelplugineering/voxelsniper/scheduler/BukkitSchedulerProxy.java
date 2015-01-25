@@ -31,6 +31,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 
@@ -57,23 +58,23 @@ public class BukkitSchedulerProxy implements Scheduler
      * {@inheritDoc}
      */
     @Override
-    public Task startSynchronousTask(Runnable runnable, int interval)
+    public Optional<BukkitTask> startSynchronousTask(Runnable runnable, int interval)
     {
         BukkitTask newTask = new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimer(this.plugin, runnable, 0, interval / 50));
         this.tasks.add(new WeakReference<BukkitTask>(newTask));
-        return newTask;
+        return Optional.of(newTask);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Task startAsynchronousTask(Runnable runnable, int interval)
+    public Optional<BukkitTask> startAsynchronousTask(Runnable runnable, int interval)
     {
         BukkitTask newTask =
                 new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, runnable, 0, interval / 50));
         this.tasks.add(new WeakReference<BukkitTask>(newTask));
-        return newTask;
+        return Optional.of(newTask);
     }
 
     /**
