@@ -61,7 +61,7 @@ public class BukkitEntity extends AbstractEntity<Entity>
     @Override
     public String getName()
     {
-        return getThis().getName();
+        return getThis().getCustomName();
     }
 
     /**
