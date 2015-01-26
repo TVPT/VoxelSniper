@@ -33,6 +33,7 @@ import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.world.AbstractChunk;
 import com.voxelplugineering.voxelsniper.world.CommonBlock;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
@@ -40,10 +41,8 @@ import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 /**
  * A bukkit wrapper for {@link Chunk}.
  */
-public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelplugineering.voxelsniper.api.world.Chunk
+public class BukkitChunk extends AbstractChunk<Chunk>
 {
-
-    private World world;
 
     /**
      * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}.
@@ -53,8 +52,7 @@ public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelpluginee
      */
     public BukkitChunk(Chunk chunk, World world)
     {
-        super(chunk);
-        this.world = world;
+        super(chunk, world);
     }
 
     /**
@@ -77,28 +75,6 @@ public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelpluginee
      * {@inheritDoc}
      */
     @Override
-    public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(Location location)
-    {
-        if (location.getWorld() != this.world)
-        {
-            return Optional.absent();
-        }
-        return getBlock(location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(Vector3i vector)
-    {
-        return getBlock(vector.getX(), vector.getY(), vector.getZ());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void setBlock(Material material, int x, int y, int z)
     {
         //TODO range checks
@@ -107,33 +83,6 @@ public class BukkitChunk extends WeakWrapper<Chunk> implements com.voxelpluginee
             BukkitMaterial bukkitMaterial = (BukkitMaterial) material;
             getThis().getBlock(x, y, z).setType(bukkitMaterial.getThis());
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setBlock(Material material, Location location)
-    {
-        setBlock(material, location.getFlooredX(), location.getFlooredY(), location.getFlooredZ());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setBlock(Material material, Vector3i vector)
-    {
-        setBlock(material, vector.getX(), vector.getY(), vector.getZ());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public World getWorld()
-    {
-        return this.world;
     }
 
     /**

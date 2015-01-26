@@ -31,7 +31,7 @@ import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
-import com.voxelplugineering.voxelsniper.util.BukkitUtility;
+import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
 
 /**
  * A wrapper for bukkit's {@link Player}s.
@@ -68,15 +68,6 @@ public class BukkitPlayer extends AbstractPlayer<Player>
      * {@inheritDoc}
      */
     @Override
-    public void sendMessage(String format, Object... args)
-    {
-        sendMessage(String.format(format, args));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
@@ -106,7 +97,7 @@ public class BukkitPlayer extends AbstractPlayer<Player>
     @Override
     public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
     {
-        return BukkitUtility.getGunsmithLocation(getThis().getLocation());
+        return BukkitUtilities.getGunsmithLocation(getThis().getLocation());
     }
 
     /**
@@ -115,16 +106,7 @@ public class BukkitPlayer extends AbstractPlayer<Player>
     @Override
     public void setLocation(com.voxelplugineering.voxelsniper.api.world.Location newLocation)
     {
-        getThis().teleport(BukkitUtility.getBukkitLocation(newLocation));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isPlayer()
-    {
-        return true;
+        getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
     }
 
     /**

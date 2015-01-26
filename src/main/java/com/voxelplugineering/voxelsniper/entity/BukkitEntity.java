@@ -29,7 +29,7 @@ import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.util.BukkitUtility;
+import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
 
 /**
  * Represents a Bukkit entity.
@@ -79,7 +79,7 @@ public class BukkitEntity extends AbstractEntity<Entity>
     @Override
     public Location getLocation()
     {
-        return BukkitUtility.getGunsmithLocation(getThis().getLocation());
+        return BukkitUtilities.getGunsmithLocation(getThis().getLocation());
     }
 
     /**
@@ -88,6 +88,6 @@ public class BukkitEntity extends AbstractEntity<Entity>
     @Override
     public void setLocation(Location newLocation)
     {
-        getThis().teleport(BukkitUtility.getBukkitLocation(newLocation));
+        getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
     }
 }

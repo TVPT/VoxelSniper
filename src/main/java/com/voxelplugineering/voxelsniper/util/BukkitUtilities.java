@@ -32,7 +32,7 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 /**
  * Bukkit based utilities.
  */
-public final class BukkitUtility
+public final class BukkitUtilities
 {
 
     /**
