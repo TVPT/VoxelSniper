@@ -32,7 +32,6 @@ import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
-import com.voxelplugineering.voxelsniper.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
 
 /**
@@ -90,7 +89,7 @@ public class BukkitPlayer extends AbstractPlayer<Player>
     @Override
     public EntityType getType()
     {
-        return BukkitEntity.getEntityType(org.bukkit.entity.EntityType.PLAYER);
+        return BukkitUtilities.getEntityType(org.bukkit.entity.EntityType.PLAYER);
     }
 
     /**

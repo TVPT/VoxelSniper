@@ -23,9 +23,14 @@
  */
 package com.voxelplugineering.voxelsniper.util;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import org.bukkit.Location;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.entity.BukkitEntityType;
 import com.voxelplugineering.voxelsniper.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 
@@ -61,6 +66,29 @@ public final class BukkitUtilities
             return new Location(((BukkitWorld) location.getWorld()).getThis(), location.getX(), location.getY(), location.getZ());
         }
         return null;
+    }
+
+    private static final Map<org.bukkit.entity.EntityType, EntityType> entityTypes = new EnumMap<org.bukkit.entity.EntityType, EntityType>(
+            org.bukkit.entity.EntityType.class);
+
+    /**
+     * Returns the Gunsmith {@link EntityType} for the given bukkit EntityType.
+     * 
+     * @param type The bukkit entity type
+     * @return The gunsmith entity type
+     */
+    public static EntityType getEntityType(org.bukkit.entity.EntityType type)
+    {
+        EntityType gtype;
+        if (!entityTypes.containsKey(type))
+        {
+            gtype = new BukkitEntityType(type);
+            entityTypes.put(type, gtype);
+        } else
+        {
+            gtype = entityTypes.get(type);
+        }
+        return gtype;
     }
 
 }
