@@ -114,7 +114,7 @@ uploadArchives {
                 description 'Implementation of VoxelSniper for Bukkit'
                 url 'http://voxelmodpack.com/'
                 scm {
-                    url 'https://github.com/tvpt/voxelgunsmith'
+                    url 'https://github.com/tvpt/voxelsniper'
                     connection 'git'
                     developerConnection 'git@github.com:tvpt/VoxelSniper-Bukkit.git'
                 }
@@ -210,7 +210,6 @@ shadowJar {
         include(dependency('com.voxelplugineering:VoxelGunsmith:7.0.0-SNAPSHOT'))
         include(dependency('com.thevoxelbox:VisualScripting:0.2.7-SNAPSHOT'))
         include(dependency('com.google.code.gson:gson:2.3'))
-        include(dependency('org.ow2.asm:asm-all:5.0.3'))
     }
 }
 
