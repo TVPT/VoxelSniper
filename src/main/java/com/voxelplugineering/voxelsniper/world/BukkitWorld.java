@@ -23,26 +23,21 @@
  */
 package com.voxelplugineering.voxelsniper.world;
 
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.World;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.shape.MaterialShape;
-import com.voxelplugineering.voxelsniper.api.shape.Shape;
-import com.voxelplugineering.voxelsniper.api.world.Block;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
-import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
-import com.voxelplugineering.voxelsniper.shape.ComplexMaterialShape;
-import com.voxelplugineering.voxelsniper.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.world.AbstractWorld;
+import com.voxelplugineering.voxelsniper.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**
@@ -53,6 +48,7 @@ public class BukkitWorld extends AbstractWorld<World>
 
     private final MaterialRegistry<Material> materials;
     private final Map<org.bukkit.Chunk, Chunk> chunks;
+    private final Map<org.bukkit.entity.Entity, Entity> entitiesCache;
     private final Thread worldThread;
 
     /**
@@ -66,7 +62,8 @@ public class BukkitWorld extends AbstractWorld<World>
     {
         super(world);
         this.materials = materialRegistry;
-        this.chunks = new MapMaker().weakKeys().weakValues().makeMap();
+        this.chunks = new MapMaker().weakKeys().makeMap();
+        this.entitiesCache = new MapMaker().weakKeys().makeMap();
         this.worldThread = thread;
     }
 
@@ -151,7 +148,7 @@ public class BukkitWorld extends AbstractWorld<World>
     @Override
     public void setBlock(com.voxelplugineering.voxelsniper.api.world.material.Material material, int x, int y, int z)
     {
-        if(y < 0 || y >= 256)
+        if (y < 0 || y >= 256)
         {
             return;
         }
@@ -200,7 +197,20 @@ public class BukkitWorld extends AbstractWorld<World>
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
-        return null;//TODO
+        List<Entity> entities = Lists.newArrayList();
+        for (org.bukkit.entity.Entity e : getThis().getEntities())
+        {
+            if (this.entitiesCache.containsKey(e))
+            {
+                entities.add(this.entitiesCache.get(e));
+            } else
+            {
+                Entity ent = new BukkitEntity(e);
+                this.entitiesCache.put(e, ent);
+                entities.add(ent);
+            }
+        }
+        return entities;
     }
 
 }

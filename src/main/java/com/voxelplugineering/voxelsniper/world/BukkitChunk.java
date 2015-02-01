@@ -28,14 +28,8 @@ import org.bukkit.block.Block;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
-import com.voxelplugineering.voxelsniper.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.world.AbstractChunk;
-import com.voxelplugineering.voxelsniper.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**
@@ -45,7 +39,8 @@ public class BukkitChunk extends AbstractChunk<Chunk>
 {
 
     /**
-     * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}.
+     * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}
+     * .
      * 
      * @param chunk the chunk to wrap, cannot be null
      * @param world The world to wrap
@@ -100,7 +95,7 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     @Override
     public void refreshChunk()
     {
-        ((BukkitWorld) this.world).getThis().refreshChunk(getThis().getX(), getThis().getZ());
+        ((BukkitWorld) this.getWorld()).getThis().refreshChunk(getThis().getX(), getThis().getZ());
     }
 
 }

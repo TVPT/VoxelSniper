@@ -30,7 +30,8 @@ import org.bukkit.command.CommandSender;
 import com.voxelplugineering.voxelsniper.api.entity.living.Player;
 
 /**
- * A stripped out {@link Player} implementation to act as a proxy for the console.
+ * A stripped out {@link Player} implementation to act as a proxy for the
+ * console.
  */
 public class BukkitConsoleSender implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
 {

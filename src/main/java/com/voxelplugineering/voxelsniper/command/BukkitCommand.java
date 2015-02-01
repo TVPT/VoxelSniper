@@ -32,7 +32,8 @@ import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.command.Command;
 
 /**
- * A wrapper for Gunsmith's commands which may be registered into the bukkit command handler.
+ * A wrapper for Gunsmith's commands which may be registered into the bukkit
+ * command handler.
  */
 public class BukkitCommand extends org.bukkit.command.Command
 {

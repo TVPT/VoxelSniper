@@ -23,6 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.entity;
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.entity.Entity;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
@@ -36,14 +40,41 @@ import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
  */
 public class BukkitEntity extends AbstractEntity<Entity>
 {
+
+    private static final Map<org.bukkit.entity.EntityType, EntityType> entityTypes = new EnumMap<org.bukkit.entity.EntityType, EntityType>(
+            org.bukkit.entity.EntityType.class);
+
+    /**
+     * Returns the Gunsmith {@link EntityType} for the given bukkit EntityType.
+     * 
+     * @param type The bukkit entity type
+     * @return The gunsmith entity type
+     */
+    public static EntityType getEntityType(org.bukkit.entity.EntityType type)
+    {
+        EntityType gType;
+        if (!entityTypes.containsKey(type))
+        {
+            gType = new BukkitEntityType(type);
+            entityTypes.put(type, gType);
+        } else
+        {
+            gType = entityTypes.get(type);
+        }
+        return gType;
+    }
+
+    private final EntityType type;
+
     /**
      * Creates a new entity wrapper.
      *
-     * @param value The entity to wrap
+     * @param entity The entity to wrap
      */
-    public BukkitEntity(Entity value)
+    public BukkitEntity(Entity entity)
     {
-        super(value);
+        super(entity);
+        this.type = getEntityType(entity.getType());
     }
 
     /**
@@ -70,7 +101,7 @@ public class BukkitEntity extends AbstractEntity<Entity>
     @Override
     public EntityType getType()
     {
-        return null;
+        return this.type;
     }
 
     /**
@@ -89,5 +120,14 @@ public class BukkitEntity extends AbstractEntity<Entity>
     public void setLocation(Location newLocation)
     {
         getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UUID getUniqueId()
+    {
+        return getThis().getUniqueId();
     }
 }

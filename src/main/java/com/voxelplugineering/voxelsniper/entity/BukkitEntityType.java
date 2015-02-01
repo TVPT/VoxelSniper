@@ -21,29 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.util;
+package com.voxelplugineering.voxelsniper.entity;
 
-import org.bukkit.Bukkit;
-
-import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 
 /**
- * A utility class to fetch the current craftbukkit package for this version.
- * TODO: replace with a cleaner way, here as a placeholder
- * 
- * @author Deamon
+ * An implementation of {@link EntityType} for bukkit.
  */
-public class CraftBukkitFetcher
+public class BukkitEntityType implements EntityType
 {
 
-    /**
-     * The current craftbukkit package.
-     */
-    public static String CRAFTBUKKIT_PACKAGE;
+    private final org.bukkit.entity.EntityType type;
 
-    static
+    /**
+     * Creates a new {@link BukkitEntityType}
+     * 
+     * @param type The bukkit entity type
+     */
+    public BukkitEntityType(org.bukkit.entity.EntityType type)
     {
-        CRAFTBUKKIT_PACKAGE = Bukkit.getServer().getClass().getPackage().getName();
-        Gunsmith.getLogger().info("Detected craftbukkit package as " + CRAFTBUKKIT_PACKAGE);
+        this.type = type;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName()
+    {
+        return this.type.name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAlive()
+    {
+        return this.type.isAlive();
+    }
+
 }

@@ -25,7 +25,7 @@ package com.voxelplugineering.voxelsniper;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.voxelplugineering.voxelsniper.util.vsl.DefaultBrushBuilder;
+import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The Main class for the bukkit specific implementation.

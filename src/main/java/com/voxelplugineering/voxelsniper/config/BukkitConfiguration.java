@@ -30,5 +30,6 @@ import org.bukkit.Material;
  */
 public class BukkitConfiguration
 {
+
     Material arrowMaterial = Material.ARROW;
 }

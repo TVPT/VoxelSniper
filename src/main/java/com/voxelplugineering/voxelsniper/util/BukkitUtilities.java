@@ -36,7 +36,8 @@ public final class BukkitUtilities
 {
 
     /**
-     * Switches between Gunsmith's {@link CommonLocation} and bukkit's {@link Location}.
+     * Switches between Gunsmith's {@link CommonLocation} and bukkit's
+     * {@link Location}.
      * 
      * @param location Bukkit's location
      * @return Gunsmith's location
@@ -47,7 +48,8 @@ public final class BukkitUtilities
     }
 
     /**
-     * Switches between Gunsmith's {@link CommonLocation} and bukkit's {@link Location}.
+     * Switches between Gunsmith's {@link CommonLocation} and bukkit's
+     * {@link Location}.
      * 
      * @param location Gunsmith's location
      * @return Bukkit's location
