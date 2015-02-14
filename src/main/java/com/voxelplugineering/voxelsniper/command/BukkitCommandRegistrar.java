@@ -42,9 +42,6 @@ public class BukkitCommandRegistrar implements CommandRegistrar
 
     /**
      * A reference to bukkit's {@link CommandMap}.
-     * <p>
-     * TODO: possible memory leak if bukkit attempts to recreate this map,
-     * perhaps across reloads.
      */
     private CommandMap commands;
 

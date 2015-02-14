@@ -30,6 +30,7 @@ import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**
@@ -37,6 +38,10 @@ import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
  */
 public class BukkitChunk extends AbstractChunk<Chunk>
 {
+
+    private final Vector3i min;
+    private final Vector3i max;
+    private static final Vector3i CHUNK_SIZE = new Vector3i(16, 256, 16);
 
     /**
      * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}
@@ -48,6 +53,8 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     public BukkitChunk(Chunk chunk, World world)
     {
         super(chunk, world);
+        this.min = new Vector3i(chunk.getX() * 16, 0, chunk.getZ() * 16);
+        this.max = new Vector3i(chunk.getX() * 16 + 15, 255, chunk.getZ() * 16 + 15);
     }
 
     /**
@@ -56,6 +63,10 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
+        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 255)
+        {
+            return Optional.absent();
+        }
         Block b = getThis().getBlock(x, y, z);
         CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
         Optional<Material> m = this.getWorld().getMaterialRegistry().getMaterial(b.getType().name());
@@ -63,7 +74,7 @@ public class BukkitChunk extends AbstractChunk<Chunk>
         {
             return Optional.absent();
         }
-        return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
+        return Optional.<com.voxelplugineering.voxelsniper.api.world.Block> of(new CommonBlock(l, m.get()));
     }
 
     /**
@@ -72,7 +83,7 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
-        //TODO range checks
+        // TODO range checks
         if (material instanceof BukkitMaterial)
         {
             BukkitMaterial bukkitMaterial = (BukkitMaterial) material;
@@ -86,16 +97,44 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
-        return null; //TODO
+        return null; // TODO
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("deprecation")
+    @Override
+    public void refreshChunk()
+    {
+        ((BukkitWorld) this.getWorld()).getThis().refreshChunk(getThis().getX(), getThis().getZ());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void refreshChunk()
+    public Vector3i getMinBound()
     {
-        ((BukkitWorld) this.getWorld()).getThis().refreshChunk(getThis().getX(), getThis().getZ());
+        return this.min;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Vector3i getMaxBound()
+    {
+        return this.max;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Vector3i getSize()
+    {
+        return CHUNK_SIZE;
     }
 
 }
