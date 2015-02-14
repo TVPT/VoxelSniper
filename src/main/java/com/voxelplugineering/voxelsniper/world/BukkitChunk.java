@@ -23,13 +23,17 @@
  */
 package com.voxelplugineering.voxelsniper.world;
 
+import java.util.List;
+
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
+import com.voxelplugineering.voxelsniper.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
@@ -83,7 +87,10 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
-        // TODO range checks
+        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 255)
+        {
+            return;
+        }
         if (material instanceof BukkitMaterial)
         {
             BukkitMaterial bukkitMaterial = (BukkitMaterial) material;
@@ -97,7 +104,20 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
-        return null; // TODO
+        List<Entity> entities = Lists.newArrayList();
+        for (org.bukkit.entity.Entity e : getThis().getEntities())
+        {
+            if (((BukkitWorld) getWorld()).entitiesCache.containsKey(e))
+            {
+                entities.add(((BukkitWorld) getWorld()).entitiesCache.get(e));
+            } else
+            {
+                Entity ent = new BukkitEntity(e);
+                ((BukkitWorld) getWorld()).entitiesCache.put(e, ent);
+                entities.add(ent);
+            }
+        }
+        return entities;
     }
 
     /**

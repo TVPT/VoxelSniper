@@ -48,7 +48,7 @@ public class BukkitWorld extends AbstractWorld<World>
 
     private final MaterialRegistry<Material> materials;
     private final Map<org.bukkit.Chunk, Chunk> chunks;
-    private final Map<org.bukkit.entity.Entity, Entity> entitiesCache;
+    final Map<org.bukkit.entity.Entity, Entity> entitiesCache;
     private final Thread worldThread;
 
     /**
