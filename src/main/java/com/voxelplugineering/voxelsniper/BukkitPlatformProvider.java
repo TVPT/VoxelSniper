@@ -34,7 +34,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.brushes.BrushLoader;
 import com.voxelplugineering.voxelsniper.api.brushes.BrushManager;
 import com.voxelplugineering.voxelsniper.api.logging.Logger;
 import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
@@ -45,10 +44,10 @@ import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceProvider;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
 import com.voxelplugineering.voxelsniper.brushes.CommonBrushManager;
-import com.voxelplugineering.voxelsniper.brushes.FileBrushLoader;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.command.BukkitConsoleSender;
 import com.voxelplugineering.voxelsniper.command.CommandHandler;
@@ -71,6 +70,8 @@ import com.voxelplugineering.voxelsniper.registry.CommonMaterialRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonPlayerRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonWorldRegistry;
 import com.voxelplugineering.voxelsniper.scheduler.BukkitSchedulerProxy;
+import com.voxelplugineering.voxelsniper.service.persistence.DirectoryDataSourceProvider;
+import com.voxelplugineering.voxelsniper.service.persistence.NBTDataSource;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.util.text.BukkitTextFormatProxy;
 import com.voxelplugineering.voxelsniper.world.BukkitBiome;
@@ -202,10 +203,10 @@ public class BukkitPlatformProvider implements PlatformProvider
      * {@inheritDoc}
      */
     @Override
-    public BrushLoader getDefaultBrushLoader()
+    public DataSourceProvider getDefaultBrushLoader()
     {
         check();
-        return new FileBrushLoader(new File(Gunsmith.getDataFolder(), "brushes"));
+        return new DirectoryDataSourceProvider(new File(Gunsmith.getDataFolder(), "brushes"), NBTDataSource.BUILDER);
     }
 
     /**

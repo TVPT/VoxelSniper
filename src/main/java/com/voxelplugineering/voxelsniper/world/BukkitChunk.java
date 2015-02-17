@@ -45,7 +45,7 @@ public class BukkitChunk extends AbstractChunk<Chunk>
 
     private final Vector3i min;
     private final Vector3i max;
-    private static final Vector3i CHUNK_SIZE = new Vector3i(16, 256, 16);
+    protected static final Vector3i CHUNK_SIZE = new Vector3i(16, 256, 16);
 
     /**
      * Creates a new {@link BukkitChunk} wrapping the given bukkit {@link Chunk}
@@ -123,7 +123,6 @@ public class BukkitChunk extends AbstractChunk<Chunk>
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("deprecation")
     @Override
     public void refreshChunk()
     {

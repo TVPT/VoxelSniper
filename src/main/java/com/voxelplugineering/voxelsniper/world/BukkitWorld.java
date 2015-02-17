@@ -38,6 +38,7 @@ import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.entity.BukkitEntity;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**
@@ -211,6 +212,15 @@ public class BukkitWorld extends AbstractWorld<World>
             }
         }
         return entities;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Vector3i getChunkSize()
+    {
+        return BukkitChunk.CHUNK_SIZE;
     }
 
 }
