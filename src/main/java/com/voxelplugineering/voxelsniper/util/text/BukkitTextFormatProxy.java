@@ -25,14 +25,24 @@ package com.voxelplugineering.voxelsniper.util.text;
 
 import org.bukkit.ChatColor;
 
+import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormat;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
 
 /**
  * A proxy for bukkit's formatting codes.
  */
-public class BukkitTextFormatProxy implements TextFormatProxy
+public class BukkitTextFormatProxy extends AbstractService implements TextFormatProxy
 {
+
+    /**
+     * Creates a new {@link BukkitTextFormatProxy}.
+     */
+    public BukkitTextFormatProxy()
+    {
+        super(0);
+    }
 
     /**
      * {@inheritDoc}
@@ -85,6 +95,33 @@ public class BukkitTextFormatProxy implements TextFormatProxy
         default:
             return ChatColor.RESET.toString();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName()
+    {
+        return "formatProxy";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void init()
+    {
+        Gunsmith.getLogger().info("Initialized BukkitTextFormat service");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void destroy()
+    {
+        Gunsmith.getLogger().info("Stopped BukkitTextFormat service");
     }
 
 }

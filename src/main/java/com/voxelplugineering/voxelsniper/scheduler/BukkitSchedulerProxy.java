@@ -33,16 +33,18 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 
 /**
  * A proxy for Bukkit's {@link BukkitScheduler}.
  */
-public class BukkitSchedulerProxy implements Scheduler
+public class BukkitSchedulerProxy extends AbstractService implements Scheduler
 {
 
-    private List<WeakReference<BukkitTask>> tasks = Lists.newArrayList();
-    private Plugin plugin;
+    private List<WeakReference<BukkitTask>> tasks;
+    private final Plugin plugin;
 
     /**
      * Creates a new {@link BukkitSchedulerProxy}.
@@ -51,7 +53,38 @@ public class BukkitSchedulerProxy implements Scheduler
      */
     public BukkitSchedulerProxy(Plugin plugin)
     {
+        super(11);
         this.plugin = plugin;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName()
+    {
+        return "scheduler";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init()
+    {
+        this.tasks = Lists.newArrayList();
+        Gunsmith.getLogger().info("Initialized BukkitSchedulerProxy service");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void destroy()
+    {
+        stopAllTasks();
+        this.tasks = null;
+        Gunsmith.getLogger().info("Stopped BukkitSchedulerProxy service");
     }
 
     /**

@@ -30,31 +30,62 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.living.Player;
 import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
 
 /**
  * A permission proxy for Vault permissions.
  */
-public class VaultPermissionProxy implements PermissionProxy
+public class VaultPermissionProxy extends AbstractService implements PermissionProxy
 {
 
     /**
      * A reference to Vault's permission service.
      */
-    private static Permission permissionService = null;
+    private Permission permissionService = null;
 
     /**
      * Creates a new {@link VaultPermissionProxy}.
      */
     public VaultPermissionProxy()
     {
+        super(7);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName()
+    {
+        return "permissionProxy";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void init()
+    {
         RegisteredServiceProvider<Permission> rsp = Bukkit.getServicesManager().getRegistration(Permission.class);
         if (rsp != null)
         {
-            permissionService = rsp.getProvider();
+            this.permissionService = rsp.getProvider();
         }
+        Gunsmith.getLogger().info("Initialized VaultPermissionProxy service");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void destroy()
+    {
+        this.permissionService = null;
+        Gunsmith.getLogger().info("Stopped VaultPermissionProxy service");
     }
 
     /**
@@ -63,6 +94,7 @@ public class VaultPermissionProxy implements PermissionProxy
     @Override
     public boolean isOp(Player sniper)
     {
+        check();
         checkNotNull(sniper, "Sniper cannot be null");
         return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
     }
@@ -73,9 +105,10 @@ public class VaultPermissionProxy implements PermissionProxy
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {
+        check();
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(permission, "Permission cannot be null!");
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");
-        return sniper instanceof BukkitPlayer && permissionService.playerHas(((BukkitPlayer) sniper).getThis(), permission);
+        return sniper instanceof BukkitPlayer && this.permissionService.playerHas(((BukkitPlayer) sniper).getThis(), permission);
     }
 }

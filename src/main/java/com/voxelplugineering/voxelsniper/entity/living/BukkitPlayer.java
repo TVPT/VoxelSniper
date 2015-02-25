@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.entity.living;
 
-import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -31,8 +30,6 @@ import org.bukkit.entity.Player;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.service.persistence.DirectoryDataSourceProvider;
-import com.voxelplugineering.voxelsniper.service.persistence.NBTDataSource;
 import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
 
 /**
@@ -49,9 +46,9 @@ public class BukkitPlayer extends AbstractPlayer<Player>
     public BukkitPlayer(Player player)
     {
         super(player);
-        //TODO: Change the call to getDataFolder() to a configuration value for the Gunsmith folder
-        File personalFolder = new File(Gunsmith.getDataFolder(), "brushes" + File.separator + this.getName());
-        this.getPersonalBrushManager().addLoader(new DirectoryDataSourceProvider(personalFolder, NBTDataSource.BUILDER));
+        //TODO persistence
+        //File personalFolder = new File(Gunsmith.getDataFolder(), "brushes" + File.separator + this.getName());
+        //this.getPersonalBrushManager().addLoader(new DirectoryDataSourceProvider(personalFolder, NBTDataSource.BUILDER));
     }
 
     /**

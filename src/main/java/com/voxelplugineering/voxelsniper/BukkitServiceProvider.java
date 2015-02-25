@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import java.io.File;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -34,32 +32,17 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.brushes.BrushManager;
-import com.voxelplugineering.voxelsniper.api.logging.Logger;
-import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
-import com.voxelplugineering.voxelsniper.api.platform.PlatformProvider;
-import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
+import com.voxelplugineering.voxelsniper.api.config.Configuration;
+import com.voxelplugineering.voxelsniper.api.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceProvider;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
-import com.voxelplugineering.voxelsniper.brushes.CommonBrushManager;
+import com.voxelplugineering.voxelsniper.api.service.Service;
+import com.voxelplugineering.voxelsniper.api.service.ServiceManager;
+import com.voxelplugineering.voxelsniper.api.service.ServiceProvider;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.command.BukkitConsoleSender;
 import com.voxelplugineering.voxelsniper.command.CommandHandler;
-import com.voxelplugineering.voxelsniper.commands.AliasCommand;
-import com.voxelplugineering.voxelsniper.commands.BrushCommand;
-import com.voxelplugineering.voxelsniper.commands.HelpCommand;
-import com.voxelplugineering.voxelsniper.commands.MaskMaterialCommand;
-import com.voxelplugineering.voxelsniper.commands.MaterialCommand;
-import com.voxelplugineering.voxelsniper.commands.RedoCommand;
-import com.voxelplugineering.voxelsniper.commands.ResetCommand;
-import com.voxelplugineering.voxelsniper.commands.UndoCommand;
-import com.voxelplugineering.voxelsniper.commands.VSCommand;
 import com.voxelplugineering.voxelsniper.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
 import com.voxelplugineering.voxelsniper.logging.JavaUtilLogger;
@@ -70,8 +53,6 @@ import com.voxelplugineering.voxelsniper.registry.CommonMaterialRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonPlayerRegistry;
 import com.voxelplugineering.voxelsniper.registry.CommonWorldRegistry;
 import com.voxelplugineering.voxelsniper.scheduler.BukkitSchedulerProxy;
-import com.voxelplugineering.voxelsniper.service.persistence.DirectoryDataSourceProvider;
-import com.voxelplugineering.voxelsniper.service.persistence.NBTDataSource;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.util.text.BukkitTextFormatProxy;
 import com.voxelplugineering.voxelsniper.world.BukkitBiome;
@@ -81,19 +62,19 @@ import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 /**
  * A provider for bukkit's initialization values.
  */
-public class BukkitPlatformProvider implements PlatformProvider
+public class BukkitServiceProvider extends ServiceProvider
 {
 
     private JavaPlugin plugin;
 
     /**
-     * Creates a new {@link BukkitPlatformProvider}.
+     * Creates a new {@link BukkitServiceProvider}.
      * 
      * @param pl the plugin
      */
-    public BukkitPlatformProvider(JavaPlugin pl)
+    public BukkitServiceProvider(JavaPlugin pl)
     {
-        check();
+        super(ServiceProvider.Type.PLATFORM);
         this.plugin = pl;
     }
 
@@ -101,74 +82,101 @@ public class BukkitPlatformProvider implements PlatformProvider
      * {@inheritDoc}
      */
     @Override
-    public Logger getLogger()
+    public void registerNewServices(ServiceManager manager)
     {
-        check();
-        return new JavaUtilLogger(this.plugin.getLogger());
+
     }
 
     /**
-     * {@inheritDoc}
+     * Init hook
+     * 
+     * @param logger The service
      */
-    @Override
-    public String getLoggerName()
+    @InitHook("logger")
+    public void getLogger(Service logger)
     {
-        check();
-        return "bukkit";
+        ((LoggingDistributor) logger).registerLogger(new JavaUtilLogger(this.plugin.getLogger()), "bukkit");
     }
 
     /**
-     * {@inheritDoc}
+     * Builder
+     * 
+     * @return The service
      */
-    @Override
-    public PlatformProxy getPlatformProxy()
+    @Builder("formatProxy")
+    public Service getFormatProxy()
     {
-        check();
-        return new BukkitPlatformProxy(Gunsmith.getMainThread(), Gunsmith.getDataFolder());
+        return new BukkitTextFormatProxy();
     }
 
     /**
-     * {@inheritDoc}
+     * Builder
+     * 
+     * @return The service
      */
-    @Override
-    public void registerConfiguration()
+    @Builder("platformProxy")
+    public Service getPlatformProxy()
     {
-        check();
-        Gunsmith.getConfiguration().registerContainer(BukkitConfiguration.class);
+        return new BukkitPlatformProxy();
     }
 
     /**
-     * {@inheritDoc}
+     * Init hook
+     * 
+     * @param config The service
      */
-    @Override
-    public MaterialRegistry<?> getDefaultMaterialRegistry()
+    @InitHook("config")
+    public void registerConfiguration(Service config)
     {
-        check();
-        MaterialRegistry<Material> registry = new CommonMaterialRegistry<Material>();
+        ((Configuration) config).registerContainer(BukkitConfiguration.class);
+    }
+
+    /**
+     * Builder
+     * 
+     * @return The service
+     */
+    @Builder("materialRegistry")
+    public Service getMaterialRegistry()
+    {
+        return new CommonMaterialRegistry<Material>();
+    }
+
+    /**
+     * Init hook
+     * 
+     * @param config The service
+     */
+    @InitHook("materialRegistry")
+    public void registerMaterials(Service config)
+    {
+        @SuppressWarnings("unchecked")
+        MaterialRegistry<Material> registry = (MaterialRegistry<Material>) config;
         for (Material m : Material.values())
         {
             registry.registerMaterial(m.name(), m, new BukkitMaterial(m));
         }
-        return registry;
     }
 
     /**
-     * {@inheritDoc}
+     * Builder
+     * 
+     * @return The service
      */
-    @Override
-    public WorldRegistry<?> getWorldRegistry()
+    @Builder("worldRegistry")
+    public Service getWorldRegistry()
     {
-        check();
-        return new CommonWorldRegistry<World>(new WorldRegistryProvider(Gunsmith.getDefaultMaterialRegistry()));
+        return new CommonWorldRegistry<World>(new WorldRegistryProvider(Gunsmith.getMaterialRegistry()));
     }
 
     /**
-     * {@inheritDoc}
+     * Builder
+     * 
+     * @return The service
      */
-    @Override
-    public PermissionProxy getPermissionProxy()
+    @Builder("permissionProxy")
+    public Service getPermissionProxy()
     {
-        check();
         Plugin vault = Bukkit.getPluginManager().getPlugin("Vault");
         if (vault != null)
         {
@@ -180,107 +188,75 @@ public class BukkitPlatformProvider implements PlatformProvider
     }
 
     /**
-     * {@inheritDoc}
+     * Builder
+     * 
+     * @return The service
      */
-    @Override
-    public PlayerRegistry<?> getSniperRegistry()
+    @Builder("playerRegistry")
+    public Service getPlayerRegistry()
     {
-        check();
         return new CommonPlayerRegistry<Player>(new PlayerRegistryProvider(), new BukkitConsoleSender(Bukkit.getConsoleSender()));
     }
 
     /**
-     * {@inheritDoc}
+     * Init hook
+     * 
+     * @param service The service
      */
-    @Override
-    public void registerEventProxies()
+    @InitHook("eventBus")
+    public void registerEventProxies(Service service)
     {
-        check();
         Bukkit.getPluginManager().registerEvents(new BukkitEventHandler(), this.plugin);
     }
 
     /**
-     * {@inheritDoc}
+     * Init hook
+     * 
+     * @param service The service
      */
-    @Override
-    public DataSourceProvider getDefaultBrushLoader()
+    @InitHook("commandHandler")
+    public void registerCommands(Service service)
     {
-        check();
-        return new DirectoryDataSourceProvider(new File(Gunsmith.getDataFolder(), "brushes"), NBTDataSource.BUILDER);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BrushManager getGlobalBrushManager()
-    {
-        check();
-        return new CommonBrushManager();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public CommandHandler getCommandHandler()
-    {
-        check();
-        CommandHandler cmd = new CommandHandler();
+        CommandHandler cmd = (CommandHandler) service;
         cmd.setRegistrar(new BukkitCommandRegistrar());
-
-        cmd.registerCommand(new BrushCommand());
-        cmd.registerCommand(new MaterialCommand());
-        cmd.registerCommand(new MaskMaterialCommand());
-        cmd.registerCommand(new VSCommand());
-        cmd.registerCommand(new AliasCommand());
-        cmd.registerCommand(new HelpCommand());
-        cmd.registerCommand(new ResetCommand());
-        cmd.registerCommand(new UndoCommand());
-        cmd.registerCommand(new RedoCommand());
-
-        return cmd;
     }
 
     /**
-     * {@inheritDoc}
+     * Builder
+     * 
+     * @return The service
      */
-    @Override
-    public Scheduler getSchedulerProxy()
+    @Builder("scheduler")
+    public Service getSchedulerProxy()
     {
-        check();
         return new BukkitSchedulerProxy(this.plugin);
     }
 
-    private void check()
+    /**
+     * Builder
+     * 
+     * @return The service
+     */
+    @Builder("biomeRegistry")
+    public Service getBiomeRegistry()
     {
-        if (Gunsmith.isEnabled())
-        {
-            throw new IllegalStateException("Cannot fetch from the provider post-initialization");
-        }
+        return new CommonBiomeRegistry<Biome>();
     }
 
     /**
-     * {@inheritDoc}
+     * Init hook
+     * 
+     * @param service The service
      */
-    @Override
-    public BiomeRegistry<?> getBiomeRegistry()
+    @InitHook("biomeRegistry")
+    public void registerBiomes(Service service)
     {
-        BiomeRegistry<Biome> reg = new CommonBiomeRegistry<Biome>();
+        @SuppressWarnings("unchecked")
+        BiomeRegistry<Biome> reg = (BiomeRegistry<Biome>) service;
         for (Biome b : Biome.values())
         {
             reg.registerBiome(b.name(), b, new BukkitBiome(b));
         }
-        return reg;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TextFormatProxy getFormatProxy()
-    {
-        return new BukkitTextFormatProxy();
     }
 
 }

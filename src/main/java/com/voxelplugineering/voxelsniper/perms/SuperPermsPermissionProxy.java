@@ -23,15 +23,52 @@
  */
 package com.voxelplugineering.voxelsniper.perms;
 
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.living.Player;
 import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
 
 /**
  * PermissionProxy for super perms of bukkit.
  */
-public class SuperPermsPermissionProxy implements PermissionProxy
+public class SuperPermsPermissionProxy extends AbstractService implements PermissionProxy
 {
+
+    /**
+     * Creates a new SuperPermsPermissionProxy.
+     */
+    public SuperPermsPermissionProxy()
+    {
+        super(7);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName()
+    {
+        return "permissionProxy";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void init()
+    {
+        Gunsmith.getLogger().info("Initialized SuperPermsPermissionProxy service");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void destroy()
+    {
+        Gunsmith.getLogger().info("Stopped SuperPermsPermissionProxy service");
+    }
 
     /**
      * {@inheritDoc}

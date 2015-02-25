@@ -23,21 +23,21 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import java.io.File;
-
 import org.bukkit.Bukkit;
 
 import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
+import com.voxelplugineering.voxelsniper.api.service.AbstractService;
+import com.voxelplugineering.voxelsniper.api.service.persistence.DataSource;
+import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceProvider;
 
 /**
  * A proxy for Bukkit's platform.
  */
-public class BukkitPlatformProxy implements PlatformProxy
+public class BukkitPlatformProxy extends AbstractService implements PlatformProxy
 {
 
-    private Thread mainThread;
-    private File dataFolder;
-    private File metrics;
+    private DataSource metrics;
+    private DataSourceProvider brushDataSource;
 
     /**
      * Creates a new {@link BukkitPlatformProxy}.
@@ -45,11 +45,31 @@ public class BukkitPlatformProxy implements PlatformProxy
      * @param thread The main thread
      * @param data The data folder
      */
-    protected BukkitPlatformProxy(Thread thread, File data)
+    protected BukkitPlatformProxy()
     {
-        this.mainThread = thread;
-        this.dataFolder = data;
-        this.metrics = new File(data.getParentFile(), "PluginMetrics/config.yml");
+        super(4);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void init()
+    {
+        this.metrics = null;// TODO persistence for new File(data.getParentFile(), "PluginMetrics/config.yml");
+        this.brushDataSource = null;//TODO persistence config new DirectoryDataSourceProvider(new File(Gunsmith.getDataFolder(), "brushes"), NBTDataSource.BUILDER);
+        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void destroy()
+    {
+        this.metrics = null;
+        this.brushDataSource = null;
+        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
     }
 
     /**
@@ -57,6 +77,15 @@ public class BukkitPlatformProxy implements PlatformProxy
      */
     @Override
     public String getName()
+    {
+        return "platformProxy";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPlatformName()
     {
         return Bukkit.getName();
     }
@@ -83,25 +112,7 @@ public class BukkitPlatformProxy implements PlatformProxy
      * {@inheritDoc}
      */
     @Override
-    public Thread getMainThread()
-    {
-        return this.mainThread;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public File getDataFolder()
-    {
-        return this.dataFolder;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public File getMetricsFile()
+    public DataSource getMetricsFile()
     {
         return this.metrics;
     }
@@ -113,6 +124,15 @@ public class BukkitPlatformProxy implements PlatformProxy
     public int getNumberOfPlayersOnline()
     {
         return Bukkit.getOnlinePlayers().size();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DataSourceProvider getBrushDataSource()
+    {
+        return this.brushDataSource;
     }
 
 }

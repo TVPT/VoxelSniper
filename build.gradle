@@ -208,7 +208,7 @@ shadowJar {
     dependencies {
         include(dependency('com.google.guava:guava:18.0'))
         include(dependency('com.voxelplugineering:VoxelGunsmith:7.0.0-SNAPSHOT'))
-        include(dependency('com.thevoxelbox:VisualScripting:0.2.7-SNAPSHOT'))
+        include(dependency('com.thevoxelbox:VisualScripting:0.2.8-SNAPSHOT'))
         include(dependency('com.google.code.gson:gson:2.3'))
     }
 }

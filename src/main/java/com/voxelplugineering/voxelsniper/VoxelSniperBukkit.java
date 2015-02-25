@@ -25,12 +25,13 @@ package com.voxelplugineering.voxelsniper;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
 import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The Main class for the bukkit specific implementation.
  */
-public class VoxelSniperBukkit extends JavaPlugin
+public class VoxelSniperBukkit extends JavaPlugin implements Expansion
 {
 
     /**
@@ -44,7 +45,8 @@ public class VoxelSniperBukkit extends JavaPlugin
     @Override
     public void onEnable()
     {
-        Gunsmith.beginInit(getDataFolder(), new BukkitPlatformProvider(this));
+        Gunsmith.getExpansionManager().registerExpansion(this);
+        Gunsmith.getServiceManager().init();
 
         DefaultBrushBuilder.buildBrushes();
         DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
@@ -58,8 +60,26 @@ public class VoxelSniperBukkit extends JavaPlugin
     {
         if (Gunsmith.isEnabled())
         {
-            Gunsmith.stop();
+            Gunsmith.getServiceManager().stop();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init()
+    {
+        Gunsmith.getServiceManager().registerServiceProvider(new BukkitServiceProvider(this));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stop()
+    {
+        
     }
 
 }
