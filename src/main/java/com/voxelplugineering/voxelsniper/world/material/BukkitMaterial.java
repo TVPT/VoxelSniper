@@ -25,80 +25,78 @@ package com.voxelplugineering.voxelsniper.world.material;
 
 import java.util.List;
 
-import org.bukkit.Material;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 
 /**
- * A wrapper for bukkit {@link Material}s.
+ * A wrapper for bukkit {@link org.bukkit.Material}s.
  */
-public class BukkitMaterial extends WeakWrapper<Material> implements com.voxelplugineering.voxelsniper.api.world.material.Material
+public class BukkitMaterial extends WeakWrapper<org.bukkit.Material> implements com.voxelplugineering.voxelsniper.api.world.material.Material
 {
 
     /**
      * A static set of materials which are liquids.
      */
-    private static List<Material> LIQUIDS = Lists.newArrayListWithCapacity(4);
+    private static List<org.bukkit.Material> LIQUIDS = Lists.newArrayListWithCapacity(4);
     /**
      * A static set of materials which can break on physics updates.
      */
-    private static List<Material> FALLOFF_MATERIALS = Lists.newArrayListWithCapacity(47);
+    private static List<org.bukkit.Material> FALLOFF_MATERIALS = Lists.newArrayListWithCapacity(47);
 
     static
     {
-        LIQUIDS.add(Material.WATER);
-        LIQUIDS.add(Material.LAVA);
-        LIQUIDS.add(Material.STATIONARY_LAVA);
-        LIQUIDS.add(Material.STATIONARY_WATER);
+        LIQUIDS.add(org.bukkit.Material.WATER);
+        LIQUIDS.add(org.bukkit.Material.LAVA);
+        LIQUIDS.add(org.bukkit.Material.STATIONARY_LAVA);
+        LIQUIDS.add(org.bukkit.Material.STATIONARY_WATER);
 
-        FALLOFF_MATERIALS.add(Material.ACTIVATOR_RAIL);
-        FALLOFF_MATERIALS.add(Material.BROWN_MUSHROOM);
-        FALLOFF_MATERIALS.add(Material.CACTUS);
-        FALLOFF_MATERIALS.add(Material.CARPET);
-        FALLOFF_MATERIALS.add(Material.DEAD_BUSH);
-        FALLOFF_MATERIALS.add(Material.DETECTOR_RAIL);
-        FALLOFF_MATERIALS.add(Material.DIODE_BLOCK_OFF);
-        FALLOFF_MATERIALS.add(Material.DIODE_BLOCK_ON);
-        FALLOFF_MATERIALS.add(Material.DOUBLE_PLANT);
-        FALLOFF_MATERIALS.add(Material.FLOWER_POT);
-        FALLOFF_MATERIALS.add(Material.IRON_DOOR);
-        FALLOFF_MATERIALS.add(Material.ITEM_FRAME);
-        FALLOFF_MATERIALS.add(Material.LADDER);
-        FALLOFF_MATERIALS.add(Material.LEVER);
-        FALLOFF_MATERIALS.add(Material.LONG_GRASS);
-        FALLOFF_MATERIALS.add(Material.MELON_STEM);
-        FALLOFF_MATERIALS.add(Material.NETHER_STALK);
-        FALLOFF_MATERIALS.add(Material.NETHER_WARTS);
-        FALLOFF_MATERIALS.add(Material.PAINTING);
-        FALLOFF_MATERIALS.add(Material.PISTON_EXTENSION);
-        FALLOFF_MATERIALS.add(Material.PISTON_MOVING_PIECE);
-        FALLOFF_MATERIALS.add(Material.PORTAL);
-        FALLOFF_MATERIALS.add(Material.POTATO);
-        FALLOFF_MATERIALS.add(Material.POWERED_RAIL);
-        FALLOFF_MATERIALS.add(Material.PUMPKIN_STEM);
-        FALLOFF_MATERIALS.add(Material.RAILS);
-        FALLOFF_MATERIALS.add(Material.RED_MUSHROOM);
-        FALLOFF_MATERIALS.add(Material.RED_ROSE);
-        FALLOFF_MATERIALS.add(Material.REDSTONE_COMPARATOR_OFF);
-        FALLOFF_MATERIALS.add(Material.REDSTONE_COMPARATOR_ON);
-        FALLOFF_MATERIALS.add(Material.REDSTONE_TORCH_OFF);
-        FALLOFF_MATERIALS.add(Material.REDSTONE_TORCH_ON);
-        FALLOFF_MATERIALS.add(Material.REDSTONE_WIRE);
-        FALLOFF_MATERIALS.add(Material.SAPLING);
-        FALLOFF_MATERIALS.add(Material.SIGN);
-        FALLOFF_MATERIALS.add(Material.SIGN_POST);
-        FALLOFF_MATERIALS.add(Material.SNOW);
-        FALLOFF_MATERIALS.add(Material.STONE_BUTTON);
-        FALLOFF_MATERIALS.add(Material.TORCH);
-        FALLOFF_MATERIALS.add(Material.TRAP_DOOR);
-        FALLOFF_MATERIALS.add(Material.TRIPWIRE_HOOK);
-        FALLOFF_MATERIALS.add(Material.VINE);
-        FALLOFF_MATERIALS.add(Material.WATER_LILY);
-        FALLOFF_MATERIALS.add(Material.WHEAT);
-        FALLOFF_MATERIALS.add(Material.WOODEN_DOOR);
-        FALLOFF_MATERIALS.add(Material.WOOD_BUTTON);
-        FALLOFF_MATERIALS.add(Material.YELLOW_FLOWER);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.ACTIVATOR_RAIL);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.BROWN_MUSHROOM);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.CACTUS);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.CARPET);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.DEAD_BUSH);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.DETECTOR_RAIL);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.DIODE_BLOCK_OFF);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.DIODE_BLOCK_ON);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.DOUBLE_PLANT);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.FLOWER_POT);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.IRON_DOOR);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.ITEM_FRAME);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.LADDER);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.LEVER);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.LONG_GRASS);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.MELON_STEM);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.NETHER_STALK);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.NETHER_WARTS);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.PAINTING);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.PISTON_EXTENSION);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.PISTON_MOVING_PIECE);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.PORTAL);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.POTATO);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.POWERED_RAIL);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.PUMPKIN_STEM);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.RAILS);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.RED_MUSHROOM);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.RED_ROSE);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.REDSTONE_COMPARATOR_OFF);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.REDSTONE_COMPARATOR_ON);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.REDSTONE_TORCH_OFF);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.REDSTONE_TORCH_ON);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.REDSTONE_WIRE);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.SAPLING);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.SIGN);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.SIGN_POST);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.SNOW);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.STONE_BUTTON);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.TORCH);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.TRAP_DOOR);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.TRIPWIRE_HOOK);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.VINE);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.WATER_LILY);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.WHEAT);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.WOODEN_DOOR);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.WOOD_BUTTON);
+        FALLOFF_MATERIALS.add(org.bukkit.Material.YELLOW_FLOWER);
 
     }
 
@@ -107,7 +105,7 @@ public class BukkitMaterial extends WeakWrapper<Material> implements com.voxelpl
      * 
      * @param value the material to wrap, cannot be null
      */
-    public BukkitMaterial(Material value)
+    public BukkitMaterial(org.bukkit.Material value)
     {
         super(value);
     }

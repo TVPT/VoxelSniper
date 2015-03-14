@@ -23,15 +23,13 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
 import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The Main class for the bukkit specific implementation.
  */
-public class VoxelSniperBukkit extends JavaPlugin implements Expansion
+public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin implements Expansion
 {
 
     /**
@@ -79,7 +77,7 @@ public class VoxelSniperBukkit extends JavaPlugin implements Expansion
     @Override
     public void stop()
     {
-        
+
     }
 
 }

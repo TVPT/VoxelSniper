@@ -25,28 +25,27 @@ package com.voxelplugineering.voxelsniper.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.bukkit.command.CommandSender;
-
+import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.entity.living.Player;
 
 /**
  * A stripped out {@link Player} implementation to act as a proxy for the
  * console.
  */
-public class BukkitConsoleSender implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
+public class BukkitConsoleSender implements CommandSender
 {
 
     /**
      * The console's bukkit {@link CommandSender}.
      */
-    CommandSender console;
+    private final org.bukkit.command.CommandSender console;
 
     /**
      * Creates a new console proxy wrapping the given {@link CommandSender}.
      * 
      * @param console the console, cannot be null
      */
-    public BukkitConsoleSender(CommandSender console)
+    public BukkitConsoleSender(org.bukkit.command.CommandSender console)
     {
         checkNotNull(console, "Console cannot be null");
         this.console = console;

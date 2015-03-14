@@ -25,8 +25,6 @@ package com.voxelplugineering.voxelsniper.entity;
 
 import java.util.UUID;
 
-import org.bukkit.entity.Entity;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.Location;
@@ -36,7 +34,7 @@ import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
 /**
  * Represents a Bukkit entity.
  */
-public class BukkitEntity extends AbstractEntity<Entity>
+public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
 {
 
     private final EntityType type;
@@ -46,7 +44,7 @@ public class BukkitEntity extends AbstractEntity<Entity>
      *
      * @param entity The entity to wrap
      */
-    public BukkitEntity(Entity entity)
+    public BukkitEntity(org.bukkit.entity.Entity entity)
     {
         super(entity);
         this.type = BukkitUtilities.getEntityType(entity.getType());

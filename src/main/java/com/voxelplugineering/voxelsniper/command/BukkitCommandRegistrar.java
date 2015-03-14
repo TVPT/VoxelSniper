@@ -25,9 +25,6 @@ package com.voxelplugineering.voxelsniper.command;
 
 import java.lang.reflect.Field;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.command.Command;
@@ -43,11 +40,11 @@ public class BukkitCommandRegistrar implements CommandRegistrar
     /**
      * A reference to bukkit's {@link CommandMap}.
      */
-    private CommandMap commands;
+    private org.bukkit.command.CommandMap commands;
 
     /**
      * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's
-     * {@link CommandMap} via reflection for use to register commands.
+     * CommandMap via reflection for use to register commands.
      */
     public BukkitCommandRegistrar()
     {
@@ -55,7 +52,7 @@ public class BukkitCommandRegistrar implements CommandRegistrar
         {
             Field cmap = Class.forName(CraftBukkitFetcher.CRAFTBUKKIT_PACKAGE + ".CraftServer").getDeclaredField("commandMap");
             cmap.setAccessible(true);
-            this.commands = (CommandMap) cmap.get(Bukkit.getServer());
+            this.commands = (org.bukkit.command.CommandMap) cmap.get(org.bukkit.Bukkit.getServer());
         } catch (Exception e)
         {
             Gunsmith.getLogger().error(e, "Error setting up bukkit command registrar");

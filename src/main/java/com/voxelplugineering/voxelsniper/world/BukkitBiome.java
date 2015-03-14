@@ -23,15 +23,14 @@
  */
 package com.voxelplugineering.voxelsniper.world;
 
-import org.bukkit.block.Biome;
-
+import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 
 /**
  * A bukkit wrapper for gunsmith's
  * {@link com.voxelplugineering.voxelsniper.api.world.biome.Biome}
  */
-public class BukkitBiome extends WeakWrapper<Biome> implements com.voxelplugineering.voxelsniper.api.world.biome.Biome
+public class BukkitBiome extends WeakWrapper<org.bukkit.block.Biome> implements Biome
 {
 
     /**
@@ -39,7 +38,7 @@ public class BukkitBiome extends WeakWrapper<Biome> implements com.voxelpluginee
      * 
      * @param value The biome to wrap
      */
-    public BukkitBiome(Biome value)
+    public BukkitBiome(org.bukkit.block.Biome value)
     {
         super(value);
     }

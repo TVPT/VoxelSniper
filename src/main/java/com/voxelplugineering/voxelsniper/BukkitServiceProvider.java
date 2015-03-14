@@ -23,16 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
+import com.voxelplugineering.voxelsniper.api.entity.living.Player;
 import com.voxelplugineering.voxelsniper.api.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
@@ -40,6 +34,7 @@ import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.api.service.Service;
 import com.voxelplugineering.voxelsniper.api.service.ServiceManager;
 import com.voxelplugineering.voxelsniper.api.service.ServiceProvider;
+import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.command.BukkitConsoleSender;
 import com.voxelplugineering.voxelsniper.command.CommandHandler;
@@ -65,14 +60,14 @@ import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 public class BukkitServiceProvider extends ServiceProvider
 {
 
-    private JavaPlugin plugin;
+    private final org.bukkit.plugin.java.JavaPlugin plugin;
 
     /**
      * Creates a new {@link BukkitServiceProvider}.
      * 
      * @param pl the plugin
      */
-    public BukkitServiceProvider(JavaPlugin pl)
+    public BukkitServiceProvider(org.bukkit.plugin.java.JavaPlugin pl)
     {
         super(ServiceProvider.Type.PLATFORM);
         this.plugin = pl;
@@ -139,20 +134,20 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("materialRegistry")
     public Service getMaterialRegistry()
     {
-        return new CommonMaterialRegistry<Material>();
+        return new CommonMaterialRegistry<org.bukkit.Material>();
     }
 
     /**
      * Init hook
      * 
-     * @param config The service
+     * @param service The service
      */
     @InitHook("materialRegistry")
-    public void registerMaterials(Service config)
+    public void registerMaterials(Service service)
     {
         @SuppressWarnings("unchecked")
-        MaterialRegistry<Material> registry = (MaterialRegistry<Material>) config;
-        for (Material m : Material.values())
+        MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
+        for (org.bukkit.Material m : org.bukkit.Material.values())
         {
             registry.registerMaterial(m.name(), m, new BukkitMaterial(m));
         }
@@ -166,7 +161,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("worldRegistry")
     public Service getWorldRegistry()
     {
-        return new CommonWorldRegistry<World>(new WorldRegistryProvider(Gunsmith.getMaterialRegistry()));
+        return new CommonWorldRegistry<org.bukkit.World>(new WorldRegistryProvider(Gunsmith.getMaterialRegistry()));
     }
 
     /**
@@ -177,7 +172,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("permissionProxy")
     public Service getPermissionProxy()
     {
-        Plugin vault = Bukkit.getPluginManager().getPlugin("Vault");
+        org.bukkit.plugin.Plugin vault = org.bukkit.Bukkit.getPluginManager().getPlugin("Vault");
         if (vault != null)
         {
             return new VaultPermissionProxy();
@@ -195,7 +190,8 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("playerRegistry")
     public Service getPlayerRegistry()
     {
-        return new CommonPlayerRegistry<Player>(new PlayerRegistryProvider(), new BukkitConsoleSender(Bukkit.getConsoleSender()));
+        CommandSender console = new BukkitConsoleSender(org.bukkit.Bukkit.getConsoleSender());
+        return new CommonPlayerRegistry<org.bukkit.entity.Player>(new PlayerRegistryProvider(), console);
     }
 
     /**
@@ -206,7 +202,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @InitHook("eventBus")
     public void registerEventProxies(Service service)
     {
-        Bukkit.getPluginManager().registerEvents(new BukkitEventHandler(), this.plugin);
+        org.bukkit.Bukkit.getPluginManager().registerEvents(new BukkitEventHandler(), this.plugin);
     }
 
     /**
@@ -240,7 +236,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("biomeRegistry")
     public Service getBiomeRegistry()
     {
-        return new CommonBiomeRegistry<Biome>();
+        return new CommonBiomeRegistry<org.bukkit.block.Biome>();
     }
 
     /**
@@ -252,8 +248,8 @@ public class BukkitServiceProvider extends ServiceProvider
     public void registerBiomes(Service service)
     {
         @SuppressWarnings("unchecked")
-        BiomeRegistry<Biome> reg = (BiomeRegistry<Biome>) service;
-        for (Biome b : Biome.values())
+        BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
+        for (org.bukkit.block.Biome b : org.bukkit.block.Biome.values())
         {
             reg.registerBiome(b.name(), b, new BukkitBiome(b));
         }
@@ -264,7 +260,7 @@ public class BukkitServiceProvider extends ServiceProvider
 /**
  * A provider for {@link BukkitWorld}s.
  */
-class WorldRegistryProvider implements RegistryProvider<World, com.voxelplugineering.voxelsniper.api.world.World>
+class WorldRegistryProvider implements RegistryProvider<org.bukkit.World, World>
 {
 
     MaterialRegistry<?> materials;
@@ -284,32 +280,32 @@ class WorldRegistryProvider implements RegistryProvider<World, com.voxelpluginee
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Optional<Pair<World, com.voxelplugineering.voxelsniper.api.world.World>> get(String name)
+    public Optional<Pair<org.bukkit.World, World>> get(String name)
     {
-        World world = Bukkit.getWorld(name);
+        org.bukkit.World world = org.bukkit.Bukkit.getWorld(name);
         if (world == null)
         {
             return Optional.absent();
         }
-        return Optional.of(new Pair<World, com.voxelplugineering.voxelsniper.api.world.World>(world, new BukkitWorld(world,
-                (MaterialRegistry<Material>) this.materials, Thread.currentThread())));
+        return Optional.of(new Pair<org.bukkit.World, World>(world, new BukkitWorld(world, (MaterialRegistry<org.bukkit.Material>) this.materials,
+                Thread.currentThread())));
     }
 
 }
 
-class PlayerRegistryProvider implements RegistryProvider<Player, com.voxelplugineering.voxelsniper.api.entity.living.Player>
+class PlayerRegistryProvider implements RegistryProvider<org.bukkit.entity.Player, Player>
 {
 
     @SuppressWarnings("deprecation")
     @Override
-    public Optional<Pair<Player, com.voxelplugineering.voxelsniper.api.entity.living.Player>> get(String name)
+    public Optional<Pair<org.bukkit.entity.Player, Player>> get(String name)
     {
-        Player player = Bukkit.getPlayer(name);
+        org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(name);
         if (player == null)
         {
             return Optional.absent();
         }
-        return Optional.of(new Pair<Player, com.voxelplugineering.voxelsniper.api.entity.living.Player>(player, new BukkitPlayer(player)));
+        return Optional.of(new Pair<org.bukkit.entity.Player, Player>(player, new BukkitPlayer(player)));
     }
 
 }

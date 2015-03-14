@@ -25,9 +25,6 @@ package com.voxelplugineering.voxelsniper.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.command.Command;
 
@@ -60,12 +57,12 @@ public class BukkitCommand extends org.bukkit.command.Command
      * {@inheritDoc}
      */
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args)
+    public boolean execute(org.bukkit.command.CommandSender sender, String command, String[] args)
     {
-        if (sender instanceof Player)
+        if (sender instanceof org.bukkit.entity.Player)
         {
             return this.cmd.execute(Gunsmith.getPlayerRegistry().getPlayer(sender.getName()).get(), args);
-        } else
+        } else if (sender instanceof org.bukkit.command.ConsoleCommandSender)
         {
             if (this.cmd.isPlayerOnly())
             {
@@ -75,6 +72,10 @@ public class BukkitCommand extends org.bukkit.command.Command
             {
                 return this.cmd.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
             }
+        } else
+        {
+            // Could support other senders here if necessary
+            return false;
         }
     }
 

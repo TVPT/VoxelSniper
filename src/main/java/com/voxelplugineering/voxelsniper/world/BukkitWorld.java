@@ -26,30 +26,29 @@ package com.voxelplugineering.voxelsniper.world;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Material;
-import org.bukkit.World;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.world.Block;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
+import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**
- * A wrapper for bukkit's {@link World}s.
+ * A wrapper for bukkit's {@link org.bukkit.World}s.
  */
-public class BukkitWorld extends AbstractWorld<World>
+public class BukkitWorld extends AbstractWorld<org.bukkit.World>
 {
 
-    private final MaterialRegistry<Material> materials;
+    private final MaterialRegistry<org.bukkit.Material> materials;
     private final Map<org.bukkit.Chunk, Chunk> chunks;
-    final Map<org.bukkit.entity.Entity, Entity> entitiesCache;
+    private final Map<org.bukkit.entity.Entity, Entity> entitiesCache;
     private final Thread worldThread;
 
     /**
@@ -59,7 +58,7 @@ public class BukkitWorld extends AbstractWorld<World>
      * @param materialRegistry the registry
      * @param thread The world Thread
      */
-    public BukkitWorld(World world, MaterialRegistry<Material> materialRegistry, Thread thread)
+    public BukkitWorld(org.bukkit.World world, MaterialRegistry<org.bukkit.Material> materialRegistry, Thread thread)
     {
         super(world);
         this.materials = materialRegistry;
@@ -74,7 +73,7 @@ public class BukkitWorld extends AbstractWorld<World>
     @Override
     public String getName()
     {
-        return this.getThis().getName();
+        return getThis().getName();
     }
 
     /**
@@ -113,7 +112,7 @@ public class BukkitWorld extends AbstractWorld<World>
      * {@inheritDoc}
      */
     @Override
-    public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
+    public Optional<Block> getBlock(int x, int y, int z)
     {
         if (!checkAsyncBlockAccess(x, y, z))
         {
@@ -121,20 +120,20 @@ public class BukkitWorld extends AbstractWorld<World>
         }
         org.bukkit.block.Block b = getThis().getBlockAt(x, y, z);
         CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
-        Optional<com.voxelplugineering.voxelsniper.api.world.material.Material> m = this.materials.getMaterial(b.getType().name());
+        Optional<Material> m = this.materials.getMaterial(b.getType().name());
         if (!m.isPresent())
         {
             return Optional.absent();
         }
-        return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
+        return Optional.<Block>of(new CommonBlock(l, m.get()));
     }
 
     private boolean checkAsyncBlockAccess(int x, int y, int z)
     {
         if (Thread.currentThread() != this.worldThread)
         {
-            int cx = x < 0 ? (x / 16 - 1) : x / 16;
-            int cz = z < 0 ? (z / 16 - 1) : z / 16;
+            int cx = x < 0 ? (x / getChunkSize().getX() - 1) : x / 16;
+            int cz = z < 0 ? (z / getChunkSize().getZ() - 1) : z / 16;
             if (!getThis().isChunkLoaded(cx, cz))
             {
                 return false;
@@ -147,7 +146,7 @@ public class BukkitWorld extends AbstractWorld<World>
      * {@inheritDoc}
      */
     @Override
-    public void setBlock(com.voxelplugineering.voxelsniper.api.world.material.Material material, int x, int y, int z)
+    public void setBlock(Material material, int x, int y, int z)
     {
         if (y < 0 || y >= 256)
         {
@@ -221,6 +220,16 @@ public class BukkitWorld extends AbstractWorld<World>
     public Vector3i getChunkSize()
     {
         return BukkitChunk.CHUNK_SIZE;
+    }
+
+    /**
+     * Gets a live copy of the entities cache.
+     * 
+     * @return The entities cache
+     */
+    protected Map<org.bukkit.entity.Entity, Entity> getEntityCache()
+    {
+        return this.entitiesCache;
     }
 
 }

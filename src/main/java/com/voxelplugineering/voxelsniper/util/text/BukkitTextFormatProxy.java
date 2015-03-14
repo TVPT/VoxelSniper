@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.util.text;
 
-import org.bukkit.ChatColor;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormat;
@@ -53,47 +51,47 @@ public class BukkitTextFormatProxy extends AbstractService implements TextFormat
         switch (format)
         {
         case BLACK:
-            return ChatColor.BLACK.toString();
+            return org.bukkit.ChatColor.BLACK.toString();
         case DARK_BLUE:
-            return ChatColor.DARK_BLUE.toString();
+            return org.bukkit.ChatColor.DARK_BLUE.toString();
         case DARK_GREEN:
-            return ChatColor.DARK_GREEN.toString();
+            return org.bukkit.ChatColor.DARK_GREEN.toString();
         case DARK_AQUA:
-            return ChatColor.DARK_AQUA.toString();
+            return org.bukkit.ChatColor.DARK_AQUA.toString();
         case DARK_RED:
-            return ChatColor.DARK_RED.toString();
+            return org.bukkit.ChatColor.DARK_RED.toString();
         case DARK_PURPLE:
-            return ChatColor.DARK_PURPLE.toString();
+            return org.bukkit.ChatColor.DARK_PURPLE.toString();
         case GOLD:
-            return ChatColor.GOLD.toString();
+            return org.bukkit.ChatColor.GOLD.toString();
         case GRAY:
-            return ChatColor.GRAY.toString();
+            return org.bukkit.ChatColor.GRAY.toString();
         case DARK_GRAY:
-            return ChatColor.DARK_GRAY.toString();
+            return org.bukkit.ChatColor.DARK_GRAY.toString();
         case BLUE:
-            return ChatColor.BLUE.toString();
+            return org.bukkit.ChatColor.BLUE.toString();
         case GREEN:
-            return ChatColor.GREEN.toString();
+            return org.bukkit.ChatColor.GREEN.toString();
         case AQUA:
-            return ChatColor.AQUA.toString();
+            return org.bukkit.ChatColor.AQUA.toString();
         case RED:
-            return ChatColor.RED.toString();
+            return org.bukkit.ChatColor.RED.toString();
         case LIGHT_PURPLE:
-            return ChatColor.LIGHT_PURPLE.toString();
+            return org.bukkit.ChatColor.LIGHT_PURPLE.toString();
         case YELLOW:
-            return ChatColor.YELLOW.toString();
+            return org.bukkit.ChatColor.YELLOW.toString();
         case WHITE:
-            return ChatColor.WHITE.toString();
+            return org.bukkit.ChatColor.WHITE.toString();
         case BOLD:
-            return ChatColor.BOLD.toString();
+            return org.bukkit.ChatColor.BOLD.toString();
         case STRIKETHROUGH:
-            return ChatColor.STRIKETHROUGH.toString();
+            return org.bukkit.ChatColor.STRIKETHROUGH.toString();
         case UNDERLINE:
-            return ChatColor.UNDERLINE.toString();
+            return org.bukkit.ChatColor.UNDERLINE.toString();
         case ITALIC:
-            return ChatColor.ITALIC.toString();
+            return org.bukkit.ChatColor.ITALIC.toString();
         default:
-            return ChatColor.RESET.toString();
+            return org.bukkit.ChatColor.RESET.toString();
         }
     }
 

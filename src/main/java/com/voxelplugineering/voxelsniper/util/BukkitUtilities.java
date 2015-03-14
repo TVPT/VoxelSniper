@@ -26,10 +26,9 @@ package com.voxelplugineering.voxelsniper.util;
 import java.util.EnumMap;
 import java.util.Map;
 
-import org.bukkit.Location;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.entity.BukkitEntityType;
 import com.voxelplugineering.voxelsniper.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
@@ -47,7 +46,7 @@ public final class BukkitUtilities
      * @param location Bukkit's location
      * @return Gunsmith's location
      */
-    public static com.voxelplugineering.voxelsniper.api.world.Location getGunsmithLocation(Location location)
+    public static Location getGunsmithLocation(org.bukkit.Location location)
     {
         return new CommonLocation(Gunsmith.getWorldRegistry().getWorld(location.getWorld()).get(), location.getX(), location.getY(), location.getZ());
     }
@@ -59,11 +58,11 @@ public final class BukkitUtilities
      * @param location Gunsmith's location
      * @return Bukkit's location
      */
-    public static Location getBukkitLocation(com.voxelplugineering.voxelsniper.api.world.Location location)
+    public static org.bukkit.Location getBukkitLocation(Location location)
     {
         if (location.getWorld() instanceof BukkitWorld)
         {
-            return new Location(((BukkitWorld) location.getWorld()).getThis(), location.getX(), location.getY(), location.getZ());
+            return new org.bukkit.Location(((BukkitWorld) location.getWorld()).getThis(), location.getX(), location.getY(), location.getZ());
         }
         return null;
     }

@@ -25,17 +25,15 @@ package com.voxelplugineering.voxelsniper.entity.living;
 
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
 
 /**
- * A wrapper for bukkit's {@link Player}s.
+ * A wrapper for bukkit's {@link org.bukkit.entity.Player}s.
  */
-public class BukkitPlayer extends AbstractPlayer<Player>
+public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
 {
 
     /**
@@ -43,7 +41,7 @@ public class BukkitPlayer extends AbstractPlayer<Player>
      * 
      * @param player the player to wrap, cannot be null
      */
-    public BukkitPlayer(Player player)
+    public BukkitPlayer(org.bukkit.entity.Player player)
     {
         super(player);
         //TODO persistence

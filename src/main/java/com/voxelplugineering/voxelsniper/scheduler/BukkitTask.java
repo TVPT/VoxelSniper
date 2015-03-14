@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.scheduler;
 
+import java.lang.ref.WeakReference;
+
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 
 /**
@@ -31,7 +33,7 @@ import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 public class BukkitTask extends Task
 {
 
-    private org.bukkit.scheduler.BukkitTask task;
+    private WeakReference<org.bukkit.scheduler.BukkitTask> task;
 
     /**
      * Creates a new {@link BukkitTask}.
@@ -43,7 +45,7 @@ public class BukkitTask extends Task
     public BukkitTask(Runnable runnable, int interval, org.bukkit.scheduler.BukkitTask task)
     {
         super(runnable, interval);
-        this.task = task;
+        this.task = new WeakReference<org.bukkit.scheduler.BukkitTask>(task);
     }
 
     /**
@@ -52,7 +54,21 @@ public class BukkitTask extends Task
     @Override
     public void cancel()
     {
-        this.task.cancel();
+        org.bukkit.scheduler.BukkitTask bukkitTask = this.task.get();
+        if (bukkitTask != null)
+        {
+            bukkitTask.cancel();
+        }
+    }
+
+    /**
+     * Gets whether the referenced task is still valid.
+     * 
+     * @return True if the task has not been garbage collected yet
+     */
+    public boolean check()
+    {
+        return this.task.get() != null;
     }
 
 }

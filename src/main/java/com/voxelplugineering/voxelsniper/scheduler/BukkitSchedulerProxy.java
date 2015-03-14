@@ -23,13 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.scheduler;
 
-import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -38,23 +33,25 @@ import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 
 /**
- * A proxy for Bukkit's {@link BukkitScheduler}.
+ * A proxy for Bukkit's {@link org.bukkit.scheduler.BukkitScheduler}.
  */
 public class BukkitSchedulerProxy extends AbstractService implements Scheduler
 {
 
-    private List<WeakReference<BukkitTask>> tasks;
-    private final Plugin plugin;
+    private List<BukkitTask> tasks;
+    private final org.bukkit.plugin.Plugin plugin;
+    private final org.bukkit.scheduler.BukkitScheduler scheduler;
 
     /**
      * Creates a new {@link BukkitSchedulerProxy}.
      * 
      * @param plugin The plugin
      */
-    public BukkitSchedulerProxy(Plugin plugin)
+    public BukkitSchedulerProxy(org.bukkit.plugin.Plugin plugin)
     {
         super(11);
         this.plugin = plugin;
+        this.scheduler = org.bukkit.Bukkit.getScheduler();
     }
 
     /**
@@ -93,8 +90,9 @@ public class BukkitSchedulerProxy extends AbstractService implements Scheduler
     @Override
     public Optional<BukkitTask> startSynchronousTask(Runnable runnable, int interval)
     {
-        BukkitTask newTask = new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimer(this.plugin, runnable, 0, interval / 50));
-        this.tasks.add(new WeakReference<BukkitTask>(newTask));
+        org.bukkit.scheduler.BukkitTask task = this.scheduler.runTaskTimer(this.plugin, runnable, 0, interval / 50);
+        BukkitTask newTask = new BukkitTask(runnable, interval, task);
+        this.tasks.add(newTask);
         return Optional.of(newTask);
     }
 
@@ -104,9 +102,9 @@ public class BukkitSchedulerProxy extends AbstractService implements Scheduler
     @Override
     public Optional<BukkitTask> startAsynchronousTask(Runnable runnable, int interval)
     {
-        BukkitTask newTask =
-                new BukkitTask(runnable, interval, Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, runnable, 0, interval / 50));
-        this.tasks.add(new WeakReference<BukkitTask>(newTask));
+        org.bukkit.scheduler.BukkitTask task = this.scheduler.runTaskTimerAsynchronously(this.plugin, runnable, 0, interval / 50);
+        BukkitTask newTask = new BukkitTask(runnable, interval, task);
+        this.tasks.add(newTask);
         return Optional.of(newTask);
     }
 
@@ -116,15 +114,10 @@ public class BukkitSchedulerProxy extends AbstractService implements Scheduler
     @Override
     public void stopAllTasks()
     {
-        for (Iterator<WeakReference<BukkitTask>> iter = this.tasks.iterator(); iter.hasNext();)
+        for (Iterator<BukkitTask> iter = this.tasks.iterator(); iter.hasNext();)
         {
-            WeakReference<BukkitTask> task = iter.next();
-            if (task.get() == null)
-            {
-                iter.remove();
-                continue;
-            }
-            task.get().cancel();
+            BukkitTask task = iter.next();
+            task.cancel();
             iter.remove();
         }
     }

@@ -23,13 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.config;
 
-import org.bukkit.Material;
-
 /**
  * Bukkit's specific configuration.
  */
 public class BukkitConfiguration
 {
 
-    Material arrowMaterial = Material.ARROW;
+    org.bukkit.Material arrowMaterial = org.bukkit.Material.ARROW;
 }

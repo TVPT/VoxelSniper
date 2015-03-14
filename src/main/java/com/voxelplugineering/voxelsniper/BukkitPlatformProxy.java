@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import org.bukkit.Bukkit;
-
 import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSource;
@@ -87,7 +85,7 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
     @Override
     public String getPlatformName()
     {
-        return Bukkit.getName();
+        return org.bukkit.Bukkit.getName();
     }
 
     /**
@@ -96,7 +94,7 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
     @Override
     public String getVersion()
     {
-        return Bukkit.getVersion();
+        return org.bukkit.Bukkit.getVersion();
     }
 
     /**
@@ -105,7 +103,7 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
     @Override
     public String getFullVersion()
     {
-        return Bukkit.getBukkitVersion();
+        return org.bukkit.Bukkit.getBukkitVersion();
     }
 
     /**
@@ -123,7 +121,7 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
     @Override
     public int getNumberOfPlayersOnline()
     {
-        return Bukkit.getOnlinePlayers().size();
+        return org.bukkit.Bukkit.getOnlinePlayers().size();
     }
 
     /**

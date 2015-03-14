@@ -25,10 +25,8 @@ package com.voxelplugineering.voxelsniper.perms;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.RegisteredServiceProvider;
+import net.milkbowl.vault.permission.Permission;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.living.Player;
@@ -70,12 +68,15 @@ public class VaultPermissionProxy extends AbstractService implements PermissionP
     @Override
     protected void init()
     {
-        RegisteredServiceProvider<Permission> rsp = Bukkit.getServicesManager().getRegistration(Permission.class);
+        org.bukkit.plugin.RegisteredServiceProvider<Permission> rsp = org.bukkit.Bukkit.getServicesManager().getRegistration(Permission.class);
         if (rsp != null)
         {
             this.permissionService = rsp.getProvider();
+            Gunsmith.getLogger().info("Initialized VaultPermissionProxy service");
+        } else
+        {
+            throw new RuntimeException("Failed to initialized VaultPermissionProxy service");
         }
-        Gunsmith.getLogger().info("Initialized VaultPermissionProxy service");
     }
 
     /**
