@@ -121,4 +121,13 @@ public class BukkitSchedulerProxy extends AbstractService implements Scheduler
             iter.remove();
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<BukkitTask> getAllTasks()
+    {
+        return this.tasks;
+    }
 }

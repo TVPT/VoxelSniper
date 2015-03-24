@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.scheduler;
 import java.lang.ref.WeakReference;
 
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
 
 /**
  * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.

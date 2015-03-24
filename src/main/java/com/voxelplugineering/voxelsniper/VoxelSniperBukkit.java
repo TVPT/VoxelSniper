@@ -44,7 +44,7 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin impleme
     public void onEnable()
     {
         Gunsmith.getExpansionManager().registerExpansion(this);
-        Gunsmith.getServiceManager().init();
+        Gunsmith.getServiceManager().initializeServices();
 
         DefaultBrushBuilder.buildBrushes();
         DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
@@ -58,7 +58,7 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin impleme
     {
         if (Gunsmith.isEnabled())
         {
-            Gunsmith.getServiceManager().stop();
+            Gunsmith.getServiceManager().stopServices();
         }
     }
 

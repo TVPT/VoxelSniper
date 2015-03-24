@@ -30,6 +30,7 @@ import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 
 /**
  * Represents a Bukkit entity.
@@ -102,5 +103,35 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
     public UUID getUniqueId()
     {
         return getThis().getUniqueId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Vector3d getRotation()
+    {
+        org.bukkit.Location location = getThis().getLocation();
+        return new Vector3d(location.getYaw(), location.getPitch(), 0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setRotation(Vector3d rotation)
+    {
+        getThis().getLocation().setYaw((float) rotation.getX());
+        getThis().getLocation().setYaw((float) rotation.getY());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean remove()
+    {
+        getThis().remove();
+        return true;
     }
 }

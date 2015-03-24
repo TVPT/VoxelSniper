@@ -29,6 +29,7 @@ import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.util.BukkitUtilities;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.entity.Player}s.
@@ -122,6 +123,54 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     public UUID getUniqueId()
     {
         return getThis().getUniqueId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setHealth(double health)
+    {
+        getThis().setHealth(health);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getMaxHealth()
+    {
+        return getThis().getMaxHealth();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Vector3d getRotation()
+    {
+        org.bukkit.Location location = getThis().getLocation();
+        return new Vector3d(location.getYaw(), location.getPitch(), 0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setRotation(Vector3d rotation)
+    {
+        getThis().getLocation().setYaw((float) rotation.getX());
+        getThis().getLocation().setYaw((float) rotation.getY());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean remove()
+    {
+        getThis().remove();
+        return true;
     }
 
 }
