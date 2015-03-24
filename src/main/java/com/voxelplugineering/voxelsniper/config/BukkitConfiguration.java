@@ -23,10 +23,12 @@
  */
 package com.voxelplugineering.voxelsniper.config;
 
+import com.voxelplugineering.voxelsniper.api.config.AbstractConfigurationContainer;
+
 /**
  * Bukkit's specific configuration.
  */
-public class BukkitConfiguration
+public class BukkitConfiguration extends AbstractConfigurationContainer
 {
 
     org.bukkit.Material arrowMaterial = org.bukkit.Material.ARROW;

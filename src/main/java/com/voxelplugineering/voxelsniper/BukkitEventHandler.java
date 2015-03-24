@@ -35,7 +35,7 @@ import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
 public class BukkitEventHandler implements org.bukkit.event.Listener
 {
 
-    private final org.bukkit.Material ARROW_MATERIAL = Gunsmith.getConfiguration().get("arrowMaterial", org.bukkit.Material.class)
+    private final org.bukkit.Material arrowMaterial = Gunsmith.getConfiguration().get("arrowMaterial", org.bukkit.Material.class)
             .or(org.bukkit.Material.ARROW);
 
     /**
@@ -88,8 +88,7 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
         org.bukkit.entity.Player p = event.getPlayer();
-        Gunsmith.getLogger().info("PlayerInteractEvent for " + p.getName());
-        if (p.getItemInHand().getType() == ARROW_MATERIAL && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR))
+        if (p.getItemInHand().getType() == this.arrowMaterial && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR))
         {
             Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
             if (s.isPresent())

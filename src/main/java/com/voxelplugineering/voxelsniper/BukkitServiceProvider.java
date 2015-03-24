@@ -112,7 +112,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("platformProxy")
     public Service getPlatformProxy()
     {
-        return new BukkitPlatformProxy();
+        return new BukkitPlatformProxy(this.plugin.getDataFolder());
     }
 
     /**

@@ -23,10 +23,17 @@
  */
 package com.voxelplugineering.voxelsniper;
 
+import java.io.File;
+
+import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSource;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceProvider;
+import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceReader;
+import com.voxelplugineering.voxelsniper.service.persistence.DirectoryDataSourceProvider;
+import com.voxelplugineering.voxelsniper.service.persistence.FileDataSource;
+import com.voxelplugineering.voxelsniper.service.persistence.JsonDataSourceReader;
 
 /**
  * A proxy for Bukkit's platform.
@@ -36,16 +43,20 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
 
     private DataSource metrics;
     private DataSourceProvider brushDataSource;
+    private DataSourceProvider root;
+    private DataSourceReader config;
+
+    private final File rootDir;
 
     /**
      * Creates a new {@link BukkitPlatformProxy}.
      * 
-     * @param thread The main thread
      * @param data The data folder
      */
-    protected BukkitPlatformProxy()
+    protected BukkitPlatformProxy(File data)
     {
         super(4);
+        this.rootDir = data;
     }
 
     /**
@@ -54,8 +65,10 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
     @Override
     protected void init()
     {
-        this.metrics = null;// TODO persistence for new File(data.getParentFile(), "PluginMetrics/config.yml");
-        this.brushDataSource = null;//TODO persistence config new DirectoryDataSourceProvider(new File(Gunsmith.getDataFolder(), "brushes"), NBTDataSource.BUILDER);
+        this.root = new DirectoryDataSourceProvider(this.rootDir);
+        this.metrics = new FileDataSource(new File(this.rootDir.getParentFile(), "PluginMetrics/config.yml"));
+        this.brushDataSource = new DirectoryDataSourceProvider(new File(this.rootDir, "brushes"));
+        this.config = new JsonDataSourceReader(new FileDataSource(new File(this.rootDir, "VoxelSniperConfiguration.json")));
         Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
     }
 
@@ -110,15 +123,6 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
      * {@inheritDoc}
      */
     @Override
-    public DataSource getMetricsFile()
-    {
-        return this.metrics;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public int getNumberOfPlayersOnline()
     {
         return org.bukkit.Bukkit.getOnlinePlayers().size();
@@ -131,6 +135,33 @@ public class BukkitPlatformProxy extends AbstractService implements PlatformProx
     public DataSourceProvider getBrushDataSource()
     {
         return this.brushDataSource;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DataSourceProvider getRootDataSourceProvider()
+    {
+        return this.root;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DataSource getMetricsFile()
+    {
+        return this.metrics;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<DataSourceReader> getConfigDataSource()
+    {
+        return Optional.of(this.config);
     }
 
 }
