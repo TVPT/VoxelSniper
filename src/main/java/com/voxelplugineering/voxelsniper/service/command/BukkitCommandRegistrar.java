@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.command;
+package com.voxelplugineering.voxelsniper.service.command;
 
 import java.lang.reflect.Field;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.command.Command;
+import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.util.CraftBukkitFetcher;
 
 /**

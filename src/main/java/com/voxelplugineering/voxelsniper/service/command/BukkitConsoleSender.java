@@ -21,55 +21,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.scheduler;
+package com.voxelplugineering.voxelsniper.service.command;
 
-import java.lang.ref.WeakReference;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
+import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
+import com.voxelplugineering.voxelsniper.api.entity.Player;
 
 /**
- * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.
+ * A stripped out {@link Player} implementation to act as a proxy for the
+ * console.
  */
-public class BukkitTask extends Task
+public class BukkitConsoleSender implements CommandSender
 {
 
-    private WeakReference<org.bukkit.scheduler.BukkitTask> task;
+    /**
+     * The console's bukkit {@link CommandSender}.
+     */
+    private final org.bukkit.command.CommandSender console;
 
     /**
-     * Creates a new {@link BukkitTask}.
+     * Creates a new console proxy wrapping the given {@link CommandSender}.
      * 
-     * @param runnable the runnable
-     * @param interval the interval, in milliseconds
-     * @param task the underlying {@link org.bukkit.scheduler.BukkitTask}
+     * @param console the console, cannot be null
      */
-    public BukkitTask(Runnable runnable, int interval, org.bukkit.scheduler.BukkitTask task)
+    public BukkitConsoleSender(org.bukkit.command.CommandSender console)
     {
-        super(runnable, interval);
-        this.task = new WeakReference<org.bukkit.scheduler.BukkitTask>(task);
+        checkNotNull(console, "Console cannot be null");
+        this.console = console;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void cancel()
+    public void sendMessage(String msg)
     {
-        org.bukkit.scheduler.BukkitTask bukkitTask = this.task.get();
-        if (bukkitTask != null)
+        for (String message : msg.split("\n"))
         {
-            bukkitTask.cancel();
+            this.console.sendMessage(message);
         }
     }
 
     /**
-     * Gets whether the referenced task is still valid.
-     * 
-     * @return True if the task has not been garbage collected yet
+     * {@inheritDoc}
      */
-    public boolean check()
+    @Override
+    public void sendMessage(String format, Object... args)
     {
-        return this.task.get() != null;
+        sendMessage(String.format(format, args));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isPlayer()
+    {
+        return false;
     }
 
 }

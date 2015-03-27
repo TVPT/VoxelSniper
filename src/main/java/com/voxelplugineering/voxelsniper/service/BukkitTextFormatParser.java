@@ -21,23 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.util.text;
+package com.voxelplugineering.voxelsniper.service;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormat;
-import com.voxelplugineering.voxelsniper.api.util.text.TextFormatProxy;
+import com.voxelplugineering.voxelsniper.api.util.text.TextFormatParser;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
 
 /**
  * A proxy for bukkit's formatting codes.
  */
-public class BukkitTextFormatProxy extends AbstractService implements TextFormatProxy
+public class BukkitTextFormatParser extends AbstractService implements TextFormatParser
 {
 
     /**
-     * Creates a new {@link BukkitTextFormatProxy}.
+     * Creates a new {@link BukkitTextFormatParser}.
      */
-    public BukkitTextFormatProxy()
+    public BukkitTextFormatParser()
     {
         super(0);
     }

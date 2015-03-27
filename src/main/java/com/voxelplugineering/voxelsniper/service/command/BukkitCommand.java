@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.command;
+package com.voxelplugineering.voxelsniper.service.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.command.Command;
+import com.voxelplugineering.voxelsniper.commands.Command;
 
 /**
  * A wrapper for Gunsmith's commands which may be registered into the bukkit

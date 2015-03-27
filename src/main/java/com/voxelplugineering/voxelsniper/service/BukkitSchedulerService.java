@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.scheduler;
+package com.voxelplugineering.voxelsniper.service;
 
 import java.util.Iterator;
 import java.util.List;
@@ -29,13 +29,14 @@ import java.util.List;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.api.service.AbstractService;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.service.persistence.BukkitTask;
 
 /**
  * A proxy for Bukkit's {@link org.bukkit.scheduler.BukkitScheduler}.
  */
-public class BukkitSchedulerProxy extends AbstractService implements Scheduler
+public class BukkitSchedulerService extends AbstractService implements Scheduler
 {
 
     private List<BukkitTask> tasks;
@@ -43,11 +44,11 @@ public class BukkitSchedulerProxy extends AbstractService implements Scheduler
     private final org.bukkit.scheduler.BukkitScheduler scheduler;
 
     /**
-     * Creates a new {@link BukkitSchedulerProxy}.
+     * Creates a new {@link BukkitSchedulerService}.
      * 
      * @param plugin The plugin
      */
-    public BukkitSchedulerProxy(org.bukkit.plugin.Plugin plugin)
+    public BukkitSchedulerService(org.bukkit.plugin.Plugin plugin)
     {
         super(11);
         this.plugin = plugin;

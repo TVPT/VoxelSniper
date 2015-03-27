@@ -21,23 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.perms;
+package com.voxelplugineering.voxelsniper.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-
 import net.milkbowl.vault.permission.Permission;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.api.entity.living.Player;
+import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
-import com.voxelplugineering.voxelsniper.api.service.AbstractService;
-import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
+import com.voxelplugineering.voxelsniper.entity.BukkitPlayer;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
 
 /**
  * A permission proxy for Vault permissions.
  */
-public class VaultPermissionProxy extends AbstractService implements PermissionProxy
+public class VaultPermissionService extends AbstractService implements PermissionProxy
 {
 
     /**
@@ -46,9 +45,9 @@ public class VaultPermissionProxy extends AbstractService implements PermissionP
     private Permission permissionService = null;
 
     /**
-     * Creates a new {@link VaultPermissionProxy}.
+     * Creates a new {@link VaultPermissionService}.
      */
-    public VaultPermissionProxy()
+    public VaultPermissionService()
     {
         super(7);
     }

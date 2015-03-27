@@ -21,10 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper;
+package com.voxelplugineering.voxelsniper.event.handler;
+
+import org.bukkit.Material;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.entity.living.Player;
+import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
@@ -35,8 +38,7 @@ import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
 public class BukkitEventHandler implements org.bukkit.event.Listener
 {
 
-    private final org.bukkit.Material arrowMaterial = Gunsmith.getConfiguration().get("arrowMaterial", org.bukkit.Material.class)
-            .or(org.bukkit.Material.ARROW);
+    private final org.bukkit.Material arrowMaterial = Material.valueOf(Gunsmith.getConfiguration().get("arrowMaterial", String.class).or("ARROW"));
 
     /**
      * Creates a new {@link BukkitEventHandler}.
@@ -88,6 +90,7 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
         org.bukkit.entity.Player p = event.getPlayer();
+        System.out.println(p.getItemInHand().getType().name() + " " + this.arrowMaterial.name());
         if (p.getItemInHand().getType() == this.arrowMaterial && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR))
         {
             Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());

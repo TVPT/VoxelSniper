@@ -26,7 +26,7 @@ package com.voxelplugineering.voxelsniper;
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
-import com.voxelplugineering.voxelsniper.api.entity.living.Player;
+import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
@@ -35,21 +35,23 @@ import com.voxelplugineering.voxelsniper.api.service.Service;
 import com.voxelplugineering.voxelsniper.api.service.ServiceManager;
 import com.voxelplugineering.voxelsniper.api.service.ServiceProvider;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.command.BukkitCommandRegistrar;
-import com.voxelplugineering.voxelsniper.command.BukkitConsoleSender;
-import com.voxelplugineering.voxelsniper.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.config.BukkitConfiguration;
-import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
-import com.voxelplugineering.voxelsniper.logging.JavaUtilLogger;
-import com.voxelplugineering.voxelsniper.perms.SuperPermsPermissionProxy;
-import com.voxelplugineering.voxelsniper.perms.VaultPermissionProxy;
-import com.voxelplugineering.voxelsniper.registry.CommonBiomeRegistry;
-import com.voxelplugineering.voxelsniper.registry.CommonMaterialRegistry;
-import com.voxelplugineering.voxelsniper.registry.CommonPlayerRegistry;
-import com.voxelplugineering.voxelsniper.registry.CommonWorldRegistry;
-import com.voxelplugineering.voxelsniper.scheduler.BukkitSchedulerProxy;
+import com.voxelplugineering.voxelsniper.entity.BukkitPlayer;
+import com.voxelplugineering.voxelsniper.event.handler.BukkitEventHandler;
+import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.service.BukkitPlatformProxyService;
+import com.voxelplugineering.voxelsniper.service.BukkitSchedulerService;
+import com.voxelplugineering.voxelsniper.service.BukkitTextFormatParser;
+import com.voxelplugineering.voxelsniper.service.CommandHandlerService;
+import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
+import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
+import com.voxelplugineering.voxelsniper.service.SuperPermsPermissionService;
+import com.voxelplugineering.voxelsniper.service.VaultPermissionService;
+import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.service.command.BukkitCommandRegistrar;
+import com.voxelplugineering.voxelsniper.service.command.BukkitConsoleSender;
+import com.voxelplugineering.voxelsniper.service.logging.JavaUtilLogger;
 import com.voxelplugineering.voxelsniper.util.Pair;
-import com.voxelplugineering.voxelsniper.util.text.BukkitTextFormatProxy;
 import com.voxelplugineering.voxelsniper.world.BukkitBiome;
 import com.voxelplugineering.voxelsniper.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
@@ -101,7 +103,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("formatProxy")
     public Service getFormatProxy()
     {
-        return new BukkitTextFormatProxy();
+        return new BukkitTextFormatParser();
     }
 
     /**
@@ -112,7 +114,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("platformProxy")
     public Service getPlatformProxy()
     {
-        return new BukkitPlatformProxy(this.plugin.getDataFolder());
+        return new BukkitPlatformProxyService(this.plugin.getDataFolder());
     }
 
     /**
@@ -134,7 +136,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("materialRegistry")
     public Service getMaterialRegistry()
     {
-        return new CommonMaterialRegistry<org.bukkit.Material>();
+        return new MaterialRegistryService<org.bukkit.Material>();
     }
 
     /**
@@ -161,7 +163,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("worldRegistry")
     public Service getWorldRegistry()
     {
-        return new CommonWorldRegistry<org.bukkit.World>(new WorldRegistryProvider(Gunsmith.getMaterialRegistry()));
+        return new WorldRegistryService<org.bukkit.World>(new WorldRegistryProvider(Gunsmith.getMaterialRegistry()));
     }
 
     /**
@@ -175,10 +177,10 @@ public class BukkitServiceProvider extends ServiceProvider
         org.bukkit.plugin.Plugin vault = org.bukkit.Bukkit.getPluginManager().getPlugin("Vault");
         if (vault != null)
         {
-            return new VaultPermissionProxy();
+            return new VaultPermissionService();
         } else
         {
-            return new SuperPermsPermissionProxy();
+            return new SuperPermsPermissionService();
         }
     }
 
@@ -191,7 +193,7 @@ public class BukkitServiceProvider extends ServiceProvider
     public Service getPlayerRegistry()
     {
         CommandSender console = new BukkitConsoleSender(org.bukkit.Bukkit.getConsoleSender());
-        return new CommonPlayerRegistry<org.bukkit.entity.Player>(new PlayerRegistryProvider(), console);
+        return new PlayerRegistryService<org.bukkit.entity.Player>(new PlayerRegistryProvider(), console);
     }
 
     /**
@@ -213,7 +215,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @InitHook("commandHandler")
     public void registerCommands(Service service)
     {
-        CommandHandler cmd = (CommandHandler) service;
+        CommandHandlerService cmd = (CommandHandlerService) service;
         cmd.setRegistrar(new BukkitCommandRegistrar());
     }
 
@@ -225,7 +227,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("scheduler")
     public Service getSchedulerProxy()
     {
-        return new BukkitSchedulerProxy(this.plugin);
+        return new BukkitSchedulerService(this.plugin);
     }
 
     /**
@@ -236,7 +238,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @Builder("biomeRegistry")
     public Service getBiomeRegistry()
     {
-        return new CommonBiomeRegistry<org.bukkit.block.Biome>();
+        return new BiomeRegistryService<org.bukkit.block.Biome>();
     }
 
     /**

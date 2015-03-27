@@ -21,24 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.perms;
+package com.voxelplugineering.voxelsniper.service;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.api.entity.living.Player;
+import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
-import com.voxelplugineering.voxelsniper.api.service.AbstractService;
-import com.voxelplugineering.voxelsniper.entity.living.BukkitPlayer;
+import com.voxelplugineering.voxelsniper.entity.BukkitPlayer;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
 
 /**
  * PermissionProxy for super perms of bukkit.
  */
-public class SuperPermsPermissionProxy extends AbstractService implements PermissionProxy
+public class SuperPermsPermissionService extends AbstractService implements PermissionProxy
 {
 
     /**
      * Creates a new SuperPermsPermissionProxy.
      */
-    public SuperPermsPermissionProxy()
+    public SuperPermsPermissionService()
     {
         super(7);
     }

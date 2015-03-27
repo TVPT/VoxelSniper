@@ -31,5 +31,5 @@ import com.voxelplugineering.voxelsniper.api.config.AbstractConfigurationContain
 public class BukkitConfiguration extends AbstractConfigurationContainer
 {
 
-    org.bukkit.Material arrowMaterial = org.bukkit.Material.ARROW;
+    String arrowMaterial = org.bukkit.Material.ARROW.name();
 }
