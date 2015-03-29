@@ -26,11 +26,9 @@ package com.voxelplugineering.voxelsniper.sponge.world;
 import java.util.List;
 import java.util.Map;
 
-import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.shape.MaterialShape;
@@ -40,13 +38,15 @@ import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.shape.ComplexMaterialShape;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.shape.ComplexMaterialShape;
+import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
+import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
-import com.voxelplugineering.voxelsniper.world.AbstractWorld;
-import com.voxelplugineering.voxelsniper.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.world.CommonLocation;
 
 /**
  * A wrapper for Sponge's World.
@@ -110,7 +110,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         {
             int cx = x < 0 ? (x / 16 - 1) : x / 16;
             int cz = z < 0 ? (z / 16 - 1) : z / 16;
-            if (!getThis().getChunk(new Vector3i(cx, 0, cz)).isPresent())
+            if (!getThis().getChunk(new com.flowpowered.math.vector.Vector3i(cx, 0, cz)).isPresent())
             {
                 return false;
             }
@@ -176,7 +176,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         {
             return Optional.absent();
         }
-        org.spongepowered.api.world.Chunk chunk = getThis().getChunk(new Vector3i(x, y, z)).get();
+        org.spongepowered.api.world.Chunk chunk = getThis().getChunk(new com.flowpowered.math.vector.Vector3i(x, y, z)).get();
         if (this.chunks.containsKey(chunk))
         {
             return Optional.of(this.chunks.get(chunk));
@@ -190,7 +190,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     {
         if (Thread.currentThread() != this.worldThread)
         {
-            if (!getThis().getChunk(new Vector3i(x, y, z)).isPresent())
+            if (!getThis().getChunk(new com.flowpowered.math.vector.Vector3i(x, y, z)).isPresent())
             {
                 return false;
             }
@@ -258,7 +258,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
      * {@inheritDoc}
      */
     @Override
-    public com.voxelplugineering.voxelsniper.util.math.Vector3i getChunkSize()
+    public Vector3i getChunkSize()
     {
         return SpongeChunk.CHUNK_SIZE;
     }

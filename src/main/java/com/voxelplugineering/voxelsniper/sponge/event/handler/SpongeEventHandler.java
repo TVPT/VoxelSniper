@@ -28,11 +28,11 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.event.SnipeEvent;
-import com.voxelplugineering.voxelsniper.event.SniperEvent;
-import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.event.SnipeEvent;
+import com.voxelplugineering.voxelsniper.core.event.SniperEvent;
+import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperDestroyEvent;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 
 /**

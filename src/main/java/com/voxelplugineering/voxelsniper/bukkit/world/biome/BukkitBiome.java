@@ -24,7 +24,7 @@
 package com.voxelplugineering.voxelsniper.bukkit.world.biome;
 
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.core.registry.WeakWrapper;
 
 /**
  * A bukkit wrapper for gunsmith's

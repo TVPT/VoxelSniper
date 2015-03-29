@@ -23,9 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.command;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.commands.Command;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 import com.voxelplugineering.voxelsniper.sponge.service.SpongePlatformProxyService;
 

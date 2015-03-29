@@ -1,12 +1,12 @@
 VoxelSniper-Bukkit [![Build Status](https://travis-ci.org/TVPT/VoxelSniper.svg?branch=master)](https://travis-ci.org/TVPT/VoxelSniper)
 ===============
 
-The premiere long-distance brush editor implementation for Bukkit and Sponge.
+The premiere long-distance brush editor implementation for [Bukkit][Bukkit] and [Sponge][Sponge]. Documentation can be found at the [VoxelGunsmith wiki][VoxelSniperWiki].
 
 Compilation
 -----------
 
-We use Gradle for dependencies and building.
+We use [Gradle][Gradle] for dependencies and building.
 
 - Check out this repository.
 - Run ```./gradlew```
@@ -60,4 +60,5 @@ Some rough guidelines for now:
 [VoxelSniperWiki]: https://github.com/TVPT/VoxelGunsmith/wiki
 [JenkinsJob]: http://ci.voxelmodpack.com/view/VoxelSniper/
 [Bukkit]: http://bukkit.org/
+[Sponge]: https://spongepowered.org/
 [Gradle]: https://www.gradle.org

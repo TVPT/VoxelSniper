@@ -24,7 +24,6 @@
 package com.voxelplugineering.voxelsniper.sponge;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.logging.LoggingDistributor;
@@ -35,11 +34,13 @@ import com.voxelplugineering.voxelsniper.api.service.Service;
 import com.voxelplugineering.voxelsniper.api.service.ServiceManager;
 import com.voxelplugineering.voxelsniper.api.service.ServiceProvider;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
-import com.voxelplugineering.voxelsniper.service.CommandHandlerService;
-import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
-import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
-import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.core.service.CommandHandlerService;
+import com.voxelplugineering.voxelsniper.core.service.MaterialRegistryService;
+import com.voxelplugineering.voxelsniper.core.service.PlayerRegistryService;
+import com.voxelplugineering.voxelsniper.core.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.core.util.Pair;
 import com.voxelplugineering.voxelsniper.sponge.config.SpongeConfiguration;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
 import com.voxelplugineering.voxelsniper.sponge.event.handler.SpongeEventHandler;
@@ -53,7 +54,6 @@ import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 import com.voxelplugineering.voxelsniper.sponge.world.SpongeWorld;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
-import com.voxelplugineering.voxelsniper.util.Pair;
 
 /**
  * A provider for bukkit's initialization values.

@@ -23,10 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormat;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormatParser;
-import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.service.AbstractService;
 
 /**
  * A converter for text formatting codes.

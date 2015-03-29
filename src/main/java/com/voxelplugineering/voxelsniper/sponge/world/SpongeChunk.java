@@ -31,12 +31,12 @@ import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
+import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.core.world.AbstractChunk;
+import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
-import com.voxelplugineering.voxelsniper.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.world.AbstractChunk;
-import com.voxelplugineering.voxelsniper.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.world.CommonLocation;
 
 /**
  * Wraps a {@link Chunk}.

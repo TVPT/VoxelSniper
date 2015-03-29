@@ -25,12 +25,12 @@ package com.voxelplugineering.voxelsniper.bukkit.entity;
 
 import java.util.UUID;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
-import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
-import com.voxelplugineering.voxelsniper.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.entity.Player}s.

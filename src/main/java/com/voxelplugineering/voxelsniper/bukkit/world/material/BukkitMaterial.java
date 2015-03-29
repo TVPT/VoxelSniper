@@ -26,7 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit.world.material;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.core.registry.WeakWrapper;
 
 /**
  * A wrapper for bukkit {@link org.bukkit.Material}s.

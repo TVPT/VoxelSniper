@@ -27,11 +27,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import net.milkbowl.vault.permission.Permission;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
-import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.service.AbstractService;
 
 /**
  * A permission proxy for Vault permissions.

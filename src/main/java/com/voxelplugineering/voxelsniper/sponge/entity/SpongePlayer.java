@@ -29,10 +29,11 @@ import org.spongepowered.api.text.Texts;
 
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
-import com.voxelplugineering.voxelsniper.util.math.Vector3d;
-import com.voxelplugineering.voxelsniper.world.CommonLocation;
 
 /**
  * Wraps a {@link org.spongepowered.api.entity.player.Player}.
@@ -94,7 +95,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public World getWorld()
     {
-        return com.voxelplugineering.voxelsniper.Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
+        return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
     }
 
     /**

@@ -30,8 +30,8 @@ import org.spongepowered.api.util.command.CommandException;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.commands.Command;
 
 /**
  * A proxy command which may be registered with sponge but calls the gunsmith

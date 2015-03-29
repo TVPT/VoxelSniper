@@ -23,9 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
-import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
 
 /**
  * The main plugin class for Sponge.

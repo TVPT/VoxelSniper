@@ -25,10 +25,12 @@ package com.voxelplugineering.voxelsniper.bukkit.service.command;
 
 import java.lang.reflect.Field;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
+import javax.activation.CommandMap;
+
 import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.bukkit.util.CraftBukkitFetcher;
-import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.commands.Command;
 
 /**
  * A registrar for registering Gunsmith command within the bukkit command

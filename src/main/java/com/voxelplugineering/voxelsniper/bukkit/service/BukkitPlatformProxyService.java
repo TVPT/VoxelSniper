@@ -26,7 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit.service;
 import java.io.File;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
-import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
 
 /**
  * A proxy for Bukkit's platform.

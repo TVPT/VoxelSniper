@@ -30,7 +30,7 @@ import org.spongepowered.api.block.BlockTypes;
 
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.core.registry.WeakWrapper;
 
 /**
  * Wraps sponge's {@link BlockType}.

@@ -29,7 +29,6 @@ import java.util.Map;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Block;
@@ -39,10 +38,11 @@ import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
-import com.voxelplugineering.voxelsniper.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.world.AbstractWorld;
-import com.voxelplugineering.voxelsniper.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
+import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.World}s.

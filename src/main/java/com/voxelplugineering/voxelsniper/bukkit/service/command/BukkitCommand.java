@@ -25,8 +25,8 @@ package com.voxelplugineering.voxelsniper.bukkit.service.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.commands.Command;
 
 /**
  * A wrapper for Gunsmith's commands which may be registered into the bukkit

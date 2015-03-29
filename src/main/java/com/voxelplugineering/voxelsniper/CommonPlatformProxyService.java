@@ -30,10 +30,10 @@ import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSource;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceProvider;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceReader;
-import com.voxelplugineering.voxelsniper.service.AbstractService;
-import com.voxelplugineering.voxelsniper.service.persistence.DirectoryDataSourceProvider;
-import com.voxelplugineering.voxelsniper.service.persistence.FileDataSource;
-import com.voxelplugineering.voxelsniper.service.persistence.JsonDataSourceReader;
+import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.service.persistence.DirectoryDataSourceProvider;
+import com.voxelplugineering.voxelsniper.core.service.persistence.FileDataSource;
+import com.voxelplugineering.voxelsniper.core.service.persistence.JsonDataSourceReader;
 
 /**
  * A common platform proxy service.

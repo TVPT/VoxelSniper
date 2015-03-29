@@ -24,7 +24,6 @@
 package com.voxelplugineering.voxelsniper.bukkit;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
@@ -49,13 +48,14 @@ import com.voxelplugineering.voxelsniper.bukkit.service.command.BukkitConsoleSen
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
-import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
-import com.voxelplugineering.voxelsniper.service.CommandHandlerService;
-import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
-import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
-import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
-import com.voxelplugineering.voxelsniper.service.logging.JavaUtilLogger;
-import com.voxelplugineering.voxelsniper.util.Pair;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.core.service.CommandHandlerService;
+import com.voxelplugineering.voxelsniper.core.service.MaterialRegistryService;
+import com.voxelplugineering.voxelsniper.core.service.PlayerRegistryService;
+import com.voxelplugineering.voxelsniper.core.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.core.service.logging.JavaUtilLogger;
+import com.voxelplugineering.voxelsniper.core.util.Pair;
 
 /**
  * A provider for bukkit's initialization values.

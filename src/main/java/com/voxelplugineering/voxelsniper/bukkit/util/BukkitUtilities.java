@@ -26,12 +26,12 @@ package com.voxelplugineering.voxelsniper.bukkit.util;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntityType;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
-import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 
 /**
  * Bukkit based utilities.
