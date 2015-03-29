@@ -23,24 +23,33 @@
  */
 package com.voxelplugineering.voxelsniper.service;
 
-import java.io.File;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.entity.Player;
+import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.entity.SpongePlayer;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
 
 /**
- * A proxy for Bukkit's platform.
+ * A proxy to sponge's permission system.
  */
-public class BukkitPlatformProxyService extends CommonPlatformProxyService
+public class SpongePermissionProxyService extends AbstractService implements PermissionProxy
 {
 
     /**
-     * Creates a new {@link BukkitPlatformProxyService}.
-     * 
-     * @param data The data folder
+     * Creates a new SuperPermsPermissionProxy.
      */
-    public BukkitPlatformProxyService(File data)
+    public SpongePermissionProxyService()
     {
-        super(data);
+        super(7);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName()
+    {
+        return "permissionProxy";
     }
 
     /**
@@ -49,8 +58,7 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     @Override
     protected void init()
     {
-        super.init();
-        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
+        Gunsmith.getLogger().info("Initialized SpongePermissionProxy service");
     }
 
     /**
@@ -59,44 +67,25 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     @Override
     protected void destroy()
     {
-        super.destroy();
-        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
+        Gunsmith.getLogger().info("Stopped SpongePermissionProxy service");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getPlatformName()
+    public boolean isOp(Player sniper)
     {
-        return org.bukkit.Bukkit.getName();
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getVersion()
+    public boolean hasPermission(Player sniper, String permission)
     {
-        return org.bukkit.Bukkit.getVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getFullVersion()
-    {
-        return org.bukkit.Bukkit.getBukkitVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNumberOfPlayersOnline()
-    {
-        return org.bukkit.Bukkit.getOnlinePlayers().size();
+        return ((SpongePlayer) sniper).getThis().hasPermission(permission);
     }
 
 }

@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
-import com.voxelplugineering.voxelsniper.service.persistence.BukkitTask;
+import com.voxelplugineering.voxelsniper.service.scheduler.BukkitTask;
 
 /**
  * A proxy for Bukkit's {@link org.bukkit.scheduler.BukkitScheduler}.

@@ -52,8 +52,8 @@ import com.voxelplugineering.voxelsniper.service.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.service.command.BukkitConsoleSender;
 import com.voxelplugineering.voxelsniper.service.logging.JavaUtilLogger;
 import com.voxelplugineering.voxelsniper.util.Pair;
-import com.voxelplugineering.voxelsniper.world.BukkitBiome;
 import com.voxelplugineering.voxelsniper.world.BukkitWorld;
+import com.voxelplugineering.voxelsniper.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**

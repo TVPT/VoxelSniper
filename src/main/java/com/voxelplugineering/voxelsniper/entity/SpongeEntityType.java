@@ -21,82 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.service;
+package com.voxelplugineering.voxelsniper.entity;
 
-import java.io.File;
-
-import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 
 /**
- * A proxy for Bukkit's platform.
+ * A forge entity type.
  */
-public class BukkitPlatformProxyService extends CommonPlatformProxyService
+public class SpongeEntityType implements EntityType
 {
 
+    private final Class<? extends org.spongepowered.api.entity.Entity> type;
+
     /**
-     * Creates a new {@link BukkitPlatformProxyService}.
+     * Creates a new {@link SpongeEntityType}.
      * 
-     * @param data The data folder
+     * @param cls The entity type
      */
-    public BukkitPlatformProxyService(File data)
+    public SpongeEntityType(Class<? extends org.spongepowered.api.entity.Entity> cls)
     {
-        super(data);
+        this.type = cls;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void init()
+    public String getName()
     {
-        super.init();
-        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
+        return this.type.getName();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void destroy()
+    public boolean isAlive()
     {
-        super.destroy();
-        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getPlatformName()
-    {
-        return org.bukkit.Bukkit.getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getVersion()
-    {
-        return org.bukkit.Bukkit.getVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getFullVersion()
-    {
-        return org.bukkit.Bukkit.getBukkitVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNumberOfPlayersOnline()
-    {
-        return org.bukkit.Bukkit.getOnlinePlayers().size();
+        return org.spongepowered.api.entity.living.Living.class.isAssignableFrom(this.type);
     }
 
 }

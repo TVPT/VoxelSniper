@@ -25,22 +25,26 @@ package com.voxelplugineering.voxelsniper.service;
 
 import java.io.File;
 
+import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 
 /**
- * A proxy for Bukkit's platform.
+ * A proxy for sponge-specific runtime values.
  */
-public class BukkitPlatformProxyService extends CommonPlatformProxyService
+public class SpongePlatformProxyService extends CommonPlatformProxyService
 {
 
+    private org.spongepowered.api.Game game;
+
     /**
-     * Creates a new {@link BukkitPlatformProxyService}.
+     * Creates a new {@link SpongePlatformProxyService}.
      * 
-     * @param data The data folder
+     * @param game The game instance
      */
-    public BukkitPlatformProxyService(File data)
+    public SpongePlatformProxyService(org.spongepowered.api.Game game)
     {
-        super(data);
+        super(new File("", "VoxelSniper"));
+        this.game = game;
     }
 
     /**
@@ -50,7 +54,7 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     protected void init()
     {
         super.init();
-        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
+        Gunsmith.getLogger().info("Initialized SpongePlatformProxy service");
     }
 
     /**
@@ -60,7 +64,7 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     protected void destroy()
     {
         super.destroy();
-        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
+        Gunsmith.getLogger().info("Stopped SpongePlatformProxy service");
     }
 
     /**
@@ -69,7 +73,7 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getPlatformName()
     {
-        return org.bukkit.Bukkit.getName();
+        return "Sponge";
     }
 
     /**
@@ -78,7 +82,7 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getVersion()
     {
-        return org.bukkit.Bukkit.getVersion();
+        return String.format("%s %s", "Sponge", this.game.getImplementationVersion());//TODO add MC version
     }
 
     /**
@@ -87,7 +91,7 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getFullVersion()
     {
-        return org.bukkit.Bukkit.getBukkitVersion();
+        return "Sponge version " + this.game.getImplementationVersion() + " implementing api version " + this.game.getApiVersion();
     }
 
     /**
@@ -96,7 +100,24 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     @Override
     public int getNumberOfPlayersOnline()
     {
-        return org.bukkit.Bukkit.getOnlinePlayers().size();
+        Optional<org.spongepowered.api.Server> server = this.game.getServer();
+        if (server.isPresent())
+        {
+            return server.get().getOnlinePlayers().size();
+        } else
+        {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns sponge's {@link org.spongepowered.api.Game} instance.
+     * 
+     * @return The game
+     */
+    public org.spongepowered.api.Game getGame()
+    {
+        return this.game;
     }
 
 }

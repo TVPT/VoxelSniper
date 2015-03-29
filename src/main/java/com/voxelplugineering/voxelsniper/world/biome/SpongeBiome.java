@@ -21,55 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.service.persistence;
+package com.voxelplugineering.voxelsniper.world.biome;
 
-import java.lang.ref.WeakReference;
-
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
+import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
+import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 
 /**
- * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.
+ * Wraps a {@link org.spongepowered.api.world.biome.BiomeType}.
  */
-public class BukkitTask extends Task
+public class SpongeBiome extends WeakWrapper<org.spongepowered.api.world.biome.BiomeType> implements Biome
 {
 
-    private WeakReference<org.bukkit.scheduler.BukkitTask> task;
-
     /**
-     * Creates a new {@link BukkitTask}.
+     * Creates a new {@link SpongeBiome}.
      * 
-     * @param runnable the runnable
-     * @param interval the interval, in milliseconds
-     * @param task the underlying {@link org.bukkit.scheduler.BukkitTask}
+     * @param value The biome
      */
-    public BukkitTask(Runnable runnable, int interval, org.bukkit.scheduler.BukkitTask task)
+    public SpongeBiome(org.spongepowered.api.world.biome.BiomeType value)
     {
-        super(runnable, interval);
-        this.task = new WeakReference<org.bukkit.scheduler.BukkitTask>(task);
+        super(value);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void cancel()
+    public String getName()
     {
-        org.bukkit.scheduler.BukkitTask bukkitTask = this.task.get();
-        if (bukkitTask != null)
-        {
-            bukkitTask.cancel();
-        }
-    }
-
-    /**
-     * Gets whether the referenced task is still valid.
-     * 
-     * @return True if the task has not been garbage collected yet
-     */
-    public boolean check()
-    {
-        return this.task.get() != null;
+        return getThis().getName();
     }
 
 }

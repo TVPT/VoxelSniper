@@ -23,38 +23,45 @@
  */
 package com.voxelplugineering.voxelsniper.event.handler;
 
-import org.bukkit.Material;
+import org.spongepowered.api.entity.EntityInteractionTypes;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.VoxelSniperSponge;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
 
 /**
- * An event handler for bukkit's events to post the events to Gunsmith from.
+ * A proxy for sponge events to post the corresponding Gunsmith events.
  */
-public class BukkitEventHandler implements org.bukkit.event.Listener
+public class SpongeEventProxy
 {
 
-    private final org.bukkit.Material arrowMaterial = Material.valueOf(Gunsmith.getConfiguration().get("arrowMaterial", String.class).or("ARROW"));
+    private static ItemType TOOL_TYPE;
 
-    /**
-     * Creates a new {@link BukkitEventHandler}.
-     */
-    public BukkitEventHandler()
+    static
     {
-
+        Optional<String> id = Gunsmith.getConfiguration().get("arrowMaterial", String.class);
+        if (id.isPresent())
+        {
+            TOOL_TYPE = VoxelSniperSponge.instance.getGame().getRegistry().getItem(id.get()).or(ItemTypes.ARROW);
+        } else
+        {
+            TOOL_TYPE = ItemTypes.ARROW;
+        }
     }
 
     /**
      * An event handler for player join events.
      * 
-     * @param event the {@link org.bukkit.event.player.PlayerJoinEvent}
+     * @param event The event
      */
-    @org.bukkit.event.EventHandler
-    public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
+    @org.spongepowered.api.util.event.Subscribe
+    public void onPlayerJoin(org.spongepowered.api.event.entity.player.PlayerJoinEvent event)
     {
         Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer().getName());
         if (s.isPresent())
@@ -70,8 +77,8 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
      * 
      * @param event the event
      */
-    @org.bukkit.event.EventHandler
-    public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event)
+    @org.spongepowered.api.util.event.Subscribe
+    public void onPlayerLeave(org.spongepowered.api.event.entity.player.PlayerQuitEvent event)
     {
         Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
         if (s.isPresent())
@@ -82,20 +89,22 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     }
 
     /**
-     * An event handler for player interact events.
+     * An event handler for sponge's PlayerInteractEvent events.
      * 
-     * @param event the {@link org.bukkit.event.player.PlayerInteractEvent}
+     * @param event The event
      */
-    @org.bukkit.event.EventHandler
-    public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
+    @org.spongepowered.api.util.event.Subscribe
+    public void onPlayerInteractEvent(org.spongepowered.api.event.entity.player.PlayerInteractEvent event)
     {
-        org.bukkit.entity.Player p = event.getPlayer();
-        if (p.getItemInHand().getType() == this.arrowMaterial && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR))
+        org.spongepowered.api.entity.player.Player p = event.getPlayer();
+        if (!p.getItemInHand().isPresent()) return;
+        if (p.getItemInHand().get().getItem() == TOOL_TYPE && event.getInteractionType() == EntityInteractionTypes.USE)
         {
             Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
             if (s.isPresent())
             {
-                SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch());
+                com.flowpowered.math.vector.Vector3d rotation = p.getRotation(); // {yaw, pitch, roll}
+                SnipeEvent se = new SnipeEvent(s.get(), rotation.getX(), rotation.getY());
                 Gunsmith.getEventBus().post(se);
             }
         }

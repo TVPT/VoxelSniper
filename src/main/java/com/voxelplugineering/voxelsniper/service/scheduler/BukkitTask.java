@@ -21,82 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.service;
+package com.voxelplugineering.voxelsniper.service.scheduler;
 
-import java.io.File;
+import java.lang.ref.WeakReference;
 
-import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
 
 /**
- * A proxy for Bukkit's platform.
+ * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.
  */
-public class BukkitPlatformProxyService extends CommonPlatformProxyService
+public class BukkitTask extends Task
 {
 
+    private WeakReference<org.bukkit.scheduler.BukkitTask> task;
+
     /**
-     * Creates a new {@link BukkitPlatformProxyService}.
+     * Creates a new {@link BukkitTask}.
      * 
-     * @param data The data folder
+     * @param runnable the runnable
+     * @param interval the interval, in milliseconds
+     * @param task the underlying {@link org.bukkit.scheduler.BukkitTask}
      */
-    public BukkitPlatformProxyService(File data)
+    public BukkitTask(Runnable runnable, int interval, org.bukkit.scheduler.BukkitTask task)
     {
-        super(data);
+        super(runnable, interval);
+        this.task = new WeakReference<org.bukkit.scheduler.BukkitTask>(task);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void init()
+    public void cancel()
     {
-        super.init();
-        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
+        org.bukkit.scheduler.BukkitTask bukkitTask = this.task.get();
+        if (bukkitTask != null)
+        {
+            bukkitTask.cancel();
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * Gets whether the referenced task is still valid.
+     * 
+     * @return True if the task has not been garbage collected yet
      */
-    @Override
-    protected void destroy()
+    public boolean check()
     {
-        super.destroy();
-        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getPlatformName()
-    {
-        return org.bukkit.Bukkit.getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getVersion()
-    {
-        return org.bukkit.Bukkit.getVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getFullVersion()
-    {
-        return org.bukkit.Bukkit.getBukkitVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNumberOfPlayersOnline()
-    {
-        return org.bukkit.Bukkit.getOnlinePlayers().size();
+        return this.task.get() != null;
     }
 
 }

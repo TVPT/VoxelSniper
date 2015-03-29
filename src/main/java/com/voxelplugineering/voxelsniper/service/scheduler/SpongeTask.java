@@ -21,22 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper;
+package com.voxelplugineering.voxelsniper.service.scheduler;
+
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
 
 /**
- * The main class for utility functions.
+ * A wrapper for sponge's {@link org.spongepowered.api.service.scheduler.Task}.
  */
-public class BukkitMain extends GunsmithMain
+public class SpongeTask extends Task
 {
 
+    org.spongepowered.api.service.scheduler.Task task;
+
     /**
-     * The main method.
+     * Creates a new task.
      * 
-     * @param args The program arguments
+     * @param repeatingTask The sponge task
+     * @param runnable The task runnable
+     * @param interval The task interval
      */
-    public static void main(String[] args)
+    public SpongeTask(org.spongepowered.api.service.scheduler.Task repeatingTask, Runnable runnable, int interval)
     {
-        GunsmithMain.main(args);
+        super(runnable, interval);
+        this.task = repeatingTask;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cancel()
+    {
+        this.task.cancel();
     }
 
 }

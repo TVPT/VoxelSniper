@@ -6,6 +6,10 @@ buildscript {
         maven {
             url "http://repository.jboss.org/nexus/content/groups/public/"
         }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
 
     }
     dependencies {
@@ -29,7 +33,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 defaultTasks 'clean', 'licenseFormat', 'check', 'build'
 
 group 'com.voxelplugineering'
-archivesBaseName = 'VoxelSniper-Bukkit'
+archivesBaseName = 'VoxelSniper'
 version '7.0.0-SNAPSHOT'
 
 // Minimum version of Java required
@@ -52,6 +56,9 @@ repositories {
     maven {
         url "https://hub.spigotmc.org/nexus/content/groups/public/"
     }
+    maven {
+        url "http://repo.spongepowered.org/maven/"
+    }
 }
 
 dependencies {
@@ -59,6 +66,8 @@ dependencies {
     compile 'com.voxelplugineering:VoxelGunsmith:7.0.0-SNAPSHOT'
     compile 'org.bukkit:bukkit:1.8-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.4'
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
 }
 
 // Generates sources.jar
@@ -189,7 +198,7 @@ jar {
                 "Built-By": System.properties['user.name'],
                 "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
                 "Implementation-Vendor": url,
-				"Main-Class": "com.voxelplugineering.voxelsniper.BukkitMain"
+				"Main-Class": "com.voxelplugineering.voxelsniper.PlatformMain"
         )
     }
     from ("${projectDir}") {
@@ -204,7 +213,6 @@ configure([compileJava, compileTestJava]) {
 }
 
 shadowJar {
-    relocate 'com.google', 'com.voxelplugineering.voxelsniper.libs.com.google'
     dependencies {
         include(dependency('com.google.guava:guava:18.0'))
         include(dependency('com.voxelplugineering:VoxelGunsmith:7.0.0-SNAPSHOT'))

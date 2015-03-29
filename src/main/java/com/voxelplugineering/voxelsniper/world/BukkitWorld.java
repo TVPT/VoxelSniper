@@ -38,6 +38,7 @@ import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.world.material.BukkitMaterial;
 
 /**

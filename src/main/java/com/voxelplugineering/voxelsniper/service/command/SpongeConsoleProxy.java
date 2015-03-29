@@ -21,35 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.world;
+package com.voxelplugineering.voxelsniper.service.command;
 
-import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.VoxelSniperSponge;
 
 /**
- * A bukkit wrapper for gunsmith's
- * {@link com.voxelplugineering.voxelsniper.api.world.biome.Biome}
+ * A proxy for sponge's server console.
  */
-public class BukkitBiome extends WeakWrapper<org.bukkit.block.Biome> implements Biome
+public class SpongeConsoleProxy implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
 {
 
     /**
-     * Creates a new {@link BukkitBiome}.
-     * 
-     * @param value The biome to wrap
+     * {@inheritDoc}
      */
-    public BukkitBiome(org.bukkit.block.Biome value)
+    @Override
+    public void sendMessage(String msg)
     {
-        super(value);
+        VoxelSniperSponge.instance.getLogger().info(msg);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getName()
+    public void sendMessage(String format, Object... args)
     {
-        return getThis().name();
+        sendMessage(String.format(format, args));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isPlayer()
+    {
+        return false;
     }
 
 }
