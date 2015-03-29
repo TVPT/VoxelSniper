@@ -1,7 +1,7 @@
-VoxelSniper-Bukkit [![Build Status](https://travis-ci.org/TVPT/VoxelSniper-Bukkit.svg?branch=master)](https://travis-ci.org/TVPT/VoxelSniper-Bukkit)
+VoxelSniper-Bukkit [![Build Status](https://travis-ci.org/TVPT/VoxelSniper.svg?branch=master)](https://travis-ci.org/TVPT/VoxelSniper)
 ===============
 
-The premiere long-distance brush editor implementation for Bukkit.
+The premiere long-distance brush editor implementation for Bukkit and Sponge.
 
 Compilation
 -----------
@@ -57,7 +57,7 @@ Some rough guidelines for now:
 - Give us a good description to what you've done.
 - Try to submit one change in one pull request and try to link it to the issue in the tracker if possible.
 
-[VoxelSniperWiki]: http://voxelwiki.com/minecraft/VoxelSniper/
+[VoxelSniperWiki]: https://github.com/TVPT/VoxelGunsmith/wiki
 [JenkinsJob]: http://ci.voxelmodpack.com/view/VoxelSniper/
 [Bukkit]: http://bukkit.org/
 [Gradle]: https://www.gradle.org
