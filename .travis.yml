@@ -1,4 +1,9 @@
 language: java
+cache:
+directories:
+- $HOME/.gradle
+- .gradle
+sudo: false
 notifications:
   email: false
 install: true

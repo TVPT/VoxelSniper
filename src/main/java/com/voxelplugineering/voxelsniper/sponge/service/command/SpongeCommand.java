@@ -25,10 +25,10 @@ package com.voxelplugineering.voxelsniper.sponge.service.command;
 
 import java.util.List;
 
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
@@ -114,25 +114,25 @@ public class SpongeCommand implements CommandCallable
      * {@inheritDoc}
      */
     @Override
-    public Optional<String> getShortDescription()
+    public String getShortDescription(org.spongepowered.api.util.command.CommandSource source)
     {
-        return Optional.of(this.command.getHelpMsg());
+        return this.command.getHelpMsg();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<String> getHelp()
+    public org.spongepowered.api.text.Text getHelp(org.spongepowered.api.util.command.CommandSource source)
     {
-        return Optional.of(this.command.getHelpMsg());
+        return Texts.of(this.command.getHelpMsg());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getUsage()
+    public String getUsage(org.spongepowered.api.util.command.CommandSource source)
     {
         return this.command.getHelpMsg();
     }

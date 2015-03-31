@@ -94,7 +94,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         {
             return Optional.absent();
         }
-        org.spongepowered.api.block.BlockLoc b = getThis().getFullBlock(x, y, z);
+        org.spongepowered.api.world.Location b = getThis().getFullBlock(x, y, z);
         CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
         Optional<com.voxelplugineering.voxelsniper.api.world.material.Material> m = this.materials.getMaterial(b.getType());
         if (!m.isPresent())

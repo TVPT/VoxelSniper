@@ -1,4 +1,4 @@
-VoxelSniper-Bukkit [![Build Status](https://travis-ci.org/TVPT/VoxelSniper.svg?branch=master)](https://travis-ci.org/TVPT/VoxelSniper)
+VoxelSniper [![Build Status](https://travis-ci.org/TVPT/VoxelSniper.svg?branch=master)](https://travis-ci.org/TVPT/VoxelSniper)
 ===============
 
 The premiere long-distance brush editor implementation for [Bukkit][Bukkit] and [Sponge][Sponge]. Documentation can be found at the [VoxelGunsmith wiki][VoxelSniperWiki].

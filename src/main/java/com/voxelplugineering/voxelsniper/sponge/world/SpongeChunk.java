@@ -72,7 +72,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         {
             return Optional.absent();
         }
-        org.spongepowered.api.block.BlockLoc b = getThis().getFullBlock(x, y, z);
+        org.spongepowered.api.world.Location b = getThis().getFullBlock(x, y, z);
         CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
         Optional<Material> m = ((SpongeWorld) this.getWorld()).getMaterialRegistry().getMaterial(b.getType());
         if (!m.isPresent())

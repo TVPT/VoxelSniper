@@ -1,5 +1,5 @@
 name: VoxelSniper
-main: com.voxelplugineering.voxelsniper.VoxelSniperBukkit
+main: com.voxelplugineering.voxelsniper.bukkit.VoxelSniperBukkit
 version: 7.0.0
 website: http://thevoxelbox.com
 authors: [gabizou, Deamon5550]
