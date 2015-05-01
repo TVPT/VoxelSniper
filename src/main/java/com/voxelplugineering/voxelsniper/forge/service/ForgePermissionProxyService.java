@@ -21,30 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.sponge.service;
+package com.voxelplugineering.voxelsniper.forge.service;
 
-import java.io.File;
+import net.minecraft.server.MinecraftServer;
 
-import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
+import com.voxelplugineering.voxelsniper.api.entity.Player;
+import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.forge.entity.ForgePlayer;
 
 /**
- * A proxy for sponge-specific runtime values.
+ * A proxy for forge permissions.
  */
-public class SpongePlatformProxyService extends CommonPlatformProxyService
+public class ForgePermissionProxyService extends AbstractService implements PermissionProxy
 {
 
-    private org.spongepowered.api.Game game;
+    /**
+     * Creates a new {@link ForgePermissionProxyService}.
+     */
+    public ForgePermissionProxyService()
+    {
+        super(7);
+    }
 
     /**
-     * Creates a new {@link SpongePlatformProxyService}.
-     * 
-     * @param game The game instance
+     * {@inheritDoc}
      */
-    public SpongePlatformProxyService(org.spongepowered.api.Game game)
+    @Override
+    public String getName()
     {
-        super(new File("", "VoxelSniper"));
-        this.game = game;
+        return "permissionProxy";
     }
 
     /**
@@ -53,8 +60,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     protected void init()
     {
-        super.init();
-        Gunsmith.getLogger().info("Initialized SpongePlatformProxy service");
+        Gunsmith.getLogger().info("Initialized ForgePermissionProxy service");
     }
 
     /**
@@ -63,54 +69,27 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     protected void destroy()
     {
-        super.destroy();
-        Gunsmith.getLogger().info("Stopped SpongePlatformProxy service");
+        Gunsmith.getLogger().info("Stopped ForgePermissionProxy service");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getPlatformName()
+    public boolean isOp(Player sniper)
     {
-        return "Sponge";
+        return sniper instanceof ForgePlayer
+                && MinecraftServer.getServer().getConfigurationManager().getOppedPlayers()
+                        .getEntry(((ForgePlayer) sniper).getThis().getGameProfile()) != null;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getVersion()
+    public boolean hasPermission(Player sniper, String permission)
     {
-        return String.format("%s %s", "Sponge", this.game.getImplementationVersion());//TODO add MC version
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getFullVersion()
-    {
-        return "Sponge version " + this.game.getImplementationVersion() + " implementing api version " + this.game.getApiVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNumberOfPlayersOnline()
-    {
-        return this.game.getServer().getOnlinePlayers().size();
-    }
-
-    /**
-     * Returns sponge's {@link org.spongepowered.api.Game} instance.
-     * 
-     * @return The game
-     */
-    public org.spongepowered.api.Game getGame()
-    {
-        return this.game;
+        return isOp(sniper);
     }
 
 }

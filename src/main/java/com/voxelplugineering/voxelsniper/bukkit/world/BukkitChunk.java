@@ -168,7 +168,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         return CHUNK_SIZE;
     }
 
-    private boolean checkBounds(int x, int y, int z)
+    private static boolean checkBounds(int x, int y, int z)
     {
         if (x < 0 || x >= CHUNK_SIZE.getX() || z < 0 || z >= CHUNK_SIZE.getZ() || y < 0 || y >= CHUNK_SIZE.getY())
         {

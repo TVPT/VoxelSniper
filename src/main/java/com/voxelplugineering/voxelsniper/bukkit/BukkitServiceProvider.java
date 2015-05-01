@@ -179,10 +179,8 @@ public class BukkitServiceProvider extends ServiceProvider
         if (vault != null)
         {
             return new VaultPermissionService();
-        } else
-        {
-            return new SuperPermsPermissionService();
         }
+        return new SuperPermsPermissionService();
     }
 
     /**

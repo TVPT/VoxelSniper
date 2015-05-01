@@ -1,0 +1,194 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 The Voxel Plugineering Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.voxelplugineering.voxelsniper.forge.entity;
+
+import java.util.UUID;
+
+import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.world.Location;
+import com.voxelplugineering.voxelsniper.api.world.World;
+import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.forge.util.ForgeUtilities;
+
+/**
+ * A wrapper for forge's {@link net.minecraft.entity.player.EntityPlayer}.
+ */
+public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.EntityPlayer>
+{
+
+    private static final EntityType PLAYER_TYPE = ForgeUtilities.getEntityType(net.minecraft.entity.player.EntityPlayer.class);
+
+    /**
+     * Creates a new {@link ForgePlayer}.
+     * 
+     * @param player the player to wrap
+     */
+    public ForgePlayer(net.minecraft.entity.player.EntityPlayer player)
+    {
+        super(player);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName()
+    {
+        return getThis().getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void sendMessage(String msg)
+    {
+        getThis().addChatMessage(new net.minecraft.util.ChatComponentText(msg));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void sendMessage(String format, Object... args)
+    {
+        sendMessage(String.format(format, args));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isPlayer()
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getHealth()
+    {
+        return getThis().getHealth();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public World getWorld()
+    {
+        return Gunsmith.getWorldRegistry().getWorld(getThis().worldObj.getWorldInfo().getWorldName()).orNull();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Location getLocation()
+    {
+        return new CommonLocation(this.getWorld(), getThis().posX, getThis().posY, getThis().posZ);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setLocation(Location newLocation)
+    {
+        if (!newLocation.getWorld().equals(this.getWorld()))
+        {
+            getThis().travelToDimension(getThis().worldObj.provider.getDimensionId());
+        }
+        getThis().setPositionAndUpdate(newLocation.getX(), newLocation.getY(), newLocation.getZ());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UUID getUniqueId()
+    {
+        return getThis().getUniqueID();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public EntityType getType()
+    {
+        return PLAYER_TYPE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setHealth(double health)
+    {
+        getThis().setHealth((float) health);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getMaxHealth()
+    {
+        return getThis().getMaxHealth();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Vector3d getRotation()
+    {
+        return new Vector3d(getThis().rotationYaw, getThis().rotationPitch, 0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setRotation(Vector3d rotation)
+    {
+        getThis().setRotationYawHead((float) rotation.getX());
+        getThis().rotationPitch = (float) rotation.getY();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean remove()
+    {
+        throw new UnsupportedOperationException();
+    }
+}

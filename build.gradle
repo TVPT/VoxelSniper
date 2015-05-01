@@ -4,6 +4,10 @@ buildscript {
         jcenter()
         mavenCentral()
         maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
             url "http://repository.jboss.org/nexus/content/groups/public/"
         }
         maven {
@@ -13,13 +17,15 @@ buildscript {
 
     }
     dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
         classpath 'org.hibernate.build.gradle:gradle-maven-publish-auth:2.0.1'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.1.1'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
     }
 }
 
 // Plugins
+apply plugin: 'forge'
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'license'
@@ -59,6 +65,18 @@ repositories {
     maven {
         url "http://repo.spongepowered.org/maven/"
     }
+}
+
+minecraft {
+    version = "1.8-11.14.0.1252-1.8"
+    runDir = "eclipse"
+    
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not allways work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "snapshot_nodoc_20141130"
 }
 
 dependencies {
@@ -161,6 +179,22 @@ signing {
 
 processResources {
     from 'LICENSE'
+    
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 }
 
 license {
@@ -219,6 +253,12 @@ shadowJar {
         include(dependency('com.thevoxelbox:VisualScripting:0.2.8-SNAPSHOT'))
         include(dependency('com.google.code.gson:gson:2.3'))
     }
+}
+
+reobf {
+	reobf(project.tasks.shadowJar) { spec ->
+		spec.classpath = sourceSets.main.compileClasspath;
+	}
 }
 
 build.dependsOn shadowJar

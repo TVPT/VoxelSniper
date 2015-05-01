@@ -98,12 +98,10 @@ public class SpongeUtilities
         if (entityTypeCache.containsKey(cls))
         {
             return entityTypeCache.get(cls);
-        } else
-        {
-            SpongeEntityType type = new SpongeEntityType(cls);
-            entityTypeCache.put(cls, type);
-            return type;
         }
+        SpongeEntityType type = new SpongeEntityType(cls);
+        entityTypeCache.put(cls, type);
+        return type;
     }
 
     /**

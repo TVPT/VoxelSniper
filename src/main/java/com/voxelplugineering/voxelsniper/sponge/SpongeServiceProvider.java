@@ -147,8 +147,8 @@ public class SpongeServiceProvider extends ServiceProvider
     @InitHook("materialRegistry")
     public void registerMaterials(Service service)
     {
-        @SuppressWarnings("unchecked")
-        MaterialRegistry<org.spongepowered.api.block.BlockType> registry = (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
+        @SuppressWarnings("unchecked") MaterialRegistry<org.spongepowered.api.block.BlockType> registry =
+                (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
         for (org.spongepowered.api.block.BlockType m : this.game.getRegistry().getBlocks())
         {
             registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m));
@@ -242,8 +242,8 @@ public class SpongeServiceProvider extends ServiceProvider
     @InitHook("biomeRegistry")
     public void registerBiomes(Service service)
     {
-        @SuppressWarnings("unchecked")
-        BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> reg = (BiomeRegistry<org.spongepowered.api.world.biome.BiomeType>) service;
+        @SuppressWarnings("unchecked") BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> reg =
+                (BiomeRegistry<org.spongepowered.api.world.biome.BiomeType>) service;
         for (org.spongepowered.api.world.biome.BiomeType b : this.game.getRegistry().getBiomes())
         {
             reg.registerBiome(b.getName(), b, new SpongeBiome(b));
@@ -260,8 +260,7 @@ public class SpongeServiceProvider extends ServiceProvider
         private org.spongepowered.api.Game game;
 
         /**
-         * Creates a new
-         * {@link com.voxelplugineering.voxelsniper.api.registry.RegistryProvider}
+         * Creates a new {@link com.voxelplugineering.voxelsniper.api.registry.RegistryProvider}
          *
          * @param mat The material registry
          * @param game The game instance
@@ -278,15 +277,11 @@ public class SpongeServiceProvider extends ServiceProvider
         @Override
         public Optional<Pair<org.spongepowered.api.world.World, World>> get(String name)
         {
-            Optional<org.spongepowered.api.Server> server = this.game.getServer();
-            if (server.isPresent())
+            Optional<org.spongepowered.api.world.World> world = this.game.getServer().getWorld(name);
+            if (world.isPresent())
             {
-                Optional<org.spongepowered.api.world.World> world = server.get().getWorld(name);
-                if (world.isPresent())
-                {
-                    SpongeWorld spongeWorld = new SpongeWorld(world.get(), this.materials, Gunsmith.getMainThread());
-                    return Optional.of(new Pair<org.spongepowered.api.world.World, World>(world.get(), spongeWorld));
-                }
+                SpongeWorld spongeWorld = new SpongeWorld(world.get(), this.materials, Gunsmith.getMainThread());
+                return Optional.of(new Pair<org.spongepowered.api.world.World, World>(world.get(), spongeWorld));
             }
             return Optional.absent();
         }
@@ -316,15 +311,11 @@ public class SpongeServiceProvider extends ServiceProvider
         @Override
         public Optional<Pair<org.spongepowered.api.entity.player.Player, Player>> get(String name)
         {
-            Optional<org.spongepowered.api.Server> server = this.game.getServer();
-            if (server.isPresent())
+            Optional<org.spongepowered.api.entity.player.Player> player = this.game.getServer().getPlayer(name);
+            if (player.isPresent())
             {
-                Optional<org.spongepowered.api.entity.player.Player> player = server.get().getPlayer(name);
-                if (player.isPresent())
-                {
-                    SpongePlayer splayer = new SpongePlayer(player.get());
-                    return Optional.of(new Pair<org.spongepowered.api.entity.player.Player, Player>(player.get(), splayer));
-                }
+                SpongePlayer splayer = new SpongePlayer(player.get());
+                return Optional.of(new Pair<org.spongepowered.api.entity.player.Player, Player>(player.get(), splayer));
             }
             return Optional.absent();
         }

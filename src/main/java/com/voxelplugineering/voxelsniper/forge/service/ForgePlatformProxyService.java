@@ -21,30 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.voxelplugineering.voxelsniper.sponge.service;
+package com.voxelplugineering.voxelsniper.forge.service;
 
 import java.io.File;
+
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 
 /**
- * A proxy for sponge-specific runtime values.
+ * The platform proxy for minecraft forge.
  */
-public class SpongePlatformProxyService extends CommonPlatformProxyService
+public class ForgePlatformProxyService extends CommonPlatformProxyService
 {
 
-    private org.spongepowered.api.Game game;
-
     /**
-     * Creates a new {@link SpongePlatformProxyService}.
-     * 
-     * @param game The game instance
+     * Creates a new {@link ForgePlatformProxyService}.
      */
-    public SpongePlatformProxyService(org.spongepowered.api.Game game)
+    public ForgePlatformProxyService()
     {
-        super(new File("", "VoxelSniper"));
-        this.game = game;
+        super(new File(".", "VoxelSniper"));
     }
 
     /**
@@ -54,7 +52,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     protected void init()
     {
         super.init();
-        Gunsmith.getLogger().info("Initialized SpongePlatformProxy service");
+        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
     }
 
     /**
@@ -64,7 +62,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     protected void destroy()
     {
         super.destroy();
-        Gunsmith.getLogger().info("Stopped SpongePlatformProxy service");
+        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
     }
 
     /**
@@ -73,7 +71,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getPlatformName()
     {
-        return "Sponge";
+        return "MinecraftForge";
     }
 
     /**
@@ -82,7 +80,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getVersion()
     {
-        return String.format("%s %s", "Sponge", this.game.getImplementationVersion());//TODO add MC version
+        return MinecraftForge.MC_VERSION;
     }
 
     /**
@@ -91,7 +89,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getFullVersion()
     {
-        return "Sponge version " + this.game.getImplementationVersion() + " implementing api version " + this.game.getApiVersion();
+        return MinecraftForge.MC_VERSION;
     }
 
     /**
@@ -100,17 +98,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     public int getNumberOfPlayersOnline()
     {
-        return this.game.getServer().getOnlinePlayers().size();
-    }
-
-    /**
-     * Returns sponge's {@link org.spongepowered.api.Game} instance.
-     * 
-     * @return The game
-     */
-    public org.spongepowered.api.Game getGame()
-    {
-        return this.game;
+        return MinecraftServer.getServer().getCurrentPlayerCount();
     }
 
 }

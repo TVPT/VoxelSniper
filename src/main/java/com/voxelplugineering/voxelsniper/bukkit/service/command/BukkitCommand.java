@@ -68,10 +68,8 @@ public class BukkitCommand extends org.bukkit.command.Command
             {
                 sender.sendMessage("Sorry this is a player only command.");
                 return true;
-            } else
-            {
-                return this.cmd.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
             }
+            return this.cmd.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
         } else
         {
             // Could support other senders here if necessary

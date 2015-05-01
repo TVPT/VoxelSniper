@@ -26,11 +26,13 @@ package com.voxelplugineering.voxelsniper.sponge;
 import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
+import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
 
 /**
  * The main plugin class for Sponge.
  */
-@org.spongepowered.api.plugin.Plugin(id = "voxelsniper-sponge", name = "VoxelSniper-Sponge", version = "7.0.0")
+@org.spongepowered.api.plugin.Plugin(
+        id = "voxelsnipersponge", name = "VoxelSniper-Sponge", version = "7.0.0")
 public class VoxelSniperSponge implements Expansion
 {
 
@@ -41,7 +43,13 @@ public class VoxelSniperSponge implements Expansion
 
     private org.spongepowered.api.Game game;
     private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger("voxelsniper-sponge");
-    
+
+    @org.spongepowered.api.util.event.Subscribe
+    public void onInit(org.spongepowered.api.event.state.PreInitializationEvent event)
+    {
+        SpongeDetector.sponge();
+    }
+
     /**
      * The init event handler.
      * 
