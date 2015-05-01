@@ -29,8 +29,7 @@ import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 
 /**
- * A stripped out {@link Player} implementation to act as a proxy for the
- * console.
+ * A stripped out {@link Player} implementation to act as a proxy for the console.
  */
 public class BukkitConsoleSender implements CommandSender
 {
@@ -47,8 +46,7 @@ public class BukkitConsoleSender implements CommandSender
      */
     public BukkitConsoleSender(org.bukkit.command.CommandSender console)
     {
-        checkNotNull(console, "Console cannot be null");
-        this.console = console;
+        this.console = checkNotNull(console, "Console cannot be null");
     }
 
     /**

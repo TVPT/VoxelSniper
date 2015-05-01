@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormat;
 import com.voxelplugineering.voxelsniper.api.util.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
@@ -48,6 +50,7 @@ public class BukkitTextFormatParser extends AbstractService implements TextForma
     @Override
     public String getFormat(TextFormat format)
     {
+        checkNotNull(format);
         switch (format)
         {
         case BLACK:

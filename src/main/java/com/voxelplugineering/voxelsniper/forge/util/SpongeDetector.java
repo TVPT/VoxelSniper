@@ -23,16 +23,28 @@
  */
 package com.voxelplugineering.voxelsniper.forge.util;
 
+/**
+ * A utility for detecting if a forge server is also running the sponge version of VoxelSniper so
+ * that the forge mod can be disabled.
+ */
 public class SpongeDetector
 {
 
     private static boolean SPONGE = false;
 
+    /**
+     * Marks this server as having sponge enabled.
+     */
     public static void sponge()
     {
         SPONGE = true;
     }
 
+    /**
+     * Gets whether this server has sponge enabled.
+     * 
+     * @return Is sponge enabled
+     */
     public static boolean isSponge()
     {
         return SPONGE;

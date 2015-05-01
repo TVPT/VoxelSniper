@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
@@ -57,7 +59,8 @@ public class ClientProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(value = "worldRegistry")
+    @Builder(
+            value = "worldRegistry")
     public Service getWorldRegistry()
     {
         return new WorldRegistryService<net.minecraft.world.World>(new WorldRegistryProviderClient(
@@ -69,7 +72,8 @@ public class ClientProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(value = "playerRegistry")
+    @Builder(
+            value = "playerRegistry")
     public Service getPlayerRegistry()
     {
         return new PlayerRegistryService<net.minecraft.entity.player.EntityPlayer>(new SniperRegistryProviderClient(), new ForgeConsoleProxy());
@@ -90,7 +94,7 @@ public class ClientProxy extends CommonProxy
          */
         public WorldRegistryProviderClient(MaterialRegistry<net.minecraft.block.Block> mat)
         {
-            this.materials = mat;
+            this.materials = checkNotNull(mat);
         }
 
         /**

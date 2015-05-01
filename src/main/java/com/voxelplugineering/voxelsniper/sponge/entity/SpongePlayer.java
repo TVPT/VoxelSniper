@@ -86,7 +86,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public double getHealth()
     {
-        return getThis().getHealth();
+        return getThis().getHealthData().getHealth();
     }
 
     /**
@@ -150,7 +150,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public void setHealth(double health)
     {
-        getThis().setHealth(health);
+        getThis().getHealthData().setHealth(health);
     }
 
     /**
@@ -159,7 +159,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public double getMaxHealth()
     {
-        return getThis().getMaxHealth();
+        return getThis().getHealthData().getMaxHealth();
     }
 
     /**

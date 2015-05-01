@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.world;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +71,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     public SpongeWorld(org.spongepowered.api.world.World world, MaterialRegistry<org.spongepowered.api.block.BlockType> materials, Thread thread)
     {
         super(world);
-        this.materials = materials;
+        this.materials = checkNotNull(materials);
         this.chunks = new MapMaker().weakKeys().makeMap();
         this.entitiesCache = new MapMaker().weakKeys().makeMap();
         this.worldThread = thread;

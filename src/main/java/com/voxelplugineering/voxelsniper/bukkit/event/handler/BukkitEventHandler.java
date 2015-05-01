@@ -65,8 +65,7 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     }
 
     /**
-     * An event handler for quit events, proxies to Gunsmith's
-     * {@link SniperDestroyEvent}.
+     * An event handler for quit events, proxies to Gunsmith's {@link SniperDestroyEvent}.
      * 
      * @param event the event
      */

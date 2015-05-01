@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.forge.world;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Map;
 
@@ -67,8 +69,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     public ForgeWorld(WorldServer world, MaterialRegistry<net.minecraft.block.Block> materials)
     {
         super(world);
-        Gunsmith.getLogger().debug("Created world with materials: " + materials);
-        this.materials = materials;
+        this.materials = checkNotNull(materials);
         this.chunks = new MapMaker().weakKeys().makeMap();
         this.entitiesCache = new MapMaker().weakKeys().makeMap();
     }

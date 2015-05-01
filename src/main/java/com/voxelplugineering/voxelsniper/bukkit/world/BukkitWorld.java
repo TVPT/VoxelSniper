@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.world;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +67,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     public BukkitWorld(org.bukkit.World world, MaterialRegistry<org.bukkit.Material> materialRegistry, Thread thread)
     {
         super(world);
-        this.materials = materialRegistry;
+        this.materials = checkNotNull(materialRegistry);
         this.chunks = new MapMaker().weakKeys().makeMap();
         this.entitiesCache = new MapMaker().weakKeys().makeMap();
         this.worldThread = thread;
@@ -152,6 +154,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
+        checkNotNull(material);
         if (y < 0 || y >= 256)
         {
             return;
@@ -179,6 +182,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     @Override
     public void setBiome(Biome biome, int x, int y, int z)
     {
+        checkNotNull(biome);
         if (biome instanceof BukkitBiome)
         {
             BukkitBiome bukkitBiome = (BukkitBiome) biome;

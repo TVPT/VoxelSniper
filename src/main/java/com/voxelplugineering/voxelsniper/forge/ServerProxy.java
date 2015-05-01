@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import net.minecraft.server.MinecraftServer;
 
 import com.google.common.base.Optional;
@@ -59,7 +61,8 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(value = "worldRegistry")
+    @Builder(
+            value = "worldRegistry")
     public Service getWorldRegistry()
     {
         WorldRegistryProviderServer provider = new WorldRegistryProviderServer(Gunsmith.<net.minecraft.block.Block>getMaterialRegistry());
@@ -71,7 +74,8 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(value = "playerRegistry")
+    @Builder(
+            value = "playerRegistry")
     public Service getPlayerRegistry()
     {
         return new PlayerRegistryService<net.minecraft.entity.player.EntityPlayer>(new SniperRegistryProviderServer(), new ForgeConsoleProxy());
@@ -92,7 +96,7 @@ public class ServerProxy extends CommonProxy
          */
         public WorldRegistryProviderServer(MaterialRegistry<net.minecraft.block.Block> mat)
         {
-            this.materials = mat;
+            this.materials = checkNotNull(mat);
         }
 
         /**

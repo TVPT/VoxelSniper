@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.world;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +54,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
     private final BukkitWorld world;
 
     /**
-     * Creates a new {@link BukkitChunk} wrapping the given
-     * {@link org.bukkit.Chunk} .
+     * Creates a new {@link BukkitChunk} wrapping the given {@link org.bukkit.Chunk} .
      * 
      * @param chunk the chunk to wrap, cannot be null
      * @param world The world to wrap
@@ -61,6 +62,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
     public BukkitChunk(org.bukkit.Chunk chunk, World world)
     {
         super(chunk, world);
+        checkNotNull(world);
         if (world instanceof BukkitWorld)
         {
             this.world = (BukkitWorld) world;

@@ -29,8 +29,7 @@ import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
 
 /**
- * A wrapper for Gunsmith's commands which may be registered into the bukkit
- * command handler.
+ * A wrapper for Gunsmith's commands which may be registered into the bukkit command handler.
  */
 public class BukkitCommand extends org.bukkit.command.Command
 {
@@ -49,8 +48,7 @@ public class BukkitCommand extends org.bukkit.command.Command
     protected BukkitCommand(String name, Command cmd)
     {
         super(name);
-        checkNotNull(cmd, "Command cannot be null");
-        this.cmd = cmd;
+        this.cmd = checkNotNull(cmd, "Command cannot be null");
     }
 
     /**

@@ -23,6 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.world.biome.BiomeType;
+
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
@@ -149,7 +152,7 @@ public class SpongeServiceProvider extends ServiceProvider
     {
         @SuppressWarnings("unchecked") MaterialRegistry<org.spongepowered.api.block.BlockType> registry =
                 (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
-        for (org.spongepowered.api.block.BlockType m : this.game.getRegistry().getBlocks())
+        for (org.spongepowered.api.block.BlockType m : this.game.getRegistry().getAllOf(BlockType.class))
         {
             registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m));
         }
@@ -244,7 +247,7 @@ public class SpongeServiceProvider extends ServiceProvider
     {
         @SuppressWarnings("unchecked") BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> reg =
                 (BiomeRegistry<org.spongepowered.api.world.biome.BiomeType>) service;
-        for (org.spongepowered.api.world.biome.BiomeType b : this.game.getRegistry().getBiomes())
+        for (org.spongepowered.api.world.biome.BiomeType b : this.game.getRegistry().getAllOf(BiomeType.class))
         {
             reg.registerBiome(b.getName(), b, new SpongeBiome(b));
         }

@@ -25,17 +25,20 @@ package com.voxelplugineering.voxelsniper.sponge.service.command;
 
 import java.util.List;
 
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
+import org.spongepowered.api.util.command.CommandSource;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
 
 /**
- * A proxy command which may be registered with sponge but calls the gunsmith
- * event handler.
+ * A proxy command which may be registered with sponge but calls the gunsmith event handler.
  */
 public class SpongeCommand implements CommandCallable
 {
@@ -65,22 +68,28 @@ public class SpongeCommand implements CommandCallable
      * {@inheritDoc}
      */
     @Override
-    public boolean call(org.spongepowered.api.util.command.CommandSource source, String arguments, List<String> parents) throws CommandException
+    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException
     {
         String[] args = arguments.split(" ");
         if (source instanceof org.spongepowered.api.entity.player.Player)
         {
             org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
             com.voxelplugineering.voxelsniper.api.entity.Player sniper = Gunsmith.getPlayerRegistry().getPlayer(player.getName()).get();
-            return this.command.execute(sniper, args);
+            boolean success = this.command.execute(sniper, args);
+            if (success)
+            {
+                return Optional.of(CommandResult.success());
+            }
         } else if (source instanceof org.spongepowered.api.util.command.source.ConsoleSource)
         {
-            return this.command.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
-        } else
-        {
-            //TODO support other types?
-            return false;
+            boolean success = this.command.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
+            if (success)
+            {
+                return Optional.of(CommandResult.success());
+            }
         }
+        // TODO support other types?
+        return Optional.of(CommandResult.empty());
     }
 
     /**
@@ -89,7 +98,7 @@ public class SpongeCommand implements CommandCallable
     @Override
     public boolean testPermission(org.spongepowered.api.util.command.CommandSource source)
     {
-        //TODO support for other sources?
+        // TODO support for other sources?
         if (source instanceof org.spongepowered.api.entity.player.Player)
         {
             org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
@@ -114,27 +123,27 @@ public class SpongeCommand implements CommandCallable
      * {@inheritDoc}
      */
     @Override
-    public String getShortDescription(org.spongepowered.api.util.command.CommandSource source)
+    public Optional<Text> getShortDescription(CommandSource source)
     {
-        return this.command.getHelpMsg();
+        return Optional.<Text>of(Texts.of(this.command.getHelpMsg()));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public org.spongepowered.api.text.Text getHelp(org.spongepowered.api.util.command.CommandSource source)
+    public Optional<Text> getHelp(CommandSource source)
+    {
+        return Optional.<Text>of(Texts.of(this.command.getHelpMsg()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Text getUsage(CommandSource source)
     {
         return Texts.of(this.command.getHelpMsg());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getUsage(org.spongepowered.api.util.command.CommandSource source)
-    {
-        return this.command.getHelpMsg();
     }
 
 }

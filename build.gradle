@@ -85,7 +85,7 @@ dependencies {
     compile 'org.bukkit:bukkit:1.8-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.4'
     compile 'org.slf4j:slf4j-api:1.7.7'
-    compile 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:2.1-SNAPSHOT'
 }
 
 // Generates sources.jar

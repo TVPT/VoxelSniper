@@ -97,6 +97,7 @@ public class SpongeTextFormatService extends AbstractService implements TextForm
             return "\u00A7k";
         }
     }
+
     /**
      * {@inheritDoc}
      */

@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.service.scheduler;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.lang.ref.WeakReference;
 
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
@@ -46,6 +48,7 @@ public class BukkitTask extends Task
     public BukkitTask(Runnable runnable, int interval, org.bukkit.scheduler.BukkitTask task)
     {
         super(runnable, interval);
+        checkNotNull(task);
         this.task = new WeakReference<org.bukkit.scheduler.BukkitTask>(task);
     }
 

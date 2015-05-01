@@ -92,7 +92,8 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(value = "formatProxy")
+    @Builder(
+            value = "formatProxy")
     public Service getFormatProxy()
     {
         return new ForgeTextFormatParser();
@@ -103,7 +104,8 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(value = "platformProxy")
+    @Builder(
+            value = "platformProxy")
     public Service getPlatformProxy()
     {
         return new ForgePlatformProxyService();
@@ -125,9 +127,11 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(value = "materialRegistry")
+    @Builder(
+            value = "materialRegistry")
     public Service getMaterialRegistry()
     {
+        System.out.println("Creating material registry");
         return new ProvidedMaterialRegistryService<net.minecraft.block.Block>(new MaterialProvider());
     }
 
@@ -136,7 +140,8 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(value = "permissionProxy")
+    @Builder(
+            value = "permissionProxy")
     public Service getPermissionProxy()
     {
         return new ForgePermissionProxyService();
@@ -172,7 +177,8 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(value = "scheduler")
+    @Builder(
+            value = "scheduler")
     public Service getSchedulerProxy()
     {
         return new ForgeSchedulerService();
@@ -183,7 +189,8 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(value = "biomeRegistry")
+    @Builder(
+            value = "biomeRegistry")
     public Service getBiomeRegistry()
     {
         return new BiomeRegistryService<net.minecraft.world.biome.BiomeGenBase>();
@@ -197,8 +204,8 @@ public abstract class CommonProxy extends ServiceProvider
     @InitHook("biomeRegistry")
     public void registerBiomes(Service service)
     {
-        @SuppressWarnings("unchecked")
-        BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg = (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;
+        @SuppressWarnings("unchecked") BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg =
+                (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;
         for (Object b : BiomeGenBase.BIOME_ID_MAP.keySet())
         {
             BiomeGenBase biome = (BiomeGenBase) BiomeGenBase.BIOME_ID_MAP.get(b);

@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.entity;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 
 /**
@@ -40,7 +42,7 @@ public class BukkitEntityType implements EntityType
      */
     public BukkitEntityType(org.bukkit.entity.EntityType type)
     {
-        this.type = type;
+        this.type = checkNotNull(type);
     }
 
     /**

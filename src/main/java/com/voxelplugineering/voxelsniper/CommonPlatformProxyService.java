@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 
 import com.google.common.base.Optional;
@@ -55,7 +57,7 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
     public CommonPlatformProxyService(File dir)
     {
         super(4);
-        this.rootDir = dir;
+        this.rootDir = checkNotNull(dir);
     }
 
     /**

@@ -94,8 +94,8 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
                         .getGame()
                         .getSyncScheduler()
                         .runRepeatingTask(
-                                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy()).getGame().getPluginManager().getPlugin("voxelsniper-sponge")
-                                        .get(), runnable, interval / MILLISECONDS_PER_TICK);
+                                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy()).getGame().getPluginManager()
+                                        .getPlugin("voxelsniper-sponge").get(), runnable, interval / MILLISECONDS_PER_TICK);
         if (task.isPresent())
         {
             SpongeTask stask = new SpongeTask(task.get(), runnable, interval);
@@ -116,8 +116,8 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
                         .getGame()
                         .getAsyncScheduler()
                         .runRepeatingTask(
-                                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy()).getGame().getPluginManager().getPlugin("VoxelSniper-Sponge")
-                                        .get(), runnable, TimeUnit.MILLISECONDS, interval / MILLISECONDS_PER_TICK);
+                                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy()).getGame().getPluginManager()
+                                        .getPlugin("VoxelSniper-Sponge").get(), runnable, TimeUnit.MILLISECONDS, interval / MILLISECONDS_PER_TICK);
         if (task.isPresent())
         {
             SpongeTask stask = new SpongeTask(task.get(), runnable, interval);

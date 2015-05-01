@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.entity;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.UUID;
 
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
@@ -122,6 +124,7 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
     @Override
     public void setRotation(Vector3d rotation)
     {
+        checkNotNull(rotation);
         getThis().getLocation().setYaw((float) rotation.getX());
         getThis().getLocation().setYaw((float) rotation.getY());
     }

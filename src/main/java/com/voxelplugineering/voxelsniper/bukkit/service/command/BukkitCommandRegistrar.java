@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.service.command;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.lang.reflect.Field;
 
 import javax.activation.CommandMap;
@@ -33,8 +35,7 @@ import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
 
 /**
- * A registrar for registering Gunsmith command within the bukkit command
- * handler.
+ * A registrar for registering Gunsmith command within the bukkit command handler.
  */
 public class BukkitCommandRegistrar implements CommandRegistrar
 {
@@ -45,8 +46,8 @@ public class BukkitCommandRegistrar implements CommandRegistrar
     private org.bukkit.command.CommandMap commands;
 
     /**
-     * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's
-     * CommandMap via reflection for use to register commands.
+     * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's CommandMap via reflection
+     * for use to register commands.
      */
     public BukkitCommandRegistrar()
     {
@@ -67,6 +68,7 @@ public class BukkitCommandRegistrar implements CommandRegistrar
     @Override
     public void registerCommand(Command cmd)
     {
+        checkNotNull(cmd);
         BukkitCommand bcmd = new BukkitCommand(cmd.getName(), cmd);
         this.commands.register("voxelsniper", bcmd);
         for (String alias : cmd.getAllAliases())

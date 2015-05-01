@@ -69,7 +69,7 @@ public class Slf4jLogger implements Logger
     @Override
     public void log(LogLevel level, String msg)
     {
-        switch(level)
+        switch (level)
         {
         case OFF:
             return;

@@ -50,8 +50,8 @@ public class SpongeUtilities
     }
 
     /**
-     * Converts a {@link com.voxelplugineering.voxelsniper.api.world.Location}
-     * into a {@link org.spongepowered.api.world.Location}.
+     * Converts a {@link com.voxelplugineering.voxelsniper.api.world.Location} into a
+     * {@link org.spongepowered.api.world.Location}.
      * 
      * @param location The location to convert
      * @return The new location
@@ -62,8 +62,8 @@ public class SpongeUtilities
     }
 
     /**
-     * Converts a {@link com.voxelplugineering.voxelsniper.core.util.math.Vector3d}
-     * into a {@link com.flowpowered.math.vector.Vector3d}.
+     * Converts a {@link com.voxelplugineering.voxelsniper.core.util.math.Vector3d} into a
+     * {@link com.flowpowered.math.vector.Vector3d}.
      * 
      * @param vector The vector to convert
      * @return The new vector
@@ -87,8 +87,7 @@ public class SpongeUtilities
     }
 
     /**
-     * Gets the Gunsmith {@link EntityType} corresponding to the given entity
-     * class.
+     * Gets the Gunsmith {@link EntityType} corresponding to the given entity class.
      * 
      * @param cls The entity class
      * @return The gunsmith entity type
@@ -105,8 +104,7 @@ public class SpongeUtilities
     }
 
     /**
-     * Gets an instance of a Gunsmith {@link Location} corresponding to the
-     * given sponge location.
+     * Gets an instance of a Gunsmith {@link Location} corresponding to the given sponge location.
      * 
      * @param location The location
      * @return The gunsmith location

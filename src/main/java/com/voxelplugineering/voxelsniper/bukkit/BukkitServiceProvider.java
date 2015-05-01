@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
@@ -73,7 +75,7 @@ public class BukkitServiceProvider extends ServiceProvider
     public BukkitServiceProvider(org.bukkit.plugin.java.JavaPlugin pl)
     {
         super(ServiceProvider.Type.PLATFORM);
-        this.plugin = pl;
+        this.plugin = checkNotNull(pl);
     }
 
     /**
@@ -148,8 +150,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @InitHook("materialRegistry")
     public void registerMaterials(Service service)
     {
-        @SuppressWarnings("unchecked")
-        MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
+        @SuppressWarnings("unchecked") MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
         for (org.bukkit.Material m : org.bukkit.Material.values())
         {
             registry.registerMaterial(m.name(), m, new BukkitMaterial(m));
@@ -248,8 +249,7 @@ public class BukkitServiceProvider extends ServiceProvider
     @InitHook("biomeRegistry")
     public void registerBiomes(Service service)
     {
-        @SuppressWarnings("unchecked")
-        BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
+        @SuppressWarnings("unchecked") BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
         for (org.bukkit.block.Biome b : org.bukkit.block.Biome.values())
         {
             reg.registerBiome(b.name(), b, new BukkitBiome(b));

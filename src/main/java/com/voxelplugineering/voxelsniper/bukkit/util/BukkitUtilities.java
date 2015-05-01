@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.util;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -40,26 +42,26 @@ public final class BukkitUtilities
 {
 
     /**
-     * Switches between Gunsmith's {@link CommonLocation} and bukkit's
-     * {@link Location}.
+     * Switches between Gunsmith's {@link CommonLocation} and bukkit's {@link Location}.
      * 
      * @param location Bukkit's location
      * @return Gunsmith's location
      */
     public static Location getGunsmithLocation(org.bukkit.Location location)
     {
+        checkNotNull(location);
         return new CommonLocation(Gunsmith.getWorldRegistry().getWorld(location.getWorld()).get(), location.getX(), location.getY(), location.getZ());
     }
 
     /**
-     * Switches between Gunsmith's {@link CommonLocation} and bukkit's
-     * {@link Location}.
+     * Switches between Gunsmith's {@link CommonLocation} and bukkit's {@link Location}.
      * 
      * @param location Gunsmith's location
      * @return Bukkit's location
      */
     public static org.bukkit.Location getBukkitLocation(Location location)
     {
+        checkNotNull(location);
         if (location.getWorld() instanceof BukkitWorld)
         {
             return new org.bukkit.Location(((BukkitWorld) location.getWorld()).getThis(), location.getX(), location.getY(), location.getZ());
@@ -78,6 +80,7 @@ public final class BukkitUtilities
      */
     public static EntityType getEntityType(org.bukkit.entity.EntityType type)
     {
+        checkNotNull(type);
         EntityType gtype;
         if (!entityTypes.containsKey(type))
         {

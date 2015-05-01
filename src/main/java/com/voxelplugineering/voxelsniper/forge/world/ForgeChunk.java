@@ -122,10 +122,7 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Note: this refresh method is the bukkit method for refreshing chunks.
-     * </p>
+     * {@inheritDoc} <p> Note: this refresh method is the bukkit method for refreshing chunks. </p>
      */
     @Override
     public void refreshChunk()

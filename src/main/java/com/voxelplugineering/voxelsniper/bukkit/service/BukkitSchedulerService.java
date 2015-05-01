@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class BukkitSchedulerService extends AbstractService implements Scheduler
     public BukkitSchedulerService(org.bukkit.plugin.Plugin plugin)
     {
         super(11);
-        this.plugin = plugin;
+        this.plugin = checkNotNull(plugin);
         this.scheduler = org.bukkit.Bukkit.getScheduler();
     }
 

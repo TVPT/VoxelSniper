@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
@@ -91,7 +92,7 @@ public class VoxelSniperForge implements Expansion
      * @param event the event
      */
     @EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
+    public void serverPreStart(FMLServerAboutToStartEvent event)
     {
         if (!SpongeDetector.isSponge())
         {
@@ -100,17 +101,24 @@ public class VoxelSniperForge implements Expansion
 
             DefaultBrushBuilder.buildBrushes();
             DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
-
-            Optional<CommandRegistrar> registrar = Gunsmith.getCommandHandler().getRegistrar();
-            if (registrar.isPresent())
-            {
-                ((ForgeCommandRegistrar) registrar.get()).flush(event);
-            }
         } else
         {
             this.disabled = true;
             this.logger.info("Detected Sponge: disabling VoxelSniper-Forge in favour of sponge version.");
             Loader.instance().runtimeDisableMod("voxelsniperforge");
+        }
+    }
+
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        if (!SpongeDetector.isSponge())
+        {
+            Optional<CommandRegistrar> registrar = Gunsmith.getCommandHandler().getRegistrar();
+            if (registrar.isPresent())
+            {
+                ((ForgeCommandRegistrar) registrar.get()).flush(event);
+            }
         }
     }
 

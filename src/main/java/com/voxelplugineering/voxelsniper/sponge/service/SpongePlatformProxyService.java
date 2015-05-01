@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
@@ -44,7 +46,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     public SpongePlatformProxyService(org.spongepowered.api.Game game)
     {
         super(new File("", "VoxelSniper"));
-        this.game = game;
+        this.game = checkNotNull(game);
     }
 
     /**

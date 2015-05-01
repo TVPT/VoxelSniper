@@ -44,7 +44,12 @@ public class VoxelSniperSponge implements Expansion
     private org.spongepowered.api.Game game;
     private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger("voxelsniper-sponge");
 
-    @org.spongepowered.api.util.event.Subscribe
+    /**
+     * Marks the server as having sponge.
+     * 
+     * @param event The event
+     */
+    @org.spongepowered.api.event.Subscribe
     public void onInit(org.spongepowered.api.event.state.PreInitializationEvent event)
     {
         SpongeDetector.sponge();
@@ -55,7 +60,7 @@ public class VoxelSniperSponge implements Expansion
      * 
      * @param event The event
      */
-    @org.spongepowered.api.util.event.Subscribe
+    @org.spongepowered.api.event.Subscribe
     public void onServerStarted(org.spongepowered.api.event.state.ServerAboutToStartEvent event)
     {
         instance = this;
@@ -91,7 +96,7 @@ public class VoxelSniperSponge implements Expansion
      * 
      * @param event The event
      */
-    @org.spongepowered.api.util.event.Subscribe
+    @org.spongepowered.api.event.Subscribe
     public void onServerStop(org.spongepowered.api.event.state.ServerStoppingEvent event)
     {
         if (Gunsmith.isEnabled())

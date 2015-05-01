@@ -48,7 +48,7 @@ public class SpongeEventHandler
         Optional<String> id = Gunsmith.getConfiguration().get("arrowMaterial", String.class);
         if (id.isPresent())
         {
-            TOOL_TYPE = VoxelSniperSponge.instance.getGame().getRegistry().getItem(id.get()).or(ItemTypes.ARROW);
+            TOOL_TYPE = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, id.get()).or(ItemTypes.ARROW);
         } else
         {
             TOOL_TYPE = ItemTypes.ARROW;
@@ -60,7 +60,7 @@ public class SpongeEventHandler
      * 
      * @param event The event
      */
-    @org.spongepowered.api.util.event.Subscribe
+    @org.spongepowered.api.event.Subscribe
     public void onPlayerJoin(org.spongepowered.api.event.entity.player.PlayerJoinEvent event)
     {
         Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer().getName());
@@ -72,12 +72,11 @@ public class SpongeEventHandler
     }
 
     /**
-     * An event handler for quit events, proxies to Gunsmith's
-     * {@link SniperDestroyEvent}.
+     * An event handler for quit events, proxies to Gunsmith's {@link SniperDestroyEvent}.
      * 
      * @param event the event
      */
-    @org.spongepowered.api.util.event.Subscribe
+    @org.spongepowered.api.event.Subscribe
     public void onPlayerLeave(org.spongepowered.api.event.entity.player.PlayerQuitEvent event)
     {
         Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
@@ -93,7 +92,7 @@ public class SpongeEventHandler
      * 
      * @param event The event
      */
-    @org.spongepowered.api.util.event.Subscribe
+    @org.spongepowered.api.event.Subscribe
     public void onPlayerInteractEvent(org.spongepowered.api.event.entity.player.PlayerInteractEvent event)
     {
         org.spongepowered.api.entity.player.Player p = event.getPlayer();
