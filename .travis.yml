@@ -10,4 +10,6 @@ install: true
 jdk:
   - oraclejdk8
   - oraclejdk7
-script: ./gradlew
+env: GRADLE_OPTS="-Xms1g -Xmx3g"
+install: ./gradlew setupCIWorkspace
+script: ./gradlew build
