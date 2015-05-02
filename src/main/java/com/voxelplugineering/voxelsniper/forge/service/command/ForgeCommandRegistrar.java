@@ -40,9 +40,6 @@ public class ForgeCommandRegistrar implements CommandRegistrar
 
     List<ForgeCommand> pending = Lists.newArrayList();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized void registerCommand(Command command)
     {

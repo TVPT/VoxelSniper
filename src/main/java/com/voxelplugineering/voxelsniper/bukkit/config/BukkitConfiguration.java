@@ -32,4 +32,5 @@ public class BukkitConfiguration extends AbstractConfigurationContainer
 {
 
     String arrowMaterial = org.bukkit.Material.ARROW.name();
+    String defaultBiomeName = org.bukkit.block.Biome.PLAINS.name();
 }

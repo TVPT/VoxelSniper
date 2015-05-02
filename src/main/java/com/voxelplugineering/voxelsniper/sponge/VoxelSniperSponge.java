@@ -23,6 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
+import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
+
+import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
@@ -31,25 +36,22 @@ import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
 /**
  * The main plugin class for Sponge.
  */
-@org.spongepowered.api.plugin.Plugin(
-        id = "voxelsnipersponge", name = "VoxelSniper-Sponge", version = "7.0.0")
+@Plugin(id = "voxelsnipersponge", name = "VoxelSniper-Sponge", version = "7.0.0")
 public class VoxelSniperSponge implements Expansion
 {
 
-    /**
-     * The plugin instance.
-     */
     public static VoxelSniperSponge instance = null;
 
-    private org.spongepowered.api.Game game;
-    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger("voxelsniper-sponge");
+    @Inject private org.spongepowered.api.Game game;
+    @Inject private org.slf4j.Logger logger;
+    @Inject private PluginContainer plugin;
 
     /**
      * Marks the server as having sponge.
      * 
      * @param event The event
      */
-    @org.spongepowered.api.event.Subscribe
+    @Subscribe
     public void onInit(org.spongepowered.api.event.state.PreInitializationEvent event)
     {
         SpongeDetector.sponge();
@@ -60,11 +62,10 @@ public class VoxelSniperSponge implements Expansion
      * 
      * @param event The event
      */
-    @org.spongepowered.api.event.Subscribe
+    @Subscribe
     public void onServerStarted(org.spongepowered.api.event.state.ServerAboutToStartEvent event)
     {
         instance = this;
-        this.game = event.getGame();
 
         Gunsmith.getExpansionManager().registerExpansion(this);
         Gunsmith.getServiceManager().initializeServices();
@@ -73,18 +74,12 @@ public class VoxelSniperSponge implements Expansion
         DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void init()
     {
-        Gunsmith.getServiceManager().registerServiceProvider(new SpongeServiceProvider(this.game));
+        Gunsmith.getServiceManager().registerServiceProvider(new SpongeServiceProvider(this.game, this.plugin, this.logger));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stop()
     {
@@ -96,7 +91,7 @@ public class VoxelSniperSponge implements Expansion
      * 
      * @param event The event
      */
-    @org.spongepowered.api.event.Subscribe
+    @Subscribe
     public void onServerStop(org.spongepowered.api.event.state.ServerStoppingEvent event)
     {
         if (Gunsmith.isEnabled())

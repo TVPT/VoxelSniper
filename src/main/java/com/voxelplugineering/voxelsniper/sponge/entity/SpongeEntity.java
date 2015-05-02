@@ -56,18 +56,12 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
         this.type = SpongeUtilities.getEntityType(entity.getClass());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
@@ -85,63 +79,42 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
         return this.type.getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EntityType getType()
     {
         return this.type;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Location getLocation()
     {
         return SpongeUtilities.fromSpongeLocation(getThis().getLocation()).orNull();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLocation(Location loc)
     {
         getThis().setLocation(SpongeUtilities.getSpongeLocation(loc));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public UUID getUniqueId()
     {
         return getThis().getUniqueId();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3d getRotation()
     {
         return SpongeUtilities.getGunsmithVector(getThis().getRotation());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setRotation(Vector3d rotation)
     {
         getThis().setRotation(SpongeUtilities.getSpongeVector(rotation));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean remove()
     {

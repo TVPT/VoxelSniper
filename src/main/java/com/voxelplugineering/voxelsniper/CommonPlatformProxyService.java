@@ -56,13 +56,10 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
      */
     public CommonPlatformProxyService(File dir)
     {
-        super(4);
+        super(PlatformProxy.class, 4);
         this.rootDir = checkNotNull(dir);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
@@ -75,9 +72,6 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
         this.config = new JsonDataSourceReader(new FileDataSource(new File(this.rootDir, "VoxelSniperConfiguration.json")));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -87,45 +81,30 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
         this.root = null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "platformProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DataSource getMetricsFile()
     {
         return this.metricsConf;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DataSourceProvider getBrushDataSource()
     {
         return this.brushDataSource;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DataSourceProvider getRootDataSourceProvider()
     {
         return this.root;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<DataSourceReader> getConfigDataSource()
     {

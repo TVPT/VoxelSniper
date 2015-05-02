@@ -61,9 +61,6 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
         this.max = new Vector3i(chunk.xPosition * 16 + 15, 255, chunk.zPosition * 16 + 15);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
@@ -81,9 +78,6 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
         return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
@@ -94,9 +88,6 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
         getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), ((ForgeMaterial) material).getThis().getDefaultState());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
@@ -122,7 +113,9 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
     }
 
     /**
-     * {@inheritDoc} <p> Note: this refresh method is the bukkit method for refreshing chunks. </p>
+     * {@inheritDoc}
+     * 
+     * <p> Note: this refresh method is the bukkit method for refreshing chunks. </p>
      */
     @Override
     public void refreshChunk()
@@ -138,27 +131,18 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
         ((ForgeWorld) this.getWorld()).getThis().notifyLightSet(new net.minecraft.util.BlockPos(px + 15, height * 16 - 1, pz + 15));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getMinBound()
     {
         return this.min;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getMaxBound()
     {
         return this.max;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getSize()
     {

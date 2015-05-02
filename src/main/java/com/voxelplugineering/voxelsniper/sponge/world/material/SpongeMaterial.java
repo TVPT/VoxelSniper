@@ -105,63 +105,42 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
         super(type);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString()
     {
         return getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isBlock()
     {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isAffectedByGravity()
     {
         return getThis().isAffectedByGravity();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isSolid()
     {
         return getThis().isSolidCube();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isLiquid()
     {
         return getThis().isLiquid();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isReliantOnEnvironment()
     {
         return FALLOFF_MATERIALS.contains(getThis());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {

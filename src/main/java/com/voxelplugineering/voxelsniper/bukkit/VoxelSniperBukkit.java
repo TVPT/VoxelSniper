@@ -63,18 +63,12 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin impleme
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void init()
     {
         Gunsmith.getServiceManager().registerServiceProvider(new BukkitServiceProvider(this));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stop()
     {

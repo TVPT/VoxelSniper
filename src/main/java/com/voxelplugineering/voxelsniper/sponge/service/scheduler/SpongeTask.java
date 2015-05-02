@@ -46,9 +46,6 @@ public class SpongeTask extends Task
         this.task = repeatingTask;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancel()
     {

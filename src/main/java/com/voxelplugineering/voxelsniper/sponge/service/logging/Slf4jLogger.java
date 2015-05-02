@@ -44,9 +44,6 @@ public class Slf4jLogger implements Logger
         this.logger = logger;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public LogLevel getLevel()
     {
@@ -54,18 +51,12 @@ public class Slf4jLogger implements Logger
         return LogLevel.INFO;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLevel(LogLevel level)
     {
         // TODO slf4j level ?
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void log(LogLevel level, String msg)
     {
@@ -88,54 +79,36 @@ public class Slf4jLogger implements Logger
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void debug(String msg)
     {
         this.logger.debug(msg);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void info(String msg)
     {
         this.logger.info(msg);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void warn(String msg)
     {
         this.logger.warn(msg);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void error(String msg)
     {
         this.logger.error(msg);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void error(Exception e)
     {
         this.logger.error(e.getMessage(), e);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void error(Exception e, String msg)
     {

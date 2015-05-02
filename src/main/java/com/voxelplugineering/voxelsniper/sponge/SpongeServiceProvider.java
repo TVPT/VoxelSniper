@@ -24,18 +24,26 @@
 package com.voxelplugineering.voxelsniper.sponge;
 
 import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.biome.BiomeType;
 
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.api.commands.CommandHandler;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
+import com.voxelplugineering.voxelsniper.api.event.bus.EventBus;
 import com.voxelplugineering.voxelsniper.api.logging.LoggingDistributor;
+import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.service.Service;
+import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.service.ServiceManager;
 import com.voxelplugineering.voxelsniper.api.service.ServiceProvider;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.api.util.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
@@ -64,22 +72,25 @@ import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 public class SpongeServiceProvider extends ServiceProvider
 {
 
-    private org.spongepowered.api.Game game;
+    private final org.spongepowered.api.Game game;
+    private final PluginContainer plugin;
+    private final org.slf4j.Logger logger;
 
     /**
      * Creates a new {@link SpongeServiceProvider}.
      * 
      * @param game the game instance
+     * @param plugin The plugin container
+     * @param logger The logger
      */
-    public SpongeServiceProvider(org.spongepowered.api.Game game)
+    public SpongeServiceProvider(org.spongepowered.api.Game game, PluginContainer plugin, org.slf4j.Logger logger)
     {
         super(ServiceProvider.Type.PLATFORM);
         this.game = game;
+        this.plugin = plugin;
+        this.logger = logger;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void registerNewServices(ServiceManager manager)
     {
@@ -91,11 +102,10 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @param logger The service
      */
-    @InitHook("logger")
-    public void getLogger(Service logger)
+    @InitHook(LoggingDistributor.class)
+    public void getLogger(LoggingDistributor logger)
     {
-        org.slf4j.Logger log = VoxelSniperSponge.instance.getLogger();
-        ((LoggingDistributor) logger).registerLogger(new Slf4jLogger(log), "sponge");
+        logger.registerLogger(new Slf4jLogger(this.logger), "sponge");
     }
 
     /**
@@ -103,8 +113,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("formatProxy")
-    public Service getFormatProxy()
+    @Builder(TextFormatParser.class)
+    public TextFormatParser getFormatProxy()
     {
         return new SpongeTextFormatService();
     }
@@ -114,8 +124,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("platformProxy")
-    public Service getPlatformProxy()
+    @Builder(PlatformProxy.class)
+    public PlatformProxy getPlatformProxy()
     {
         return new SpongePlatformProxyService(this.game);
     }
@@ -125,10 +135,10 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @param config The service
      */
-    @InitHook("config")
-    public void registerConfiguration(Service config)
+    @InitHook(Configuration.class)
+    public void registerConfiguration(Configuration config)
     {
-        ((Configuration) config).registerContainer(SpongeConfiguration.class);
+        config.registerContainer(SpongeConfiguration.class);
     }
 
     /**
@@ -136,8 +146,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("materialRegistry")
-    public Service getMaterialRegistry()
+    @Builder(MaterialRegistry.class)
+    public MaterialRegistry<?> getMaterialRegistry()
     {
         return new MaterialRegistryService<org.spongepowered.api.block.BlockType>();
     }
@@ -147,13 +157,14 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("materialRegistry")
-    public void registerMaterials(Service service)
+    @InitHook(MaterialRegistry.class)
+    public void registerMaterials(MaterialRegistry<?> service)
     {
         @SuppressWarnings("unchecked") MaterialRegistry<org.spongepowered.api.block.BlockType> registry =
                 (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
         for (org.spongepowered.api.block.BlockType m : this.game.getRegistry().getAllOf(BlockType.class))
         {
+            System.out.println(m.getId());
             registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m));
         }
     }
@@ -163,10 +174,10 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("worldRegistry")
-    public Service getWorldRegistry()
+    @Builder(WorldRegistry.class)
+    public WorldRegistry<?> getWorldRegistry()
     {
-        WorldRegistryProvider provider = new WorldRegistryProvider(Gunsmith.<org.spongepowered.api.block.BlockType>getMaterialRegistry(), this.game);
+        WorldRegistryProvider provider = new WorldRegistryProvider(this.game);
         return new WorldRegistryService<org.spongepowered.api.world.World>(provider);
     }
 
@@ -175,8 +186,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("permissionProxy")
-    public Service getPermissionProxy()
+    @Builder(PermissionProxy.class)
+    public PermissionProxy getPermissionProxy()
     {
         return new SpongePermissionProxyService();
     }
@@ -186,8 +197,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("playerRegistry")
-    public Service getPlayerRegistry()
+    @Builder(PlayerRegistry.class)
+    public PlayerRegistry<?> getPlayerRegistry()
     {
         return new PlayerRegistryService<org.spongepowered.api.entity.player.Player>(new PlayerRegistryProvider(this.game), new SpongeConsoleProxy());
     }
@@ -197,10 +208,10 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("eventBus")
-    public void registerEventProxies(Service service)
+    @InitHook(EventBus.class)
+    public void registerEventProxies(EventBus service)
     {
-        this.game.getEventManager().register(VoxelSniperSponge.instance, new SpongeEventHandler());
+        this.game.getEventManager().register(this.plugin, new SpongeEventHandler());
     }
 
     /**
@@ -208,8 +219,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("commandHandler")
-    public void registerCommands(Service service)
+    @InitHook(CommandHandler.class)
+    public void registerCommands(CommandHandler service)
     {
         CommandHandlerService cmd = (CommandHandlerService) service;
         cmd.setRegistrar(new SpongeCommandRegistrar());
@@ -220,10 +231,10 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("scheduler")
-    public Service getSchedulerProxy()
+    @Builder(Scheduler.class)
+    public Scheduler getSchedulerProxy()
     {
-        return new SpongeSchedulerService();
+        return new SpongeSchedulerService(this.plugin, this.game);
     }
 
     /**
@@ -231,8 +242,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("biomeRegistry")
-    public Service getBiomeRegistry()
+    @Builder(BiomeRegistry.class)
+    public BiomeRegistry<?> getBiomeRegistry()
     {
         return new BiomeRegistryService<org.spongepowered.api.world.biome.BiomeType>();
     }
@@ -242,8 +253,8 @@ public class SpongeServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("biomeRegistry")
-    public void registerBiomes(Service service)
+    @InitHook(BiomeRegistry.class)
+    public void registerBiomes(BiomeRegistry<?> service)
     {
         @SuppressWarnings("unchecked") BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> reg =
                 (BiomeRegistry<org.spongepowered.api.world.biome.BiomeType>) service;
@@ -259,31 +270,26 @@ public class SpongeServiceProvider extends ServiceProvider
     public static class WorldRegistryProvider implements RegistryProvider<org.spongepowered.api.world.World, World>
     {
 
-        private MaterialRegistry<org.spongepowered.api.block.BlockType> materials;
         private org.spongepowered.api.Game game;
 
         /**
          * Creates a new {@link com.voxelplugineering.voxelsniper.api.registry.RegistryProvider}
          *
-         * @param mat The material registry
          * @param game The game instance
          */
-        public WorldRegistryProvider(MaterialRegistry<org.spongepowered.api.block.BlockType> mat, org.spongepowered.api.Game game)
+        public WorldRegistryProvider(org.spongepowered.api.Game game)
         {
-            this.materials = mat;
             this.game = game;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Optional<Pair<org.spongepowered.api.world.World, World>> get(String name)
         {
             Optional<org.spongepowered.api.world.World> world = this.game.getServer().getWorld(name);
             if (world.isPresent())
             {
-                SpongeWorld spongeWorld = new SpongeWorld(world.get(), this.materials, Gunsmith.getMainThread());
+                SpongeWorld spongeWorld =
+                        new SpongeWorld(world.get(), Gunsmith.<org.spongepowered.api.block.BlockType>getMaterialRegistry(), Gunsmith.getMainThread());
                 return Optional.of(new Pair<org.spongepowered.api.world.World, World>(world.get(), spongeWorld));
             }
             return Optional.absent();
@@ -308,9 +314,6 @@ public class SpongeServiceProvider extends ServiceProvider
             this.game = g;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Optional<Pair<org.spongepowered.api.entity.player.Player, Player>> get(String name)
         {

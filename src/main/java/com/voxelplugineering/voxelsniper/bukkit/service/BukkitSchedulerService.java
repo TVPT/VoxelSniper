@@ -52,23 +52,17 @@ public class BukkitSchedulerService extends AbstractService implements Scheduler
      */
     public BukkitSchedulerService(org.bukkit.plugin.Plugin plugin)
     {
-        super(11);
+        super(Scheduler.class, 11);
         this.plugin = checkNotNull(plugin);
         this.scheduler = org.bukkit.Bukkit.getScheduler();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "scheduler";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void init()
     {
@@ -76,9 +70,6 @@ public class BukkitSchedulerService extends AbstractService implements Scheduler
         Gunsmith.getLogger().info("Initialized BukkitSchedulerProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -87,9 +78,6 @@ public class BukkitSchedulerService extends AbstractService implements Scheduler
         Gunsmith.getLogger().info("Stopped BukkitSchedulerProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<BukkitTask> startSynchronousTask(Runnable runnable, int interval)
     {
@@ -99,9 +87,6 @@ public class BukkitSchedulerService extends AbstractService implements Scheduler
         return Optional.of(newTask);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<BukkitTask> startAsynchronousTask(Runnable runnable, int interval)
     {
@@ -111,9 +96,6 @@ public class BukkitSchedulerService extends AbstractService implements Scheduler
         return Optional.of(newTask);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stopAllTasks()
     {
@@ -125,9 +107,6 @@ public class BukkitSchedulerService extends AbstractService implements Scheduler
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<BukkitTask> getAllTasks()
     {

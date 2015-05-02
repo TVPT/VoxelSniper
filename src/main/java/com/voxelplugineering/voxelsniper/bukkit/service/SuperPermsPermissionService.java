@@ -40,48 +40,33 @@ public class SuperPermsPermissionService extends AbstractService implements Perm
      */
     public SuperPermsPermissionService()
     {
-        super(7);
+        super(PermissionProxy.class, 7);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "permissionProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
         Gunsmith.getLogger().info("Initialized SuperPermsPermissionProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
         Gunsmith.getLogger().info("Stopped SuperPermsPermissionProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isOp(Player sniper)
     {
         return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {

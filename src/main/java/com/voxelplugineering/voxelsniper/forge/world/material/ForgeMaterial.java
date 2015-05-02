@@ -105,63 +105,42 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implem
         super(block);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString()
     {
         return getThis().getUnlocalizedName().substring(5);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isBlock()
     {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isAffectedByGravity()
     {
         return getThis() instanceof net.minecraft.block.BlockFalling;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isSolid()
     {
         return getThis().getMaterial().isSolid();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isLiquid()
     {
         return getThis().getMaterial().isLiquid();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isReliantOnEnvironment()
     {
         return FALLOFF_MATERIALS.contains(getThis());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {

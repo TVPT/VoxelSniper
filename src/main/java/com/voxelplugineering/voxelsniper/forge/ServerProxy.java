@@ -23,15 +23,13 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import net.minecraft.server.MinecraftServer;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.service.Service;
+import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.service.PlayerRegistryService;
@@ -47,9 +45,6 @@ import com.voxelplugineering.voxelsniper.forge.world.ForgeWorld;
 public class ServerProxy extends CommonProxy
 {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getOnlinePlayerCount()
     {
@@ -61,12 +56,10 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(
-            value = "worldRegistry")
-    public Service getWorldRegistry()
+    @Builder(WorldRegistry.class)
+    public WorldRegistry<?> getWorldRegistry()
     {
-        WorldRegistryProviderServer provider = new WorldRegistryProviderServer(Gunsmith.<net.minecraft.block.Block>getMaterialRegistry());
-        return new WorldRegistryService<net.minecraft.world.World>(provider);
+        return new WorldRegistryService<net.minecraft.world.World>(new WorldRegistryProviderServer());
     }
 
     /**
@@ -74,9 +67,8 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(
-            value = "playerRegistry")
-    public Service getPlayerRegistry()
+    @Builder(PlayerRegistry.class)
+    public PlayerRegistry<?> getPlayerRegistry()
     {
         return new PlayerRegistryService<net.minecraft.entity.player.EntityPlayer>(new SniperRegistryProviderServer(), new ForgeConsoleProxy());
     }
@@ -87,21 +79,6 @@ public class ServerProxy extends CommonProxy
     private class WorldRegistryProviderServer implements RegistryProvider<net.minecraft.world.World, World>
     {
 
-        MaterialRegistry<net.minecraft.block.Block> materials;
-
-        /**
-         * Creates a new WorldRegistryProviderServer
-         * 
-         * @param mat
-         */
-        public WorldRegistryProviderServer(MaterialRegistry<net.minecraft.block.Block> mat)
-        {
-            this.materials = checkNotNull(mat);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Optional<Pair<net.minecraft.world.World, World>> get(String name)
         {
@@ -118,7 +95,8 @@ public class ServerProxy extends CommonProxy
             {
                 return Optional.absent();
             }
-            return Optional.of(new Pair<net.minecraft.world.World, World>(w, new ForgeWorld(w, this.materials)));
+            return Optional.of(new Pair<net.minecraft.world.World, World>(w, new ForgeWorld(w, Gunsmith
+                    .<net.minecraft.block.Block>getMaterialRegistry())));
         }
     }
 
@@ -128,9 +106,6 @@ public class ServerProxy extends CommonProxy
     private class SniperRegistryProviderServer implements RegistryProvider<net.minecraft.entity.player.EntityPlayer, Player>
     {
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Optional<Pair<net.minecraft.entity.player.EntityPlayer, Player>> get(String name)
         {

@@ -24,6 +24,7 @@
 package com.voxelplugineering.voxelsniper.sponge.config;
 
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.world.biome.BiomeTypes;
 
 import com.voxelplugineering.voxelsniper.api.config.AbstractConfigurationContainer;
 
@@ -34,4 +35,5 @@ public class SpongeConfiguration extends AbstractConfigurationContainer
 {
 
     String arrowMaterial = ItemTypes.ARROW.getId();
+    String defaultBiomeName = BiomeTypes.PLAINS.getId();
 }

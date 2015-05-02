@@ -51,45 +51,30 @@ public class ForgeCommand implements net.minecraft.command.ICommand
         this.aliases = cmd.getAllAliases().length == 0 ? Lists.newArrayList() : Lists.newArrayList(cmd.getAllAliases());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(Object arg0)
     {
         return 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return this.cmd.getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getCommandUsage(net.minecraft.command.ICommandSender sender)
     {
         return this.cmd.getHelpMsg();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<?> getAliases()
     {
         return this.aliases;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute(net.minecraft.command.ICommandSender sender, String[] args) throws CommandException
     {
@@ -108,18 +93,12 @@ public class ForgeCommand implements net.minecraft.command.ICommand
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canCommandSenderUse(net.minecraft.command.ICommandSender sender)
     {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<?> addTabCompletionOptions(net.minecraft.command.ICommandSender sender, String[] args, net.minecraft.util.BlockPos pos)
     {
@@ -127,9 +106,6 @@ public class ForgeCommand implements net.minecraft.command.ICommand
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isUsernameIndex(String[] args, int index)
     {

@@ -44,9 +44,6 @@ public class ForgeBiome extends WeakWrapper<BiomeGenBase> implements Biome
         super(biome);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {

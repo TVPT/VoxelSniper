@@ -62,9 +62,6 @@ public class BukkitCommandRegistrar implements CommandRegistrar
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void registerCommand(Command cmd)
     {

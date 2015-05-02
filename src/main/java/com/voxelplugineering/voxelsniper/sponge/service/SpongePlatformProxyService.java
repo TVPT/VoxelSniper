@@ -49,9 +49,6 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
         this.game = checkNotNull(game);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
@@ -59,9 +56,6 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
         Gunsmith.getLogger().info("Initialized SpongePlatformProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -69,36 +63,24 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
         Gunsmith.getLogger().info("Stopped SpongePlatformProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getPlatformName()
     {
         return "Sponge";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getVersion()
     {
         return String.format("%s %s", "Sponge", this.game.getImplementationVersion());//TODO add MC version
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getFullVersion()
     {
         return "Sponge version " + this.game.getImplementationVersion() + " implementing api version " + this.game.getApiVersion();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getNumberOfPlayersOnline()
     {

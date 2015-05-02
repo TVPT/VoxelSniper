@@ -55,18 +55,12 @@ public class SpongeCommand implements CommandCallable
         this.command = cmd;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<String> getSuggestions(org.spongepowered.api.util.command.CommandSource source, String arguments) throws CommandException
     {
         return Lists.newArrayList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException
     {
@@ -92,9 +86,6 @@ public class SpongeCommand implements CommandCallable
         return Optional.of(CommandResult.empty());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean testPermission(org.spongepowered.api.util.command.CommandSource source)
     {
@@ -119,27 +110,18 @@ public class SpongeCommand implements CommandCallable
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Text> getShortDescription(CommandSource source)
     {
         return Optional.<Text>of(Texts.of(this.command.getHelpMsg()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Text> getHelp(CommandSource source)
     {
         return Optional.<Text>of(Texts.of(this.command.getHelpMsg()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Text getUsage(CommandSource source)
     {

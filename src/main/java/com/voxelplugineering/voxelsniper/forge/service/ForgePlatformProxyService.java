@@ -45,9 +45,6 @@ public class ForgePlatformProxyService extends CommonPlatformProxyService
         super(new File(".", "VoxelSniper"));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
@@ -55,9 +52,6 @@ public class ForgePlatformProxyService extends CommonPlatformProxyService
         Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -65,36 +59,24 @@ public class ForgePlatformProxyService extends CommonPlatformProxyService
         Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getPlatformName()
     {
         return "MinecraftForge";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getVersion()
     {
         return MinecraftForge.MC_VERSION;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getFullVersion()
     {
         return MinecraftForge.MC_VERSION;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getNumberOfPlayersOnline()
     {

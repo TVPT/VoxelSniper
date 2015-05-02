@@ -51,22 +51,16 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
      */
     public ForgeSchedulerService()
     {
-        super(11);
+        super(Scheduler.class, 11);
         this.exec = java.util.concurrent.Executors.newCachedThreadPool();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "scheduler";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void init()
     {
@@ -75,9 +69,6 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
         Gunsmith.getLogger().info("Initialized BukkitSchedulerProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -87,9 +78,6 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
         Gunsmith.getLogger().info("Stopped BukkitSchedulerProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<ForgeTask> startSynchronousTask(Runnable runnable, int interval)
     {
@@ -98,9 +86,6 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
         return Optional.of(task);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<ForgeTaskAsync> startAsynchronousTask(Runnable runnable, int interval)
     {
@@ -110,9 +95,6 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
         return Optional.of(task);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stopAllTasks()
     {
@@ -155,9 +137,6 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<? extends Task> getAllTasks()
     {

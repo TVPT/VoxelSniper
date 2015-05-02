@@ -74,18 +74,12 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         this.entitiesCache = new MapMaker().weakKeys().makeMap();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getWorldInfo().getWorldName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
@@ -104,9 +98,6 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         return Optional.absent();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
@@ -117,18 +108,12 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public MaterialRegistry<?> getMaterialRegistry()
     {
         return this.materials;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
@@ -149,9 +134,6 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         return entities;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Chunk> getChunk(int x, int y, int z)
     {
@@ -169,9 +151,6 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         return Optional.<Chunk>of(newChunk);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Biome> getBiome(int x, int y, int z)
     {
@@ -179,9 +158,6 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         return Gunsmith.getBiomeRegistry().getBiome(biome.biomeName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBiome(Biome biome, int x, int y, int z)
     {
@@ -194,9 +170,6 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getChunkSize()
     {

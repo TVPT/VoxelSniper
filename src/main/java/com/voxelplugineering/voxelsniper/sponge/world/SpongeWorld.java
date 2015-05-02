@@ -77,18 +77,12 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         this.worldThread = thread;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
@@ -120,9 +114,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
@@ -137,18 +128,12 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public MaterialRegistry<org.spongepowered.api.block.BlockType> getMaterialRegistry()
     {
         return this.materials;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
@@ -168,9 +153,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         return entities;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Chunk> getChunk(int x, int y, int z)
     {
@@ -200,9 +182,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Biome> getBiome(int x, int y, int z)
     {
@@ -210,9 +189,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         return Gunsmith.getBiomeRegistry().getBiome(biome);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBiome(Biome biome, int x, int y, int z)
     {
@@ -223,9 +199,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public MaterialShape getShapeFromWorld(Location origin, Shape shape)
     {
@@ -256,9 +229,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         return mat;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getChunkSize()
     {

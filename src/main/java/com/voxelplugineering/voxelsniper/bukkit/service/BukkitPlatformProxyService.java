@@ -44,9 +44,6 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
         super(data);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
@@ -54,9 +51,6 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
         Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -64,36 +58,24 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
         Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getPlatformName()
     {
         return org.bukkit.Bukkit.getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getVersion()
     {
         return org.bukkit.Bukkit.getVersion();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getFullVersion()
     {
         return org.bukkit.Bukkit.getBukkitVersion();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getNumberOfPlayersOnline()
     {

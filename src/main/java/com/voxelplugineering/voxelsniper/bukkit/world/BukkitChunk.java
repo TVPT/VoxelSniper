@@ -74,9 +74,6 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         this.max = new Vector3i(chunk.getX() * 16 + 15, 255, chunk.getZ() * 16 + 15);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Block> getBlock(int x, int y, int z)
     {
@@ -94,9 +91,6 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         return Optional.<Block>of(new CommonBlock(l, m.get()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
@@ -111,9 +105,6 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
@@ -134,36 +125,24 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         return entities;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void refreshChunk()
     {
         this.world.getThis().refreshChunk(getThis().getX(), getThis().getZ());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getMinBound()
     {
         return this.min;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getMaxBound()
     {
         return this.max;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getSize()
     {

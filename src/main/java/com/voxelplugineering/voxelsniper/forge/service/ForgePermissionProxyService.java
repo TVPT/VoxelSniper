@@ -42,39 +42,27 @@ public class ForgePermissionProxyService extends AbstractService implements Perm
      */
     public ForgePermissionProxyService()
     {
-        super(7);
+        super(PermissionProxy.class, 7);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "permissionProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
         Gunsmith.getLogger().info("Initialized ForgePermissionProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
         Gunsmith.getLogger().info("Stopped ForgePermissionProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isOp(Player sniper)
     {
@@ -83,9 +71,6 @@ public class ForgePermissionProxyService extends AbstractService implements Perm
                         .getEntry(((ForgePlayer) sniper).getThis().getGameProfile()) != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {

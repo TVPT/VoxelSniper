@@ -53,72 +53,48 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
         super(player);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isPlayer()
     {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
         getThis().sendMessage(Texts.of(msg));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String format, Object... args)
     {
         sendMessage(String.format(format, args));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public double getHealth()
     {
         return getThis().getHealthData().getHealth();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EntityType getType()
     {
         return PLAYER_TYPE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
     {
@@ -126,63 +102,42 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
         return new CommonLocation(getWorld(), position.getX(), position.getY(), position.getZ());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLocation(com.voxelplugineering.voxelsniper.api.world.Location newLocation)
     {
         getThis().setLocation(SpongeUtilities.getSpongeLocation(newLocation));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public UUID getUniqueId()
     {
         return getThis().getUniqueId();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setHealth(double health)
     {
         getThis().getHealthData().setHealth(health);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public double getMaxHealth()
     {
         return getThis().getHealthData().getMaxHealth();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3d getRotation()
     {
         return SpongeUtilities.getGunsmithVector(getThis().getRotation());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setRotation(Vector3d rotation)
     {
         getThis().setRotation(SpongeUtilities.getSpongeVector(rotation));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean remove()
     {

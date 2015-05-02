@@ -49,9 +49,6 @@ public class BukkitConsoleSender implements CommandSender
         this.console = checkNotNull(console, "Console cannot be null");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
@@ -61,18 +58,12 @@ public class BukkitConsoleSender implements CommandSender
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String format, Object... args)
     {
         sendMessage(String.format(format, args));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isPlayer()
     {

@@ -51,9 +51,6 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
         //this.getPersonalBrushManager().addLoader(new DirectoryDataSourceProvider(personalFolder, NBTDataSource.BUILDER));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
@@ -63,90 +60,60 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EntityType getType()
     {
         return BukkitUtilities.getEntityType(org.bukkit.entity.EntityType.PLAYER);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
     {
         return BukkitUtilities.getGunsmithLocation(getThis().getLocation());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLocation(com.voxelplugineering.voxelsniper.api.world.Location newLocation)
     {
         getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public double getHealth()
     {
         return getThis().getHealth();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public UUID getUniqueId()
     {
         return getThis().getUniqueId();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setHealth(double health)
     {
         getThis().setHealth(health);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public double getMaxHealth()
     {
         return getThis().getMaxHealth();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3d getRotation()
     {
@@ -154,9 +121,6 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
         return new Vector3d(location.getYaw(), location.getPitch(), 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setRotation(Vector3d rotation)
     {
@@ -164,9 +128,6 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
         getThis().getLocation().setYaw((float) rotation.getY());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean remove()
     {

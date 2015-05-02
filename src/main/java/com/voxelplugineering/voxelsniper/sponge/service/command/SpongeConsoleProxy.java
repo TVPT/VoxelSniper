@@ -31,27 +31,18 @@ import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 public class SpongeConsoleProxy implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
 {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
         VoxelSniperSponge.instance.getLogger().info(msg);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String format, Object... args)
     {
         sendMessage(String.format(format, args));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isPlayer()
     {

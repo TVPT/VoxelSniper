@@ -62,9 +62,6 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         this.max = new Vector3i(pos.getX() * 16 + 15, 255, pos.getZ() * 16 + 15);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
     {
@@ -82,9 +79,6 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
@@ -99,9 +93,6 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<com.voxelplugineering.voxelsniper.api.entity.Entity> getLoadedEntities()
     {
@@ -121,36 +112,24 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         return entities;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void refreshChunk()
     {
         //TODO Sponge refreshChunk
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getMinBound()
     {
         return this.min;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getMaxBound()
     {
         return this.max;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getSize()
     {

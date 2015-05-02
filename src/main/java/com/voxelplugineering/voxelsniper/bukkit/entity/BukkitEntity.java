@@ -54,63 +54,42 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
         this.type = BukkitUtilities.getEntityType(entity.getType());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getCustomName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EntityType getType()
     {
         return this.type;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Location getLocation()
     {
         return BukkitUtilities.getGunsmithLocation(getThis().getLocation());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLocation(Location newLocation)
     {
         getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public UUID getUniqueId()
     {
         return getThis().getUniqueId();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3d getRotation()
     {
@@ -118,9 +97,6 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
         return new Vector3d(location.getYaw(), location.getPitch(), 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setRotation(Vector3d rotation)
     {
@@ -129,9 +105,6 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
         getThis().getLocation().setYaw((float) rotation.getY());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean remove()
     {

@@ -54,45 +54,30 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
         this.type = ForgeUtilities.getEntityType(entity.getClass());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().worldObj.getProviderName()).get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EntityType getType()
     {
         return this.type;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Location getLocation()
     {
         return new CommonLocation(this.getWorld(), getThis().posX, getThis().posY, getThis().posZ);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLocation(Location loc)
     {
@@ -103,27 +88,18 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public UUID getUniqueId()
     {
         return getThis().getUniqueID();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3d getRotation()
     {
         return new Vector3d(getThis().rotationYaw, getThis().rotationPitch, 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setRotation(Vector3d rotation)
     {
@@ -131,9 +107,6 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
         getThis().rotationPitch = (float) rotation.getY();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean remove()
     {

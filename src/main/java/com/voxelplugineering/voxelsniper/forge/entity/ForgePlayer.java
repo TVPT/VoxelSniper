@@ -52,72 +52,48 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
         super(player);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
         getThis().addChatMessage(new net.minecraft.util.ChatComponentText(msg));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String format, Object... args)
     {
         sendMessage(String.format(format, args));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isPlayer()
     {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public double getHealth()
     {
         return getThis().getHealth();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public World getWorld()
     {
         return Gunsmith.getWorldRegistry().getWorld(getThis().worldObj.getWorldInfo().getWorldName()).orNull();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Location getLocation()
     {
         return new CommonLocation(this.getWorld(), getThis().posX, getThis().posY, getThis().posZ);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLocation(Location newLocation)
     {
@@ -128,54 +104,36 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
         getThis().setPositionAndUpdate(newLocation.getX(), newLocation.getY(), newLocation.getZ());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public UUID getUniqueId()
     {
         return getThis().getUniqueID();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EntityType getType()
     {
         return PLAYER_TYPE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setHealth(double health)
     {
         getThis().setHealth((float) health);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public double getMaxHealth()
     {
         return getThis().getMaxHealth();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3d getRotation()
     {
         return new Vector3d(getThis().rotationYaw, getThis().rotationPitch, 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setRotation(Vector3d rotation)
     {
@@ -183,9 +141,6 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
         getThis().rotationPitch = (float) rotation.getY();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean remove()
     {

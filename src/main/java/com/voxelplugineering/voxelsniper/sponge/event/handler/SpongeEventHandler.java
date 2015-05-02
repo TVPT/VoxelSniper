@@ -96,7 +96,10 @@ public class SpongeEventHandler
     public void onPlayerInteractEvent(org.spongepowered.api.event.entity.player.PlayerInteractEvent event)
     {
         org.spongepowered.api.entity.player.Player p = event.getPlayer();
-        if (!p.getItemInHand().isPresent()) return;
+        if (!p.getItemInHand().isPresent())
+        {
+            return;
+        }
         if (p.getItemInHand().get().getItem() == TOOL_TYPE && event.getInteractionType() == EntityInteractionTypes.USE)
         {
             Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());

@@ -26,16 +26,23 @@ package com.voxelplugineering.voxelsniper.bukkit;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.api.commands.CommandHandler;
 import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
+import com.voxelplugineering.voxelsniper.api.event.bus.EventBus;
 import com.voxelplugineering.voxelsniper.api.logging.LoggingDistributor;
+import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.service.Service;
+import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.service.ServiceManager;
 import com.voxelplugineering.voxelsniper.api.service.ServiceProvider;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.api.util.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
@@ -78,9 +85,6 @@ public class BukkitServiceProvider extends ServiceProvider
         this.plugin = checkNotNull(pl);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void registerNewServices(ServiceManager manager)
     {
@@ -92,10 +96,10 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @param logger The service
      */
-    @InitHook("logger")
-    public void getLogger(Service logger)
+    @InitHook(LoggingDistributor.class)
+    public void getLogger(LoggingDistributor logger)
     {
-        ((LoggingDistributor) logger).registerLogger(new JavaUtilLogger(this.plugin.getLogger()), "bukkit");
+        logger.registerLogger(new JavaUtilLogger(this.plugin.getLogger()), "bukkit");
     }
 
     /**
@@ -103,8 +107,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("formatProxy")
-    public Service getFormatProxy()
+    @Builder(TextFormatParser.class)
+    public TextFormatParser getFormatProxy()
     {
         return new BukkitTextFormatParser();
     }
@@ -114,8 +118,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("platformProxy")
-    public Service getPlatformProxy()
+    @Builder(PlatformProxy.class)
+    public PlatformProxy getPlatformProxy()
     {
         return new BukkitPlatformProxyService(this.plugin.getDataFolder());
     }
@@ -125,10 +129,10 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @param config The service
      */
-    @InitHook("config")
-    public void registerConfiguration(Service config)
+    @InitHook(Configuration.class)
+    public void registerConfiguration(Configuration config)
     {
-        ((Configuration) config).registerContainer(BukkitConfiguration.class);
+        config.registerContainer(BukkitConfiguration.class);
     }
 
     /**
@@ -136,8 +140,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("materialRegistry")
-    public Service getMaterialRegistry()
+    @Builder(MaterialRegistry.class)
+    public MaterialRegistry<?> getMaterialRegistry()
     {
         return new MaterialRegistryService<org.bukkit.Material>();
     }
@@ -147,8 +151,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("materialRegistry")
-    public void registerMaterials(Service service)
+    @InitHook(MaterialRegistry.class)
+    public void registerMaterials(MaterialRegistry<?> service)
     {
         @SuppressWarnings("unchecked") MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
         for (org.bukkit.Material m : org.bukkit.Material.values())
@@ -162,10 +166,10 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("worldRegistry")
-    public Service getWorldRegistry()
+    @Builder(WorldRegistry.class)
+    public WorldRegistry<?> getWorldRegistry()
     {
-        return new WorldRegistryService<org.bukkit.World>(new WorldRegistryProvider(Gunsmith.getMaterialRegistry()));
+        return new WorldRegistryService<org.bukkit.World>(new WorldRegistryProvider());
     }
 
     /**
@@ -173,8 +177,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("permissionProxy")
-    public Service getPermissionProxy()
+    @Builder(PermissionProxy.class)
+    public PermissionProxy getPermissionProxy()
     {
         org.bukkit.plugin.Plugin vault = org.bukkit.Bukkit.getPluginManager().getPlugin("Vault");
         if (vault != null)
@@ -189,8 +193,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("playerRegistry")
-    public Service getPlayerRegistry()
+    @Builder(PlayerRegistry.class)
+    public PlayerRegistry<?> getPlayerRegistry()
     {
         CommandSender console = new BukkitConsoleSender(org.bukkit.Bukkit.getConsoleSender());
         return new PlayerRegistryService<org.bukkit.entity.Player>(new PlayerRegistryProvider(), console);
@@ -201,8 +205,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("eventBus")
-    public void registerEventProxies(Service service)
+    @InitHook(EventBus.class)
+    public void registerEventProxies(EventBus service)
     {
         org.bukkit.Bukkit.getPluginManager().registerEvents(new BukkitEventHandler(), this.plugin);
     }
@@ -212,8 +216,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("commandHandler")
-    public void registerCommands(Service service)
+    @InitHook(CommandHandler.class)
+    public void registerCommands(CommandHandler service)
     {
         CommandHandlerService cmd = (CommandHandlerService) service;
         cmd.setRegistrar(new BukkitCommandRegistrar());
@@ -224,8 +228,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("scheduler")
-    public Service getSchedulerProxy()
+    @Builder(Scheduler.class)
+    public Scheduler getSchedulerProxy()
     {
         return new BukkitSchedulerService(this.plugin);
     }
@@ -235,8 +239,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder("biomeRegistry")
-    public Service getBiomeRegistry()
+    @Builder(BiomeRegistry.class)
+    public BiomeRegistry<?> getBiomeRegistry()
     {
         return new BiomeRegistryService<org.bukkit.block.Biome>();
     }
@@ -246,8 +250,8 @@ public class BukkitServiceProvider extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook("biomeRegistry")
-    public void registerBiomes(Service service)
+    @InitHook(BiomeRegistry.class)
+    public void registerBiomes(BiomeRegistry<?> service)
     {
         @SuppressWarnings("unchecked") BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
         for (org.bukkit.block.Biome b : org.bukkit.block.Biome.values())
@@ -264,23 +268,7 @@ public class BukkitServiceProvider extends ServiceProvider
 class WorldRegistryProvider implements RegistryProvider<org.bukkit.World, World>
 {
 
-    MaterialRegistry<?> materials;
-
-    /**
-     * Creates a new WorldRegistryProvider.
-     * 
-     * @param materials the material registry
-     */
-    public WorldRegistryProvider(MaterialRegistry<?> materials)
-    {
-        this.materials = materials;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    @SuppressWarnings("unchecked")
     public Optional<Pair<org.bukkit.World, World>> get(String name)
     {
         org.bukkit.World world = org.bukkit.Bukkit.getWorld(name);
@@ -288,7 +276,7 @@ class WorldRegistryProvider implements RegistryProvider<org.bukkit.World, World>
         {
             return Optional.absent();
         }
-        return Optional.of(new Pair<org.bukkit.World, World>(world, new BukkitWorld(world, (MaterialRegistry<org.bukkit.Material>) this.materials,
+        return Optional.of(new Pair<org.bukkit.World, World>(world, new BukkitWorld(world, Gunsmith.<org.bukkit.Material>getMaterialRegistry(),
                 Thread.currentThread())));
     }
 
@@ -297,8 +285,8 @@ class WorldRegistryProvider implements RegistryProvider<org.bukkit.World, World>
 class PlayerRegistryProvider implements RegistryProvider<org.bukkit.entity.Player, Player>
 {
 
-    @SuppressWarnings("deprecation")
     @Override
+    @SuppressWarnings("deprecation")
     public Optional<Pair<org.bukkit.entity.Player, Player>> get(String name)
     {
         org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(name);

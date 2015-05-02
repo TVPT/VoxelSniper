@@ -51,9 +51,6 @@ public class BukkitCommand extends org.bukkit.command.Command
         this.cmd = checkNotNull(cmd, "Command cannot be null");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean execute(org.bukkit.command.CommandSender sender, String command, String[] args)
     {

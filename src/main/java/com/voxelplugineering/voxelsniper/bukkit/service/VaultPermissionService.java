@@ -49,21 +49,15 @@ public class VaultPermissionService extends AbstractService implements Permissio
      */
     public VaultPermissionService()
     {
-        super(7);
+        super(PermissionProxy.class, 7);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "permissionProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
@@ -78,9 +72,6 @@ public class VaultPermissionService extends AbstractService implements Permissio
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -88,9 +79,6 @@ public class VaultPermissionService extends AbstractService implements Permissio
         Gunsmith.getLogger().info("Stopped VaultPermissionProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isOp(Player sniper)
     {
@@ -99,9 +87,6 @@ public class VaultPermissionService extends AbstractService implements Permissio
         return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {

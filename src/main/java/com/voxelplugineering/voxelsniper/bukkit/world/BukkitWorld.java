@@ -73,18 +73,12 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         this.worldThread = thread;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return getThis().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Chunk> getChunk(int x, int y, int z)
     {
@@ -93,6 +87,10 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
             return Optional.absent();
         }
         org.bukkit.Chunk chunk = getThis().getChunkAt(x, z);
+        if (chunk == null)
+        {
+            return Optional.absent();
+        }
         if (this.chunks.containsKey(chunk))
         {
             return Optional.of(this.chunks.get(chunk));
@@ -114,9 +112,6 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Block> getBlock(int x, int y, int z)
     {
@@ -148,9 +143,6 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBlock(Material material, int x, int y, int z)
     {
@@ -166,9 +158,6 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Biome> getBiome(int x, int y, int z)
     {
@@ -176,9 +165,6 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         return Gunsmith.getBiomeRegistry().getBiome(biome.name());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setBiome(Biome biome, int x, int y, int z)
     {
@@ -190,18 +176,12 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public MaterialRegistry<?> getMaterialRegistry()
     {
         return this.materials;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<Entity> getLoadedEntities()
     {
@@ -221,9 +201,6 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         return entities;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Vector3i getChunkSize()
     {

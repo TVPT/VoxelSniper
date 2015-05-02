@@ -50,9 +50,6 @@ public class ForgeTask extends Task
         this.scheduler = scheduler;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancel()
     {

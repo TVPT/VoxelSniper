@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -48,19 +47,20 @@ import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
 /**
  * The core class of VoxelSniper for minecraft forge.
  */
-@Mod(
-        modid = "voxelsniperforge", name = "VoxelSniper-Forge", version = "7.0.0", acceptableRemoteVersions = "*", canBeDeactivated = true)
+@Mod(modid = "voxelsniperforge", name = "VoxelSniper-Forge", version = "7.0.0", acceptableRemoteVersions = "*", canBeDeactivated = true)
 public class VoxelSniperForge implements Expansion
 {
 
-    /**
-     * The mod instance.
-     */
-    @Instance(
-            value = "voxelsniperforge") public static VoxelSniperForge voxelsniper;
+    //@formatter:off
+    
+    @Instance(value = "voxelsniperforge")
+    public static VoxelSniperForge voxelsniper;
 
-    @SidedProxy(
-            clientSide = "com.voxelplugineering.voxelsniper.forge.ClientProxy", serverSide = "com.voxelplugineering.voxelsniper.forge.ServerProxy") private static CommonProxy proxy;
+    @SidedProxy(clientSide = "com.voxelplugineering.voxelsniper.forge.ClientProxy",
+                serverSide = "com.voxelplugineering.voxelsniper.forge.ServerProxy")
+    private static CommonProxy proxy;
+
+    //@formatter:on
 
     private Logger logger;
     private boolean disabled = false;
@@ -87,9 +87,9 @@ public class VoxelSniperForge implements Expansion
     }
 
     /**
-     * Server Starting event, this is the location to register commands.
+     * About to start, used to initialize gunsmith for the session.
      * 
-     * @param event the event
+     * @param event The event
      */
     @EventHandler
     public void serverPreStart(FMLServerAboutToStartEvent event)
@@ -105,10 +105,16 @@ public class VoxelSniperForge implements Expansion
         {
             this.disabled = true;
             this.logger.info("Detected Sponge: disabling VoxelSniper-Forge in favour of sponge version.");
-            Loader.instance().runtimeDisableMod("voxelsniperforge");
+            //Apparently calling this throws errors as the mod lists are backed by immutable maps
+            //Loader.instance().runtimeDisableMod("voxelsniperforge");
         }
     }
 
+    /**
+     * Server Starting event, this is the location to register commands.
+     * 
+     * @param event The event
+     */
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
@@ -123,7 +129,9 @@ public class VoxelSniperForge implements Expansion
     }
 
     /**
-     * @param event
+     * If sniper is disabled perform shutdown sequences.
+     * 
+     * @param event The event
      */
     @EventHandler
     public void onDisabled(FMLModDisabledEvent event)
@@ -168,18 +176,12 @@ public class VoxelSniperForge implements Expansion
         return proxy;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void init()
     {
         Gunsmith.getServiceManager().registerServiceProvider(proxy);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stop()
     {

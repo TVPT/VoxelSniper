@@ -26,6 +26,9 @@ package com.voxelplugineering.voxelsniper.sponge.service;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.spongepowered.api.Game;
+import org.spongepowered.api.plugin.PluginContainer;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
@@ -43,27 +46,28 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
     private static final int MILLISECONDS_PER_TICK = 50;
 
     private Map<org.spongepowered.api.service.scheduler.Task, SpongeTask> tasks;
+    private final PluginContainer plugin;
+    private final Game game;
 
     /**
      * Creates a new {@link SpongeSchedulerService}.
+     * 
+     * @param plugin The plugin container
+     * @param game The game
      */
-    public SpongeSchedulerService()
+    public SpongeSchedulerService(PluginContainer plugin, Game game)
     {
-        super(11);
+        super(Scheduler.class, 11);
+        this.plugin = plugin;
+        this.game = game;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "scheduler";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
@@ -71,9 +75,6 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
         Gunsmith.getLogger().info("Initialized SpongeSchedulerProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -82,20 +83,11 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
         Gunsmith.getLogger().info("Stopped SpongeSchedulerProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<SpongeTask> startSynchronousTask(Runnable runnable, int interval)
     {
-        //TODO cleanup this line...
         Optional<org.spongepowered.api.service.scheduler.Task> task =
-                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy())
-                        .getGame()
-                        .getSyncScheduler()
-                        .runRepeatingTask(
-                                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy()).getGame().getPluginManager()
-                                        .getPlugin("voxelsniper-sponge").get(), runnable, interval / MILLISECONDS_PER_TICK);
+                this.game.getSyncScheduler().runRepeatingTask(this.plugin, runnable, interval / MILLISECONDS_PER_TICK);
         if (task.isPresent())
         {
             SpongeTask stask = new SpongeTask(task.get(), runnable, interval);
@@ -105,19 +97,11 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
         return Optional.absent();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<SpongeTask> startAsynchronousTask(Runnable runnable, int interval)
     {
         Optional<org.spongepowered.api.service.scheduler.Task> task =
-                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy())
-                        .getGame()
-                        .getAsyncScheduler()
-                        .runRepeatingTask(
-                                ((SpongePlatformProxyService) Gunsmith.getPlatformProxy()).getGame().getPluginManager()
-                                        .getPlugin("VoxelSniper-Sponge").get(), runnable, TimeUnit.MILLISECONDS, interval / MILLISECONDS_PER_TICK);
+                this.game.getAsyncScheduler().runRepeatingTask(this.plugin, runnable, TimeUnit.MILLISECONDS, interval / MILLISECONDS_PER_TICK);
         if (task.isPresent())
         {
             SpongeTask stask = new SpongeTask(task.get(), runnable, interval);
@@ -127,9 +111,6 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
         return Optional.absent();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stopAllTasks()
     {
@@ -139,9 +120,6 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterable<? extends Task> getAllTasks()
     {

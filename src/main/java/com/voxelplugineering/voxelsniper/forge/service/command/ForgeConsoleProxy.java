@@ -40,27 +40,18 @@ public class ForgeConsoleProxy implements CommandSender
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String msg)
     {
         VoxelSniperForge.voxelsniper.getLogger().info(msg);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void sendMessage(String format, Object... args)
     {
         sendMessage(String.format(format, args));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isPlayer()
     {

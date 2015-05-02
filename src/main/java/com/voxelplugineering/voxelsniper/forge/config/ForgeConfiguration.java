@@ -23,10 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.forge.config;
 
-import com.voxelplugineering.voxelsniper.api.config.AbstractConfigurationContainer;
-
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.world.biome.BiomeGenBase;
+
+import com.voxelplugineering.voxelsniper.api.config.AbstractConfigurationContainer;
 
 /**
  * The default configuration values for forge.
@@ -35,4 +36,5 @@ public class ForgeConfiguration extends AbstractConfigurationContainer
 {
 
     int arrowMaterial = Item.getIdFromItem(Items.arrow);
+    String defaultBiomeName = BiomeGenBase.plains.biomeName;
 }

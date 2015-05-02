@@ -39,12 +39,9 @@ public class SpongeTextFormatService extends AbstractService implements TextForm
      */
     public SpongeTextFormatService()
     {
-        super(0);
+        super(TextFormatParser.class, 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getFormat(TextFormat format)
     {
@@ -98,27 +95,18 @@ public class SpongeTextFormatService extends AbstractService implements TextForm
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "formatProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
         Gunsmith.getLogger().info("Initialized SpongeTextFormat service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {

@@ -41,12 +41,9 @@ public class BukkitTextFormatParser extends AbstractService implements TextForma
      */
     public BukkitTextFormatParser()
     {
-        super(0);
+        super(TextFormatParser.class, 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getFormat(TextFormat format)
     {
@@ -98,27 +95,18 @@ public class BukkitTextFormatParser extends AbstractService implements TextForma
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "formatProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
         Gunsmith.getLogger().info("Initialized BukkitTextFormat service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {

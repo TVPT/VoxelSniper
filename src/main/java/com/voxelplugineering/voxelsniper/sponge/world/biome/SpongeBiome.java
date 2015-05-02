@@ -42,9 +42,6 @@ public class SpongeBiome extends WeakWrapper<org.spongepowered.api.world.biome.B
         super(value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {

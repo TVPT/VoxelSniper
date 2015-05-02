@@ -49,9 +49,6 @@ public class ForgeTaskAsync extends Task implements Runnable
         this.running = true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancel()
     {

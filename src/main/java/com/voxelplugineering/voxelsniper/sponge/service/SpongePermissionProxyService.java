@@ -40,48 +40,33 @@ public class SpongePermissionProxyService extends AbstractService implements Per
      */
     public SpongePermissionProxyService()
     {
-        super(7);
+        super(PermissionProxy.class, 7);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "permissionProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
         Gunsmith.getLogger().info("Initialized SpongePermissionProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
         Gunsmith.getLogger().info("Stopped SpongePermissionProxy service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isOp(Player sniper)
     {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {

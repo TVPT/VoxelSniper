@@ -52,9 +52,6 @@ public class BukkitTask extends Task
         this.task = new WeakReference<org.bukkit.scheduler.BukkitTask>(task);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancel()
     {

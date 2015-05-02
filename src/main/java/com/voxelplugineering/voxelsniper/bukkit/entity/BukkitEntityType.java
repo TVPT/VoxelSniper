@@ -45,18 +45,12 @@ public class BukkitEntityType implements EntityType
         this.type = checkNotNull(type);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return this.type.name();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isAlive()
     {

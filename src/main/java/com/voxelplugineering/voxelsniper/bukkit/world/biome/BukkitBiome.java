@@ -42,9 +42,6 @@ public class BukkitBiome extends WeakWrapper<org.bukkit.block.Biome> implements 
         super(value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {

@@ -35,9 +35,6 @@ import com.voxelplugineering.voxelsniper.sponge.service.SpongePlatformProxyServi
 public class SpongeCommandRegistrar implements CommandRegistrar
 {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void registerCommand(Command command)
     {

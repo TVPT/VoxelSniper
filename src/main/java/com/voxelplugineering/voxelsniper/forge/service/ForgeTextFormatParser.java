@@ -39,12 +39,9 @@ public class ForgeTextFormatParser extends AbstractService implements TextFormat
      */
     public ForgeTextFormatParser()
     {
-        super(0);
+        super(TextFormatParser.class, 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getFormat(TextFormat format)
     {
@@ -97,27 +94,18 @@ public class ForgeTextFormatParser extends AbstractService implements TextFormat
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "formatProxy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
         Gunsmith.getLogger().info("Initialized ForgeTextFormat service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {

@@ -46,18 +46,12 @@ public class ForgeEntityType implements EntityType
         this.type = cls;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return this.type.getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isAlive()
     {

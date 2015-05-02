@@ -56,22 +56,16 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
      */
     public ProvidedMaterialRegistryService(RegistryProvider<T, Material> provider)
     {
-        super(5);
+        super(MaterialRegistry.class, 5);
         this.provider = provider;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName()
     {
         return "materialRegistry";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init()
     {
@@ -81,9 +75,6 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
         Gunsmith.getLogger().info("Initialized MaterialRegistry service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void destroy()
     {
@@ -92,18 +83,12 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
         Gunsmith.getLogger().info("Stopped MaterialRegistry service");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Material getAirMaterial()
     {
         return getMaterial(this.defaultMaterialName).get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Material> getMaterial(String name)
     {
@@ -111,9 +96,6 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
         return this.registry.get(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Material> getMaterial(T material)
     {
@@ -121,9 +103,6 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
         return this.registry.get(material);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void registerMaterial(String name, T object, Material material)
     {
@@ -131,9 +110,6 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
         throw new UnsupportedOperationException("Cannot register with a provided registry");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Material> getMaterials()
     {
