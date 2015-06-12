@@ -33,8 +33,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.sponge.service.scheduler.SpongeTask;
 
 /**
@@ -55,32 +55,24 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
      * @param plugin The plugin container
      * @param game The game
      */
-    public SpongeSchedulerService(PluginContainer plugin, Game game)
+    public SpongeSchedulerService(Context context, PluginContainer plugin, Game game)
     {
-        super(Scheduler.class, 11);
+        super(context);
         this.plugin = plugin;
         this.game = game;
     }
 
     @Override
-    public String getName()
-    {
-        return "scheduler";
-    }
-
-    @Override
-    protected void init()
+    protected void _init()
     {
         this.tasks = new MapMaker().weakKeys().makeMap();
-        Gunsmith.getLogger().info("Initialized SpongeSchedulerProxy service");
     }
 
     @Override
-    protected void destroy()
+    protected void _shutdown()
     {
         stopAllTasks();
         this.tasks = null;
-        Gunsmith.getLogger().info("Stopped SpongeSchedulerProxy service");
     }
 
     @Override

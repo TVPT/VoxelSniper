@@ -26,9 +26,9 @@ package com.voxelplugineering.voxelsniper.forge.service;
 import net.minecraft.server.MinecraftServer;
 
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgePlayer;
 
 /**
@@ -40,41 +40,27 @@ public class ForgePermissionProxyService extends AbstractService implements Perm
     /**
      * Creates a new {@link ForgePermissionProxyService}.
      */
-    public ForgePermissionProxyService()
+    public ForgePermissionProxyService(Context context)
     {
-        super(PermissionProxy.class, 7);
+        super(context);
     }
 
     @Override
-    public String getName()
+    protected void _init()
     {
-        return "permissionProxy";
     }
 
     @Override
-    protected void init()
+    protected void _shutdown()
     {
-        Gunsmith.getLogger().info("Initialized ForgePermissionProxy service");
-    }
-
-    @Override
-    protected void destroy()
-    {
-        Gunsmith.getLogger().info("Stopped ForgePermissionProxy service");
-    }
-
-    @Override
-    public boolean isOp(Player sniper)
-    {
-        return sniper instanceof ForgePlayer
-                && MinecraftServer.getServer().getConfigurationManager().getOppedPlayers()
-                        .getEntry(((ForgePlayer) sniper).getThis().getGameProfile()) != null;
     }
 
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {
-        return isOp(sniper);
+        return sniper instanceof ForgePlayer
+                && MinecraftServer.getServer().getConfigurationManager().getOppedPlayers()
+                        .getEntry(((ForgePlayer) sniper).getThis().getGameProfile()) != null;
     }
 
 }

@@ -29,10 +29,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntityType;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 
 /**
@@ -47,10 +47,10 @@ public final class BukkitUtilities
      * @param location Bukkit's location
      * @return Gunsmith's location
      */
-    public static Location getGunsmithLocation(org.bukkit.Location location)
+    public static Location getGunsmithLocation(org.bukkit.Location location, WorldRegistry<org.bukkit.World> worldReg)
     {
         checkNotNull(location);
-        return new CommonLocation(Gunsmith.getWorldRegistry().getWorld(location.getWorld()).get(), location.getX(), location.getY(), location.getZ());
+        return new CommonLocation(worldReg.getWorld(location.getWorld()).get(), location.getX(), location.getY(), location.getZ());
     }
 
     /**

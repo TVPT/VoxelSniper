@@ -31,6 +31,7 @@ import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.core.world.AbstractChunk;
 import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
@@ -44,6 +45,8 @@ import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
 {
 
+    private final Context context;
+
     private final Vector3i min;
     private final Vector3i max;
     protected static final Vector3i CHUNK_SIZE = new Vector3i(16, 256, 16);
@@ -54,9 +57,10 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
      * @param chunk the chunk to wrap
      * @param world the world that the chunk belongs to
      */
-    public ForgeChunk(net.minecraft.world.chunk.Chunk chunk, World world)
+    public ForgeChunk(net.minecraft.world.chunk.Chunk chunk, World world, Context context)
     {
         super(chunk, world);
+        this.context = context;
         this.min = new Vector3i(chunk.xPosition * 16, 0, chunk.zPosition * 16);
         this.max = new Vector3i(chunk.xPosition * 16 + 15, 255, chunk.zPosition * 16 + 15);
     }
@@ -103,7 +107,7 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
                     entities.add(((ForgeWorld) this.getWorld()).entitiesCache.get(e));
                 } else
                 {
-                    Entity ent = new ForgeEntity(e);
+                    Entity ent = new ForgeEntity(e, this.context);
                     ((ForgeWorld) this.getWorld()).entitiesCache.put(e, ent);
                     entities.add(ent);
                 }

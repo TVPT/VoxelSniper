@@ -23,6 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import java.io.File;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -37,9 +41,11 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
+import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
@@ -48,7 +54,7 @@ import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
  * The core class of VoxelSniper for minecraft forge.
  */
 @Mod(modid = "voxelsniperforge", name = "VoxelSniper-Forge", version = "7.0.0", acceptableRemoteVersions = "*", canBeDeactivated = true)
-public class VoxelSniperForge implements Expansion
+public class VoxelSniperForge
 {
 
     //@formatter:off
@@ -63,6 +69,7 @@ public class VoxelSniperForge implements Expansion
     //@formatter:on
 
     private Logger logger;
+    private File configDir;
     private boolean disabled = false;
 
     /**
@@ -73,6 +80,7 @@ public class VoxelSniperForge implements Expansion
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        this.configDir = event.getModConfigurationDirectory();
         this.logger = event.getModLog();
     }
 
@@ -96,17 +104,23 @@ public class VoxelSniperForge implements Expansion
     {
         if (!SpongeDetector.isSponge())
         {
-            Gunsmith.getExpansionManager().registerExpansion(this);
-            Gunsmith.getServiceManager().initializeServices();
+            Gunsmith.getServiceManager().register(proxy);
+            Gunsmith.getServiceManager().start();
+
+            Context context = Gunsmith.getServiceManager().getContext();
+
+            Optional<GlobalBrushManager> bm = context.get(GlobalBrushManager.class);
+            checkArgument(bm.isPresent(), "GlobalBrushManager service was not found in the current context.");
 
             DefaultBrushBuilder.buildBrushes();
-            DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
+            DefaultBrushBuilder.loadAll(bm.get());
         } else
         {
             this.disabled = true;
             this.logger.info("Detected Sponge: disabling VoxelSniper-Forge in favour of sponge version.");
-            //Apparently calling this throws errors as the mod lists are backed by immutable maps
-            //Loader.instance().runtimeDisableMod("voxelsniperforge");
+            // Apparently calling this throws errors as the mod lists are backed
+            // by immutable maps
+            // Loader.instance().runtimeDisableMod("voxelsniperforge");
         }
     }
 
@@ -120,7 +134,12 @@ public class VoxelSniperForge implements Expansion
     {
         if (!SpongeDetector.isSponge())
         {
-            Optional<CommandRegistrar> registrar = Gunsmith.getCommandHandler().getRegistrar();
+            Context context = Gunsmith.getServiceManager().getContext();
+
+            Optional<CommandHandler> cmd = context.get(CommandHandler.class);
+            checkArgument(cmd.isPresent(), "CommandHandler service was not found in the current context.");
+
+            Optional<CommandRegistrar> registrar = cmd.get().getRegistrar();
             if (registrar.isPresent())
             {
                 ((ForgeCommandRegistrar) registrar.get()).flush(event);
@@ -136,9 +155,9 @@ public class VoxelSniperForge implements Expansion
     @EventHandler
     public void onDisabled(FMLModDisabledEvent event)
     {
-        if (Gunsmith.isEnabled() && !this.disabled)
+        if (Gunsmith.getServiceManager().isInitialized())
         {
-            Gunsmith.getServiceManager().stopServices();
+            Gunsmith.getServiceManager().shutdown();
         }
     }
 
@@ -150,9 +169,9 @@ public class VoxelSniperForge implements Expansion
     @EventHandler
     public void onShutdown(FMLServerStoppingEvent event)
     {
-        if (Gunsmith.isEnabled() && !this.disabled)
+        if (Gunsmith.getServiceManager().isInitialized())
         {
-            Gunsmith.getServiceManager().stopServices();
+            Gunsmith.getServiceManager().shutdown();
         }
     }
 
@@ -176,16 +195,8 @@ public class VoxelSniperForge implements Expansion
         return proxy;
     }
 
-    @Override
-    public void init()
+    public File getConfigDir()
     {
-        Gunsmith.getServiceManager().registerServiceProvider(proxy);
-    }
-
-    @Override
-    public void stop()
-    {
-        // TODO Auto-generated method stub
-
+        return this.configDir;
     }
 }

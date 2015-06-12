@@ -23,11 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.command;
 
-import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
-import com.voxelplugineering.voxelsniper.sponge.service.SpongePlatformProxyService;
 
 /**
  * A command registrar for sponge commands.
@@ -35,11 +34,17 @@ import com.voxelplugineering.voxelsniper.sponge.service.SpongePlatformProxyServi
 public class SpongeCommandRegistrar implements CommandRegistrar
 {
 
+    private final Context context;
+
+    public SpongeCommandRegistrar(Context context)
+    {
+        this.context = context;
+    }
+
     @Override
     public void registerCommand(Command command)
     {
-        SpongeCommand wrapper = new SpongeCommand(command);
-        ((SpongePlatformProxyService) Gunsmith.getPlatformProxy()).getGame().getCommandDispatcher()
-                .register(VoxelSniperSponge.instance, wrapper, command.getAllAliases());
+        SpongeCommand wrapper = new SpongeCommand(this.context, command);
+        VoxelSniperSponge.instance.getGame().getCommandDispatcher().register(VoxelSniperSponge.instance, wrapper, command.getAllAliases());
     }
 }

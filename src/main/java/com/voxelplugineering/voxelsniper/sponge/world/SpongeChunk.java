@@ -31,6 +31,7 @@ import com.voxelplugineering.voxelsniper.api.entity.Entity;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.core.world.AbstractChunk;
 import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
@@ -44,6 +45,8 @@ import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk>
 {
 
+    private final Context context;
+
     private final Vector3i min;
     private final Vector3i max;
     protected static final Vector3i CHUNK_SIZE = new Vector3i(16, 256, 16);
@@ -54,9 +57,10 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
      * @param chunk The chunk to wrap
      * @param world The parent world
      */
-    public SpongeChunk(org.spongepowered.api.world.Chunk chunk, World world)
+    public SpongeChunk(Context context, org.spongepowered.api.world.Chunk chunk, World world)
     {
         super(chunk, world);
+        this.context = context;
         com.flowpowered.math.vector.Vector3i pos = chunk.getPosition();
         this.min = new Vector3i(pos.getX() * 16, 0, pos.getZ() * 16);
         this.max = new Vector3i(pos.getX() * 16 + 15, 255, pos.getZ() * 16 + 15);
@@ -104,7 +108,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
                 entities.add(((SpongeWorld) this.getWorld()).entitiesCache.get(e));
             } else
             {
-                Entity ent = new SpongeEntity(e);
+                Entity ent = new SpongeEntity(this.context, e);
                 ((SpongeWorld) this.getWorld()).entitiesCache.put(e, ent);
                 entities.add(ent);
             }

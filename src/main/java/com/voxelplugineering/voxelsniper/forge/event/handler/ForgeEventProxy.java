@@ -23,6 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.forge.event.handler;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -32,10 +33,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
+import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.core.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperCreateEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperDestroyEvent;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
 
 /**
@@ -45,9 +51,29 @@ public class ForgeEventProxy
 {
 
     private final net.minecraft.item.Item toolMaterial;
+    private final PlayerRegistry<net.minecraft.entity.player.EntityPlayer> pr;
+    private final EventBus bus;
+    private final LoggingDistributor logger;
+    private final ForgeSchedulerService sched;
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public ForgeEventProxy(Context context)
     {
-        int id = Gunsmith.getConfiguration().get("arrowMaterial", int.class).or(Item.getIdFromItem(Items.arrow));
+        Optional<PlayerRegistry> pr = context.get(PlayerRegistry.class);
+        checkArgument(pr.isPresent(), "PlayerRegistry service was not found in the current context.");
+        this.pr = pr.get();
+        Optional<EventBus> bus = context.get(EventBus.class);
+        checkArgument(bus.isPresent(), "EventBus service was not found in the current context.");
+        this.bus = bus.get();
+        Optional<LoggingDistributor> logger = context.get(LoggingDistributor.class);
+        checkArgument(logger.isPresent(), "LoggingDistributor service was not found in the current context.");
+        this.logger = logger.get();
+        Optional<Scheduler> sched = context.get(Scheduler.class);
+        checkArgument(logger.isPresent(), "Scheduler service was not found in the current context.");
+        this.sched = (ForgeSchedulerService) sched.get();
+        Optional<Configuration> conf = context.get(Configuration.class);
+        checkArgument(conf.isPresent(), "Configuration service was not found in the current context.");
+        int id = conf.get().get("arrowMaterial", int.class).or(Item.getIdFromItem(Items.arrow));
         this.toolMaterial = Item.getItemById(id);
     }
 
@@ -59,11 +85,11 @@ public class ForgeEventProxy
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedInEvent event)
     {
-        Optional<Player> s = Gunsmith.<net.minecraft.entity.player.EntityPlayer>getPlayerRegistry().getPlayer(event.player.getName());
+        Optional<Player> s = this.pr.getPlayer(event.player.getName());
         if (s.isPresent())
         {
             SniperCreateEvent sce = new SniperCreateEvent(s.get());
-            Gunsmith.getEventBus().post(sce);
+            this.bus.post(sce);
         }
     }
 
@@ -75,11 +101,11 @@ public class ForgeEventProxy
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedOutEvent event)
     {
-        Optional<Player> s = Gunsmith.<net.minecraft.entity.player.EntityPlayer>getPlayerRegistry().getPlayer(event.player.getName());
+        Optional<Player> s = this.pr.getPlayer(event.player.getName());
         if (s.isPresent())
         {
             SniperDestroyEvent sde = new SniperDestroyEvent(s.get());
-            Gunsmith.getEventBus().post(sde);
+            this.bus.post(sde);
         }
     }
 
@@ -95,15 +121,15 @@ public class ForgeEventProxy
         {
             return;
         }
-        Gunsmith.getLogger().debug("PlayerInteractEvent for " + event.entityPlayer.getName());
+        this.logger.debug("PlayerInteractEvent for " + event.entityPlayer.getName());
         if (event.entityPlayer.getCurrentEquippedItem().getItem() == this.toolMaterial
                 && (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
         {
-            Optional<Player> s = Gunsmith.<net.minecraft.entity.player.EntityPlayer>getPlayerRegistry().getPlayer(event.entityPlayer.getName());
+            Optional<Player> s = this.pr.getPlayer(event.entityPlayer.getName());
             if (s.isPresent())
             {
                 SnipeEvent se = new SnipeEvent(s.get(), event.entityPlayer.rotationYawHead, event.entityPlayer.rotationPitch);
-                Gunsmith.getEventBus().post(se);
+                this.bus.post(se);
             }
         }
     }
@@ -116,6 +142,6 @@ public class ForgeEventProxy
     @SubscribeEvent
     public void onTick(TickEvent.ServerTickEvent event)
     {
-        ((ForgeSchedulerService) Gunsmith.getScheduler()).onTick();
+        this.sched.onTick();
     }
 }

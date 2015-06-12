@@ -34,8 +34,10 @@ import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A proxy command which may be registered with sponge but calls the gunsmith event handler.
@@ -43,6 +45,8 @@ import com.voxelplugineering.voxelsniper.core.commands.Command;
 public class SpongeCommand implements CommandCallable
 {
 
+    private final PlayerRegistry<org.spongepowered.api.entity.player.Player> players;
+    private final PermissionProxy perms;
     private Command command;
 
     /**
@@ -50,8 +54,11 @@ public class SpongeCommand implements CommandCallable
      * 
      * @param cmd The command to wrap
      */
-    public SpongeCommand(Command cmd)
+    @SuppressWarnings("unchecked")
+    public SpongeCommand(Context context, Command cmd)
     {
+        this.players = context.getRequired(PlayerRegistry.class);
+        this.perms = context.getRequired(PermissionProxy.class);
         this.command = cmd;
     }
 
@@ -68,7 +75,7 @@ public class SpongeCommand implements CommandCallable
         if (source instanceof org.spongepowered.api.entity.player.Player)
         {
             org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
-            com.voxelplugineering.voxelsniper.api.entity.Player sniper = Gunsmith.getPlayerRegistry().getPlayer(player.getName()).get();
+            com.voxelplugineering.voxelsniper.api.entity.Player sniper = this.players.getPlayer(player.getName()).get();
             boolean success = this.command.execute(sniper, args);
             if (success)
             {
@@ -76,7 +83,7 @@ public class SpongeCommand implements CommandCallable
             }
         } else if (source instanceof org.spongepowered.api.util.command.source.ConsoleSource)
         {
-            boolean success = this.command.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
+            boolean success = this.command.execute(this.players.getConsoleSniperProxy(), args);
             if (success)
             {
                 return Optional.of(CommandResult.success());
@@ -95,7 +102,7 @@ public class SpongeCommand implements CommandCallable
             org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
             for (String permission : this.command.getPermissions())
             {
-                if (Gunsmith.getPermissionsProxy().hasPermission(Gunsmith.getPlayerRegistry().getPlayer(player.getName()).get(), permission))
+                if (this.perms.hasPermission(this.players.getPlayer(player.getName()).get(), permission))
                 {
                     return true;
                 }

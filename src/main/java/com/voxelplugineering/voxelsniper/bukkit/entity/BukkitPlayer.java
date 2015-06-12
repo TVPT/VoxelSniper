@@ -23,13 +23,18 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.entity;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.UUID;
 
+import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.api.brushes.BrushManager;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 
 /**
@@ -38,17 +43,25 @@ import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
 {
 
+    private final WorldRegistry<org.bukkit.World> worldReg;
+
     /**
      * Creates a new {@link BukkitPlayer}.
      * 
      * @param player the player to wrap, cannot be null
      */
-    public BukkitPlayer(org.bukkit.entity.Player player)
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public BukkitPlayer(org.bukkit.entity.Player player, BrushManager bm, Context context)
     {
-        super(player);
-        //TODO persistence
-        //File personalFolder = new File(Gunsmith.getDataFolder(), "brushes" + File.separator + this.getName());
-        //this.getPersonalBrushManager().addLoader(new DirectoryDataSourceProvider(personalFolder, NBTDataSource.BUILDER));
+        super(player, bm, context);
+        Optional<WorldRegistry> worldReg = context.get(WorldRegistry.class);
+        checkArgument(worldReg.isPresent(), "WorldRegistry service was not found in the current context.");
+        this.worldReg = worldReg.get();
+        // TODO persistence
+        // File personalFolder = new File(Gunsmith.getDataFolder(), "brushes" +
+        // File.separator + this.getName());
+        // this.getPersonalBrushManager().addLoader(new
+        // DirectoryDataSourceProvider(personalFolder, NBTDataSource.BUILDER));
     }
 
     @Override
@@ -63,7 +76,7 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     @Override
     public World getWorld()
     {
-        return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
+        return this.worldReg.getWorld(getThis().getWorld().getName()).get();
     }
 
     @Override
@@ -81,7 +94,7 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     @Override
     public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
     {
-        return BukkitUtilities.getGunsmithLocation(getThis().getLocation());
+        return BukkitUtilities.getGunsmithLocation(getThis().getLocation(), this.worldReg);
     }
 
     @Override

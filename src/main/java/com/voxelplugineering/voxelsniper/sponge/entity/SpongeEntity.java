@@ -30,10 +30,11 @@ import org.spongepowered.api.text.Texts;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.entity.AbstractEntity;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 
@@ -43,6 +44,7 @@ import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.Entity>
 {
 
+    private final WorldRegistry<org.spongepowered.api.world.World> worlds;
     private final EntityType type;
 
     /**
@@ -50,16 +52,18 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
      * 
      * @param entity The entity to wrap
      */
-    public SpongeEntity(org.spongepowered.api.entity.Entity entity)
+    @SuppressWarnings("unchecked")
+    public SpongeEntity(Context context, org.spongepowered.api.entity.Entity entity)
     {
         super(entity);
+        this.worlds = context.getRequired(WorldRegistry.class);
         this.type = SpongeUtilities.getEntityType(entity.getClass());
     }
 
     @Override
     public World getWorld()
     {
-        return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
+        return this.worlds.getWorld(getThis().getWorld().getName()).get();
     }
 
     @Override
@@ -88,7 +92,8 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
     @Override
     public Location getLocation()
     {
-        return SpongeUtilities.fromSpongeLocation(getThis().getLocation()).orNull();
+        //TODO change to exception on fail
+        return SpongeUtilities.fromSpongeLocation(getThis().getLocation(), this.worlds).orNull();
     }
 
     @Override

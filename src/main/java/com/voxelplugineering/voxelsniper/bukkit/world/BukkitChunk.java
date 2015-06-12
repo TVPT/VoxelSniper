@@ -31,6 +31,7 @@ import java.util.Map;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Block;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
@@ -52,6 +53,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
     private final Vector3i min;
     private final Vector3i max;
     private final BukkitWorld world;
+    private final WorldRegistry<org.bukkit.World> worldReg;
 
     /**
      * Creates a new {@link BukkitChunk} wrapping the given {@link org.bukkit.Chunk} .
@@ -59,10 +61,11 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
      * @param chunk the chunk to wrap, cannot be null
      * @param world The world to wrap
      */
-    public BukkitChunk(org.bukkit.Chunk chunk, World world)
+    public BukkitChunk(org.bukkit.Chunk chunk, World world, WorldRegistry<org.bukkit.World> worldReg)
     {
         super(chunk, world);
         checkNotNull(world);
+        this.worldReg = checkNotNull(worldReg);
         if (world instanceof BukkitWorld)
         {
             this.world = (BukkitWorld) world;
@@ -117,7 +120,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
                 entities.add(cache.get(e));
             } else
             {
-                Entity ent = new BukkitEntity(e);
+                Entity ent = new BukkitEntity(e, this.worldReg);
                 cache.put(e, ent);
                 entities.add(ent);
             }

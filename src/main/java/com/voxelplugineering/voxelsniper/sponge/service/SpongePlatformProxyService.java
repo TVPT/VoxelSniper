@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A proxy for sponge-specific runtime values.
@@ -43,24 +43,10 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
      * 
      * @param game The game instance
      */
-    public SpongePlatformProxyService(org.spongepowered.api.Game game)
+    public SpongePlatformProxyService(Context context, org.spongepowered.api.Game game)
     {
-        super(new File("", "VoxelSniper"));
+        super(context, new File("", "VoxelSniper"));
         this.game = checkNotNull(game);
-    }
-
-    @Override
-    protected void init()
-    {
-        super.init();
-        Gunsmith.getLogger().info("Initialized SpongePlatformProxy service");
-    }
-
-    @Override
-    protected void destroy()
-    {
-        super.destroy();
-        Gunsmith.getLogger().info("Stopped SpongePlatformProxy service");
     }
 
     @Override
@@ -72,29 +58,19 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getVersion()
     {
-        return String.format("%s %s", "Sponge", this.game.getImplementationVersion());//TODO add MC version
+        return String.format("%s %s", "Sponge", this.game.getPlatform().getMinecraftVersion());
     }
 
     @Override
     public String getFullVersion()
     {
-        return "Sponge version " + this.game.getImplementationVersion() + " implementing api version " + this.game.getApiVersion();
+        return "Sponge version " + this.game.getPlatform().getVersion() + " implementing api version " + this.game.getPlatform().getApiVersion();
     }
 
     @Override
     public int getNumberOfPlayersOnline()
     {
         return this.game.getServer().getOnlinePlayers().size();
-    }
-
-    /**
-     * Returns sponge's {@link org.spongepowered.api.Game} instance.
-     * 
-     * @return The game
-     */
-    public org.spongepowered.api.Game getGame()
-    {
-        return this.game;
     }
 
 }

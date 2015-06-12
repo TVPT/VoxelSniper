@@ -29,10 +29,13 @@ import org.spongepowered.api.item.ItemTypes;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.core.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperDestroyEvent;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 
 /**
@@ -41,17 +44,23 @@ import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 public class SpongeEventHandler
 {
 
-    private static ItemType TOOL_TYPE;
+    private final PlayerRegistry<org.spongepowered.api.entity.player.Player> players;
+    private final EventBus bus;
+    private final ItemType tool;
 
-    static
+    @SuppressWarnings("unchecked")
+    public SpongeEventHandler(Context context)
     {
-        Optional<String> id = Gunsmith.getConfiguration().get("arrowMaterial", String.class);
+        this.players = context.getRequired(PlayerRegistry.class);
+        this.bus = context.getRequired(EventBus.class);
+        Configuration conf = context.getRequired(Configuration.class);
+        Optional<String> id = conf.get("arrowMaterial", String.class);
         if (id.isPresent())
         {
-            TOOL_TYPE = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, id.get()).or(ItemTypes.ARROW);
+            this.tool = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, id.get()).or(ItemTypes.ARROW);
         } else
         {
-            TOOL_TYPE = ItemTypes.ARROW;
+            this.tool = ItemTypes.ARROW;
         }
     }
 
@@ -63,11 +72,11 @@ public class SpongeEventHandler
     @org.spongepowered.api.event.Subscribe
     public void onPlayerJoin(org.spongepowered.api.event.entity.player.PlayerJoinEvent event)
     {
-        Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer().getName());
+        Optional<Player> s = this.players.getPlayer(event.getEntity().getName());
         if (s.isPresent())
         {
             SniperEvent.SniperCreateEvent sce = new SniperEvent.SniperCreateEvent(s.get());
-            Gunsmith.getEventBus().post(sce);
+            this.bus.post(sce);
         }
     }
 
@@ -79,11 +88,11 @@ public class SpongeEventHandler
     @org.spongepowered.api.event.Subscribe
     public void onPlayerLeave(org.spongepowered.api.event.entity.player.PlayerQuitEvent event)
     {
-        Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
+        Optional<Player> s = this.players.getPlayer(event.getEntity());
         if (s.isPresent())
         {
             SniperEvent.SniperDestroyEvent sde = new SniperEvent.SniperDestroyEvent(s.get());
-            Gunsmith.getEventBus().post(sde);
+            this.bus.post(sde);
         }
     }
 
@@ -95,19 +104,19 @@ public class SpongeEventHandler
     @org.spongepowered.api.event.Subscribe
     public void onPlayerInteractEvent(org.spongepowered.api.event.entity.player.PlayerInteractEvent event)
     {
-        org.spongepowered.api.entity.player.Player p = event.getPlayer();
+        org.spongepowered.api.entity.player.Player p = event.getEntity();
         if (!p.getItemInHand().isPresent())
         {
             return;
         }
-        if (p.getItemInHand().get().getItem() == TOOL_TYPE && event.getInteractionType() == EntityInteractionTypes.USE)
+        if (p.getItemInHand().get().getItem().equals(this.tool) && event.getInteractionType() == EntityInteractionTypes.USE)
         {
-            Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
+            Optional<Player> s = this.players.getPlayer(event.getEntity());
             if (s.isPresent())
             {
                 com.flowpowered.math.vector.Vector3d rotation = p.getRotation(); // {yaw, pitch, roll}
                 SnipeEvent se = new SnipeEvent(s.get(), rotation.getX(), rotation.getY());
-                Gunsmith.getEventBus().post(se);
+                this.bus.post(se);
             }
         }
     }

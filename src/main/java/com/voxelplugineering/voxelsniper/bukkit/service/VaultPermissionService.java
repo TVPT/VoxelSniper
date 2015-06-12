@@ -28,10 +28,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import net.milkbowl.vault.permission.Permission;
 
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A permission proxy for Vault permissions.
@@ -47,25 +47,18 @@ public class VaultPermissionService extends AbstractService implements Permissio
     /**
      * Creates a new {@link VaultPermissionService}.
      */
-    public VaultPermissionService()
+    public VaultPermissionService(Context context)
     {
-        super(PermissionProxy.class, 7);
+        super(context);
     }
 
     @Override
-    public String getName()
-    {
-        return "permissionProxy";
-    }
-
-    @Override
-    protected void init()
+    protected void _init()
     {
         org.bukkit.plugin.RegisteredServiceProvider<Permission> rsp = org.bukkit.Bukkit.getServicesManager().getRegistration(Permission.class);
         if (rsp != null)
         {
             this.permissionService = rsp.getProvider();
-            Gunsmith.getLogger().info("Initialized VaultPermissionProxy service");
         } else
         {
             throw new RuntimeException("Failed to initialized VaultPermissionProxy service");
@@ -73,24 +66,15 @@ public class VaultPermissionService extends AbstractService implements Permissio
     }
 
     @Override
-    protected void destroy()
+    protected void _shutdown()
     {
         this.permissionService = null;
-        Gunsmith.getLogger().info("Stopped VaultPermissionProxy service");
-    }
-
-    @Override
-    public boolean isOp(Player sniper)
-    {
-        check();
-        checkNotNull(sniper, "Sniper cannot be null");
-        return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
     }
 
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {
-        check();
+        check("hasPermission");
         checkNotNull(sniper, "Sniper cannot be null");
         checkNotNull(permission, "Permission cannot be null!");
         checkArgument(!permission.isEmpty(), "Permission cannot be empty");

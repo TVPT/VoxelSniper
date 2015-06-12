@@ -25,8 +25,8 @@ package com.voxelplugineering.voxelsniper.bukkit.service.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandSender;
 
 /**
  * A stripped out {@link Player} implementation to act as a proxy for the console.

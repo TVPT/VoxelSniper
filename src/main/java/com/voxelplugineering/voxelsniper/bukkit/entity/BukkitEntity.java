@@ -28,10 +28,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.UUID;
 
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.entity.AbstractEntity;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 
@@ -42,22 +42,24 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
 {
 
     private final EntityType type;
+    private final WorldRegistry<org.bukkit.World> worldReg;
 
     /**
      * Creates a new entity wrapper.
      *
      * @param entity The entity to wrap
      */
-    public BukkitEntity(org.bukkit.entity.Entity entity)
+    public BukkitEntity(org.bukkit.entity.Entity entity, WorldRegistry<org.bukkit.World> worldReg)
     {
         super(entity);
         this.type = BukkitUtilities.getEntityType(entity.getType());
+        this.worldReg = worldReg;
     }
 
     @Override
     public World getWorld()
     {
-        return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
+        return this.worldReg.getWorld(getThis().getWorld().getName()).get();
     }
 
     @Override
@@ -75,7 +77,7 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
     @Override
     public Location getLocation()
     {
-        return BukkitUtilities.getGunsmithLocation(getThis().getLocation());
+        return BukkitUtilities.getGunsmithLocation(getThis().getLocation(), this.worldReg);
     }
 
     @Override
@@ -102,7 +104,7 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
     {
         checkNotNull(rotation);
         getThis().getLocation().setYaw((float) rotation.getX());
-        getThis().getLocation().setYaw((float) rotation.getY());
+        getThis().getLocation().setPitch((float) rotation.getY());
     }
 
     @Override

@@ -29,10 +29,12 @@ import java.util.concurrent.ExecutorService;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
+import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTask;
 import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTaskAsync;
 
@@ -42,6 +44,8 @@ import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTaskAsync;
 public class ForgeSchedulerService extends AbstractService implements Scheduler
 {
 
+    private final Logger logger;
+
     private List<ForgeTask> tasks;
     private List<ForgeTaskAsync> asyncTasks;
     private ExecutorService exec;
@@ -49,33 +53,26 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
     /**
      * Creates a new {@link ForgeSchedulerService}.
      */
-    public ForgeSchedulerService()
+    public ForgeSchedulerService(Context context)
     {
-        super(Scheduler.class, 11);
+        super(context);
+        this.logger = context.getRequired(LoggingDistributor.class, this);
         this.exec = java.util.concurrent.Executors.newCachedThreadPool();
     }
 
     @Override
-    public String getName()
-    {
-        return "scheduler";
-    }
-
-    @Override
-    public void init()
+    public void _init()
     {
         this.tasks = Lists.newArrayList();
         this.asyncTasks = Lists.newArrayList();
-        Gunsmith.getLogger().info("Initialized BukkitSchedulerProxy service");
     }
 
     @Override
-    protected void destroy()
+    protected void _shutdown()
     {
         stopAllTasks();
         this.tasks = null;
         this.asyncTasks = null;
-        Gunsmith.getLogger().info("Stopped BukkitSchedulerProxy service");
     }
 
     @Override
@@ -89,7 +86,7 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
     @Override
     public Optional<ForgeTaskAsync> startAsynchronousTask(Runnable runnable, int interval)
     {
-        ForgeTaskAsync task = new ForgeTaskAsync(runnable, interval, this);
+        ForgeTaskAsync task = new ForgeTaskAsync(runnable, interval, this, this.logger);
         this.exec.execute(task);
         this.asyncTasks.add(task);
         return Optional.of(task);

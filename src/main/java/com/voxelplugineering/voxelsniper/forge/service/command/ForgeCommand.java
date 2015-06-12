@@ -23,19 +23,26 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service.command;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.List;
 
 import net.minecraft.command.CommandException;
+import net.minecraft.entity.player.EntityPlayer;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A wrapper for gunsmith commands to allow them to be registered into forge.
  */
 public class ForgeCommand implements net.minecraft.command.ICommand
 {
+
+    private final PlayerRegistry<EntityPlayer> players;
 
     private Command cmd;
     private List<?> aliases;
@@ -45,8 +52,12 @@ public class ForgeCommand implements net.minecraft.command.ICommand
      * 
      * @param cmd the Gunsmith command to wrap
      */
-    public ForgeCommand(Command cmd)
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public ForgeCommand(Command cmd, Context context)
     {
+        Optional<PlayerRegistry> pr = context.get(PlayerRegistry.class);
+        checkArgument(pr.isPresent(), "PlayerRegistry service was not found in the current context.");
+        this.players = pr.get();
         this.cmd = cmd;
         this.aliases = cmd.getAllAliases().length == 0 ? Lists.newArrayList() : Lists.newArrayList(cmd.getAllAliases());
     }
@@ -80,7 +91,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     {
         if (sender instanceof net.minecraft.entity.player.EntityPlayer)
         {
-            this.cmd.execute(Gunsmith.getPlayerRegistry().getPlayer(sender.getName()).get(), args);
+            this.cmd.execute(this.players.getPlayer(sender.getName()).get(), args);
         } else
         {
             if (this.cmd.isPlayerOnly())
@@ -88,7 +99,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
                 sender.addChatMessage(new net.minecraft.util.ChatComponentText("Sorry this is a player only command."));
             } else
             {
-                this.cmd.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
+                this.cmd.execute(this.players.getConsoleSniperProxy(), args);
             }
         }
     }

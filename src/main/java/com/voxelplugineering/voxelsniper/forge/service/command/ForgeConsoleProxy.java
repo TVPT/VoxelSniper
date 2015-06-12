@@ -23,7 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service.command;
 
-import com.voxelplugineering.voxelsniper.api.commands.CommandSender;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandSender;
 import com.voxelplugineering.voxelsniper.forge.VoxelSniperForge;
 
 /**

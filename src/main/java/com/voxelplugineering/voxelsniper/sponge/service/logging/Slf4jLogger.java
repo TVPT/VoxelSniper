@@ -23,8 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.logging;
 
-import com.voxelplugineering.voxelsniper.api.logging.LogLevel;
-import com.voxelplugineering.voxelsniper.api.logging.Logger;
+import com.voxelplugineering.voxelsniper.api.service.logging.LogLevel;
+import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
 
 /**
  * A logging proxy for slf4j loggers.

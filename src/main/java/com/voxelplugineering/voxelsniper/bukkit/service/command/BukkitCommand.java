@@ -25,7 +25,7 @@ package com.voxelplugineering.voxelsniper.bukkit.service.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
 
 /**
@@ -34,10 +34,8 @@ import com.voxelplugineering.voxelsniper.core.commands.Command;
 public class BukkitCommand extends org.bukkit.command.Command
 {
 
-    /**
-     * The Gunsmith command underpinning this command.
-     */
-    Command cmd;
+    private final PlayerRegistry<org.bukkit.entity.Player> pr;
+    private final Command cmd;
 
     /**
      * Creates a new {@link BukkitCommand}.
@@ -45,10 +43,11 @@ public class BukkitCommand extends org.bukkit.command.Command
      * @param name the command name, cannot be null or empty
      * @param cmd the command, cannot be null
      */
-    protected BukkitCommand(String name, Command cmd)
+    protected BukkitCommand(String name, Command cmd, PlayerRegistry<org.bukkit.entity.Player> pr)
     {
         super(name);
         this.cmd = checkNotNull(cmd, "Command cannot be null");
+        this.pr = pr;
     }
 
     @Override
@@ -56,7 +55,7 @@ public class BukkitCommand extends org.bukkit.command.Command
     {
         if (sender instanceof org.bukkit.entity.Player)
         {
-            return this.cmd.execute(Gunsmith.getPlayerRegistry().getPlayer(sender.getName()).get(), args);
+            return this.cmd.execute(this.pr.getPlayer(sender.getName()).get(), args);
         } else if (sender instanceof org.bukkit.command.ConsoleCommandSender)
         {
             if (this.cmd.isPlayerOnly())
@@ -64,7 +63,7 @@ public class BukkitCommand extends org.bukkit.command.Command
                 sender.sendMessage("Sorry this is a player only command.");
                 return true;
             }
-            return this.cmd.execute(Gunsmith.getPlayerRegistry().getConsoleSniperProxy(), args);
+            return this.cmd.execute(this.pr.getConsoleSniperProxy(), args);
         } else
         {
             // Could support other senders here if necessary

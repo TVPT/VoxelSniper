@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.world;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +30,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.shape.MaterialShape;
 import com.voxelplugineering.voxelsniper.api.shape.Shape;
 import com.voxelplugineering.voxelsniper.api.world.Block;
@@ -40,8 +39,8 @@ import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.shape.ComplexMaterialShape;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
 import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
@@ -56,7 +55,9 @@ import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World>
 {
 
+    private final Context context;
     private final MaterialRegistry<org.spongepowered.api.block.BlockType> materials;
+    private final BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> biomes;
     private final Thread worldThread;
     private final Map<org.spongepowered.api.world.Chunk, Chunk> chunks;
     protected final Map<org.spongepowered.api.entity.Entity, Entity> entitiesCache;
@@ -68,10 +69,13 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
      * @param materials The material registry for this world
      * @param thread The main thread of this world
      */
-    public SpongeWorld(org.spongepowered.api.world.World world, MaterialRegistry<org.spongepowered.api.block.BlockType> materials, Thread thread)
+    @SuppressWarnings("unchecked")
+    public SpongeWorld(Context context, org.spongepowered.api.world.World world, Thread thread)
     {
-        super(world);
-        this.materials = checkNotNull(materials);
+        super(context, world);
+        this.context = context;
+        this.biomes = context.getRequired(BiomeRegistry.class);
+        this.materials = context.getRequired(MaterialRegistry.class);
         this.chunks = new MapMaker().weakKeys().makeMap();
         this.entitiesCache = new MapMaker().weakKeys().makeMap();
         this.worldThread = thread;
@@ -145,7 +149,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
                 entities.add(this.entitiesCache.get(e));
             } else
             {
-                Entity ent = new SpongeEntity(e);
+                Entity ent = new SpongeEntity(this.context, e);
                 this.entitiesCache.put(e, ent);
                 entities.add(ent);
             }
@@ -165,7 +169,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         {
             return Optional.of(this.chunks.get(chunk));
         }
-        SpongeChunk newChunk = new SpongeChunk(chunk, this);
+        SpongeChunk newChunk = new SpongeChunk(this.context, chunk, this);
         this.chunks.put(chunk, newChunk);
         return Optional.<Chunk>of(newChunk);
     }
@@ -186,7 +190,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     public Optional<Biome> getBiome(int x, int y, int z)
     {
         org.spongepowered.api.world.biome.BiomeType biome = getThis().getBiome(x, z);
-        return Gunsmith.getBiomeRegistry().getBiome(biome);
+        return this.biomes.getBiome(biome);
     }
 
     @Override
@@ -202,7 +206,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     @Override
     public MaterialShape getShapeFromWorld(Location origin, Shape shape)
     {
-        MaterialShape mat = new ComplexMaterialShape(shape, Gunsmith.getMaterialRegistry().getAirMaterial());
+        MaterialShape mat = new ComplexMaterialShape(shape, this.materials.getAirMaterial());
         for (int x = 0; x < shape.getWidth(); x++)
         {
             int ox = x + origin.getFlooredX() - shape.getOrigin().getX();

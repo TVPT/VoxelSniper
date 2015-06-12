@@ -30,22 +30,23 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.commands.CommandHandler;
-import com.voxelplugineering.voxelsniper.api.config.Configuration;
-import com.voxelplugineering.voxelsniper.api.event.bus.EventBus;
-import com.voxelplugineering.voxelsniper.api.logging.LoggingDistributor;
-import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
-import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
-import com.voxelplugineering.voxelsniper.api.registry.BiomeRegistry;
-import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.service.ServiceManager;
-import com.voxelplugineering.voxelsniper.api.service.ServiceProvider;
+import com.voxelplugineering.voxelsniper.api.service.Builder;
+import com.voxelplugineering.voxelsniper.api.service.InitHook;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
+import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
+import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
+import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.service.platform.PlatformProxy;
+import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.util.text.TextFormatParser;
+import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.core.service.logging.Log4jLogger;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.Pair;
 import com.voxelplugineering.voxelsniper.forge.config.ForgeConfiguration;
 import com.voxelplugineering.voxelsniper.forge.event.handler.ForgeEventProxy;
@@ -61,30 +62,16 @@ import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 /**
  * A common proxy for operations common to both server and client side.
  */
-public abstract class CommonProxy extends ServiceProvider
+public abstract class CommonProxy
 {
-
-    /**
-     * 
-     */
-    public CommonProxy()
-    {
-        super(Type.PLATFORM);
-    }
-
-    @Override
-    public void registerNewServices(ServiceManager manager)
-    {
-
-    }
 
     /**
      * Init hook
      * 
      * @param logger The service
      */
-    @InitHook(LoggingDistributor.class)
-    public void getLogger(LoggingDistributor logger)
+    @InitHook(target = LoggingDistributor.class)
+    public void getLogger(Context context, LoggingDistributor logger)
     {
         logger.registerLogger(new Log4jLogger(VoxelSniperForge.voxelsniper.getLogger()), "forge");
     }
@@ -94,10 +81,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(TextFormatParser.class)
-    public TextFormatParser getFormatProxy()
+    @Builder(target = TextFormatParser.class, priority = 0)
+    public TextFormatParser getFormatProxy(Context context)
     {
-        return new ForgeTextFormatParser();
+        return new ForgeTextFormatParser(context);
     }
 
     /**
@@ -105,10 +92,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(PlatformProxy.class)
-    public PlatformProxy getPlatformProxy()
+    @Builder(target = PlatformProxy.class, priority = 4000)
+    public PlatformProxy getPlatformProxy(Context context)
     {
-        return new ForgePlatformProxyService();
+        return new ForgePlatformProxyService(context, VoxelSniperForge.voxelsniper.getConfigDir());
     }
 
     /**
@@ -116,8 +103,8 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @param config The service
      */
-    @InitHook(Configuration.class)
-    public void registerConfiguration(Configuration config)
+    @InitHook(target = Configuration.class)
+    public void registerConfiguration(Context context, Configuration config)
     {
         config.registerContainer(ForgeConfiguration.class);
     }
@@ -127,10 +114,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(MaterialRegistry.class)
-    public MaterialRegistry<?> getMaterialRegistry()
+    @Builder(target = MaterialRegistry.class, priority = 5000)
+    public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
-        return new ProvidedMaterialRegistryService<net.minecraft.block.Block>(new MaterialProvider());
+        return new ProvidedMaterialRegistryService<net.minecraft.block.Block>(context, new MaterialProvider());
     }
 
     /**
@@ -138,10 +125,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(PermissionProxy.class)
-    public PermissionProxy getPermissionProxy()
+    @Builder(target = PermissionProxy.class, priority = 7000)
+    public PermissionProxy getPermissionProxy(Context context)
     {
-        return new ForgePermissionProxyService();
+        return new ForgePermissionProxyService(context);
     }
 
     /**
@@ -149,10 +136,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook(EventBus.class)
-    public void registerEventProxies(EventBus service)
+    @InitHook(target = EventBus.class)
+    public void registerEventProxies(Context context, EventBus service)
     {
-        ForgeEventProxy events = new ForgeEventProxy();
+        ForgeEventProxy events = new ForgeEventProxy(context);
         MinecraftForge.EVENT_BUS.register(events);
         FMLCommonHandler.instance().bus().register(events);
     }
@@ -162,10 +149,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @param cmd The service
      */
-    @InitHook(CommandHandler.class)
-    public void registerCommands(CommandHandler cmd)
+    @InitHook(target = CommandHandler.class)
+    public void registerCommands(Context context, CommandHandler cmd)
     {
-        cmd.setRegistrar(new ForgeCommandRegistrar());
+        cmd.setRegistrar(new ForgeCommandRegistrar(context));
     }
 
     /**
@@ -173,10 +160,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(Scheduler.class)
-    public Scheduler getSchedulerProxy()
+    @Builder(target = Scheduler.class, priority = 11000)
+    public Scheduler getSchedulerProxy(Context context)
     {
-        return new ForgeSchedulerService();
+        return new ForgeSchedulerService(context);
     }
 
     /**
@@ -184,10 +171,10 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @return The service
      */
-    @Builder(BiomeRegistry.class)
-    public BiomeRegistry<?> getBiomeRegistry()
+    @Builder(target = BiomeRegistry.class, priority = 12000)
+    public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
-        return new BiomeRegistryService<net.minecraft.world.biome.BiomeGenBase>();
+        return new BiomeRegistryService<net.minecraft.world.biome.BiomeGenBase>(context);
     }
 
     /**
@@ -195,8 +182,8 @@ public abstract class CommonProxy extends ServiceProvider
      * 
      * @param service The service
      */
-    @InitHook(BiomeRegistry.class)
-    public void registerBiomes(BiomeRegistry<?> service)
+    @InitHook(target = BiomeRegistry.class)
+    public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
         @SuppressWarnings("unchecked") BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg =
                 (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;

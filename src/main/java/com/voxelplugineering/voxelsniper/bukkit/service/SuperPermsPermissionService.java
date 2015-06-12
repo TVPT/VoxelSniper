@@ -24,10 +24,10 @@
 package com.voxelplugineering.voxelsniper.bukkit.service;
 
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
+import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * PermissionProxy for super perms of bukkit.
@@ -38,38 +38,25 @@ public class SuperPermsPermissionService extends AbstractService implements Perm
     /**
      * Creates a new SuperPermsPermissionProxy.
      */
-    public SuperPermsPermissionService()
+    public SuperPermsPermissionService(Context context)
     {
-        super(PermissionProxy.class, 7);
+        super(context);
     }
 
     @Override
-    public String getName()
+    protected void _init()
     {
-        return "permissionProxy";
     }
 
     @Override
-    protected void init()
+    protected void _shutdown()
     {
-        Gunsmith.getLogger().info("Initialized SuperPermsPermissionProxy service");
-    }
-
-    @Override
-    protected void destroy()
-    {
-        Gunsmith.getLogger().info("Stopped SuperPermsPermissionProxy service");
-    }
-
-    @Override
-    public boolean isOp(Player sniper)
-    {
-        return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().isOp();
     }
 
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {
+        check("hasPermission");
         return sniper instanceof BukkitPlayer && ((BukkitPlayer) sniper).getThis().hasPermission(permission);
     }
 

@@ -28,9 +28,10 @@ import java.util.UUID;
 import org.spongepowered.api.text.Texts;
 
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
@@ -41,6 +42,7 @@ import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.player.Player>
 {
 
+    private final WorldRegistry<org.spongepowered.api.world.World> worlds;
     private static final EntityType PLAYER_TYPE = SpongeUtilities.getEntityType(org.spongepowered.api.entity.living.Living.class);
 
     /**
@@ -48,9 +50,11 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
      * 
      * @param player The player to wrap
      */
-    public SpongePlayer(org.spongepowered.api.entity.player.Player player)
+    @SuppressWarnings("unchecked")
+    public SpongePlayer(Context context, org.spongepowered.api.entity.player.Player player)
     {
-        super(player);
+        super(player, context);
+        this.worlds = context.getRequired(WorldRegistry.class);
     }
 
     @Override
@@ -80,7 +84,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public World getWorld()
     {
-        return Gunsmith.getWorldRegistry().getWorld(getThis().getWorld().getName()).get();
+        return this.worlds.getWorld(getThis().getWorld().getName()).get();
     }
 
     @Override

@@ -23,14 +23,19 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.event.handler;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.bukkit.Material;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.core.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperDestroyEvent;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * An event handler for bukkit's events to post the events to Gunsmith from.
@@ -38,14 +43,25 @@ import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperDestroyEve
 public class BukkitEventHandler implements org.bukkit.event.Listener
 {
 
-    private final org.bukkit.Material arrowMaterial = Material.valueOf(Gunsmith.getConfiguration().get("arrowMaterial", String.class).or("ARROW"));
+    private final PlayerRegistry<org.bukkit.entity.Player> pr;
+    private final EventBus bus;
+    private final org.bukkit.Material arrowMaterial;
 
     /**
      * Creates a new {@link BukkitEventHandler}.
      */
-    public BukkitEventHandler()
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public BukkitEventHandler(Context context)
     {
-
+        Optional<PlayerRegistry> pr = context.get(PlayerRegistry.class);
+        checkArgument(pr.isPresent(), "PlayerRegistry service was not found in the current context.");
+        Optional<Configuration> conf = context.get(Configuration.class);
+        checkArgument(conf.isPresent(), "Configuration service was not found in the current context.");
+        Optional<EventBus> bus = context.get(EventBus.class);
+        checkArgument(bus.isPresent(), "EventBus service was not found in the current context.");
+        this.pr = pr.get();
+        this.bus = bus.get();
+        this.arrowMaterial = Material.valueOf(conf.get().get("arrowMaterial", String.class).or("ARROW"));
     }
 
     /**
@@ -56,11 +72,11 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
     {
-        Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer().getName());
+        Optional<Player> s = this.pr.getPlayer(event.getPlayer().getName());
         if (s.isPresent())
         {
             SniperEvent.SniperCreateEvent sce = new SniperEvent.SniperCreateEvent(s.get());
-            Gunsmith.getEventBus().post(sce);
+            this.bus.post(sce);
         }
     }
 
@@ -72,11 +88,11 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     @org.bukkit.event.EventHandler
     public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event)
     {
-        Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
+        Optional<Player> s = this.pr.getPlayer(event.getPlayer());
         if (s.isPresent())
         {
             SniperEvent.SniperDestroyEvent sde = new SniperEvent.SniperDestroyEvent(s.get());
-            Gunsmith.getEventBus().post(sde);
+            this.bus.post(sde);
         }
     }
 
@@ -91,11 +107,11 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
         org.bukkit.entity.Player p = event.getPlayer();
         if (p.getItemInHand().getType() == this.arrowMaterial && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR))
         {
-            Optional<Player> s = Gunsmith.getPlayerRegistry().getPlayer(event.getPlayer());
+            Optional<Player> s = this.pr.getPlayer(event.getPlayer());
             if (s.isPresent())
             {
                 SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch());
-                Gunsmith.getEventBus().post(se);
+                this.bus.post(se);
             }
         }
     }

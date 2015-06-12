@@ -28,9 +28,9 @@ import java.util.Map;
 import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
@@ -109,11 +109,12 @@ public class SpongeUtilities
      * @param location The location
      * @return The gunsmith location
      */
-    public static Optional<Location> fromSpongeLocation(org.spongepowered.api.world.Location location)
+    public static Optional<Location> fromSpongeLocation(org.spongepowered.api.world.Location location,
+            WorldRegistry<org.spongepowered.api.world.World> worlds)
     {
         if (location.getExtent() instanceof World)
         {
-            Optional<World> world = Gunsmith.getWorldRegistry().getWorld(((org.spongepowered.api.world.World) location.getExtent()).getName());
+            Optional<World> world = worlds.getWorld(((org.spongepowered.api.world.World) location.getExtent()).getName());
             if (!world.isPresent())
             {
                 return Optional.absent();

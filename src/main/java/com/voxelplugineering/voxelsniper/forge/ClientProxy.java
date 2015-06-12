@@ -25,13 +25,14 @@ package com.voxelplugineering.voxelsniper.forge;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.registry.PlayerRegistry;
-import com.voxelplugineering.voxelsniper.api.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.api.service.Builder;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.RegistryProvider;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.service.PlayerRegistryService;
 import com.voxelplugineering.voxelsniper.core.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.Pair;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgePlayer;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeConsoleProxy;
@@ -54,10 +55,10 @@ public class ClientProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(WorldRegistry.class)
-    public WorldRegistry<?> getWorldRegistry()
+    @Builder(target = WorldRegistry.class, priority = 6000)
+    public WorldRegistry<?> getWorldRegistry(Context context)
     {
-        return new WorldRegistryService<net.minecraft.world.World>(new WorldRegistryProviderClient());
+        return new WorldRegistryService<net.minecraft.world.World>(context, new WorldRegistryProviderClient(context));
     }
 
     /**
@@ -65,10 +66,11 @@ public class ClientProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(PlayerRegistry.class)
-    public PlayerRegistry<?> getPlayerRegistry()
+    @Builder(target = PlayerRegistry.class, priority = 8000)
+    public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
-        return new PlayerRegistryService<net.minecraft.entity.player.EntityPlayer>(new SniperRegistryProviderClient(), new ForgeConsoleProxy());
+        return new PlayerRegistryService<net.minecraft.entity.player.EntityPlayer>(context, new SniperRegistryProviderClient(context),
+                new ForgeConsoleProxy());
     }
 
     /**
@@ -76,6 +78,13 @@ public class ClientProxy extends CommonProxy
      */
     private class WorldRegistryProviderClient implements RegistryProvider<net.minecraft.world.World, World>
     {
+
+        private final Context context;
+
+        private WorldRegistryProviderClient(Context context)
+        {
+            this.context = context;
+        }
 
         @Override
         public Optional<Pair<net.minecraft.world.World, World>> get(String name)
@@ -93,8 +102,7 @@ public class ClientProxy extends CommonProxy
             {
                 return Optional.absent();
             }
-            return Optional.of(new Pair<net.minecraft.world.World, World>(w, new ForgeWorld(w, Gunsmith
-                    .<net.minecraft.block.Block>getMaterialRegistry())));
+            return Optional.of(new Pair<net.minecraft.world.World, World>(w, new ForgeWorld(this.context, w)));
         }
 
     }
@@ -104,6 +112,13 @@ public class ClientProxy extends CommonProxy
      */
     private class SniperRegistryProviderClient implements RegistryProvider<net.minecraft.entity.player.EntityPlayer, Player>
     {
+
+        private final Context context;
+
+        public SniperRegistryProviderClient(Context context)
+        {
+            this.context = context;
+        }
 
         @Override
         public Optional<Pair<net.minecraft.entity.player.EntityPlayer, Player>> get(String name)
@@ -122,7 +137,7 @@ public class ClientProxy extends CommonProxy
             {
                 return Optional.absent();
             }
-            return Optional.of(new Pair<net.minecraft.entity.player.EntityPlayer, Player>(player, new ForgePlayer(player)));
+            return Optional.of(new Pair<net.minecraft.entity.player.EntityPlayer, Player>(player, new ForgePlayer(player, this.context)));
         }
 
     }

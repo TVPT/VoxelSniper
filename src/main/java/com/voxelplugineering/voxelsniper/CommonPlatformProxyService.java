@@ -23,25 +23,30 @@
  */
 package com.voxelplugineering.voxelsniper;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSource;
+import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceFactory;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceProvider;
 import com.voxelplugineering.voxelsniper.api.service.persistence.DataSourceReader;
+import com.voxelplugineering.voxelsniper.api.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
 import com.voxelplugineering.voxelsniper.core.service.persistence.DirectoryDataSourceProvider;
 import com.voxelplugineering.voxelsniper.core.service.persistence.FileDataSource;
 import com.voxelplugineering.voxelsniper.core.service.persistence.JsonDataSourceReader;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A common platform proxy service.
  */
 public abstract class CommonPlatformProxyService extends AbstractService implements PlatformProxy
 {
+
+    private final DataSourceFactory factory;
 
     private DataSource metricsConf;
     private DataSourceProvider brushDataSource;
@@ -54,37 +59,35 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
      * 
      * @param dir The root directory
      */
-    public CommonPlatformProxyService(File dir)
+    public CommonPlatformProxyService(Context context, File dir)
     {
-        super(PlatformProxy.class, 4);
+        super(context);
         this.rootDir = checkNotNull(dir);
+        Optional<DataSourceFactory> factory = context.get(DataSourceFactory.class);
+        checkArgument(factory.isPresent(), "DataSourceFactory service was not found in the current context.");
+        this.factory = factory.get();
+        this.factory.addDependent(this);
     }
 
     @Override
-    protected void init()
+    protected void _init()
     {
         this.rootDir.mkdirs();
-        this.root = new DirectoryDataSourceProvider(this.rootDir);
+        this.root = new DirectoryDataSourceProvider(this.rootDir, this.factory);
         this.metricsConf = new FileDataSource(new File(this.rootDir.getParentFile(), "PluginMetrics/config.yml"));
         File brushes = new File(this.rootDir, "brushes");
         brushes.mkdirs();
-        this.brushDataSource = new DirectoryDataSourceProvider(brushes);
+        this.brushDataSource = new DirectoryDataSourceProvider(brushes, this.factory);
         this.config = new JsonDataSourceReader(new FileDataSource(new File(this.rootDir, "VoxelSniperConfiguration.json")));
     }
 
     @Override
-    protected void destroy()
+    protected void _shutdown()
     {
         this.metricsConf = null;
         this.brushDataSource = null;
         this.config = null;
         this.root = null;
-    }
-
-    @Override
-    public String getName()
-    {
-        return "platformProxy";
     }
 
     @Override

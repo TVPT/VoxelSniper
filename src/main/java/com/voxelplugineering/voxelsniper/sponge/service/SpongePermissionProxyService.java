@@ -24,9 +24,9 @@
 package com.voxelplugineering.voxelsniper.sponge.service;
 
 import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.permissions.PermissionProxy;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
 
 /**
@@ -38,33 +38,19 @@ public class SpongePermissionProxyService extends AbstractService implements Per
     /**
      * Creates a new SuperPermsPermissionProxy.
      */
-    public SpongePermissionProxyService()
+    public SpongePermissionProxyService(Context context)
     {
-        super(PermissionProxy.class, 7);
+        super(context);
     }
 
     @Override
-    public String getName()
+    protected void _init()
     {
-        return "permissionProxy";
     }
 
     @Override
-    protected void init()
+    protected void _shutdown()
     {
-        Gunsmith.getLogger().info("Initialized SpongePermissionProxy service");
-    }
-
-    @Override
-    protected void destroy()
-    {
-        Gunsmith.getLogger().info("Stopped SpongePermissionProxy service");
-    }
-
-    @Override
-    public boolean isOp(Player sniper)
-    {
-        return false;
     }
 
     @Override

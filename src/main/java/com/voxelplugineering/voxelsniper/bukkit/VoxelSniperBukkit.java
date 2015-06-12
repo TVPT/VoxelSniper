@@ -23,14 +23,18 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
-import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
 
 /**
  * The Main class for the bukkit specific implementation.
  */
-public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin implements Expansion
+public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin
 {
 
     /**
@@ -44,11 +48,16 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin impleme
     @Override
     public void onEnable()
     {
-        Gunsmith.getExpansionManager().registerExpansion(this);
-        Gunsmith.getServiceManager().initializeServices();
+        Gunsmith.getServiceManager().register(new BukkitServiceProvider(this));
+        Gunsmith.getServiceManager().start();
+
+        Context context = Gunsmith.getServiceManager().getContext();
+
+        Optional<GlobalBrushManager> bm = context.get(GlobalBrushManager.class);
+        checkArgument(bm.isPresent(), "GlobalBrushManager service was not found in the current context.");
 
         DefaultBrushBuilder.buildBrushes();
-        DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
+        DefaultBrushBuilder.loadAll(bm.get());
     }
 
     /**
@@ -57,22 +66,10 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin impleme
     @Override
     public void onDisable()
     {
-        if (Gunsmith.isEnabled())
+        if (Gunsmith.getServiceManager().isInitialized())
         {
-            Gunsmith.getServiceManager().stopServices();
+            Gunsmith.getServiceManager().shutdown();
         }
-    }
-
-    @Override
-    public void init()
-    {
-        Gunsmith.getServiceManager().registerServiceProvider(new BukkitServiceProvider(this));
-    }
-
-    @Override
-    public void stop()
-    {
-
     }
 
 }

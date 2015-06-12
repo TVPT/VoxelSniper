@@ -29,7 +29,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * The platform proxy for minecraft forge.
@@ -40,23 +40,9 @@ public class ForgePlatformProxyService extends CommonPlatformProxyService
     /**
      * Creates a new {@link ForgePlatformProxyService}.
      */
-    public ForgePlatformProxyService()
+    public ForgePlatformProxyService(Context context, File file)
     {
-        super(new File(".", "VoxelSniper"));
-    }
-
-    @Override
-    protected void init()
-    {
-        super.init();
-        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
-    }
-
-    @Override
-    protected void destroy()
-    {
-        super.destroy();
-        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
+        super(context, file);
     }
 
     @Override

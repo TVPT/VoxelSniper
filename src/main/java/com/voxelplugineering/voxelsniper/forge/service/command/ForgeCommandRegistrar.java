@@ -28,8 +28,9 @@ import java.util.List;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A command registrar for registering Gunsmith commands into forge. Commands may only be registered
@@ -38,12 +39,18 @@ import com.voxelplugineering.voxelsniper.core.commands.Command;
 public class ForgeCommandRegistrar implements CommandRegistrar
 {
 
-    List<ForgeCommand> pending = Lists.newArrayList();
+    private final Context context;
+    private List<ForgeCommand> pending = Lists.newArrayList();
+
+    public ForgeCommandRegistrar(Context context)
+    {
+        this.context = context;
+    }
 
     @Override
     public synchronized void registerCommand(Command command)
     {
-        ForgeCommand cmd = new ForgeCommand(command);
+        ForgeCommand cmd = new ForgeCommand(command, this.context);
         this.pending.add(cmd);
     }
 

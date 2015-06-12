@@ -23,13 +23,18 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
 
@@ -67,17 +72,21 @@ public class VoxelSniperSponge implements Expansion
     {
         instance = this;
 
-        Gunsmith.getExpansionManager().registerExpansion(this);
-        Gunsmith.getServiceManager().initializeServices();
+        Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.logger));
+        Gunsmith.getServiceManager().start();
+
+        Context context = Gunsmith.getServiceManager().getContext();
+
+        Optional<GlobalBrushManager> bm = context.get(GlobalBrushManager.class);
+        checkArgument(bm.isPresent(), "GlobalBrushManager service was not found in the current context.");
 
         DefaultBrushBuilder.buildBrushes();
-        DefaultBrushBuilder.loadAll(Gunsmith.getGlobalBrushManager());
+        DefaultBrushBuilder.loadAll(bm.get());
     }
 
     @Override
     public void init()
     {
-        Gunsmith.getServiceManager().registerServiceProvider(new SpongeServiceProvider(this.game, this.plugin, this.logger));
     }
 
     @Override
@@ -94,9 +103,9 @@ public class VoxelSniperSponge implements Expansion
     @Subscribe
     public void onServerStop(org.spongepowered.api.event.state.ServerStoppingEvent event)
     {
-        if (Gunsmith.isEnabled())
+        if (Gunsmith.getServiceManager().isInitialized())
         {
-            Gunsmith.getServiceManager().stopServices();
+            Gunsmith.getServiceManager().shutdown();
         }
     }
 

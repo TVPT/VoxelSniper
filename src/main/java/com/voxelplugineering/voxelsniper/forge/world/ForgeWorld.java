@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.world;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +33,14 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
 import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
@@ -56,7 +55,10 @@ import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 public class ForgeWorld extends AbstractWorld<WorldServer>
 {
 
-    private MaterialRegistry<net.minecraft.block.Block> materials;
+    private final MaterialRegistry<net.minecraft.block.Block> materials;
+    private final BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> biomes;
+    private final Context context;
+
     private final Map<net.minecraft.world.chunk.Chunk, Chunk> chunks;
     protected final Map<net.minecraft.entity.Entity, Entity> entitiesCache;
 
@@ -64,12 +66,14 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
      * Creates a new {@link ForgeWorld}.
      * 
      * @param world the world to wrap
-     * @param materials the material registry for this world
      */
-    public ForgeWorld(WorldServer world, MaterialRegistry<net.minecraft.block.Block> materials)
+    @SuppressWarnings("unchecked")
+    public ForgeWorld(Context context, WorldServer world)
     {
-        super(world);
-        this.materials = checkNotNull(materials);
+        super(context, world);
+        this.context = context;
+        this.biomes = context.getRequired(BiomeRegistry.class);
+        this.materials = context.getRequired(MaterialRegistry.class);
         this.chunks = new MapMaker().weakKeys().makeMap();
         this.entitiesCache = new MapMaker().weakKeys().makeMap();
     }
@@ -126,7 +130,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
                 entities.add(this.entitiesCache.get(e));
             } else
             {
-                Entity ent = new ForgeEntity(e);
+                Entity ent = new ForgeEntity(e, this.context);
                 this.entitiesCache.put(e, ent);
                 entities.add(ent);
             }
@@ -146,7 +150,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         {
             return Optional.of(this.chunks.get(chunk));
         }
-        ForgeChunk newChunk = new ForgeChunk(chunk, this);
+        ForgeChunk newChunk = new ForgeChunk(chunk, this, this.context);
         this.chunks.put(chunk, newChunk);
         return Optional.<Chunk>of(newChunk);
     }
@@ -155,7 +159,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     public Optional<Biome> getBiome(int x, int y, int z)
     {
         BiomeGenBase biome = getThis().getBiomeGenForCoords(new net.minecraft.util.BlockPos(x, y, z));
-        return Gunsmith.getBiomeRegistry().getBiome(biome.biomeName);
+        return this.biomes.getBiome(biome.biomeName);
     }
 
     @Override

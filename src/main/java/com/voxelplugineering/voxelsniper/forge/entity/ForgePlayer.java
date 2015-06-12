@@ -26,10 +26,11 @@ package com.voxelplugineering.voxelsniper.forge.entity;
 import java.util.UUID;
 
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.forge.util.ForgeUtilities;
@@ -41,15 +42,18 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
 {
 
     private static final EntityType PLAYER_TYPE = ForgeUtilities.getEntityType(net.minecraft.entity.player.EntityPlayer.class);
+    private final WorldRegistry<org.bukkit.World> worldReg;
 
     /**
      * Creates a new {@link ForgePlayer}.
      * 
      * @param player the player to wrap
      */
-    public ForgePlayer(net.minecraft.entity.player.EntityPlayer player)
+    @SuppressWarnings("unchecked")
+    public ForgePlayer(net.minecraft.entity.player.EntityPlayer player, Context context)
     {
-        super(player);
+        super(player, context);
+        this.worldReg = context.getRequired(WorldRegistry.class);
     }
 
     @Override
@@ -85,7 +89,7 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     @Override
     public World getWorld()
     {
-        return Gunsmith.getWorldRegistry().getWorld(getThis().worldObj.getWorldInfo().getWorldName()).orNull();
+        return this.worldReg.getWorld(getThis().worldObj.getWorldInfo().getWorldName()).orNull();
     }
 
     @Override

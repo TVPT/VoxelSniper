@@ -27,12 +27,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.Field;
 
-import javax.activation.CommandMap;
-
-import com.voxelplugineering.voxelsniper.api.commands.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
+import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
+import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.bukkit.util.CraftBukkitFetcher;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A registrar for registering Gunsmith command within the bukkit command handler.
@@ -40,17 +41,17 @@ import com.voxelplugineering.voxelsniper.core.commands.Command;
 public class BukkitCommandRegistrar implements CommandRegistrar
 {
 
-    /**
-     * A reference to bukkit's {@link CommandMap}.
-     */
+    private final PlayerRegistry<org.bukkit.entity.Player> pr;
     private org.bukkit.command.CommandMap commands;
 
     /**
      * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's CommandMap via reflection
      * for use to register commands.
      */
-    public BukkitCommandRegistrar()
+    @SuppressWarnings("unchecked")
+    public BukkitCommandRegistrar(Context context)
     {
+        this.pr = context.getRequired(PlayerRegistry.class);
         try
         {
             Field cmap = Class.forName(CraftBukkitFetcher.CRAFTBUKKIT_PACKAGE + ".CraftServer").getDeclaredField("commandMap");
@@ -58,7 +59,8 @@ public class BukkitCommandRegistrar implements CommandRegistrar
             this.commands = (org.bukkit.command.CommandMap) cmap.get(org.bukkit.Bukkit.getServer());
         } catch (Exception e)
         {
-            Gunsmith.getLogger().error(e, "Error setting up bukkit command registrar");
+            Logger logger = context.getRequired(LoggingDistributor.class);
+            logger.error(e, "Error setting up bukkit command registrar");
         }
     }
 
@@ -66,11 +68,11 @@ public class BukkitCommandRegistrar implements CommandRegistrar
     public void registerCommand(Command cmd)
     {
         checkNotNull(cmd);
-        BukkitCommand bcmd = new BukkitCommand(cmd.getName(), cmd);
+        BukkitCommand bcmd = new BukkitCommand(cmd.getName(), cmd, this.pr);
         this.commands.register("voxelsniper", bcmd);
         for (String alias : cmd.getAllAliases())
         {
-            bcmd = new BukkitCommand(alias, cmd);
+            bcmd = new BukkitCommand(alias, cmd, this.pr);
             this.commands.register("voxelsniper", bcmd);
         }
     }

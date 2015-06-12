@@ -32,7 +32,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Block;
 import com.voxelplugineering.voxelsniper.api.world.Chunk;
 import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
@@ -40,7 +42,7 @@ import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
 import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
@@ -56,18 +58,22 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     private final Map<org.bukkit.Chunk, Chunk> chunks;
     private final Map<org.bukkit.entity.Entity, Entity> entitiesCache;
     private final Thread worldThread;
+    private final WorldRegistry<org.bukkit.World> worldReg;
+    private final BiomeRegistry<org.bukkit.block.Biome> biomes;
 
     /**
      * Creates a new {@link BukkitWorld}.
      * 
      * @param world the world
-     * @param materialRegistry the registry
      * @param thread The world Thread
      */
-    public BukkitWorld(org.bukkit.World world, MaterialRegistry<org.bukkit.Material> materialRegistry, Thread thread)
+    @SuppressWarnings("unchecked")
+    public BukkitWorld(Context context, org.bukkit.World world, Thread thread)
     {
-        super(world);
-        this.materials = checkNotNull(materialRegistry);
+        super(context, world);
+        this.materials = context.getRequired(MaterialRegistry.class);
+        this.worldReg = context.getRequired(WorldRegistry.class);
+        this.biomes = context.getRequired(BiomeRegistry.class);
         this.chunks = new MapMaker().weakKeys().makeMap();
         this.entitiesCache = new MapMaker().weakKeys().makeMap();
         this.worldThread = thread;
@@ -95,7 +101,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         {
             return Optional.of(this.chunks.get(chunk));
         }
-        BukkitChunk newChunk = new BukkitChunk(chunk, this);
+        BukkitChunk newChunk = new BukkitChunk(chunk, this, this.worldReg);
         this.chunks.put(chunk, newChunk);
         return Optional.<Chunk>of(newChunk);
     }
@@ -162,7 +168,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     public Optional<Biome> getBiome(int x, int y, int z)
     {
         org.bukkit.block.Biome biome = getThis().getBiome(x, z);
-        return Gunsmith.getBiomeRegistry().getBiome(biome.name());
+        return this.biomes.getBiome(biome.name());
     }
 
     @Override
@@ -193,7 +199,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
                 entities.add(this.entitiesCache.get(e));
             } else
             {
-                Entity ent = new BukkitEntity(e);
+                Entity ent = new BukkitEntity(e, this.worldReg);
                 this.entitiesCache.put(e, ent);
                 entities.add(ent);
             }

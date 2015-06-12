@@ -26,7 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit.service;
 import java.io.File;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A proxy for Bukkit's platform.
@@ -39,23 +39,19 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
      * 
      * @param data The data folder
      */
-    public BukkitPlatformProxyService(File data)
+    public BukkitPlatformProxyService(Context context, File data)
     {
-        super(data);
+        super(context, data);
     }
 
     @Override
-    protected void init()
+    protected void _init()
     {
-        super.init();
-        Gunsmith.getLogger().info("Initialized BukkitPlatformProxy service");
     }
 
     @Override
-    protected void destroy()
+    protected void _shutdown()
     {
-        super.destroy();
-        Gunsmith.getLogger().info("Stopped BukkitPlatformProxy service");
     }
 
     @Override

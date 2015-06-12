@@ -28,7 +28,7 @@ import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 /**
  * A proxy for sponge's server console.
  */
-public class SpongeConsoleProxy implements com.voxelplugineering.voxelsniper.api.commands.CommandSender
+public class SpongeConsoleProxy implements com.voxelplugineering.voxelsniper.api.service.command.CommandSender
 {
 
     @Override

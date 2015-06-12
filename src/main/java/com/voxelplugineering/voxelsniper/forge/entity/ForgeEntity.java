@@ -23,13 +23,17 @@
  */
 package com.voxelplugineering.voxelsniper.forge.entity;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.UUID;
 
+import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.entity.AbstractEntity;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.forge.util.ForgeUtilities;
@@ -42,22 +46,27 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
 {
 
     private final EntityType type;
+    private final WorldRegistry<org.bukkit.World> worldReg;
 
     /**
      * Creates a new {@link ForgeEntity}.
      * 
      * @param entity The entity to wrap
      */
-    public ForgeEntity(net.minecraft.entity.Entity entity)
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public ForgeEntity(net.minecraft.entity.Entity entity, Context context)
     {
         super(entity);
         this.type = ForgeUtilities.getEntityType(entity.getClass());
+        Optional<WorldRegistry> worldReg = context.get(WorldRegistry.class);
+        checkArgument(worldReg.isPresent(), "WorldRegistry service was not found in the current context.");
+        this.worldReg = worldReg.get();
     }
 
     @Override
     public World getWorld()
     {
-        return Gunsmith.getWorldRegistry().getWorld(getThis().worldObj.getProviderName()).get();
+        return this.worldReg.getWorld(getThis().worldObj.getProviderName()).get();
     }
 
     @Override

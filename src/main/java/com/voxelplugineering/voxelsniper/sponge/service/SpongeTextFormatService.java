@@ -23,10 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service;
 
-import com.voxelplugineering.voxelsniper.api.util.text.TextFormat;
-import com.voxelplugineering.voxelsniper.api.util.text.TextFormatParser;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.api.service.text.TextFormat;
+import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
+import com.voxelplugineering.voxelsniper.core.util.Context;
 
 /**
  * A converter for text formatting codes.
@@ -37,9 +37,9 @@ public class SpongeTextFormatService extends AbstractService implements TextForm
     /**
      * Creates a new {@link SpongeTextFormatService}.
      */
-    public SpongeTextFormatService()
+    public SpongeTextFormatService(Context context)
     {
-        super(TextFormatParser.class, 0);
+        super(context);
     }
 
     @Override
@@ -96,21 +96,13 @@ public class SpongeTextFormatService extends AbstractService implements TextForm
     }
 
     @Override
-    public String getName()
+    protected void _init()
     {
-        return "formatProxy";
     }
 
     @Override
-    protected void init()
+    protected void _shutdown()
     {
-        Gunsmith.getLogger().info("Initialized SpongeTextFormat service");
-    }
-
-    @Override
-    protected void destroy()
-    {
-        Gunsmith.getLogger().info("Stopped SpongeTextFormat service");
     }
 
 }
