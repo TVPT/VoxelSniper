@@ -23,11 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.forge.entity;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.UUID;
 
-import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.Location;
@@ -53,14 +50,12 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
      * 
      * @param entity The entity to wrap
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public ForgeEntity(net.minecraft.entity.Entity entity, Context context)
     {
         super(entity);
         this.type = ForgeUtilities.getEntityType(entity.getClass());
-        Optional<WorldRegistry> worldReg = context.get(WorldRegistry.class);
-        checkArgument(worldReg.isPresent(), "WorldRegistry service was not found in the current context.");
-        this.worldReg = worldReg.get();
+        this.worldReg = context.getRequired(WorldRegistry.class);
     }
 
     @Override

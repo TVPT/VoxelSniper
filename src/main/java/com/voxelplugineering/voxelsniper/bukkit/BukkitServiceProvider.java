@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
@@ -31,11 +30,11 @@ import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.service.Builder;
 import com.voxelplugineering.voxelsniper.api.service.InitHook;
+import com.voxelplugineering.voxelsniper.api.service.PostInit;
 import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.api.service.command.CommandSender;
 import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
-import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.api.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
@@ -60,6 +59,7 @@ import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.core.service.CommandHandlerService;
 import com.voxelplugineering.voxelsniper.core.service.MaterialRegistryService;
@@ -85,17 +85,6 @@ public class BukkitServiceProvider
     public BukkitServiceProvider(org.bukkit.plugin.java.JavaPlugin pl)
     {
         this.plugin = checkNotNull(pl);
-    }
-
-    /**
-     * Init hook
-     * 
-     * @param logger The service
-     */
-    @InitHook(target = LoggingDistributor.class)
-    public void getLogger(Context context, LoggingDistributor logger)
-    {
-        logger.registerLogger(new JavaUtilLogger(this.plugin.getLogger()), "bukkit");
     }
 
     /**
@@ -150,7 +139,8 @@ public class BukkitServiceProvider
     @InitHook(target = MaterialRegistry.class)
     public void registerMaterials(Context context, MaterialRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
+        @SuppressWarnings("unchecked")
+        MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
         for (org.bukkit.Material m : org.bukkit.Material.values())
         {
             registry.registerMaterial(m.name(), m, new BukkitMaterial(m));
@@ -249,11 +239,17 @@ public class BukkitServiceProvider
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
+        @SuppressWarnings("unchecked")
+        BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
         for (org.bukkit.block.Biome b : org.bukkit.block.Biome.values())
         {
             reg.registerBiome(b.name(), b, new BukkitBiome(b));
         }
+    }
+
+    @PostInit
+    public void postInit(Context c) {
+        GunsmithLogger.getLogger().registerLogger(new JavaUtilLogger(this.plugin.getLogger()), "bukkit");
     }
 
 }
@@ -293,9 +289,7 @@ class PlayerRegistryProvider implements RegistryProvider<org.bukkit.entity.Playe
     public PlayerRegistryProvider(Context context)
     {
         this.context = context;
-        Optional<GlobalBrushManager> bm = context.get(GlobalBrushManager.class);
-        checkArgument(bm.isPresent(), "GlobalBrushManager service was not found in the current context.");
-        this.bm = bm.get();
+        this.bm = context.getRequired(GlobalBrushManager.class);
     }
 
     @Override
@@ -307,7 +301,9 @@ class PlayerRegistryProvider implements RegistryProvider<org.bukkit.entity.Playe
         {
             return Optional.absent();
         }
-        return Optional.of(new Pair<org.bukkit.entity.Player, Player>(player, new BukkitPlayer(player, this.bm, this.context)));
+        BukkitPlayer bp = new BukkitPlayer(player, this.bm, this.context);
+        bp.init();
+        return Optional.of(new Pair<org.bukkit.entity.Player, Player>(player, bp));
     }
 
 }

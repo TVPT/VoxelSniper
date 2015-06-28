@@ -28,10 +28,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.lang.reflect.Field;
 
 import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
-import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.bukkit.util.CraftBukkitFetcher;
+import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
 import com.voxelplugineering.voxelsniper.core.util.Context;
 
@@ -59,8 +58,7 @@ public class BukkitCommandRegistrar implements CommandRegistrar
             this.commands = (org.bukkit.command.CommandMap) cmap.get(org.bukkit.Bukkit.getServer());
         } catch (Exception e)
         {
-            Logger logger = context.getRequired(LoggingDistributor.class);
-            logger.error(e, "Error setting up bukkit command registrar");
+            GunsmithLogger.getLogger().error(e, "Error setting up bukkit command registrar");
         }
     }
 

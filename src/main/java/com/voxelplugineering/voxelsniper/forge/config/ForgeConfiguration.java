@@ -39,8 +39,4 @@ public class ForgeConfiguration extends ConfigurationContainer
     int arrowMaterial = Item.getIdFromItem(Items.arrow);
     String defaultBiomeName = BiomeGenBase.plains.biomeName;
 
-    protected ForgeConfiguration(Logger logger)
-    {
-        super(logger);
-    }
 }

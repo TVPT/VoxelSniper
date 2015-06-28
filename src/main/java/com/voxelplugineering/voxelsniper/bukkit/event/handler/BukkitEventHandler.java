@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.event.handler;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.bukkit.Material;
 
 import com.google.common.base.Optional;
@@ -50,18 +48,13 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     /**
      * Creates a new {@link BukkitEventHandler}.
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public BukkitEventHandler(Context context)
     {
-        Optional<PlayerRegistry> pr = context.get(PlayerRegistry.class);
-        checkArgument(pr.isPresent(), "PlayerRegistry service was not found in the current context.");
-        Optional<Configuration> conf = context.get(Configuration.class);
-        checkArgument(conf.isPresent(), "Configuration service was not found in the current context.");
-        Optional<EventBus> bus = context.get(EventBus.class);
-        checkArgument(bus.isPresent(), "EventBus service was not found in the current context.");
-        this.pr = pr.get();
-        this.bus = bus.get();
-        this.arrowMaterial = Material.valueOf(conf.get().get("arrowMaterial", String.class).or("ARROW"));
+        this.pr = context.getRequired(PlayerRegistry.class);
+        this.bus = context.getRequired(EventBus.class);
+        Configuration conf = context.getRequired(Configuration.class);
+        this.arrowMaterial = Material.valueOf(conf.get("arrowMaterial", String.class).or("ARROW"));
     }
 
     /**

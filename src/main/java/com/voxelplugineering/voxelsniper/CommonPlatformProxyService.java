@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
@@ -63,10 +62,7 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
     {
         super(context);
         this.rootDir = checkNotNull(dir);
-        Optional<DataSourceFactory> factory = context.get(DataSourceFactory.class);
-        checkArgument(factory.isPresent(), "DataSourceFactory service was not found in the current context.");
-        this.factory = factory.get();
-        this.factory.addDependent(this);
+        this.factory = context.getRequired(DataSourceFactory.class, this);
     }
 
     @Override

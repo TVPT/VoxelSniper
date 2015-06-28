@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.io.File;
 
 import net.minecraftforge.fml.common.Mod;
@@ -70,7 +68,6 @@ public class VoxelSniperForge
 
     private Logger logger;
     private File configDir;
-    private boolean disabled = false;
 
     /**
      * The preinitialization event.
@@ -109,14 +106,10 @@ public class VoxelSniperForge
 
             Context context = Gunsmith.getServiceManager().getContext();
 
-            Optional<GlobalBrushManager> bm = context.get(GlobalBrushManager.class);
-            checkArgument(bm.isPresent(), "GlobalBrushManager service was not found in the current context.");
-
             DefaultBrushBuilder.buildBrushes();
-            DefaultBrushBuilder.loadAll(bm.get());
+            DefaultBrushBuilder.loadAll(context.getRequired(GlobalBrushManager.class));
         } else
         {
-            this.disabled = true;
             this.logger.info("Detected Sponge: disabling VoxelSniper-Forge in favour of sponge version.");
             // Apparently calling this throws errors as the mod lists are backed
             // by immutable maps
@@ -136,10 +129,7 @@ public class VoxelSniperForge
         {
             Context context = Gunsmith.getServiceManager().getContext();
 
-            Optional<CommandHandler> cmd = context.get(CommandHandler.class);
-            checkArgument(cmd.isPresent(), "CommandHandler service was not found in the current context.");
-
-            Optional<CommandRegistrar> registrar = cmd.get().getRegistrar();
+            Optional<CommandRegistrar> registrar = context.getRequired(CommandHandler.class).getRegistrar();
             if (registrar.isPresent())
             {
                 ((ForgeCommandRegistrar) registrar.get()).flush(event);
@@ -155,7 +145,7 @@ public class VoxelSniperForge
     @EventHandler
     public void onDisabled(FMLModDisabledEvent event)
     {
-        if (Gunsmith.getServiceManager().isInitialized())
+        if (Gunsmith.getServiceManager().isInitialized() && !SpongeDetector.isSponge())
         {
             Gunsmith.getServiceManager().shutdown();
         }
@@ -169,7 +159,7 @@ public class VoxelSniperForge
     @EventHandler
     public void onShutdown(FMLServerStoppingEvent event)
     {
-        if (Gunsmith.getServiceManager().isInitialized())
+        if (Gunsmith.getServiceManager().isInitialized() && !SpongeDetector.isSponge())
         {
             Gunsmith.getServiceManager().shutdown();
         }

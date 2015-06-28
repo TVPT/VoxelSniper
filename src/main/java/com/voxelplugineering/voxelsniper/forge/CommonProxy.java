@@ -32,10 +32,10 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.service.Builder;
 import com.voxelplugineering.voxelsniper.api.service.InitHook;
+import com.voxelplugineering.voxelsniper.api.service.PostInit;
 import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
-import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.api.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
@@ -44,6 +44,7 @@ import com.voxelplugineering.voxelsniper.api.service.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.api.world.material.Material;
+import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.core.service.logging.Log4jLogger;
 import com.voxelplugineering.voxelsniper.core.util.Context;
@@ -64,17 +65,6 @@ import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
  */
 public abstract class CommonProxy
 {
-
-    /**
-     * Init hook
-     * 
-     * @param logger The service
-     */
-    @InitHook(target = LoggingDistributor.class)
-    public void getLogger(Context context, LoggingDistributor logger)
-    {
-        logger.registerLogger(new Log4jLogger(VoxelSniperForge.voxelsniper.getLogger()), "forge");
-    }
 
     /**
      * Builder
@@ -185,13 +175,19 @@ public abstract class CommonProxy
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg =
+        @SuppressWarnings("unchecked")
+        BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg =
                 (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;
         for (Object b : BiomeGenBase.BIOME_ID_MAP.keySet())
         {
             BiomeGenBase biome = (BiomeGenBase) BiomeGenBase.BIOME_ID_MAP.get(b);
             reg.registerBiome(b.toString(), biome, new ForgeBiome(biome));
         }
+    }
+
+    @PostInit
+    public void postInit(Context c) {
+        GunsmithLogger.getLogger().registerLogger(new Log4jLogger(VoxelSniperForge.voxelsniper.getLogger()), "forge");
     }
 
     /**

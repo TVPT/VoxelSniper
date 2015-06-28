@@ -73,9 +73,9 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         {
             return Optional.absent();
         }
-        org.spongepowered.api.world.Location b = getThis().getFullBlock(x, y, z);
+        org.spongepowered.api.world.Location b = getThis().getLocation(x, y, z);
         CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
-        Optional<Material> m = ((SpongeWorld) this.getWorld()).getMaterialRegistry().getMaterial(b.getType());
+        Optional<Material> m = ((SpongeWorld) this.getWorld()).getMaterialRegistry().getMaterial(b.getBlockType());
         if (!m.isPresent())
         {
             return Optional.absent();
@@ -93,7 +93,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         if (material instanceof SpongeMaterial)
         {
             SpongeMaterial spongeMaterial = (SpongeMaterial) material;
-            getThis().getFullBlock(x, y, z).replaceWith(spongeMaterial.getThis());
+            getThis().getLocation(x, y, z).setBlockType(spongeMaterial.getThis());
         }
     }
 

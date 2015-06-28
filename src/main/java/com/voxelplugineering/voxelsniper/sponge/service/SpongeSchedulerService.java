@@ -78,29 +78,21 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
     @Override
     public Optional<SpongeTask> startSynchronousTask(Runnable runnable, int interval)
     {
-        Optional<org.spongepowered.api.service.scheduler.Task> task =
-                this.game.getSyncScheduler().runRepeatingTask(this.plugin, runnable, interval / MILLISECONDS_PER_TICK);
-        if (task.isPresent())
-        {
-            SpongeTask stask = new SpongeTask(task.get(), runnable, interval);
-            this.tasks.put(task.get(), stask);
-            return Optional.of(stask);
-        }
-        return Optional.absent();
+        org.spongepowered.api.service.scheduler.Task task =
+                this.game.getScheduler().getTaskBuilder().interval(interval, TimeUnit.MILLISECONDS).execute(runnable).submit(this.plugin);
+        SpongeTask stask = new SpongeTask(task, runnable, interval);
+        this.tasks.put(task, stask);
+        return Optional.of(stask);
     }
 
     @Override
     public Optional<SpongeTask> startAsynchronousTask(Runnable runnable, int interval)
     {
-        Optional<org.spongepowered.api.service.scheduler.Task> task =
-                this.game.getAsyncScheduler().runRepeatingTask(this.plugin, runnable, TimeUnit.MILLISECONDS, interval / MILLISECONDS_PER_TICK);
-        if (task.isPresent())
-        {
-            SpongeTask stask = new SpongeTask(task.get(), runnable, interval);
-            this.tasks.put(task.get(), stask);
-            return Optional.of(stask);
-        }
-        return Optional.absent();
+        org.spongepowered.api.service.scheduler.Task task =
+                this.game.getScheduler().getTaskBuilder().async().interval(interval, TimeUnit.MILLISECONDS).execute(runnable).submit(this.plugin);
+        SpongeTask stask = new SpongeTask(task, runnable, interval);
+        this.tasks.put(task, stask);
+        return Optional.of(stask);
     }
 
     @Override

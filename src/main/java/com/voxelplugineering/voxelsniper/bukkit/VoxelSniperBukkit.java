@@ -23,9 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.util.Context;
@@ -53,11 +50,8 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin
 
         Context context = Gunsmith.getServiceManager().getContext();
 
-        Optional<GlobalBrushManager> bm = context.get(GlobalBrushManager.class);
-        checkArgument(bm.isPresent(), "GlobalBrushManager service was not found in the current context.");
-
         DefaultBrushBuilder.buildBrushes();
-        DefaultBrushBuilder.loadAll(bm.get());
+        DefaultBrushBuilder.loadAll(context.getRequired(GlobalBrushManager.class));
     }
 
     /**

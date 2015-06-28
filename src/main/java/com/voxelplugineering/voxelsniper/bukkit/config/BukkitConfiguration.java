@@ -35,8 +35,4 @@ public class BukkitConfiguration extends ConfigurationContainer
     String arrowMaterial = org.bukkit.Material.ARROW.name();
     String defaultBiomeName = org.bukkit.block.Biome.PLAINS.name();
 
-    protected BukkitConfiguration(Logger logger)
-    {
-        super(logger);
-    }
 }

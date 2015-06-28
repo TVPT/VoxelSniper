@@ -31,10 +31,10 @@ import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.service.Builder;
 import com.voxelplugineering.voxelsniper.api.service.InitHook;
+import com.voxelplugineering.voxelsniper.api.service.PostInit;
 import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
-import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.api.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
@@ -46,6 +46,7 @@ import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
+import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.core.service.CommandHandlerService;
 import com.voxelplugineering.voxelsniper.core.service.MaterialRegistryService;
@@ -91,15 +92,9 @@ public class SpongeServiceProvider
         this.logger = logger;
     }
 
-    /**
-     * Init hook
-     * 
-     * @param logger The service
-     */
-    @InitHook(target = LoggingDistributor.class)
-    public void getLogger(Context context, LoggingDistributor logger)
-    {
-        logger.registerLogger(new Slf4jLogger(this.logger), "sponge");
+    @PostInit
+    public void postInit(Context c) {
+        GunsmithLogger.getLogger().registerLogger(new Slf4jLogger(this.logger), "sponge");
     }
 
     /**
@@ -319,6 +314,7 @@ public class SpongeServiceProvider
             if (player.isPresent())
             {
                 SpongePlayer splayer = new SpongePlayer(this.context, player.get());
+                splayer.init();
                 return Optional.of(new Pair<org.spongepowered.api.entity.player.Player, Player>(player.get(), splayer));
             }
             return Optional.absent();

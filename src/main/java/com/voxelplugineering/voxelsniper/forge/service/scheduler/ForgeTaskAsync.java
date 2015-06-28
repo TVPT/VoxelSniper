@@ -23,8 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service.scheduler;
 
-import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
+import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
 
 /**
@@ -32,8 +32,6 @@ import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
  */
 public class ForgeTaskAsync extends Task implements Runnable
 {
-
-    private final Logger logger;
 
     private boolean running;
     private ForgeSchedulerService scheduler;
@@ -45,11 +43,10 @@ public class ForgeTaskAsync extends Task implements Runnable
      * @param interval The interval
      * @param scheduler The scheduler
      */
-    public ForgeTaskAsync(Runnable runnable, int interval, ForgeSchedulerService scheduler, Logger logger)
+    public ForgeTaskAsync(Runnable runnable, int interval, ForgeSchedulerService scheduler)
     {
         super(runnable, interval);
         this.running = true;
-        this.logger = logger;
     }
 
     @Override
@@ -77,7 +74,7 @@ public class ForgeTaskAsync extends Task implements Runnable
                 Thread.sleep(this.getInterval() - delta);
             } catch (InterruptedException e)
             {
-                this.logger.warn("Asynchronous task interrupted, stopping.");
+                GunsmithLogger.getLogger().warn("Asynchronous task interrupted, stopping.");
                 this.running = false;
             }
         }

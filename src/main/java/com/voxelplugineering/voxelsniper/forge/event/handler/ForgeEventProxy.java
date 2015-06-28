@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.event.handler;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -35,9 +34,9 @@ import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
-import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.core.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperCreateEvent;
 import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperDestroyEvent;
@@ -53,27 +52,16 @@ public class ForgeEventProxy
     private final net.minecraft.item.Item toolMaterial;
     private final PlayerRegistry<net.minecraft.entity.player.EntityPlayer> pr;
     private final EventBus bus;
-    private final LoggingDistributor logger;
     private final ForgeSchedulerService sched;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public ForgeEventProxy(Context context)
     {
-        Optional<PlayerRegistry> pr = context.get(PlayerRegistry.class);
-        checkArgument(pr.isPresent(), "PlayerRegistry service was not found in the current context.");
-        this.pr = pr.get();
-        Optional<EventBus> bus = context.get(EventBus.class);
-        checkArgument(bus.isPresent(), "EventBus service was not found in the current context.");
-        this.bus = bus.get();
-        Optional<LoggingDistributor> logger = context.get(LoggingDistributor.class);
-        checkArgument(logger.isPresent(), "LoggingDistributor service was not found in the current context.");
-        this.logger = logger.get();
-        Optional<Scheduler> sched = context.get(Scheduler.class);
-        checkArgument(logger.isPresent(), "Scheduler service was not found in the current context.");
-        this.sched = (ForgeSchedulerService) sched.get();
-        Optional<Configuration> conf = context.get(Configuration.class);
-        checkArgument(conf.isPresent(), "Configuration service was not found in the current context.");
-        int id = conf.get().get("arrowMaterial", int.class).or(Item.getIdFromItem(Items.arrow));
+        this.pr = context.getRequired(PlayerRegistry.class);
+        this.bus = context.getRequired(EventBus.class);
+        this.sched = (ForgeSchedulerService) context.getRequired(Scheduler.class);
+        Configuration conf = context.getRequired(Configuration.class);
+        int id = conf.get("arrowMaterial", int.class).or(Item.getIdFromItem(Items.arrow));
         this.toolMaterial = Item.getItemById(id);
     }
 
@@ -121,7 +109,7 @@ public class ForgeEventProxy
         {
             return;
         }
-        this.logger.debug("PlayerInteractEvent for " + event.entityPlayer.getName());
+        GunsmithLogger.getLogger().debug("PlayerInteractEvent for " + event.entityPlayer.getName());
         if (event.entityPlayer.getCurrentEquippedItem().getItem() == this.toolMaterial
                 && (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
         {

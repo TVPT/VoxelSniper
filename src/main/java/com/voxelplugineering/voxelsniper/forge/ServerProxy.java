@@ -138,7 +138,9 @@ public class ServerProxy extends CommonProxy
             {
                 return Optional.absent();
             }
-            return Optional.of(new Pair<net.minecraft.entity.player.EntityPlayer, Player>(player, new ForgePlayer(player, this.context)));
+            ForgePlayer fp = new ForgePlayer(player, this.context);
+            fp.init();
+            return Optional.of(new Pair<net.minecraft.entity.player.EntityPlayer, Player>(player, fp));
         }
 
     }

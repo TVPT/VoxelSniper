@@ -29,8 +29,6 @@ import java.util.concurrent.ExecutorService;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
-import com.voxelplugineering.voxelsniper.api.service.logging.LoggingDistributor;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
 import com.voxelplugineering.voxelsniper.core.service.AbstractService;
@@ -44,8 +42,6 @@ import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTaskAsync;
 public class ForgeSchedulerService extends AbstractService implements Scheduler
 {
 
-    private final Logger logger;
-
     private List<ForgeTask> tasks;
     private List<ForgeTaskAsync> asyncTasks;
     private ExecutorService exec;
@@ -56,7 +52,6 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
     public ForgeSchedulerService(Context context)
     {
         super(context);
-        this.logger = context.getRequired(LoggingDistributor.class, this);
         this.exec = java.util.concurrent.Executors.newCachedThreadPool();
     }
 
@@ -86,7 +81,7 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
     @Override
     public Optional<ForgeTaskAsync> startAsynchronousTask(Runnable runnable, int interval)
     {
-        ForgeTaskAsync task = new ForgeTaskAsync(runnable, interval, this, this.logger);
+        ForgeTaskAsync task = new ForgeTaskAsync(runnable, interval, this);
         this.exec.execute(task);
         this.asyncTasks.add(task);
         return Optional.of(task);

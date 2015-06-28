@@ -23,14 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service.command;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.List;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.core.commands.Command;
@@ -52,12 +49,10 @@ public class ForgeCommand implements net.minecraft.command.ICommand
      * 
      * @param cmd the Gunsmith command to wrap
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public ForgeCommand(Command cmd, Context context)
     {
-        Optional<PlayerRegistry> pr = context.get(PlayerRegistry.class);
-        checkArgument(pr.isPresent(), "PlayerRegistry service was not found in the current context.");
-        this.players = pr.get();
+        this.players = context.getRequired(PlayerRegistry.class);
         this.cmd = cmd;
         this.aliases = cmd.getAllAliases().length == 0 ? Lists.newArrayList() : Lists.newArrayList(cmd.getAllAliases());
     }

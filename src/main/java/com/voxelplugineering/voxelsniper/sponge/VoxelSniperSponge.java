@@ -23,13 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
@@ -77,11 +74,8 @@ public class VoxelSniperSponge implements Expansion
 
         Context context = Gunsmith.getServiceManager().getContext();
 
-        Optional<GlobalBrushManager> bm = context.get(GlobalBrushManager.class);
-        checkArgument(bm.isPresent(), "GlobalBrushManager service was not found in the current context.");
-
         DefaultBrushBuilder.buildBrushes();
-        DefaultBrushBuilder.loadAll(bm.get());
+        DefaultBrushBuilder.loadAll(context.getRequired(GlobalBrushManager.class));
     }
 
     @Override

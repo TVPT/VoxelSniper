@@ -24,10 +24,8 @@
 package com.voxelplugineering.voxelsniper.sponge.config;
 
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.world.biome.BiomeTypes;
 
 import com.voxelplugineering.voxelsniper.api.service.config.ConfigurationContainer;
-import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
 
 /**
  * The container for sponge-specific configuration values.
@@ -36,10 +34,6 @@ public class SpongeConfiguration extends ConfigurationContainer
 {
 
     String arrowMaterial = ItemTypes.ARROW.getId();
-    String defaultBiomeName = BiomeTypes.PLAINS.getId();
+    String defaultBiomeName = "plains";//TODO
 
-    protected SpongeConfiguration(Logger logger)
-    {
-        super(logger);
-    }
 }

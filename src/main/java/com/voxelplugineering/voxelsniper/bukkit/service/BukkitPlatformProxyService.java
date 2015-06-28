@@ -45,16 +45,6 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     }
 
     @Override
-    protected void _init()
-    {
-    }
-
-    @Override
-    protected void _shutdown()
-    {
-    }
-
-    @Override
     public String getPlatformName()
     {
         return org.bukkit.Bukkit.getName();
