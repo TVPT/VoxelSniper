@@ -26,7 +26,6 @@ package com.voxelplugineering.voxelsniper.bukkit;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.api.entity.Player;
 import com.voxelplugineering.voxelsniper.api.service.Builder;
 import com.voxelplugineering.voxelsniper.api.service.InitHook;
@@ -45,6 +44,7 @@ import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.api.world.World;
+import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
 import com.voxelplugineering.voxelsniper.bukkit.event.handler.BukkitEventHandler;

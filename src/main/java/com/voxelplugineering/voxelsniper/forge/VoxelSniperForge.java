@@ -39,9 +39,9 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;

@@ -25,10 +25,10 @@ package com.voxelplugineering.voxelsniper.bukkit.entity;
 
 import java.util.UUID;
 
-import com.voxelplugineering.voxelsniper.api.brushes.BrushManager;
 import com.voxelplugineering.voxelsniper.api.entity.EntityType;
 import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.api.world.World;
+import com.voxelplugineering.voxelsniper.brush.BrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
 import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.core.util.Context;

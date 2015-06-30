@@ -28,8 +28,8 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import com.google.inject.Inject;
-import com.voxelplugineering.voxelsniper.api.brushes.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
+import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.core.Gunsmith;
 import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;

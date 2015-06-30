@@ -50,7 +50,7 @@ public final class BukkitUtilities
     public static Location getGunsmithLocation(org.bukkit.Location location, WorldRegistry<org.bukkit.World> worldReg)
     {
         checkNotNull(location);
-        return new CommonLocation(worldReg.getWorld(location.getWorld()).get(), location.getX(), location.getY(), location.getZ());
+        return new CommonLocation(worldReg.getWorld(location.getWorld().getName()).get(), location.getX(), location.getY(), location.getZ());
     }
 
     /**
