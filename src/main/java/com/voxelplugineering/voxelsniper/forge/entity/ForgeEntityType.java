@@ -26,7 +26,7 @@ package com.voxelplugineering.voxelsniper.forge.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
 
 /**
  * A forge entity type.

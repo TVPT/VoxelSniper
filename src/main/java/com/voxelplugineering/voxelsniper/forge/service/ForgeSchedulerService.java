@@ -29,12 +29,12 @@ import java.util.concurrent.ExecutorService;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
-import com.voxelplugineering.voxelsniper.core.service.AbstractService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
 import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTask;
 import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTaskAsync;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.service.scheduler.Task;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A scheduler proxy for forge, works off the Tick Event from forge.

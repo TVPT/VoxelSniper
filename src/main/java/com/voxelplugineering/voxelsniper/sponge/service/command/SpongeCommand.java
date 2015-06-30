@@ -34,10 +34,10 @@ import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
-import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
-import com.voxelplugineering.voxelsniper.core.commands.Command;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
+import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A proxy command which may be registered with sponge but calls the gunsmith event handler.
@@ -75,7 +75,7 @@ public class SpongeCommand implements CommandCallable
         if (source instanceof org.spongepowered.api.entity.player.Player)
         {
             org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
-            com.voxelplugineering.voxelsniper.api.entity.Player sniper = this.players.getPlayer(player.getName()).get();
+            com.voxelplugineering.voxelsniper.entity.Player sniper = this.players.getPlayer(player.getName()).get();
             boolean success = this.command.execute(sniper, args);
             if (success)
             {

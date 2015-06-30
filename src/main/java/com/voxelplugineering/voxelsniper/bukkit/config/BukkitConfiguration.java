@@ -23,8 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.config;
 
-import com.voxelplugineering.voxelsniper.api.service.config.ConfigurationContainer;
-import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
+import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
+import com.voxelplugineering.voxelsniper.service.logging.Logger;
 
 /**
  * Bukkit's specific configuration.

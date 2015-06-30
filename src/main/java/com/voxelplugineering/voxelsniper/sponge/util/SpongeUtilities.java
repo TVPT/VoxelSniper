@@ -27,14 +27,14 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.Location;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
 import com.voxelplugineering.voxelsniper.sponge.world.SpongeWorld;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.Location;
+import com.voxelplugineering.voxelsniper.world.World;
 
 /**
  * A set of utilities for the sponge implementation.
@@ -50,7 +50,7 @@ public class SpongeUtilities
     }
 
     /**
-     * Converts a {@link com.voxelplugineering.voxelsniper.api.world.Location} into a
+     * Converts a {@link com.voxelplugineering.voxelsniper.world.Location} into a
      * {@link org.spongepowered.api.world.Location}.
      * 
      * @param location The location to convert
@@ -62,7 +62,7 @@ public class SpongeUtilities
     }
 
     /**
-     * Converts a {@link com.voxelplugineering.voxelsniper.core.util.math.Vector3d} into a
+     * Converts a {@link com.voxelplugineering.voxelsniper.util.math.Vector3d} into a
      * {@link com.flowpowered.math.vector.Vector3d}.
      * 
      * @param vector The vector to convert
@@ -75,7 +75,7 @@ public class SpongeUtilities
 
     /**
      * Converts a {@link com.flowpowered.math.vector.Vector3d} into a
-     * {@link com.voxelplugineering.voxelsniper.core.util.math.Vector3d}.
+     * {@link com.voxelplugineering.voxelsniper.util.math.Vector3d}.
      * 
      * @param vector The vector to convert
      * @return The new vector

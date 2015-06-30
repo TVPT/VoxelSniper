@@ -23,10 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit;
 
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The Main class for the bukkit specific implementation.

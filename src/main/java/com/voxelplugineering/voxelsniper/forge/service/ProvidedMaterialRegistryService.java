@@ -30,13 +30,13 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
-import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.registry.ProvidedWeakRegistry;
-import com.voxelplugineering.voxelsniper.core.service.AbstractService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.registry.ProvidedWeakRegistry;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * A standard material registry for materials.

@@ -23,8 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.world.biome;
 
-import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.core.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.world.biome.Biome;
 
 /**
  * Wraps a {@link org.spongepowered.api.world.biome.BiomeType}.

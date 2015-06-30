@@ -32,22 +32,22 @@ import net.minecraft.world.biome.BiomeGenBase;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
-import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.world.Chunk;
-import com.voxelplugineering.voxelsniper.api.world.Location;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
-import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntity;
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
+import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.world.AbstractWorld;
+import com.voxelplugineering.voxelsniper.world.Chunk;
+import com.voxelplugineering.voxelsniper.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.Location;
+import com.voxelplugineering.voxelsniper.world.World;
+import com.voxelplugineering.voxelsniper.world.biome.Biome;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * A wrapper for forge's {@link World}.
@@ -85,7 +85,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     }
 
     @Override
-    public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
+    public Optional<com.voxelplugineering.voxelsniper.world.Block> getBlock(int x, int y, int z)
     {
         if (!getThis().getChunkProvider().chunkExists(x < 0 ? x / 16 - 1 : x / 16, z < 0 ? z / 16 - 1 : z / 16))
         {
@@ -97,7 +97,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
                         getThis().getBlockState(new net.minecraft.util.BlockPos(x, y, z)).getBlock().getUnlocalizedName().substring(5)).orNull();
         if (mat != null)
         {
-            return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(loc, mat));
+            return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(loc, mat));
         }
         return Optional.absent();
     }

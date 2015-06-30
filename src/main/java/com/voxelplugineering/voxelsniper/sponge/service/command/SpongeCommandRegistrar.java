@@ -23,10 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.command;
 
-import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.core.commands.Command;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A command registrar for sponge commands.

@@ -25,10 +25,10 @@ package com.voxelplugineering.voxelsniper.bukkit.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.voxelplugineering.voxelsniper.api.service.text.TextFormat;
-import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
-import com.voxelplugineering.voxelsniper.core.service.AbstractService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.service.text.TextFormat;
+import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A proxy for bukkit's formatting codes.

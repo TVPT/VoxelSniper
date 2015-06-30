@@ -23,11 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.service;
 
-import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
-import com.voxelplugineering.voxelsniper.core.service.AbstractService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * PermissionProxy for super perms of bukkit.

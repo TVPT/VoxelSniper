@@ -27,14 +27,14 @@ import java.util.UUID;
 
 import org.spongepowered.api.text.Texts;
 
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.World;
 
 /**
  * Wraps a {@link org.spongepowered.api.entity.player.Player}.
@@ -100,14 +100,14 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     }
 
     @Override
-    public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
+    public com.voxelplugineering.voxelsniper.world.Location getLocation()
     {
         com.flowpowered.math.vector.Vector3d position = getThis().getLocation().getPosition();
         return new CommonLocation(getWorld(), position.getX(), position.getY(), position.getZ());
     }
 
     @Override
-    public void setLocation(com.voxelplugineering.voxelsniper.api.world.Location newLocation)
+    public void setLocation(com.voxelplugineering.voxelsniper.world.Location newLocation)
     {
         getThis().setLocation(SpongeUtilities.getSpongeLocation(newLocation));
     }

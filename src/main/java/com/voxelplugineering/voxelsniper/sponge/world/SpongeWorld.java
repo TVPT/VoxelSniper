@@ -29,25 +29,25 @@ import java.util.Map;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
-import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.shape.MaterialShape;
-import com.voxelplugineering.voxelsniper.api.shape.Shape;
-import com.voxelplugineering.voxelsniper.api.world.Block;
-import com.voxelplugineering.voxelsniper.api.world.Chunk;
-import com.voxelplugineering.voxelsniper.api.world.Location;
-import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.shape.ComplexMaterialShape;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
-import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.shape.ComplexMaterialShape;
+import com.voxelplugineering.voxelsniper.shape.MaterialShape;
+import com.voxelplugineering.voxelsniper.shape.Shape;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.world.AbstractWorld;
+import com.voxelplugineering.voxelsniper.world.Block;
+import com.voxelplugineering.voxelsniper.world.Chunk;
+import com.voxelplugineering.voxelsniper.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.Location;
+import com.voxelplugineering.voxelsniper.world.biome.Biome;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * A wrapper for Sponge's World.
@@ -88,7 +88,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     }
 
     @Override
-    public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
+    public Optional<com.voxelplugineering.voxelsniper.world.Block> getBlock(int x, int y, int z)
     {
         if (!checkAsyncBlockAccess(x, y, z))
         {
@@ -96,12 +96,12 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         }
         org.spongepowered.api.world.Location b = getThis().getLocation(x, y, z);
         CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
-        Optional<com.voxelplugineering.voxelsniper.api.world.material.Material> m = this.materials.getMaterial(b.getBlockType());
+        Optional<com.voxelplugineering.voxelsniper.world.material.Material> m = this.materials.getMaterial(b.getBlockType());
         if (!m.isPresent())
         {
             return Optional.absent();
         }
-        return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
+        return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, m.get()));
     }
 
     private boolean checkAsyncBlockAccess(int x, int y, int z)

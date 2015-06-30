@@ -27,17 +27,17 @@ import java.util.List;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.world.Chunk;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.core.world.AbstractChunk;
-import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.world.AbstractChunk;
+import com.voxelplugineering.voxelsniper.world.Chunk;
+import com.voxelplugineering.voxelsniper.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.World;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * Wraps a {@link Chunk}.
@@ -67,7 +67,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
     }
 
     @Override
-    public Optional<com.voxelplugineering.voxelsniper.api.world.Block> getBlock(int x, int y, int z)
+    public Optional<com.voxelplugineering.voxelsniper.world.Block> getBlock(int x, int y, int z)
     {
         if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
         {
@@ -80,7 +80,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
         {
             return Optional.absent();
         }
-        return Optional.<com.voxelplugineering.voxelsniper.api.world.Block>of(new CommonBlock(l, m.get()));
+        return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, m.get()));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
     }
 
     @Override
-    public Iterable<com.voxelplugineering.voxelsniper.api.entity.Entity> getLoadedEntities()
+    public Iterable<com.voxelplugineering.voxelsniper.entity.Entity> getLoadedEntities()
     {
         List<Entity> entities = Lists.newArrayList();
         for (org.spongepowered.api.entity.Entity e : getThis().getEntities())

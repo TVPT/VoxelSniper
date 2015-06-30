@@ -25,16 +25,16 @@ package com.voxelplugineering.voxelsniper.forge.entity;
 
 import java.util.UUID;
 
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.Location;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.entity.AbstractEntity;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.AbstractEntity;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.forge.util.ForgeUtilities;
 import com.voxelplugineering.voxelsniper.forge.world.ForgeWorld;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.Location;
+import com.voxelplugineering.voxelsniper.world.World;
 
 /**
  * A wrapper for a forge entity.

@@ -23,8 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service.scheduler;
 
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
+import com.voxelplugineering.voxelsniper.service.scheduler.Task;
 
 /**
  * A task for the {@link ForgeSchedulerService}.

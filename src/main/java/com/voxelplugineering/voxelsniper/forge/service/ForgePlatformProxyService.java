@@ -29,7 +29,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * The platform proxy for minecraft forge.

@@ -23,11 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service;
 
-import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
-import com.voxelplugineering.voxelsniper.core.service.AbstractService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A proxy to sponge's permission system.

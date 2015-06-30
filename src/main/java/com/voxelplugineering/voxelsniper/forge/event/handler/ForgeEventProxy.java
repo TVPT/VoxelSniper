@@ -31,17 +31,17 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
-import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
-import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
-import com.voxelplugineering.voxelsniper.core.event.SnipeEvent;
-import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperCreateEvent;
-import com.voxelplugineering.voxelsniper.core.event.SniperEvent.SniperDestroyEvent;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
+import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.event.SnipeEvent;
+import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperCreateEvent;
+import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
+import com.voxelplugineering.voxelsniper.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
+import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * An event handler for all forge events that proxy to gunsmith events.

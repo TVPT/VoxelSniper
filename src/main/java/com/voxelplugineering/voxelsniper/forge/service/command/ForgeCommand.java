@@ -29,9 +29,9 @@ import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
-import com.voxelplugineering.voxelsniper.core.commands.Command;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A wrapper for gunsmith commands to allow them to be registered into forge.

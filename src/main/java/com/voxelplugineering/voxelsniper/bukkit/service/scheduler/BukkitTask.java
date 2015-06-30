@@ -27,8 +27,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.ref.WeakReference;
 
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
+import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.service.scheduler.Task;
 
 /**
  * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.

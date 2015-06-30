@@ -25,7 +25,7 @@ package com.voxelplugineering.voxelsniper.bukkit.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
 
 /**
  * An implementation of {@link EntityType} for bukkit.

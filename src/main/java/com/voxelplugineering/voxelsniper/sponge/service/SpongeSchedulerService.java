@@ -31,11 +31,11 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
-import com.voxelplugineering.voxelsniper.core.service.AbstractService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.service.AbstractService;
+import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.service.scheduler.Task;
 import com.voxelplugineering.voxelsniper.sponge.service.scheduler.SpongeTask;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A proxy for sponge's scheduler.

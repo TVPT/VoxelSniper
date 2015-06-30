@@ -23,7 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.entity;
 
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
 
 /**
  * A forge entity type.

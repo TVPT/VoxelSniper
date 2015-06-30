@@ -39,14 +39,14 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
-import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
+import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The core class of VoxelSniper for minecraft forge.

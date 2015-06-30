@@ -28,8 +28,8 @@ import java.util.List;
 import net.minecraft.init.Blocks;
 
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * A wrapper for forge's materials ({@link net.minecraft.block.Block}).

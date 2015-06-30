@@ -27,8 +27,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.BiomeGenBase;
 
-import com.voxelplugineering.voxelsniper.api.service.config.ConfigurationContainer;
-import com.voxelplugineering.voxelsniper.api.service.logging.Logger;
+import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
+import com.voxelplugineering.voxelsniper.service.logging.Logger;
 
 /**
  * The default configuration values for forge.

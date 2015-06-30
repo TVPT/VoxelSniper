@@ -30,25 +30,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.service.Builder;
-import com.voxelplugineering.voxelsniper.api.service.InitHook;
-import com.voxelplugineering.voxelsniper.api.service.PostInit;
-import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
-import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
-import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
-import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
-import com.voxelplugineering.voxelsniper.api.service.platform.PlatformProxy;
-import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
-import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
-import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
-import com.voxelplugineering.voxelsniper.core.service.logging.Log4jLogger;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.Pair;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.config.ForgeConfiguration;
 import com.voxelplugineering.voxelsniper.forge.event.handler.ForgeEventProxy;
 import com.voxelplugineering.voxelsniper.forge.service.ForgePermissionProxyService;
@@ -59,6 +41,24 @@ import com.voxelplugineering.voxelsniper.forge.service.ProvidedMaterialRegistryS
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
+import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.service.Builder;
+import com.voxelplugineering.voxelsniper.service.InitHook;
+import com.voxelplugineering.voxelsniper.service.PostInit;
+import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
+import com.voxelplugineering.voxelsniper.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
+import com.voxelplugineering.voxelsniper.service.logging.Log4jLogger;
+import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
+import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
+import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
+import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.Pair;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * A common proxy for operations common to both server and client side.

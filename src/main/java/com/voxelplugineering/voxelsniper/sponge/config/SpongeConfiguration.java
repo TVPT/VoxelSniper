@@ -25,7 +25,7 @@ package com.voxelplugineering.voxelsniper.sponge.config;
 
 import org.spongepowered.api.item.ItemTypes;
 
-import com.voxelplugineering.voxelsniper.api.service.config.ConfigurationContainer;
+import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
 
 /**
  * The container for sponge-specific configuration values.

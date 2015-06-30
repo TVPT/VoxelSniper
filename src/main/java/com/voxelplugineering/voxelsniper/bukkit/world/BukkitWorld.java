@@ -31,22 +31,22 @@ import java.util.Map;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
-import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.Block;
-import com.voxelplugineering.voxelsniper.api.world.Chunk;
-import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.core.world.AbstractWorld;
-import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.world.AbstractWorld;
+import com.voxelplugineering.voxelsniper.world.Block;
+import com.voxelplugineering.voxelsniper.world.Chunk;
+import com.voxelplugineering.voxelsniper.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.biome.Biome;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.World}s.

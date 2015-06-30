@@ -25,8 +25,8 @@ package com.voxelplugineering.voxelsniper.forge.world.biome;
 
 import net.minecraft.world.biome.BiomeGenBase;
 
-import com.voxelplugineering.voxelsniper.api.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.core.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.world.biome.Biome;
 
 /**
  * A wrapper for forge biomes.

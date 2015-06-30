@@ -28,32 +28,29 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.biome.BiomeType;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.entity.Player;
-import com.voxelplugineering.voxelsniper.api.service.Builder;
-import com.voxelplugineering.voxelsniper.api.service.InitHook;
-import com.voxelplugineering.voxelsniper.api.service.PostInit;
-import com.voxelplugineering.voxelsniper.api.service.command.CommandHandler;
-import com.voxelplugineering.voxelsniper.api.service.config.Configuration;
-import com.voxelplugineering.voxelsniper.api.service.event.EventBus;
-import com.voxelplugineering.voxelsniper.api.service.permission.PermissionProxy;
-import com.voxelplugineering.voxelsniper.api.service.platform.PlatformProxy;
-import com.voxelplugineering.voxelsniper.api.service.registry.BiomeRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
-import com.voxelplugineering.voxelsniper.api.service.registry.RegistryProvider;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Scheduler;
-import com.voxelplugineering.voxelsniper.api.service.text.TextFormatParser;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
-import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
-import com.voxelplugineering.voxelsniper.core.service.BiomeRegistryService;
-import com.voxelplugineering.voxelsniper.core.service.CommandHandlerService;
-import com.voxelplugineering.voxelsniper.core.service.MaterialRegistryService;
-import com.voxelplugineering.voxelsniper.core.service.PlayerRegistryService;
-import com.voxelplugineering.voxelsniper.core.service.WorldRegistryService;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.Pair;
+import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
+import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.service.Builder;
+import com.voxelplugineering.voxelsniper.service.CommandHandlerService;
+import com.voxelplugineering.voxelsniper.service.InitHook;
+import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
+import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
+import com.voxelplugineering.voxelsniper.service.PostInit;
+import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
+import com.voxelplugineering.voxelsniper.service.config.Configuration;
+import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
+import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
+import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
+import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
+import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.sponge.config.SpongeConfiguration;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
 import com.voxelplugineering.voxelsniper.sponge.event.handler.SpongeEventHandler;
@@ -67,6 +64,9 @@ import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 import com.voxelplugineering.voxelsniper.sponge.world.SpongeWorld;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.Pair;
+import com.voxelplugineering.voxelsniper.world.World;
 
 /**
  * A provider for bukkit's initialization values.
@@ -264,7 +264,7 @@ public class SpongeServiceProvider
         private final org.spongepowered.api.Game game;
 
         /**
-         * Creates a new {@link com.voxelplugineering.voxelsniper.api.service.registry.RegistryProvider}
+         * Creates a new {@link com.voxelplugineering.voxelsniper.service.registry.RegistryProvider}
          *
          * @param game The game instance
          */

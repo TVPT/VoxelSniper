@@ -23,7 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper;
 
-import com.voxelplugineering.voxelsniper.core.GunsmithMain;
+import com.voxelplugineering.voxelsniper.GunsmithMain;
 
 /**
  * The main class for utility functions.

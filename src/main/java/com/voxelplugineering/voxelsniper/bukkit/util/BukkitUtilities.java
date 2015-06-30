@@ -28,12 +28,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.Location;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntityType;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.Location;
 
 /**
  * Bukkit based utilities.

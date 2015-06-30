@@ -23,8 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service.command;
 
-import com.voxelplugineering.voxelsniper.api.service.command.CommandSender;
 import com.voxelplugineering.voxelsniper.forge.VoxelSniperForge;
+import com.voxelplugineering.voxelsniper.service.command.CommandSender;
 
 /**
  * A proxy for forge's console, used for command handling and as a message target.

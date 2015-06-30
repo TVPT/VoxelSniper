@@ -23,7 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.scheduler;
 
-import com.voxelplugineering.voxelsniper.api.service.scheduler.Task;
+import com.voxelplugineering.voxelsniper.service.scheduler.Task;
 
 /**
  * A wrapper for sponge's {@link org.spongepowered.api.service.scheduler.Task}.

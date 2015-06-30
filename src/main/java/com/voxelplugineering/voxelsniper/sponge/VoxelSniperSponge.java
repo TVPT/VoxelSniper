@@ -28,12 +28,12 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import com.google.inject.Inject;
-import com.voxelplugineering.voxelsniper.api.expansion.Expansion;
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
-import com.voxelplugineering.voxelsniper.core.Gunsmith;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.defaults.DefaultBrushBuilder;
+import com.voxelplugineering.voxelsniper.expansion.Expansion;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The main plugin class for Sponge.

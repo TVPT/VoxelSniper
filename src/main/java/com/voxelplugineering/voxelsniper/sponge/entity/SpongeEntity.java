@@ -29,14 +29,14 @@ import org.spongepowered.api.data.manipulator.DisplayNameData;
 import org.spongepowered.api.text.Texts;
 
 import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.Location;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.core.entity.AbstractEntity;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.entity.AbstractEntity;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.world.Location;
+import com.voxelplugineering.voxelsniper.world.World;
 
 /**
  * A wrapper for a sponge entity.

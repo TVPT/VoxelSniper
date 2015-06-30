@@ -27,12 +27,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.Field;
 
-import com.voxelplugineering.voxelsniper.api.service.command.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.api.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.bukkit.util.CraftBukkitFetcher;
-import com.voxelplugineering.voxelsniper.core.GunsmithLogger;
-import com.voxelplugineering.voxelsniper.core.commands.Command;
-import com.voxelplugineering.voxelsniper.core.util.Context;
+import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A registrar for registering Gunsmith command within the bukkit command handler.

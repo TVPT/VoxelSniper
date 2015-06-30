@@ -25,14 +25,14 @@ package com.voxelplugineering.voxelsniper.bukkit.entity;
 
 import java.util.UUID;
 
-import com.voxelplugineering.voxelsniper.api.entity.EntityType;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.World;
 import com.voxelplugineering.voxelsniper.brush.BrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
-import com.voxelplugineering.voxelsniper.core.entity.AbstractPlayer;
-import com.voxelplugineering.voxelsniper.core.util.Context;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.world.World;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.entity.Player}s.
@@ -87,13 +87,13 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     }
 
     @Override
-    public com.voxelplugineering.voxelsniper.api.world.Location getLocation()
+    public com.voxelplugineering.voxelsniper.world.Location getLocation()
     {
         return BukkitUtilities.getGunsmithLocation(getThis().getLocation(), this.worldReg);
     }
 
     @Override
-    public void setLocation(com.voxelplugineering.voxelsniper.api.world.Location newLocation)
+    public void setLocation(com.voxelplugineering.voxelsniper.world.Location newLocation)
     {
         getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
     }

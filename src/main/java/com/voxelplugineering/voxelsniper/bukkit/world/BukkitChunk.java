@@ -30,17 +30,17 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.api.entity.Entity;
-import com.voxelplugineering.voxelsniper.api.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.api.world.Block;
-import com.voxelplugineering.voxelsniper.api.world.World;
-import com.voxelplugineering.voxelsniper.api.world.material.Material;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
-import com.voxelplugineering.voxelsniper.core.util.math.Vector3i;
-import com.voxelplugineering.voxelsniper.core.world.AbstractChunk;
-import com.voxelplugineering.voxelsniper.core.world.CommonBlock;
-import com.voxelplugineering.voxelsniper.core.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
+import com.voxelplugineering.voxelsniper.world.AbstractChunk;
+import com.voxelplugineering.voxelsniper.world.Block;
+import com.voxelplugineering.voxelsniper.world.CommonBlock;
+import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.World;
+import com.voxelplugineering.voxelsniper.world.material.Material;
 
 /**
  * A bukkit wrapper for {@link org.bukkit.Chunk}.
