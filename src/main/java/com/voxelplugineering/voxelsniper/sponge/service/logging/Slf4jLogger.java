@@ -104,13 +104,13 @@ public class Slf4jLogger implements Logger
     }
 
     @Override
-    public void error(Exception e)
+    public void error(Throwable e)
     {
         this.logger.error(e.getMessage(), e);
     }
 
     @Override
-    public void error(Exception e, String msg)
+    public void error(Throwable e, String msg)
     {
         this.logger.error(msg, e);
     }
