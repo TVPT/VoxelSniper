@@ -48,7 +48,7 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     /**
      * Creates a new {@link BukkitEventHandler}.
      */
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     public BukkitEventHandler(Context context)
     {
         this.pr = context.getRequired(PlayerRegistry.class);
@@ -74,7 +74,8 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     }
 
     /**
-     * An event handler for quit events, proxies to Gunsmith's {@link SniperDestroyEvent}.
+     * An event handler for quit events, proxies to Gunsmith's
+     * {@link SniperDestroyEvent}.
      * 
      * @param event the event
      */
@@ -98,7 +99,8 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
         org.bukkit.entity.Player p = event.getPlayer();
-        if (p.getItemInHand().getType() == this.arrowMaterial && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR))
+        if (p.getItemInHand().getType() == this.arrowMaterial
+                && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK))
         {
             Optional<Player> s = this.pr.getPlayer(event.getPlayer());
             if (s.isPresent())

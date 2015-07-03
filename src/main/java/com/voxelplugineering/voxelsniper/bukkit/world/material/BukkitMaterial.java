@@ -145,5 +145,10 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material> implements 
     {
         return FALLOFF_MATERIALS.contains(getThis());
     }
+    
+    @Override
+    public String toString() {
+        return "BukkitMaterial {name=" + getName() + "}"; 
+    }
 
 }
