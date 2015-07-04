@@ -33,7 +33,8 @@ import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
 public class SpongeConfiguration extends ConfigurationContainer
 {
 
-    String arrowMaterial = ItemTypes.ARROW.getId();
+    String primaryMaterial = ItemTypes.ARROW.getId();
+    String altMaterial = ItemTypes.GUNPOWDER.getId();
     String defaultBiomeName = "plains";//TODO
 
 }

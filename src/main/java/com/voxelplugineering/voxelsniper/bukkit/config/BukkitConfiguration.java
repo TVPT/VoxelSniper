@@ -24,7 +24,6 @@
 package com.voxelplugineering.voxelsniper.bukkit.config;
 
 import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
-import com.voxelplugineering.voxelsniper.service.logging.Logger;
 
 /**
  * Bukkit's specific configuration.
@@ -32,7 +31,8 @@ import com.voxelplugineering.voxelsniper.service.logging.Logger;
 public class BukkitConfiguration extends ConfigurationContainer
 {
 
-    String arrowMaterial = org.bukkit.Material.ARROW.name();
+    String primaryMaterial = org.bukkit.Material.ARROW.name();
+    String altMaterial = org.bukkit.Material.SULPHUR.name();
     String defaultBiomeName = org.bukkit.block.Biome.PLAINS.name();
 
 }

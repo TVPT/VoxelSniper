@@ -28,7 +28,6 @@ import net.minecraft.item.Item;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
-import com.voxelplugineering.voxelsniper.service.logging.Logger;
 
 /**
  * The default configuration values for forge.
@@ -36,7 +35,8 @@ import com.voxelplugineering.voxelsniper.service.logging.Logger;
 public class ForgeConfiguration extends ConfigurationContainer
 {
 
-    int arrowMaterial = Item.getIdFromItem(Items.arrow);
+    int primaryMaterial = Item.getIdFromItem(Items.arrow);
+    int altMaterial = Item.getIdFromItem(Items.gunpowder);
     String defaultBiomeName = BiomeGenBase.plains.biomeName;
 
 }

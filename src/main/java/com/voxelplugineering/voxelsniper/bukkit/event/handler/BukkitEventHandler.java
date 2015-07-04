@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit.event.handler;
 import org.bukkit.Material;
 
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent;
@@ -43,18 +44,20 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
 
     private final PlayerRegistry<org.bukkit.entity.Player> pr;
     private final EventBus bus;
-    private final org.bukkit.Material arrowMaterial;
+    private final org.bukkit.Material primaryMaterial;
+    private final org.bukkit.Material altMaterial;
 
     /**
      * Creates a new {@link BukkitEventHandler}.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public BukkitEventHandler(Context context)
     {
         this.pr = context.getRequired(PlayerRegistry.class);
         this.bus = context.getRequired(EventBus.class);
         Configuration conf = context.getRequired(Configuration.class);
-        this.arrowMaterial = Material.valueOf(conf.get("arrowMaterial", String.class).or("ARROW"));
+        this.primaryMaterial = Material.valueOf(conf.get("primaryMaterial", String.class).or("ARROW"));
+        this.altMaterial = Material.valueOf(conf.get("altMaterial", String.class).or("SULPHUR"));
     }
 
     /**
@@ -74,8 +77,7 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     }
 
     /**
-     * An event handler for quit events, proxies to Gunsmith's
-     * {@link SniperDestroyEvent}.
+     * An event handler for quit events, proxies to Gunsmith's {@link SniperDestroyEvent}.
      * 
      * @param event the event
      */
@@ -99,13 +101,25 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
         org.bukkit.entity.Player p = event.getPlayer();
-        if (p.getItemInHand().getType() == this.arrowMaterial
-                && (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK))
+        if (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR
+                || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK)
         {
+            BrushAction action = null;
+            if (p.getItemInHand().getType() == this.primaryMaterial)
+            {
+                action = BrushAction.PRIMARY;
+            } else if (p.getItemInHand().getType() == this.altMaterial)
+            {
+                action = BrushAction.ALTERNATE;
+            } else
+            {
+                return;
+            }
+
             Optional<Player> s = this.pr.getPlayer(event.getPlayer());
             if (s.isPresent())
             {
-                SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch());
+                SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch(), action);
                 this.bus.post(se);
             }
         }

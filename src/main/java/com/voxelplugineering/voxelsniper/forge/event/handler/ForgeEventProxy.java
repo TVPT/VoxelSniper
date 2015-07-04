@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
+import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperCreateEvent;
@@ -49,7 +50,8 @@ import com.voxelplugineering.voxelsniper.util.Context;
 public class ForgeEventProxy
 {
 
-    private final net.minecraft.item.Item toolMaterial;
+    private final net.minecraft.item.Item primaryMaterial;
+    private final net.minecraft.item.Item altMaterial;
     private final PlayerRegistry<net.minecraft.entity.player.EntityPlayer> pr;
     private final EventBus bus;
     private final ForgeSchedulerService sched;
@@ -61,8 +63,10 @@ public class ForgeEventProxy
         this.bus = context.getRequired(EventBus.class);
         this.sched = (ForgeSchedulerService) context.getRequired(Scheduler.class);
         Configuration conf = context.getRequired(Configuration.class);
-        int id = conf.get("arrowMaterial", int.class).or(Item.getIdFromItem(Items.arrow));
-        this.toolMaterial = Item.getItemById(id);
+        int id = conf.get("primaryMaterial", int.class).or(Item.getIdFromItem(Items.arrow));
+        this.primaryMaterial = Item.getItemById(id);
+        int aid = conf.get("altMaterial", int.class).or(Item.getIdFromItem(Items.gunpowder));
+        this.altMaterial = Item.getItemById(aid);
     }
 
     /**
@@ -110,13 +114,23 @@ public class ForgeEventProxy
             return;
         }
         GunsmithLogger.getLogger().debug("PlayerInteractEvent for " + event.entityPlayer.getName());
-        if (event.entityPlayer.getCurrentEquippedItem().getItem() == this.toolMaterial
-                && (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
+        if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
         {
+            BrushAction action;
+            if (event.entityPlayer.getCurrentEquippedItem().getItem() == this.primaryMaterial)
+            {
+                action = BrushAction.PRIMARY;
+            } else if (event.entityPlayer.getCurrentEquippedItem().getItem() == this.altMaterial)
+            {
+                action = BrushAction.ALTERNATE;
+            } else
+            {
+                return;
+            }
             Optional<Player> s = this.pr.getPlayer(event.entityPlayer.getName());
             if (s.isPresent())
             {
-                SnipeEvent se = new SnipeEvent(s.get(), event.entityPlayer.rotationYawHead, event.entityPlayer.rotationPitch);
+                SnipeEvent se = new SnipeEvent(s.get(), event.entityPlayer.rotationYawHead, event.entityPlayer.rotationPitch, action);
                 this.bus.post(se);
             }
         }

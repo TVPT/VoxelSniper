@@ -28,6 +28,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent;
@@ -46,7 +47,8 @@ public class SpongeEventHandler
 
     private final PlayerRegistry<org.spongepowered.api.entity.player.Player> players;
     private final EventBus bus;
-    private final ItemType tool;
+    private final ItemType primaryMaterial;
+    private final ItemType altMaterial;
 
     @SuppressWarnings("unchecked")
     public SpongeEventHandler(Context context)
@@ -54,13 +56,21 @@ public class SpongeEventHandler
         this.players = context.getRequired(PlayerRegistry.class);
         this.bus = context.getRequired(EventBus.class);
         Configuration conf = context.getRequired(Configuration.class);
-        Optional<String> id = conf.get("arrowMaterial", String.class);
+        Optional<String> id = conf.get("primaryMaterial", String.class);
         if (id.isPresent())
         {
-            this.tool = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, id.get()).or(ItemTypes.ARROW);
+            this.primaryMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, id.get()).or(ItemTypes.ARROW);
         } else
         {
-            this.tool = ItemTypes.ARROW;
+            this.primaryMaterial = ItemTypes.ARROW;
+        }
+        Optional<String> aid = conf.get("altMaterial", String.class);
+        if (id.isPresent())
+        {
+            this.altMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, aid.get()).or(ItemTypes.GUNPOWDER);
+        } else
+        {
+            this.altMaterial = ItemTypes.GUNPOWDER;
         }
     }
 
@@ -109,13 +119,24 @@ public class SpongeEventHandler
         {
             return;
         }
-        if (p.getItemInHand().get().getItem().equals(this.tool) && event.getInteractionType() == EntityInteractionTypes.USE)
+        if (event.getInteractionType() == EntityInteractionTypes.USE)
         {
+            BrushAction action;
+            if (p.getItemInHand().get().getItem().equals(this.primaryMaterial))
+            {
+                action = BrushAction.PRIMARY;
+            } else if (p.getItemInHand().get().getItem().equals(this.altMaterial))
+            {
+                action = BrushAction.ALTERNATE;
+            } else
+            {
+                return;
+            }
             Optional<Player> s = this.players.getPlayer(event.getEntity());
             if (s.isPresent())
             {
                 com.flowpowered.math.vector.Vector3d rotation = p.getRotation(); // {yaw, pitch, roll}
-                SnipeEvent se = new SnipeEvent(s.get(), rotation.getX(), rotation.getY());
+                SnipeEvent se = new SnipeEvent(s.get(), rotation.getX(), rotation.getY(), action);
                 this.bus.post(se);
             }
         }
