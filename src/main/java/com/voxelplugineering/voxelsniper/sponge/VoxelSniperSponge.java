@@ -23,9 +23,12 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
+import java.io.File;
+
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.service.config.DefaultConfig;
 
 import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.Gunsmith;
@@ -47,6 +50,9 @@ public class VoxelSniperSponge implements Expansion
     @Inject private org.spongepowered.api.Game game;
     @Inject private org.slf4j.Logger logger;
     @Inject private PluginContainer plugin;
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private File defaultConfig;
 
     /**
      * Marks the server as having sponge.
@@ -69,7 +75,7 @@ public class VoxelSniperSponge implements Expansion
     {
         instance = this;
 
-        Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.logger));
+        Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.logger, this.defaultConfig.getParentFile()));
         Gunsmith.getServiceManager().start();
 
         Context context = Gunsmith.getServiceManager().getContext();

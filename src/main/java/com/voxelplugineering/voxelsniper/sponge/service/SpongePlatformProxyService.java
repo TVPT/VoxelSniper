@@ -43,9 +43,9 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
      * 
      * @param game The game instance
      */
-    public SpongePlatformProxyService(Context context, org.spongepowered.api.Game game)
+    public SpongePlatformProxyService(Context context, org.spongepowered.api.Game game, File root)
     {
-        super(context, new File("", "VoxelSniper"));
+        super(context, root);
         this.game = checkNotNull(game);
     }
 

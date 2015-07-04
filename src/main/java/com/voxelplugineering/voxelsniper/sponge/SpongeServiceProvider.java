@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
+import java.io.File;
+
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.biome.BiomeType;
@@ -77,6 +79,7 @@ public class SpongeServiceProvider
     private final org.spongepowered.api.Game game;
     private final PluginContainer plugin;
     private final org.slf4j.Logger logger;
+    private final File root;
 
     /**
      * Creates a new {@link SpongeServiceProvider}.
@@ -85,11 +88,12 @@ public class SpongeServiceProvider
      * @param plugin The plugin container
      * @param logger The logger
      */
-    public SpongeServiceProvider(org.spongepowered.api.Game game, PluginContainer plugin, org.slf4j.Logger logger)
+    public SpongeServiceProvider(org.spongepowered.api.Game game, PluginContainer plugin, org.slf4j.Logger logger, File root)
     {
         this.game = game;
         this.plugin = plugin;
         this.logger = logger;
+        this.root = root;
     }
 
     @PostInit
@@ -116,7 +120,7 @@ public class SpongeServiceProvider
     @Builder(target = PlatformProxy.class, priority = 4000)
     public PlatformProxy getPlatformProxy(Context context)
     {
-        return new SpongePlatformProxyService(context, this.game);
+        return new SpongePlatformProxyService(context, this.game, this.root);
     }
 
     /**
