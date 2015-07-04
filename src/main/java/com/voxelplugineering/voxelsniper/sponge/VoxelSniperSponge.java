@@ -45,6 +45,9 @@ import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 public class VoxelSniperSponge implements Expansion
 {
 
+    /**
+     * The plugin instance.
+     */
     public static VoxelSniperSponge instance = null;
 
     @Inject private org.spongepowered.api.Game game;
@@ -103,7 +106,7 @@ public class VoxelSniperSponge implements Expansion
     @Subscribe
     public void onServerStop(org.spongepowered.api.event.state.ServerStoppingEvent event)
     {
-        if (Gunsmith.getServiceManager().isInitialized())
+        if (Gunsmith.getServiceManager().isRunning())
         {
             Gunsmith.getServiceManager().shutdown();
         }

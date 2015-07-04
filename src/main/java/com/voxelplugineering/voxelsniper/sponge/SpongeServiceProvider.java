@@ -73,6 +73,7 @@ import com.voxelplugineering.voxelsniper.world.World;
 /**
  * A provider for bukkit's initialization values.
  */
+@SuppressWarnings({ "checkstyle:javadocmethod", "javadoc" })
 public class SpongeServiceProvider
 {
 
@@ -97,59 +98,35 @@ public class SpongeServiceProvider
     }
 
     @PostInit
-    public void postInit(Context c) {
-        GunsmithLogger.getLogger().registerLogger(new Slf4jLogger(this.logger), "sponge");
+    public void postInit(Context c)
+    {
+        GunsmithLogger.getLogger().registerLogger("sponge", new Slf4jLogger(this.logger));
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = TextFormatParser.class, priority = 0)
     public TextFormatParser getFormatProxy(Context context)
     {
         return new SpongeTextFormatService(context);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PlatformProxy.class, priority = 4000)
     public PlatformProxy getPlatformProxy(Context context)
     {
         return new SpongePlatformProxyService(context, this.game, this.root);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param config The service
-     */
     @InitHook(target = Configuration.class)
     public void registerConfiguration(Context context, Configuration config)
     {
         config.registerContainer(SpongeConfiguration.class);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = MaterialRegistry.class, priority = 5000)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new MaterialRegistryService<org.spongepowered.api.block.BlockType>(context);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = MaterialRegistry.class)
     public void registerMaterials(Context context, MaterialRegistry<?> service)
     {
@@ -157,16 +134,10 @@ public class SpongeServiceProvider
                 (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
         for (org.spongepowered.api.block.BlockType m : this.game.getRegistry().getAllOf(BlockType.class))
         {
-            System.out.println(m.getId());
             registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m));
         }
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = WorldRegistry.class, priority = 6000)
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
@@ -174,22 +145,12 @@ public class SpongeServiceProvider
         return new WorldRegistryService<org.spongepowered.api.world.World>(context, provider);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PermissionProxy.class, priority = 7000)
     public PermissionProxy getPermissionProxy(Context context)
     {
         return new SpongePermissionProxyService(context);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PlayerRegistry.class, priority = 8000)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
@@ -197,22 +158,12 @@ public class SpongeServiceProvider
                 new SpongeConsoleProxy());
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = EventBus.class)
     public void registerEventProxies(Context context, EventBus service)
     {
         this.game.getEventManager().register(this.plugin, new SpongeEventHandler(context));
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = CommandHandler.class)
     public void registerCommands(Context context, CommandHandler service)
     {
@@ -220,33 +171,18 @@ public class SpongeServiceProvider
         cmd.setRegistrar(new SpongeCommandRegistrar(context));
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = Scheduler.class, priority = 11000)
     public Scheduler getSchedulerProxy(Context context)
     {
         return new SpongeSchedulerService(context, this.plugin, this.game);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = BiomeRegistry.class, priority = 12000)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<org.spongepowered.api.world.biome.BiomeType>(context);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {

@@ -63,69 +63,40 @@ import com.voxelplugineering.voxelsniper.world.material.Material;
 /**
  * A common proxy for operations common to both server and client side.
  */
+@SuppressWarnings({ "checkstyle:javadocmethod", "javadoc" })
 public abstract class CommonProxy
 {
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = TextFormatParser.class, priority = 0)
     public TextFormatParser getFormatProxy(Context context)
     {
         return new ForgeTextFormatParser(context);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PlatformProxy.class, priority = 4000)
     public PlatformProxy getPlatformProxy(Context context)
     {
         return new ForgePlatformProxyService(context, VoxelSniperForge.voxelsniper.getConfigDir());
     }
 
-    /**
-     * Init hook
-     * 
-     * @param config The service
-     */
     @InitHook(target = Configuration.class)
     public void registerConfiguration(Context context, Configuration config)
     {
         config.registerContainer(ForgeConfiguration.class);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = MaterialRegistry.class, priority = 5000)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new ProvidedMaterialRegistryService<net.minecraft.block.Block>(context, new MaterialProvider());
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PermissionProxy.class, priority = 7000)
     public PermissionProxy getPermissionProxy(Context context)
     {
         return new ForgePermissionProxyService(context);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = EventBus.class)
     public void registerEventProxies(Context context, EventBus service)
     {
@@ -134,49 +105,28 @@ public abstract class CommonProxy
         FMLCommonHandler.instance().bus().register(events);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param cmd The service
-     */
     @InitHook(target = CommandHandler.class)
     public void registerCommands(Context context, CommandHandler cmd)
     {
         cmd.setRegistrar(new ForgeCommandRegistrar(context));
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = Scheduler.class, priority = 11000)
     public Scheduler getSchedulerProxy(Context context)
     {
         return new ForgeSchedulerService(context);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = BiomeRegistry.class, priority = 12000)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<net.minecraft.world.biome.BiomeGenBase>(context);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
-        @SuppressWarnings("unchecked")
-        BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg =
+        @SuppressWarnings("unchecked") BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg =
                 (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;
         for (Object b : BiomeGenBase.BIOME_ID_MAP.keySet())
         {
@@ -186,8 +136,9 @@ public abstract class CommonProxy
     }
 
     @PostInit
-    public void postInit(Context c) {
-        GunsmithLogger.getLogger().registerLogger(new Log4jLogger(VoxelSniperForge.voxelsniper.getLogger()), "forge");
+    public void postInit(Context c)
+    {
+        GunsmithLogger.getLogger().registerLogger("forge", new Log4jLogger(VoxelSniperForge.voxelsniper.getLogger()));
     }
 
     /**

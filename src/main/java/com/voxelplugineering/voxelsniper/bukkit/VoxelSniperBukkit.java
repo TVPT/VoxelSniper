@@ -60,7 +60,7 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin
     @Override
     public void onDisable()
     {
-        if (Gunsmith.getServiceManager().isInitialized())
+        if (Gunsmith.getServiceManager().isRunning())
         {
             Gunsmith.getServiceManager().shutdown();
         }

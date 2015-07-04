@@ -29,3 +29,4 @@ dependency-reduced-pom.xml
 dependency-reduced-pom.xml
 
 #Specific files to the project
+*.checkstyle

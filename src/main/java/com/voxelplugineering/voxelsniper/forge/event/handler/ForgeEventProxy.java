@@ -56,6 +56,11 @@ public class ForgeEventProxy
     private final EventBus bus;
     private final ForgeSchedulerService sched;
 
+    /**
+     * Creates a new {@link ForgeEventProxy}.
+     * 
+     * @param context The context
+     */
     @SuppressWarnings({ "unchecked" })
     public ForgeEventProxy(Context context)
     {

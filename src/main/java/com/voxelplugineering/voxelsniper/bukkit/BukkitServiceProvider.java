@@ -72,6 +72,7 @@ import com.voxelplugineering.voxelsniper.world.World;
 /**
  * A provider for bukkit's initialization values.
  */
+@SuppressWarnings({ "checkstyle:javadocmethod", "javadoc" })
 public class BukkitServiceProvider
 {
 
@@ -87,82 +88,46 @@ public class BukkitServiceProvider
         this.plugin = checkNotNull(pl);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = TextFormatParser.class, priority = 0)
     public TextFormatParser getFormatProxy(Context context)
     {
         return new BukkitTextFormatParser(context);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PlatformProxy.class, priority = 4000)
     public PlatformProxy getPlatformProxy(Context context)
     {
         return new BukkitPlatformProxyService(context, this.plugin.getDataFolder());
     }
 
-    /**
-     * Init hook
-     * 
-     * @param config The service
-     */
     @InitHook(target = Configuration.class)
     public void registerConfiguration(Context context, Configuration config)
     {
         config.registerContainer(BukkitConfiguration.class);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = MaterialRegistry.class, priority = 5000)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new MaterialRegistryService<org.bukkit.Material>(context);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = MaterialRegistry.class)
     public void registerMaterials(Context context, MaterialRegistry<?> service)
     {
-        @SuppressWarnings("unchecked")
-        MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
+        @SuppressWarnings("unchecked") MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
         for (org.bukkit.Material m : org.bukkit.Material.values())
         {
             registry.registerMaterial(m.name(), m, new BukkitMaterial(m));
         }
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = WorldRegistry.class, priority = 6000)
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
         return new WorldRegistryService<org.bukkit.World>(context, new WorldRegistryProvider(context));
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PermissionProxy.class, priority = 7000)
     public PermissionProxy getPermissionProxy(Context context)
     {
@@ -174,11 +139,6 @@ public class BukkitServiceProvider
         return new SuperPermsPermissionService(context);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = PlayerRegistry.class, priority = 8000)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
@@ -186,22 +146,12 @@ public class BukkitServiceProvider
         return new PlayerRegistryService<org.bukkit.entity.Player>(context, new PlayerRegistryProvider(context), console);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = EventBus.class)
     public void registerEventProxies(Context context, EventBus service)
     {
         org.bukkit.Bukkit.getPluginManager().registerEvents(new BukkitEventHandler(context), this.plugin);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = CommandHandler.class)
     public void registerCommands(Context context, CommandHandler service)
     {
@@ -209,38 +159,22 @@ public class BukkitServiceProvider
         cmd.setRegistrar(new BukkitCommandRegistrar(context));
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = Scheduler.class, priority = 11000)
     public Scheduler getSchedulerProxy(Context context)
     {
         return new BukkitSchedulerService(context, this.plugin);
     }
 
-    /**
-     * Builder
-     * 
-     * @return The service
-     */
     @Builder(target = BiomeRegistry.class, priority = 12000)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<org.bukkit.block.Biome>(context);
     }
 
-    /**
-     * Init hook
-     * 
-     * @param service The service
-     */
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
-        @SuppressWarnings("unchecked")
-        BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
+        @SuppressWarnings("unchecked") BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
         for (org.bukkit.block.Biome b : org.bukkit.block.Biome.values())
         {
             reg.registerBiome(b.name(), b, new BukkitBiome(b));
@@ -248,8 +182,9 @@ public class BukkitServiceProvider
     }
 
     @PostInit
-    public void postInit(Context c) {
-        GunsmithLogger.getLogger().registerLogger(new JavaUtilLogger(this.plugin.getLogger()), "bukkit");
+    public void postInit(Context c)
+    {
+        GunsmithLogger.getLogger().registerLogger("bukkit", new JavaUtilLogger(this.plugin.getLogger()));
     }
 
 }

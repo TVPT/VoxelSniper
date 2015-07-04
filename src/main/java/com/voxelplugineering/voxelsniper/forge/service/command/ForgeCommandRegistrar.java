@@ -42,6 +42,11 @@ public class ForgeCommandRegistrar implements CommandRegistrar
     private final Context context;
     private List<ForgeCommand> pending = Lists.newArrayList();
 
+    /**
+     * Creates a new {@link ForgeCommandRegistrar}.
+     * 
+     * @param context The context
+     */
     public ForgeCommandRegistrar(Context context)
     {
         this.context = context;

@@ -31,8 +31,9 @@
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
     </module>
-
+	
     <module name="TreeWalker">
+	    <module name="SuppressWarningsHolder" />
         <module name="OuterTypeFilename"/>
         <module name="IllegalTokenText">
             <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
@@ -48,10 +49,6 @@
         <module name="LineLength">
             <property name="max" value="150"/>
             <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
-        </module>
-        <module name="LineLength">
-            <property name="max" value="100"/>
-            <property name="ignorePattern" value="^[ ]*([a-zA-Z0-9\{\}\+\|\&amp;\&quot;@\(\)\&gt;\.]|//)"/>
         </module>
         <module name="AvoidStarImport"/>
         <!-- Check doesn't exist in current release of checkstyle -->
@@ -163,16 +160,16 @@
             <property name="scope" value="protected"/>
             <property name="severity" value="warning"/>
             <property name="allowMissingJavadoc" value="false"/>
-            <property name="allowMissingParamTags" value="false"/>
-            <property name="allowMissingReturnTag" value="false"/>
-            <property name="allowMissingThrowsTags" value="false"/>
+            <property name="allowMissingParamTags" value="true"/>
+            <property name="allowMissingReturnTag" value="true"/>
+            <property name="allowMissingThrowsTags" value="true"/>
             <property name="allowThrowsTagsForSubclasses" value="false"/>
             <property name="allowUndeclaredRTE" value="true"/>
         </module>
 
         <module name="JavadocType">
             <property name="scope" value="protected"/>
-            <property name="severity" value="error"/>
+            <property name="severity" value="warning"/>
         </module>
 
         <module name="JavadocStyle">
@@ -191,4 +188,5 @@
             <property name="checkMethods" value="false"/>
         </module>
     </module>
+	<module name="SuppressWarningsFilter" />
 </module>

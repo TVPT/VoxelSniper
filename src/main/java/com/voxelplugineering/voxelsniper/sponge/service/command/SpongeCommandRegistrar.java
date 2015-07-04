@@ -36,6 +36,11 @@ public class SpongeCommandRegistrar implements CommandRegistrar
 
     private final Context context;
 
+    /**
+     * Creates a new {@link SpongeCommandRegistrar}.
+     * 
+     * @param context The context
+     */
     public SpongeCommandRegistrar(Context context)
     {
         this.context = context;

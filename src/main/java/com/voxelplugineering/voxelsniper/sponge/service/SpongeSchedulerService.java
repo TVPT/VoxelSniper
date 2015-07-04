@@ -43,8 +43,6 @@ import com.voxelplugineering.voxelsniper.util.Context;
 public class SpongeSchedulerService extends AbstractService implements Scheduler
 {
 
-    private static final int MILLISECONDS_PER_TICK = 50;
-
     private Map<org.spongepowered.api.service.scheduler.Task, SpongeTask> tasks;
     private final PluginContainer plugin;
     private final Game game;

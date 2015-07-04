@@ -32,20 +32,15 @@ import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.shape.ComplexMaterialShape;
-import com.voxelplugineering.voxelsniper.shape.MaterialShape;
-import com.voxelplugineering.voxelsniper.shape.Shape;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.AbstractWorld;
-import com.voxelplugineering.voxelsniper.world.Block;
 import com.voxelplugineering.voxelsniper.world.Chunk;
 import com.voxelplugineering.voxelsniper.world.CommonBlock;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
-import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 
@@ -65,8 +60,8 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     /**
      * Creates a new {@link SpongeWorld}.
      * 
+     * @param context The context
      * @param world The world to wrap
-     * @param materials The material registry for this world
      * @param thread The main thread of this world
      */
     @SuppressWarnings("unchecked")
@@ -201,36 +196,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
             SpongeBiome spongeBiome = (SpongeBiome) biome;
             getThis().setBiome(x, z, spongeBiome.getThis());
         }
-    }
-
-    @Override
-    public MaterialShape getShapeFromWorld(Location origin, Shape shape)
-    {
-        MaterialShape mat = new ComplexMaterialShape(shape, this.materials.getAirMaterial());
-        for (int x = 0; x < shape.getWidth(); x++)
-        {
-            int ox = x + origin.getFlooredX() - shape.getOrigin().getX();
-            for (int y = 0; y < shape.getHeight(); y++)
-            {
-                int oy = y + origin.getFlooredY() - shape.getOrigin().getY();
-                for (int z = 0; z < shape.getLength(); z++)
-                {
-                    int oz = z + origin.getFlooredZ() - shape.getOrigin().getZ();
-                    if (shape.get(x, y, z, false))
-                    {
-                        Optional<Block> block = getBlock(ox, oy, oz);
-                        if (!block.isPresent())
-                        {
-                            shape.unset(x, y, z, false);
-                        } else
-                        {
-                            mat.setMaterial(x, y, z, false, block.get().getMaterial());
-                        }
-                    }
-                }
-            }
-        }
-        return mat;
     }
 
     @Override

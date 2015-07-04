@@ -50,6 +50,11 @@ public class SpongeEventHandler
     private final ItemType primaryMaterial;
     private final ItemType altMaterial;
 
+    /**
+     * Creates a new {@link SpongeEventHandler}.
+     * 
+     * @param context The context
+     */
     @SuppressWarnings("unchecked")
     public SpongeEventHandler(Context context)
     {

@@ -57,6 +57,9 @@ public class VoxelSniperForge
 
     //@formatter:off
     
+    /**
+     * The plguin instance.
+     */
     @Instance(value = "voxelsniperforge")
     public static VoxelSniperForge voxelsniper;
 
@@ -145,7 +148,7 @@ public class VoxelSniperForge
     @EventHandler
     public void onDisabled(FMLModDisabledEvent event)
     {
-        if (Gunsmith.getServiceManager().isInitialized() && !SpongeDetector.isSponge())
+        if (Gunsmith.getServiceManager().isRunning() && !SpongeDetector.isSponge())
         {
             Gunsmith.getServiceManager().shutdown();
         }
@@ -159,7 +162,7 @@ public class VoxelSniperForge
     @EventHandler
     public void onShutdown(FMLServerStoppingEvent event)
     {
-        if (Gunsmith.getServiceManager().isInitialized() && !SpongeDetector.isSponge())
+        if (Gunsmith.getServiceManager().isRunning() && !SpongeDetector.isSponge())
         {
             Gunsmith.getServiceManager().shutdown();
         }
@@ -185,6 +188,11 @@ public class VoxelSniperForge
         return proxy;
     }
 
+    /**
+     * Gets the config directory.
+     * 
+     * @return The config directory.
+     */
     public File getConfigDir()
     {
         return this.configDir;
