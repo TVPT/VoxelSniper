@@ -28,7 +28,7 @@ import com.voxelplugineering.voxelsniper.GunsmithMain;
 /**
  * The main class for utility functions.
  */
-public class PlatformMain extends GunsmithMain
+public class PlatformMain
 {
 
     /**
