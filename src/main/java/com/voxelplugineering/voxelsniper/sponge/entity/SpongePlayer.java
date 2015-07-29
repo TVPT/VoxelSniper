@@ -148,4 +148,19 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
         throw new UnsupportedOperationException("Cannot remove player entities");
     }
 
+    @Override
+    public double getYaw() {
+        return getThis().getRotation().getY();
+    }
+
+    @Override
+    public double getPitch() {
+        return getThis().getRotation().getX();
+    }
+
+    @Override
+    public double getRoll() {
+        return getThis().getRotation().getZ();
+    }
+
 }

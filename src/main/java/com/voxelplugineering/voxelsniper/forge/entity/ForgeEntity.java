@@ -36,6 +36,8 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
 
+import net.minecraft.entity.item.EntityArmorStand;
+
 /**
  * A wrapper for a forge entity.
  */
@@ -116,6 +118,21 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
     {
         getThis().worldObj.removeEntity(getThis());
         return true;
+    }
+
+    @Override
+    public double getYaw() {
+        return getThis().rotationYaw;
+    }
+
+    @Override
+    public double getPitch() {
+        return getThis().rotationPitch;
+    }
+
+    @Override
+    public double getRoll() {
+        return 0;
     }
 
 }

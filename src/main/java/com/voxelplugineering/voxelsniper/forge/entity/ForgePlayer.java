@@ -150,4 +150,19 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public double getYaw() {
+        return getThis().rotationYaw;
+    }
+
+    @Override
+    public double getPitch() {
+        return getThis().rotationPitch;
+    }
+
+    @Override
+    public double getRoll() {
+        return 0;
+    }
 }

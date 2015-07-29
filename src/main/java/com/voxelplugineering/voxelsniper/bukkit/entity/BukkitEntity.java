@@ -113,4 +113,19 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
         getThis().remove();
         return true;
     }
+
+    @Override
+    public double getYaw() {
+        return getThis().getLocation().getYaw();
+    }
+
+    @Override
+    public double getPitch() {
+        return getThis().getLocation().getPitch();
+    }
+
+    @Override
+    public double getRoll() {
+        return 0;//TODO where does bukkit expose armour stands...or do they not
+    }
 }
