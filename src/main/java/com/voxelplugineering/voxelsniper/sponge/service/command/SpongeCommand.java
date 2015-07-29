@@ -69,7 +69,7 @@ public class SpongeCommand implements CommandCallable
     }
 
     @Override
-    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException
+    public CommandResult process(CommandSource source, String arguments) throws CommandException
     {
         String[] args = arguments.split(" ");
         if (source instanceof org.spongepowered.api.entity.player.Player)
@@ -79,18 +79,18 @@ public class SpongeCommand implements CommandCallable
             boolean success = this.command.execute(sniper, args);
             if (success)
             {
-                return Optional.of(CommandResult.success());
+                return CommandResult.success();
             }
         } else if (source instanceof org.spongepowered.api.util.command.source.ConsoleSource)
         {
             boolean success = this.command.execute(this.players.getConsoleSniperProxy(), args);
             if (success)
             {
-                return Optional.of(CommandResult.success());
+                return CommandResult.success();
             }
         }
         // TODO support other types?
-        return Optional.of(CommandResult.empty());
+        return CommandResult.empty();
     }
 
     @Override
