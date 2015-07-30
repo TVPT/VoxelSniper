@@ -146,17 +146,20 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     }
 
     @Override
-    public double getYaw() {
+    public double getYaw()
+    {
         return getThis().getLocation().getYaw();
     }
 
     @Override
-    public double getPitch() {
+    public double getPitch()
+    {
         return getThis().getLocation().getPitch();
     }
 
     @Override
-    public double getRoll() {
+    public double getRoll()
+    {
         return 0;
     }
 

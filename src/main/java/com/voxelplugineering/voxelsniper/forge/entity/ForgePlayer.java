@@ -152,17 +152,20 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     }
 
     @Override
-    public double getYaw() {
+    public double getYaw()
+    {
         return getThis().rotationYaw;
     }
 
     @Override
-    public double getPitch() {
+    public double getPitch()
+    {
         return getThis().rotationPitch;
     }
 
     @Override
-    public double getRoll() {
+    public double getRoll()
+    {
         return 0;
     }
 }

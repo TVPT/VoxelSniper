@@ -149,17 +149,20 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     }
 
     @Override
-    public double getYaw() {
+    public double getYaw()
+    {
         return getThis().getRotation().getY();
     }
 
     @Override
-    public double getPitch() {
+    public double getPitch()
+    {
         return getThis().getRotation().getX();
     }
 
     @Override
-    public double getRoll() {
+    public double getRoll()
+    {
         return getThis().getRotation().getZ();
     }
 
