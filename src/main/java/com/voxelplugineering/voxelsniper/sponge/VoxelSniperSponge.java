@@ -32,11 +32,8 @@ import org.spongepowered.api.service.config.DefaultConfig;
 
 import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.expansion.Expansion;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
-import com.voxelplugineering.voxelsniper.util.Context;
-import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The main plugin class for Sponge.
@@ -80,11 +77,6 @@ public class VoxelSniperSponge implements Expansion
 
         Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.logger, this.defaultConfig.getParentFile()));
         Gunsmith.getServiceManager().start();
-
-        Context context = Gunsmith.getServiceManager().getContext();
-
-        DefaultBrushBuilder.buildBrushes();
-        DefaultBrushBuilder.loadAll(context.getRequired(GlobalBrushManager.class));
     }
 
     @Override

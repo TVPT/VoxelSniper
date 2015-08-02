@@ -25,6 +25,16 @@ package com.voxelplugineering.voxelsniper.forge;
 
 import java.io.File;
 
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
+import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
+import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.util.Context;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -35,18 +45,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
-import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
-import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
-import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
-import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.util.Context;
-import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The core class of VoxelSniper for minecraft forge.
@@ -106,14 +104,9 @@ public class VoxelSniperForge
         {
             Gunsmith.getServiceManager().register(proxy);
             Gunsmith.getServiceManager().start();
-
-            Context context = Gunsmith.getServiceManager().getContext();
-
-            DefaultBrushBuilder.buildBrushes();
-            DefaultBrushBuilder.loadAll(context.getRequired(GlobalBrushManager.class));
         } else
         {
-            this.logger.info("Detected Sponge: disabling VoxelSniper-Forge in favour of sponge version.");
+            this.logger.debug("Detected Sponge: disabling VoxelSniper-Forge in favour of sponge version.");
             // Apparently calling this throws errors as the mod lists are backed
             // by immutable maps
             // Loader.instance().runtimeDisableMod("voxelsniperforge");

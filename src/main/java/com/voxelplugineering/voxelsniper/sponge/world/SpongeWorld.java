@@ -159,7 +159,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         {
             return Optional.absent();
         }
-        org.spongepowered.api.world.Chunk chunk = getThis().getChunk(new com.flowpowered.math.vector.Vector3i(x, y, z)).get();
+        org.spongepowered.api.world.Chunk chunk = getThis().getChunk(x, y, z).get();
         if (this.chunks.containsKey(chunk))
         {
             return Optional.of(this.chunks.get(chunk));

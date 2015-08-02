@@ -24,9 +24,6 @@
 package com.voxelplugineering.voxelsniper.bukkit;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
-import com.voxelplugineering.voxelsniper.util.Context;
-import com.voxelplugineering.voxelsniper.util.defaults.DefaultBrushBuilder;
 
 /**
  * The Main class for the bukkit specific implementation.
@@ -47,11 +44,6 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin
     {
         Gunsmith.getServiceManager().register(new BukkitServiceProvider(this));
         Gunsmith.getServiceManager().start();
-
-        Context context = Gunsmith.getServiceManager().getContext();
-
-        DefaultBrushBuilder.buildBrushes();
-        DefaultBrushBuilder.loadAll(context.getRequired(GlobalBrushManager.class));
     }
 
     /**

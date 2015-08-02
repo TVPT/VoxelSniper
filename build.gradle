@@ -251,6 +251,7 @@ shadowJar {
         include(dependency('com.google.guava:guava:18.0'))
         include(dependency('com.voxelplugineering:VoxelGunsmith:7.1.0-SNAPSHOT'))
         include(dependency('com.google.code.gson:gson:2.3'))
+        include(dependency('org.ow2.asm:asm-all:5.0.3'))
     }
 }
 
