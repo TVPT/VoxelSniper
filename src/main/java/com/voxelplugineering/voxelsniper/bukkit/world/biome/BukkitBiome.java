@@ -29,7 +29,7 @@ import com.voxelplugineering.voxelsniper.world.biome.Biome;
 /**
  * A bukkit wrapper for gunsmith's {@link com.voxelplugineering.voxelsniper.world.biome.Biome}
  */
-public class BukkitBiome extends WeakWrapper<org.bukkit.block.Biome> implements Biome
+public class BukkitBiome extends WeakWrapper<org.bukkit.block.Biome>implements Biome
 {
 
     /**

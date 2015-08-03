@@ -31,7 +31,7 @@ import com.voxelplugineering.voxelsniper.world.biome.Biome;
 /**
  * A wrapper for forge biomes.
  */
-public class ForgeBiome extends WeakWrapper<BiomeGenBase> implements Biome
+public class ForgeBiome extends WeakWrapper<BiomeGenBase>implements Biome
 {
 
     /**

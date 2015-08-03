@@ -99,11 +99,12 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         Location loc = new CommonLocation(this, x, y, z);
         IBlockState state = getThis().getBlockState(new net.minecraft.util.BlockPos(x, y, z));
         ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(state.getBlock());
-        Optional<Material> mat = this.materials.getMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath());
+        Optional<Material> mat = this.materials
+                .getMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath());
         if (mat.isPresent())
         {
             MaterialState ms = ((ForgeMaterial) mat.get()).getState(state);
-            return Optional.<com.voxelplugineering.voxelsniper.world.Block> of(new CommonBlock(loc, ms));
+            return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(loc, ms));
         }
         return Optional.absent();
     }
@@ -158,7 +159,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         }
         ForgeChunk newChunk = new ForgeChunk(chunk, this, this.context);
         this.chunks.put(chunk, newChunk);
-        return Optional.<Chunk> of(newChunk);
+        return Optional.<Chunk>of(newChunk);
     }
 
     @Override

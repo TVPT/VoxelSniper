@@ -39,11 +39,12 @@ import net.minecraft.util.ResourceLocation;
 /**
  * A wrapper for forge's materials ({@link net.minecraft.block.Block}).
  */
-public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implements Material
+public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block>implements Material
 {
 
-    //TODO I dislike this solution as it does nothing to support blocks registered from other mods at runtime.
-    //There is very possibly a better solution that I missed.
+    // TODO I dislike this solution as it does nothing to support blocks registered from other mods
+    // at runtime.
+    // There is very possibly a better solution that I missed.
     private static List<net.minecraft.block.Block> FALLOFF_MATERIALS = Lists.newArrayListWithCapacity(48);
 
     static
@@ -99,7 +100,7 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implem
         FALLOFF_MATERIALS.add(Blocks.yellow_flower);
 
     }
-    
+
     private final MaterialStateCache<IBlockState, ForgeMaterialState> cache;
 
     /**
@@ -117,7 +118,7 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implem
     public String toString()
     {
         ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(getThis());
-        return (!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath();
+        return (!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath();
     }
 
     @Override
@@ -154,7 +155,7 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implem
     public String getName()
     {
         ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(getThis());
-        return (!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath();
+        return (!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath();
     }
 
     @Override

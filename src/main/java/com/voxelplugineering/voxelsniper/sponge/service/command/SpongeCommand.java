@@ -73,9 +73,11 @@ public class SpongeCommand implements CommandCallable
     {
         arguments = arguments.trim();
         String[] args;
-        if(arguments.isEmpty()) {
+        if (arguments.isEmpty())
+        {
             args = new String[0];
-        } else {
+        } else
+        {
             args = arguments.split(" ");
         }
         if (source instanceof org.spongepowered.api.entity.player.Player)

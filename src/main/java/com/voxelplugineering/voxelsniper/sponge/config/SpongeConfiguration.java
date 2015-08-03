@@ -30,11 +30,12 @@ import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
 /**
  * The container for sponge-specific configuration values.
  */
-public class SpongeConfiguration extends ConfigurationContainer
+@SuppressWarnings("javadoc")
+@ConfigurationContainer(name = "sponge")
+public class SpongeConfiguration
 {
 
-    String primaryMaterial = ItemTypes.ARROW.getId();
-    String altMaterial = ItemTypes.GUNPOWDER.getId();
-    String defaultBiomeName = "plains";//TODO
+    public static String primaryMaterial = ItemTypes.ARROW.getId();
+    public static String altMaterial = ItemTypes.GUNPOWDER.getId();
 
 }

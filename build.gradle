@@ -20,7 +20,7 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
         classpath 'org.hibernate.build.gradle:gradle-maven-publish-auth:2.0.1'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.1.1'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
     }
 }
 
@@ -252,6 +252,9 @@ shadowJar {
         include(dependency('com.voxelplugineering:VoxelGunsmith:7.1.0-SNAPSHOT'))
         include(dependency('com.google.code.gson:gson:2.3'))
         include(dependency('org.ow2.asm:asm-all:5.0.3'))
+        include(dependency('ninja.leaping.configurate:configurate-hocon:2.0'))
+        include(dependency('ninja.leaping.configurate:configurate-core:2.0'))
+        include(dependency('com.typesafe:config:1.2.1'))
     }
 }
 

@@ -30,9 +30,9 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.registry.ProvidedWeakRegistry;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
-import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.util.Context;
@@ -46,8 +46,6 @@ import com.voxelplugineering.voxelsniper.world.material.Material;
 public class ProvidedMaterialRegistryService<T> extends AbstractService implements MaterialRegistry<T>
 {
 
-    private final Configuration conf;
-
     private ProvidedWeakRegistry<T, Material> registry;
     private final RegistryProvider<T, Material> provider;
     private String defaultMaterialName;
@@ -60,7 +58,6 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
     public ProvidedMaterialRegistryService(Context context, RegistryProvider<T, Material> provider)
     {
         super(context);
-        this.conf = context.getRequired(Configuration.class, this);
         this.provider = provider;
     }
 
@@ -69,7 +66,7 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
     {
         this.registry = new ProvidedWeakRegistry<T, Material>(this.provider);
         this.registry.setCaseSensitiveKeys(false);
-        this.defaultMaterialName = this.conf.get("defaultMaterialName", String.class).or("air");
+        this.defaultMaterialName = BaseConfiguration.defaultMaterialName;
     }
 
     @Override
@@ -102,7 +99,7 @@ public class ProvidedMaterialRegistryService<T> extends AbstractService implemen
     @Override
     public void registerMaterial(String name, T object, Material material)
     {
-        //TODO clean up the registry to remove this method
+        // TODO clean up the registry to remove this method
         throw new UnsupportedOperationException("Cannot register with a provided registry");
     }
 

@@ -82,7 +82,8 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
         IBlockState b = getThis().getBlockState(new BlockPos(x, y, z));
         CommonLocation l = new CommonLocation(this.getWorld(), x + getThis().xPosition * 16, y, z + getThis().zPosition * 16);
         ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(b.getBlock());
-        Optional<Material> m = this.getWorld().getMaterialRegistry().getMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath());
+        Optional<Material> m = this.getWorld().getMaterialRegistry()
+                .getMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath());
         if (!m.isPresent())
         {
             return Optional.absent();

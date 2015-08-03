@@ -23,13 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.event.handler;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
@@ -37,12 +30,18 @@ import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperCreateEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
+import com.voxelplugineering.voxelsniper.forge.config.ForgeConfiguration;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
-import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import net.minecraft.item.Item;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * An event handler for all forge events that proxy to gunsmith events.
@@ -50,8 +49,6 @@ import com.voxelplugineering.voxelsniper.util.Context;
 public class ForgeEventProxy
 {
 
-    private final net.minecraft.item.Item primaryMaterial;
-    private final net.minecraft.item.Item altMaterial;
     private final PlayerRegistry<net.minecraft.entity.player.EntityPlayer> pr;
     private final EventBus bus;
     private final ForgeSchedulerService sched;
@@ -67,11 +64,6 @@ public class ForgeEventProxy
         this.pr = context.getRequired(PlayerRegistry.class);
         this.bus = context.getRequired(EventBus.class);
         this.sched = (ForgeSchedulerService) context.getRequired(Scheduler.class);
-        Configuration conf = context.getRequired(Configuration.class);
-        int id = conf.get("primaryMaterial", int.class).or(Item.getIdFromItem(Items.arrow));
-        this.primaryMaterial = Item.getItemById(id);
-        int aid = conf.get("altMaterial", int.class).or(Item.getIdFromItem(Items.gunpowder));
-        this.altMaterial = Item.getItemById(aid);
     }
 
     /**
@@ -122,10 +114,10 @@ public class ForgeEventProxy
         if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
         {
             BrushAction action;
-            if (event.entityPlayer.getCurrentEquippedItem().getItem() == this.primaryMaterial)
+            if (event.entityPlayer.getCurrentEquippedItem().getItem().equals(Item.getItemById(ForgeConfiguration.primaryMaterial)))
             {
                 action = BrushAction.PRIMARY;
-            } else if (event.entityPlayer.getCurrentEquippedItem().getItem() == this.altMaterial)
+            } else if (event.entityPlayer.getCurrentEquippedItem().getItem().equals(Item.getItemById(ForgeConfiguration.altMaterial)))
             {
                 action = BrushAction.ALTERNATE;
             } else

@@ -25,7 +25,7 @@ package com.voxelplugineering.voxelsniper.forge;
 
 import com.google.common.base.Function;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
-import com.voxelplugineering.voxelsniper.forge.config.ForgeConfiguration;
+import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.forge.event.handler.ForgeEventProxy;
 import com.voxelplugineering.voxelsniper.forge.service.ForgePermissionProxyService;
 import com.voxelplugineering.voxelsniper.forge.service.ForgePlatformProxyService;
@@ -35,6 +35,7 @@ import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegis
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
+import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.service.Builder;
 import com.voxelplugineering.voxelsniper.service.InitHook;
@@ -68,6 +69,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 public abstract class CommonProxy
 {
 
+    @InitHook(target = AnnotationScanner.class)
+    public void registerScannerExclusions(Context context, AnnotationScanner scanner)
+    {
+        scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/bukkit/");
+        scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/sponge/");
+    }
+
     @Builder(target = TextFormatParser.class, priority = 0)
     public TextFormatParser getFormatProxy(Context context)
     {
@@ -83,7 +91,7 @@ public abstract class CommonProxy
     @InitHook(target = Configuration.class)
     public void registerConfiguration(Context context, Configuration config)
     {
-        config.registerContainer(ForgeConfiguration.class);
+        BaseConfiguration.defaultBiomeName = BiomeGenBase.plains.biomeName;
     }
 
     @Builder(target = MaterialRegistry.class, priority = 5000)
@@ -91,16 +99,19 @@ public abstract class CommonProxy
     {
         return new MaterialRegistryService<net.minecraft.block.Block>(context);
     }
-    
+
     @InitHook(target = MaterialRegistry.class)
-    public void registerMaterials(Context context, MaterialRegistry<net.minecraft.block.Block> reg) {
+    public void registerMaterials(Context context, MaterialRegistry<net.minecraft.block.Block> reg)
+    {
         MaterialStateBuilder builder = new MaterialStateBuilder(reg);
         MaterialStateCache<IBlockState, ForgeMaterialState> cache = new MaterialStateCache<IBlockState, ForgeMaterialState>(builder);
-        for(Object o: Block.blockRegistry.getKeys()) {
+        for (Object o : Block.blockRegistry.getKeys())
+        {
             ResourceLocation rs = (ResourceLocation) o;
             Block block = (Block) Block.blockRegistry.getObject(rs);
             Material material = new ForgeMaterial(block, cache);
-            reg.registerMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath(), block, material);
+            reg.registerMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath(), block,
+                    material);
         }
     }
 
@@ -167,8 +178,9 @@ class MaterialStateBuilder implements Function<IBlockState, ForgeMaterialState>
 {
 
     private final MaterialRegistry<net.minecraft.block.Block> reg;
-    
-    public MaterialStateBuilder(MaterialRegistry<net.minecraft.block.Block> reg) {
+
+    public MaterialStateBuilder(MaterialRegistry<net.minecraft.block.Block> reg)
+    {
         this.reg = reg;
     }
 
@@ -176,7 +188,9 @@ class MaterialStateBuilder implements Function<IBlockState, ForgeMaterialState>
     public ForgeMaterialState apply(IBlockState input)
     {
         ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(input.getBlock());
-        return new ForgeMaterialState(this.reg.getMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath()).get(), input);
+        return new ForgeMaterialState(
+                this.reg.getMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath()).get(),
+                input);
     }
 
 }

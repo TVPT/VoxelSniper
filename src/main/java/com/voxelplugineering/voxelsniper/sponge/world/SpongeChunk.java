@@ -122,7 +122,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
     @Override
     public void refreshChunk()
     {
-        //TODO Sponge refreshChunk
+        // TODO Sponge refreshChunk
     }
 
     @Override

@@ -28,11 +28,12 @@ import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
 /**
  * Bukkit's specific configuration.
  */
-public class BukkitConfiguration extends ConfigurationContainer
+@SuppressWarnings("javadoc")
+@ConfigurationContainer(name = "bukkit")
+public class BukkitConfiguration
 {
 
-    String primaryMaterial = org.bukkit.Material.ARROW.name();
-    String altMaterial = org.bukkit.Material.SULPHUR.name();
-    String defaultBiomeName = org.bukkit.block.Biome.PLAINS.name();
+    public static String primaryMaterial = org.bukkit.Material.ARROW.name();
+    public static String altMaterial = org.bukkit.Material.SULPHUR.name();
 
 }

@@ -58,9 +58,8 @@ public class ForgePermissionProxyService extends AbstractService implements Perm
     @Override
     public boolean hasPermission(Player sniper, String permission)
     {
-        return sniper instanceof ForgePlayer
-                && MinecraftServer.getServer().getConfigurationManager().getOppedPlayers()
-                        .getEntry(((ForgePlayer) sniper).getThis().getGameProfile()) != null;
+        return sniper instanceof ForgePlayer && MinecraftServer.getServer().getConfigurationManager().getOppedPlayers()
+                .getEntry(((ForgePlayer) sniper).getThis().getGameProfile()) != null;
     }
 
 }

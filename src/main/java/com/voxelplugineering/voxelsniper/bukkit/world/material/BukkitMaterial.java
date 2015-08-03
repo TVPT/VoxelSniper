@@ -36,7 +36,7 @@ import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
  */
 public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements com.voxelplugineering.voxelsniper.world.material.Material
 {
-    
+
     /**
      * A static set of materials which are liquids.
      */
@@ -174,20 +174,22 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
     {
         return this.cache.get(data);
     }
-    
+
     /**
      * A function which constructs {@link BukkitMaterialState} instances from input data.
      */
-    public static class MaterialStateBuilder implements Function<Byte, BukkitMaterialState> {
-        
+    public static class MaterialStateBuilder implements Function<Byte, BukkitMaterialState>
+    {
+
         private final BukkitMaterial mat;
-        
+
         /**
          * Creates a new {@link MaterialStateBuilder}.
          * 
          * @param mat The base material
          */
-        public MaterialStateBuilder(BukkitMaterial mat) {
+        public MaterialStateBuilder(BukkitMaterial mat)
+        {
             this.mat = mat;
         }
 
@@ -196,7 +198,7 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
         {
             return new BukkitMaterialState(this.mat, input);
         }
-        
+
     }
 
 }

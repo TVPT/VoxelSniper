@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.util;
 
-
 /**
  * A utility class to fetch the current craftbukkit package for this version.
  */

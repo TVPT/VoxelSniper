@@ -29,7 +29,6 @@ import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
-import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
 import com.voxelplugineering.voxelsniper.bukkit.event.handler.BukkitEventHandler;
 import com.voxelplugineering.voxelsniper.bukkit.service.BukkitPlatformProxyService;
@@ -42,7 +41,9 @@ import com.voxelplugineering.voxelsniper.bukkit.service.command.BukkitConsoleSen
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
+import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.service.Builder;
 import com.voxelplugineering.voxelsniper.service.CommandHandlerService;
@@ -88,6 +89,13 @@ public class BukkitServiceProvider
         this.plugin = checkNotNull(pl);
     }
 
+    @InitHook(target = AnnotationScanner.class)
+    public void registerScannerExclusions(Context context, AnnotationScanner scanner)
+    {
+        scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/forge/");
+        scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/sponge/");
+    }
+
     @Builder(target = TextFormatParser.class, priority = 0)
     public TextFormatParser getFormatProxy(Context context)
     {
@@ -103,7 +111,9 @@ public class BukkitServiceProvider
     @InitHook(target = Configuration.class)
     public void registerConfiguration(Context context, Configuration config)
     {
-        config.registerContainer(BukkitConfiguration.class);
+        // We perform configuration overrides here as its before the configuration
+        // is loaded from file in the post-init step.
+        BaseConfiguration.defaultBiomeName = org.bukkit.block.Biome.PLAINS.name();
     }
 
     @Builder(target = MaterialRegistry.class, priority = 5000)

@@ -109,7 +109,8 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         if (material instanceof BukkitMaterialState)
         {
             BukkitMaterialState bukkitMaterial = (BukkitMaterialState) material;
-            getThis().getBlock(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(), true);
+            getThis().getBlock(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(),
+                    true);
         }
     }
 

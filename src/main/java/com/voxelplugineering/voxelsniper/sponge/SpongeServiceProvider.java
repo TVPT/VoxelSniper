@@ -35,6 +35,7 @@ import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.service.Builder;
 import com.voxelplugineering.voxelsniper.service.CommandHandlerService;
@@ -55,7 +56,6 @@ import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
-import com.voxelplugineering.voxelsniper.sponge.config.SpongeConfiguration;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
 import com.voxelplugineering.voxelsniper.sponge.event.handler.SpongeEventHandler;
 import com.voxelplugineering.voxelsniper.sponge.service.SpongePermissionProxyService;
@@ -101,6 +101,13 @@ public class SpongeServiceProvider
         this.root = root;
     }
 
+    @InitHook(target = AnnotationScanner.class)
+    public void registerScannerExclusions(Context context, AnnotationScanner scanner)
+    {
+        scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/forge/");
+        scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/bukkit/");
+    }
+
     @PostInit
     public void postInit(Context c)
     {
@@ -122,7 +129,7 @@ public class SpongeServiceProvider
     @InitHook(target = Configuration.class)
     public void registerConfiguration(Context context, Configuration config)
     {
-        config.registerContainer(SpongeConfiguration.class);
+        // config overrides go here
     }
 
     @Builder(target = MaterialRegistry.class, priority = 5000)
@@ -199,12 +206,14 @@ public class SpongeServiceProvider
             reg.registerBiome(b.getName(), b, new SpongeBiome(b));
         }
     }
-    
-    public static class MaterialStateBuilder implements Function<BlockState, SpongeMaterialState> {
-        
+
+    public static class MaterialStateBuilder implements Function<BlockState, SpongeMaterialState>
+    {
+
         private final MaterialRegistry<org.spongepowered.api.block.BlockType> reg;
-        
-        public MaterialStateBuilder(MaterialRegistry<org.spongepowered.api.block.BlockType> reg) {
+
+        public MaterialStateBuilder(MaterialRegistry<org.spongepowered.api.block.BlockType> reg)
+        {
             this.reg = reg;
         }
 
@@ -213,7 +222,7 @@ public class SpongeServiceProvider
         {
             return new SpongeMaterialState(this.reg.getMaterial(input.getType().getId().replace("minecraft:", "")).get(), input);
         }
-        
+
     }
 
     /**

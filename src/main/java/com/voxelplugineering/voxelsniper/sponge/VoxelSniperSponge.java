@@ -47,9 +47,12 @@ public class VoxelSniperSponge implements Expansion
      */
     public static VoxelSniperSponge instance = null;
 
-    @Inject private org.spongepowered.api.Game game;
-    @Inject private org.slf4j.Logger logger;
-    @Inject private PluginContainer plugin;
+    @Inject
+    private org.spongepowered.api.Game game;
+    @Inject
+    private org.slf4j.Logger logger;
+    @Inject
+    private PluginContainer plugin;
     @Inject
     @DefaultConfig(sharedRoot = false)
     private File defaultConfig;

@@ -165,7 +165,8 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         if (material instanceof BukkitMaterialState)
         {
             BukkitMaterialState bukkitMaterial = (BukkitMaterialState) material;
-            getThis().getBlockAt(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(), true);
+            getThis().getBlockAt(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(),
+                    true);
         }
     }
 

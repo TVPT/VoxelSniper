@@ -23,15 +23,13 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.event.handler;
 
-import org.bukkit.Material;
-
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
+import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
-import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
@@ -44,8 +42,6 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
 
     private final PlayerRegistry<org.bukkit.entity.Player> pr;
     private final EventBus bus;
-    private final org.bukkit.Material primaryMaterial;
-    private final org.bukkit.Material altMaterial;
 
     /**
      * Creates a new {@link BukkitEventHandler}.
@@ -55,9 +51,6 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     {
         this.pr = context.getRequired(PlayerRegistry.class);
         this.bus = context.getRequired(EventBus.class);
-        Configuration conf = context.getRequired(Configuration.class);
-        this.primaryMaterial = Material.valueOf(conf.get("primaryMaterial", String.class).or("ARROW"));
-        this.altMaterial = Material.valueOf(conf.get("altMaterial", String.class).or("SULPHUR"));
     }
 
     /**
@@ -105,10 +98,10 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
                 || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK)
         {
             BrushAction action = null;
-            if (p.getItemInHand().getType() == this.primaryMaterial)
+            if (p.getItemInHand().getType().equals(BukkitConfiguration.primaryMaterial))
             {
                 action = BrushAction.PRIMARY;
-            } else if (p.getItemInHand().getType() == this.altMaterial)
+            } else if (p.getItemInHand().getType().equals(BukkitConfiguration.altMaterial))
             {
                 action = BrushAction.ALTERNATE;
             } else

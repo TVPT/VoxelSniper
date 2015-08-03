@@ -39,9 +39,10 @@ import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
  * Wraps sponge's {@link BlockType}.
  */
 public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
-{ //TODO I dislike this solution as it does nothing to support BlockTypes registered from other mods at runtime.
+{ // TODO I dislike this solution as it does nothing to support BlockTypes registered from other
+  // mods at runtime.
 
-    //There is very possibly a better solution that I missed.
+    // There is very possibly a better solution that I missed.
     private static List<BlockType> FALLOFF_MATERIALS = Lists.newArrayListWithCapacity(48);
 
     static
@@ -96,9 +97,9 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
         FALLOFF_MATERIALS.add(BlockTypes.YELLOW_FLOWER);
 
     }
-    
+
     private final MaterialStateCache<BlockState, SpongeMaterialState> cache;
-    
+
     /**
      * Creates {@link SpongeMaterial}.
      * 

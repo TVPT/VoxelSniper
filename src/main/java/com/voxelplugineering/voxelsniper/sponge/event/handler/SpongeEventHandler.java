@@ -33,10 +33,10 @@ import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
-import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
+import com.voxelplugineering.voxelsniper.sponge.config.SpongeConfiguration;
 import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
@@ -60,23 +60,10 @@ public class SpongeEventHandler
     {
         this.players = context.getRequired(PlayerRegistry.class);
         this.bus = context.getRequired(EventBus.class);
-        Configuration conf = context.getRequired(Configuration.class);
-        Optional<String> id = conf.get("primaryMaterial", String.class);
-        if (id.isPresent())
-        {
-            this.primaryMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, id.get()).or(ItemTypes.ARROW);
-        } else
-        {
-            this.primaryMaterial = ItemTypes.ARROW;
-        }
-        Optional<String> aid = conf.get("altMaterial", String.class);
-        if (id.isPresent())
-        {
-            this.altMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, aid.get()).or(ItemTypes.GUNPOWDER);
-        } else
-        {
-            this.altMaterial = ItemTypes.GUNPOWDER;
-        }
+        this.primaryMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, SpongeConfiguration.primaryMaterial)
+                .or(ItemTypes.ARROW);
+        this.altMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, SpongeConfiguration.altMaterial)
+                .or(ItemTypes.GUNPOWDER);
     }
 
     /**

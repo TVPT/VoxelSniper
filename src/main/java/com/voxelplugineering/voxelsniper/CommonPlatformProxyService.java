@@ -27,31 +27,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 
-import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
-import com.voxelplugineering.voxelsniper.service.persistence.DataSource;
-import com.voxelplugineering.voxelsniper.service.persistence.DataSourceFactory;
-import com.voxelplugineering.voxelsniper.service.persistence.DataSourceProvider;
-import com.voxelplugineering.voxelsniper.service.persistence.DataSourceReader;
-import com.voxelplugineering.voxelsniper.service.persistence.DirectoryDataSourceProvider;
-import com.voxelplugineering.voxelsniper.service.persistence.FileDataSource;
-import com.voxelplugineering.voxelsniper.service.persistence.JsonDataSourceReader;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 /**
  * A common platform proxy service.
  */
 public abstract class CommonPlatformProxyService extends AbstractService implements PlatformProxy
 {
-
-    private final DataSourceFactory factory;
-
-    private DataSource metricsConf;
-    private DataSourceProvider brushDataSource;
-    private DataSourceProvider root;
-    private DataSourceReader config;
     private File rootDir;
+    private File metricsConf;
 
     /**
      * Sets up a new {@link CommonPlatformProxyService}.
@@ -62,52 +50,32 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
     {
         super(context);
         this.rootDir = checkNotNull(dir);
-        this.factory = context.getRequired(DataSourceFactory.class, this);
+        Class<?> conf = HoconConfigurationLoader.class;
     }
 
     @Override
     protected void _init()
     {
         this.rootDir.mkdirs();
-        this.root = new DirectoryDataSourceProvider(this.rootDir, this.factory);
-        this.metricsConf = new FileDataSource(new File(this.rootDir.getParentFile(), "PluginMetrics/config.yml"));
-        File brushes = new File(this.rootDir, "brushes");
-        brushes.mkdirs();
-        this.brushDataSource = new DirectoryDataSourceProvider(brushes, this.factory);
-        this.config = new JsonDataSourceReader(new FileDataSource(new File(this.rootDir, "VoxelSniperConfiguration.json")));
+        this.metricsConf = new File(this.rootDir.getParentFile(), "PluginMetrics/config.yml");
     }
 
     @Override
     protected void _shutdown()
     {
-        this.metricsConf = null;
-        this.brushDataSource = null;
-        this.config = null;
-        this.root = null;
+
     }
 
     @Override
-    public DataSource getMetricsFile()
+    public File getMetricsFile()
     {
         return this.metricsConf;
     }
 
     @Override
-    public DataSourceProvider getBrushDataSource()
+    public File getRoot()
     {
-        return this.brushDataSource;
-    }
-
-    @Override
-    public DataSourceProvider getRootDataSourceProvider()
-    {
-        return this.root;
-    }
-
-    @Override
-    public Optional<DataSourceReader> getConfigDataSource()
-    {
-        return Optional.of(this.config);
+        return this.rootDir;
     }
 
 }
