@@ -158,6 +158,12 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
         return this.cache.get(getThis().getDefaultState());
     }
 
+    /**
+     * Gets a {@link MaterialState} for this material with the given data.
+     * 
+     * @param block The data.
+     * @return The material state
+     */
     public MaterialState getState(BlockState block)
     {
         return this.cache.get(block);

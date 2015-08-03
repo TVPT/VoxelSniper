@@ -23,17 +23,24 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.world.material;
 
-import org.spongepowered.api.block.BlockState;
-
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
+/**
+ * A {@link MaterialState} wrapping a byte data value.
+ */
 public class BukkitMaterialState implements MaterialState
 {
 
     private final byte state;
     private final Material type;
 
+    /**
+     * Creates a new {@link BukkitMaterialState}.
+     * 
+     * @param type The base material
+     * @param state The data value
+     */
     public BukkitMaterialState(Material type, byte state)
     {
         this.type = type;
@@ -46,6 +53,11 @@ public class BukkitMaterialState implements MaterialState
         return this.type;
     }
 
+    /**
+     * Gets the data value.
+     * 
+     * @return The data value
+     */
     public byte getState()
     {
         return this.state;

@@ -28,17 +28,34 @@ import java.util.Map;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
-public class MaterialStateCache<T, M>
+/**
+ * A cache for {@link MaterialState} instances.
+ * 
+ * @param <T> The underlying data type
+ * @param <M> The MaterialState instance type
+ */
+public class MaterialStateCache<T, M extends MaterialState>
 {
 
     private final Map<T, M> cache = Maps.newHashMap();
     private final Function<T, M> builder;
 
+    /**
+     * Creates a new {@link MaterialStateCache} with the given builder function.
+     * 
+     * @param builder The builder function
+     */
     public MaterialStateCache(Function<T, M> builder)
     {
         this.builder = builder;
     }
 
+    /**
+     * Gets a {@link MaterialState} from the cache for the given data value.
+     * 
+     * @param state The data value
+     * @return A MaterialState
+     */
     public M get(T state)
     {
         if (this.cache.containsKey(state))

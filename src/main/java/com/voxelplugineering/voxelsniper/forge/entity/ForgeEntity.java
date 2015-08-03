@@ -36,8 +36,6 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
 
-import net.minecraft.entity.item.EntityArmorStand;
-
 /**
  * A wrapper for a forge entity.
  */

@@ -79,6 +79,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         this.max = new Vector3i(chunk.getX() * 16 + 15, 255, chunk.getZ() * 16 + 15);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Optional<Block> getBlock(int x, int y, int z)
     {
@@ -97,6 +98,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         return Optional.<Block>of(new CommonBlock(l, ms));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setBlock(MaterialState material, int x, int y, int z)
     {
@@ -132,6 +134,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void refreshChunk()
     {
         this.world.getThis().refreshChunk(getThis().getX(), getThis().getZ());

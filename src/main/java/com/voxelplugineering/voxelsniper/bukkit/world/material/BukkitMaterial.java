@@ -164,15 +164,29 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
         return this.cache.get((byte) 0);
     }
 
+    /**
+     * Gets a {@link MaterialState} with the given data.
+     * 
+     * @param data The data
+     * @return A MaterialState
+     */
     public MaterialState getState(byte data)
     {
         return this.cache.get(data);
     }
     
+    /**
+     * A function which constructs {@link BukkitMaterialState} instances from input data.
+     */
     public static class MaterialStateBuilder implements Function<Byte, BukkitMaterialState> {
         
         private final BukkitMaterial mat;
         
+        /**
+         * Creates a new {@link MaterialStateBuilder}.
+         * 
+         * @param mat The base material
+         */
         public MaterialStateBuilder(BukkitMaterial mat) {
             this.mat = mat;
         }

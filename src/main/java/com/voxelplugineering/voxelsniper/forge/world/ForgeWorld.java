@@ -26,12 +26,6 @@ package com.voxelplugineering.voxelsniper.forge.world;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.BiomeGenBase;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
@@ -42,7 +36,6 @@ import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.AbstractWorld;
@@ -54,6 +47,12 @@ import com.voxelplugineering.voxelsniper.world.World;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.BiomeGenBase;
 
 /**
  * A wrapper for forge's {@link World}.

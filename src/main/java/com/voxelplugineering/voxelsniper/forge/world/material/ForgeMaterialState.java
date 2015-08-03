@@ -28,12 +28,21 @@ import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
 import net.minecraft.block.state.IBlockState;
 
+/**
+ * A {@link MaterialState} which wraps an {@link IBlockState}.
+ */
 public class ForgeMaterialState implements MaterialState
 {
 
     private final IBlockState state;
     private final Material type;
 
+    /**
+     * Creates a new {@link ForgeMaterialState}.
+     * 
+     * @param type the base type
+     * @param state The data
+     */
     public ForgeMaterialState(Material type, IBlockState state)
     {
         this.type = type;
@@ -46,6 +55,11 @@ public class ForgeMaterialState implements MaterialState
         return this.type;
     }
 
+    /**
+     * Gets the data for this material state.
+     * 
+     * @return The data
+     */
     public IBlockState getState()
     {
         return this.state;

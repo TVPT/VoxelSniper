@@ -120,6 +120,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Optional<Block> getBlock(int x, int y, int z)
     {
@@ -152,6 +153,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setBlock(MaterialState material, int x, int y, int z)
     {

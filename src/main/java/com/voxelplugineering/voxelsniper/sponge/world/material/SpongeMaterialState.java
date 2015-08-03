@@ -28,12 +28,18 @@ import org.spongepowered.api.block.BlockState;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
+/**
+ * A {@link MaterialState} which wraps a {@link BlockState}.
+ */
 public class SpongeMaterialState implements MaterialState
 {
 
     private final BlockState state;
     private final Material type;
 
+    /**
+     * Creates a new {@link SpongeMaterialState}.
+     */
     public SpongeMaterialState(Material type, BlockState state)
     {
         this.type = type;
@@ -46,6 +52,11 @@ public class SpongeMaterialState implements MaterialState
         return this.type;
     }
 
+    /**
+     * Gets the underlying data value.
+     * 
+     * @return The data value
+     */
     public BlockState getState()
     {
         return this.state;

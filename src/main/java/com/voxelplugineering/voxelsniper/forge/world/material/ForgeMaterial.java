@@ -163,6 +163,12 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implem
         return this.cache.get(getThis().getDefaultState());
     }
 
+    /**
+     * Gets a {@link MaterialState} for the given data.
+     * 
+     * @param state The data
+     * @return A material state
+     */
     public MaterialState getState(IBlockState state)
     {
         return this.cache.get(state);
