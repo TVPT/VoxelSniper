@@ -26,6 +26,9 @@ package com.voxelplugineering.voxelsniper.forge.world;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -36,8 +39,10 @@ import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntity;
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
+import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.AbstractWorld;
@@ -48,6 +53,7 @@ import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
 /**
  * A wrapper for forge's {@link World}.
@@ -92,23 +98,24 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
             return Optional.absent();
         }
         Location loc = new CommonLocation(this, x, y, z);
-        Material mat =
-                this.materials.getMaterial(
-                        getThis().getBlockState(new net.minecraft.util.BlockPos(x, y, z)).getBlock().getUnlocalizedName().substring(5)).orNull();
-        if (mat != null)
+        IBlockState state = getThis().getBlockState(new net.minecraft.util.BlockPos(x, y, z));
+        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(state.getBlock());
+        Optional<Material> mat = this.materials.getMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath());
+        if (mat.isPresent())
         {
-            return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(loc, mat));
+            MaterialState ms = ((ForgeMaterial) mat.get()).getState(state);
+            return Optional.<com.voxelplugineering.voxelsniper.world.Block> of(new CommonBlock(loc, ms));
         }
         return Optional.absent();
     }
 
     @Override
-    public void setBlock(Material material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z)
     {
-        if (material instanceof ForgeMaterial)
+        if (material instanceof ForgeMaterialState)
         {
-            ForgeMaterial forgeMaterial = (ForgeMaterial) material;
-            getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), forgeMaterial.getThis().getDefaultState());
+            ForgeMaterialState forgeMaterial = (ForgeMaterialState) material;
+            getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), forgeMaterial.getState());
         }
     }
 
@@ -152,7 +159,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         }
         ForgeChunk newChunk = new ForgeChunk(chunk, this, this.context);
         this.chunks.put(chunk, newChunk);
-        return Optional.<Chunk>of(newChunk);
+        return Optional.<Chunk> of(newChunk);
     }
 
     @Override

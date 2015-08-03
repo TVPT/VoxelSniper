@@ -31,6 +31,7 @@ import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntity;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
+import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.AbstractChunk;
@@ -38,6 +39,12 @@ import com.voxelplugineering.voxelsniper.world.CommonBlock;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.World;
 import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * A forge chunk wrapper.
@@ -72,24 +79,26 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
         {
             return Optional.absent();
         }
-        net.minecraft.block.Block b = getThis().getBlock(x, y, z);
+        IBlockState b = getThis().getBlockState(new BlockPos(x, y, z));
         CommonLocation l = new CommonLocation(this.getWorld(), x + getThis().xPosition * 16, y, z + getThis().zPosition * 16);
-        Optional<Material> m = this.getWorld().getMaterialRegistry().getMaterial(b.getUnlocalizedName().substring(5));
+        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(b.getBlock());
+        Optional<Material> m = this.getWorld().getMaterialRegistry().getMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath());
         if (!m.isPresent())
         {
             return Optional.absent();
         }
-        return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, m.get()));
+        MaterialState ms = ((ForgeMaterial) m.get()).getState(b);
+        return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));
     }
 
     @Override
-    public void setBlock(Material material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z)
     {
         if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
         {
             return;
         }
-        getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), ((ForgeMaterial) material).getThis().getDefaultState());
+        getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), ((ForgeMaterialState) material).getState());
     }
 
     @Override

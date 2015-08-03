@@ -34,6 +34,7 @@ import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
+import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterialState;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
@@ -47,6 +48,7 @@ import com.voxelplugineering.voxelsniper.world.CommonBlock;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.World}s.
@@ -132,7 +134,8 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         {
             return Optional.absent();
         }
-        return Optional.<Block>of(new CommonBlock(l, m.get()));
+        MaterialState ms = ((BukkitMaterial) m.get()).getState(b.getData());
+        return Optional.<Block>of(new CommonBlock(l, ms));
     }
 
     private boolean checkAsyncBlockAccess(int x, int y, int z)
@@ -150,17 +153,17 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     }
 
     @Override
-    public void setBlock(Material material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z)
     {
         checkNotNull(material);
         if (y < 0 || y >= 256)
         {
             return;
         }
-        if (material instanceof BukkitMaterial)
+        if (material instanceof BukkitMaterialState)
         {
-            BukkitMaterial bukkitMaterial = (BukkitMaterial) material;
-            getThis().getBlockAt(x, y, z).setType(bukkitMaterial.getThis());
+            BukkitMaterialState bukkitMaterial = (BukkitMaterialState) material;
+            getThis().getBlockAt(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(), true);
         }
     }
 

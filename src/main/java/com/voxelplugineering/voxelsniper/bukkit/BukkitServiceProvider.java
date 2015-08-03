@@ -115,7 +115,8 @@ public class BukkitServiceProvider
     @InitHook(target = MaterialRegistry.class)
     public void registerMaterials(Context context, MaterialRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
+        @SuppressWarnings("unchecked")
+        MaterialRegistry<org.bukkit.Material> registry = (MaterialRegistry<org.bukkit.Material>) service;
         for (org.bukkit.Material m : org.bukkit.Material.values())
         {
             registry.registerMaterial(m.name(), m, new BukkitMaterial(m));
@@ -174,7 +175,8 @@ public class BukkitServiceProvider
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
+        @SuppressWarnings("unchecked")
+        BiomeRegistry<org.bukkit.block.Biome> reg = (BiomeRegistry<org.bukkit.block.Biome>) service;
         for (org.bukkit.block.Biome b : org.bukkit.block.Biome.values())
         {
             reg.registerBiome(b.name(), b, new BukkitBiome(b));

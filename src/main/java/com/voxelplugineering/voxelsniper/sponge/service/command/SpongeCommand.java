@@ -71,7 +71,13 @@ public class SpongeCommand implements CommandCallable
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException
     {
-        String[] args = arguments.split(" ");
+        arguments = arguments.trim();
+        String[] args;
+        if(arguments.isEmpty()) {
+            args = new String[0];
+        } else {
+            args = arguments.split(" ");
+        }
         if (source instanceof org.spongepowered.api.entity.player.Player)
         {
             org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;

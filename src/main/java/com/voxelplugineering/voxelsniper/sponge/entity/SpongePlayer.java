@@ -133,13 +133,13 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public Vector3d getRotation()
     {
-        return SpongeUtilities.getGunsmithVector(getThis().getRotation());
+        return new Vector3d(getThis().getRotation().getY(), getThis().getRotation().getX(), getThis().getRotation().getZ());
     }
 
     @Override
     public void setRotation(Vector3d rotation)
     {
-        getThis().setRotation(SpongeUtilities.getSpongeVector(rotation));
+        getThis().setRotation(new com.flowpowered.math.vector.Vector3d(rotation.getY(), rotation.getX(), rotation.getZ()));
     }
 
     @Override

@@ -140,8 +140,7 @@ public class SpongeEventHandler
             Optional<Player> s = this.players.getPlayer(event.getEntity());
             if (s.isPresent())
             {
-                com.flowpowered.math.vector.Vector3d rotation = p.getRotation(); // {yaw, pitch, roll}
-                SnipeEvent se = new SnipeEvent(s.get(), rotation.getX(), rotation.getY(), action);
+                SnipeEvent se = new SnipeEvent(s.get(), s.get().getYaw(), s.get().getPitch(), action);
                 this.bus.post(se);
             }
         }

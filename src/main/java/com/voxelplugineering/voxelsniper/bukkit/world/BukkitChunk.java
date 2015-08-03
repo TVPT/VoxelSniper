@@ -32,6 +32,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
+import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterialState;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
@@ -41,6 +42,7 @@ import com.voxelplugineering.voxelsniper.world.CommonBlock;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.World;
 import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
 /**
  * A bukkit wrapper for {@link org.bukkit.Chunk}.
@@ -91,20 +93,21 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         {
             return Optional.absent();
         }
-        return Optional.<Block>of(new CommonBlock(l, m.get()));
+        MaterialState ms = ((BukkitMaterial) m.get()).getState(b.getData());
+        return Optional.<Block>of(new CommonBlock(l, ms));
     }
 
     @Override
-    public void setBlock(Material material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z)
     {
         if (!checkBounds(x, y, z))
         {
             return;
         }
-        if (material instanceof BukkitMaterial)
+        if (material instanceof BukkitMaterialState)
         {
-            BukkitMaterial bukkitMaterial = (BukkitMaterial) material;
-            getThis().getBlock(x, y, z).setType(bukkitMaterial.getThis());
+            BukkitMaterialState bukkitMaterial = (BukkitMaterialState) material;
+            getThis().getBlock(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(), true);
         }
     }
 

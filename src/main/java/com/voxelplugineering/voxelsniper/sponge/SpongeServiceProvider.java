@@ -25,10 +25,12 @@ package com.voxelplugineering.voxelsniper.sponge;
 
 import java.io.File;
 
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.biome.BiomeType;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
@@ -66,9 +68,11 @@ import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 import com.voxelplugineering.voxelsniper.sponge.world.SpongeWorld;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
+import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterialState;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.world.World;
+import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 
 /**
  * A provider for bukkit's initialization values.
@@ -130,11 +134,13 @@ public class SpongeServiceProvider
     @InitHook(target = MaterialRegistry.class)
     public void registerMaterials(Context context, MaterialRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") MaterialRegistry<org.spongepowered.api.block.BlockType> registry =
-                (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
+        @SuppressWarnings("unchecked")
+        MaterialRegistry<org.spongepowered.api.block.BlockType> registry = (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
+        MaterialStateBuilder builder = new MaterialStateBuilder(registry);
+        MaterialStateCache<BlockState, SpongeMaterialState> cache = new MaterialStateCache<BlockState, SpongeMaterialState>(builder);
         for (org.spongepowered.api.block.BlockType m : this.game.getRegistry().getAllOf(BlockType.class))
         {
-            registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m));
+            registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m, cache));
         }
     }
 
@@ -186,12 +192,28 @@ public class SpongeServiceProvider
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> reg =
-                (BiomeRegistry<org.spongepowered.api.world.biome.BiomeType>) service;
+        @SuppressWarnings("unchecked")
+        BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> reg = (BiomeRegistry<org.spongepowered.api.world.biome.BiomeType>) service;
         for (org.spongepowered.api.world.biome.BiomeType b : this.game.getRegistry().getAllOf(BiomeType.class))
         {
             reg.registerBiome(b.getName(), b, new SpongeBiome(b));
         }
+    }
+    
+    public static class MaterialStateBuilder implements Function<BlockState, SpongeMaterialState> {
+        
+        private final MaterialRegistry<org.spongepowered.api.block.BlockType> reg;
+        
+        public MaterialStateBuilder(MaterialRegistry<org.spongepowered.api.block.BlockType> reg) {
+            this.reg = reg;
+        }
+
+        @Override
+        public SpongeMaterialState apply(BlockState input)
+        {
+            return new SpongeMaterialState(this.reg.getMaterial(input.getType().getId().replace("minecraft:", "")).get(), input);
+        }
+        
     }
 
     /**

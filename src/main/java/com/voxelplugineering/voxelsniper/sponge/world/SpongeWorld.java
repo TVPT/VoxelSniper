@@ -35,6 +35,7 @@ import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
+import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterialState;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.AbstractWorld;
@@ -42,7 +43,7 @@ import com.voxelplugineering.voxelsniper.world.Chunk;
 import com.voxelplugineering.voxelsniper.world.CommonBlock;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
-import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
 /**
  * A wrapper for Sponge's World.
@@ -96,7 +97,8 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         {
             return Optional.absent();
         }
-        return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, m.get()));
+        MaterialState ms = ((SpongeMaterial) m.get()).getState(b.getBlock());
+        return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));
     }
 
     private boolean checkAsyncBlockAccess(int x, int y, int z)
@@ -114,16 +116,16 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     }
 
     @Override
-    public void setBlock(Material material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z)
     {
         if (y < 0 || y >= 256)
         {
             return;
         }
-        if (material instanceof SpongeMaterial)
+        if (material instanceof SpongeMaterialState)
         {
-            SpongeMaterial spongeMaterial = (SpongeMaterial) material;
-            getThis().getLocation(x, y, z).setBlockType(spongeMaterial.getThis());
+            SpongeMaterialState spongeMaterial = (SpongeMaterialState) material;
+            getThis().getLocation(x, y, z).setBlock(spongeMaterial.getState());
         }
     }
 

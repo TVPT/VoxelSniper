@@ -23,13 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-
-import com.google.common.base.Optional;
+import com.google.common.base.Function;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.config.ForgeConfiguration;
 import com.voxelplugineering.voxelsniper.forge.event.handler.ForgeEventProxy;
@@ -37,13 +31,14 @@ import com.voxelplugineering.voxelsniper.forge.service.ForgePermissionProxyServi
 import com.voxelplugineering.voxelsniper.forge.service.ForgePlatformProxyService;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeTextFormatParser;
-import com.voxelplugineering.voxelsniper.forge.service.ProvidedMaterialRegistryService;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
+import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.service.Builder;
 import com.voxelplugineering.voxelsniper.service.InitHook;
+import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
 import com.voxelplugineering.voxelsniper.service.PostInit;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.config.Configuration;
@@ -53,12 +48,18 @@ import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
-import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
-import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * A common proxy for operations common to both server and client side.
@@ -88,7 +89,19 @@ public abstract class CommonProxy
     @Builder(target = MaterialRegistry.class, priority = 5000)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
-        return new ProvidedMaterialRegistryService<net.minecraft.block.Block>(context, new MaterialProvider());
+        return new MaterialRegistryService<net.minecraft.block.Block>(context);
+    }
+    
+    @InitHook(target = MaterialRegistry.class)
+    public void registerMaterials(Context context, MaterialRegistry<net.minecraft.block.Block> reg) {
+        MaterialStateBuilder builder = new MaterialStateBuilder(reg);
+        MaterialStateCache<IBlockState, ForgeMaterialState> cache = new MaterialStateCache<IBlockState, ForgeMaterialState>(builder);
+        for(Object o: Block.blockRegistry.getKeys()) {
+            ResourceLocation rs = (ResourceLocation) o;
+            Block block = (Block) Block.blockRegistry.getObject(rs);
+            Material material = new ForgeMaterial(block, cache);
+            reg.registerMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath(), block, material);
+        }
     }
 
     @Builder(target = PermissionProxy.class, priority = 7000)
@@ -126,8 +139,8 @@ public abstract class CommonProxy
     @InitHook(target = BiomeRegistry.class)
     public void registerBiomes(Context context, BiomeRegistry<?> service)
     {
-        @SuppressWarnings("unchecked") BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg =
-                (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;
+        @SuppressWarnings("unchecked")
+        BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg = (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;
         for (Object b : BiomeGenBase.BIOME_ID_MAP.keySet())
         {
             BiomeGenBase biome = (BiomeGenBase) BiomeGenBase.BIOME_ID_MAP.get(b);
@@ -150,19 +163,20 @@ public abstract class CommonProxy
 
 }
 
-class MaterialProvider implements RegistryProvider<net.minecraft.block.Block, Material>
+class MaterialStateBuilder implements Function<IBlockState, ForgeMaterialState>
 {
 
+    private final MaterialRegistry<net.minecraft.block.Block> reg;
+    
+    public MaterialStateBuilder(MaterialRegistry<net.minecraft.block.Block> reg) {
+        this.reg = reg;
+    }
+
     @Override
-    public Optional<Pair<Block, Material>> get(String name)
+    public ForgeMaterialState apply(IBlockState input)
     {
-        Block block = (Block) Block.blockRegistry.getObject(new ResourceLocation(name));
-        if (block == null)
-        {
-            return Optional.absent();
-        }
-        Material material = new ForgeMaterial(block);
-        return Optional.<Pair<Block, Material>>of(new Pair<Block, Material>(block, material));
+        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(input.getBlock());
+        return new ForgeMaterialState(this.reg.getMaterial((!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath()).get(), input);
     }
 
 }

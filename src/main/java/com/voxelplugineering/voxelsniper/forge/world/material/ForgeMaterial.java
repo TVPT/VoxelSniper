@@ -25,11 +25,16 @@ package com.voxelplugineering.voxelsniper.forge.world.material;
 
 import java.util.List;
 
-import net.minecraft.init.Blocks;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * A wrapper for forge's materials ({@link net.minecraft.block.Block}).
@@ -94,21 +99,25 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implem
         FALLOFF_MATERIALS.add(Blocks.yellow_flower);
 
     }
+    
+    private final MaterialStateCache<IBlockState, ForgeMaterialState> cache;
 
     /**
      * Creates a new {@link ForgeMaterial}.
      * 
      * @param block the block to wrap
      */
-    public ForgeMaterial(net.minecraft.block.Block block)
+    public ForgeMaterial(net.minecraft.block.Block block, MaterialStateCache<IBlockState, ForgeMaterialState> cache)
     {
         super(block);
+        this.cache = cache;
     }
 
     @Override
     public String toString()
     {
-        return getThis().getUnlocalizedName().substring(5);
+        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(getThis());
+        return (!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath();
     }
 
     @Override
@@ -144,7 +153,19 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block> implem
     @Override
     public String getName()
     {
-        return getThis().getUnlocalizedName();
+        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(getThis());
+        return (!rs.getResourceDomain().equals("minecraft")? rs.getResourceDomain()+":" : "") + rs.getResourcePath();
+    }
+
+    @Override
+    public MaterialState getDefaultState()
+    {
+        return this.cache.get(getThis().getDefaultState());
+    }
+
+    public MaterialState getState(IBlockState state)
+    {
+        return this.cache.get(state);
     }
 
 }

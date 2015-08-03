@@ -25,15 +25,18 @@ package com.voxelplugineering.voxelsniper.bukkit.world.material;
 
 import java.util.List;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 
 /**
  * A wrapper for bukkit {@link org.bukkit.Material}s.
  */
-public class BukkitMaterial extends WeakWrapper<org.bukkit.Material> implements com.voxelplugineering.voxelsniper.world.material.Material
+public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements com.voxelplugineering.voxelsniper.world.material.Material
 {
-
+    
     /**
      * A static set of materials which are liquids.
      */
@@ -100,6 +103,8 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material> implements 
 
     }
 
+    private final MaterialStateCache<Byte, BukkitMaterialState> cache;
+
     /**
      * Creates a new {@link BukkitMaterial}.
      * 
@@ -108,6 +113,7 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material> implements 
     public BukkitMaterial(org.bukkit.Material value)
     {
         super(value);
+        this.cache = new MaterialStateCache<Byte, BukkitMaterialState>(new MaterialStateBuilder(this));
     }
 
     @Override
@@ -150,6 +156,33 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material> implements 
     public String toString()
     {
         return "BukkitMaterial {name=" + getName() + "}";
+    }
+
+    @Override
+    public MaterialState getDefaultState()
+    {
+        return this.cache.get((byte) 0);
+    }
+
+    public MaterialState getState(byte data)
+    {
+        return this.cache.get(data);
+    }
+    
+    public static class MaterialStateBuilder implements Function<Byte, BukkitMaterialState> {
+        
+        private final BukkitMaterial mat;
+        
+        public MaterialStateBuilder(BukkitMaterial mat) {
+            this.mat = mat;
+        }
+
+        @Override
+        public BukkitMaterialState apply(Byte input)
+        {
+            return new BukkitMaterialState(this.mat, input);
+        }
+        
     }
 
 }

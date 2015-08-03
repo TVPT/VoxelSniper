@@ -25,12 +25,15 @@ package com.voxelplugineering.voxelsniper.sponge.world.material;
 
 import java.util.List;
 
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 
 /**
  * Wraps sponge's {@link BlockType}.
@@ -43,7 +46,6 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
 
     static
     {
-
         FALLOFF_MATERIALS.add(BlockTypes.ACTIVATOR_RAIL);
         FALLOFF_MATERIALS.add(BlockTypes.BROWN_MUSHROOM);
         FALLOFF_MATERIALS.add(BlockTypes.CACTUS);
@@ -94,15 +96,18 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
         FALLOFF_MATERIALS.add(BlockTypes.YELLOW_FLOWER);
 
     }
-
+    
+    private final MaterialStateCache<BlockState, SpongeMaterialState> cache;
+    
     /**
      * Creates {@link SpongeMaterial}.
      * 
      * @param type The type to wrap
      */
-    public SpongeMaterial(BlockType type)
+    public SpongeMaterial(BlockType type, MaterialStateCache<BlockState, SpongeMaterialState> cache)
     {
         super(type);
+        this.cache = cache;
     }
 
     @Override
@@ -145,6 +150,17 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
     public String getName()
     {
         return getThis().getId();
+    }
+
+    @Override
+    public MaterialState getDefaultState()
+    {
+        return this.cache.get(getThis().getDefaultState());
+    }
+
+    public MaterialState getState(BlockState block)
+    {
+        return this.cache.get(block);
     }
 
 }
