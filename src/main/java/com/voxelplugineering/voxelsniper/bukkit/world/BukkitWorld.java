@@ -28,6 +28,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Location;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
@@ -227,6 +229,12 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     protected Map<org.bukkit.entity.Entity, Entity> getEntityCache()
     {
         return this.entitiesCache;
+    }
+
+    @Override
+    public void spawnLightning(Vector3i position)
+    {
+        getThis().strikeLightning(new Location(getThis(), position.getX(), position.getY(), position.getZ()));
     }
 
 }

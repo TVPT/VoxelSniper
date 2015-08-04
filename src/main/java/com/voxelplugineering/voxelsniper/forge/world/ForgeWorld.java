@@ -50,6 +50,7 @@ import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -185,6 +186,12 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     public Vector3i getChunkSize()
     {
         return ForgeChunk.CHUNK_SIZE;
+    }
+
+    @Override
+    public void spawnLightning(Vector3i position)
+    {
+        getThis().addWeatherEffect(new EntityLightningBolt(getThis(), (double)position.getX(), (double)position.getY(), (double)position.getZ()));
     }
 
 }

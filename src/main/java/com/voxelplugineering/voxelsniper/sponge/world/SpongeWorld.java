@@ -205,4 +205,10 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     {
         return SpongeChunk.CHUNK_SIZE;
     }
+
+    @Override
+    public void spawnLightning(Vector3i position)
+    {
+        //TODO
+    }
 }
