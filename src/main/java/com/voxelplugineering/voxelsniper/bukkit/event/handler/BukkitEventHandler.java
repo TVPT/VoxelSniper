@@ -23,7 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.event.handler;
 
+import org.bukkit.Material;
+
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.entity.Player;
@@ -98,10 +101,10 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
                 || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK)
         {
             BrushAction action = null;
-            if (p.getItemInHand().getType().equals(BukkitConfiguration.primaryMaterial))
+            if (p.getItemInHand().getType().equals(Material.valueOf(BukkitConfiguration.primaryMaterial)))
             {
                 action = BrushAction.PRIMARY;
-            } else if (p.getItemInHand().getType().equals(BukkitConfiguration.altMaterial))
+            } else if (p.getItemInHand().getType().equals(Material.valueOf(BukkitConfiguration.altMaterial)))
             {
                 action = BrushAction.ALTERNATE;
             } else
@@ -114,6 +117,8 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
             {
                 SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch(), action);
                 this.bus.post(se);
+            } else {
+                GunsmithLogger.getLogger().warn("error getting player");
             }
         }
     }
