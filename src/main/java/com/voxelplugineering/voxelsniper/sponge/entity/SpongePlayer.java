@@ -42,6 +42,7 @@ import com.voxelplugineering.voxelsniper.world.World;
 public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.player.Player>
 {
 
+    private static final int MAX_MESSAGE_LENGTH = 32768;
     private final WorldRegistry<org.spongepowered.api.world.World> worlds;
     private static final EntityType PLAYER_TYPE = SpongeUtilities.getEntityType(org.spongepowered.api.entity.living.Living.class);
 
@@ -66,6 +67,18 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public void sendMessage(String msg)
     {
+        if(msg.indexOf('\n') != -1) {
+            for (String message : msg.split("\n"))
+            {
+                sendMessage(message);
+            }
+            return;
+        }
+        if(msg.length() > MAX_MESSAGE_LENGTH) {
+            sendMessage(msg.substring(0, MAX_MESSAGE_LENGTH));
+            sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
+            return;
+        }
         getThis().sendMessage(Texts.of(msg));
     }
 

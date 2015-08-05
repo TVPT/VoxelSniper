@@ -41,7 +41,9 @@ import com.voxelplugineering.voxelsniper.world.World;
 public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.EntityPlayer>
 {
 
+    private static final int MAX_MESSAGE_LENGTH = 32768;
     private static final EntityType PLAYER_TYPE = ForgeUtilities.getEntityType(net.minecraft.entity.player.EntityPlayer.class);
+    
     private final WorldRegistry<org.bukkit.World> worldReg;
 
     /**
@@ -65,6 +67,18 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     @Override
     public void sendMessage(String msg)
     {
+        if(msg.indexOf('\n') != -1) {
+            for (String message : msg.split("\n"))
+            {
+                sendMessage(message);
+            }
+            return;
+        }
+        if(msg.length() > MAX_MESSAGE_LENGTH) {
+            sendMessage(msg.substring(0, MAX_MESSAGE_LENGTH));
+            sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
+            return;
+        }
         getThis().addChatMessage(new net.minecraft.util.ChatComponentText(msg));
     }
 

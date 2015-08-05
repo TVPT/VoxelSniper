@@ -39,6 +39,8 @@ import com.voxelplugineering.voxelsniper.world.World;
  */
 public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
 {
+    
+    private static final int MAX_MESSAGE_LENGTH = 32768;
 
     private final WorldRegistry<org.bukkit.World> worldReg;
 
@@ -62,10 +64,19 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     @Override
     public void sendMessage(String msg)
     {
-        for (String message : msg.split("\n"))
-        {
-            getThis().sendMessage(message);
+        if(msg.indexOf('\n') != -1) {
+            for (String message : msg.split("\n"))
+            {
+                sendMessage(message);
+            }
+            return;
         }
+        if(msg.length() > MAX_MESSAGE_LENGTH) {
+            sendMessage(msg.substring(0, MAX_MESSAGE_LENGTH));
+            sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
+            return;
+        }
+        getThis().sendMessage(msg);
     }
 
     @Override
