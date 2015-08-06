@@ -30,6 +30,8 @@ import org.spongepowered.api.text.Texts;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.service.text.TextFormat;
+import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
@@ -43,8 +45,10 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
 {
 
     private static final int MAX_MESSAGE_LENGTH = 32768;
-    private final WorldRegistry<org.spongepowered.api.world.World> worlds;
     private static final EntityType PLAYER_TYPE = SpongeUtilities.getEntityType(org.spongepowered.api.entity.living.Living.class);
+
+    private final WorldRegistry<org.spongepowered.api.world.World> worlds;
+    private final TextFormatParser textFormat;
 
     /**
      * Creates a new {@link SpongePlayer}.
@@ -56,6 +60,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     {
         super(player, context);
         this.worlds = context.getRequired(WorldRegistry.class);
+        this.textFormat = context.getRequired(TextFormatParser.class);
     }
 
     @Override
@@ -67,19 +72,30 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public void sendMessage(String msg)
     {
-        if(msg.indexOf('\n') != -1) {
+        if (msg.indexOf('\n') != -1)
+        {
             for (String message : msg.split("\n"))
             {
                 sendMessage(message);
             }
             return;
         }
-        if(msg.length() > MAX_MESSAGE_LENGTH) {
+        if (msg.length() > MAX_MESSAGE_LENGTH)
+        {
             sendMessage(msg.substring(0, MAX_MESSAGE_LENGTH));
             sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
             return;
         }
-        getThis().sendMessage(Texts.of(msg));
+        getThis().sendMessage(Texts.of(formatMessage(msg)));
+    }
+
+    private String formatMessage(String msg)
+    {
+        for (TextFormat format : TextFormat.values())
+        {
+            msg = msg.replaceAll(format.toString(), this.textFormat.getFormat(format));
+        }
+        return msg;
     }
 
     @Override

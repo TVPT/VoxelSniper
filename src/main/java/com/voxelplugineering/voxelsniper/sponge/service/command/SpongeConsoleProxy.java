@@ -23,6 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.command;
 
+import com.voxelplugineering.voxelsniper.service.text.TextFormat;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 
 /**
@@ -34,6 +35,16 @@ public class SpongeConsoleProxy implements com.voxelplugineering.voxelsniper.ser
     @Override
     public void sendMessage(String msg)
     {
+        if(msg.indexOf('\n') != -1) {
+            for (String message : msg.split("\n"))
+            {
+                sendMessage(message);
+            }
+            return;
+        }
+        for(TextFormat format: TextFormat.values()) {
+            msg = msg.replaceAll(format.toString(), "");
+        }
         VoxelSniperSponge.instance.getLogger().info(msg);
     }
 

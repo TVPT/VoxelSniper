@@ -29,6 +29,8 @@ import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.forge.util.ForgeUtilities;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.service.text.TextFormat;
+import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
@@ -43,8 +45,9 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
 
     private static final int MAX_MESSAGE_LENGTH = 32768;
     private static final EntityType PLAYER_TYPE = ForgeUtilities.getEntityType(net.minecraft.entity.player.EntityPlayer.class);
-    
+
     private final WorldRegistry<org.bukkit.World> worldReg;
+    private final TextFormatParser textFormat;
 
     /**
      * Creates a new {@link ForgePlayer}.
@@ -56,6 +59,7 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     {
         super(player, context);
         this.worldReg = context.getRequired(WorldRegistry.class);
+        this.textFormat = context.getRequired(TextFormatParser.class);
     }
 
     @Override
@@ -67,19 +71,30 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     @Override
     public void sendMessage(String msg)
     {
-        if(msg.indexOf('\n') != -1) {
+        if (msg.indexOf('\n') != -1)
+        {
             for (String message : msg.split("\n"))
             {
                 sendMessage(message);
             }
             return;
         }
-        if(msg.length() > MAX_MESSAGE_LENGTH) {
+        if (msg.length() > MAX_MESSAGE_LENGTH)
+        {
             sendMessage(msg.substring(0, MAX_MESSAGE_LENGTH));
             sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
             return;
         }
-        getThis().addChatMessage(new net.minecraft.util.ChatComponentText(msg));
+        getThis().addChatMessage(new net.minecraft.util.ChatComponentText(formatMessage(msg)));
+    }
+
+    private String formatMessage(String msg)
+    {
+        for (TextFormat format : TextFormat.values())
+        {
+            msg = msg.replaceAll(format.toString(), this.textFormat.getFormat(format));
+        }
+        return msg;
     }
 
     @Override

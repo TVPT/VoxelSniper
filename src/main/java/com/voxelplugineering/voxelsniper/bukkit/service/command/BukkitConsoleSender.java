@@ -27,6 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.command.CommandSender;
+import com.voxelplugineering.voxelsniper.service.text.TextFormat;
 
 /**
  * A stripped out {@link Player} implementation to act as a proxy for the console.
@@ -52,10 +53,17 @@ public class BukkitConsoleSender implements CommandSender
     @Override
     public void sendMessage(String msg)
     {
-        for (String message : msg.split("\n"))
-        {
-            this.console.sendMessage(message);
+        if(msg.indexOf('\n') != -1) {
+            for (String message : msg.split("\n"))
+            {
+                sendMessage(message);
+            }
+            return;
         }
+        for(TextFormat format: TextFormat.values()) {
+            msg = msg.replaceAll(format.toString(), "");
+        }
+        this.console.sendMessage(msg);
     }
 
     @Override

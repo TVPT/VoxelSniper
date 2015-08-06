@@ -25,11 +25,15 @@ package com.voxelplugineering.voxelsniper.bukkit.entity;
 
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
+
 import com.voxelplugineering.voxelsniper.brush.BrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.service.text.TextFormat;
+import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.World;
@@ -43,6 +47,7 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     private static final int MAX_MESSAGE_LENGTH = 32768;
 
     private final WorldRegistry<org.bukkit.World> worldReg;
+    private final TextFormatParser textFormat;
 
     /**
      * Creates a new {@link BukkitPlayer}.
@@ -54,11 +59,7 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     {
         super(player, bm, context);
         this.worldReg = context.getRequired(WorldRegistry.class);
-        // TODO persistence
-        // File personalFolder = new File(Gunsmith.getDataFolder(), "brushes" +
-        // File.separator + this.getName());
-        // this.getPersonalBrushManager().addLoader(new
-        // DirectoryDataSourceProvider(personalFolder, NBTDataSource.BUILDER));
+        this.textFormat = context.getRequired(TextFormatParser.class);
     }
 
     @Override
@@ -76,7 +77,14 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
             sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
             return;
         }
-        getThis().sendMessage(msg);
+        getThis().sendMessage(formatMessage(msg));
+    }
+    
+    private String formatMessage(String msg) {
+        for(TextFormat format: TextFormat.values()) {
+            msg = msg.replaceAll(format.toString(), this.textFormat.getFormat(format));
+        }
+        return msg;
     }
 
     @Override

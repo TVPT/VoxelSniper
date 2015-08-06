@@ -90,6 +90,8 @@ public class BukkitTextFormatParser extends AbstractService implements TextForma
             return org.bukkit.ChatColor.UNDERLINE.toString();
         case ITALIC:
             return org.bukkit.ChatColor.ITALIC.toString();
+        case OBFUSCATED:
+            return org.bukkit.ChatColor.MAGIC.toString();
         default:
             return org.bukkit.ChatColor.RESET.toString();
         }

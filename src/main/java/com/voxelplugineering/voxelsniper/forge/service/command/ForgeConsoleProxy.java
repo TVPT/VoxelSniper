@@ -25,6 +25,7 @@ package com.voxelplugineering.voxelsniper.forge.service.command;
 
 import com.voxelplugineering.voxelsniper.forge.VoxelSniperForge;
 import com.voxelplugineering.voxelsniper.service.command.CommandSender;
+import com.voxelplugineering.voxelsniper.service.text.TextFormat;
 
 /**
  * A proxy for forge's console, used for command handling and as a message target.
@@ -43,6 +44,16 @@ public class ForgeConsoleProxy implements CommandSender
     @Override
     public void sendMessage(String msg)
     {
+        if(msg.indexOf('\n') != -1) {
+            for (String message : msg.split("\n"))
+            {
+                sendMessage(message);
+            }
+            return;
+        }
+        for(TextFormat format: TextFormat.values()) {
+            msg = msg.replaceAll(format.toString(), "");
+        }
         VoxelSniperForge.voxelsniper.getLogger().info(msg);
     }
 
