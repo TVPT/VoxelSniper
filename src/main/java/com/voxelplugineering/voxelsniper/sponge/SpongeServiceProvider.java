@@ -285,7 +285,7 @@ public class SpongeServiceProvider
             if (player.isPresent())
             {
                 SpongePlayer splayer = new SpongePlayer(this.context, player.get());
-                splayer.init();
+                splayer.init(this.context);
                 return Optional.of(new Pair<org.spongepowered.api.entity.player.Player, Player>(player.get(), splayer));
             }
             return Optional.absent();

@@ -249,7 +249,7 @@ class PlayerRegistryProvider implements RegistryProvider<org.bukkit.entity.Playe
             return Optional.absent();
         }
         BukkitPlayer bp = new BukkitPlayer(player, this.bm, this.context);
-        bp.init();
+        bp.init(this.context);
         return Optional.of(new Pair<org.bukkit.entity.Player, Player>(player, bp));
     }
 
