@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit.service.command;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 
 /**
@@ -60,7 +61,7 @@ public class BukkitCommand extends org.bukkit.command.Command
         {
             if (this.cmd.isPlayerOnly())
             {
-                sender.sendMessage("Sorry this is a player only command.");
+                sender.sendMessage(VoxelSniperConfiguration.commandPlayerOnly);
                 return true;
             }
             return this.cmd.execute(this.pr.getConsoleSniperProxy(), args);

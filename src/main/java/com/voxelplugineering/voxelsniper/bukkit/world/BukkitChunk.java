@@ -73,7 +73,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
             this.world = (BukkitWorld) world;
         } else
         {
-            throw new RuntimeException("Cannot create a BukkitChunk with a non-Bukkit world");
+            throw new IllegalArgumentException("Cannot create a BukkitChunk with a non-Bukkit world");
         }
         this.min = new Vector3i(chunk.getX() * 16, 0, chunk.getZ() * 16);
         this.max = new Vector3i(chunk.getX() * 16 + 15, 255, chunk.getZ() * 16 + 15);

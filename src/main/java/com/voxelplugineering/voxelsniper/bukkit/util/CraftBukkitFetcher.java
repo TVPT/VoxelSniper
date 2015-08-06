@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.util;
 
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
+
 /**
  * A utility class to fetch the current craftbukkit package for this version.
  */
@@ -37,6 +39,6 @@ public class CraftBukkitFetcher
     static
     {
         CRAFTBUKKIT_PACKAGE = org.bukkit.Bukkit.getServer().getClass().getPackage().getName();
-        System.out.println("Detected craftbukkit package as " + CRAFTBUKKIT_PACKAGE);
+        GunsmithLogger.getLogger().debug("Detected craftbukkit package as " + CRAFTBUKKIT_PACKAGE);
     }
 }

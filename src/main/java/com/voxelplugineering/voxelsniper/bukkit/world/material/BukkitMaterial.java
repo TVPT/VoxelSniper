@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit.world.material;
 import java.util.List;
 
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
@@ -155,7 +156,7 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
     @Override
     public String toString()
     {
-        return "BukkitMaterial {name=" + getName() + "}";
+        return MoreObjects.toStringHelper(this).add("name", getName()).toString();
     }
 
     @Override

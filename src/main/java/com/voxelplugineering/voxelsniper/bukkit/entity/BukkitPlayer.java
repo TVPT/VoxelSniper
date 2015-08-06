@@ -28,7 +28,9 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 
 import com.voxelplugineering.voxelsniper.brush.BrushManager;
+import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
+import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -43,8 +45,6 @@ import com.voxelplugineering.voxelsniper.world.World;
  */
 public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
 {
-    
-    private static final int MAX_MESSAGE_LENGTH = 32768;
 
     private final WorldRegistry<org.bukkit.World> worldReg;
     private final TextFormatParser textFormat;
@@ -72,9 +72,9 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
             }
             return;
         }
-        if(msg.length() > MAX_MESSAGE_LENGTH) {
-            sendMessage(msg.substring(0, MAX_MESSAGE_LENGTH));
-            sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
+        if(msg.length() > BukkitConfiguration.maxMessageSize) {
+            sendMessage(msg.substring(0, BukkitConfiguration.maxMessageSize));
+            sendMessage(msg.substring(BukkitConfiguration.maxMessageSize));
             return;
         }
         getThis().sendMessage(formatMessage(msg));

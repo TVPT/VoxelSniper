@@ -27,11 +27,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
+
+import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.util.Context;
-
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 /**
  * A common platform proxy service.
@@ -50,14 +51,13 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
     {
         super(context);
         this.rootDir = checkNotNull(dir);
-        Class<?> conf = HoconConfigurationLoader.class;
     }
 
     @Override
     protected void _init()
     {
         this.rootDir.mkdirs();
-        this.metricsConf = new File(this.rootDir.getParentFile(), "PluginMetrics/config.yml");
+        this.metricsConf = new File(this.rootDir.getParentFile(), BukkitConfiguration.metricsConf);
     }
 
     @Override
