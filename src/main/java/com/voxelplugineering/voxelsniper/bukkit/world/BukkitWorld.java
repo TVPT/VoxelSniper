@@ -157,7 +157,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
 
     @SuppressWarnings("deprecation")
     @Override
-    public void setBlock(MaterialState material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
         checkNotNull(material);
         if (y < 0 || y >= 256)
@@ -168,7 +168,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
         {
             BukkitMaterialState bukkitMaterial = (BukkitMaterialState) material;
             getThis().getBlockAt(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(),
-                    true);
+                    update);
         }
     }
 

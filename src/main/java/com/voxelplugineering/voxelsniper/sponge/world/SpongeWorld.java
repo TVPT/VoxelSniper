@@ -116,8 +116,9 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     }
 
     @Override
-    public void setBlock(MaterialState material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
+        // TODO physics
         if (y < 0 || y >= 256)
         {
             return;
@@ -209,6 +210,6 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     @Override
     public void spawnLightning(Vector3i position)
     {
-        //TODO
+        // TODO
     }
 }

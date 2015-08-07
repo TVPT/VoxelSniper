@@ -100,7 +100,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
 
     @SuppressWarnings("deprecation")
     @Override
-    public void setBlock(MaterialState material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
         if (!checkBounds(x, y, z))
         {
@@ -110,7 +110,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
         {
             BukkitMaterialState bukkitMaterial = (BukkitMaterialState) material;
             getThis().getBlock(x, y, z).setTypeIdAndData(((BukkitMaterial) bukkitMaterial.getType()).getThis().getId(), bukkitMaterial.getState(),
-                    true);
+                    update);
         }
     }
 

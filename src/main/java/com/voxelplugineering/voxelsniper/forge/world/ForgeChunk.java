@@ -93,13 +93,13 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
     }
 
     @Override
-    public void setBlock(MaterialState material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
         if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
         {
             return;
         }
-        getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), ((ForgeMaterialState) material).getState());
+        getThis().getWorld().setBlockState(new net.minecraft.util.BlockPos(x, y, z), ((ForgeMaterialState) material).getState(), update ? 3 : 0);
     }
 
     @Override

@@ -111,12 +111,12 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     }
 
     @Override
-    public void setBlock(MaterialState material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
         if (material instanceof ForgeMaterialState)
         {
             ForgeMaterialState forgeMaterial = (ForgeMaterialState) material;
-            getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), forgeMaterial.getState());
+            getThis().setBlockState(new net.minecraft.util.BlockPos(x, y, z), forgeMaterial.getState(), update ? 3 : 0);
         }
     }
 
@@ -191,7 +191,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     @Override
     public void spawnLightning(Vector3i position)
     {
-        getThis().addWeatherEffect(new EntityLightningBolt(getThis(), (double)position.getX(), (double)position.getY(), (double)position.getZ()));
+        getThis().addWeatherEffect(new EntityLightningBolt(getThis(), (double) position.getX(), (double) position.getY(), (double) position.getZ()));
     }
 
 }

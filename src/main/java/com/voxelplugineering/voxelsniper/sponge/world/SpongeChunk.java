@@ -87,8 +87,9 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
     }
 
     @Override
-    public void setBlock(MaterialState material, int x, int y, int z)
+    public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
+        // TODO physics
         if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
         {
             return;
