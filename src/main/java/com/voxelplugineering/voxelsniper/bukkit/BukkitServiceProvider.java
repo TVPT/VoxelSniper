@@ -38,10 +38,12 @@ import com.voxelplugineering.voxelsniper.bukkit.service.SuperPermsPermissionServ
 import com.voxelplugineering.voxelsniper.bukkit.service.VaultPermissionService;
 import com.voxelplugineering.voxelsniper.bukkit.service.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.bukkit.service.command.BukkitConsoleSender;
+import com.voxelplugineering.voxelsniper.bukkit.util.BukkitMaterialAliases;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
 import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
+import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
@@ -53,6 +55,7 @@ import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
 import com.voxelplugineering.voxelsniper.service.PostInit;
 import com.voxelplugineering.voxelsniper.service.ServicePriorities;
 import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.service.alias.GlobalAliasHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandSender;
 import com.voxelplugineering.voxelsniper.service.config.Configuration;
@@ -69,6 +72,7 @@ import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.Pair;
+import com.voxelplugineering.voxelsniper.util.defaults.DefaultAliasBuilder;
 import com.voxelplugineering.voxelsniper.world.World;
 
 /**
@@ -198,6 +202,12 @@ public class BukkitServiceProvider
     public void postInit(Context c)
     {
         GunsmithLogger.getLogger().registerLogger("bukkit", new JavaUtilLogger(this.plugin.getLogger()));
+        
+        Optional<GlobalAliasHandler> aliases = c.get(GlobalAliasHandler.class);
+        if (aliases.isPresent() && VoxelSniperConfiguration.generateDefaultAliases)
+        {
+            BukkitMaterialAliases.loadDefaultAliases(aliases.get());
+        }
     }
 
 }

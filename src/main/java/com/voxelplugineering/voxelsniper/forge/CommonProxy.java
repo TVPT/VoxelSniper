@@ -24,14 +24,18 @@
 package com.voxelplugineering.voxelsniper.forge;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
+import com.voxelplugineering.voxelsniper.bukkit.util.BukkitMaterialAliases;
 import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
+import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
 import com.voxelplugineering.voxelsniper.forge.event.handler.ForgeEventProxy;
 import com.voxelplugineering.voxelsniper.forge.service.ForgePermissionProxyService;
 import com.voxelplugineering.voxelsniper.forge.service.ForgePlatformProxyService;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeSchedulerService;
 import com.voxelplugineering.voxelsniper.forge.service.ForgeTextFormatParser;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
+import com.voxelplugineering.voxelsniper.forge.util.ForgeMaterialAliases;
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
@@ -42,6 +46,7 @@ import com.voxelplugineering.voxelsniper.service.InitHook;
 import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
 import com.voxelplugineering.voxelsniper.service.PostInit;
 import com.voxelplugineering.voxelsniper.service.ServicePriorities;
+import com.voxelplugineering.voxelsniper.service.alias.GlobalAliasHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
@@ -164,6 +169,12 @@ public abstract class CommonProxy
     public void postInit(Context c)
     {
         GunsmithLogger.getLogger().registerLogger("forge", new Log4jLogger(VoxelSniperForge.voxelsniper.getLogger()));
+        
+        Optional<GlobalAliasHandler> aliases = c.get(GlobalAliasHandler.class);
+        if (aliases.isPresent() && VoxelSniperConfiguration.generateDefaultAliases)
+        {
+            ForgeMaterialAliases.loadDefaultAliases(aliases.get());
+        }
     }
 
     /**
