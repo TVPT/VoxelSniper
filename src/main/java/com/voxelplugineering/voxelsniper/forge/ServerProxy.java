@@ -32,6 +32,7 @@ import com.voxelplugineering.voxelsniper.forge.service.command.ForgeConsoleProxy
 import com.voxelplugineering.voxelsniper.forge.world.ForgeWorld;
 import com.voxelplugineering.voxelsniper.service.Builder;
 import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
+import com.voxelplugineering.voxelsniper.service.ServicePriorities;
 import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
@@ -57,7 +58,7 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(target = WorldRegistry.class)
+    @Builder(target = WorldRegistry.class, priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
         return new WorldRegistryService<net.minecraft.world.World>(context, new WorldRegistryProviderServer(context));
@@ -68,7 +69,7 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(target = PlayerRegistry.class)
+    @Builder(target = PlayerRegistry.class, priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
         return new PlayerRegistryService<net.minecraft.entity.player.EntityPlayer>(context, new SniperRegistryProviderServer(context),

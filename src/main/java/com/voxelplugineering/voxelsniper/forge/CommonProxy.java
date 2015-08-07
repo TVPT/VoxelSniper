@@ -41,6 +41,7 @@ import com.voxelplugineering.voxelsniper.service.Builder;
 import com.voxelplugineering.voxelsniper.service.InitHook;
 import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
 import com.voxelplugineering.voxelsniper.service.PostInit;
+import com.voxelplugineering.voxelsniper.service.ServicePriorities;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
@@ -82,7 +83,7 @@ public abstract class CommonProxy
         return new ForgeTextFormatParser(context);
     }
 
-    @Builder(target = PlatformProxy.class, priority = 4000)
+    @Builder(target = PlatformProxy.class, priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
     public PlatformProxy getPlatformProxy(Context context)
     {
         return new ForgePlatformProxyService(context, VoxelSniperForge.voxelsniper.getConfigDir());
@@ -94,7 +95,7 @@ public abstract class CommonProxy
         BaseConfiguration.defaultBiomeName = BiomeGenBase.plains.biomeName;
     }
 
-    @Builder(target = MaterialRegistry.class, priority = 5000)
+    @Builder(target = MaterialRegistry.class, priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new MaterialRegistryService<net.minecraft.block.Block>(context);
@@ -115,7 +116,7 @@ public abstract class CommonProxy
         }
     }
 
-    @Builder(target = PermissionProxy.class, priority = 7000)
+    @Builder(target = PermissionProxy.class, priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
     public PermissionProxy getPermissionProxy(Context context)
     {
         return new ForgePermissionProxyService(context);
@@ -135,13 +136,13 @@ public abstract class CommonProxy
         cmd.setRegistrar(new ForgeCommandRegistrar(context));
     }
 
-    @Builder(target = Scheduler.class, priority = 11000)
+    @Builder(target = Scheduler.class, priority = ServicePriorities.SCHEDULER_PRIORITY)
     public Scheduler getSchedulerProxy(Context context)
     {
         return new ForgeSchedulerService(context);
     }
 
-    @Builder(target = BiomeRegistry.class, priority = 12000)
+    @Builder(target = BiomeRegistry.class, priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<net.minecraft.world.biome.BiomeGenBase>(context);
