@@ -74,7 +74,7 @@ public class SpongeMaterialState implements MaterialState
             return false;
         }
         SpongeMaterialState sms = (SpongeMaterialState) o;
-        return sms.state.equals(this.state);
+        return sms.state.equals(this.state) && this.type.equals(sms.type);
     }
 
     @Override
@@ -82,6 +82,7 @@ public class SpongeMaterialState implements MaterialState
     {
         int r = 1;
         r = r * 31 + this.state.hashCode();
+        r = r * 31 + this.type.hashCode();
         return r;
     }
 

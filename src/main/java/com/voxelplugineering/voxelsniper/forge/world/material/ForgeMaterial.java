@@ -152,6 +152,12 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block>impleme
     }
 
     @Override
+    public boolean isFlamable()
+    {
+        return Blocks.fire.getFlammability(getThis()) > 0;
+    }
+
+    @Override
     public String getName()
     {
         ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(getThis());
@@ -173,6 +179,27 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block>impleme
     public MaterialState getState(IBlockState state)
     {
         return this.cache.get(state);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == this)
+        {
+            return true;
+        }
+        if (!(o instanceof ForgeMaterial))
+        {
+            return false;
+        }
+        ForgeMaterial obj = (ForgeMaterial) o;
+        return obj.getThis().equals(getThis());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getThis().hashCode();
     }
 
 }

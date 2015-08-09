@@ -38,12 +38,13 @@ import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 /**
  * Wraps sponge's {@link BlockType}.
  */
-public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
+public class SpongeMaterial extends WeakWrapper<BlockType>implements Material
 { // TODO I dislike this solution as it does nothing to support BlockTypes registered from other
   // mods at runtime.
 
     // There is very possibly a better solution that I missed.
     private static List<BlockType> FALLOFF_MATERIALS = Lists.newArrayListWithCapacity(48);
+    private static List<BlockType> FLAMMABLE = Lists.newArrayListWithCapacity(48);
 
     static
     {
@@ -95,6 +96,62 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
         FALLOFF_MATERIALS.add(BlockTypes.ACACIA_DOOR);
         FALLOFF_MATERIALS.add(BlockTypes.WOODEN_BUTTON);
         FALLOFF_MATERIALS.add(BlockTypes.YELLOW_FLOWER);
+
+        FLAMMABLE.add(BlockTypes.PLANKS);
+        FLAMMABLE.add(BlockTypes.LOG);
+        FLAMMABLE.add(BlockTypes.LEAVES);
+        FLAMMABLE.add(BlockTypes.NOTEBLOCK);
+        FLAMMABLE.add(BlockTypes.BED);
+        FLAMMABLE.add(BlockTypes.TALLGRASS);
+        FLAMMABLE.add(BlockTypes.DEADBUSH);
+        FLAMMABLE.add(BlockTypes.WOOL);
+        FLAMMABLE.add(BlockTypes.TNT);
+        FLAMMABLE.add(BlockTypes.BOOKSHELF);
+        FLAMMABLE.add(BlockTypes.ACACIA_STAIRS);
+        FLAMMABLE.add(BlockTypes.BIRCH_STAIRS);
+        FLAMMABLE.add(BlockTypes.DARK_OAK_STAIRS);
+        FLAMMABLE.add(BlockTypes.JUNGLE_STAIRS);
+        FLAMMABLE.add(BlockTypes.OAK_STAIRS);
+        FLAMMABLE.add(BlockTypes.SPRUCE_STAIRS);
+        FLAMMABLE.add(BlockTypes.CHEST);
+        FLAMMABLE.add(BlockTypes.CRAFTING_TABLE);
+        FLAMMABLE.add(BlockTypes.STANDING_SIGN);
+        FLAMMABLE.add(BlockTypes.WOODEN_DOOR);
+        FLAMMABLE.add(BlockTypes.WALL_SIGN);
+        FLAMMABLE.add(BlockTypes.WOODEN_PRESSURE_PLATE);
+        FLAMMABLE.add(BlockTypes.JUKEBOX);
+        FLAMMABLE.add(BlockTypes.FENCE);
+        FLAMMABLE.add(BlockTypes.TRAPDOOR);
+        FLAMMABLE.add(BlockTypes.BROWN_MUSHROOM_BLOCK);
+        FLAMMABLE.add(BlockTypes.RED_MUSHROOM_BLOCK);
+        FLAMMABLE.add(BlockTypes.VINE);
+        FLAMMABLE.add(BlockTypes.FENCE_GATE);
+        FLAMMABLE.add(BlockTypes.WOODEN_SLAB);
+        FLAMMABLE.add(BlockTypes.DOUBLE_WOODEN_SLAB);
+        FLAMMABLE.add(BlockTypes.TRAPPED_CHEST);
+        FLAMMABLE.add(BlockTypes.DAYLIGHT_DETECTOR);
+        FLAMMABLE.add(BlockTypes.CARPET);
+        FLAMMABLE.add(BlockTypes.LEAVES2);
+        FLAMMABLE.add(BlockTypes.LOG2);
+        FLAMMABLE.add(BlockTypes.DOUBLE_PLANT);
+        FLAMMABLE.add(BlockTypes.SPRUCE_FENCE_GATE);
+        FLAMMABLE.add(BlockTypes.BIRCH_FENCE_GATE);
+        FLAMMABLE.add(BlockTypes.JUNGLE_FENCE_GATE);
+        FLAMMABLE.add(BlockTypes.DARK_OAK_FENCE_GATE);
+        FLAMMABLE.add(BlockTypes.ACACIA_FENCE_GATE);
+        FLAMMABLE.add(BlockTypes.SPRUCE_FENCE);
+        FLAMMABLE.add(BlockTypes.BIRCH_FENCE);
+        FLAMMABLE.add(BlockTypes.JUNGLE_FENCE);
+        FLAMMABLE.add(BlockTypes.DARK_OAK_FENCE);
+        FLAMMABLE.add(BlockTypes.ACACIA_FENCE);
+        FLAMMABLE.add(BlockTypes.STANDING_BANNER);
+        FLAMMABLE.add(BlockTypes.WALL_BANNER);
+        FLAMMABLE.add(BlockTypes.DAYLIGHT_DETECTOR_INVERTED);
+        FLAMMABLE.add(BlockTypes.SPRUCE_DOOR);
+        FLAMMABLE.add(BlockTypes.BIRCH_DOOR);
+        FLAMMABLE.add(BlockTypes.JUNGLE_DOOR);
+        FLAMMABLE.add(BlockTypes.ACACIA_DOOR);
+        FLAMMABLE.add(BlockTypes.DARK_OAK_DOOR);
 
     }
 
@@ -148,6 +205,12 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
     }
 
     @Override
+    public boolean isFlamable()
+    {
+        return FLAMMABLE.contains(getThis());
+    }
+
+    @Override
     public String getName()
     {
         return getThis().getId();
@@ -168,6 +231,27 @@ public class SpongeMaterial extends WeakWrapper<BlockType> implements Material
     public MaterialState getState(BlockState block)
     {
         return this.cache.get(block);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == this)
+        {
+            return true;
+        }
+        if (!(o instanceof SpongeMaterial))
+        {
+            return false;
+        }
+        SpongeMaterial obj = (SpongeMaterial) o;
+        return obj.getThis().equals(getThis());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getThis().hashCode();
     }
 
 }

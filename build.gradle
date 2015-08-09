@@ -70,12 +70,6 @@ repositories {
 minecraft {
     version = "1.8-11.14.0.1252-1.8"
     runDir = "eclipse"
-    
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = "snapshot_nodoc_20141130"
 }
 
@@ -95,12 +89,12 @@ task sourceJar(type: Jar) {
 }
 
 ext {
-    projectName = 'VoxelSniper-Bukkit'
+    projectName = 'VoxelSniper'
     inceptionYear = '2014'
     packaging = 'jar'
     url = 'http://voxelplugineering.com/'
-    description = "Implementation of VoxelSniper for Bukkit"
-    organization = 'The VoxelPlugineering Team'
+    description = "Implementation of VoxelSniper for Sponge, Forge, and Bukkit"
+    organization = 'The VoxelBox dev team'
     pomFile = file("${project.projectDir}/pom.xml")
     buildNumber = project.hasProperty("buildNumber") ? buildNumber : '0'
     ciSystem = project.hasProperty("ciSystem") ? ciSystem : 'unknown'
@@ -138,12 +132,12 @@ uploadArchives {
             project {
                 name project.archivesBaseName
                 packaging 'jar'
-                description 'Implementation of VoxelSniper for Bukkit'
+                description 'Implementation of VoxelSniper for Sponge, Forge, and Bukkit'
                 url 'http://voxelmodpack.com/'
                 scm {
                     url 'https://github.com/tvpt/voxelsniper'
                     connection 'git'
-                    developerConnection 'git@github.com:tvpt/VoxelSniper-Bukkit.git'
+                    developerConnection 'git@github.com:tvpt/VoxelSniper.git'
                 }
                 licenses {
                     license {

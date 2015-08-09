@@ -154,6 +154,12 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
     }
 
     @Override
+    public boolean isFlamable()
+    {
+        return getThis().isFlammable();
+    }
+
+    @Override
     public String toString()
     {
         return MoreObjects.toStringHelper(this).add("name", getName()).toString();
@@ -174,6 +180,27 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
     public MaterialState getState(byte data)
     {
         return this.cache.get(data);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == this)
+        {
+            return true;
+        }
+        if (!(o instanceof BukkitMaterial))
+        {
+            return false;
+        }
+        BukkitMaterial obj = (BukkitMaterial) o;
+        return obj.getThis().equals(getThis());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getThis().hashCode();
     }
 
     /**

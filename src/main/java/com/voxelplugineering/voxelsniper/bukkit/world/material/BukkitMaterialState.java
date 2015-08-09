@@ -75,7 +75,7 @@ public class BukkitMaterialState implements MaterialState
             return false;
         }
         BukkitMaterialState sms = (BukkitMaterialState) o;
-        return sms.state == this.state;
+        return sms.state == this.state && this.type.equals(sms.type);
     }
 
     @Override
@@ -83,6 +83,7 @@ public class BukkitMaterialState implements MaterialState
     {
         int r = 1;
         r = r * 31 + this.state;
+        r = r * 31 + this.type.hashCode();
         return r;
     }
 
