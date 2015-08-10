@@ -76,7 +76,7 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
     @Override
     public Optional<SpongeTask> startSynchronousTask(Runnable runnable, int interval)
     {
-        org.spongepowered.api.service.scheduler.Task task = this.game.getScheduler().getTaskBuilder().interval(interval, TimeUnit.MILLISECONDS)
+        org.spongepowered.api.service.scheduler.Task task = this.game.getScheduler().createTaskBuilder().interval(interval, TimeUnit.MILLISECONDS)
                 .execute(runnable).submit(this.plugin);
         SpongeTask stask = new SpongeTask(task, runnable, interval);
         this.tasks.put(task, stask);
@@ -86,7 +86,7 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
     @Override
     public Optional<SpongeTask> startAsynchronousTask(Runnable runnable, int interval)
     {
-        org.spongepowered.api.service.scheduler.Task task = this.game.getScheduler().getTaskBuilder().async()
+        org.spongepowered.api.service.scheduler.Task task = this.game.getScheduler().createTaskBuilder().async()
                 .interval(interval, TimeUnit.MILLISECONDS).execute(runnable).submit(this.plugin);
         SpongeTask stask = new SpongeTask(task, runnable, interval);
         this.tasks.put(task, stask);

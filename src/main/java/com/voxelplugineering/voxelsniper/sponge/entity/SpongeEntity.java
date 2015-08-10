@@ -25,7 +25,8 @@ package com.voxelplugineering.voxelsniper.sponge.entity;
 
 import java.util.UUID;
 
-import org.spongepowered.api.data.manipulator.DisplayNameData;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 
 import com.google.common.base.Optional;
@@ -73,10 +74,10 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
         {
             return ((org.spongepowered.api.entity.player.Player) getThis()).getName();
         }
-        Optional<DisplayNameData> name = getThis().getData(DisplayNameData.class);
+        Optional<Text> name = getThis().get(Keys.DISPLAY_NAME);
         if (name.isPresent())
         {
-            return Texts.toPlain(name.get().getDisplayName());
+            return Texts.toPlain(name.get());
         }
         return this.type.getName();
     }

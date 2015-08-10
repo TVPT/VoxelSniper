@@ -25,6 +25,7 @@ package com.voxelplugineering.voxelsniper.sponge.entity;
 
 import java.util.UUID;
 
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.text.Texts;
 
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
@@ -107,7 +108,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public double getHealth()
     {
-        return getThis().getHealthData().getHealth();
+        return getThis().getHealthData().health().get();
     }
 
     @Override
@@ -150,13 +151,13 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
     @Override
     public void setHealth(double health)
     {
-        getThis().getHealthData().setHealth(health);
+        getThis().getHealthData().set(Keys.HEALTH, health);
     }
 
     @Override
     public double getMaxHealth()
     {
-        return getThis().getHealthData().getMaxHealth();
+        return getThis().getHealthData().maxHealth().get();
     }
 
     @Override
