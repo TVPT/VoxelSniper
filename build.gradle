@@ -250,6 +250,11 @@ shadowJar {
         include(dependency('ninja.leaping.configurate:configurate-core:2.0'))
         include(dependency('com.typesafe:config:1.2.1'))
     }
+	
+	relocate "com.google", "voxelsniper.reshade.com.google"
+	relocate "org.objectweb", "voxelsniper.reshade.org.objectweb"
+	relocate "ninja.leaping.configurate", "voxelsniper.reshade.ninja.leaping.configurate"
+	relocate "com.typesafe", "voxelsniper.reshade.com.typesafe"
 }
 
 reobf {
