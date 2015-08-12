@@ -27,8 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 
-import org.bukkit.Bukkit;
-
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
@@ -39,8 +37,7 @@ import com.voxelplugineering.voxelsniper.util.Context;
  */
 public abstract class CommonPlatformProxyService extends AbstractService implements PlatformProxy
 {
-    private File rootDir;
-    private File metricsConf;
+    protected File rootDir;
 
     /**
      * Sets up a new {@link CommonPlatformProxyService}.
@@ -57,19 +54,12 @@ public abstract class CommonPlatformProxyService extends AbstractService impleme
     protected void _init()
     {
         this.rootDir.mkdirs();
-        this.metricsConf = new File(this.rootDir.getParentFile(), BukkitConfiguration.metricsConf);
     }
 
     @Override
     protected void _shutdown()
     {
 
-    }
-
-    @Override
-    public File getMetricsFile()
-    {
-        return this.metricsConf;
     }
 
     @Override

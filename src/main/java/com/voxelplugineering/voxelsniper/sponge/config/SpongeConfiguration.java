@@ -25,6 +25,7 @@ package com.voxelplugineering.voxelsniper.sponge.config;
 
 import org.spongepowered.api.item.ItemTypes;
 
+import com.voxelplugineering.voxelsniper.service.config.ConfigValue;
 import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
 
 /**
@@ -38,4 +39,6 @@ public class SpongeConfiguration
     public static String primaryMaterial = ItemTypes.ARROW.getId();
     public static String altMaterial = ItemTypes.GUNPOWDER.getId();
 
+    @ConfigValue(hidden = true)
+    public static String metricsConf = "PluginMetrics/config.yml";
 }

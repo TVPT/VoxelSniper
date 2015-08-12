@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.bukkit.service;
 import java.io.File;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
+import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
@@ -33,6 +34,8 @@ import com.voxelplugineering.voxelsniper.util.Context;
  */
 public class BukkitPlatformProxyService extends CommonPlatformProxyService
 {
+    
+    private File metricsConf;
 
     /**
      * Creates a new {@link BukkitPlatformProxyService}.
@@ -42,6 +45,7 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     public BukkitPlatformProxyService(Context context, File data)
     {
         super(context, data);
+        this.metricsConf = new File(this.rootDir.getParentFile(), BukkitConfiguration.metricsConf);
     }
 
     @Override
@@ -66,6 +70,12 @@ public class BukkitPlatformProxyService extends CommonPlatformProxyService
     public int getNumberOfPlayersOnline()
     {
         return org.bukkit.Bukkit.getOnlinePlayers().size();
+    }
+
+    @Override
+    public File getMetricsFile()
+    {
+        return this.metricsConf;
     }
 
 }

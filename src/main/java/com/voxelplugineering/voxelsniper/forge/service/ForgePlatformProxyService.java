@@ -25,17 +25,20 @@ package com.voxelplugineering.voxelsniper.forge.service;
 
 import java.io.File;
 
+import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
+import com.voxelplugineering.voxelsniper.forge.config.ForgeConfiguration;
+import com.voxelplugineering.voxelsniper.util.Context;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-
-import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
-import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * The platform proxy for minecraft forge.
  */
 public class ForgePlatformProxyService extends CommonPlatformProxyService
 {
+    
+    private File metricsConf;
 
     /**
      * Creates a new {@link ForgePlatformProxyService}.
@@ -43,6 +46,7 @@ public class ForgePlatformProxyService extends CommonPlatformProxyService
     public ForgePlatformProxyService(Context context, File file)
     {
         super(context, file);
+        this.metricsConf = new File(this.rootDir.getParentFile(), ForgeConfiguration.metricsConf);
     }
 
     @Override
@@ -67,6 +71,12 @@ public class ForgePlatformProxyService extends CommonPlatformProxyService
     public int getNumberOfPlayersOnline()
     {
         return MinecraftServer.getServer().getCurrentPlayerCount();
+    }
+
+    @Override
+    public File getMetricsFile()
+    {
+        return this.metricsConf;
     }
 
 }

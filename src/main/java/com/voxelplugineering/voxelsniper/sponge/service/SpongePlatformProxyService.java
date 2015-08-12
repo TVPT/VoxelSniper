@@ -28,6 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
+import com.voxelplugineering.voxelsniper.sponge.config.SpongeConfiguration;
 import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
@@ -35,6 +36,8 @@ import com.voxelplugineering.voxelsniper.util.Context;
  */
 public class SpongePlatformProxyService extends CommonPlatformProxyService
 {
+
+    private File metricsConf;
 
     private org.spongepowered.api.Game game;
 
@@ -47,6 +50,7 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     {
         super(context, root);
         this.game = checkNotNull(game);
+        this.metricsConf = new File(this.rootDir.getParentFile(), SpongeConfiguration.metricsConf);
     }
 
     @Override
@@ -71,6 +75,12 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     public int getNumberOfPlayersOnline()
     {
         return this.game.getServer().getOnlinePlayers().size();
+    }
+
+    @Override
+    public File getMetricsFile()
+    {
+        return this.metricsConf;
     }
 
 }

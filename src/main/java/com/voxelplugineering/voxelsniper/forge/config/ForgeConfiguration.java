@@ -23,6 +23,7 @@
  */
 package com.voxelplugineering.voxelsniper.forge.config;
 
+import com.voxelplugineering.voxelsniper.service.config.ConfigValue;
 import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
 
 import net.minecraft.init.Items;
@@ -39,4 +40,6 @@ public class ForgeConfiguration
     public static int primaryMaterial = Item.getIdFromItem(Items.arrow);
     public static int altMaterial = Item.getIdFromItem(Items.gunpowder);
 
+    @ConfigValue(hidden = true)
+    public static String metricsConf = "PluginMetrics/config.yml";
 }
