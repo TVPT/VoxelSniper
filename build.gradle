@@ -241,10 +241,11 @@ configure([compileJava, compileTestJava]) {
 }
 
 shadowJar {
+    relocate 'org.objectweb', 'com.voxelplugineering.voxelsniper.libs.org.objectweb'
+    relocate 'ninja.leaping', 'com.voxelplugineering.voxelsniper.libs.ninja.leaping'
+    relocate 'com.typesafe', 'com.voxelplugineering.voxelsniper.libs.com.typesafe'
     dependencies {
-        include(dependency('com.google.guava:guava:17.0'))
         include(dependency('com.voxelplugineering:VoxelGunsmith:7.1.0-SNAPSHOT'))
-        include(dependency('com.google.code.gson:gson:2.3'))
         include(dependency('org.ow2.asm:asm-all:5.0.3'))
         include(dependency('ninja.leaping.configurate:configurate-hocon:2.0'))
         include(dependency('ninja.leaping.configurate:configurate-core:2.0'))
