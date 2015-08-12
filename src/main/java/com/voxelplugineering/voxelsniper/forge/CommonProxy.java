@@ -167,9 +167,7 @@ public abstract class CommonProxy
 
     @PostInit
     public void postInit(Context c)
-    {
-        GunsmithLogger.getLogger().registerLogger("forge", new Log4jLogger(VoxelSniperForge.voxelsniper.getLogger()));
-        
+    {        
         Optional<GlobalAliasHandler> aliases = c.get(GlobalAliasHandler.class);
         if (aliases.isPresent() && VoxelSniperConfiguration.generateDefaultAliases)
         {

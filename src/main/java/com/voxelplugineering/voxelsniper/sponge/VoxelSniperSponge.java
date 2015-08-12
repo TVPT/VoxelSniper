@@ -32,14 +32,15 @@ import org.spongepowered.api.service.config.DefaultConfig;
 
 import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.expansion.Expansion;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 
 /**
  * The main plugin class for Sponge.
  */
-@Plugin(id = "voxelsnipersponge", name = "VoxelSniper-Sponge", version = "7.0.0")
-public class VoxelSniperSponge implements Expansion
+@Plugin(id = "voxelsnipersponge", name = "VoxelSniper-Sponge", version = "7.1.0")
+public class VoxelSniperSponge
 {
 
     /**
@@ -78,19 +79,8 @@ public class VoxelSniperSponge implements Expansion
     {
         instance = this;
 
-        Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.logger, this.defaultConfig.getParentFile()));
+        Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.defaultConfig.getParentFile()));
         Gunsmith.getServiceManager().start();
-    }
-
-    @Override
-    public void init()
-    {
-    }
-
-    @Override
-    public void stop()
-    {
-
     }
 
     /**

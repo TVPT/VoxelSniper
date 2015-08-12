@@ -24,6 +24,8 @@
 package com.voxelplugineering.voxelsniper.bukkit;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
+import com.voxelplugineering.voxelsniper.service.logging.JavaUtilLogger;
 
 /**
  * The Main class for the bukkit specific implementation.
@@ -42,6 +44,7 @@ public class VoxelSniperBukkit extends org.bukkit.plugin.java.JavaPlugin
     @Override
     public void onEnable()
     {
+        GunsmithLogger.getLogger().registerLogger("bukkit", new JavaUtilLogger(getLogger()));
         Gunsmith.getServiceManager().register(new BukkitServiceProvider(this));
         Gunsmith.getServiceManager().start();
     }

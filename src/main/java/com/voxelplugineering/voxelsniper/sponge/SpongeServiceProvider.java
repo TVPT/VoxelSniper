@@ -33,7 +33,6 @@ import org.spongepowered.api.world.biome.BiomeType;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
@@ -65,7 +64,6 @@ import com.voxelplugineering.voxelsniper.sponge.service.SpongeSchedulerService;
 import com.voxelplugineering.voxelsniper.sponge.service.SpongeTextFormatService;
 import com.voxelplugineering.voxelsniper.sponge.service.command.SpongeCommandRegistrar;
 import com.voxelplugineering.voxelsniper.sponge.service.command.SpongeConsoleProxy;
-import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 import com.voxelplugineering.voxelsniper.sponge.world.SpongeWorld;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
@@ -84,7 +82,6 @@ public class SpongeServiceProvider
 
     private final org.spongepowered.api.Game game;
     private final PluginContainer plugin;
-    private final org.slf4j.Logger logger;
     private final File root;
 
     /**
@@ -94,11 +91,10 @@ public class SpongeServiceProvider
      * @param plugin The plugin container
      * @param logger The logger
      */
-    public SpongeServiceProvider(org.spongepowered.api.Game game, PluginContainer plugin, org.slf4j.Logger logger, File root)
+    public SpongeServiceProvider(org.spongepowered.api.Game game, PluginContainer plugin, File root)
     {
         this.game = game;
         this.plugin = plugin;
-        this.logger = logger;
         this.root = root;
     }
 
@@ -112,7 +108,6 @@ public class SpongeServiceProvider
     @PostInit
     public void postInit(Context c)
     {
-        GunsmithLogger.getLogger().registerLogger("sponge", new Slf4jLogger(this.logger));
     }
 
     @Builder(target = TextFormatParser.class, priority = ServicePriorities.TEXT_FORMAT_PRIORITY)

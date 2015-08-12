@@ -200,9 +200,7 @@ public class BukkitServiceProvider
 
     @PostInit
     public void postInit(Context c)
-    {
-        GunsmithLogger.getLogger().registerLogger("bukkit", new JavaUtilLogger(this.plugin.getLogger()));
-        
+    {        
         Optional<GlobalAliasHandler> aliases = c.get(GlobalAliasHandler.class);
         if (aliases.isPresent() && VoxelSniperConfiguration.generateDefaultAliases)
         {

@@ -23,6 +23,8 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.logging;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.voxelplugineering.voxelsniper.service.logging.LogLevel;
 import com.voxelplugineering.voxelsniper.service.logging.Logger;
 
@@ -41,7 +43,7 @@ public class Slf4jLogger implements Logger
      */
     public Slf4jLogger(org.slf4j.Logger logger)
     {
-        this.logger = logger;
+        this.logger = checkNotNull(logger);
     }
 
     @Override

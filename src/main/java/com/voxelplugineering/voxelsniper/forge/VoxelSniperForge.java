@@ -29,10 +29,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
+import com.voxelplugineering.voxelsniper.service.logging.Log4jLogger;
 import com.voxelplugineering.voxelsniper.util.Context;
 
 import net.minecraftforge.fml.common.Mod;
@@ -49,14 +51,14 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 /**
  * The core class of VoxelSniper for minecraft forge.
  */
-@Mod(modid = "voxelsniperforge", name = "VoxelSniper-Forge", version = "7.0.0", acceptableRemoteVersions = "*", canBeDeactivated = true)
+@Mod(modid = "voxelsniperforge", name = "VoxelSniper-Forge", version = "7.1.0", acceptableRemoteVersions = "*", canBeDeactivated = true)
 public class VoxelSniperForge
 {
 
     //@formatter:off
     
     /**
-     * The plguin instance.
+     * The plugin instance.
      */
     @Instance(value = "voxelsniperforge")
     public static VoxelSniperForge voxelsniper;
@@ -78,6 +80,7 @@ public class VoxelSniperForge
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        GunsmithLogger.getLogger().registerLogger("forge", new Log4jLogger(event.getModLog()));
         this.configDir = event.getModConfigurationDirectory();
         this.logger = event.getModLog();
     }
