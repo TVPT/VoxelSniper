@@ -31,7 +31,6 @@ import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.bukkit.util.CraftBukkitFetcher;
 import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
-import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
@@ -40,17 +39,16 @@ import com.voxelplugineering.voxelsniper.util.Context;
 public class BukkitCommandRegistrar implements CommandRegistrar
 {
 
-    private final PlayerRegistry<org.bukkit.entity.Player> pr;
+    private final Context context;
     private org.bukkit.command.CommandMap commands;
 
     /**
      * Creates a new {@link BukkitCommandRegistrar}. This fetches bukkit's CommandMap via reflection
      * for use to register commands.
      */
-    @SuppressWarnings("unchecked")
     public BukkitCommandRegistrar(Context context)
     {
-        this.pr = context.getRequired(PlayerRegistry.class);
+        this.context = context;
         try
         {
             Field cmap = Class.forName(CraftBukkitFetcher.CRAFTBUKKIT_PACKAGE + ".CraftServer").getDeclaredField("commandMap");
@@ -66,11 +64,11 @@ public class BukkitCommandRegistrar implements CommandRegistrar
     public void registerCommand(Command cmd)
     {
         checkNotNull(cmd);
-        BukkitCommand bcmd = new BukkitCommand(cmd.getName(), cmd, this.pr);
+        BukkitCommand bcmd = new BukkitCommand(cmd.getName(), cmd, this.context);
         this.commands.register("voxelsniper", bcmd);
         for (String alias : cmd.getAllAliases())
         {
-            bcmd = new BukkitCommand(alias, cmd, this.pr);
+            bcmd = new BukkitCommand(alias, cmd, this.context);
             this.commands.register("voxelsniper", bcmd);
         }
     }

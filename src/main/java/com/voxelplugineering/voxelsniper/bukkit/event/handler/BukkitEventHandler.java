@@ -64,6 +64,9 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
     {
+        if(!event.getPlayer().hasPermission("voxelsniper.sniper")) {
+            return;
+        }
         Optional<Player> s = this.pr.getPlayer(event.getPlayer().getName());
         if (s.isPresent())
         {
@@ -80,6 +83,9 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     @org.bukkit.event.EventHandler
     public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event)
     {
+        if(!event.getPlayer().hasPermission("voxelsniper.sniper")) {
+            return;
+        }
         Optional<Player> s = this.pr.getPlayer(event.getPlayer());
         if (s.isPresent())
         {
@@ -96,6 +102,9 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     @org.bukkit.event.EventHandler
     public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
+        if(!event.getPlayer().hasPermission("voxelsniper.sniper")) {
+            return;
+        }
         org.bukkit.entity.Player p = event.getPlayer();
         if (event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_AIR
                 || event.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK)

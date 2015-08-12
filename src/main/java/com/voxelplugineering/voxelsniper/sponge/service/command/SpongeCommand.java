@@ -35,6 +35,8 @@ import org.spongepowered.api.util.command.CommandSource;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
+import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
@@ -83,12 +85,30 @@ public class SpongeCommand implements CommandCallable
         if (source instanceof org.spongepowered.api.entity.player.Player)
         {
             org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
-            com.voxelplugineering.voxelsniper.entity.Player sniper = this.players.getPlayer(player.getName()).get();
-            boolean success = this.command.execute(sniper, args);
-            if (success)
+            Player sniper = this.players.getPlayer(player.getName()).get();
+            boolean allowed = false;
+            for (String s : this.command.getPermissions())
             {
-                return CommandResult.success();
+                if (this.perms.hasPermission(sniper, s))
+                {
+                    allowed = true;
+                    break;
+                }
             }
+
+            if (allowed)
+            {
+                boolean success = this.command.execute(sniper, args);
+
+                if (!success)
+                {
+                    sniper.sendMessage(this.command.getHelpMsg());
+                }
+            } else
+            {
+                sniper.sendMessage(VoxelSniperConfiguration.permissionsRequiredMessage);
+            }
+            return CommandResult.success();
         } else if (source instanceof org.spongepowered.api.util.command.source.ConsoleSource)
         {
             boolean success = this.command.execute(this.players.getConsoleSniperProxy(), args);

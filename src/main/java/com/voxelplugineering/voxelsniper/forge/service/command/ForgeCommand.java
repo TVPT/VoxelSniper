@@ -30,6 +30,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.commands.Command;
+import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
+import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
 
@@ -40,6 +43,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
 {
 
     private final PlayerRegistry<EntityPlayer> players;
+    private final PermissionProxy perms;
 
     private Command cmd;
     private List<?> aliases;
@@ -53,6 +57,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     public ForgeCommand(Command cmd, Context context)
     {
         this.players = context.getRequired(PlayerRegistry.class);
+        this.perms = context.getRequired(PermissionProxy.class);
         this.cmd = cmd;
         this.aliases = cmd.getAllAliases().length == 0 ? Lists.newArrayList() : Lists.newArrayList(cmd.getAllAliases());
     }
@@ -86,7 +91,29 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     {
         if (sender instanceof net.minecraft.entity.player.EntityPlayer)
         {
-            this.cmd.execute(this.players.getPlayer(sender.getName()).get(), args);
+            Player player = this.players.getPlayer(sender.getName()).get();
+            boolean allowed = false;
+            for (String s : this.cmd.getPermissions())
+            {
+                if (this.perms.hasPermission(player, s))
+                {
+                    allowed = true;
+                    break;
+                }
+            }
+
+            if (allowed)
+            {
+                boolean success = this.cmd.execute(player, args);
+
+                if (!success)
+                {
+                    player.sendMessage(this.cmd.getHelpMsg());
+                }
+            } else
+            {
+                player.sendMessage(VoxelSniperConfiguration.permissionsRequiredMessage);
+            }
         } else
         {
             if (this.cmd.isPlayerOnly())

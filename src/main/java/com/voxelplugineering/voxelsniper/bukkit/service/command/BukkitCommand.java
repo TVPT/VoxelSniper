@@ -25,9 +25,13 @@ package com.voxelplugineering.voxelsniper.bukkit.service.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
+import com.voxelplugineering.voxelsniper.entity.Player;
+import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.util.Context;
 
 /**
  * A wrapper for Gunsmith's commands which may be registered into the bukkit command handler.
@@ -36,6 +40,7 @@ public class BukkitCommand extends org.bukkit.command.Command
 {
 
     private final PlayerRegistry<org.bukkit.entity.Player> pr;
+    private final PermissionProxy perms;
     private final Command cmd;
 
     /**
@@ -44,24 +49,49 @@ public class BukkitCommand extends org.bukkit.command.Command
      * @param name the command name, cannot be null or empty
      * @param cmd the command, cannot be null
      */
-    protected BukkitCommand(String name, Command cmd, PlayerRegistry<org.bukkit.entity.Player> pr)
+    @SuppressWarnings("unchecked")
+    protected BukkitCommand(String name, Command cmd, Context context)
     {
         super(name);
         this.cmd = checkNotNull(cmd, "Command cannot be null");
-        this.pr = pr;
+        this.pr = context.getRequired(PlayerRegistry.class);
+        this.perms = context.getRequired(PermissionProxy.class);
     }
 
     @Override
-    public boolean execute(org.bukkit.command.CommandSender sender, String command, String[] args)
+    public boolean execute(org.bukkit.command.CommandSender cs, String command, String[] args)
     {
-        if (sender instanceof org.bukkit.entity.Player)
+        if (cs instanceof org.bukkit.entity.Player)
         {
-            return this.cmd.execute(this.pr.getPlayer(sender.getName()).get(), args);
-        } else if (sender instanceof org.bukkit.command.ConsoleCommandSender)
+            Player sender = this.pr.getPlayer(cs.getName()).get();
+            boolean allowed = false;
+            for (String s : this.cmd.getPermissions())
+            {
+                if (this.perms.hasPermission(sender, s))
+                {
+                    allowed = true;
+                    break;
+                }
+            }
+
+            if (allowed)
+            {
+                boolean success = this.cmd.execute(sender, args);
+
+                if (!success)
+                {
+                    sender.sendMessage(this.cmd.getHelpMsg());
+                }
+            } else
+            {
+                sender.sendMessage(VoxelSniperConfiguration.permissionsRequiredMessage);
+            }
+            return true;
+        } else if (cs instanceof org.bukkit.command.ConsoleCommandSender)
         {
             if (this.cmd.isPlayerOnly())
             {
-                sender.sendMessage(VoxelSniperConfiguration.commandPlayerOnly);
+                cs.sendMessage(VoxelSniperConfiguration.commandPlayerOnly);
                 return true;
             }
             return this.cmd.execute(this.pr.getConsoleSniperProxy(), args);
