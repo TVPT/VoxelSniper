@@ -70,9 +70,9 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
     @Override
     public String getName()
     {
-        if (getThis() instanceof org.spongepowered.api.entity.player.Player)
+        if (getThis() instanceof org.spongepowered.api.entity.living.player.Player)
         {
-            return ((org.spongepowered.api.entity.player.Player) getThis()).getName();
+            return ((org.spongepowered.api.entity.living.player.Player) getThis()).getName();
         }
         Optional<Text> name = getThis().get(Keys.DISPLAY_NAME);
         if (name.isPresent())

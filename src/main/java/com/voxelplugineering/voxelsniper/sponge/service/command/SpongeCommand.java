@@ -47,7 +47,7 @@ import com.voxelplugineering.voxelsniper.util.Context;
 public class SpongeCommand implements CommandCallable
 {
 
-    private final PlayerRegistry<org.spongepowered.api.entity.player.Player> players;
+    private final PlayerRegistry<org.spongepowered.api.entity.living.player.Player> players;
     private final PermissionProxy perms;
     private Command command;
 
@@ -82,9 +82,9 @@ public class SpongeCommand implements CommandCallable
         {
             args = arguments.split(" ");
         }
-        if (source instanceof org.spongepowered.api.entity.player.Player)
+        if (source instanceof org.spongepowered.api.entity.living.player.Player)
         {
-            org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
+            org.spongepowered.api.entity.living.player.Player player = (org.spongepowered.api.entity.living.player.Player) source;
             Player sniper = this.players.getPlayer(player.getName()).get();
             boolean allowed = false;
             for (String s : this.command.getPermissions())
@@ -125,9 +125,9 @@ public class SpongeCommand implements CommandCallable
     public boolean testPermission(org.spongepowered.api.util.command.CommandSource source)
     {
         // TODO support for other sources?
-        if (source instanceof org.spongepowered.api.entity.player.Player)
+        if (source instanceof org.spongepowered.api.entity.living.player.Player)
         {
-            org.spongepowered.api.entity.player.Player player = (org.spongepowered.api.entity.player.Player) source;
+            org.spongepowered.api.entity.living.player.Player player = (org.spongepowered.api.entity.living.player.Player) source;
             for (String permission : this.command.getPermissions())
             {
                 if (this.perms.hasPermission(this.players.getPlayer(player.getName()).get(), permission))

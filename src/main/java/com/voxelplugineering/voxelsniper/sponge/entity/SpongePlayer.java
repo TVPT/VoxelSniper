@@ -40,9 +40,9 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.World;
 
 /**
- * Wraps a {@link org.spongepowered.api.entity.player.Player}.
+ * Wraps a {@link org.spongepowered.api.entity.living.player.Player}.
  */
-public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.player.Player>
+public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.living.player.Player>
 {
 
     private static final int MAX_MESSAGE_LENGTH = 32768;
@@ -57,7 +57,7 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.pl
      * @param player The player to wrap
      */
     @SuppressWarnings("unchecked")
-    public SpongePlayer(Context context, org.spongepowered.api.entity.player.Player player)
+    public SpongePlayer(Context context, org.spongepowered.api.entity.living.player.Player player)
     {
         super(player, context);
         this.worlds = context.getRequired(WorldRegistry.class);

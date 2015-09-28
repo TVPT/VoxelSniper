@@ -25,7 +25,12 @@ package com.voxelplugineering.voxelsniper.sponge;
 
 import java.io.File;
 
-import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.DefaultConfig;
@@ -34,6 +39,7 @@ import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import com.voxelplugineering.voxelsniper.service.logging.LogLevel;
 import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 
 /**
@@ -63,8 +69,8 @@ public class VoxelSniperSponge
      * 
      * @param event The event
      */
-    @Subscribe
-    public void onInit(org.spongepowered.api.event.state.PreInitializationEvent event)
+    @Listener
+    public void onInit(GamePreInitializationEvent event)
     {
         SpongeDetector.sponge();
     }
@@ -74,11 +80,10 @@ public class VoxelSniperSponge
      * 
      * @param event The event
      */
-    @Subscribe
-    public void onServerStarted(org.spongepowered.api.event.state.ServerAboutToStartEvent event)
+    @Listener
+    public void onServerStarted(GameAboutToStartServerEvent event)
     {
         instance = this;
-
         Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.defaultConfig.getParentFile()));
         Gunsmith.getServiceManager().start();
     }
@@ -88,8 +93,8 @@ public class VoxelSniperSponge
      * 
      * @param event The event
      */
-    @Subscribe
-    public void onServerStop(org.spongepowered.api.event.state.ServerStoppingEvent event)
+    @Listener
+    public void onServerStop(GameStoppingServerEvent event)
     {
         if (Gunsmith.getServiceManager().isRunning())
         {

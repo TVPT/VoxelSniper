@@ -33,6 +33,7 @@ import org.spongepowered.api.world.biome.BiomeType;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
@@ -163,14 +164,14 @@ public class SpongeServiceProvider
     @Builder(target = PlayerRegistry.class, priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
-        return new PlayerRegistryService<org.spongepowered.api.entity.player.Player>(context, new PlayerRegistryProvider(context, this.game),
+        return new PlayerRegistryService<org.spongepowered.api.entity.living.player.Player>(context, new PlayerRegistryProvider(context, this.game),
                 new SpongeConsoleProxy());
     }
 
     @InitHook(target = EventBus.class)
     public void registerEventProxies(Context context, EventBus service)
     {
-        this.game.getEventManager().register(this.plugin, new SpongeEventHandler(context));
+        this.game.getEventManager().registerListeners(this.plugin, new SpongeEventHandler(context));
     }
 
     @InitHook(target = CommandHandler.class)
@@ -257,7 +258,7 @@ public class SpongeServiceProvider
     /**
      * A player registry provider for forge.
      */
-    public static class PlayerRegistryProvider implements RegistryProvider<org.spongepowered.api.entity.player.Player, Player>
+    public static class PlayerRegistryProvider implements RegistryProvider<org.spongepowered.api.entity.living.player.Player, Player>
     {
 
         private final org.spongepowered.api.Game game;
@@ -275,14 +276,14 @@ public class SpongeServiceProvider
         }
 
         @Override
-        public Optional<Pair<org.spongepowered.api.entity.player.Player, Player>> get(String name)
+        public Optional<Pair<org.spongepowered.api.entity.living.player.Player, Player>> get(String name)
         {
-            Optional<org.spongepowered.api.entity.player.Player> player = this.game.getServer().getPlayer(name);
+            Optional<org.spongepowered.api.entity.living.player.Player> player = this.game.getServer().getPlayer(name);
             if (player.isPresent())
             {
                 SpongePlayer splayer = new SpongePlayer(this.context, player.get());
                 splayer.init(this.context);
-                return Optional.of(new Pair<org.spongepowered.api.entity.player.Player, Player>(player.get(), splayer));
+                return Optional.of(new Pair<org.spongepowered.api.entity.living.player.Player, Player>(player.get(), splayer));
             }
             return Optional.absent();
         }

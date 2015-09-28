@@ -23,11 +23,16 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.event.handler;
 
-import org.spongepowered.api.entity.EntityInteractionTypes;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.action.InteractEvent;
+import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.inventory.UseItemStackEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
 import com.google.common.base.Optional;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
@@ -45,7 +50,7 @@ import com.voxelplugineering.voxelsniper.util.Context;
 public class SpongeEventHandler
 {
 
-    private final PlayerRegistry<org.spongepowered.api.entity.player.Player> players;
+    private final PlayerRegistry<org.spongepowered.api.entity.living.player.Player> players;
     private final EventBus bus;
     private final ItemType primaryMaterial;
     private final ItemType altMaterial;
@@ -71,10 +76,10 @@ public class SpongeEventHandler
      * 
      * @param event The event
      */
-    @org.spongepowered.api.event.Subscribe
-    public void onPlayerJoin(org.spongepowered.api.event.entity.player.PlayerJoinEvent event)
+    @Listener
+    public void onPlayerJoin(ClientConnectionEvent.Join event)
     {
-        Optional<Player> s = this.players.getPlayer(event.getEntity().getName());
+        Optional<Player> s = this.players.getPlayer(event.getTargetEntity());
         if (s.isPresent())
         {
             SniperEvent.SniperCreateEvent sce = new SniperEvent.SniperCreateEvent(s.get());
@@ -87,10 +92,10 @@ public class SpongeEventHandler
      * 
      * @param event the event
      */
-    @org.spongepowered.api.event.Subscribe
-    public void onPlayerLeave(org.spongepowered.api.event.entity.player.PlayerQuitEvent event)
+    @Listener
+    public void onPlayerLeave(ClientConnectionEvent.Disconnect event)
     {
-        Optional<Player> s = this.players.getPlayer(event.getEntity());
+        Optional<Player> s = this.players.getPlayer(event.getTargetEntity());
         if (s.isPresent())
         {
             SniperEvent.SniperDestroyEvent sde = new SniperEvent.SniperDestroyEvent(s.get());
@@ -103,33 +108,30 @@ public class SpongeEventHandler
      * 
      * @param event The event
      */
-    @org.spongepowered.api.event.Subscribe
-    public void onPlayerInteractEvent(org.spongepowered.api.event.entity.player.PlayerInteractEvent event)
+    @Listener
+    public void onPlayerInteractEvent(InteractBlockEvent.Secondary event)
     {
-        org.spongepowered.api.entity.player.Player p = event.getEntity();
+        org.spongepowered.api.entity.living.player.Player p = event.getCause().first(org.spongepowered.api.entity.living.player.Player.class).get();
         if (!p.getItemInHand().isPresent())
         {
             return;
         }
-        if (event.getInteractionType() == EntityInteractionTypes.USE)
+        BrushAction action;
+        if (p.getItemInHand().get().getItem().equals(this.primaryMaterial))
         {
-            BrushAction action;
-            if (p.getItemInHand().get().getItem().equals(this.primaryMaterial))
-            {
-                action = BrushAction.PRIMARY;
-            } else if (p.getItemInHand().get().getItem().equals(this.altMaterial))
-            {
-                action = BrushAction.ALTERNATE;
-            } else
-            {
-                return;
-            }
-            Optional<Player> s = this.players.getPlayer(event.getEntity());
-            if (s.isPresent())
-            {
-                SnipeEvent se = new SnipeEvent(s.get(), s.get().getYaw(), s.get().getPitch(), action);
-                this.bus.post(se);
-            }
+            action = BrushAction.PRIMARY;
+        } else if (p.getItemInHand().get().getItem().equals(this.altMaterial))
+        {
+            action = BrushAction.ALTERNATE;
+        } else
+        {
+            return;
+        }
+        Optional<Player> s = this.players.getPlayer(p);
+        if (s.isPresent())
+        {
+            SnipeEvent se = new SnipeEvent(s.get(), s.get().getYaw(), s.get().getPitch(), action);
+            this.bus.post(se);
         }
     }
 }

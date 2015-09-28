@@ -27,7 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
 import com.voxelplugineering.voxelsniper.bukkit.event.handler.BukkitEventHandler;
@@ -60,7 +59,6 @@ import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandSender;
 import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
-import com.voxelplugineering.voxelsniper.service.logging.JavaUtilLogger;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
@@ -72,7 +70,6 @@ import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.Pair;
-import com.voxelplugineering.voxelsniper.util.defaults.DefaultAliasBuilder;
 import com.voxelplugineering.voxelsniper.world.World;
 
 /**
