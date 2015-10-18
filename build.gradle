@@ -47,8 +47,8 @@ archivesBaseName = 'VoxelSniper'
 version '7.1.0-SNAPSHOT'
 
 // Minimum version of Java required
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 // Project dependencies
 repositories {
