@@ -154,7 +154,7 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
     }
 
     @Override
-    public boolean isFlamable()
+    public boolean isFlammable()
     {
         return getThis().isFlammable();
     }

@@ -23,13 +23,13 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service;
 
-import net.minecraft.server.MinecraftServer;
-
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgePlayer;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import net.minecraft.server.MinecraftServer;
 
 /**
  * A proxy for forge permissions.

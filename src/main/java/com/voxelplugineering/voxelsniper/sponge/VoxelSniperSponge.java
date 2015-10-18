@@ -25,11 +25,9 @@ package com.voxelplugineering.voxelsniper.sponge;
 
 import java.io.File;
 
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -37,10 +35,7 @@ import org.spongepowered.api.service.config.DefaultConfig;
 
 import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
-import com.voxelplugineering.voxelsniper.service.logging.LogLevel;
-import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 
 /**
  * The main plugin class for Sponge.

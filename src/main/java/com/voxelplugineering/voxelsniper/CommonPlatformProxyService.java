@@ -27,7 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 
-import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.util.Context;

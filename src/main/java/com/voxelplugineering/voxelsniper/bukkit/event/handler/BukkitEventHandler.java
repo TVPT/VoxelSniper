@@ -23,9 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.event.handler;
 
+import java.util.Optional;
+
 import org.bukkit.Material;
 
-import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;

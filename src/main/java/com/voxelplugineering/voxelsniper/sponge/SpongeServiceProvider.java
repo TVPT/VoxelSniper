@@ -24,6 +24,7 @@
 package com.voxelplugineering.voxelsniper.sponge;
 
 import java.io.File;
+import java.util.Optional;
 
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
@@ -31,9 +32,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.biome.BiomeType;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
@@ -251,7 +250,7 @@ public class SpongeServiceProvider
                 SpongeWorld spongeWorld = new SpongeWorld(this.context, world.get(), Gunsmith.getMainThread());
                 return Optional.of(new Pair<org.spongepowered.api.world.World, World>(world.get(), spongeWorld));
             }
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
@@ -285,7 +284,7 @@ public class SpongeServiceProvider
                 splayer.init(this.context);
                 return Optional.of(new Pair<org.spongepowered.api.entity.living.player.Player, Player>(player.get(), splayer));
             }
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 }

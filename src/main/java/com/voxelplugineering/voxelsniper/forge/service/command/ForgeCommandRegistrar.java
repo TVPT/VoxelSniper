@@ -25,12 +25,12 @@ package com.voxelplugineering.voxelsniper.forge.service.command;
 
 import java.util.List;
 
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 /**
  * A command registrar for registering Gunsmith commands into forge. Commands may only be registered

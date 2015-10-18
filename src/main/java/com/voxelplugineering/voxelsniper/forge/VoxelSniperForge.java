@@ -24,10 +24,10 @@
 package com.voxelplugineering.voxelsniper.forge;
 
 import java.io.File;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;

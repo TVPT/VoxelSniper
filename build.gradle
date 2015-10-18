@@ -17,15 +17,19 @@ buildscript {
 
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
         classpath 'org.hibernate.build.gradle:gradle-maven-publish-auth:2.0.1'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
     }
 }
 
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.1"
+}
+
 // Plugins
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'license'
@@ -52,25 +56,17 @@ repositories {
     mavenCentral()
     maven {
         url "http://vault.voxelmodpack.com/content/groups/public/"
-    }
-    maven {
         url "http://nexus.afterkraft.com/content/groups/public/"
-    }
-    maven {
         url "http://repo.budgiehouse.com:8081/nexus/content/repositories/VBpublic/"
-    }
-    maven {
         url "https://hub.spigotmc.org/nexus/content/groups/public/"
-    }
-    maven {
         url "http://repo.spongepowered.org/maven/"
     }
 }
 
 minecraft {
-    version = "1.8-11.14.0.1252-1.8"
-    runDir = "eclipse"
-    mappings = "snapshot_nodoc_20141130"
+    version = "1.8-11.14.3.1521"
+    runDir = "run"
+    mappings = "snapshot_nodoc_20151017"
 }
 
 dependencies {
@@ -80,12 +76,6 @@ dependencies {
     compile 'net.milkbowl.vault:VaultAPI:1.4'
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.spongepowered:spongeapi:2.1-SNAPSHOT'
-}
-
-// Generates sources.jar
-task sourceJar(type: Jar) {
-    classifier 'sources'
-    from sourceSets.main.allSource
 }
 
 ext {
@@ -171,21 +161,17 @@ signing {
     sign configurations.archives
 }
 
-processResources {
-    from 'LICENSE'
-    
+processResources
+{
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
-        // replace version and mcversion
+   
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
-    // copy everything else, thats not the mcmod.info
+
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
@@ -251,12 +237,6 @@ shadowJar {
         include(dependency('ninja.leaping.configurate:configurate-core:2.0'))
         include(dependency('com.typesafe:config:1.2.1'))
     }
-}
-
-reobf {
-	reobf(project.tasks.shadowJar) { spec ->
-		spec.classpath = sourceSets.main.compileClasspath;
-	}
 }
 
 build.dependsOn shadowJar

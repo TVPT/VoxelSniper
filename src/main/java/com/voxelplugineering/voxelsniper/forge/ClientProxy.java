@@ -23,7 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import com.google.common.base.Optional;
+
+import java.util.Optional;
+
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgePlayer;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeConsoleProxy;
@@ -101,7 +103,7 @@ public class ClientProxy extends CommonProxy
             }
             if (w == null)
             {
-                return Optional.absent();
+                return Optional.empty();
             }
             return Optional.of(new Pair<net.minecraft.world.World, World>(w, new ForgeWorld(this.context, w)));
         }
@@ -128,7 +130,7 @@ public class ClientProxy extends CommonProxy
             for (Object e : net.minecraft.client.Minecraft.getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList)
             {
                 net.minecraft.entity.player.EntityPlayer entity = (net.minecraft.entity.player.EntityPlayer) e;
-                if (entity.getName().equals(name))
+                if (entity.getCommandSenderName().equals(name))
                 {
                     player = entity;
                     break;
@@ -136,7 +138,7 @@ public class ClientProxy extends CommonProxy
             }
             if (player == null)
             {
-                return Optional.absent();
+                return Optional.empty();
             }
             return Optional.of(new Pair<net.minecraft.entity.player.EntityPlayer, Player>(player, new ForgePlayer(player, this.context)));
         }

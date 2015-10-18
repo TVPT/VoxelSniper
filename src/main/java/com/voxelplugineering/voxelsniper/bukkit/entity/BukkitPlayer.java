@@ -25,12 +25,9 @@ package com.voxelplugineering.voxelsniper.bukkit.entity;
 
 import java.util.UUID;
 
-import org.bukkit.ChatColor;
-
 import com.voxelplugineering.voxelsniper.brush.BrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
-import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;

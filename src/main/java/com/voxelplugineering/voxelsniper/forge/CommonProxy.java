@@ -23,10 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
+import java.util.Optional;
+
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.GunsmithLogger;
-import com.voxelplugineering.voxelsniper.bukkit.util.BukkitMaterialAliases;
 import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
 import com.voxelplugineering.voxelsniper.forge.event.handler.ForgeEventProxy;
@@ -50,7 +49,6 @@ import com.voxelplugineering.voxelsniper.service.alias.GlobalAliasHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
-import com.voxelplugineering.voxelsniper.service.logging.Log4jLogger;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;

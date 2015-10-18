@@ -67,7 +67,7 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
     @Override
     public String getName()
     {
-        return getThis().getName();
+        return getThis().getDisplayName().getUnformattedText();
     }
 
     @Override

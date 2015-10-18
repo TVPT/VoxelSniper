@@ -25,9 +25,6 @@ package com.voxelplugineering.voxelsniper.forge.service.command;
 
 import java.util.List;
 
-import net.minecraft.command.CommandException;
-import net.minecraft.entity.player.EntityPlayer;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
@@ -35,6 +32,10 @@ import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * A wrapper for gunsmith commands to allow them to be registered into forge.
@@ -69,7 +70,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     }
 
     @Override
-    public String getName()
+    public String getCommandName()
     {
         return this.cmd.getName();
     }
@@ -81,17 +82,17 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     }
 
     @Override
-    public List<?> getAliases()
+    public List<?> getCommandAliases()
     {
         return this.aliases;
     }
 
     @Override
-    public void execute(net.minecraft.command.ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(net.minecraft.command.ICommandSender sender, String[] args) throws CommandException
     {
         if (sender instanceof net.minecraft.entity.player.EntityPlayer)
         {
-            Player player = this.players.getPlayer(sender.getName()).get();
+            Player player = this.players.getPlayer(sender.getCommandSenderName()).get();
             boolean allowed = false;
             for (String s : this.cmd.getPermissions())
             {
@@ -127,12 +128,6 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     }
 
     @Override
-    public boolean canCommandSenderUse(net.minecraft.command.ICommandSender sender)
-    {
-        return true;
-    }
-
-    @Override
     public List<?> addTabCompletionOptions(net.minecraft.command.ICommandSender sender, String[] args, net.minecraft.util.BlockPos pos)
     {
         // TODO tab completion
@@ -143,6 +138,15 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     public boolean isUsernameIndex(String[] args, int index)
     {
         return false;
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender)
+    {
+        if(sender instanceof EntityPlayer) {
+            return true;
+        }
+        return !this.cmd.isPlayerOnly();
     }
 
 }

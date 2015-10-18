@@ -25,8 +25,8 @@ package com.voxelplugineering.voxelsniper.sponge.world;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.Entity;
@@ -88,14 +88,14 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     {
         if (!checkAsyncBlockAccess(x, y, z))
         {
-            return Optional.absent();
+            return Optional.empty();
         }
-        org.spongepowered.api.world.Location b = getThis().getLocation(x, y, z);
+        org.spongepowered.api.world.Location<org.spongepowered.api.world.World> b = getThis().getLocation(x, y, z);
         CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
         Optional<com.voxelplugineering.voxelsniper.world.material.Material> m = this.materials.getMaterial(b.getBlockType());
         if (!m.isPresent())
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         MaterialState ms = ((SpongeMaterial) m.get()).getState(b.getBlock());
         return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));
@@ -160,7 +160,7 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     {
         if (!checkAsyncChunkAccess(x, y, z))
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         org.spongepowered.api.world.Chunk chunk = getThis().getChunk(x, y, z).get();
         if (this.chunks.containsKey(chunk))

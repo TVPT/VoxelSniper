@@ -27,8 +27,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
@@ -85,14 +85,14 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
     {
         if (!checkBounds(x, y, z))
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         org.bukkit.block.Block b = getThis().getBlock(x, y, z);
         CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
         Optional<Material> m = this.getWorld().getMaterialRegistry().getMaterial(b.getType().name());
         if (!m.isPresent())
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         MaterialState ms = ((BukkitMaterial) m.get()).getState(b.getData());
         return Optional.<Block>of(new CommonBlock(l, ms));

@@ -24,10 +24,15 @@
 package com.voxelplugineering.voxelsniper.sponge.world.material;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.property.block.GravityAffectedProperty;
+import org.spongepowered.api.data.property.block.MatterProperty;
+import org.spongepowered.api.data.property.block.MatterProperty.Matter;
+import org.spongepowered.api.data.property.block.PassableProperty;
 
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
@@ -183,19 +188,31 @@ public class SpongeMaterial extends WeakWrapper<BlockType>implements Material
     @Override
     public boolean isAffectedByGravity()
     {
-        return getThis().isAffectedByGravity();
+        Optional<GravityAffectedProperty> prop = getThis().getProperty(GravityAffectedProperty.class);
+        if(prop.isPresent()) {
+            return prop.get().getValue();
+        }
+        return false;
     }
 
     @Override
     public boolean isSolid()
     {
-        return getThis().isSolidCube();
+        Optional<PassableProperty> prop = getThis().getProperty(PassableProperty.class);
+        if(prop.isPresent()) {
+            return prop.get().getValue();
+        }
+        return false;
     }
 
     @Override
     public boolean isLiquid()
     {
-        return getThis().isLiquid();
+        Optional<MatterProperty> prop = getThis().getProperty(MatterProperty.class);
+        if(prop.isPresent()) {
+            return prop.get().getValue() == Matter.LIQUID;
+        }
+        return false;
     }
 
     @Override
@@ -205,7 +222,7 @@ public class SpongeMaterial extends WeakWrapper<BlockType>implements Material
     }
 
     @Override
-    public boolean isFlamable()
+    public boolean isFlammable()
     {
         return FLAMMABLE.contains(getThis());
     }

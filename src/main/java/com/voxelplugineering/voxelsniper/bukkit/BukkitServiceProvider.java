@@ -25,7 +25,8 @@ package com.voxelplugineering.voxelsniper.bukkit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
+
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
@@ -226,7 +227,7 @@ class WorldRegistryProvider implements RegistryProvider<org.bukkit.World, World>
         org.bukkit.World world = org.bukkit.Bukkit.getWorld(name);
         if (world == null)
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(new Pair<org.bukkit.World, World>(world, new BukkitWorld(this.context, world, Gunsmith.getMainThread())));
     }
@@ -252,7 +253,7 @@ class PlayerRegistryProvider implements RegistryProvider<org.bukkit.entity.Playe
         org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(name);
         if (player == null)
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         BukkitPlayer bp = new BukkitPlayer(player, this.bm, this.context);
         bp.init(this.context);

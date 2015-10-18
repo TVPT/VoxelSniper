@@ -27,8 +27,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.bukkit.service.scheduler.BukkitTask;
 import com.voxelplugineering.voxelsniper.service.AbstractService;

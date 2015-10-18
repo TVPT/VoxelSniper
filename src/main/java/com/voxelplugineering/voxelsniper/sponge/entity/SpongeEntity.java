@@ -23,13 +23,13 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.entity;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 
-import com.google.common.base.Optional;
 import com.voxelplugineering.voxelsniper.entity.AbstractEntity;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -92,7 +92,7 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
     public Location getLocation()
     {
         // TODO change to exception on fail
-        return SpongeUtilities.fromSpongeLocation(getThis().getLocation(), this.worlds).orNull();
+        return SpongeUtilities.fromSpongeLocation(getThis().getLocation(), this.worlds).orElse(null);
     }
 
     @Override

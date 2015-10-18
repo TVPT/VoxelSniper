@@ -25,8 +25,8 @@ package com.voxelplugineering.voxelsniper.forge.world;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntity;
@@ -77,7 +77,7 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
     {
         if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         IBlockState b = getThis().getBlockState(new BlockPos(x, y, z));
         CommonLocation l = new CommonLocation(this.getWorld(), x + getThis().xPosition * 16, y, z + getThis().zPosition * 16);
@@ -86,7 +86,7 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
                 .getMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath());
         if (!m.isPresent())
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         MaterialState ms = ((ForgeMaterial) m.get()).getState(b);
         return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));

@@ -23,16 +23,14 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.event.handler;
 
+import java.util.Optional;
+
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.action.InteractEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.inventory.UseItemStackEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
-import com.google.common.base.Optional;
-import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
@@ -66,9 +64,9 @@ public class SpongeEventHandler
         this.players = context.getRequired(PlayerRegistry.class);
         this.bus = context.getRequired(EventBus.class);
         this.primaryMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, SpongeConfiguration.primaryMaterial)
-                .or(ItemTypes.ARROW);
+                .orElse(ItemTypes.ARROW);
         this.altMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, SpongeConfiguration.altMaterial)
-                .or(ItemTypes.GUNPOWDER);
+                .orElse(ItemTypes.GUNPOWDER);
     }
 
     /**
@@ -79,7 +77,7 @@ public class SpongeEventHandler
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event)
     {
-        Optional<Player> s = this.players.getPlayer(event.getTargetEntity());
+        Optional<Player> s = this.players.getPlayer(event.getTargetEntity().getName());
         if (s.isPresent())
         {
             SniperEvent.SniperCreateEvent sce = new SniperEvent.SniperCreateEvent(s.get());
@@ -95,7 +93,7 @@ public class SpongeEventHandler
     @Listener
     public void onPlayerLeave(ClientConnectionEvent.Disconnect event)
     {
-        Optional<Player> s = this.players.getPlayer(event.getTargetEntity());
+        Optional<Player> s = this.players.getPlayer(event.getTargetEntity().getName());
         if (s.isPresent())
         {
             SniperEvent.SniperDestroyEvent sde = new SniperEvent.SniperDestroyEvent(s.get());

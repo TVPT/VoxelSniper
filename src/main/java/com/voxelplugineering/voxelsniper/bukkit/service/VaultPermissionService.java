@@ -25,13 +25,14 @@ package com.voxelplugineering.voxelsniper.bukkit.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import net.milkbowl.vault.permission.Permission;
 
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import net.milkbowl.vault.permission.Permission;
 
 /**
  * A permission proxy for Vault permissions.

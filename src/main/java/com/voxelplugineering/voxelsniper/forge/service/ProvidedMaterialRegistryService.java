@@ -26,9 +26,9 @@ package com.voxelplugineering.voxelsniper.forge.service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.registry.ProvidedWeakRegistry;

@@ -24,8 +24,8 @@
 package com.voxelplugineering.voxelsniper.sponge.world;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
@@ -73,14 +73,14 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
     {
         if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
         {
-            return Optional.absent();
+            return Optional.empty();
         }
-        org.spongepowered.api.world.Location b = getThis().getLocation(x, y, z);
+        org.spongepowered.api.world.Location<org.spongepowered.api.world.Chunk> b = getThis().getLocation(x, y, z);
         CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
         Optional<Material> m = ((SpongeWorld) this.getWorld()).getMaterialRegistry().getMaterial(b.getBlockType());
         if (!m.isPresent())
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         MaterialState ms = ((SpongeMaterial) m.get()).getState(b.getBlock());
         return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));

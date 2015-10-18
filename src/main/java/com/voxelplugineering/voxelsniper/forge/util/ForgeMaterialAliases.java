@@ -29,8 +29,17 @@ import com.voxelplugineering.voxelsniper.service.alias.AliasRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * A helper for loading default material aliases.
+ */
 public class ForgeMaterialAliases
 {
+    
+    /**
+     * Loads the default material aliases to the given registry.
+     * 
+     * @param registry The registry to load to
+     */
     public static void loadDefaultAliases(AliasHandler registry)
     {
 

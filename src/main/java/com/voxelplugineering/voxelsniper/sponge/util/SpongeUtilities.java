@@ -24,8 +24,8 @@
 package com.voxelplugineering.voxelsniper.sponge.util;
 
 import java.util.Map;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -56,9 +56,10 @@ public class SpongeUtilities
      * @param location The location to convert
      * @return The new location
      */
-    public static org.spongepowered.api.world.Location getSpongeLocation(Location location)
+    public static org.spongepowered.api.world.Location<org.spongepowered.api.world.World> getSpongeLocation(Location location)
     {
-        return new org.spongepowered.api.world.Location(((SpongeWorld) location.getWorld()).getThis(), getSpongeVector(location.toVector()));
+        return new org.spongepowered.api.world.Location<org.spongepowered.api.world.World>(((SpongeWorld) location.getWorld()).getThis(),
+                getSpongeVector(location.toVector()));
     }
 
     /**
@@ -109,20 +110,16 @@ public class SpongeUtilities
      * @param location The location
      * @return The gunsmith location
      */
-    public static Optional<Location> fromSpongeLocation(org.spongepowered.api.world.Location location,
+    public static Optional<Location> fromSpongeLocation(org.spongepowered.api.world.Location<org.spongepowered.api.world.World> location,
             WorldRegistry<org.spongepowered.api.world.World> worlds)
     {
-        if (location.getExtent() instanceof World)
+        Optional<World> world = worlds.getWorld(location.getExtent().getName());
+        if (!world.isPresent())
         {
-            Optional<World> world = worlds.getWorld(((org.spongepowered.api.world.World) location.getExtent()).getName());
-            if (!world.isPresent())
-            {
-                return Optional.absent();
-            }
-            com.flowpowered.math.vector.Vector3d position = location.getPosition();
-            return Optional.<Location>of(new CommonLocation(world.get(), position.getX(), position.getY(), position.getZ()));
+            return Optional.empty();
         }
-        return Optional.absent();
+        com.flowpowered.math.vector.Vector3d position = location.getPosition();
+        return Optional.<Location>of(new CommonLocation(world.get(), position.getX(), position.getY(), position.getZ()));
     }
 
 }

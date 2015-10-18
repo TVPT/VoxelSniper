@@ -25,8 +25,8 @@ package com.voxelplugineering.voxelsniper.forge.world;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.Entity;
@@ -95,7 +95,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     {
         if (!getThis().getChunkProvider().chunkExists(x < 0 ? x / 16 - 1 : x / 16, z < 0 ? z / 16 - 1 : z / 16))
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         Location loc = new CommonLocation(this, x, y, z);
         IBlockState state = getThis().getBlockState(new net.minecraft.util.BlockPos(x, y, z));
@@ -107,7 +107,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
             MaterialState ms = ((ForgeMaterial) mat.get()).getState(state);
             return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(loc, ms));
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override
@@ -151,7 +151,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     {
         if (!getThis().getChunkProvider().chunkExists(x, z))
         {
-            return Optional.absent();
+            return Optional.empty();
         }
         net.minecraft.world.chunk.Chunk chunk = getThis().getChunkFromChunkCoords(x, z);
         if (this.chunks.containsKey(chunk))
@@ -191,7 +191,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     @Override
     public void spawnLightning(Vector3i position)
     {
-        getThis().addWeatherEffect(new EntityLightningBolt(getThis(), (double) position.getX(), (double) position.getY(), (double) position.getZ()));
+        getThis().addWeatherEffect(new EntityLightningBolt(getThis(), position.getX(), position.getY(), position.getZ()));
     }
 
 }

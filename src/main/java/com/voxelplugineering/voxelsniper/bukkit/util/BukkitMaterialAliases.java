@@ -28,8 +28,17 @@ import org.bukkit.Material;
 import com.voxelplugineering.voxelsniper.service.alias.AliasHandler;
 import com.voxelplugineering.voxelsniper.service.alias.AliasRegistry;
 
+/**
+ * A helper for loading default material aliases.
+ */
 public class BukkitMaterialAliases
 {
+    /**
+     * Loads the default material aliases.
+     * 
+     * @param registry The alias registry to load into
+     */
+    @SuppressWarnings("deprecation")
     public static void loadDefaultAliases(AliasHandler registry)
     {
 
@@ -41,8 +50,9 @@ public class BukkitMaterialAliases
             }
             AliasRegistry alias = registry.getRegistry("material").get();
 
-            for(Material mat: Material.values()) {
-                alias.register(mat.getId()+"", mat.name());
+            for (Material mat : Material.values())
+            {
+                alias.register(mat.getId() + "", mat.name());
             }
 
         }

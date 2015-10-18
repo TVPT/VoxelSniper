@@ -151,8 +151,9 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block>impleme
         return FALLOFF_MATERIALS.contains(getThis());
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public boolean isFlamable()
+    public boolean isFlammable()
     {
         return Blocks.fire.getFlammability(getThis()) > 0;
     }

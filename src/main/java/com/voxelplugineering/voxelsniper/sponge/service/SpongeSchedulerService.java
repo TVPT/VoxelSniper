@@ -24,12 +24,12 @@
 package com.voxelplugineering.voxelsniper.sponge.service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;

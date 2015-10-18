@@ -25,9 +25,9 @@ package com.voxelplugineering.voxelsniper.forge.service;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTask;
 import com.voxelplugineering.voxelsniper.forge.service.scheduler.ForgeTaskAsync;

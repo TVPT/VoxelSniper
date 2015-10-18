@@ -23,7 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.forge.event.handler;
 
-import com.google.common.base.Optional;
+
+import java.util.Optional;
+
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
@@ -74,7 +76,7 @@ public class ForgeEventProxy
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedInEvent event)
     {
-        Optional<Player> s = this.pr.getPlayer(event.player.getName());
+        Optional<Player> s = this.pr.getPlayer(event.player.getCommandSenderName());
         if (s.isPresent())
         {
             SniperCreateEvent sce = new SniperCreateEvent(s.get());
@@ -90,7 +92,7 @@ public class ForgeEventProxy
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedOutEvent event)
     {
-        Optional<Player> s = this.pr.getPlayer(event.player.getName());
+        Optional<Player> s = this.pr.getPlayer(event.player.getCommandSenderName());
         if (s.isPresent())
         {
             SniperDestroyEvent sde = new SniperDestroyEvent(s.get());
@@ -110,7 +112,7 @@ public class ForgeEventProxy
         {
             return;
         }
-        GunsmithLogger.getLogger().debug("PlayerInteractEvent for " + event.entityPlayer.getName());
+        GunsmithLogger.getLogger().debug("PlayerInteractEvent for " + event.entityPlayer.getCommandSenderName());
         if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
         {
             BrushAction action;
@@ -124,7 +126,7 @@ public class ForgeEventProxy
             {
                 return;
             }
-            Optional<Player> s = this.pr.getPlayer(event.entityPlayer.getName());
+            Optional<Player> s = this.pr.getPlayer(event.entityPlayer.getCommandSenderName());
             if (s.isPresent())
             {
                 SnipeEvent se = new SnipeEvent(s.get(), event.entityPlayer.rotationYawHead, event.entityPlayer.rotationPitch, action);
