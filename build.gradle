@@ -56,9 +56,11 @@ repositories {
     mavenCentral()
     maven {
         url "http://vault.voxelmodpack.com/content/groups/public/"
-        url "http://nexus.afterkraft.com/content/groups/public/"
-        url "http://repo.budgiehouse.com:8081/nexus/content/repositories/VBpublic/"
+	}
+	maven {
         url "https://hub.spigotmc.org/nexus/content/groups/public/"
+	}
+	maven {
         url "http://repo.spongepowered.org/maven/"
     }
 }
