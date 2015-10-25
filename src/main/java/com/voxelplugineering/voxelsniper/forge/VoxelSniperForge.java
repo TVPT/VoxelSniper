@@ -51,7 +51,11 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 /**
  * The core class of VoxelSniper for minecraft forge.
  */
-@Mod(modid = "voxelsniperforge", name = "VoxelSniper-Forge", version = "7.1.0", acceptableRemoteVersions = "*", canBeDeactivated = true)
+@Mod(modid = "voxelsniperforge",
+        name = "VoxelSniper-Forge",
+        version = "7.1.0",
+        acceptableRemoteVersions = "*",
+        canBeDeactivated = true)
 public class VoxelSniperForge
 {
 
@@ -75,7 +79,7 @@ public class VoxelSniperForge
     /**
      * The preinitialization event.
      * 
-     * @param event the event
+     * @param event The event
      */
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -88,7 +92,7 @@ public class VoxelSniperForge
     /**
      * The Initialization event.
      * 
-     * @param event the event
+     * @param event The event
      */
     @EventHandler
     public void onInit(FMLInitializationEvent event)
@@ -153,7 +157,7 @@ public class VoxelSniperForge
     /**
      * The shutdown event.
      * 
-     * @param event the event
+     * @param event The event
      */
     @EventHandler
     public void onShutdown(FMLServerStoppingEvent event)
@@ -167,7 +171,7 @@ public class VoxelSniperForge
     /**
      * Returns the {@link Logger}.
      * 
-     * @return the logger
+     * @return The logger
      */
     public Logger getLogger()
     {
@@ -177,7 +181,7 @@ public class VoxelSniperForge
     /**
      * Returns the {@link SidedProxy}.
      * 
-     * @return the proxy
+     * @return The proxy
      */
     public CommonProxy getSidedProxy()
     {

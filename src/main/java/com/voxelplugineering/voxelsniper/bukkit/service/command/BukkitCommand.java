@@ -45,8 +45,8 @@ public class BukkitCommand extends org.bukkit.command.Command
     /**
      * Creates a new {@link BukkitCommand}.
      * 
-     * @param name the command name, cannot be null or empty
-     * @param cmd the command, cannot be null
+     * @param name The command name, cannot be null or empty
+     * @param cmd The command, cannot be null
      */
     @SuppressWarnings("unchecked")
     protected BukkitCommand(String name, Command cmd, Context context)

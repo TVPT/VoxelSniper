@@ -52,7 +52,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     /**
      * Creates a new {@link ForgeCommand}.
      * 
-     * @param cmd the Gunsmith command to wrap
+     * @param cmd The Gunsmith command to wrap
      */
     @SuppressWarnings({ "unchecked" })
     public ForgeCommand(Command cmd, Context context)
@@ -143,7 +143,8 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender)
     {
-        if(sender instanceof EntityPlayer) {
+        if (sender instanceof EntityPlayer)
+        {
             return true;
         }
         return !this.cmd.isPlayerOnly();

@@ -59,7 +59,8 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(target = WorldRegistry.class, priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
+    @Builder(target = WorldRegistry.class,
+            priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
         return new WorldRegistryService<net.minecraft.world.World>(context, new WorldRegistryProviderServer(context));
@@ -70,7 +71,8 @@ public class ServerProxy extends CommonProxy
      * 
      * @return The service
      */
-    @Builder(target = PlayerRegistry.class, priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
+    @Builder(target = PlayerRegistry.class,
+            priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
         return new PlayerRegistryService<net.minecraft.entity.player.EntityPlayer>(context, new SniperRegistryProviderServer(context),

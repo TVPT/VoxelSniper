@@ -189,7 +189,8 @@ public class SpongeMaterial extends WeakWrapper<BlockType>implements Material
     public boolean isAffectedByGravity()
     {
         Optional<GravityAffectedProperty> prop = getThis().getProperty(GravityAffectedProperty.class);
-        if(prop.isPresent()) {
+        if (prop.isPresent())
+        {
             return prop.get().getValue();
         }
         return false;
@@ -199,7 +200,8 @@ public class SpongeMaterial extends WeakWrapper<BlockType>implements Material
     public boolean isSolid()
     {
         Optional<PassableProperty> prop = getThis().getProperty(PassableProperty.class);
-        if(prop.isPresent()) {
+        if (prop.isPresent())
+        {
             return prop.get().getValue();
         }
         return false;
@@ -209,7 +211,8 @@ public class SpongeMaterial extends WeakWrapper<BlockType>implements Material
     public boolean isLiquid()
     {
         Optional<MatterProperty> prop = getThis().getProperty(MatterProperty.class);
-        if(prop.isPresent()) {
+        if (prop.isPresent())
+        {
             return prop.get().getValue() == Matter.LIQUID;
         }
         return false;

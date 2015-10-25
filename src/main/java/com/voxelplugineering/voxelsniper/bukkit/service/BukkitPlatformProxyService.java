@@ -34,7 +34,7 @@ import com.voxelplugineering.voxelsniper.util.Context;
  */
 public class BukkitPlatformProxyService extends CommonPlatformProxyService
 {
-    
+
     private File metricsConf;
 
     /**

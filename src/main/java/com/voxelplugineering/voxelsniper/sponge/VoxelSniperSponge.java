@@ -40,7 +40,9 @@ import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
 /**
  * The main plugin class for Sponge.
  */
-@Plugin(id = "voxelsnipersponge", name = "VoxelSniper-Sponge", version = "7.1.0")
+@Plugin(id = "voxelsnipersponge",
+        name = "VoxelSniper-Sponge",
+        version = "7.1.0")
 public class VoxelSniperSponge
 {
 

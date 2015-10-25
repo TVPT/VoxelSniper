@@ -68,7 +68,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     /**
      * Creates a new {@link BukkitWorld}.
      * 
-     * @param world the world
+     * @param world The world
      * @param thread The world Thread
      */
     @SuppressWarnings("unchecked")

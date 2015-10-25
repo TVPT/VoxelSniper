@@ -88,7 +88,7 @@ public class SpongeEventHandler
     /**
      * An event handler for quit events, proxies to Gunsmith's {@link SniperDestroyEvent}.
      * 
-     * @param event the event
+     * @param event The event
      */
     @Listener
     public void onPlayerLeave(ClientConnectionEvent.Disconnect event)

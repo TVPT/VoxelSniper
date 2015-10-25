@@ -37,6 +37,7 @@ import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
+import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
 
 /**
@@ -130,16 +131,16 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.li
     }
 
     @Override
-    public com.voxelplugineering.voxelsniper.world.Location getLocation()
+    public Location getLocation()
     {
         com.flowpowered.math.vector.Vector3d position = getThis().getLocation().getPosition();
         return new CommonLocation(getWorld(), position.getX(), position.getY(), position.getZ());
     }
 
     @Override
-    public void setLocation(com.voxelplugineering.voxelsniper.world.Location newLocation)
+    public void setLocation(World world, double x, double y, double z)
     {
-        getThis().setLocation(SpongeUtilities.getSpongeLocation(newLocation));
+        getThis().setLocation(SpongeUtilities.getSpongeLocation(world, x, y, z));
     }
 
     @Override
@@ -163,13 +164,13 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.li
     @Override
     public Vector3d getRotation()
     {
-        return new Vector3d(getThis().getRotation().getY(), getThis().getRotation().getX(), getThis().getRotation().getZ());
+        return SpongeUtilities.getGunsmithVector(getThis().getRotation());
     }
 
     @Override
-    public void setRotation(Vector3d rotation)
+    public void setRotation(double pitch, double yaw, double roll)
     {
-        getThis().setRotation(new com.flowpowered.math.vector.Vector3d(rotation.getY(), rotation.getX(), rotation.getZ()));
+        getThis().setRotation(new com.flowpowered.math.vector.Vector3d(pitch, yaw, roll));
     }
 
     @Override
@@ -179,15 +180,15 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.li
     }
 
     @Override
-    public double getYaw()
-    {
-        return getThis().getRotation().getY();
-    }
-
-    @Override
     public double getPitch()
     {
         return getThis().getRotation().getX();
+    }
+
+    @Override
+    public double getYaw()
+    {
+        return getThis().getRotation().getY();
     }
 
     @Override

@@ -28,6 +28,7 @@ import java.util.UUID;
 import com.voxelplugineering.voxelsniper.brush.BrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
+import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -49,7 +50,7 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     /**
      * Creates a new {@link BukkitPlayer}.
      * 
-     * @param player the player to wrap, cannot be null
+     * @param player The player to wrap, cannot be null
      */
     @SuppressWarnings({ "unchecked" })
     public BukkitPlayer(org.bukkit.entity.Player player, BrushManager bm, Context context)
@@ -62,23 +63,27 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     @Override
     public void sendMessage(String msg)
     {
-        if(msg.indexOf('\n') != -1) {
+        if (msg.indexOf('\n') != -1)
+        {
             for (String message : msg.split("\n"))
             {
                 sendMessage(message);
             }
             return;
         }
-        if(msg.length() > BukkitConfiguration.maxMessageSize) {
+        if (msg.length() > BukkitConfiguration.maxMessageSize)
+        {
             sendMessage(msg.substring(0, BukkitConfiguration.maxMessageSize));
             sendMessage(msg.substring(BukkitConfiguration.maxMessageSize));
             return;
         }
         getThis().sendMessage(formatMessage(msg));
     }
-    
-    private String formatMessage(String msg) {
-        for(TextFormat format: TextFormat.values()) {
+
+    private String formatMessage(String msg)
+    {
+        for (TextFormat format : TextFormat.values())
+        {
             msg = msg.replaceAll(format.toString(), this.textFormat.getFormat(format));
         }
         return msg;
@@ -109,9 +114,9 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     }
 
     @Override
-    public void setLocation(com.voxelplugineering.voxelsniper.world.Location newLocation)
+    public void setLocation(World world, double x, double y, double z)
     {
-        getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
+        getThis().teleport(new org.bukkit.Location(((BukkitWorld) world).getThis(), x, y, z));
     }
 
     @Override
@@ -142,14 +147,14 @@ public class BukkitPlayer extends AbstractPlayer<org.bukkit.entity.Player>
     public Vector3d getRotation()
     {
         org.bukkit.Location location = getThis().getLocation();
-        return new Vector3d(location.getYaw(), location.getPitch(), 0);
+        return new Vector3d(location.getPitch(), location.getYaw(), 0);
     }
 
     @Override
-    public void setRotation(Vector3d rotation)
+    public void setRotation(double pitch, double yaw, double roll)
     {
-        getThis().getLocation().setYaw((float) rotation.getX());
-        getThis().getLocation().setYaw((float) rotation.getY());
+        getThis().getLocation().setYaw((float) yaw);
+        getThis().getLocation().setYaw((float) pitch);
     }
 
     @Override

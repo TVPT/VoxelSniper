@@ -101,7 +101,7 @@ public class ForgeSchedulerService extends AbstractService implements Scheduler
     /**
      * Cancels the given {@link ForgeTask} if it exists with this scheduler.
      * 
-     * @param forgeTask the task to cancel
+     * @param forgeTask The task to cancel
      */
     public void cancel(Task forgeTask)
     {

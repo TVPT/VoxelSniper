@@ -44,14 +44,16 @@ public class ForgeConsoleProxy implements CommandSender
     @Override
     public void sendMessage(String msg)
     {
-        if(msg.indexOf('\n') != -1) {
+        if (msg.indexOf('\n') != -1)
+        {
             for (String message : msg.split("\n"))
             {
                 sendMessage(message);
             }
             return;
         }
-        for(TextFormat format: TextFormat.values()) {
+        for (TextFormat format : TextFormat.values())
+        {
             msg = msg.replaceAll(format.toString(), "");
         }
         VoxelSniperForge.voxelsniper.getLogger().info(msg);

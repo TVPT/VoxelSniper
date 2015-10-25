@@ -23,11 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.entity;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.UUID;
 
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
+import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.entity.AbstractEntity;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -81,9 +80,9 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
     }
 
     @Override
-    public void setLocation(Location newLocation)
+    public void setLocation(World world, double x, double y, double z)
     {
-        getThis().teleport(BukkitUtilities.getBukkitLocation(newLocation));
+        getThis().teleport(new org.bukkit.Location(((BukkitWorld) world).getThis(), x, y, z));
     }
 
     @Override
@@ -96,15 +95,14 @@ public class BukkitEntity extends AbstractEntity<org.bukkit.entity.Entity>
     public Vector3d getRotation()
     {
         org.bukkit.Location location = getThis().getLocation();
-        return new Vector3d(location.getYaw(), location.getPitch(), 0);
+        return new Vector3d(location.getPitch(), location.getYaw(), 0);
     }
 
     @Override
-    public void setRotation(Vector3d rotation)
+    public void setRotation(double pitch, double yaw, double roll)
     {
-        checkNotNull(rotation);
-        getThis().getLocation().setYaw((float) rotation.getX());
-        getThis().getLocation().setPitch((float) rotation.getY());
+        getThis().getLocation().setYaw((float) yaw);
+        getThis().getLocation().setPitch((float) pitch);
     }
 
     @Override

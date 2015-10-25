@@ -60,7 +60,7 @@ public class BukkitChunk extends AbstractChunk<org.bukkit.Chunk>
     /**
      * Creates a new {@link BukkitChunk} wrapping the given {@link org.bukkit.Chunk} .
      * 
-     * @param chunk the chunk to wrap, cannot be null
+     * @param chunk The chunk to wrap, cannot be null
      * @param world The world to wrap
      */
     public BukkitChunk(org.bukkit.Chunk chunk, World world, WorldRegistry<org.bukkit.World> worldReg)

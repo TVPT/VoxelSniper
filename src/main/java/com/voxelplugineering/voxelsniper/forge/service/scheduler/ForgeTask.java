@@ -40,9 +40,9 @@ public class ForgeTask extends Task
     /**
      * Creates a new {@link ForgeTask}.
      * 
-     * @param runnable the runnable for the task
-     * @param interval the interval to execute the task on
-     * @param scheduler the scheduler controlling this task
+     * @param runnable The runnable for the task
+     * @param interval The interval to execute the task on
+     * @param scheduler The scheduler controlling this task
      */
     public ForgeTask(Runnable runnable, int interval, ForgeSchedulerService scheduler)
     {
@@ -59,7 +59,7 @@ public class ForgeTask extends Task
     /**
      * Returns whether this task should be run.
      * 
-     * @return should run
+     * @return Should run
      */
     public boolean shouldTick()
     {

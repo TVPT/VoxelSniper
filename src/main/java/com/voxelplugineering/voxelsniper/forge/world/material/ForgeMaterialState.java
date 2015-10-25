@@ -40,7 +40,7 @@ public class ForgeMaterialState implements MaterialState
     /**
      * Creates a new {@link ForgeMaterialState}.
      * 
-     * @param type the base type
+     * @param type The base type
      * @param state The data
      */
     public ForgeMaterialState(Material type, IBlockState state)

@@ -71,7 +71,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     /**
      * Creates a new {@link ForgeWorld}.
      * 
-     * @param world the world to wrap
+     * @param world The world to wrap
      */
     @SuppressWarnings("unchecked")
     public ForgeWorld(Context context, WorldServer world)

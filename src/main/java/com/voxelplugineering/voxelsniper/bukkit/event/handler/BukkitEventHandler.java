@@ -60,12 +60,13 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     /**
      * An event handler for player join events.
      * 
-     * @param event the {@link org.bukkit.event.player.PlayerJoinEvent}
+     * @param event The {@link org.bukkit.event.player.PlayerJoinEvent}
      */
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event)
     {
-        if(!event.getPlayer().hasPermission("voxelsniper.sniper")) {
+        if (!event.getPlayer().hasPermission("voxelsniper.sniper"))
+        {
             return;
         }
         Optional<Player> s = this.pr.getPlayer(event.getPlayer().getName());
@@ -79,12 +80,13 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     /**
      * An event handler for quit events, proxies to Gunsmith's {@link SniperDestroyEvent}.
      * 
-     * @param event the event
+     * @param event The event
      */
     @org.bukkit.event.EventHandler
     public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event)
     {
-        if(!event.getPlayer().hasPermission("voxelsniper.sniper")) {
+        if (!event.getPlayer().hasPermission("voxelsniper.sniper"))
+        {
             return;
         }
         Optional<Player> s = this.pr.getPlayer(event.getPlayer());
@@ -98,12 +100,13 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
     /**
      * An event handler for player interact events.
      * 
-     * @param event the {@link org.bukkit.event.player.PlayerInteractEvent}
+     * @param event The {@link org.bukkit.event.player.PlayerInteractEvent}
      */
     @org.bukkit.event.EventHandler
     public void onPlayerInteractEvent(org.bukkit.event.player.PlayerInteractEvent event)
     {
-        if(!event.getPlayer().hasPermission("voxelsniper.sniper")) {
+        if (!event.getPlayer().hasPermission("voxelsniper.sniper"))
+        {
             return;
         }
         org.bukkit.entity.Player p = event.getPlayer();
@@ -127,7 +130,8 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
             {
                 SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch(), action);
                 this.bus.post(se);
-            } else {
+            } else
+            {
                 GunsmithLogger.getLogger().warn("error getting player");
             }
         }

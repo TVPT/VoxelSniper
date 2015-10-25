@@ -63,6 +63,20 @@ public class SpongeUtilities
     }
 
     /**
+     * Converts the given world and position to a {@link org.spongepowered.api.world.Location}
+     * 
+     * @param world The world
+     * @param x The X position
+     * @param y The Y position
+     * @param z The Z position
+     * @return The new location
+     */
+    public static org.spongepowered.api.world.Location<org.spongepowered.api.world.World> getSpongeLocation(World world, double x, double y, double z)
+    {
+        return new org.spongepowered.api.world.Location<org.spongepowered.api.world.World>(((SpongeWorld) world).getThis(), x, y, z);
+    }
+
+    /**
      * Converts a {@link com.voxelplugineering.voxelsniper.util.math.Vector3d} into a
      * {@link com.flowpowered.math.vector.Vector3d}.
      * 

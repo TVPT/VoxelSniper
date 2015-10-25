@@ -96,9 +96,9 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
     }
 
     @Override
-    public void setLocation(Location loc)
+    public void setLocation(World world, double x, double y, double z)
     {
-        getThis().setLocation(SpongeUtilities.getSpongeLocation(loc));
+        getThis().setLocation(SpongeUtilities.getSpongeLocation(world, x, y, z));
     }
 
     @Override
@@ -114,9 +114,9 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
     }
 
     @Override
-    public void setRotation(Vector3d rotation)
+    public void setRotation(double pitch, double yaw, double roll)
     {
-        getThis().setRotation(SpongeUtilities.getSpongeVector(rotation));
+        getThis().setRotation(new com.flowpowered.math.vector.Vector3d(pitch, yaw, roll));
     }
 
     @Override

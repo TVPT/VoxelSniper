@@ -52,7 +52,7 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     /**
      * Creates a new {@link ForgePlayer}.
      * 
-     * @param player the player to wrap
+     * @param player The player to wrap
      */
     @SuppressWarnings("unchecked")
     public ForgePlayer(net.minecraft.entity.player.EntityPlayer player, Context context)
@@ -128,13 +128,13 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     }
 
     @Override
-    public void setLocation(Location newLocation)
+    public void setLocation(World world, double x, double y, double z)
     {
-        if (!newLocation.getWorld().equals(this.getWorld()))
+        if (!world.equals(this.getWorld()))
         {
             getThis().travelToDimension(getThis().worldObj.provider.getDimensionId());
         }
-        getThis().setPositionAndUpdate(newLocation.getX(), newLocation.getY(), newLocation.getZ());
+        getThis().setPositionAndUpdate(x, y, z);
     }
 
     @Override
@@ -168,10 +168,10 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     }
 
     @Override
-    public void setRotation(Vector3d rotation)
+    public void setRotation(double pitch, double yaw, double roll)
     {
-        getThis().setRotationYawHead((float) rotation.getX());
-        getThis().rotationPitch = (float) rotation.getY();
+        getThis().setRotationYawHead((float) yaw);
+        getThis().rotationPitch = (float) pitch;
     }
 
     @Override

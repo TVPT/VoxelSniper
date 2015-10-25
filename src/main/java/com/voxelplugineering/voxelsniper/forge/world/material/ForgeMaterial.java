@@ -106,7 +106,7 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block>impleme
     /**
      * Creates a new {@link ForgeMaterial}.
      * 
-     * @param block the block to wrap
+     * @param block The block to wrap
      */
     public ForgeMaterial(net.minecraft.block.Block block, MaterialStateCache<IBlockState, ForgeMaterialState> cache)
     {

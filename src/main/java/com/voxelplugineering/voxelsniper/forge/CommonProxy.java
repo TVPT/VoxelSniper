@@ -80,13 +80,15 @@ public abstract class CommonProxy
         scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/sponge/");
     }
 
-    @Builder(target = TextFormatParser.class, priority = 0)
+    @Builder(target = TextFormatParser.class,
+            priority = 0)
     public TextFormatParser getFormatProxy(Context context)
     {
         return new ForgeTextFormatParser(context);
     }
 
-    @Builder(target = PlatformProxy.class, priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
+    @Builder(target = PlatformProxy.class,
+            priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
     public PlatformProxy getPlatformProxy(Context context)
     {
         return new ForgePlatformProxyService(context, VoxelSniperForge.voxelsniper.getConfigDir());
@@ -98,7 +100,8 @@ public abstract class CommonProxy
         BaseConfiguration.defaultBiomeName = BiomeGenBase.plains.biomeName;
     }
 
-    @Builder(target = MaterialRegistry.class, priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
+    @Builder(target = MaterialRegistry.class,
+            priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new MaterialRegistryService<net.minecraft.block.Block>(context);
@@ -119,7 +122,8 @@ public abstract class CommonProxy
         }
     }
 
-    @Builder(target = PermissionProxy.class, priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
+    @Builder(target = PermissionProxy.class,
+            priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
     public PermissionProxy getPermissionProxy(Context context)
     {
         return new ForgePermissionProxyService(context);
@@ -139,13 +143,15 @@ public abstract class CommonProxy
         cmd.setRegistrar(new ForgeCommandRegistrar(context));
     }
 
-    @Builder(target = Scheduler.class, priority = ServicePriorities.SCHEDULER_PRIORITY)
+    @Builder(target = Scheduler.class,
+            priority = ServicePriorities.SCHEDULER_PRIORITY)
     public Scheduler getSchedulerProxy(Context context)
     {
         return new ForgeSchedulerService(context);
     }
 
-    @Builder(target = BiomeRegistry.class, priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
+    @Builder(target = BiomeRegistry.class,
+            priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<net.minecraft.world.biome.BiomeGenBase>(context);
@@ -165,7 +171,7 @@ public abstract class CommonProxy
 
     @PostInit
     public void postInit(Context c)
-    {        
+    {
         Optional<GlobalAliasHandler> aliases = c.get(GlobalAliasHandler.class);
         if (aliases.isPresent() && VoxelSniperConfiguration.generateDefaultAliases)
         {

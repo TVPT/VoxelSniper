@@ -83,12 +83,12 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
     }
 
     @Override
-    public void setLocation(Location loc)
+    public void setLocation(World world, double x, double y, double z)
     {
-        if (loc.getWorld() instanceof ForgeWorld)
+        if (world instanceof ForgeWorld)
         {
-            getThis().setWorld(((ForgeWorld) loc.getWorld()).getThis());
-            getThis().setPositionAndUpdate(loc.getX(), loc.getY(), loc.getZ());
+            getThis().setWorld(((ForgeWorld) world).getThis());
+            getThis().setPositionAndUpdate(x, y, z);
         }
     }
 
@@ -105,10 +105,10 @@ public class ForgeEntity extends AbstractEntity<net.minecraft.entity.Entity>
     }
 
     @Override
-    public void setRotation(Vector3d rotation)
+    public void setRotation(double pitch, double yaw, double roll)
     {
-        getThis().setRotationYawHead((float) rotation.getX());
-        getThis().rotationPitch = (float) rotation.getY();
+        getThis().setRotationYawHead((float) yaw);
+        getThis().rotationPitch = (float) pitch;
     }
 
     @Override

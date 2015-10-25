@@ -29,7 +29,7 @@ import com.voxelplugineering.voxelsniper.world.biome.Biome;
 /**
  * Wraps a {@link org.spongepowered.api.world.biome.BiomeType}.
  */
-public class SpongeBiome extends WeakWrapper<org.spongepowered.api.world.biome.BiomeType> implements Biome
+public class SpongeBiome extends WeakWrapper<org.spongepowered.api.world.biome.BiomeType>implements Biome
 {
 
     /**

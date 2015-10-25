@@ -64,7 +64,7 @@ public class ForgeCommandRegistrar implements CommandRegistrar
      * {@link FMLServerStartingEvent#registerServerCommand(net.minecraft.command.ICommand)} is
      * called against to register the commands.
      * 
-     * @param event the server starting event
+     * @param event The server starting event
      */
     public synchronized void flush(FMLServerStartingEvent event)
     {

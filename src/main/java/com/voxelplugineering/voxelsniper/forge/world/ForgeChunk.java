@@ -61,8 +61,8 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
     /**
      * Creates a new {@link ForgeChunk}
      * 
-     * @param chunk the chunk to wrap
-     * @param world the world that the chunk belongs to
+     * @param chunk The chunk to wrap
+     * @param world The world that the chunk belongs to
      */
     public ForgeChunk(net.minecraft.world.chunk.Chunk chunk, World world, Context context)
     {

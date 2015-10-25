@@ -43,7 +43,7 @@ public class BukkitConsoleSender implements CommandSender
     /**
      * Creates a new console proxy wrapping the given {@link CommandSender}.
      * 
-     * @param console the console, cannot be null
+     * @param console The console, cannot be null
      */
     public BukkitConsoleSender(org.bukkit.command.CommandSender console)
     {
@@ -53,14 +53,16 @@ public class BukkitConsoleSender implements CommandSender
     @Override
     public void sendMessage(String msg)
     {
-        if(msg.indexOf('\n') != -1) {
+        if (msg.indexOf('\n') != -1)
+        {
             for (String message : msg.split("\n"))
             {
                 sendMessage(message);
             }
             return;
         }
-        for(TextFormat format: TextFormat.values()) {
+        for (TextFormat format : TextFormat.values())
+        {
             msg = msg.replaceAll(format.toString(), "");
         }
         this.console.sendMessage(msg);

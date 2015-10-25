@@ -87,7 +87,7 @@ public class SpongeServiceProvider
     /**
      * Creates a new {@link SpongeServiceProvider}.
      * 
-     * @param game the game instance
+     * @param game The game instance
      * @param plugin The plugin container
      * @param logger The logger
      */
@@ -110,13 +110,15 @@ public class SpongeServiceProvider
     {
     }
 
-    @Builder(target = TextFormatParser.class, priority = ServicePriorities.TEXT_FORMAT_PRIORITY)
+    @Builder(target = TextFormatParser.class,
+            priority = ServicePriorities.TEXT_FORMAT_PRIORITY)
     public TextFormatParser getFormatProxy(Context context)
     {
         return new SpongeTextFormatService(context);
     }
 
-    @Builder(target = PlatformProxy.class, priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
+    @Builder(target = PlatformProxy.class,
+            priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
     public PlatformProxy getPlatformProxy(Context context)
     {
         return new SpongePlatformProxyService(context, this.game, this.root);
@@ -128,7 +130,8 @@ public class SpongeServiceProvider
         // config overrides go here
     }
 
-    @Builder(target = MaterialRegistry.class, priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
+    @Builder(target = MaterialRegistry.class,
+            priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new MaterialRegistryService<org.spongepowered.api.block.BlockType>(context);
@@ -147,20 +150,23 @@ public class SpongeServiceProvider
         }
     }
 
-    @Builder(target = WorldRegistry.class, priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
+    @Builder(target = WorldRegistry.class,
+            priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
         WorldRegistryProvider provider = new WorldRegistryProvider(context, this.game);
         return new WorldRegistryService<org.spongepowered.api.world.World>(context, provider);
     }
 
-    @Builder(target = PermissionProxy.class, priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
+    @Builder(target = PermissionProxy.class,
+            priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
     public PermissionProxy getPermissionProxy(Context context)
     {
         return new SpongePermissionProxyService(context);
     }
 
-    @Builder(target = PlayerRegistry.class, priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
+    @Builder(target = PlayerRegistry.class,
+            priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
         return new PlayerRegistryService<org.spongepowered.api.entity.living.player.Player>(context, new PlayerRegistryProvider(context, this.game),
@@ -180,13 +186,15 @@ public class SpongeServiceProvider
         cmd.setRegistrar(new SpongeCommandRegistrar(context));
     }
 
-    @Builder(target = Scheduler.class, priority = ServicePriorities.SCHEDULER_PRIORITY)
+    @Builder(target = Scheduler.class,
+            priority = ServicePriorities.SCHEDULER_PRIORITY)
     public Scheduler getSchedulerProxy(Context context)
     {
         return new SpongeSchedulerService(context, this.plugin, this.game);
     }
 
-    @Builder(target = BiomeRegistry.class, priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
+    @Builder(target = BiomeRegistry.class,
+            priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<org.spongepowered.api.world.biome.BiomeType>(context);

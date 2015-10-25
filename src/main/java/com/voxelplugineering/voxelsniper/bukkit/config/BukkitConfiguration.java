@@ -36,7 +36,7 @@ public class BukkitConfiguration
 
     public static String primaryMaterial = org.bukkit.Material.ARROW.name();
     public static String altMaterial = org.bukkit.Material.SULPHUR.name();
-    
+
     @ConfigValue(hidden = true)
     public static String metricsConf = "PluginMetrics/config.yml";
     @ConfigValue(hidden = true)

@@ -85,7 +85,7 @@ public class BukkitServiceProvider
     /**
      * Creates a new {@link BukkitServiceProvider}.
      * 
-     * @param pl the plugin
+     * @param pl The plugin
      */
     public BukkitServiceProvider(org.bukkit.plugin.java.JavaPlugin pl)
     {
@@ -99,13 +99,15 @@ public class BukkitServiceProvider
         scanner.addScannerExclusion("com/voxelplugineering/voxelsniper/sponge/");
     }
 
-    @Builder(target = TextFormatParser.class, priority = ServicePriorities.TEXT_FORMAT_PRIORITY)
+    @Builder(target = TextFormatParser.class,
+            priority = ServicePriorities.TEXT_FORMAT_PRIORITY)
     public TextFormatParser getFormatProxy(Context context)
     {
         return new BukkitTextFormatParser(context);
     }
 
-    @Builder(target = PlatformProxy.class, priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
+    @Builder(target = PlatformProxy.class,
+            priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
     public PlatformProxy getPlatformProxy(Context context)
     {
         return new BukkitPlatformProxyService(context, this.plugin.getDataFolder());
@@ -119,7 +121,8 @@ public class BukkitServiceProvider
         BaseConfiguration.defaultBiomeName = org.bukkit.block.Biome.PLAINS.name();
     }
 
-    @Builder(target = MaterialRegistry.class, priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
+    @Builder(target = MaterialRegistry.class,
+            priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new MaterialRegistryService<org.bukkit.Material>(context);
@@ -136,13 +139,15 @@ public class BukkitServiceProvider
         }
     }
 
-    @Builder(target = WorldRegistry.class, priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
+    @Builder(target = WorldRegistry.class,
+            priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
         return new WorldRegistryService<org.bukkit.World>(context, new WorldRegistryProvider(context));
     }
 
-    @Builder(target = PermissionProxy.class, priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
+    @Builder(target = PermissionProxy.class,
+            priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
     public PermissionProxy getPermissionProxy(Context context)
     {
         org.bukkit.plugin.Plugin vault = org.bukkit.Bukkit.getPluginManager().getPlugin("Vault");
@@ -153,7 +158,8 @@ public class BukkitServiceProvider
         return new SuperPermsPermissionService(context);
     }
 
-    @Builder(target = PlayerRegistry.class, priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
+    @Builder(target = PlayerRegistry.class,
+            priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
         CommandSender console = new BukkitConsoleSender(org.bukkit.Bukkit.getConsoleSender());
@@ -173,13 +179,15 @@ public class BukkitServiceProvider
         cmd.setRegistrar(new BukkitCommandRegistrar(context));
     }
 
-    @Builder(target = Scheduler.class, priority = ServicePriorities.SCHEDULER_PRIORITY)
+    @Builder(target = Scheduler.class,
+            priority = ServicePriorities.SCHEDULER_PRIORITY)
     public Scheduler getSchedulerProxy(Context context)
     {
         return new BukkitSchedulerService(context, this.plugin);
     }
 
-    @Builder(target = BiomeRegistry.class, priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
+    @Builder(target = BiomeRegistry.class,
+            priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<org.bukkit.block.Biome>(context);
@@ -198,7 +206,7 @@ public class BukkitServiceProvider
 
     @PostInit
     public void postInit(Context c)
-    {        
+    {
         Optional<GlobalAliasHandler> aliases = c.get(GlobalAliasHandler.class);
         if (aliases.isPresent() && VoxelSniperConfiguration.generateDefaultAliases)
         {

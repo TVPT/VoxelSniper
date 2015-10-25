@@ -23,7 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.event.handler;
 
-
 import java.util.Optional;
 
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
@@ -71,7 +70,7 @@ public class ForgeEventProxy
     /**
      * The Player logged in event, proxies to Gunsmith's {@link SniperCreateEvent}.
      * 
-     * @param event the event
+     * @param event The event
      */
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedInEvent event)
@@ -87,7 +86,7 @@ public class ForgeEventProxy
     /**
      * The Player logged out event, proxies to Gunsmith's {@link SniperDestroyEvent}.
      * 
-     * @param event the event
+     * @param event The event
      */
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedOutEvent event)
@@ -103,7 +102,7 @@ public class ForgeEventProxy
     /**
      * The player interact event, proxies into Gunsmith's {@link SnipeEvent}.
      * 
-     * @param event the event
+     * @param event The event
      */
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent event)
@@ -138,7 +137,7 @@ public class ForgeEventProxy
     /**
      * The ServerTick event, used to synchronously tick the player's change-queues.
      * 
-     * @param event the event
+     * @param event The event
      */
     @SubscribeEvent
     public void onTick(TickEvent.ServerTickEvent event)

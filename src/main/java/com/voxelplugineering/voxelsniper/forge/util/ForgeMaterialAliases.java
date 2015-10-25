@@ -34,7 +34,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ForgeMaterialAliases
 {
-    
+
     /**
      * Loads the default material aliases to the given registry.
      * 

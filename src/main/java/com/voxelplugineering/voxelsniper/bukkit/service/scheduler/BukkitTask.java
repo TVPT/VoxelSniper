@@ -41,9 +41,9 @@ public class BukkitTask extends Task
     /**
      * Creates a new {@link BukkitTask}.
      * 
-     * @param runnable the runnable
-     * @param interval the interval, in milliseconds
-     * @param task the underlying {@link org.bukkit.scheduler.BukkitTask}
+     * @param runnable The runnable
+     * @param interval The interval, in milliseconds
+     * @param task The underlying {@link org.bukkit.scheduler.BukkitTask}
      */
     public BukkitTask(Runnable runnable, int interval, org.bukkit.scheduler.BukkitTask task)
     {

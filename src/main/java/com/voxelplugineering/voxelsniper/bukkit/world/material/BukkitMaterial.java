@@ -109,7 +109,7 @@ public class BukkitMaterial extends WeakWrapper<org.bukkit.Material>implements c
     /**
      * Creates a new {@link BukkitMaterial}.
      * 
-     * @param value the material to wrap, cannot be null
+     * @param value The material to wrap, cannot be null
      */
     public BukkitMaterial(org.bukkit.Material value)
     {

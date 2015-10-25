@@ -37,7 +37,7 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class ForgePlatformProxyService extends CommonPlatformProxyService
 {
-    
+
     private File metricsConf;
 
     /**
