@@ -30,6 +30,7 @@ import java.util.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntity;
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
@@ -189,7 +190,7 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     }
 
     @Override
-    public void spawnLightning(Vector3i position)
+    public void spawnLightning(Vector3i position, Player source)
     {
         getThis().addWeatherEffect(new EntityLightningBolt(getThis(), position.getX(), position.getY(), position.getZ()));
     }

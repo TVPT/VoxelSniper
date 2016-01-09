@@ -23,16 +23,16 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.world;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
+import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
+import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterialState;
@@ -44,6 +44,12 @@ import com.voxelplugineering.voxelsniper.world.CommonBlock;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.event.cause.Cause;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * A wrapper for Sponge's World.
@@ -208,8 +214,11 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
     }
 
     @Override
-    public void spawnLightning(Vector3i position)
+    public void spawnLightning(Vector3i position, Player source)
     {
-        // TODO
+        Optional<org.spongepowered.api.entity.Entity> ent = getThis().createEntity(EntityTypes.LIGHTNING, SpongeUtilities.getSpongeVector(position));
+        if(ent.isPresent()) {
+            getThis().spawnEntity(ent.get(), Cause.of(VoxelSniperSponge.instance.getContainer(), ((SpongePlayer) source).getThis()));
+        }
     }
 }

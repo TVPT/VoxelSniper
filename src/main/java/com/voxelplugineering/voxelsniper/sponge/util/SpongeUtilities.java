@@ -32,6 +32,7 @@ import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
 import com.voxelplugineering.voxelsniper.sponge.world.SpongeWorld;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
+import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
@@ -86,6 +87,18 @@ public class SpongeUtilities
     public static com.flowpowered.math.vector.Vector3d getSpongeVector(Vector3d vector)
     {
         return new com.flowpowered.math.vector.Vector3d(vector.getX(), vector.getY(), vector.getZ());
+    }
+
+    /**
+     * Converts a {@link com.voxelplugineering.voxelsniper.util.math.Vector3d} into a
+     * {@link com.flowpowered.math.vector.Vector3d}.
+     * 
+     * @param vector The vector to convert
+     * @return The new vector
+     */
+    public static com.flowpowered.math.vector.Vector3i getSpongeVector(Vector3i vector)
+    {
+        return new com.flowpowered.math.vector.Vector3i(vector.getX(), vector.getY(), vector.getZ());
     }
 
     /**

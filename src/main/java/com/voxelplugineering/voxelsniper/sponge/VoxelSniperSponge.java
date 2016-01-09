@@ -99,4 +99,8 @@ public class VoxelSniperSponge
     {
         return this.logger;
     }
+    
+    public PluginContainer getContainer() {
+        return this.plugin;
+    }
 }

@@ -38,6 +38,7 @@ import com.voxelplugineering.voxelsniper.bukkit.world.biome.BukkitBiome;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterial;
 import com.voxelplugineering.voxelsniper.bukkit.world.material.BukkitMaterialState;
 import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -232,7 +233,7 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     }
 
     @Override
-    public void spawnLightning(Vector3i position)
+    public void spawnLightning(Vector3i position, Player source)
     {
         getThis().strikeLightning(new Location(getThis(), position.getX(), position.getY(), position.getZ()));
     }
