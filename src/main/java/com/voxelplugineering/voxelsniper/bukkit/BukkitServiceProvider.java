@@ -25,8 +25,6 @@ package com.voxelplugineering.voxelsniper.bukkit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Optional;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
@@ -35,7 +33,6 @@ import com.voxelplugineering.voxelsniper.bukkit.service.BukkitPlatformProxyServi
 import com.voxelplugineering.voxelsniper.bukkit.service.BukkitSchedulerService;
 import com.voxelplugineering.voxelsniper.bukkit.service.BukkitTextFormatParser;
 import com.voxelplugineering.voxelsniper.bukkit.service.SuperPermsPermissionService;
-import com.voxelplugineering.voxelsniper.bukkit.service.VaultPermissionService;
 import com.voxelplugineering.voxelsniper.bukkit.service.command.BukkitCommandRegistrar;
 import com.voxelplugineering.voxelsniper.bukkit.service.command.BukkitConsoleSender;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitMaterialAliases;
@@ -72,6 +69,8 @@ import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.world.World;
+
+import java.util.Optional;
 
 /**
  * A provider for bukkit's initialization values.
@@ -150,11 +149,6 @@ public class BukkitServiceProvider
             priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
     public PermissionProxy getPermissionProxy(Context context)
     {
-        org.bukkit.plugin.Plugin vault = org.bukkit.Bukkit.getPluginManager().getPlugin("Vault");
-        if (vault != null)
-        {
-            return new VaultPermissionService(context);
-        }
         return new SuperPermsPermissionService(context);
     }
 
