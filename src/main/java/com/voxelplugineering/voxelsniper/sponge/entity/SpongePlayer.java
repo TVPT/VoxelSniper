@@ -26,7 +26,6 @@ package com.voxelplugineering.voxelsniper.sponge.entity;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.service.text.TextFormat;
 import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 import com.voxelplugineering.voxelsniper.util.Context;
@@ -36,13 +35,9 @@ import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColor;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Wraps a {@link org.spongepowered.api.entity.living.player.Player}.
@@ -54,7 +49,6 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.li
     private static final EntityType PLAYER_TYPE = SpongeUtilities.getEntityType(org.spongepowered.api.entity.living.Living.class);
 
     private final WorldRegistry<org.spongepowered.api.world.World> worlds;
-    private final TextFormatParser textFormat;
 
     /**
      * Creates a new {@link SpongePlayer}.
@@ -66,7 +60,6 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.li
     {
         super(player, context);
         this.worlds = context.getRequired(WorldRegistry.class);
-        this.textFormat = context.getRequired(TextFormatParser.class);
     }
 
     @Override

@@ -84,7 +84,6 @@ public class VoxelSniperForge
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        GunsmithLogger.getLogger().registerLogger("forge", new Log4jLogger(event.getModLog()));
         this.configDir = event.getModConfigurationDirectory();
         this.logger = event.getModLog();
     }
@@ -109,6 +108,7 @@ public class VoxelSniperForge
     {
         if (!SpongeDetector.isSponge())
         {
+            GunsmithLogger.getLogger().registerLogger("forge", new Log4jLogger(this.logger));
             Gunsmith.getServiceManager().register(proxy);
             Gunsmith.getServiceManager().start();
         } else

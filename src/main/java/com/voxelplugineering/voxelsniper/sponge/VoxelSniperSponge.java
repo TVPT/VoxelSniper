@@ -25,7 +25,10 @@ package com.voxelplugineering.voxelsniper.sponge;
 
 import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import com.voxelplugineering.voxelsniper.service.logging.JavaUtilLogger;
+import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
@@ -72,6 +75,7 @@ public class VoxelSniperSponge
     public void onServerStarted(GameAboutToStartServerEvent event)
     {
         instance = this;
+        GunsmithLogger.getLogger().registerLogger("sponge", new Slf4jLogger(this.logger));
         Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.plugin, this.defaultConfig.getParentFile()));
         Gunsmith.getServiceManager().start();
     }
