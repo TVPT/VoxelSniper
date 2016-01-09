@@ -23,26 +23,23 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
-import java.io.File;
-
+import com.google.inject.Inject;
+import com.voxelplugineering.voxelsniper.Gunsmith;
+import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.service.config.DefaultConfig;
 
-import com.google.inject.Inject;
-import com.voxelplugineering.voxelsniper.Gunsmith;
-import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
+import java.io.File;
 
 /**
  * The main plugin class for Sponge.
  */
-@Plugin(id = "voxelsnipersponge",
-        name = "VoxelSniper-Sponge",
-        version = "7.1.0")
+@Plugin(id = "voxelsnipersponge", name = "VoxelSniper-Sponge", version = "7.1.0")
 public class VoxelSniperSponge
 {
 
@@ -51,15 +48,9 @@ public class VoxelSniperSponge
      */
     public static VoxelSniperSponge instance = null;
 
-    @Inject
-    private org.spongepowered.api.Game game;
-    @Inject
-    private org.slf4j.Logger logger;
-    @Inject
-    private PluginContainer plugin;
-    @Inject
-    @DefaultConfig(sharedRoot = false)
-    private File defaultConfig;
+    @Inject private org.slf4j.Logger logger;
+    @Inject private PluginContainer plugin;
+    @Inject @DefaultConfig(sharedRoot = false) private File defaultConfig;
 
     /**
      * Marks the server as having sponge.
@@ -81,7 +72,7 @@ public class VoxelSniperSponge
     public void onServerStarted(GameAboutToStartServerEvent event)
     {
         instance = this;
-        Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.game, this.plugin, this.defaultConfig.getParentFile()));
+        Gunsmith.getServiceManager().register(new SpongeServiceProvider(this.plugin, this.defaultConfig.getParentFile()));
         Gunsmith.getServiceManager().start();
     }
 
@@ -107,15 +98,5 @@ public class VoxelSniperSponge
     public org.slf4j.Logger getLogger()
     {
         return this.logger;
-    }
-
-    /**
-     * Gets the game instance.
-     * 
-     * @return The game
-     */
-    public org.spongepowered.api.Game getGame()
-    {
-        return this.game;
     }
 }

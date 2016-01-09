@@ -31,7 +31,7 @@ import com.voxelplugineering.voxelsniper.service.scheduler.Task;
 public class SpongeTask extends Task
 {
 
-    org.spongepowered.api.service.scheduler.Task task;
+    org.spongepowered.api.scheduler.Task task;
 
     /**
      * Creates a new task.
@@ -40,7 +40,7 @@ public class SpongeTask extends Task
      * @param runnable The task runnable
      * @param interval The task interval
      */
-    public SpongeTask(org.spongepowered.api.service.scheduler.Task repeatingTask, Runnable runnable, int interval)
+    public SpongeTask(org.spongepowered.api.scheduler.Task repeatingTask, Runnable runnable, int interval)
     {
         super(runnable, interval);
         this.task = repeatingTask;

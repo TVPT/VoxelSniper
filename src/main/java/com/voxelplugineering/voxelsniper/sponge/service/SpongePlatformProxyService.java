@@ -23,13 +23,12 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.File;
-
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
 import com.voxelplugineering.voxelsniper.sponge.config.SpongeConfiguration;
 import com.voxelplugineering.voxelsniper.util.Context;
+import org.spongepowered.api.Sponge;
+
+import java.io.File;
 
 /**
  * A proxy for sponge-specific runtime values.
@@ -39,17 +38,14 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
 
     private File metricsConf;
 
-    private org.spongepowered.api.Game game;
-
     /**
      * Creates a new {@link SpongePlatformProxyService}.
      * 
      * @param game The game instance
      */
-    public SpongePlatformProxyService(Context context, org.spongepowered.api.Game game, File root)
+    public SpongePlatformProxyService(Context context, File root)
     {
         super(context, root);
-        this.game = checkNotNull(game);
         this.metricsConf = new File(this.rootDir.getParentFile(), SpongeConfiguration.metricsConf);
     }
 
@@ -62,19 +58,19 @@ public class SpongePlatformProxyService extends CommonPlatformProxyService
     @Override
     public String getVersion()
     {
-        return String.format("%s %s", "Sponge", this.game.getPlatform().getMinecraftVersion());
+        return String.format("%s %s", "Sponge", Sponge.getPlatform().getMinecraftVersion());
     }
 
     @Override
     public String getFullVersion()
     {
-        return "Sponge version " + this.game.getPlatform().getVersion() + " implementing api version " + this.game.getPlatform().getApiVersion();
+        return "Sponge version " + Sponge.getPlatform().getImplementation().getVersion() + " implementing api version " + Sponge.getPlatform().getApi().getVersion();
     }
 
     @Override
     public int getNumberOfPlayersOnline()
     {
-        return this.game.getServer().getOnlinePlayers().size();
+        return Sponge.getServer().getOnlinePlayers().size();
     }
 
     @Override

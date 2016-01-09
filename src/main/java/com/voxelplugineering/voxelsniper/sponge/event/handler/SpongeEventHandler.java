@@ -23,14 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.event.handler;
 
-import java.util.Optional;
-
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
-
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
@@ -38,9 +30,16 @@ import com.voxelplugineering.voxelsniper.event.SniperEvent;
 import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
-import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 import com.voxelplugineering.voxelsniper.sponge.config.SpongeConfiguration;
 import com.voxelplugineering.voxelsniper.util.Context;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
+
+import java.util.Optional;
 
 /**
  * A proxy for sponge events to post the corresponding Gunsmith events.
@@ -63,9 +62,9 @@ public class SpongeEventHandler
     {
         this.players = context.getRequired(PlayerRegistry.class);
         this.bus = context.getRequired(EventBus.class);
-        this.primaryMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, SpongeConfiguration.primaryMaterial)
+        this.primaryMaterial = Sponge.getRegistry().getType(ItemType.class, SpongeConfiguration.primaryMaterial)
                 .orElse(ItemTypes.ARROW);
-        this.altMaterial = VoxelSniperSponge.instance.getGame().getRegistry().getType(ItemType.class, SpongeConfiguration.altMaterial)
+        this.altMaterial = Sponge.getRegistry().getType(ItemType.class, SpongeConfiguration.altMaterial)
                 .orElse(ItemTypes.GUNPOWDER);
     }
 

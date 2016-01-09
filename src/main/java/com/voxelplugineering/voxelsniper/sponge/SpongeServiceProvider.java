@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.sponge;
 import java.io.File;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -76,11 +77,10 @@ import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 /**
  * A provider for bukkit's initialization values.
  */
-@SuppressWarnings({ "checkstyle:javadocmethod", "javadoc" })
+@SuppressWarnings({"checkstyle:javadocmethod", "javadoc"})
 public class SpongeServiceProvider
 {
 
-    private final org.spongepowered.api.Game game;
     private final PluginContainer plugin;
     private final File root;
 
@@ -91,9 +91,8 @@ public class SpongeServiceProvider
      * @param plugin The plugin container
      * @param logger The logger
      */
-    public SpongeServiceProvider(org.spongepowered.api.Game game, PluginContainer plugin, File root)
+    public SpongeServiceProvider(PluginContainer plugin, File root)
     {
-        this.game = game;
         this.plugin = plugin;
         this.root = root;
     }
@@ -110,18 +109,16 @@ public class SpongeServiceProvider
     {
     }
 
-    @Builder(target = TextFormatParser.class,
-            priority = ServicePriorities.TEXT_FORMAT_PRIORITY)
+    @Builder(target = TextFormatParser.class, priority = ServicePriorities.TEXT_FORMAT_PRIORITY)
     public TextFormatParser getFormatProxy(Context context)
     {
         return new SpongeTextFormatService(context);
     }
 
-    @Builder(target = PlatformProxy.class,
-            priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
+    @Builder(target = PlatformProxy.class, priority = ServicePriorities.PLATFORM_PROXY_PRIORITY)
     public PlatformProxy getPlatformProxy(Context context)
     {
-        return new SpongePlatformProxyService(context, this.game, this.root);
+        return new SpongePlatformProxyService(context, this.root);
     }
 
     @InitHook(target = Configuration.class)
@@ -130,8 +127,7 @@ public class SpongeServiceProvider
         // config overrides go here
     }
 
-    @Builder(target = MaterialRegistry.class,
-            priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
+    @Builder(target = MaterialRegistry.class, priority = ServicePriorities.MATERIAL_REGISTRY_PRIORITY)
     public MaterialRegistry<?> getMaterialRegistry(Context context)
     {
         return new MaterialRegistryService<org.spongepowered.api.block.BlockType>(context);
@@ -144,39 +140,36 @@ public class SpongeServiceProvider
         MaterialRegistry<org.spongepowered.api.block.BlockType> registry = (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
         MaterialStateBuilder builder = new MaterialStateBuilder(registry);
         MaterialStateCache<BlockState, SpongeMaterialState> cache = new MaterialStateCache<BlockState, SpongeMaterialState>(builder);
-        for (org.spongepowered.api.block.BlockType m : this.game.getRegistry().getAllOf(BlockType.class))
+        for (org.spongepowered.api.block.BlockType m : Sponge.getRegistry().getAllOf(BlockType.class))
         {
             registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m, cache));
         }
     }
 
-    @Builder(target = WorldRegistry.class,
-            priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
+    @Builder(target = WorldRegistry.class, priority = ServicePriorities.WORLD_REGISTRY_PRIORITY)
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
-        WorldRegistryProvider provider = new WorldRegistryProvider(context, this.game);
+        WorldRegistryProvider provider = new WorldRegistryProvider(context);
         return new WorldRegistryService<org.spongepowered.api.world.World>(context, provider);
     }
 
-    @Builder(target = PermissionProxy.class,
-            priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
+    @Builder(target = PermissionProxy.class, priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
     public PermissionProxy getPermissionProxy(Context context)
     {
         return new SpongePermissionProxyService(context);
     }
 
-    @Builder(target = PlayerRegistry.class,
-            priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
+    @Builder(target = PlayerRegistry.class, priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
-        return new PlayerRegistryService<org.spongepowered.api.entity.living.player.Player>(context, new PlayerRegistryProvider(context, this.game),
+        return new PlayerRegistryService<org.spongepowered.api.entity.living.player.Player>(context, new PlayerRegistryProvider(context),
                 new SpongeConsoleProxy());
     }
 
     @InitHook(target = EventBus.class)
     public void registerEventProxies(Context context, EventBus service)
     {
-        this.game.getEventManager().registerListeners(this.plugin, new SpongeEventHandler(context));
+        Sponge.getEventManager().registerListeners(this.plugin, new SpongeEventHandler(context));
     }
 
     @InitHook(target = CommandHandler.class)
@@ -186,15 +179,13 @@ public class SpongeServiceProvider
         cmd.setRegistrar(new SpongeCommandRegistrar(context));
     }
 
-    @Builder(target = Scheduler.class,
-            priority = ServicePriorities.SCHEDULER_PRIORITY)
+    @Builder(target = Scheduler.class, priority = ServicePriorities.SCHEDULER_PRIORITY)
     public Scheduler getSchedulerProxy(Context context)
     {
-        return new SpongeSchedulerService(context, this.plugin, this.game);
+        return new SpongeSchedulerService(context, this.plugin);
     }
 
-    @Builder(target = BiomeRegistry.class,
-            priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
+    @Builder(target = BiomeRegistry.class, priority = ServicePriorities.BIOME_REGISTRY_PRIORITY)
     public BiomeRegistry<?> getBiomeRegistry(Context context)
     {
         return new BiomeRegistryService<org.spongepowered.api.world.biome.BiomeType>(context);
@@ -205,7 +196,7 @@ public class SpongeServiceProvider
     {
         @SuppressWarnings("unchecked")
         BiomeRegistry<org.spongepowered.api.world.biome.BiomeType> reg = (BiomeRegistry<org.spongepowered.api.world.biome.BiomeType>) service;
-        for (org.spongepowered.api.world.biome.BiomeType b : this.game.getRegistry().getAllOf(BiomeType.class))
+        for (org.spongepowered.api.world.biome.BiomeType b : Sponge.getRegistry().getAllOf(BiomeType.class))
         {
             reg.registerBiome(b.getName(), b, new SpongeBiome(b));
         }
@@ -236,23 +227,21 @@ public class SpongeServiceProvider
     {
 
         private final Context context;
-        private final org.spongepowered.api.Game game;
 
         /**
          * Creates a new {@link com.voxelplugineering.voxelsniper.service.registry.RegistryProvider}
          *
          * @param game The game instance
          */
-        public WorldRegistryProvider(Context context, org.spongepowered.api.Game game)
+        public WorldRegistryProvider(Context context)
         {
             this.context = context;
-            this.game = game;
         }
 
         @Override
         public Optional<Pair<org.spongepowered.api.world.World, World>> get(String name)
         {
-            Optional<org.spongepowered.api.world.World> world = this.game.getServer().getWorld(name);
+            Optional<org.spongepowered.api.world.World> world = Sponge.getServer().getWorld(name);
             if (world.isPresent())
             {
                 SpongeWorld spongeWorld = new SpongeWorld(this.context, world.get(), Gunsmith.getMainThread());
@@ -268,7 +257,6 @@ public class SpongeServiceProvider
     public static class PlayerRegistryProvider implements RegistryProvider<org.spongepowered.api.entity.living.player.Player, Player>
     {
 
-        private final org.spongepowered.api.Game game;
         private final Context context;
 
         /**
@@ -276,16 +264,15 @@ public class SpongeServiceProvider
          *
          * @param g The game instance
          */
-        public PlayerRegistryProvider(Context context, org.spongepowered.api.Game g)
+        public PlayerRegistryProvider(Context context)
         {
-            this.game = g;
             this.context = context;
         }
 
         @Override
         public Optional<Pair<org.spongepowered.api.entity.living.player.Player, Player>> get(String name)
         {
-            Optional<org.spongepowered.api.entity.living.player.Player> player = this.game.getServer().getPlayer(name);
+            Optional<org.spongepowered.api.entity.living.player.Player> player = Sponge.getServer().getPlayer(name);
             if (player.isPresent())
             {
                 SpongePlayer splayer = new SpongePlayer(this.context, player.get());

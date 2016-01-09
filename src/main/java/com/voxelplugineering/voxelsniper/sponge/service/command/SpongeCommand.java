@@ -23,16 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service.command;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandCallable;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
@@ -40,6 +30,14 @@ import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.text.Text;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A proxy command which may be registered with sponge but calls the gunsmith event handler.
@@ -65,7 +63,7 @@ public class SpongeCommand implements CommandCallable
     }
 
     @Override
-    public List<String> getSuggestions(org.spongepowered.api.util.command.CommandSource source, String arguments) throws CommandException
+    public List<String> getSuggestions(org.spongepowered.api.command.CommandSource source, String arguments) throws CommandException
     {
         return Lists.newArrayList();
     }
@@ -109,7 +107,7 @@ public class SpongeCommand implements CommandCallable
                 sniper.sendMessage(VoxelSniperConfiguration.permissionsRequiredMessage);
             }
             return CommandResult.success();
-        } else if (source instanceof org.spongepowered.api.util.command.source.ConsoleSource)
+        } else if (source instanceof org.spongepowered.api.command.source.ConsoleSource)
         {
             boolean success = this.command.execute(this.players.getConsoleSniperProxy(), args);
             if (success)
@@ -122,7 +120,7 @@ public class SpongeCommand implements CommandCallable
     }
 
     @Override
-    public boolean testPermission(org.spongepowered.api.util.command.CommandSource source)
+    public boolean testPermission(org.spongepowered.api.command.CommandSource source)
     {
         // TODO support for other sources?
         if (source instanceof org.spongepowered.api.entity.living.player.Player)
@@ -148,19 +146,19 @@ public class SpongeCommand implements CommandCallable
     @Override
     public Optional<Text> getShortDescription(CommandSource source)
     {
-        return Optional.<Text>of(Texts.of(this.command.getHelpMsg()));
+        return Optional.<Text>of(Text.of(this.command.getHelpMsg()));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source)
     {
-        return Optional.<Text>of(Texts.of(this.command.getHelpMsg()));
+        return Optional.<Text>of(Text.of(this.command.getHelpMsg()));
     }
 
     @Override
     public Text getUsage(CommandSource source)
     {
-        return Texts.of(this.command.getHelpMsg());
+        return Text.of(this.command.getHelpMsg());
     }
 
 }

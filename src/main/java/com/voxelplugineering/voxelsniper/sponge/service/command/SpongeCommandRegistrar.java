@@ -27,6 +27,7 @@ import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 import com.voxelplugineering.voxelsniper.util.Context;
+import org.spongepowered.api.Sponge;
 
 /**
  * A command registrar for sponge commands.
@@ -50,6 +51,6 @@ public class SpongeCommandRegistrar implements CommandRegistrar
     public void registerCommand(Command command)
     {
         SpongeCommand wrapper = new SpongeCommand(this.context, command);
-        VoxelSniperSponge.instance.getGame().getCommandDispatcher().register(VoxelSniperSponge.instance, wrapper, command.getAllAliases());
+        Sponge.getCommandManager().register(VoxelSniperSponge.instance, wrapper, command.getAllAliases());
     }
 }

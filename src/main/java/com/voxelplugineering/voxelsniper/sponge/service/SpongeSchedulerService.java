@@ -23,19 +23,18 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.service;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import org.spongepowered.api.Game;
-import org.spongepowered.api.plugin.PluginContainer;
-
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.scheduler.Task;
 import com.voxelplugineering.voxelsniper.sponge.service.scheduler.SpongeTask;
 import com.voxelplugineering.voxelsniper.util.Context;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.plugin.PluginContainer;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A proxy for sponge's scheduler.
@@ -43,9 +42,8 @@ import com.voxelplugineering.voxelsniper.util.Context;
 public class SpongeSchedulerService extends AbstractService implements Scheduler
 {
 
-    private Map<org.spongepowered.api.service.scheduler.Task, SpongeTask> tasks;
+    private Map<org.spongepowered.api.scheduler.Task, SpongeTask> tasks;
     private final PluginContainer plugin;
-    private final Game game;
 
     /**
      * Creates a new {@link SpongeSchedulerService}.
@@ -53,11 +51,10 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
      * @param plugin The plugin container
      * @param game The game
      */
-    public SpongeSchedulerService(Context context, PluginContainer plugin, Game game)
+    public SpongeSchedulerService(Context context, PluginContainer plugin)
     {
         super(context);
         this.plugin = plugin;
-        this.game = game;
     }
 
     @Override
@@ -76,7 +73,7 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
     @Override
     public Optional<SpongeTask> startSynchronousTask(Runnable runnable, int interval)
     {
-        org.spongepowered.api.service.scheduler.Task task = this.game.getScheduler().createTaskBuilder().interval(interval, TimeUnit.MILLISECONDS)
+        org.spongepowered.api.scheduler.Task task = Sponge.getScheduler().createTaskBuilder().interval(interval, TimeUnit.MILLISECONDS)
                 .execute(runnable).submit(this.plugin);
         SpongeTask stask = new SpongeTask(task, runnable, interval);
         this.tasks.put(task, stask);
@@ -86,7 +83,7 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
     @Override
     public Optional<SpongeTask> startAsynchronousTask(Runnable runnable, int interval)
     {
-        org.spongepowered.api.service.scheduler.Task task = this.game.getScheduler().createTaskBuilder().async()
+        org.spongepowered.api.scheduler.Task task = Sponge.getScheduler().createTaskBuilder().async()
                 .interval(interval, TimeUnit.MILLISECONDS).execute(runnable).submit(this.plugin);
         SpongeTask stask = new SpongeTask(task, runnable, interval);
         this.tasks.put(task, stask);
@@ -96,7 +93,7 @@ public class SpongeSchedulerService extends AbstractService implements Scheduler
     @Override
     public void stopAllTasks()
     {
-        for (org.spongepowered.api.service.scheduler.Task task : this.tasks.keySet())
+        for (org.spongepowered.api.scheduler.Task task : this.tasks.keySet())
         {
             task.cancel();
         }

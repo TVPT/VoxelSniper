@@ -23,11 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.entity;
 
-import java.util.UUID;
-
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.text.Texts;
-
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -39,6 +34,15 @@ import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
+
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Wraps a {@link org.spongepowered.api.entity.living.player.Player}.
@@ -88,16 +92,12 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.li
             sendMessage(msg.substring(MAX_MESSAGE_LENGTH));
             return;
         }
-        getThis().sendMessage(Texts.of(formatMessage(msg)));
+        getThis().sendMessage(formatMessage(msg));
     }
 
-    private String formatMessage(String msg)
+    private Text formatMessage(String msg)
     {
-        for (TextFormat format : TextFormat.values())
-        {
-            msg = msg.replaceAll(format.toString(), this.textFormat.getFormat(format));
-        }
-        return msg;
+        return TextSerializers.FORMATTING_CODE.deserialize(msg);
     }
 
     @Override

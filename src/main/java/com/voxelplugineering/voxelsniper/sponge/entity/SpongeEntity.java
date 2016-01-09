@@ -23,13 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.entity;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-
 import com.voxelplugineering.voxelsniper.entity.AbstractEntity;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -38,6 +31,11 @@ import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.text.Text;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * A wrapper for a sponge entity.
@@ -77,7 +75,7 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
         Optional<Text> name = getThis().get(Keys.DISPLAY_NAME);
         if (name.isPresent())
         {
-            return Texts.toPlain(name.get());
+            return name.get().toPlain();
         }
         return this.type.getName();
     }
