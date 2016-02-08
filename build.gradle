@@ -1,31 +1,26 @@
 // Gradle dependencies
 buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            url "http://repository.jboss.org/nexus/content/groups/public/"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-
+  repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+      name = "forge"
+      url = "http://files.minecraftforge.net/maven"
     }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
-        classpath 'org.hibernate.build.gradle:gradle-maven-publish-auth:2.0.1'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+    maven {
+      url "http://repository.jboss.org/nexus/content/groups/public/"
     }
-}
-
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.1"
+    maven {
+      name = "sonatype"
+      url = "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+  }
+  dependencies {
+    classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
+    classpath 'org.hibernate.build.gradle:gradle-maven-publish-auth:2.0.1'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+  }
 }
 
 // Plugins
@@ -52,194 +47,197 @@ targetCompatibility = 1.8
 
 // Project dependencies
 repositories {
-	mavenLocal()
-    mavenCentral()
-    maven {
-        url "http://vault.voxelmodpack.com/content/groups/public/"
-	}
-	maven {
-        url "https://hub.spigotmc.org/nexus/content/groups/public/"
-	}
-	maven {
-        url "http://repo.spongepowered.org/maven/"
-    }
+  mavenLocal()
+  mavenCentral()
+  maven {
+    url "http://vault.voxelmodpack.com/content/groups/public/"
+  }
+  maven {
+    url "https://hub.spigotmc.org/nexus/content/groups/public/"
+  }
+  maven {
+    url "http://repo.spongepowered.org/maven/"
+  }
 }
 
 minecraft {
-    version = "1.8-11.14.3.1521"
-    runDir = "run"
-    mappings = "snapshot_nodoc_20151017"
+  version = "1.8.9-11.15.0.1691"
+  runDir = "run"
+  mappings = "snapshot_20160109"
 }
 
 dependencies {
-    compile 'com.google.guava:guava:17.0'
-    compile 'com.voxelplugineering:VoxelGunsmith:7.1.0-SNAPSHOT'
+  compile 'com.google.guava:guava:17.0'
+  compile 'com.voxelplugineering:VoxelGunsmith:7.1.0-SNAPSHOT'
 
-    compile 'org.bukkit:bukkit:1.8.8-R0.1-SNAPSHOT'
+  compile 'org.bukkit:bukkit:1.8.8-R0.1-SNAPSHOT'
 
-    compile 'org.slf4j:slf4j-api:1.7.7'
-    compile 'org.spongepowered:spongeapi:3.1.0-SNAPSHOT'
+  compile 'org.slf4j:slf4j-api:1.7.7'
+  compile 'org.spongepowered:spongeapi:3.1.0-SNAPSHOT'
 }
 
 ext {
-    projectName = 'VoxelSniper'
-    inceptionYear = '2014'
-    packaging = 'jar'
-    url = 'http://voxelplugineering.com/'
-    description = "Implementation of VoxelSniper for Sponge, Forge, and Bukkit"
-    organization = 'The VoxelBox dev team'
-    pomFile = file("${project.projectDir}/pom.xml")
-    buildNumber = project.hasProperty("buildNumber") ? buildNumber : '0'
-    ciSystem = project.hasProperty("ciSystem") ? ciSystem : 'unknown'
-    commit = project.hasProperty("commit") ? commit : 'unknown'
+  projectName = 'VoxelSniper'
+  inceptionYear = '2014'
+  packaging = 'jar'
+  url = 'http://voxelplugineering.com/'
+  description = "Implementation of VoxelSniper for Sponge, Forge, and Bukkit"
+  organization = 'The VoxelBox dev team'
+  pomFile = file("${project.projectDir}/pom.xml")
+  buildNumber = project.hasProperty("buildNumber") ? buildNumber : '0'
+  ciSystem = project.hasProperty("ciSystem") ? ciSystem : 'unknown'
+  commit = project.hasProperty("commit") ? commit : 'unknown'
 }
 
 configurations {
-    pom
+  pom
 }
 
 artifacts {
-    archives jar
-    archives sourceJar
+  archives shadowJar
+  archives sourceJar
 }
 
 def sonatypeUser = hasProperty('sonatypeUser') ? sonatypeUser : System.getenv('sonatypeUser')
 def sonatypePassword = hasProperty('sonatypePassword') ? sonatypePassword : System.getenv('sonatypePassword')
 // Vault
 uploadArchives {
-    repositories.mavenDeployer {
-        beforeDeployment { MavenDeployment deployment ->
-            signing.signPom(deployment)
-        }
-        repository(id: 'tvpt-repo', url: "http://vault.voxelmodpack.com/content/repositories/releases") {
-            authentication(userName: sonatypeUser, password: sonatypePassword)
-
-        }
-        snapshotRepository(id: 'tvpt-repo', url: "http://vault.voxelmodpack.com/content/repositories/snapshots") {
-            authentication(userName: sonatypeUser, password: sonatypePassword)
-        }
-        pom {
-            groupId = project.group
-            version = project.version
-            artifactId = project.archivesBaseName
-            project {
-                name project.archivesBaseName
-                packaging 'jar'
-                description 'Implementation of VoxelSniper for Sponge, Forge, and Bukkit'
-                url 'http://voxelmodpack.com/'
-                scm {
-                    url 'https://github.com/tvpt/voxelsniper'
-                    connection 'git'
-                    developerConnection 'git@github.com:tvpt/VoxelSniper.git'
-                }
-                licenses {
-                    license {
-                        name 'The MIT License'
-                        url 'http://opensource.org/licenses/MIT'
-                        distribution 'repo'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'gabizou'
-                        name 'Gabriel Harris-Rouquette'
-                        email 'gabizou@me.com'
-                    }
-                    developer {
-                        id 'Deamon5550'
-                        name 'Nick Conde'
-                        email 'nick@budgiehouse.com'
-                    }
-
-                }
-            }
-        }
+  repositories.mavenDeployer {
+    beforeDeployment { MavenDeployment deployment ->
+      signing.signPom(deployment)
     }
+    repository(id: 'tvpt-repo', url: "http://vault.voxelmodpack.com/content/repositories/releases") {
+      authentication(userName: sonatypeUser, password: sonatypePassword)
+    }
+    snapshotRepository(id: 'tvpt-repo', url: "http://vault.voxelmodpack.com/content/repositories/snapshots") {
+      authentication(userName: sonatypeUser, password: sonatypePassword)
+    }
+    pom {
+      groupId = project.group
+      version = project.version
+      artifactId = project.archivesBaseName
+      project {
+        name project.archivesBaseName
+        packaging 'jar'
+        description 'Implementation of VoxelSniper for Sponge, Forge, and Bukkit'
+        url 'http://voxelmodpack.com/'
+        scm {
+          url 'https://github.com/tvpt/voxelsniper'
+          connection 'git'
+          developerConnection 'git@github.com:tvpt/VoxelSniper.git'
+        }
+        licenses {
+          license {
+            name 'The MIT License'
+            url 'http://opensource.org/licenses/MIT'
+            distribution 'repo'
+          }
+        }
+        developers {
+          developer {
+            id 'Deamon5550'
+            name 'Nick Conde'
+            email 'nick@budgiehouse.com'
+          }
+          developer {
+            id 'gabizou'
+            name 'Gabriel Harris-Rouquette'
+            email 'gabizou@me.com'
+          }
+        }
+      }
+    }
+  }
 }
 
 signing {
-    required {
-        gradle.taskGraph.hasTask("uploadArchives")
-    }
-    sign configurations.archives
+  required {
+    gradle.taskGraph.hasTask("uploadArchives")
+  }
+  sign configurations.archives
 }
 
 processResources
 {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+  inputs.property "version", project.version
+  inputs.property "mcversion", project.minecraft.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+  from(sourceSets.main.resources.srcDirs) {
+    include 'mcmod.info'
+    expand 'version':project.version, 'mcversion':project.minecraft.version
+  }
 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+  from(sourceSets.main.resources.srcDirs) {
+    exclude 'mcmod.info'
+  }
 }
 
 license {
-    ext.name = project.name
-    ext.organization = project.organization
-    ext.url = project.url
-    ext.year = project.inceptionYear
-    exclude "**/*.info"
-    exclude "assets/**"
-    header file("LICENSE")
-    sourceSets = project.sourceSets
-    ignoreFailures false
-    strictCheck true
-    mapping {
-        java = 'SLASHSTAR_STYLE'
-    }
+  ext.name = project.name
+  ext.organization = project.organization
+  ext.url = project.url
+  ext.year = project.inceptionYear
+  exclude "**/*.info"
+  exclude "assets/**"
+  header file("LICENSE")
+  sourceSets = project.sourceSets
+  ignoreFailures false
+  strictCheck true
+  mapping {
+    java = 'SLASHSTAR_STYLE'
+  }
 }
 
 checkstyle {
-    configProperties = [
-            "name"        : project.name,
-            "organization": project.organization,
-            "url"         : project.url,
-            "year"        : project.inceptionYear
-    ]
-    configFile = file("checkstyle.xml")
+  configProperties = [
+          "name"        : project.name,
+          "organization": project.organization,
+          "url"         : project.url,
+          "year"        : project.inceptionYear
+  ]
+  configFile = file("checkstyle.xml")
 }
 
-
 jar {
-    manifest {
-        attributes(
-                "Implementation-Title": project.name,
-                "Implementation-Version": version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commit,
-                "Built-By": System.properties['user.name'],
-                "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-                "Implementation-Vendor": url,
-				"Main-Class": "com.voxelplugineering.voxelsniper.PlatformMain"
-        )
-    }
-    from ("${projectDir}") {
-        include('LICENSE', 'README.md')
-    }
+  manifest {
+    attributes(
+            "Implementation-Title": project.name,
+            "Implementation-Version": version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commit,
+            "Built-By": System.properties['user.name'],
+            "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+            "Implementation-Vendor": url,
+            "Main-Class": "com.voxelplugineering.voxelsniper.PlatformMain"
+    )
+  }
+  from ("${projectDir}") {
+    include('LICENSE', 'README.md')
+  }
 }
 
 configure([compileJava, compileTestJava]) {
-    options.compilerArgs += ['-Xlint:all', '-Xlint:-path']
-    options.deprecation = true
-    options.encoding = 'utf8'
+  options.compilerArgs += ['-Xlint:all', '-Xlint:-path']
+  options.deprecation = true
+  options.encoding = 'utf8'
 }
 
 shadowJar {
-    relocate 'org.objectweb', 'com.voxelplugineering.voxelsniper.libs.org.objectweb'
-    relocate 'ninja.leaping', 'com.voxelplugineering.voxelsniper.libs.ninja.leaping'
-    relocate 'com.typesafe', 'com.voxelplugineering.voxelsniper.libs.com.typesafe'
-    dependencies {
-        include(dependency('com.voxelplugineering:VoxelGunsmith:7.1.0-SNAPSHOT'))
-        include(dependency('org.ow2.asm:asm-all:5.0.3'))
-        include(dependency('ninja.leaping.configurate:configurate-hocon:3.1'))
-        include(dependency('ninja.leaping.configurate:configurate-core:3.1'))
-        include(dependency('com.typesafe:config:1.3.0'))
-    }
+  relocate 'org.objectweb', 'com.voxelplugineering.voxelsniper.libs.org.objectweb'
+  relocate 'ninja.leaping', 'com.voxelplugineering.voxelsniper.libs.ninja.leaping'
+  relocate 'com.typesafe', 'com.voxelplugineering.voxelsniper.libs.com.typesafe'
+  dependencies {
+    include(dependency('com.voxelplugineering:VoxelGunsmith:7.1.0-SNAPSHOT'))
+    include(dependency('org.ow2.asm:asm-all:5.0.3'))
+    include(dependency('ninja.leaping.configurate:configurate-hocon:3.1'))
+    include(dependency('ninja.leaping.configurate:configurate-core:3.1'))
+    include(dependency('com.typesafe:config:1.3.0'))
+  }
+}
+
+reobf {
+  shadowJar {
+    println delegate
+    mappingType 'SEARGE'
+  }
 }
 
 build.dependsOn shadowJar

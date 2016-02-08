@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service.command;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.commands.Command;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
@@ -32,10 +30,12 @@ import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
-
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.List;
 
 /**
  * A wrapper for gunsmith commands to allow them to be registered into forge.
@@ -47,7 +47,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     private final PermissionProxy perms;
 
     private Command cmd;
-    private List<?> aliases;
+    private List<String> aliases;
 
     /**
      * Creates a new {@link ForgeCommand}.
@@ -64,7 +64,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     }
 
     @Override
-    public int compareTo(Object arg0)
+    public int compareTo(ICommand o)
     {
         return 0;
     }
@@ -82,7 +82,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     }
 
     @Override
-    public List<?> getCommandAliases()
+    public List<String> getCommandAliases()
     {
         return this.aliases;
     }
@@ -92,7 +92,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     {
         if (sender instanceof net.minecraft.entity.player.EntityPlayer)
         {
-            Player player = this.players.getPlayer(sender.getCommandSenderName()).get();
+            Player player = this.players.getPlayer(sender.getName()).get();
             boolean allowed = false;
             for (String s : this.cmd.getPermissions())
             {
@@ -128,7 +128,7 @@ public class ForgeCommand implements net.minecraft.command.ICommand
     }
 
     @Override
-    public List<?> addTabCompletionOptions(net.minecraft.command.ICommandSender sender, String[] args, net.minecraft.util.BlockPos pos)
+    public List<String> addTabCompletionOptions(net.minecraft.command.ICommandSender sender, String[] args, net.minecraft.util.BlockPos pos)
     {
         // TODO tab completion
         return null;

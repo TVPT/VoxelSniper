@@ -51,11 +51,10 @@ public class ForgeMaterialAliases
             }
             AliasRegistry alias = registry.getRegistry("material").get();
 
-            for (Object key : Block.blockRegistry.getKeys())
+            for (ResourceLocation key : Block.blockRegistry.getKeys())
             {
-                Block block = (Block) Block.blockRegistry.getObject(key);
-                ResourceLocation rs = (ResourceLocation) key;
-                String name = (!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath();
+                Block block = Block.blockRegistry.getObject(key);
+                String name = (!key.getResourceDomain().equals("minecraft") ? key.getResourceDomain() + ":" : "") + key.getResourcePath();
                 String id = Block.getIdFromBlock(block) + "";
                 alias.register(id, name);
             }

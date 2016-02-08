@@ -23,9 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.event.handler;
 
-import java.util.Optional;
-
-import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.event.SnipeEvent;
@@ -37,12 +34,13 @@ import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.util.Context;
-
 import net.minecraft.item.Item;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.Optional;
 
 /**
  * An event handler for all forge events that proxy to gunsmith events.
@@ -75,7 +73,7 @@ public class ForgeEventProxy
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedInEvent event)
     {
-        Optional<Player> s = this.pr.getPlayer(event.player.getCommandSenderName());
+        Optional<Player> s = this.pr.getPlayer(event.player.getName());
         if (s.isPresent())
         {
             SniperCreateEvent sce = new SniperCreateEvent(s.get());
@@ -91,7 +89,7 @@ public class ForgeEventProxy
     @SubscribeEvent
     public void onSpawn(PlayerEvent.PlayerLoggedOutEvent event)
     {
-        Optional<Player> s = this.pr.getPlayer(event.player.getCommandSenderName());
+        Optional<Player> s = this.pr.getPlayer(event.player.getName());
         if (s.isPresent())
         {
             SniperDestroyEvent sde = new SniperDestroyEvent(s.get());
@@ -111,7 +109,6 @@ public class ForgeEventProxy
         {
             return;
         }
-        GunsmithLogger.getLogger().debug("PlayerInteractEvent for " + event.entityPlayer.getCommandSenderName());
         if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
         {
             BrushAction action;
@@ -125,7 +122,7 @@ public class ForgeEventProxy
             {
                 return;
             }
-            Optional<Player> s = this.pr.getPlayer(event.entityPlayer.getCommandSenderName());
+            Optional<Player> s = this.pr.getPlayer(event.entityPlayer.getName());
             if (s.isPresent())
             {
                 SnipeEvent se = new SnipeEvent(s.get(), event.entityPlayer.rotationYawHead, event.entityPlayer.rotationPitch, action);

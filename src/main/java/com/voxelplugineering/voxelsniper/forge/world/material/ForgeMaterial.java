@@ -117,7 +117,7 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block>impleme
     @Override
     public String toString()
     {
-        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(getThis());
+        ResourceLocation rs = Block.blockRegistry.getNameForObject(getThis());
         return (!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath();
     }
 
@@ -161,7 +161,7 @@ public class ForgeMaterial extends WeakWrapper<net.minecraft.block.Block>impleme
     @Override
     public String getName()
     {
-        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(getThis());
+        ResourceLocation rs = Block.blockRegistry.getNameForObject(getThis());
         return (!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath();
     }
 

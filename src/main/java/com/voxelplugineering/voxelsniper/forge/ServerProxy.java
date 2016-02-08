@@ -132,7 +132,7 @@ public class ServerProxy extends CommonProxy
             for (Object e : MinecraftServer.getServer().getConfigurationManager().playerEntityList)
             {
                 net.minecraft.entity.player.EntityPlayer entity = (net.minecraft.entity.player.EntityPlayer) e;
-                if (entity.getCommandSenderName().equals(name))
+                if (entity.getName().equals(name))
                 {
                     player = entity;
                     break;

@@ -98,14 +98,14 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
         {
             return Optional.empty();
         }
-        Location loc = new CommonLocation(this, x, y, z);
         IBlockState state = getThis().getBlockState(new net.minecraft.util.BlockPos(x, y, z));
-        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(state.getBlock());
+        ResourceLocation rs = Block.blockRegistry.getNameForObject(state.getBlock());
         Optional<Material> mat = this.materials
                 .getMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath());
         if (mat.isPresent())
         {
             MaterialState ms = ((ForgeMaterial) mat.get()).getState(state);
+            Location loc = new CommonLocation(this, x, y, z);
             return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(loc, ms));
         }
         return Optional.empty();

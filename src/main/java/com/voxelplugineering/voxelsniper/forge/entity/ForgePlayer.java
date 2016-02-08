@@ -65,7 +65,7 @@ public class ForgePlayer extends AbstractPlayer<net.minecraft.entity.player.Enti
     @Override
     public String getName()
     {
-        return getThis().getCommandSenderName();
+        return getThis().getName();
     }
 
     @Override

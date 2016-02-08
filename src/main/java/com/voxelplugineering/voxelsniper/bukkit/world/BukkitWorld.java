@@ -132,13 +132,13 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
             return Optional.empty();
         }
         org.bukkit.block.Block b = getThis().getBlockAt(x, y, z);
-        CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
         Optional<Material> m = this.materials.getMaterial(b.getType().name());
         if (!m.isPresent())
         {
             return Optional.empty();
         }
         MaterialState ms = ((BukkitMaterial) m.get()).getState(b.getData());
+        CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
         return Optional.<Block>of(new CommonBlock(l, ms));
     }
 

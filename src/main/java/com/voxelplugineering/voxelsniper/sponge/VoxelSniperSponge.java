@@ -27,7 +27,6 @@ import com.google.inject.Inject;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.util.SpongeDetector;
-import com.voxelplugineering.voxelsniper.service.logging.JavaUtilLogger;
 import com.voxelplugineering.voxelsniper.sponge.service.logging.Slf4jLogger;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;

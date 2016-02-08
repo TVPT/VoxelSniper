@@ -75,13 +75,12 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
     @Override
     public Optional<com.voxelplugineering.voxelsniper.world.Block> getBlock(int x, int y, int z)
     {
-        if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
+        if (x < 0 || x >= CHUNK_SIZE.getX() || z < 0 || z >= CHUNK_SIZE.getZ() || y < 0 || y >= CHUNK_SIZE.getY())
         {
             return Optional.empty();
         }
         IBlockState b = getThis().getBlockState(new BlockPos(x, y, z));
-        CommonLocation l = new CommonLocation(this.getWorld(), x + getThis().xPosition * 16, y, z + getThis().zPosition * 16);
-        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(b.getBlock());
+        ResourceLocation rs = Block.blockRegistry.getNameForObject(b.getBlock());
         Optional<Material> m = this.getWorld().getMaterialRegistry()
                 .getMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath());
         if (!m.isPresent())
@@ -89,13 +88,14 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
             return Optional.empty();
         }
         MaterialState ms = ((ForgeMaterial) m.get()).getState(b);
+        CommonLocation l = new CommonLocation(this.getWorld(), x + getThis().xPosition * 16, y, z + getThis().zPosition * 16);
         return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));
     }
 
     @Override
     public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
-        if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
+        if (x < 0 || x >= CHUNK_SIZE.getX() || z < 0 || z >= CHUNK_SIZE.getZ() || y < 0 || y >= CHUNK_SIZE.getY())
         {
             return;
         }
@@ -106,7 +106,7 @@ public class ForgeChunk extends AbstractChunk<net.minecraft.world.chunk.Chunk>
     public Iterable<Entity> getLoadedEntities()
     {
         List<Entity> entities = Lists.newArrayList();
-        net.minecraft.util.ClassInheritanceMultiMap[] entityLists = getThis().getEntityLists();
+        net.minecraft.util.ClassInheritanceMultiMap<net.minecraft.entity.Entity>[] entityLists = getThis().getEntityLists();
         for (int i = 0; i < entityLists.length; i++)
         {
             for (Iterator<?> it = entityLists[i].iterator(); it.hasNext();)

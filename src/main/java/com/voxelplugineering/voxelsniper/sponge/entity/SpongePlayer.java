@@ -26,7 +26,6 @@ package com.voxelplugineering.voxelsniper.sponge.entity;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
-import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;

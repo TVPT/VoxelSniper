@@ -71,18 +71,19 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
     @Override
     public Optional<com.voxelplugineering.voxelsniper.world.Block> getBlock(int x, int y, int z)
     {
-        if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
+        // TODO I think these coordinates may need to be offset by the chunk min
+        if (x < 0 || x >= CHUNK_SIZE.getX() || z < 0 || z >= CHUNK_SIZE.getZ() || y < 0 || y >= CHUNK_SIZE.getY())
         {
             return Optional.empty();
         }
         org.spongepowered.api.world.Location<org.spongepowered.api.world.Chunk> b = getThis().getLocation(x, y, z);
-        CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
         Optional<Material> m = ((SpongeWorld) this.getWorld()).getMaterialRegistry().getMaterial(b.getBlockType());
         if (!m.isPresent())
         {
             return Optional.empty();
         }
         MaterialState ms = ((SpongeMaterial) m.get()).getState(b.getBlock());
+        CommonLocation l = new CommonLocation(this.getWorld(), b.getX(), b.getY(), b.getZ());
         return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));
     }
 
@@ -90,7 +91,7 @@ public class SpongeChunk extends AbstractChunk<org.spongepowered.api.world.Chunk
     public void setBlock(MaterialState material, int x, int y, int z, boolean update)
     {
         // TODO physics
-        if (x < 0 || x > CHUNK_SIZE.getX() - 1 || z < 0 || z > CHUNK_SIZE.getZ() - 1 || y < 0 || y > CHUNK_SIZE.getY() - 1)
+        if (x < 0 || x >= CHUNK_SIZE.getX() || z < 0 || z >= CHUNK_SIZE.getZ() || y < 0 || y >= CHUNK_SIZE.getY())
         {
             return;
         }

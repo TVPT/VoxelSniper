@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import java.util.Optional;
-
 import com.google.common.base.Function;
 import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
@@ -58,13 +56,13 @@ import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.util.Optional;
 
 /**
  * A common proxy for operations common to both server and client side.
@@ -112,10 +110,9 @@ public abstract class CommonProxy
     {
         MaterialStateBuilder builder = new MaterialStateBuilder(reg);
         MaterialStateCache<IBlockState, ForgeMaterialState> cache = new MaterialStateCache<IBlockState, ForgeMaterialState>(builder);
-        for (Object o : Block.blockRegistry.getKeys())
+        for (ResourceLocation rs : Block.blockRegistry.getKeys())
         {
-            ResourceLocation rs = (ResourceLocation) o;
-            Block block = (Block) Block.blockRegistry.getObject(rs);
+            Block block = Block.blockRegistry.getObject(rs);
             Material material = new ForgeMaterial(block, cache);
             reg.registerMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath(), block,
                     material);
@@ -134,7 +131,6 @@ public abstract class CommonProxy
     {
         ForgeEventProxy events = new ForgeEventProxy(context);
         MinecraftForge.EVENT_BUS.register(events);
-        FMLCommonHandler.instance().bus().register(events);
     }
 
     @InitHook(target = CommandHandler.class)
@@ -162,9 +158,9 @@ public abstract class CommonProxy
     {
         @SuppressWarnings("unchecked")
         BiomeRegistry<net.minecraft.world.biome.BiomeGenBase> reg = (BiomeRegistry<net.minecraft.world.biome.BiomeGenBase>) service;
-        for (Object b : BiomeGenBase.BIOME_ID_MAP.keySet())
+        for (String b : BiomeGenBase.BIOME_ID_MAP.keySet())
         {
-            BiomeGenBase biome = (BiomeGenBase) BiomeGenBase.BIOME_ID_MAP.get(b);
+            BiomeGenBase biome = BiomeGenBase.BIOME_ID_MAP.get(b);
             reg.registerBiome(b.toString(), biome, new ForgeBiome(biome));
         }
     }
@@ -201,7 +197,7 @@ class MaterialStateBuilder implements Function<IBlockState, ForgeMaterialState>
     @Override
     public ForgeMaterialState apply(IBlockState input)
     {
-        ResourceLocation rs = (ResourceLocation) Block.blockRegistry.getNameForObject(input.getBlock());
+        ResourceLocation rs = Block.blockRegistry.getNameForObject(input.getBlock());
         return new ForgeMaterialState(
                 this.reg.getMaterial((!rs.getResourceDomain().equals("minecraft") ? rs.getResourceDomain() + ":" : "") + rs.getResourcePath()).get(),
                 input);

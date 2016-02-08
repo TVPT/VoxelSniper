@@ -96,14 +96,20 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         {
             return Optional.empty();
         }
+        com.flowpowered.math.vector.Vector3i min = getThis().getBlockMin();
+        com.flowpowered.math.vector.Vector3i max = getThis().getBlockMax();
+        if (x < min.getX() || x > max.getX() || z < min.getZ() || z > max.getZ() || y < min.getY() || y > max.getY())
+        {
+            return Optional.empty();
+        }
         org.spongepowered.api.world.Location<org.spongepowered.api.world.World> b = getThis().getLocation(x, y, z);
-        CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
         Optional<com.voxelplugineering.voxelsniper.world.material.Material> m = this.materials.getMaterial(b.getBlockType());
         if (!m.isPresent())
         {
             return Optional.empty();
         }
         MaterialState ms = ((SpongeMaterial) m.get()).getState(b.getBlock());
+        CommonLocation l = new CommonLocation(this, b.getX(), b.getY(), b.getZ());
         return Optional.<com.voxelplugineering.voxelsniper.world.Block>of(new CommonBlock(l, ms));
     }
 
