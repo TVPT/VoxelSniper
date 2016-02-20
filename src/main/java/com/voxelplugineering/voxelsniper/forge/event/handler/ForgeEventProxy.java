@@ -125,7 +125,13 @@ public class ForgeEventProxy
             Optional<Player> s = this.pr.getPlayer(event.entityPlayer.getName());
             if (s.isPresent())
             {
-                SnipeEvent se = new SnipeEvent(s.get(), event.entityPlayer.rotationYawHead, event.entityPlayer.rotationPitch, action);
+                Player pl = s.get();
+                if (pl.isProcessing())
+                {
+                    return;
+                }
+                pl.setProcessing(true);
+                SnipeEvent se = new SnipeEvent(pl, event.entityPlayer.rotationYawHead, event.entityPlayer.rotationPitch, action);
                 this.bus.post(se);
             }
         }

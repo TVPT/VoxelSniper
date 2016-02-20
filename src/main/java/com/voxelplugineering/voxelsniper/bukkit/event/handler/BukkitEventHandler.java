@@ -127,7 +127,13 @@ public class BukkitEventHandler implements org.bukkit.event.Listener
             Optional<Player> s = this.pr.getPlayer(event.getPlayer());
             if (s.isPresent())
             {
-                SnipeEvent se = new SnipeEvent(s.get(), p.getLocation().getYaw(), p.getLocation().getPitch(), action);
+                Player pl = s.get();
+                if (pl.isProcessing())
+                {
+                    return;
+                }
+                pl.setProcessing(true);
+                SnipeEvent se = new SnipeEvent(pl, p.getLocation().getYaw(), p.getLocation().getPitch(), action);
                 this.bus.post(se);
             } else
             {

@@ -127,7 +127,13 @@ public class SpongeEventHandler
         Optional<Player> s = this.players.getPlayer(p);
         if (s.isPresent())
         {
-            SnipeEvent se = new SnipeEvent(s.get(), s.get().getYaw(), s.get().getPitch(), action);
+            Player pl = s.get();
+            if (pl.isProcessing())
+            {
+                return;
+            }
+            pl.setProcessing(true);
+            SnipeEvent se = new SnipeEvent(pl, s.get().getYaw(), s.get().getPitch(), action);
             this.bus.post(se);
         }
     }
