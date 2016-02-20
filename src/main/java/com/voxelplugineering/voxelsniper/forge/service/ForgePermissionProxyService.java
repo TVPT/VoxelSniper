@@ -28,7 +28,6 @@ import com.voxelplugineering.voxelsniper.forge.entity.ForgePlayer;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.util.Context;
-
 import net.minecraft.server.MinecraftServer;
 
 /**

@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.entity;
 
-import java.util.UUID;
-
 import com.voxelplugineering.voxelsniper.brush.BrushManager;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
@@ -37,6 +35,8 @@ import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.World;
+
+import java.util.UUID;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.entity.Player}s.

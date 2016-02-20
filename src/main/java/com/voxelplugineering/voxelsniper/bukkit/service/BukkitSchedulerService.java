@@ -25,15 +25,15 @@ package com.voxelplugineering.voxelsniper.bukkit.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.bukkit.service.scheduler.BukkitTask;
 import com.voxelplugineering.voxelsniper.service.AbstractService;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A proxy for Bukkit's {@link org.bukkit.scheduler.BukkitScheduler}.

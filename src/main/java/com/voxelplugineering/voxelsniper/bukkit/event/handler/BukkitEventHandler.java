@@ -23,10 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.event.handler;
 
-import java.util.Optional;
-
-import org.bukkit.Material;
-
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.brush.BrushAction;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
@@ -37,6 +33,9 @@ import com.voxelplugineering.voxelsniper.event.SniperEvent.SniperDestroyEvent;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
 import com.voxelplugineering.voxelsniper.util.Context;
+import org.bukkit.Material;
+
+import java.util.Optional;
 
 /**
  * An event handler for bukkit's events to post the events to Gunsmith from.

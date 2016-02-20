@@ -23,10 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.world;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntity;
@@ -40,11 +36,14 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.World;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A forge chunk wrapper.

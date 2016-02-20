@@ -25,7 +25,6 @@ package com.voxelplugineering.voxelsniper.forge.util;
 
 import com.voxelplugineering.voxelsniper.service.alias.AliasHandler;
 import com.voxelplugineering.voxelsniper.service.alias.AliasRegistry;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 

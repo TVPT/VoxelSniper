@@ -23,11 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import java.io.File;
-import java.util.Optional;
-
-import org.apache.logging.log4j.Logger;
-
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.GunsmithLogger;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeCommandRegistrar;
@@ -36,7 +31,6 @@ import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandRegistrar;
 import com.voxelplugineering.voxelsniper.service.logging.Log4jLogger;
 import com.voxelplugineering.voxelsniper.util.Context;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -47,6 +41,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.Optional;
 
 /**
  * The core class of VoxelSniper for minecraft forge.

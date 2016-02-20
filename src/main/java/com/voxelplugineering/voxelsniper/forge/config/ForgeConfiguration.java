@@ -25,7 +25,6 @@ package com.voxelplugineering.voxelsniper.forge.config;
 
 import com.voxelplugineering.voxelsniper.service.config.ConfigValue;
 import com.voxelplugineering.voxelsniper.service.config.ConfigurationContainer;
-
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 

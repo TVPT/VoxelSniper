@@ -23,14 +23,13 @@
  */
 package com.voxelplugineering.voxelsniper.forge.service;
 
-import java.io.File;
-
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
 import com.voxelplugineering.voxelsniper.forge.config.ForgeConfiguration;
 import com.voxelplugineering.voxelsniper.util.Context;
-
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.io.File;
 
 /**
  * The platform proxy for minecraft forge.

@@ -23,11 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.forge.util;
 
-import java.util.Map;
-
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntityType;
+
+import java.util.Map;
 
 /**
  * A set of utility functions for forge.

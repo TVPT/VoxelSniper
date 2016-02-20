@@ -25,15 +25,15 @@ package com.voxelplugineering.voxelsniper.bukkit.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntityType;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Bukkit based utilities.

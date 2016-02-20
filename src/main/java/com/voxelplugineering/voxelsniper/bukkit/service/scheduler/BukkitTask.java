@@ -25,10 +25,10 @@ package com.voxelplugineering.voxelsniper.bukkit.service.scheduler;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.lang.ref.WeakReference;
-
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.scheduler.Task;
+
+import java.lang.ref.WeakReference;
 
 /**
  * A wrapper for bukkit task's for Gunsmith's {@link Scheduler}.

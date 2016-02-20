@@ -23,10 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.world.material;
 
-import java.util.Map;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 /**
  * A cache for {@link MaterialState} instances.

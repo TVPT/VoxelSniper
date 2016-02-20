@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.entity;
 
-import java.util.UUID;
-
 import com.voxelplugineering.voxelsniper.bukkit.util.BukkitUtilities;
 import com.voxelplugineering.voxelsniper.bukkit.world.BukkitWorld;
 import com.voxelplugineering.voxelsniper.entity.AbstractEntity;
@@ -33,6 +31,8 @@ import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
+
+import java.util.UUID;
 
 /**
  * Represents a Bukkit entity.

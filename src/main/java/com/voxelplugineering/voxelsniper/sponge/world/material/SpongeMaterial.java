@@ -23,9 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.world.material;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.google.common.collect.Lists;
+import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
+import com.voxelplugineering.voxelsniper.world.material.Material;
+import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -34,11 +36,8 @@ import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.data.property.block.MatterProperty.Matter;
 import org.spongepowered.api.data.property.block.PassableProperty;
 
-import com.google.common.collect.Lists;
-import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
-import com.voxelplugineering.voxelsniper.world.material.Material;
-import com.voxelplugineering.voxelsniper.world.material.MaterialState;
-import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Wraps sponge's {@link BlockType}.

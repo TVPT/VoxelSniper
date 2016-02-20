@@ -23,10 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.world.material;
 
-import org.spongepowered.api.block.BlockState;
-
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+import org.spongepowered.api.block.BlockState;
 
 /**
  * A {@link MaterialState} which wraps a {@link BlockState}.

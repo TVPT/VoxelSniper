@@ -25,12 +25,6 @@ package com.voxelplugineering.voxelsniper.bukkit.world;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.bukkit.Location;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntity;
@@ -52,6 +46,11 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+import org.bukkit.Location;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * A wrapper for bukkit's {@link org.bukkit.World}s.

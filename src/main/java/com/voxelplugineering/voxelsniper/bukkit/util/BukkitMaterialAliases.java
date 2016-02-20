@@ -23,10 +23,9 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.util;
 
-import org.bukkit.Material;
-
 import com.voxelplugineering.voxelsniper.service.alias.AliasHandler;
 import com.voxelplugineering.voxelsniper.service.alias.AliasRegistry;
+import org.bukkit.Material;
 
 /**
  * A helper for loading default material aliases.

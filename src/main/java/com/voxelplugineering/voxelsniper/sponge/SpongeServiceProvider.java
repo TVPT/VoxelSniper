@@ -23,38 +23,29 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
-import java.io.File;
-import java.util.Optional;
-
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.world.biome.BiomeType;
-
 import com.google.common.base.Function;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.entity.Player;
-import com.voxelplugineering.voxelsniper.service.AnnotationScanner;
-import com.voxelplugineering.voxelsniper.service.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.service.Builder;
-import com.voxelplugineering.voxelsniper.service.CommandHandlerService;
 import com.voxelplugineering.voxelsniper.service.InitHook;
-import com.voxelplugineering.voxelsniper.service.MaterialRegistryService;
-import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
 import com.voxelplugineering.voxelsniper.service.PostInit;
 import com.voxelplugineering.voxelsniper.service.ServicePriorities;
-import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
+import com.voxelplugineering.voxelsniper.service.alias.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
+import com.voxelplugineering.voxelsniper.service.command.CommandHandlerService;
 import com.voxelplugineering.voxelsniper.service.config.Configuration;
 import com.voxelplugineering.voxelsniper.service.eventbus.EventBus;
 import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistryService;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
@@ -73,6 +64,14 @@ import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.world.World;
 import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.world.biome.BiomeType;
+
+import java.io.File;
+import java.util.Optional;
 
 /**
  * A provider for bukkit's initialization values.

@@ -25,7 +25,6 @@ package com.voxelplugineering.voxelsniper.forge.world.biome;
 
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 import com.voxelplugineering.voxelsniper.world.biome.Biome;
-
 import net.minecraft.world.biome.BiomeGenBase;
 
 /**

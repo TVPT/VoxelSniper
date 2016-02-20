@@ -23,22 +23,22 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
-import java.util.Optional;
-
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgePlayer;
 import com.voxelplugineering.voxelsniper.forge.service.command.ForgeConsoleProxy;
 import com.voxelplugineering.voxelsniper.forge.world.ForgeWorld;
 import com.voxelplugineering.voxelsniper.service.Builder;
-import com.voxelplugineering.voxelsniper.service.PlayerRegistryService;
 import com.voxelplugineering.voxelsniper.service.ServicePriorities;
-import com.voxelplugineering.voxelsniper.service.WorldRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.RegistryProvider;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
+import com.voxelplugineering.voxelsniper.service.registry.WorldRegistryService;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.world.World;
+
+import java.util.Optional;
 
 /**
  * The proxy for operations to only be executed in a client-side environment.

@@ -23,14 +23,14 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.world.material;
 
-import java.util.List;
-
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
+
+import java.util.List;
 
 /**
  * A wrapper for bukkit {@link org.bukkit.Material}s.

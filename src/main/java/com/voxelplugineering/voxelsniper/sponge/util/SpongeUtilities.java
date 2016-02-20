@@ -23,9 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.util;
 
-import java.util.Map;
-import java.util.Optional;
-
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
@@ -36,6 +33,9 @@ import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * A set of utilities for the sponge implementation.

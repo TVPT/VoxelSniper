@@ -23,11 +23,11 @@
  */
 package com.voxelplugineering.voxelsniper.bukkit.service;
 
-import java.io.File;
-
 import com.voxelplugineering.voxelsniper.CommonPlatformProxyService;
 import com.voxelplugineering.voxelsniper.bukkit.config.BukkitConfiguration;
 import com.voxelplugineering.voxelsniper.util.Context;
+
+import java.io.File;
 
 /**
  * A proxy for Bukkit's platform.

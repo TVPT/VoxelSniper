@@ -23,9 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.world;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.entity.Entity;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
@@ -40,6 +37,9 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.World;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Wraps a {@link Chunk}.

@@ -25,7 +25,6 @@ package com.voxelplugineering.voxelsniper.forge.world.material;
 
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
-
 import net.minecraft.block.state.IBlockState;
 
 /**

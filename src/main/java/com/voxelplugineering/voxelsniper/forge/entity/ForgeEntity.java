@@ -23,8 +23,6 @@
  */
 package com.voxelplugineering.voxelsniper.forge.entity;
 
-import java.util.UUID;
-
 import com.voxelplugineering.voxelsniper.entity.AbstractEntity;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.forge.util.ForgeUtilities;
@@ -35,6 +33,8 @@ import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
+
+import java.util.UUID;
 
 /**
  * A wrapper for a forge entity.

@@ -23,18 +23,17 @@
  */
 package com.voxelplugineering.voxelsniper.forge.world.material;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.voxelplugineering.voxelsniper.registry.WeakWrapper;
 import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 /**
  * A wrapper for forge's materials ({@link net.minecraft.block.Block}).
