@@ -46,6 +46,7 @@ import com.voxelplugineering.voxelsniper.world.biome.Biome;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,8 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         if (material instanceof SpongeMaterialState)
         {
             SpongeMaterialState spongeMaterial = (SpongeMaterialState) material;
-            getThis().getLocation(x, y, z).setBlock(spongeMaterial.getState());
+            // TODO construct the cause with the executor of the brush or queue.
+            getThis().setBlock(x, y, z, spongeMaterial.getState(), update, Cause.of(NamedCause.source(VoxelSniperSponge.instance.getContainer())));
         }
     }
 
