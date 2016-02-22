@@ -32,21 +32,23 @@ public class SpongeEntityType implements EntityType
 {
 
     private final Class<? extends org.spongepowered.api.entity.Entity> type;
+    private final org.spongepowered.api.entity.EntityType entityType;
 
     /**
      * Creates a new {@link SpongeEntityType}.
      * 
-     * @param cls The entity type
+     * @param entityType The entity type
      */
-    public SpongeEntityType(Class<? extends org.spongepowered.api.entity.Entity> cls)
+    public SpongeEntityType(org.spongepowered.api.entity.EntityType entityType)
     {
-        this.type = cls;
+        this.type = entityType.getEntityClass();
+        this.entityType = entityType;
     }
 
     @Override
     public String getName()
     {
-        return this.type.getName();
+        return this.entityType.getName();
     }
 
     @Override
@@ -55,4 +57,7 @@ public class SpongeEntityType implements EntityType
         return org.spongepowered.api.entity.living.Living.class.isAssignableFrom(this.type);
     }
 
+    public org.spongepowered.api.entity.EntityType getEntityType() {
+        return this.entityType;
+    }
 }

@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntityType;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import org.bukkit.Location;
 
 import com.google.common.collect.Lists;
@@ -236,6 +240,11 @@ public class BukkitWorld extends AbstractWorld<org.bukkit.World>
     public void spawnLightning(Vector3i position, Player source)
     {
         getThis().strikeLightning(new Location(getThis(), position.getX(), position.getY(), position.getZ()));
+    }
+
+    @Override
+    public void spawnEntity(EntityType entityType, Vector3d position, Player source) {
+        getThis().spawnEntity(new Location(getThis(), position.getX(), position.getY(), position.getZ()), ((BukkitEntityType) entityType).getType());
     }
 
 }

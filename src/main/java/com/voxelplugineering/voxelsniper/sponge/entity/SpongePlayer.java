@@ -23,8 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.sponge.entity;
 
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.service.EntityRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 import com.voxelplugineering.voxelsniper.util.Context;
@@ -33,6 +35,7 @@ import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
@@ -45,7 +48,9 @@ public class SpongePlayer extends AbstractPlayer<org.spongepowered.api.entity.li
 {
 
     private static final int MAX_MESSAGE_LENGTH = 32768;
-    private static final EntityType PLAYER_TYPE = SpongeUtilities.getEntityType(org.spongepowered.api.entity.living.Living.class);
+    @SuppressWarnings("unchecked")
+    private static final EntityType PLAYER_TYPE = (EntityType) Gunsmith.getServiceManager().getContext().get(EntityRegistryService.class)
+            .get().getEntityType(EntityTypes.PLAYER).get();
 
     private final WorldRegistry<org.spongepowered.api.world.World> worlds;
 

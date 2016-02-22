@@ -57,4 +57,8 @@ public class BukkitEntityType implements EntityType
         return this.type.isAlive();
     }
 
+    public org.bukkit.entity.EntityType getType() {
+        return this.type;
+    }
+
 }

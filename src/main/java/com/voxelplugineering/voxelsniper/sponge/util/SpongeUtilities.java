@@ -27,7 +27,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.google.common.collect.MapMaker;
+import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
+import com.voxelplugineering.voxelsniper.service.EntityRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.WorldRegistry;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
 import com.voxelplugineering.voxelsniper.sponge.world.SpongeWorld;
@@ -36,6 +38,7 @@ import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.CommonLocation;
 import com.voxelplugineering.voxelsniper.world.Location;
 import com.voxelplugineering.voxelsniper.world.World;
+import org.spongepowered.api.entity.Entity;
 
 /**
  * A set of utilities for the sponge implementation.
@@ -43,7 +46,7 @@ import com.voxelplugineering.voxelsniper.world.World;
 public class SpongeUtilities
 {
 
-    private static final Map<Class<? extends org.spongepowered.api.entity.Entity>, SpongeEntityType> entityTypeCache;
+    private static final Map<org.spongepowered.api.entity.EntityType, SpongeEntityType> entityTypeCache;
 
     static
     {
@@ -117,17 +120,22 @@ public class SpongeUtilities
     /**
      * Gets the Gunsmith {@link EntityType} corresponding to the given entity class.
      * 
-     * @param cls The entity class
+     * @param entity The entity instance
      * @return The gunsmith entity type
      */
-    public static EntityType getEntityType(Class<? extends org.spongepowered.api.entity.Entity> cls)
+    @SuppressWarnings("unchecked")
+    public static EntityType getEntityType(Entity entity)
     {
-        if (entityTypeCache.containsKey(cls))
+        final org.spongepowered.api.entity.EntityType spongeEntityType = entity.getType();
+        if (entityTypeCache.containsKey(spongeEntityType))
         {
-            return entityTypeCache.get(cls);
+            return entityTypeCache.get(spongeEntityType);
         }
-        SpongeEntityType type = new SpongeEntityType(cls);
-        entityTypeCache.put(cls, type);
+        SpongeEntityType type = new SpongeEntityType(spongeEntityType);
+        final Optional<EntityRegistryService<org.spongepowered.api.entity.EntityType>> entityRegistryService = Gunsmith.getServiceManager()
+                .getContext().get((Class<EntityRegistryService<org.spongepowered.api.entity.EntityType>>) (Class<?>) EntityRegistryService.class);
+        entityRegistryService.get().registerEntityType(spongeEntityType, type);
+        entityTypeCache.put(spongeEntityType, type);
         return type;
     }
 
