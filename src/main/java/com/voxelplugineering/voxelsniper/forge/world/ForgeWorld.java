@@ -26,14 +26,18 @@ package com.voxelplugineering.voxelsniper.forge.world;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntity;
+import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntityType;
 import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
+import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
 import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.AbstractWorld;
 import com.voxelplugineering.voxelsniper.world.Chunk;
@@ -46,6 +50,7 @@ import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialState;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
@@ -192,6 +197,14 @@ public class ForgeWorld extends AbstractWorld<WorldServer>
     public void spawnLightning(Vector3i position, Player source)
     {
         getThis().addWeatherEffect(new EntityLightningBolt(getThis(), position.getX(), position.getY(), position.getZ()));
+    }
+
+    @Override
+    public void spawnEntity(EntityType entityType, Vector3d position, Player source) {
+        final net.minecraft.entity.Entity
+                entity = EntityList.createEntityByName(((ForgeEntityType) entityType).getRegistration().getEntityName(), getThis());
+        entity.setPosition(position.getX(), position.getY(), position.getZ());
+        getThis().spawnEntityInWorld(entity);
     }
 
 }

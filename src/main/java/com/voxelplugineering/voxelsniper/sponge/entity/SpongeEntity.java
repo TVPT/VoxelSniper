@@ -56,7 +56,7 @@ public class SpongeEntity extends AbstractEntity<org.spongepowered.api.entity.En
     {
         super(entity);
         this.worlds = context.getRequired(WorldRegistry.class);
-        this.type = SpongeUtilities.getEntityType(entity.getClass());
+        this.type = SpongeUtilities.getEntityType(entity);
     }
 
     @Override

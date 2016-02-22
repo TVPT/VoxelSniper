@@ -27,6 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.brush.GlobalBrushManager;
+import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitEntityType;
 import com.voxelplugineering.voxelsniper.bukkit.entity.BukkitPlayer;
 import com.voxelplugineering.voxelsniper.bukkit.event.handler.BukkitEventHandler;
 import com.voxelplugineering.voxelsniper.bukkit.service.BukkitPlatformProxyService;
@@ -43,6 +44,7 @@ import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.Builder;
+import com.voxelplugineering.voxelsniper.service.EntityRegistryService;
 import com.voxelplugineering.voxelsniper.service.InitHook;
 import com.voxelplugineering.voxelsniper.service.PostInit;
 import com.voxelplugineering.voxelsniper.service.ServicePriorities;
@@ -57,6 +59,7 @@ import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.service.registry.EntityRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
@@ -69,6 +72,7 @@ import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.util.Context;
 import com.voxelplugineering.voxelsniper.util.Pair;
 import com.voxelplugineering.voxelsniper.world.World;
+import org.bukkit.entity.EntityType;
 
 import java.util.Optional;
 
@@ -197,6 +201,23 @@ public class BukkitServiceProvider
             reg.registerBiome(b.name(), b, new BukkitBiome(b));
         }
     }
+
+    @Builder(target = EntityRegistry.class, priority = ServicePriorities.ENTITY_REGISTRY_PRIORITY)
+    public EntityRegistry<?> getEntityRegistry(Context context)
+    {
+        return new EntityRegistryService<EntityType>(context);
+    }
+
+    @SuppressWarnings("unchecked")
+    @InitHook(target = EntityRegistry.class)
+    public void registerEntities(Context context, EntityRegistry<?> service) {
+        EntityRegistry<EntityType> registry = (EntityRegistry<EntityType>) service;
+        for (EntityType entityType : EntityType.values()) {
+            registry.registerEntityType(entityType, new BukkitEntityType(entityType));
+        }
+    }
+
+
 
     @PostInit
     public void postInit(Context c)

@@ -23,9 +23,13 @@
  */
 package com.voxelplugineering.voxelsniper.forge;
 
+import static net.minecraftforge.fml.common.registry.EntityRegistry.*;
+
 import com.google.common.base.Function;
+import com.google.common.collect.BiMap;
 import com.voxelplugineering.voxelsniper.config.BaseConfiguration;
 import com.voxelplugineering.voxelsniper.config.VoxelSniperConfiguration;
+import com.voxelplugineering.voxelsniper.forge.entity.ForgeEntityType;
 import com.voxelplugineering.voxelsniper.forge.event.handler.ForgeEventProxy;
 import com.voxelplugineering.voxelsniper.forge.service.ForgePermissionProxyService;
 import com.voxelplugineering.voxelsniper.forge.service.ForgePlatformProxyService;
@@ -37,6 +41,7 @@ import com.voxelplugineering.voxelsniper.forge.world.biome.ForgeBiome;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterial;
 import com.voxelplugineering.voxelsniper.forge.world.material.ForgeMaterialState;
 import com.voxelplugineering.voxelsniper.service.Builder;
+import com.voxelplugineering.voxelsniper.service.EntityRegistryService;
 import com.voxelplugineering.voxelsniper.service.InitHook;
 import com.voxelplugineering.voxelsniper.service.PostInit;
 import com.voxelplugineering.voxelsniper.service.ServicePriorities;
@@ -49,6 +54,7 @@ import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.service.registry.EntityRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistryService;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
@@ -58,10 +64,14 @@ import com.voxelplugineering.voxelsniper.world.material.Material;
 import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.registry.EntityRegistry.EntityRegistration;
 
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -162,6 +172,31 @@ public abstract class CommonProxy
         {
             BiomeGenBase biome = BiomeGenBase.BIOME_ID_MAP.get(b);
             reg.registerBiome(b.toString(), biome, new ForgeBiome(biome));
+        }
+    }
+
+
+    @Builder(target = EntityRegistry.class, priority = ServicePriorities.ENTITY_REGISTRY_PRIORITY)
+    public EntityRegistry<?> getEntityRegistry(Context context)
+    {
+        return new EntityRegistryService<net.minecraftforge.fml.common.registry.EntityRegistry.EntityRegistration>(context);
+    }
+
+    @SuppressWarnings("unchecked")
+    @InitHook(target = EntityRegistry.class)
+    public void registerEntities(Context context, EntityRegistry<?> service) {
+        EntityRegistry<EntityRegistration> registry = (EntityRegistry<EntityRegistration>) service;
+        net.minecraftforge.fml.common.registry.EntityRegistry forgeRegistry = instance();
+        try {
+            Field biMapField = forgeRegistry.getClass().getField("entityClassRegistrations");
+            biMapField.setAccessible(true);
+            BiMap<Class<? extends Entity>, EntityRegistration> map =
+                    ((BiMap<Class<? extends Entity>, EntityRegistration>) biMapField.get(forgeRegistry));
+            for (Map.Entry<Class<? extends Entity>, EntityRegistration> entry : map.entrySet()) {
+                registry.registerEntityType(entry.getValue(), new ForgeEntityType(entry.getValue()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

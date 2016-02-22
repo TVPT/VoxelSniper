@@ -23,6 +23,10 @@
  */
 package com.voxelplugineering.voxelsniper.sponge;
 
+import java.io.File;
+import java.util.Optional;
+
+
 import com.google.common.base.Function;
 import com.voxelplugineering.voxelsniper.Gunsmith;
 import com.voxelplugineering.voxelsniper.entity.Player;
@@ -30,6 +34,7 @@ import com.voxelplugineering.voxelsniper.service.Builder;
 import com.voxelplugineering.voxelsniper.service.InitHook;
 import com.voxelplugineering.voxelsniper.service.PostInit;
 import com.voxelplugineering.voxelsniper.service.ServicePriorities;
+import com.voxelplugineering.voxelsniper.service.EntityRegistryService;
 import com.voxelplugineering.voxelsniper.service.alias.AnnotationScanner;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandler;
 import com.voxelplugineering.voxelsniper.service.command.CommandHandlerService;
@@ -39,6 +44,7 @@ import com.voxelplugineering.voxelsniper.service.permission.PermissionProxy;
 import com.voxelplugineering.voxelsniper.service.platform.PlatformProxy;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistryService;
+import com.voxelplugineering.voxelsniper.service.registry.EntityRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistryService;
 import com.voxelplugineering.voxelsniper.service.registry.PlayerRegistry;
@@ -49,6 +55,7 @@ import com.voxelplugineering.voxelsniper.service.registry.WorldRegistryService;
 import com.voxelplugineering.voxelsniper.service.scheduler.Scheduler;
 import com.voxelplugineering.voxelsniper.service.text.TextFormatParser;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
+import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
 import com.voxelplugineering.voxelsniper.sponge.event.handler.SpongeEventHandler;
 import com.voxelplugineering.voxelsniper.sponge.service.SpongePermissionProxyService;
 import com.voxelplugineering.voxelsniper.sponge.service.SpongePlatformProxyService;
@@ -67,6 +74,7 @@ import com.voxelplugineering.voxelsniper.world.material.MaterialStateCache;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.biome.BiomeType;
 
@@ -85,10 +93,9 @@ public class SpongeServiceProvider
 
     /**
      * Creates a new {@link SpongeServiceProvider}.
-     * 
-     * @param game The game instance
+     *
      * @param plugin The plugin container
-     * @param logger The logger
+     * @param root The root file path
      */
     public SpongeServiceProvider(PluginContainer plugin, File root)
     {
@@ -138,7 +145,7 @@ public class SpongeServiceProvider
         @SuppressWarnings("unchecked")
         MaterialRegistry<org.spongepowered.api.block.BlockType> registry = (MaterialRegistry<org.spongepowered.api.block.BlockType>) service;
         MaterialStateBuilder builder = new MaterialStateBuilder(registry);
-        MaterialStateCache<BlockState, SpongeMaterialState> cache = new MaterialStateCache<BlockState, SpongeMaterialState>(builder);
+        MaterialStateCache<BlockState, SpongeMaterialState> cache = new MaterialStateCache<>(builder);
         for (org.spongepowered.api.block.BlockType m : Sponge.getRegistry().getAllOf(BlockType.class))
         {
             registry.registerMaterial(m.getId().replace("minecraft:", ""), m, new SpongeMaterial(m, cache));
@@ -149,7 +156,7 @@ public class SpongeServiceProvider
     public WorldRegistry<?> getWorldRegistry(Context context)
     {
         WorldRegistryProvider provider = new WorldRegistryProvider(context);
-        return new WorldRegistryService<org.spongepowered.api.world.World>(context, provider);
+        return new WorldRegistryService<>(context, provider);
     }
 
     @Builder(target = PermissionProxy.class, priority = ServicePriorities.PERMISSION_PROXY_PRIORITY)
@@ -161,8 +168,23 @@ public class SpongeServiceProvider
     @Builder(target = PlayerRegistry.class, priority = ServicePriorities.PLAYER_REGISTRY_PRIORITY)
     public PlayerRegistry<?> getPlayerRegistry(Context context)
     {
-        return new PlayerRegistryService<org.spongepowered.api.entity.living.player.Player>(context, new PlayerRegistryProvider(context),
+        return new PlayerRegistryService<>(context, new PlayerRegistryProvider(context),
                 new SpongeConsoleProxy());
+    }
+
+    @Builder(target = EntityRegistry.class, priority = ServicePriorities.ENTITY_REGISTRY_PRIORITY)
+    public EntityRegistry<?> getEntityRegistry(Context context)
+    {
+        return new EntityRegistryService<EntityType>(context);
+    }
+
+    @SuppressWarnings("unchecked")
+    @InitHook(target = EntityRegistry.class)
+    public void registerEntities(Context context, EntityRegistry<?> service) {
+        EntityRegistry<EntityType> registry = (EntityRegistry<EntityType>) service;
+        for (EntityType entityType : Sponge.getRegistry().getAllOf(EntityType.class)) {
+            registry.registerEntityType(entityType, new SpongeEntityType(entityType));
+        }
     }
 
     @InitHook(target = EventBus.class)
@@ -230,7 +252,7 @@ public class SpongeServiceProvider
         /**
          * Creates a new {@link com.voxelplugineering.voxelsniper.service.registry.RegistryProvider}
          *
-         * @param game The game instance
+         * @param context The game instance
          */
         public WorldRegistryProvider(Context context)
         {
@@ -244,7 +266,7 @@ public class SpongeServiceProvider
             if (world.isPresent())
             {
                 SpongeWorld spongeWorld = new SpongeWorld(this.context, world.get(), Gunsmith.getMainThread());
-                return Optional.of(new Pair<org.spongepowered.api.world.World, World>(world.get(), spongeWorld));
+                return Optional.of(new Pair<>(world.get(), spongeWorld));
             }
             return Optional.empty();
         }
@@ -261,7 +283,7 @@ public class SpongeServiceProvider
         /**
          * Creates a new {@link PlayerRegistryProvider}
          *
-         * @param g The game instance
+         * @param context The game instance
          */
         public PlayerRegistryProvider(Context context)
         {
@@ -276,7 +298,7 @@ public class SpongeServiceProvider
             {
                 SpongePlayer splayer = new SpongePlayer(this.context, player.get());
                 splayer.init(this.context);
-                return Optional.of(new Pair<org.spongepowered.api.entity.living.player.Player, Player>(player.get(), splayer));
+                return Optional.of(new Pair<>(player.get(), splayer));
             }
             return Optional.empty();
         }

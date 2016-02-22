@@ -26,6 +26,7 @@ package com.voxelplugineering.voxelsniper.forge.entity;
 import com.voxelplugineering.voxelsniper.entity.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 /**
  * A forge entity type.
@@ -33,28 +34,30 @@ import net.minecraft.entity.EntityLiving;
 public class ForgeEntityType implements EntityType
 {
 
-    private final Class<? extends Entity> type;
+    private final EntityRegistry.EntityRegistration registration;
 
     /**
      * Creates a new {@link ForgeEntityType}.
-     * 
-     * @param cls The entity type
      */
-    public ForgeEntityType(Class<? extends Entity> cls)
+    public ForgeEntityType(EntityRegistry.EntityRegistration registration)
     {
-        this.type = cls;
+        this.registration = registration;
     }
 
     @Override
     public String getName()
     {
-        return this.type.getName();
+        return this.registration.getEntityName();
     }
 
     @Override
     public boolean isAlive()
     {
-        return EntityLiving.class.isAssignableFrom(this.type);
+        return EntityLiving.class.isAssignableFrom(this.registration.getEntityClass());
     }
 
+    public EntityRegistry.EntityRegistration getRegistration()
+    {
+        return this.registration;
+    }
 }

@@ -25,18 +25,22 @@ package com.voxelplugineering.voxelsniper.sponge.world;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
+import com.voxelplugineering.voxelsniper.entity.AbstractPlayer;
 import com.voxelplugineering.voxelsniper.entity.Entity;
+import com.voxelplugineering.voxelsniper.entity.EntityType;
 import com.voxelplugineering.voxelsniper.entity.Player;
 import com.voxelplugineering.voxelsniper.service.registry.BiomeRegistry;
 import com.voxelplugineering.voxelsniper.service.registry.MaterialRegistry;
 import com.voxelplugineering.voxelsniper.sponge.VoxelSniperSponge;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntity;
+import com.voxelplugineering.voxelsniper.sponge.entity.SpongeEntityType;
 import com.voxelplugineering.voxelsniper.sponge.entity.SpongePlayer;
 import com.voxelplugineering.voxelsniper.sponge.util.SpongeUtilities;
 import com.voxelplugineering.voxelsniper.sponge.world.biome.SpongeBiome;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterial;
 import com.voxelplugineering.voxelsniper.sponge.world.material.SpongeMaterialState;
 import com.voxelplugineering.voxelsniper.util.Context;
+import com.voxelplugineering.voxelsniper.util.math.Vector3d;
 import com.voxelplugineering.voxelsniper.util.math.Vector3i;
 import com.voxelplugineering.voxelsniper.world.AbstractWorld;
 import com.voxelplugineering.voxelsniper.world.Chunk;
@@ -227,6 +231,16 @@ public class SpongeWorld extends AbstractWorld<org.spongepowered.api.world.World
         Optional<org.spongepowered.api.entity.Entity> ent = getThis().createEntity(EntityTypes.LIGHTNING, SpongeUtilities.getSpongeVector(position));
         if(ent.isPresent()) {
             getThis().spawnEntity(ent.get(), Cause.of(VoxelSniperSponge.instance.getContainer(), ((SpongePlayer) source).getThis()));
+        }
+    }
+
+    @Override
+    public void spawnEntity(EntityType entityType, Vector3d position, Player source) {
+        org.spongepowered.api.entity.EntityType spongeEntityType = ((SpongeEntityType) entityType).getEntityType();
+        Optional<org.spongepowered.api.entity.Entity> entity = getThis().createEntity(spongeEntityType, SpongeUtilities.getSpongeVector(position));
+        if (entity.isPresent()) {
+            getThis().spawnEntity(entity.get(), Cause.of(NamedCause.source(VoxelSniperSponge.instance.getContainer()), NamedCause.of("Player",
+                    ((SpongePlayer) source).getThis())));
         }
     }
 }
