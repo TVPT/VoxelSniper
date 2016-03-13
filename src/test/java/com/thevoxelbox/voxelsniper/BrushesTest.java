@@ -1,8 +1,10 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
-import junit.framework.Assert;
+import org.bukkit.util.Vector;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

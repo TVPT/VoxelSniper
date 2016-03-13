@@ -4,10 +4,13 @@ import org.bukkit.Art;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 /**
  * Painting state change handler.
@@ -37,8 +40,8 @@ public final class PaintingWrapper
     @SuppressWarnings("deprecation")
     public static void paint(final Player p, final boolean auto, final boolean back, final int choice)
     {
-        Location targetLocation = p.getTargetBlock(null, 4).getLocation();
-        Chunk paintingChunk = p.getTargetBlock(null, 4).getLocation().getChunk();
+        Location targetLocation = p.getTargetBlock((Set<Material>) null, 4).getLocation();
+        Chunk paintingChunk = p.getTargetBlock((Set<Material>) null, 4).getLocation().getChunk();
 
         Double bestDistanceMatch = 50D;
         Painting bestMatch = null;

@@ -4,7 +4,7 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelSniper</artifactId>
-    <version>5.170.0-SNAPSHOT</version>
+    <version>5.171.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>VoxelSniper</name>
@@ -53,8 +53,8 @@
 
     <repositories>
         <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>Plugin Metrics</id>
@@ -70,12 +70,12 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.9-R0.2</version>
+            <version>1.9-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mcstats.bukkit</groupId>
             <artifactId>metrics</artifactId>
-            <version>R7</version>
+            <version>R8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.martiansoftware</groupId>
