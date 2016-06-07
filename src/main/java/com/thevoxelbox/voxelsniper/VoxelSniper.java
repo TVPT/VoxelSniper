@@ -47,6 +47,7 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -80,8 +81,8 @@ public class VoxelSniper {
     @Inject
     private PluginContainer container;
 
-    private ItemType        primary   = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.primary_material).get();
-    private ItemType        secondary = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.secondary_material).get();
+    private ItemType        primary;
+    private ItemType        secondary;
     private ChangeQueue     queue;
 
     @Listener
@@ -107,6 +108,12 @@ public class VoxelSniper {
 
         this.queue = new ChangeQueue();
         Sponge.getScheduler().createTaskBuilder().intervalTicks(1).execute(this.queue).name("VoxelSniper change queue").submit(this);
+    }
+
+    @Listener
+    public void postStart(GameStartedServerEvent event) {
+        this.primary = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.primary_material).get();
+        this.secondary = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.secondary_material).get();
     }
 
     @Listener
