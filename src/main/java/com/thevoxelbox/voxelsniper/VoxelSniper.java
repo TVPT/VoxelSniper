@@ -24,7 +24,6 @@
  */
 package com.thevoxelbox.voxelsniper;
 
-import com.google.inject.Inject;
 import com.thevoxelbox.genesis.common.config.ConfigurationManager;
 import com.thevoxelbox.genesis.logging.Log;
 import com.thevoxelbox.genesis.logging.LogLevel;
@@ -34,11 +33,11 @@ import com.thevoxelbox.voxelsniper.brush.BrushManager;
 import com.thevoxelbox.voxelsniper.command.BrushCommand;
 import com.thevoxelbox.voxelsniper.player.PlayerData;
 import com.thevoxelbox.voxelsniper.util.AnnotationHelper;
+
+import com.google.inject.Inject;
 import org.objectweb.asm.Type;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -52,7 +51,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
@@ -141,13 +139,7 @@ public class VoxelSniper {
 
     private void setupCommands() {
         // @formatter:off
-        CommandSpec brush = CommandSpec.builder()
-                .description(Text.of("VoxelSniper brush selection."))
-                .permission("voxelsniper.command.brush")
-                .arguments(GenericArguments.string(Text.of("brush")), GenericArguments.remainingJoinedStrings(Text.of("args")))
-                .executor(new BrushCommand())
-                .build();
-        Sponge.getCommandManager().register(this, brush, "brush", "b");
+        Sponge.getCommandManager().register(this, new BrushCommand(), "brush", "b");
         // @formatter:on
     }
 }

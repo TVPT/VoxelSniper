@@ -27,27 +27,40 @@ package com.thevoxelbox.voxelsniper.command;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushManager;
 import com.thevoxelbox.voxelsniper.player.PlayerData;
+
+import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-public class BrushCommand implements CommandExecutor {
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+public class BrushCommand implements CommandCallable {
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public CommandResult process(CommandSource src, String args) throws CommandException {
         if (!(src instanceof Player)) {
             src.sendMessage(Text.of(TextColors.RED, "Player only."));
             return CommandResult.success();
         }
-        String brush = args.<String> getOne("brush").get();
-        String brushArgs = args.<String> getOne("args").get();
+        if (args == null || args.isEmpty()) {
+            PlayerData data = PlayerData.get(((Player) src).getUniqueId());
+            src.sendMessage(Text.of("Current brush: " + data.getCurrentBrush().getName()));
+            return CommandResult.success();
+        }
+        String brush = args;
+        String brushArgs = "";
+        if (args.indexOf(' ') != -1) {
+            brush = args.substring(0, args.indexOf(' '));
+            brushArgs = args.substring(args.indexOf(' ') + 1);
+        }
         Brush<?> brushInstance = BrushManager.get().getBrush(brush);
-        if(brushInstance == null) {
+        if (brushInstance == null) {
             src.sendMessage(Text.of(TextColors.RED, "Brush not found"));
             return CommandResult.success();
         }
@@ -56,6 +69,32 @@ public class BrushCommand implements CommandExecutor {
         data.setCurrentBrush(brushInstance);
         src.sendMessage(Text.of("Your brush has been set to " + brushInstance.getName()));
         return CommandResult.success();
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+        // TODO tab completion
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean testPermission(CommandSource source) {
+        return source.hasPermission("voxelsniper.command.brush");
+    }
+
+    @Override
+    public Optional<Text> getShortDescription(CommandSource source) {
+        return Optional.of(Text.of("Set your brush"));
+    }
+
+    @Override
+    public Optional<Text> getHelp(CommandSource source) {
+        return Optional.of(Text.of("Set your brush"));
+    }
+
+    @Override
+    public Text getUsage(CommandSource source) {
+        return Text.of("/brush [brush [args...]]");
     }
 
 }

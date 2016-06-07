@@ -30,7 +30,6 @@ import com.thevoxelbox.voxelsniper.brush.ModeBrush;
 import com.thevoxelbox.voxelsniper.player.PlayerData;
 
 import com.flowpowered.math.GenericMath;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
