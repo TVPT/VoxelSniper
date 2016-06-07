@@ -25,16 +25,17 @@
 package com.thevoxelbox.voxelsniper.brush.insn;
 
 import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushInfo;
+import com.thevoxelbox.voxelsniper.brush.ModeBrush;
 import com.thevoxelbox.voxelsniper.player.PlayerData;
+
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 @BrushInfo(alias = { "snipe", "s" })
-public class SnipeBrush implements Brush<SnipeBrush> {
+public class SnipeBrush extends ModeBrush<SnipeBrush> {
 
     public SnipeBrush() {
 
@@ -46,14 +47,13 @@ public class SnipeBrush implements Brush<SnipeBrush> {
     }
 
     @Override
-    public SnipeBrush create(String args) {
-        // No args are parsed so no new instance is needed
-        return this;
+    public SnipeBrush consumeArgs(String args) {
+        return new SnipeBrush();
     }
 
     @Override
     public void execute(PlayerData data, Location<World> target) {
-        target.getExtent().setBlock(target.getBlockX(), target.getBlockY(), target.getBlockZ(), data.getMaterial(), true,
+        perform(data, target.getExtent(), target.getBlockX(), target.getBlockY(), target.getBlockZ(),
                 Cause.of(VoxelSniper.plugin_cause, NamedCause.source(data.getPlayer())));
     }
 

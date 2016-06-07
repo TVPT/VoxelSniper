@@ -24,11 +24,12 @@
  */
 package com.thevoxelbox.voxelsniper.brush.insn;
 
-import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushInfo;
+import com.thevoxelbox.voxelsniper.brush.ModeBrush;
 import com.thevoxelbox.voxelsniper.player.PlayerData;
+
+import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
@@ -36,7 +37,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 @BrushInfo(alias = { "ball", "b" })
-public class BallBrush implements Brush<BallBrush> {
+public class BallBrush extends ModeBrush<BallBrush> {
 
     public BallBrush() {
 
@@ -48,15 +49,15 @@ public class BallBrush implements Brush<BallBrush> {
     }
 
     @Override
-    public BallBrush create(String args) {
-        // No args are parsed so no new instance is needed
-        return this;
+    public BallBrush consumeArgs(String args) {
+        return new BallBrush();
     }
 
     @Override
     public void execute(PlayerData data, Location<World> target) {
         double radius = data.getBrushSize();
         double radiusSquared = radius * radius;
+        Cause cause = Cause.of(VoxelSniper.plugin_cause, NamedCause.source(data.getPlayer()));
         for (int x = -GenericMath.floor(radius); x <= GenericMath.floor(radius) + 1; x++) {
             int ox = target.getBlockX() + x;
             for (int y = -GenericMath.floor(radius); y <= GenericMath.floor(radius) + 1; y++) {
@@ -64,19 +65,11 @@ public class BallBrush implements Brush<BallBrush> {
                 for (int z = -GenericMath.floor(radius); z <= GenericMath.floor(radius) + 1; z++) {
                     int oz = target.getBlockZ() + z;
                     if (x * x + y * y + z * z < radiusSquared) {
-                        setBlock(target.getExtent(), ox, oy, oz, data.getMaterial(),
-                                Cause.of(VoxelSniper.plugin_cause, NamedCause.source(data.getPlayer())));
+                        perform(data, target.getExtent(), ox, oy, oz, cause);
                     }
                 }
             }
         }
-    }
-
-    private void setBlock(World world, int x, int y, int z, BlockState mat, Cause cause) {
-        if (x < -30000000 || x > 29999999 || y < 0 || y > 255 || z < -30000000 || z > 29999999) {
-            return;
-        }
-        world.setBlock(x, y, z, mat, true, cause);
     }
 
 }

@@ -53,10 +53,11 @@ public class PlayerData {
     }
 
     private final UUID uid;
-    private Brush<?>   currentBrush = BrushManager.get().getBrush(VoxelSniperConfig.default_brush);
-    private BlockState material     = BlockTypes.AIR.getDefaultState();
-    private double     size         = 3.5;
-    private long       lastSnipe    = 0;
+    private Brush<?>   currentBrush    = BrushManager.get().getBrush(VoxelSniperConfig.default_brush);
+    private BlockState material        = BlockTypes.AIR.getDefaultState();
+    private BlockState replaceMaterial = BlockTypes.AIR.getDefaultState();
+    private double     size            = 3.5;
+    private long       lastSnipe       = 0;
 
     public PlayerData(UUID uid) {
         this.uid = uid;
@@ -80,6 +81,14 @@ public class PlayerData {
 
     public void setMaterial(BlockState material) {
         this.material = material;
+    }
+
+    public BlockState getReplaceMaterial() {
+        return this.replaceMaterial;
+    }
+
+    public void setReplaceMaterial(BlockState material) {
+        this.replaceMaterial = material;
     }
 
     public double getBrushSize() {
