@@ -30,6 +30,7 @@ import com.thevoxelbox.genesis.logging.LogLevel;
 import com.thevoxelbox.genesis.logging.target.Slf4jTarget;
 import com.thevoxelbox.voxelsniper.brush.BrushInfo;
 import com.thevoxelbox.voxelsniper.brush.BrushManager;
+import com.thevoxelbox.voxelsniper.change.ChangeQueue;
 import com.thevoxelbox.voxelsniper.command.BrushCommand;
 import com.thevoxelbox.voxelsniper.player.PlayerData;
 import com.thevoxelbox.voxelsniper.util.AnnotationHelper;
@@ -64,20 +65,28 @@ import java.util.function.Predicate;
 @Plugin(id = "voxelsniper", name = "VoxelSniper", version = "8.0.0")
 public class VoxelSniper {
 
-    public static NamedCause plugin_cause;
+    public static NamedCause   plugin_cause;
+    private static VoxelSniper instance;
+
+    public static ChangeQueue getChangeQueue() {
+        return instance.queue;
+    }
+
     @Inject
-    private Logger           logger;
+    private Logger          logger;
     @Inject
     @ConfigDir(sharedRoot = false)
-    private File             configDir;
+    private File            configDir;
     @Inject
-    private PluginContainer  container;
+    private PluginContainer container;
 
-    private ItemType         primary   = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.primary_material).get();
-    private ItemType         secondary = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.secondary_material).get();
+    private ItemType        primary   = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.primary_material).get();
+    private ItemType        secondary = Sponge.getRegistry().getType(ItemType.class, VoxelSniperConfig.secondary_material).get();
+    private ChangeQueue     queue;
 
     @Listener
     public void onInit(GameInitializationEvent event) {
+        instance = this;
         plugin_cause = NamedCause.of("plugin", this.container);
         Log.getDefaultTargets().clear();
         Log.getDefaultTargets().add(new Slf4jTarget(this.logger));
@@ -95,6 +104,9 @@ public class VoxelSniper {
         Log.GLOBAL.info("Found and loaded " + BrushManager.get().getLoadedBrushes().size() + " brushes.");
 
         setupCommands();
+
+        this.queue = new ChangeQueue();
+        Sponge.getScheduler().createTaskBuilder().intervalTicks(1).execute(this.queue).name("VoxelSniper change queue").submit(this);
     }
 
     @Listener
