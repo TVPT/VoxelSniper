@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 
 /**
@@ -116,8 +116,8 @@ public class DrainBrush extends Brush
         vm.brushName(this.getName());
         vm.size();
 
-        vm.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
-        vm.custom(ChatColor.AQUA + ((this.disc) ? "Disc drain mode ON" : "Disc drain mode OFF"));
+        vm.custom(TextColors.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
+        vm.custom(TextColors.AQUA + ((this.disc) ? "Disc drain mode ON" : "Disc drain mode OFF"));
     }
 
     @Override
@@ -129,37 +129,37 @@ public class DrainBrush extends Brush
 
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
-                v.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
+                v.sendMessage(TextColors.GOLD + "Drain Brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
+                v.sendMessage(TextColors.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
                 return;
             }
             else if (parameter.startsWith("true"))
             {
                 this.trueCircle = 0.5;
-                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
             }
             else if (parameter.startsWith("false"))
             {
                 this.trueCircle = 0;
-                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
             }
             else if (parameter.equalsIgnoreCase("d"))
             {
                 if (this.disc)
                 {
                     this.disc = false;
-                    v.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
+                    v.sendMessage(TextColors.AQUA + "Disc drain mode OFF");
                 }
                 else
                 {
                     this.disc = true;
-                    v.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
+                    v.sendMessage(TextColors.AQUA + "Disc drain mode ON");
                 }
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

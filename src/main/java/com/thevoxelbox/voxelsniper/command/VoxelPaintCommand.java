@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.command;
 import com.thevoxelbox.voxelsniper.PaintingWrapper;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.entity.Player;
 
 public class VoxelPaintCommand extends VoxelCommand
@@ -34,7 +34,7 @@ public class VoxelPaintCommand extends VoxelCommand
                 }
                 catch (final Exception exception)
                 {
-                    player.sendMessage(ChatColor.RED + "Invalid input.");
+                    player.sendMessage(TextColors.RED + "Invalid input.");
                     return true;
                 }
             }

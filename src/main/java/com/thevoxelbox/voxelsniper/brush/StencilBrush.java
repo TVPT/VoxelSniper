@@ -13,7 +13,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -58,7 +58,7 @@ public class StencilBrush extends Brush
     {
         if (this.filename.matches("NoFileLoaded"))
         {
-            v.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
+            v.sendMessage(TextColors.RED + "You did not specify a filename.  This is required.");
             return;
         }
 
@@ -245,13 +245,13 @@ public class StencilBrush extends Brush
             }
             catch (final Exception exception)
             {
-                v.sendMessage(ChatColor.RED + "Something went wrong.");
+                v.sendMessage(TextColors.RED + "Something went wrong.");
                 exception.printStackTrace();
             }
         }
         else
         {
-            v.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+            v.sendMessage(TextColors.RED + "You need to type a stencil name / your specified stencil does not exist.");
         }
     }
 
@@ -271,7 +271,7 @@ public class StencilBrush extends Brush
 
             if ((this.x * this.y * this.z) > 50000)
             {
-                v.sendMessage(ChatColor.AQUA + "Volume exceeds maximum limit.");
+                v.sendMessage(TextColors.AQUA + "Volume exceeds maximum limit.");
                 return;
             }
 
@@ -288,7 +288,7 @@ public class StencilBrush extends Brush
             out.writeShort(this.zRef);
             out.writeShort(this.yRef);
 
-            v.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
+            v.sendMessage(TextColors.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
 
             byte[] blockArray = new byte[this.x * this.z * this.y];
             byte[] dataArray = new byte[this.x * this.z * this.y];
@@ -351,13 +351,13 @@ public class StencilBrush extends Brush
                 }
             }
 
-            v.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
+            v.sendMessage(TextColors.BLUE + "Saved as '" + this.filename + "'.");
             out.close();
 
         }
         catch (final Exception exception)
         {
-            v.sendMessage(ChatColor.RED + "Something went wrong.");
+            v.sendMessage(TextColors.RED + "Something went wrong.");
             exception.printStackTrace();
         }
     }
@@ -370,7 +370,7 @@ public class StencilBrush extends Brush
             this.firstPoint[0] = this.getTargetBlock().getX();
             this.firstPoint[1] = this.getTargetBlock().getZ();
             this.firstPoint[2] = this.getTargetBlock().getY();
-            v.sendMessage(ChatColor.GRAY + "First point");
+            v.sendMessage(TextColors.GRAY + "First point");
             v.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
             this.point = 2;
         }
@@ -381,12 +381,12 @@ public class StencilBrush extends Brush
             this.secondPoint[2] = this.getTargetBlock().getY();
             if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(this.firstPoint[2] - this.secondPoint[2])) > 5000000)
             {
-                v.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
+                v.sendMessage(TextColors.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
                 this.point = 1;
             }
             else
             {
-                v.sendMessage(ChatColor.GRAY + "Second point");
+                v.sendMessage(TextColors.GRAY + "Second point");
                 v.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
                 this.point = 3;
             }
@@ -396,7 +396,7 @@ public class StencilBrush extends Brush
             this.pastePoint[0] = this.getTargetBlock().getX();
             this.pastePoint[1] = this.getTargetBlock().getZ();
             this.pastePoint[2] = this.getTargetBlock().getY();
-            v.sendMessage(ChatColor.GRAY + "Paste Reference point");
+            v.sendMessage(TextColors.GRAY + "Paste Reference point");
             v.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
             this.point = 1;
 
@@ -422,9 +422,9 @@ public class StencilBrush extends Brush
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
-            v.sendMessage(ChatColor.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
+            v.sendMessage(TextColors.GOLD + "Stencil brush Parameters:");
+            v.sendMessage(TextColors.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+            v.sendMessage(TextColors.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
             return;
         }
         else if (par[1].equalsIgnoreCase("full"))
@@ -448,16 +448,16 @@ public class StencilBrush extends Brush
             final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
             if (file.exists())
             {
-                v.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
+                v.sendMessage(TextColors.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
             }
             else
             {
-                v.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
+                v.sendMessage(TextColors.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
             }
         }
         catch (final Exception exception)
         {
-            v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
+            v.sendMessage(TextColors.RED + "You need to type a stencil name.");
         }
     }
 

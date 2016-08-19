@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Underlay_Brush
@@ -182,9 +182,9 @@ public class UnderlayBrush extends PerformBrush
         {
             if (par[i].equalsIgnoreCase("info"))
             {
-                v.owner().getPlayer().sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
-                v.owner().getPlayer().sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
-                v.owner().getPlayer().sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
+                v.owner().getPlayer().sendMessage(TextColors.GOLD + "Reverse Overlay brush parameters:");
+                v.owner().getPlayer().sendMessage(TextColors.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
+                v.owner().getPlayer().sendMessage(TextColors.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
                 if (this.depth < 1)
                 {
                     this.depth = 1;
@@ -194,21 +194,21 @@ public class UnderlayBrush extends PerformBrush
             if (par[i].startsWith("d"))
             {
                 this.depth = Integer.parseInt(par[i].replace("d", ""));
-                v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+                v.owner().getPlayer().sendMessage(TextColors.AQUA + "Depth set to " + this.depth);
             }
             else if (par[i].startsWith("all"))
             {
                 this.allBlocks = true;
-                v.owner().getPlayer().sendMessage(ChatColor.BLUE + "Will underlay over any block." + this.depth);
+                v.owner().getPlayer().sendMessage(TextColors.BLUE + "Will underlay over any block." + this.depth);
             }
             else if (par[i].startsWith("some"))
             {
                 this.allBlocks = false;
-                v.owner().getPlayer().sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + this.depth);
+                v.owner().getPlayer().sendMessage(TextColors.BLUE + "Will underlay only natural block types." + this.depth);
             }
             else
             {
-                v.owner().getPlayer().sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.owner().getPlayer().sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

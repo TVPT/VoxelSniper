@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -163,15 +163,15 @@ public class OceanBrush extends Brush
             {
                 if (parameter.equalsIgnoreCase("info"))
                 {
-                    v.sendMessage(ChatColor.BLUE + "Parameters:");
-                    v.sendMessage(ChatColor.GREEN + "-wlevel #  " + ChatColor.BLUE + "--  Sets the water level (e.g. -wlevel 64)");
-                    v.sendMessage(ChatColor.GREEN + "-cfloor [y|n]  " + ChatColor.BLUE + "--  Enables or disables sea floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
+                    v.sendMessage(TextColors.BLUE + "Parameters:");
+                    v.sendMessage(TextColors.GREEN + "-wlevel #  " + TextColors.BLUE + "--  Sets the water level (e.g. -wlevel 64)");
+                    v.sendMessage(TextColors.GREEN + "-cfloor [y|n]  " + TextColors.BLUE + "--  Enables or disables sea floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
                 }
                 else if (parameter.equalsIgnoreCase("-wlevel"))
                 {
                     if ((i + 1) >= par.length)
                     {
-                        v.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
+                        v.sendMessage(TextColors.RED + "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
                         continue;
                     }
 
@@ -179,28 +179,28 @@ public class OceanBrush extends Brush
 
                     if (temp <= WATER_LEVEL_MIN)
                     {
-                        v.sendMessage(ChatColor.RED + "Error: Your specified water level was below 12.");
+                        v.sendMessage(TextColors.RED + "Error: Your specified water level was below 12.");
                         continue;
                     }
 
                     this.waterLevel = temp - 1;
-                    v.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
+                    v.sendMessage(TextColors.BLUE + "Water level set to " + TextColors.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
                 }
                 else if (parameter.equalsIgnoreCase("-cfloor") || parameter.equalsIgnoreCase("-coverfloor"))
                 {
                     if ((i + 1) >= par.length)
                     {
-                        v.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
+                        v.sendMessage(TextColors.RED + "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
                         continue;
                     }
 
                     this.coverFloor = par[++i].equalsIgnoreCase("y");
-                    v.sendMessage(ChatColor.BLUE + String.format("Floor cover %s.", ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")));
+                    v.sendMessage(TextColors.BLUE + String.format("Floor cover %s.", TextColors.GREEN + (this.coverFloor ? "enabled" : "disabled")));
                 }
             }
             catch (Exception exception)
             {
-                v.sendMessage(ChatColor.RED + String.format("Error while parsing parameter: %s", parameter));
+                v.sendMessage(TextColors.RED + String.format("Error while parsing parameter: %s", parameter));
                 exception.printStackTrace();
             }
         }
@@ -210,8 +210,8 @@ public class OceanBrush extends Brush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
-        vm.custom(ChatColor.BLUE + String.format("Floor cover %s.", ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")));
+        vm.custom(TextColors.BLUE + "Water level set to " + TextColors.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
+        vm.custom(TextColors.BLUE + String.format("Floor cover %s.", TextColors.GREEN + (this.coverFloor ? "enabled" : "disabled")));
     }
 
     @Override

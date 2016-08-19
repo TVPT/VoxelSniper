@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 
@@ -58,11 +58,11 @@ public class ScannerBrush extends Brush
                 {
                     if (this.clampY(this.getTargetBlock().getX() + i, this.getTargetBlock().getY(), this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
-                        v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                        v.sendMessage(TextColors.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(TextColors.GRAY + "Nope.");
                 break;
 
             case SOUTH:
@@ -71,11 +71,11 @@ public class ScannerBrush extends Brush
                 {
                     if (this.clampY(this.getTargetBlock().getX() - i, this.getTargetBlock().getY(), this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
-                        v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                        v.sendMessage(TextColors.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(TextColors.GRAY + "Nope.");
                 break;
 
             case EAST:
@@ -84,11 +84,11 @@ public class ScannerBrush extends Brush
                 {
                     if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ() + i).getType() == this.checkFor)
                     {
-                        v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                        v.sendMessage(TextColors.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(TextColors.GRAY + "Nope.");
                 break;
 
             case WEST:
@@ -97,11 +97,11 @@ public class ScannerBrush extends Brush
                 {
                     if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ() - i).getType() == this.checkFor)
                     {
-                        v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                        v.sendMessage(TextColors.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(TextColors.GRAY + "Nope.");
                 break;
 
             case UP:
@@ -114,11 +114,11 @@ public class ScannerBrush extends Brush
                     }
                     if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY() - i, this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
-                        v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                        v.sendMessage(TextColors.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(TextColors.GRAY + "Nope.");
                 break;
 
             case DOWN:
@@ -131,11 +131,11 @@ public class ScannerBrush extends Brush
                     }
                     if (this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY() + i, this.getTargetBlock().getZ()).getType() == this.checkFor)
                     {
-                        v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+                        v.sendMessage(TextColors.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
                         return;
                     }
                 }
-                v.sendMessage(ChatColor.GRAY + "Nope.");
+                v.sendMessage(TextColors.GRAY + "Nope.");
                 break;
 
             default:
@@ -163,8 +163,8 @@ public class ScannerBrush extends Brush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
-        vm.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
+        vm.custom(TextColors.GREEN + "Scanner depth set to " + this.depth);
+        vm.custom(TextColors.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
     }
 
     @Override
@@ -174,18 +174,18 @@ public class ScannerBrush extends Brush
         {
             if (par[i].equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
+                v.sendMessage(TextColors.GOLD + "Scanner brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
                 return;
             }
             if (par[i].startsWith("d"))
             {
                 this.depth = this.clamp(Integer.parseInt(par[i].substring(1)), DEPTH_MIN, DEPTH_MAX);
-                v.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
+                v.sendMessage(TextColors.AQUA + "Scanner depth set to " + this.depth);
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

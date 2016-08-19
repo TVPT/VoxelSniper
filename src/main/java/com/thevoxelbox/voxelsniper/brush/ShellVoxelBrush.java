@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -118,7 +118,7 @@ public class ShellVoxelBrush extends Brush
         }
         v.owner().storeUndo(undo);
 
-        v.owner().getPlayer().sendMessage(ChatColor.AQUA + "Shell complete.");
+        v.owner().getPlayer().sendMessage(TextColors.AQUA + "Shell complete.");
     }
 
     @Override
@@ -147,11 +147,11 @@ public class ShellVoxelBrush extends Brush
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
+            v.sendMessage(TextColors.GOLD + "Shell Voxel Parameters:");
         }
         else
         {
-            v.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
+            v.sendMessage(TextColors.RED + "Invalid parameter - see the info message for help.");
         }
     }
 

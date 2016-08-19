@@ -2,144 +2,78 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
+import com.flowpowered.math.GenericMath;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
  * A brush that creates a solid ball.
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Ball_Brush
- *
- * @author Piotr
  */
-public class BallBrush extends PerformBrush
-{
-    public static final double TRUE_CIRCLE_ON_VALUE = 0.5;
-    public static final int TRUE_CIRCLE_OFF_VALUE = 0;
-    private double trueCircle = 0;
+public class BallBrush extends PerformBrush {
 
-    /**
-     *
-     */
-    public BallBrush()
-    {
+    public BallBrush() {
         this.setName("Ball");
     }
 
-    private void ball(final SnipeData v, Block targetBlock)
-    {
-        final int brushSize = v.getBrushSize();
-        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+    private void ball(SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
 
-        int blockPositionX = targetBlock.getX();
-        int blockPositionY = targetBlock.getY();
-        int blockPositionZ = targetBlock.getZ();
-        this.current.perform(targetBlock);
+        int blockPositionX = targetBlock.getBlockX();
+        int blockPositionY = targetBlock.getBlockY();
+        int blockPositionZ = targetBlock.getBlockZ();
 
-        for (int z = 1; z <= brushSize; z++)
-        {
-            final double zSquared = Math.pow(z, 2);
+        int minx = GenericMath.floor(blockPositionX - brushSize);
+        int maxx = GenericMath.floor(blockPositionX + brushSize) + 1;
+        int miny = Math.max(GenericMath.floor(blockPositionY - brushSize), 0);
+        int maxy = Math.min(GenericMath.floor(blockPositionY + brushSize) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(blockPositionZ - brushSize);
+        int maxz = GenericMath.floor(blockPositionZ + brushSize) + 1;
 
-            this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ));
-            this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ));
-            this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ));
-            this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ));
-            this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ + z));
-            this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ - z));
+        // Approximate the size of the undo to the volume of a one larger sphere
+        this.undo = new Undo(GenericMath.floor(4 * Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));
 
-            for (int x = 1; x <= brushSize; x++)
-            {
-                final double xSquared = Math.pow(x, 2);
-
-                if (zSquared + xSquared <= brushSizeSquared)
-                {
-                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ + x));
-                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ - x));
-                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ + x));
-                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ - x));
-                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY + x, blockPositionZ));
-                    this.current.perform(this.clampY(blockPositionX + z, blockPositionY - x, blockPositionZ));
-                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY + x, blockPositionZ));
-                    this.current.perform(this.clampY(blockPositionX - z, blockPositionY - x, blockPositionZ));
-                    this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ + x));
-                    this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ - x));
-                    this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ + x));
-                    this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ - x));
-                }
-
-                for (int y = 1; y <= brushSize; y++)
-                {
-                    if ((xSquared + Math.pow(y, 2) + zSquared) <= brushSizeSquared)
-                    {
-                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z));
-                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z));
-                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z));
-                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z));
-                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z));
-                        this.current.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z));
-                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z));
-                        this.current.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z));
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int y = miny; y <= maxy; y++) {
+                double ys = (miny - y) * (miny - y);
+                for (int z = minz; z <= maxz; z++) {
+                    double zs = (minz - z) * (minz - z);
+                    if (xs + ys + zs < brushSizeSquared) {
+                        perform(v, x, y, z);
                     }
                 }
             }
         }
 
-        v.owner().storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.ball(v, this.getTargetBlock());
+    protected void arrow(SnipeData v) {
+        this.ball(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.ball(v, this.getLastBlock());
+    protected void powder(SnipeData v) {
+        this.ball(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        for (int i = 1; i < par.length; i++)
-        {
-            final String parameter = par[i];
-
-            if (parameter.equalsIgnoreCase("info"))
-            {
-                v.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-                return;
-            }
-            else if (parameter.startsWith("true"))
-            {
-                this.trueCircle = TRUE_CIRCLE_ON_VALUE;
-                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-            }
-            else if (parameter.startsWith("false"))
-            {
-                this.trueCircle = TRUE_CIRCLE_OFF_VALUE;
-                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-            }
-            else
-            {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
-    }
-
-    @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.ball";
     }
 }

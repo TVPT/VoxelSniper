@@ -6,7 +6,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.NumberConversions;
@@ -77,7 +77,7 @@ public class JaggedLineBrush extends PerformBrush
             originCoords = new Vector();
         }
         this.originCoords = this.getTargetBlock().getLocation().toVector();
-        v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+        v.sendMessage(TextColors.DARK_PURPLE + "First point selected.");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class JaggedLineBrush extends PerformBrush
     {
         if (originCoords == null)
         {
-            v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+            v.sendMessage(TextColors.RED + "Warning: You did not select a first coordinate with the arrow");
         }
         else
         {
@@ -99,8 +99,8 @@ public class JaggedLineBrush extends PerformBrush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GRAY + String.format("Recursion set to: %d", this.recursion));
-        vm.custom(ChatColor.GRAY + String.format("Spread set to: %d", this.spread));
+        vm.custom(TextColors.GRAY + String.format("Recursion set to: %d", this.recursion));
+        vm.custom(TextColors.GRAY + String.format("Spread set to: %d", this.spread));
     }
 
     @Override
@@ -112,9 +112,9 @@ public class JaggedLineBrush extends PerformBrush
             {
                 if (parameter.equalsIgnoreCase("info"))
                 {
-                    v.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
-                    v.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
-                    v.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
+                    v.sendMessage(TextColors.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
+                    v.sendMessage(TextColors.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
+                    v.sendMessage(TextColors.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
                     return;
                 }
                 if (parameter.startsWith("r"))
@@ -123,11 +123,11 @@ public class JaggedLineBrush extends PerformBrush
                     if (temp >= RECURSION_MIN && temp <= RECURSION_MAX)
                     {
                         this.recursion = temp;
-                        v.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
+                        v.sendMessage(TextColors.GREEN + "Recursion set to: " + this.recursion);
                     }
                     else
                     {
-                        v.sendMessage(ChatColor.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
+                        v.sendMessage(TextColors.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
                     }
 
                     return;
@@ -136,12 +136,12 @@ public class JaggedLineBrush extends PerformBrush
                 {
                     final int temp = Integer.parseInt(parameter.substring(1));
                     this.spread = temp;
-                    v.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
+                    v.sendMessage(TextColors.GREEN + "Spread set to: " + this.spread);
                 }
             }
             catch (Exception exception)
             {
-                v.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
+                v.sendMessage(TextColors.RED + String.format("Exception while parsing parameter: %s", parameter));
                 exception.printStackTrace();
             }
         }

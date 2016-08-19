@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -35,7 +35,7 @@ public class SetBrush extends PerformBrush
         {
             if (!this.block.getWorld().getName().equals(bl.getWorld().getName()))
             {
-                v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+                v.sendMessage(TextColors.RED + "You selected points in different worlds!");
                 this.block = null;
                 return true;
             }
@@ -48,7 +48,7 @@ public class SetBrush extends PerformBrush
 
             if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > SELECTION_SIZE_MAX)
             {
-                v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+                v.sendMessage(TextColors.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             }
             else
             {
@@ -74,7 +74,7 @@ public class SetBrush extends PerformBrush
     {
         if (this.set(this.getTargetBlock(), v))
         {
-            v.sendMessage(ChatColor.GRAY + "Point one");
+            v.sendMessage(TextColors.GRAY + "Point one");
         }
         else
         {
@@ -87,7 +87,7 @@ public class SetBrush extends PerformBrush
     {
         if (this.set(this.getLastBlock(), v))
         {
-            v.sendMessage(ChatColor.GRAY + "Point one");
+            v.sendMessage(TextColors.GRAY + "Point one");
         }
         else
         {

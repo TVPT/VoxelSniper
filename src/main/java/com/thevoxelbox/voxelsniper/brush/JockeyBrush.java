@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -90,12 +90,12 @@ public class JockeyBrush extends Brush
                     closest.setPassenger(player);
                     jockeyedEntity = closest;
                 }
-                v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
+                v.sendMessage(TextColors.GREEN + "You are now saddles on entity: " + closest.getEntityId());
             }
         }
         else
         {
-            v.sendMessage(ChatColor.RED + "Could not find any entities");
+            v.sendMessage(TextColors.RED + "Could not find any entities");
         }
     }
 
@@ -158,7 +158,7 @@ public class JockeyBrush extends Brush
         if (jockeyType == JockeyType.INVERSE_PLAYER_ONLY || jockeyType == JockeyType.INVERSE_ALL_ENTITIES)
         {
             v.owner().getPlayer().eject();
-            v.owner().getPlayer().sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
+            v.owner().getPlayer().sendMessage(TextColors.GOLD + "The guy on top of you has been ejected!");
         }
         else
         {
@@ -166,7 +166,7 @@ public class JockeyBrush extends Brush
             {
                 jockeyedEntity.eject();
                 jockeyedEntity = null;
-                v.owner().getPlayer().sendMessage(ChatColor.GOLD + "You have been ejected!");
+                v.owner().getPlayer().sendMessage(TextColors.GOLD + "You have been ejected!");
             }
         }
 
@@ -176,8 +176,8 @@ public class JockeyBrush extends Brush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom("Current jockey mode: " + ChatColor.GREEN + jockeyType.toString());
-        vm.custom(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
+        vm.custom("Current jockey mode: " + TextColors.GREEN + jockeyType.toString());
+        vm.custom(TextColors.GREEN + "Help: " + TextColors.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
     }
 
     @Override
@@ -241,7 +241,7 @@ public class JockeyBrush extends Brush
                 }
             }
 
-            v.sendMessage("Current jockey mode: " + ChatColor.GREEN + jockeyType.toString());
+            v.sendMessage("Current jockey mode: " + TextColors.GREEN + jockeyType.toString());
         }
         catch (Exception exception)
         {

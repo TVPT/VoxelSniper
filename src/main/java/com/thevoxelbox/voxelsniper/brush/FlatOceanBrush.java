@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 
@@ -74,9 +74,9 @@ public class FlatOceanBrush extends Brush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
-        vm.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
-        vm.custom(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+        vm.custom(TextColors.RED + "THIS BRUSH DOES NOT UNDO");
+        vm.custom(TextColors.GREEN + "Water level set to " + this.waterLevel);
+        vm.custom(TextColors.GREEN + "Ocean floor level set to " + this.floorLevel);
     }
 
     @Override
@@ -88,8 +88,8 @@ public class FlatOceanBrush extends Brush
 
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
-                v.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
+                v.sendMessage(TextColors.GREEN + "yo[number] to set the Level to which the water will rise.");
+                v.sendMessage(TextColors.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
             }
             if (parameter.startsWith("yo"))
             {
@@ -99,7 +99,7 @@ public class FlatOceanBrush extends Brush
                     newWaterLevel = this.floorLevel + 1;
                 }
                 this.waterLevel = newWaterLevel;
-                v.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
+                v.sendMessage(TextColors.GREEN + "Water Level set to " + this.waterLevel);
             }
             else if (parameter.startsWith("yl"))
             {
@@ -114,7 +114,7 @@ public class FlatOceanBrush extends Brush
                     }
                 }
                 this.floorLevel = newFloorLevel;
-                v.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
+                v.sendMessage(TextColors.GREEN + "Ocean floor Level set to " + this.floorLevel);
             }
         }
     }

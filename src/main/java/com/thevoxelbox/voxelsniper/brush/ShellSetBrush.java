@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ShellSetBrush extends Brush
         {
             if (!this.block.getWorld().getName().equals(bl.getWorld().getName()))
             {
-                v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+                v.sendMessage(TextColors.RED + "You selected points in different worlds!");
                 this.block = null;
                 return true;
             }
@@ -52,7 +52,7 @@ public class ShellSetBrush extends Brush
 
             if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_SIZE)
             {
-                v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+                v.sendMessage(TextColors.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             }
             else
             {
@@ -109,7 +109,7 @@ public class ShellSetBrush extends Brush
                     }
                 }
                 v.owner().storeUndo(undo);
-                v.sendMessage(ChatColor.AQUA + "Shell complete.");
+                v.sendMessage(TextColors.AQUA + "Shell complete.");
             }
 
             this.block = null;
@@ -122,7 +122,7 @@ public class ShellSetBrush extends Brush
     {
         if (this.set(this.getTargetBlock(), v))
         {
-            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(TextColors.GRAY + "Point one");
         }
     }
 
@@ -131,7 +131,7 @@ public class ShellSetBrush extends Brush
     {
         if (this.set(this.getLastBlock(), v))
         {
-            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(TextColors.GRAY + "Point one");
         }
     }
 

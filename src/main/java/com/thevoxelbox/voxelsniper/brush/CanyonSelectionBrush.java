@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Chunk;
 
 /**
@@ -34,12 +34,12 @@ public class CanyonSelectionBrush extends CanyonBrush
             this.fx = chunk.getX();
             this.fz = chunk.getZ();
 
-            v.sendMessage(ChatColor.YELLOW + "First point selected!");
+            v.sendMessage(TextColors.YELLOW + "First point selected!");
             this.first = !this.first;
         }
         else
         {
-            v.sendMessage(ChatColor.YELLOW + "Second point selected!");
+            v.sendMessage(TextColors.YELLOW + "Second point selected!");
             selection(Math.min(fx, chunk.getX()), Math.min(fz, chunk.getZ()), Math.max(fx, chunk.getX()), Math.max(fz, chunk.getZ()), v);
 
             this.first = !this.first;
@@ -77,7 +77,7 @@ public class CanyonSelectionBrush extends CanyonBrush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Shift Level set to " + this.getYLevel());
+        vm.custom(TextColors.GREEN + "Shift Level set to " + this.getYLevel());
     }
 
     @Override

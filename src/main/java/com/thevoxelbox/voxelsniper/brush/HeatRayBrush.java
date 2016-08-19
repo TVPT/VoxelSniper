@@ -7,7 +7,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -177,9 +177,9 @@ public class HeatRayBrush extends Brush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
-        vm.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
-        vm.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
+        vm.custom(TextColors.GREEN + "Octaves: " + this.octaves);
+        vm.custom(TextColors.GREEN + "Amplitude: " + this.amplitude);
+        vm.custom(TextColors.GREEN + "Frequency: " + this.frequency);
         vm.size();
     }
 
@@ -192,25 +192,25 @@ public class HeatRayBrush extends Brush
 
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
-                v.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
-                v.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
+                v.sendMessage(TextColors.GOLD + "Heat Ray brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
+                v.sendMessage(TextColors.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
+                v.sendMessage(TextColors.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
             }
             if (parameter.startsWith("oct"))
             {
                 this.octaves = Integer.valueOf(parameter.replace("oct", ""));
-                v.getVoxelMessage().custom(ChatColor.GREEN + "Octaves: " + this.octaves);
+                v.getVoxelMessage().custom(TextColors.GREEN + "Octaves: " + this.octaves);
             }
             else if (parameter.startsWith("amp"))
             {
                 this.amplitude = Double.valueOf(parameter.replace("amp", ""));
-                v.getVoxelMessage().custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+                v.getVoxelMessage().custom(TextColors.GREEN + "Amplitude: " + this.amplitude);
             }
             else if (parameter.startsWith("freq"))
             {
                 this.frequency = Double.valueOf(parameter.replace("freq", ""));
-                v.getVoxelMessage().custom(ChatColor.GREEN + "Frequency: " + this.frequency);
+                v.getVoxelMessage().custom(TextColors.GREEN + "Frequency: " + this.frequency);
             }
         }
     }

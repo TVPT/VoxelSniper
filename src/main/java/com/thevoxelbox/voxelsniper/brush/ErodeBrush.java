@@ -11,7 +11,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.jsap.HelpJSAP;
 import com.thevoxelbox.voxelsniper.jsap.NullableIntegerStringParser;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -229,10 +229,10 @@ public class ErodeBrush extends Brush
     {
         vm.brushName(this.getName());
         vm.size();
-        vm.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
-        vm.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
-        vm.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
-        vm.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
+        vm.custom(TextColors.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
+        vm.custom(TextColors.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
+        vm.custom(TextColors.DARK_BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
+        vm.custom(TextColors.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
     }
 
     @Override
@@ -286,19 +286,19 @@ public class ErodeBrush extends Brush
         {
             if (currentPreset.getErosionFaces() != currentPresetBackup.getErosionFaces())
             {
-                v.sendMessage(ChatColor.AQUA + "Erosion faces set to: " + ChatColor.WHITE + currentPreset.getErosionFaces());
+                v.sendMessage(TextColors.AQUA + "Erosion faces set to: " + TextColors.WHITE + currentPreset.getErosionFaces());
             }
             if (currentPreset.getFillFaces() != currentPresetBackup.getFillFaces())
             {
-                v.sendMessage(ChatColor.AQUA + "Fill faces set to: " + ChatColor.WHITE + currentPreset.getFillFaces());
+                v.sendMessage(TextColors.AQUA + "Fill faces set to: " + TextColors.WHITE + currentPreset.getFillFaces());
             }
             if (currentPreset.getErosionRecursion() != currentPresetBackup.getErosionRecursion())
             {
-                v.sendMessage(ChatColor.AQUA + "Erosion recursions set to: " + ChatColor.WHITE + currentPreset.getErosionRecursion());
+                v.sendMessage(TextColors.AQUA + "Erosion recursions set to: " + TextColors.WHITE + currentPreset.getErosionRecursion());
             }
             if (currentPreset.getFillRecursion() != currentPresetBackup.getFillRecursion())
             {
-                v.sendMessage(ChatColor.AQUA + "Fill recursions set to: " + ChatColor.WHITE + currentPreset.getFillRecursion());
+                v.sendMessage(TextColors.AQUA + "Fill recursions set to: " + TextColors.WHITE + currentPreset.getFillRecursion());
             }
         }
     }

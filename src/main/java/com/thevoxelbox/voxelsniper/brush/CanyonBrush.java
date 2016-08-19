@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -99,7 +99,7 @@ public class CanyonBrush extends Brush
     public void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+        vm.custom(TextColors.GREEN + "Shift Level set to " + this.yLevel);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class CanyonBrush extends Brush
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
+            v.sendMessage(TextColors.GREEN + "y[number] to set the Level to which the land will be shifted down");
         }
         if (par[1].startsWith("y"))
         {
@@ -121,7 +121,7 @@ public class CanyonBrush extends Brush
                 _i = SHIFT_LEVEL_MAX;
             }
             this.yLevel = _i;
-            v.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+            v.sendMessage(TextColors.GREEN + "Shift Level set to " + this.yLevel);
         }
     }
 

@@ -2,287 +2,211 @@ package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 
-import org.bukkit.World;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.World;
 
-/**
- * @author Piotr
- */
-public class SnipeData
-{
+import java.util.Optional;
 
-    public static final int DEFAULT_REPLACE_DATA_VALUE = 0;
+public class SnipeData {
+
     public static final int DEFAULT_CYLINDER_CENTER = 0;
     public static final int DEFAULT_VOXEL_HEIGHT = 1;
-    public static final int DEFAULT_BRUSH_SIZE = 3;
-    public static final int DEFAULT_DATA_VALUE = 0;
-    public static final int DEFAULT_REPLACE_ID = 0;
-    public static final int DEFAULT_VOXEL_ID = 0;
+    public static final double DEFAULT_BRUSH_SIZE = 3.5;
+    public static final String DEFAULT_REPLACE_ID = "air";
+    public static final String DEFAULT_VOXEL_ID = "air";
 
-    private final Sniper owner;
+    private Sniper owner;
     private Message voxelMessage;
-    /**
-     * Brush size -- set blockPositionY /b #.
-     */
-    private int brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
-    /**
-     * Voxel Id -- set blockPositionY /v (#,name).
-     */
-    private int voxelId = SnipeData.DEFAULT_VOXEL_ID;
-    /**
-     * Voxel Replace Id -- set blockPositionY /vr #.
-     */
-    private int replaceId = SnipeData.DEFAULT_REPLACE_ID;
-    /**
-     * Voxel 'ink' -- set blockPositionY /vi #.
-     */
-    private byte data = SnipeData.DEFAULT_DATA_VALUE;
-    /**
-     * Voxel 'ink' Replace -- set blockPositionY /vir #.
-     */
-    private byte replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
-    /**
-     * Voxel List of ID's -- set blockPositionY /vl # # # -#.
-     */
+
+    private double brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
+    private BlockState voxelId = Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
+    private BlockState replaceId =
+            Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
     private VoxelList voxelList = new VoxelList();
-    /**
-     * Voxel 'heigth' -- set blockPositionY /vh #.
-     */
+    private Key<?> voxelInkKey = null;
+    private Object voxelInkValue = null;
+    private Key<?> replaceInkKey = null;
+    private Object replaceInkValue = null;
+
     private int voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
-    /**
-     * Voxel centroid -- set Cylynder center /vc #.
-     */
     private int cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
     private int range = 0;
     private boolean ranged = false;
     private boolean lightning = false;
 
-    /**
-     * @param vs
-     */
-    public SnipeData(final Sniper vs)
-    {
+    public SnipeData(Sniper vs) {
         this.owner = vs;
     }
 
-    /**
-     * @return the brushSize
-     */
-    public final int getBrushSize()
-    {
+    // @Cleanup these method names are all over the place
+
+    public double getBrushSize() {
         return this.brushSize;
     }
 
-    /**
-     * @return the cCen
-     */
-    public final int getcCen()
-    {
+    public void setBrushSize(double brushSize) {
+        this.brushSize = brushSize;
+    }
+
+    public int getcCen() {
         return this.cCen;
     }
 
-    /**
-     * @return the data
-     */
-    public final byte getData()
-    {
-        return this.data;
+    public void setcCen(int cCen) {
+        this.cCen = cCen;
     }
 
-    /**
-     * @return the replaceData
-     */
-    public final byte getReplaceData()
-    {
-        return this.replaceData;
+    public int getRange() {
+        return this.range;
     }
 
-    /**
-     * @return the replaceId
-     */
-    public final int getReplaceId()
-    {
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    public String getReplaceId() {
+        return this.replaceId.getId();
+    }
+
+    public BlockState getReplaceIdState() {
         return this.replaceId;
     }
 
-    /**
-     * @return the voxelHeight
-     */
-    public final int getVoxelHeight()
-    {
+    public boolean setReplaceId(String replaceId) {
+        Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, replaceId);
+        if (state.isPresent()) {
+            this.replaceId = state.get();
+            return true;
+        }
+        return false;
+    }
+
+    public void setReplaceId(BlockState state) {
+        this.replaceId = state;
+    }
+
+    public int getVoxelHeight() {
         return this.voxelHeight;
     }
 
-    /**
-     * @return the voxelId
-     */
-    public final int getVoxelId()
-    {
+    public void setVoxelHeight(int voxelHeight) {
+        this.voxelHeight = voxelHeight;
+    }
+
+    public String getVoxelId() {
+        return this.voxelId.getId();
+    }
+
+    public BlockState getVoxelIdState() {
         return this.voxelId;
     }
 
-    /**
-     * @return the voxelList
-     */
-    public final VoxelList getVoxelList()
-    {
+    public boolean setVoxelId(String voxelId) {
+        Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, voxelId);
+        if (state.isPresent()) {
+            this.voxelId = state.get();
+            return true;
+        }
+        return false;
+    }
+
+    public void setVoxelId(BlockState state) {
+        this.voxelId = state;
+    }
+
+    public VoxelList getVoxelList() {
         return this.voxelList;
     }
 
-    /**
-     * @return the voxelMessage
-     */
-    public final Message getVoxelMessage()
-    {
+    public void setVoxelList(VoxelList voxelList) {
+        this.voxelList = voxelList;
+    }
+
+    public Message getVoxelMessage() {
         return this.voxelMessage;
     }
 
-    /**
-     * @return World
-     */
-    public final World getWorld()
-    {
+    public void setVoxelMessage(Message voxelMessage) {
+        this.voxelMessage = voxelMessage;
+    }
+
+    public World getWorld() {
         return this.owner.getPlayer().getWorld();
     }
 
-    /**
-     * @return Sniper
-     */
-    public final Sniper owner()
-    {
+    public boolean isLightningEnabled() {
+        return this.lightning;
+    }
+
+    public void setLightningEnabled(boolean lightning) {
+        this.lightning = lightning;
+    }
+
+    public boolean isRanged() {
+        return this.ranged;
+    }
+
+    public void setRanged(boolean ranged) {
+        this.ranged = ranged;
+    }
+
+    public Key<? extends BaseValue<?>> getVoxelInkKey() {
+        return this.voxelInkKey;
+    }
+
+    public Object getVoxelInkValue() {
+        return this.voxelInkValue;
+    }
+
+    public <V extends BaseValue<T>, T> void setVoxelInk(Key<V> key, T value) {
+        this.voxelInkKey = key;
+        this.voxelInkValue = value;
+    }
+
+    public Key<? extends BaseValue<?>> getReplaceInkKey() {
+        return this.replaceInkKey;
+    }
+
+    public Object getReplaceInkValue() {
+        return this.replaceInkValue;
+    }
+
+    public <V extends BaseValue<T>, T> void setReplaceInk(Key<V> key, T value) {
+        this.replaceInkKey = key;
+        this.replaceInkValue = value;
+    }
+
+    public Sniper owner() {
         return this.owner;
     }
 
     /**
      * Reset to default values.
      */
-    public final void reset()
-    {
-        this.voxelId = SnipeData.DEFAULT_VOXEL_ID;
-        this.replaceId = SnipeData.DEFAULT_REPLACE_ID;
-        this.data = SnipeData.DEFAULT_DATA_VALUE;
+    public void reset() {
+        this.voxelId = Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
+        this.replaceId = Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
         this.brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
         this.voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
         this.cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
-        this.replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
         this.voxelList = new VoxelList();
+
+        this.voxelInkKey = null;
+        this.voxelInkValue = null;
+        this.replaceInkKey = null;
+        this.replaceInkValue = null;
     }
 
-    /**
-     * @param message
-     */
-    public final void sendMessage(final String message)
-    {
-        this.owner.getPlayer().sendMessage(message);
+    public void sendMessage(Object... args) {
+        this.owner.getPlayer().sendMessage(Text.of(args));
     }
 
-    /**
-     * @param brushSize
-     *         the brushSize to set
-     */
-    public final void setBrushSize(final int brushSize)
-    {
-        this.brushSize = brushSize;
-    }
-
-    /**
-     * @param cCen
-     *         the cCen to set
-     */
-    public final void setcCen(final int cCen)
-    {
-        this.cCen = cCen;
-    }
-
-    /**
-     * @param data
-     *         the data to set
-     */
-    public final void setData(final byte data)
-    {
-        this.data = data;
-    }
-
-    /**
-     * @param replaceData
-     *         the replaceData to set
-     */
-    public final void setReplaceData(final byte replaceData)
-    {
-        this.replaceData = replaceData;
-    }
-
-    /**
-     * @param replaceId
-     *         the replaceId to set
-     */
-    public final void setReplaceId(final int replaceId)
-    {
-        this.replaceId = replaceId;
-    }
-
-    /**
-     * @param voxelHeight
-     *         the voxelHeight to set
-     */
-    public final void setVoxelHeight(final int voxelHeight)
-    {
-        this.voxelHeight = voxelHeight;
-    }
-
-    /**
-     * @param voxelId
-     *         the voxelId to set
-     */
-    public final void setVoxelId(final int voxelId)
-    {
-        this.voxelId = voxelId;
-    }
-
-    /**
-     * @param voxelList
-     *         the voxelList to set
-     */
-    public final void setVoxelList(final VoxelList voxelList)
-    {
-        this.voxelList = voxelList;
-    }
-
-    /**
-     * @param voxelMessage
-     *         the voxelMessage to set
-     */
-    public final void setVoxelMessage(final Message voxelMessage)
-    {
-        this.voxelMessage = voxelMessage;
-    }
-
-    public int getRange()
-    {
-        return range;
-    }
-
-    public void setRange(int range)
-    {
-        this.range = range;
-    }
-
-    public boolean isRanged()
-    {
-        return ranged;
-    }
-
-    public void setRanged(boolean ranged)
-    {
-        this.ranged = ranged;
-    }
-
-    public boolean isLightningEnabled()
-    {
-        return lightning;
-    }
-
-    public void setLightningEnabled(boolean lightning)
-    {
-        this.lightning = lightning;
+    public void sendMessage(Text msg) {
+        this.owner.getPlayer().sendMessage(msg);
     }
 }

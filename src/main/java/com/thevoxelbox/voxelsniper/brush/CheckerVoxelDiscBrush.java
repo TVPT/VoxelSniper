@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -70,24 +70,24 @@ public class CheckerVoxelDiscBrush extends PerformBrush
 
             if (parameter.equals("info"))
             {
-                v.sendMessage(ChatColor.GOLD + this.getName() + " Parameters:");
-                v.sendMessage(ChatColor.AQUA + "true  -- Enables using World Coordinates.");
-                v.sendMessage(ChatColor.AQUA + "false -- Disables using World Coordinates.");
+                v.sendMessage(TextColors.GOLD + this.getName() + " Parameters:");
+                v.sendMessage(TextColors.AQUA + "true  -- Enables using World Coordinates.");
+                v.sendMessage(TextColors.AQUA + "false -- Disables using World Coordinates.");
                 return;
             }
             if (parameter.startsWith("true"))
             {
                 this.useWorldCoordinates = true;
-                v.sendMessage(ChatColor.AQUA + "Enabled using World Coordinates.");
+                v.sendMessage(TextColors.AQUA + "Enabled using World Coordinates.");
             }
             else if (parameter.startsWith("false"))
             {
                 this.useWorldCoordinates = false;
-                v.sendMessage(ChatColor.AQUA + "Disabled using World Coordinates.");
+                v.sendMessage(TextColors.AQUA + "Disabled using World Coordinates.");
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
                 break;
             }
         }

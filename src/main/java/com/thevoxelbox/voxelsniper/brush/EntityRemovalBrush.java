@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 
@@ -55,10 +55,10 @@ public class EntityRemovalBrush extends Brush
         catch (final PatternSyntaxException pse)
         {
             pse.printStackTrace();
-            v.sendMessage(ChatColor.RED + "Error in RegEx: " + ChatColor.LIGHT_PURPLE + pse.getPattern());
-            v.sendMessage(ChatColor.RED + String.format("%s (Index: %d)", pse.getDescription(), pse.getIndex()));
+            v.sendMessage(TextColors.RED + "Error in RegEx: " + TextColors.LIGHT_PURPLE + pse.getPattern());
+            v.sendMessage(TextColors.RED + String.format("%s (Index: %d)", pse.getDescription(), pse.getIndex()));
         }
-        v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
+        v.sendMessage(TextColors.GREEN + "Removed " + TextColors.RED + entityCount + TextColors.GREEN + " entities out of " + TextColors.BLUE + chunkCount + TextColors.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
     }
 
     private int removeEntities(Chunk chunk) throws PatternSyntaxException
@@ -129,7 +129,7 @@ public class EntityRemovalBrush extends Brush
     {
         vm.brushName(getName());
 
-        final StringBuilder exemptionsList = new StringBuilder(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE);
+        final StringBuilder exemptionsList = new StringBuilder(TextColors.GREEN + "Exemptions: " + TextColors.LIGHT_PURPLE);
         for (Iterator it = exemptions.iterator(); it.hasNext(); )
         {
             exemptionsList.append(it.next());
@@ -173,7 +173,7 @@ public class EntityRemovalBrush extends Brush
             {
                 for (final String exemption : exemptions)
                 {
-                    v.sendMessage(ChatColor.LIGHT_PURPLE + exemption);
+                    v.sendMessage(TextColors.LIGHT_PURPLE + exemption);
                 }
             }
         }

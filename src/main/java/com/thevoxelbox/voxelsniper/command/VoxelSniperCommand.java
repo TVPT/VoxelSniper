@@ -9,7 +9,7 @@ import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -75,13 +75,13 @@ public class VoxelSniperCommand extends VoxelCommand
             }
             else if (args[0].equalsIgnoreCase("perf"))
             {
-                player.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");
+                player.sendMessage(TextColors.AQUA + "Available performers (abbreviated):");
                 player.sendMessage(PerformerE.performer_list_short);
                 return true;
             }
             else if (args[0].equalsIgnoreCase("perflong"))
             {
-                player.sendMessage(ChatColor.AQUA + "Available performers:");
+                player.sendMessage(TextColors.AQUA + "Available performers:");
                 player.sendMessage(PerformerE.performer_list_long);
                 return true;
             }
@@ -104,7 +104,7 @@ public class VoxelSniperCommand extends VoxelCommand
                 return true;
             }
         }
-        player.sendMessage(ChatColor.DARK_RED + "VoxelSniper - Current Brush Settings:");
+        player.sendMessage(TextColors.DARK_RED + "VoxelSniper - Current Brush Settings:");
         sniper.displayInfo();
         return true;
     }

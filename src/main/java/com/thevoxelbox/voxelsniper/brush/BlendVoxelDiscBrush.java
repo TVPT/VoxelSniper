@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 
 /**
@@ -120,8 +120,8 @@ public class BlendVoxelDiscBrush extends BlendBrushBase
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");
+            v.sendMessage(TextColors.GOLD + "Blend Voxel Disc Parameters:");
+            v.sendMessage(TextColors.AQUA + "/b bvd water -- toggle include or exclude (default) water");
             return;
         }
 

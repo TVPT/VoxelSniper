@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Location;
 import org.bukkit.entity.LargeFireball;
 import org.bukkit.entity.SmallFireball;
@@ -65,12 +65,12 @@ public class CometBrush extends Brush
                 if (newBallSize.equalsIgnoreCase("big"))
                 {
                     useBigBalls = true;
-                    v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
+                    v.sendMessage("Your balls are " + TextColors.DARK_RED + ("BIG"));
                 }
                 else if (newBallSize.equalsIgnoreCase("small"))
                 {
                     useBigBalls = false;
-                    v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
+                    v.sendMessage("Your balls are " + TextColors.DARK_RED + ("small"));
                 }
                 else
                 {
@@ -97,7 +97,7 @@ public class CometBrush extends Brush
     {
         vm.brushName(this.getName());
         vm.voxel();
-        vm.custom("Your balls are " + ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+        vm.custom("Your balls are " + TextColors.DARK_RED + (useBigBalls ? "BIG" : "small"));
     }
 
     @Override

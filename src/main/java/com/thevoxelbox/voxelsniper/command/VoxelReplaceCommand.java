@@ -5,7 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -47,7 +47,7 @@ public class VoxelReplaceCommand extends VoxelCommand
             }
             else
             {
-                player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
+                player.sendMessage(TextColors.RED + "You have entered an invalid Item ID.");
                 return true;
             }
         }

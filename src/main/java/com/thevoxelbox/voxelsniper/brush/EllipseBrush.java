@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -68,7 +68,7 @@ public class EllipseBrush extends PerformBrush
         }
         catch (final Exception exception)
         {
-            v.sendMessage(ChatColor.RED + "Invalid target.");
+            v.sendMessage(TextColors.RED + "Invalid target.");
         }
 
         v.owner().storeUndo(this.current.getUndo());
@@ -154,7 +154,7 @@ public class EllipseBrush extends PerformBrush
         }
         catch (final Exception exception)
         {
-            v.sendMessage(ChatColor.RED + "Invalid target.");
+            v.sendMessage(TextColors.RED + "Invalid target.");
         }
 
         v.owner().storeUndo(this.current.getUndo());
@@ -205,16 +205,16 @@ public class EllipseBrush extends PerformBrush
         }
 
         vm.brushName(this.getName());
-        vm.custom(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl);
-        vm.custom(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl);
-        vm.custom(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps);
+        vm.custom(TextColors.AQUA + "X-size set to: " + TextColors.DARK_AQUA + this.xscl);
+        vm.custom(TextColors.AQUA + "Y-size set to: " + TextColors.DARK_AQUA + this.yscl);
+        vm.custom(TextColors.AQUA + "Render step number set to: " + TextColors.DARK_AQUA + this.steps);
         if (this.fill)
         {
-            vm.custom(ChatColor.AQUA + "Fill mode is enabled");
+            vm.custom(TextColors.AQUA + "Fill mode is enabled");
         }
         else
         {
-            vm.custom(ChatColor.AQUA + "Fill mode is disabled");
+            vm.custom(TextColors.AQUA + "Fill mode is disabled");
         }
     }
 
@@ -229,11 +229,11 @@ public class EllipseBrush extends PerformBrush
             {
                 if (parameter.equalsIgnoreCase("info"))
                 {
-                    v.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-                    v.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
-                    v.sendMessage(ChatColor.AQUA + "y[n]: Set Y size modifier to n");
-                    v.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
-                    v.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
+                    v.sendMessage(TextColors.GOLD + "Ellipse brush parameters");
+                    v.sendMessage(TextColors.AQUA + "x[n]: Set X size modifier to n");
+                    v.sendMessage(TextColors.AQUA + "y[n]: Set Y size modifier to n");
+                    v.sendMessage(TextColors.AQUA + "t[n]: Set the amount of time steps");
+                    v.sendMessage(TextColors.AQUA + "fill: Toggles fill mode");
                     return;
                 }
                 else if (parameter.startsWith("x"))
@@ -241,56 +241,56 @@ public class EllipseBrush extends PerformBrush
                     int tempXScale = Integer.parseInt(par[i].replace("x", ""));
                     if (tempXScale < SCL_MIN || tempXScale > SCL_MAX)
                     {
-                        v.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+                        v.sendMessage(TextColors.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
                         continue;
                     }
                     this.xscl = tempXScale;
-                    v.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
+                    v.sendMessage(TextColors.AQUA + "X-scale modifier set to: " + this.xscl);
                 }
                 else if (parameter.startsWith("y"))
                 {
                     int tempYScale = Integer.parseInt(par[i].replace("y", ""));
                     if (tempYScale < SCL_MIN || tempYScale > SCL_MAX)
                     {
-                        v.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+                        v.sendMessage(TextColors.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
                         continue;
                     }
                     this.yscl = tempYScale;
-                    v.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
+                    v.sendMessage(TextColors.AQUA + "Y-scale modifier set to: " + this.yscl);
                 }
                 else if (parameter.startsWith("t"))
                 {
                     int tempSteps = Integer.parseInt(par[i].replace("t", ""));
                     if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX)
                     {
-                        v.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
+                        v.sendMessage(TextColors.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
                         continue;
                     }
                     this.steps = tempSteps;
-                    v.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
+                    v.sendMessage(TextColors.AQUA + "Render step number set to: " + this.steps);
                 }
                 else if (parameter.equalsIgnoreCase("fill"))
                 {
                     if (this.fill)
                     {
                         this.fill = false;
-                        v.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
+                        v.sendMessage(TextColors.AQUA + "Fill mode is disabled");
                     }
                     else
                     {
                         this.fill = true;
-                        v.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
+                        v.sendMessage(TextColors.AQUA + "Fill mode is enabled");
                     }
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
 
             }
             catch (final Exception exception)
             {
-                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+                v.sendMessage(TextColors.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
             }
         }
     }

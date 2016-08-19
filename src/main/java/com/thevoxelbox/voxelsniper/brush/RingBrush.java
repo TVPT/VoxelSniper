@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -66,7 +66,7 @@ public class RingBrush extends PerformBrush
     {
         vm.brushName(this.getName());
         vm.size();
-        vm.custom(ChatColor.AQUA + "The inner radius is " + ChatColor.RED + this.innerSize);
+        vm.custom(TextColors.AQUA + "The inner radius is " + TextColors.RED + this.innerSize);
     }
 
     @Override
@@ -76,20 +76,20 @@ public class RingBrush extends PerformBrush
         {
             if (par[i].equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
-                v.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
+                v.sendMessage(TextColors.GOLD + "Ring Brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
+                v.sendMessage(TextColors.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
                 return;
             }
             else if (par[i].startsWith("true"))
             {
                 this.trueCircle = 0.5;
-                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
             }
             else if (par[i].startsWith("false"))
             {
                 this.trueCircle = 0;
-                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
             }
             else if (par[i].startsWith("ir"))
             {
@@ -97,16 +97,16 @@ public class RingBrush extends PerformBrush
                 {
                     final double d = Double.parseDouble(par[i].replace("ir", ""));
                     this.innerSize = d;
-                    v.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
+                    v.sendMessage(TextColors.AQUA + "The inner radius has been set to " + TextColors.RED + this.innerSize);
                 }
                 catch (final Exception exception)
                 {
-                    v.sendMessage(ChatColor.RED + "The parameters included are invalid.");
+                    v.sendMessage(TextColors.RED + "The parameters included are invalid.");
                 }
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

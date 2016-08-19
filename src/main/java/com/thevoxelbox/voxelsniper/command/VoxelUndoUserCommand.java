@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.command;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.entity.Player;
 
 public class VoxelUndoUserCommand extends VoxelCommand
@@ -25,7 +25,7 @@ public class VoxelUndoUserCommand extends VoxelCommand
         }
         catch (final Exception exception)
         {
-            player.sendMessage(ChatColor.GREEN + "Player not found.");
+            player.sendMessage(TextColors.GREEN + "Player not found.");
             return true;
         }
     }

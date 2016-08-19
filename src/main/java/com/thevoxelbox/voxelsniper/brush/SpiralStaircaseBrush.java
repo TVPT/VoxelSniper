@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -31,7 +31,7 @@ public class SpiralStaircaseBrush extends Brush
         if (v.getVoxelHeight() < 1)
         {
             v.setVoxelHeight(1);
-            v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+            v.sendMessage(TextColors.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
 
         final int[][][] spiral = new int[2 * v.getBrushSize() + 1][v.getVoxelHeight()][2 * v.getBrushSize() + 1];
@@ -404,7 +404,7 @@ public class SpiralStaircaseBrush extends Brush
         if (v.getVoxelHeight() < 1)
         {
             v.setVoxelHeight(1);
-            v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+            v.sendMessage(TextColors.RED + "VoxelHeight must be a natural number! Set to 1.");
         }
 
         // initialize array
@@ -781,9 +781,9 @@ public class SpiralStaircaseBrush extends Brush
         vm.voxel();
         vm.height();
         vm.data();
-        vm.custom(ChatColor.BLUE + "Staircase type: " + this.stairtype);
-        vm.custom(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-        vm.custom(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+        vm.custom(TextColors.BLUE + "Staircase type: " + this.stairtype);
+        vm.custom(TextColors.BLUE + "Staircase turns: " + this.sdirect);
+        vm.custom(TextColors.BLUE + "Staircase opens: " + this.sopen);
     }
 
     @Override
@@ -791,10 +791,10 @@ public class SpiralStaircaseBrush extends Brush
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
-            v.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
-            v.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
+            v.sendMessage(TextColors.GOLD + "Spiral Staircase Parameters:");
+            v.sendMessage(TextColors.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
+            v.sendMessage(TextColors.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
+            v.sendMessage(TextColors.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
             return;
         }
 
@@ -803,21 +803,21 @@ public class SpiralStaircaseBrush extends Brush
             if (par[i].equalsIgnoreCase("block") || par[i].equalsIgnoreCase("step") || par[i].equalsIgnoreCase("woodstair") || par[i].equalsIgnoreCase("cobblestair"))
             {
                 this.stairtype = par[i];
-                v.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairtype);
+                v.sendMessage(TextColors.BLUE + "Staircase type: " + this.stairtype);
             }
             else if (par[i].equalsIgnoreCase("c") || par[i].equalsIgnoreCase("cc"))
             {
                 this.sdirect = par[i];
-                v.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+                v.sendMessage(TextColors.BLUE + "Staircase turns: " + this.sdirect);
             }
             else if (par[i].equalsIgnoreCase("n") || par[i].equalsIgnoreCase("e") || par[i].equalsIgnoreCase("s") || par[i].equalsIgnoreCase("world"))
             {
                 this.sopen = par[i];
-                v.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+                v.sendMessage(TextColors.BLUE + "Staircase opens: " + this.sopen);
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

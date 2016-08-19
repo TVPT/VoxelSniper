@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
@@ -79,23 +79,23 @@ public class DiscBrush extends PerformBrush
 
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
+                v.sendMessage(TextColors.GOLD + "Disc Brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
                 return;
             }
             else if (parameter.startsWith("true"))
             {
                 this.trueCircle = 0.5;
-                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
             }
             else if (parameter.startsWith("false"))
             {
                 this.trueCircle = 0;
-                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

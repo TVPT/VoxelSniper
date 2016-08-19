@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -239,7 +239,7 @@ public class PunishBrush extends PerformBrush
                 }
             }
         }
-        v.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
+        v.sendMessage(TextColors.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
     }
 
     @Override
@@ -274,7 +274,7 @@ public class PunishBrush extends PerformBrush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GREEN + "Punishment: " + this.punishment.toString());
+        vm.custom(TextColors.GREEN + "Punishment: " + this.punishment.toString());
         vm.size();
         vm.center();
     }
@@ -288,14 +288,14 @@ public class PunishBrush extends PerformBrush
 
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
-                v.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
-                v.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
-                v.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
-                v.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
-                v.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
-                v.sendMessage(ChatColor.AQUA + "Parameter -toggleSelf will toggle whether you get hit as well.");
-                v.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
+                v.sendMessage(TextColors.GOLD + "Punish Brush Options:");
+                v.sendMessage(TextColors.AQUA + "Punishments can be set via /b p [punishment]");
+                v.sendMessage(TextColors.AQUA + "Punishment level can be set with /vc [level]");
+                v.sendMessage(TextColors.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
+                v.sendMessage(TextColors.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
+                v.sendMessage(TextColors.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
+                v.sendMessage(TextColors.AQUA + "Parameter -toggleSelf will toggle whether you get hit as well.");
+                v.sendMessage(TextColors.AQUA + "Available Punishment Options:");
                 final StringBuilder punishmentOptions = new StringBuilder();
                 for (final Punishment punishment : Punishment.values())
                 {
@@ -305,7 +305,7 @@ public class PunishBrush extends PerformBrush
                     }
                     punishmentOptions.append(punishment.name());
                 }
-                v.sendMessage(ChatColor.GOLD + punishmentOptions.toString());
+                v.sendMessage(TextColors.GOLD + punishmentOptions.toString());
                 return;
             }
             else if (parameter.equalsIgnoreCase("-toggleSM"))
@@ -319,7 +319,7 @@ public class PunishBrush extends PerformBrush
                     }
                     catch (final IndexOutOfBoundsException exception)
                     {
-                        v.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
+                        v.sendMessage(TextColors.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
                     }
                 }
             }
@@ -328,11 +328,11 @@ public class PunishBrush extends PerformBrush
                 this.hitsSelf = !this.hitsSelf;
                 if (hitsSelf)
                 {
-                    v.sendMessage(ChatColor.AQUA + "Your punishments will now affect you too!");
+                    v.sendMessage(TextColors.AQUA + "Your punishments will now affect you too!");
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.AQUA + "Your punishments will no longer affect you!");
+                    v.sendMessage(TextColors.AQUA + "Your punishments will no longer affect you!");
                 }
             }
             else if (parameter.equalsIgnoreCase("-toggleHypnoLandscape"))
@@ -344,11 +344,11 @@ public class PunishBrush extends PerformBrush
                 try
                 {
                     this.punishment = Punishment.valueOf(parameter.toUpperCase());
-                    v.sendMessage(ChatColor.AQUA + this.punishment.name().toLowerCase() + " punishment selected.");
+                    v.sendMessage(TextColors.AQUA + this.punishment.name().toLowerCase() + " punishment selected.");
                 }
                 catch (final IllegalArgumentException exception)
                 {
-                    v.sendMessage(ChatColor.AQUA + "No such Punishment.");
+                    v.sendMessage(TextColors.AQUA + "No such Punishment.");
                 }
             }
         }

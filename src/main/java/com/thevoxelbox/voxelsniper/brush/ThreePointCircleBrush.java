@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
@@ -33,24 +33,24 @@ public class ThreePointCircleBrush extends PerformBrush
         if (this.coordsOne == null)
         {
             this.coordsOne = this.getTargetBlock().getLocation().toVector();
-            v.sendMessage(ChatColor.GRAY + "First Corner set.");
+            v.sendMessage(TextColors.GRAY + "First Corner set.");
         }
         else if (this.coordsTwo == null)
         {
             this.coordsTwo = this.getTargetBlock().getLocation().toVector();
-            v.sendMessage(ChatColor.GRAY + "Second Corner set.");
+            v.sendMessage(TextColors.GRAY + "Second Corner set.");
         }
         else if (this.coordsThree == null)
         {
             this.coordsThree = this.getTargetBlock().getLocation().toVector();
-            v.sendMessage(ChatColor.GRAY + "Third Corner set.");
+            v.sendMessage(TextColors.GRAY + "Third Corner set.");
         }
         else
         {
             this.coordsOne = this.getTargetBlock().getLocation().toVector();
             this.coordsTwo = null;
             this.coordsThree = null;
-            v.sendMessage(ChatColor.GRAY + "First Corner set.");
+            v.sendMessage(TextColors.GRAY + "First Corner set.");
         }
     }
 
@@ -74,7 +74,7 @@ public class ThreePointCircleBrush extends PerformBrush
         if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0 || vectorOne.angle(vectorTwo) == 0 || vectorOne.angle(vectorThree) == 0 || vectorThree.angle(vectorTwo) == 0)
         {
 
-            v.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
+            v.sendMessage(TextColors.RED + "ERROR: Invalid points, try again.");
             this.coordsOne = null;
             this.coordsTwo = null;
             this.coordsThree = null;
@@ -142,7 +142,7 @@ public class ThreePointCircleBrush extends PerformBrush
             }
         }
 
-        v.sendMessage(ChatColor.GREEN + "Done.");
+        v.sendMessage(TextColors.GREEN + "Done.");
         v.owner().storeUndo(this.current.getUndo());
 
         // Reset Brush
@@ -159,16 +159,16 @@ public class ThreePointCircleBrush extends PerformBrush
         switch (this.tolerance)
         {
             case ACCURATE:
-                vm.custom(ChatColor.GOLD + "Mode: Accurate");
+                vm.custom(TextColors.GOLD + "Mode: Accurate");
                 break;
             case DEFAULT:
-                vm.custom(ChatColor.GOLD + "Mode: Default");
+                vm.custom(TextColors.GOLD + "Mode: Default");
                 break;
             case SMOOTH:
-                vm.custom(ChatColor.GOLD + "Mode: Smooth");
+                vm.custom(TextColors.GOLD + "Mode: Smooth");
                 break;
             default:
-                vm.custom(ChatColor.GOLD + "Mode: Unknown");
+                vm.custom(TextColors.GOLD + "Mode: Unknown");
                 break;
         }
 
@@ -179,7 +179,7 @@ public class ThreePointCircleBrush extends PerformBrush
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
+            v.sendMessage(TextColors.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
             String toleranceOptions = "";
             for (final Tolerance tolerance : Tolerance.values())
             {
@@ -189,7 +189,7 @@ public class ThreePointCircleBrush extends PerformBrush
                 }
                 toleranceOptions += tolerance.name().toLowerCase();
             }
-            v.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
+            v.sendMessage(TextColors.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
             return;
         }
 
@@ -199,7 +199,7 @@ public class ThreePointCircleBrush extends PerformBrush
             try
             {
                 this.tolerance = Tolerance.valueOf(parameter);
-                v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
+                v.sendMessage(TextColors.AQUA + "Brush set to " + this.tolerance.name().toLowerCase() + " tolerance.");
                 return;
             }
             catch (final IllegalArgumentException exception)

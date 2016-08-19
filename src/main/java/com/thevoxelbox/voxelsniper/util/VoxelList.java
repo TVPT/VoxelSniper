@@ -1,128 +1,98 @@
 package com.thevoxelbox.voxelsniper.util;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockType;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Container class for multiple ID/Datavalue pairs.
  */
-public class VoxelList
-{
+public class VoxelList {
 
-    private List<int[]> valuePairs = new ArrayList<int[]>();
+    private Set<BlockType> wildcardTypes = Sets.newHashSet();
+    private Set<BlockState> specificTypes = Sets.newHashSet();
 
     /**
-     * Adds the specified id, data value pair to the VoxelList. A data value of -1 will operate on all data values of that id.
+     * Adds the specified id, data value pair to the VoxelList. A data value of
+     * -1 will operate on all data values of that id.
      * 
      * @param i
      */
-    public void add(int[] i)
-    {
-        if (i[1] == -1)
-        {
-            if (!valuePairs.contains(i))
-            {
-                for (Iterator<int[]> it = valuePairs.iterator(); it.hasNext(); )
-                {
-                    int[] in = it.next();
-                    if (in[0] == i[0])
-                    {
-                        it.remove();
-                    }
+    public void add(BlockState i) {
+        if (this.wildcardTypes.contains(i.getType())) {
+            return;
+        }
+        this.specificTypes.add(i);
+    }
+
+    public void add(BlockType t) {
+        if (this.wildcardTypes.contains(t)) {
+            return;
+        }
+        for (Iterator<BlockState> it = this.specificTypes.iterator(); it.hasNext();) {
+            BlockState state = it.next();
+            if (state.getType() == t) {
+                it.remove();
+            }
+        }
+        this.wildcardTypes.add(t);
+    }
+
+    public boolean remove(BlockState state) {
+        return this.specificTypes.remove(state);
+    }
+
+    public boolean remove(BlockType t) {
+        boolean removed = this.wildcardTypes.remove(t);
+        for (Iterator<BlockState> it = this.specificTypes.iterator(); it.hasNext();) {
+            BlockState state = it.next();
+            if (state.getType() == t) {
+                it.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
+
+    public boolean contains(BlockState state) {
+        return this.specificTypes.contains(state);
+    }
+
+    public boolean contains(BlockType type) {
+        return this.wildcardTypes.contains(type);
+    }
+
+    public boolean containsAny(BlockType type) {
+        boolean contains = this.wildcardTypes.contains(type);
+        if (!contains) {
+            for (Iterator<BlockState> it = this.specificTypes.iterator(); it.hasNext();) {
+                BlockState state = it.next();
+                if (state.getType() == type) {
+                    return true;
                 }
-                valuePairs.add(i);
             }
         }
-        else
-        {
-            if (!valuePairs.contains(i))
-            {
-                valuePairs.add(i);
-            }
-        }
+        return contains;
     }
 
-    /**
-     * Removes the specified id, data value pair from the VoxelList.
-     * 
-     * @param i
-     * @return true if this list contained the specified element
-     */
-    public boolean removeValue(final int[] i)
-    {
-        if (valuePairs.isEmpty())
-        {
-            return false;
-        }
-        else
-        {
-            boolean ret = false;
-            if (i[1] == -1)
-            {
-                for (Iterator<int[]> it = valuePairs.iterator(); it.hasNext(); )
-                {
-                    int[] in = it.next();
-                    if (in[0] == i[0])
-                    {
-                        it.remove();
-                        ret = true;
-                    }
-                }
-            }
-            else
-            {
-                ret = valuePairs.remove(i);
-            }
-            return ret;
-        }
+    public void clear() {
+        this.specificTypes.clear();
+        this.wildcardTypes.clear();
     }
 
-    /**
-     * @param i
-     * @return true if this list contains the specified element
-     */
-    public boolean contains(final int[] i)
-    {
-        for (int[] in : valuePairs)
-        {
-            if (in[0] == i[0] && (in[1] == i[1] || in[1] == -1))
-            {
-                return true;
-            }
-        }
-        return false;
+    public boolean isEmpty() {
+        return this.specificTypes.isEmpty() && this.wildcardTypes.isEmpty();
     }
 
-    /**
-     * Clears the VoxelList.
-     */
-    public void clear()
-    {
-        valuePairs.clear();
+    public Set<BlockType> getWildcardTypes() {
+        return this.wildcardTypes;
     }
 
-    /**
-     * Returns true if this list contains no elements.
-     *
-     * @return true if this list contains no elements
-     */
-    public boolean isEmpty()
-    {
-        return valuePairs.isEmpty();
+    public Set<BlockState> getSpecificTypes() {
+        return this.specificTypes;
     }
-
-    /**
-     * Returns a defensive copy of the List with pairs.
-     *
-     * @return defensive copy of the List with pairs
-     */
-    public List<int[]> getList()
-    {
-        return ImmutableList.copyOf(valuePairs);
-    }
-
 
 }

@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 import java.util.HashSet;
@@ -31,8 +31,8 @@ public class PullBrush extends Brush
         vm.brushName(this.getName());
         vm.size();
         vm.height();
-        vm.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
-        vm.custom(ChatColor.AQUA + "Bubble " + this.c2);
+        vm.custom(TextColors.AQUA + "Pinch " + (-this.c1 + 1));
+        vm.custom(TextColors.AQUA + "Bubble " + this.c2);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class PullBrush extends Brush
         }
         catch (final Exception exception)
         {
-            v.sendMessage(ChatColor.RED + "Invalid brush parameters!");
+            v.sendMessage(TextColors.RED + "Invalid brush parameters!");
         }
     }
 

@@ -6,7 +6,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Blob_Brush
@@ -35,7 +35,7 @@ public class BlobBrush extends PerformBrush
         if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX)
         {
             this.growPercent = GROW_PERCENT_DEFAULT;
-            v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            v.sendMessage(TextColors.BLUE + "Growth percent set to: 10%");
         }
     }
 
@@ -269,7 +269,7 @@ public class BlobBrush extends PerformBrush
 
         vm.brushName(this.getName());
         vm.size();
-        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+        vm.custom(TextColors.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
     }
 
     @Override
@@ -281,8 +281,8 @@ public class BlobBrush extends PerformBrush
 
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
+                v.sendMessage(TextColors.GOLD + "Blob brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
                 return;
             }
             if (parameter.startsWith("g"))
@@ -290,17 +290,17 @@ public class BlobBrush extends PerformBrush
                 final int temp = Integer.parseInt(parameter.replace("g", ""));
                 if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX)
                 {
-                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
+                    v.sendMessage(TextColors.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
                     this.growPercent = temp;
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
+                    v.sendMessage(TextColors.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
                 }
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

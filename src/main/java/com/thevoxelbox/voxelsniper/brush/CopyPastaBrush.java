@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -67,11 +67,11 @@ public class CopyPastaBrush extends Brush
                 }
             }
 
-            v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks copied.");
+            v.sendMessage(TextColors.AQUA + "" + this.numBlocks + " blocks copied.");
         }
         else
         {
-            v.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + CopyPastaBrush.BLOCK_LIMIT + ")");
+            v.sendMessage(TextColors.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + CopyPastaBrush.BLOCK_LIMIT + ")");
         }
     }
 
@@ -116,7 +116,7 @@ public class CopyPastaBrush extends Brush
                 }
             }
         }
-        v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks pasted.");
+        v.sendMessage(TextColors.AQUA + "" + this.numBlocks + " blocks pasted.");
 
         v.owner().storeUndo(undo);
     }
@@ -130,14 +130,14 @@ public class CopyPastaBrush extends Brush
                 this.firstPoint[0] = this.getTargetBlock().getX();
                 this.firstPoint[1] = this.getTargetBlock().getY();
                 this.firstPoint[2] = this.getTargetBlock().getZ();
-                v.sendMessage(ChatColor.GRAY + "First point");
+                v.sendMessage(TextColors.GRAY + "First point");
                 this.points = 1;
                 break;
             case 1:
                 this.secondPoint[0] = this.getTargetBlock().getX();
                 this.secondPoint[1] = this.getTargetBlock().getY();
                 this.secondPoint[2] = this.getTargetBlock().getZ();
-                v.sendMessage(ChatColor.GRAY + "Second point");
+                v.sendMessage(TextColors.GRAY + "Second point");
                 this.points = 2;
                 break;
             default:
@@ -147,7 +147,7 @@ public class CopyPastaBrush extends Brush
                 this.blockArray = new int[1];
                 this.dataArray = new byte[1];
                 this.points = 0;
-                v.sendMessage(ChatColor.GRAY + "Points cleared.");
+                v.sendMessage(TextColors.GRAY + "Points cleared.");
                 break;
         }
     }
@@ -170,12 +170,12 @@ public class CopyPastaBrush extends Brush
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Error");
+                v.sendMessage(TextColors.RED + "Error");
             }
         }
         else
         {
-            v.sendMessage(ChatColor.RED + "You must select exactly two points.");
+            v.sendMessage(TextColors.RED + "You must select exactly two points.");
         }
     }
 
@@ -183,8 +183,8 @@ public class CopyPastaBrush extends Brush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
-        vm.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
+        vm.custom(TextColors.GOLD + "Paste air: " + this.pasteAir);
+        vm.custom(TextColors.GOLD + "Pivot angle: " + this.pivot);
     }
 
     @Override
@@ -194,9 +194,9 @@ public class CopyPastaBrush extends Brush
 
         if (parameter.equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
-            v.sendMessage(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
+            v.sendMessage(TextColors.GOLD + "CopyPasta Parameters:");
+            v.sendMessage(TextColors.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
+            v.sendMessage(TextColors.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
             return;
         }
 
@@ -204,14 +204,14 @@ public class CopyPastaBrush extends Brush
         {
             this.pasteAir = !this.pasteAir;
 
-            v.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
+            v.sendMessage(TextColors.GOLD + "Paste air: " + this.pasteAir);
             return;
         }
 
         if (parameter.equalsIgnoreCase("90") || parameter.equalsIgnoreCase("180") || parameter.equalsIgnoreCase("270") || parameter.equalsIgnoreCase("0"))
         {
             this.pivot = Integer.parseInt(parameter);
-            v.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
+            v.sendMessage(TextColors.GOLD + "Pivot angle: " + this.pivot);
         }
     }
 

@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.entity.EntityType;
 
 /**
@@ -33,7 +33,7 @@ public class EntityBrush extends Brush
             }
             catch (final IllegalArgumentException exception)
             {
-                v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
+                v.sendMessage(TextColors.RED + "Cannot spawn entity!");
             }
         }
     }
@@ -54,7 +54,7 @@ public class EntityBrush extends Brush
 	@Override
     public final void info(final Message vm)
     {
-        vm.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
+        vm.brushMessage(TextColors.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
         vm.size();
     }
 
@@ -66,13 +66,13 @@ public class EntityBrush extends Brush
         {
             String names = "";
 
-            v.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
+            v.sendMessage(TextColors.BLUE + "The available entity types are as follows:");
             for (final EntityType currentEntity : EntityType.values())
             {
 
-                names += ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + currentEntity.getName();
+                names += TextColors.AQUA + " | " + TextColors.DARK_GREEN + currentEntity.getName();
             }
-            names += ChatColor.AQUA + " |";
+            names += TextColors.AQUA + " |";
             v.sendMessage(names);
         }
         else
@@ -81,11 +81,11 @@ public class EntityBrush extends Brush
             if (currentEntity != null)
             {
                 this.entityType = currentEntity;
-                v.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
+                v.sendMessage(TextColors.GREEN + "Entity type set to " + this.entityType.getName());
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "This is not a valid entity!");
+                v.sendMessage(TextColors.RED + "This is not a valid entity!");
             }
         }
     }

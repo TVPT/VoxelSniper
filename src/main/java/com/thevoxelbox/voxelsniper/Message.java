@@ -1,21 +1,19 @@
 package com.thevoxelbox.voxelsniper;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
-/**
- *
- */
-public class Message
-{
+public class Message {
+
     private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
     private final SnipeData snipeData;
 
     /**
      * @param snipeData
      */
-    public Message(SnipeData snipeData)
-    {
+    public Message(SnipeData snipeData) {
         this.snipeData = snipeData;
     }
 
@@ -24,9 +22,8 @@ public class Message
      *
      * @param brushMessage
      */
-    public void brushMessage(String brushMessage)
-    {
-        snipeData.sendMessage(ChatColor.LIGHT_PURPLE + brushMessage);
+    public void brushMessage(String brushMessage) {
+        this.snipeData.sendMessage(TextColors.LIGHT_PURPLE, brushMessage);
     }
 
     /**
@@ -34,17 +31,15 @@ public class Message
      *
      * @param brushName
      */
-    public void brushName(String brushName)
-    {
-        snipeData.sendMessage(ChatColor.AQUA + "Brush Type: " + ChatColor.LIGHT_PURPLE + brushName);
+    public void brushName(String brushName) {
+        this.snipeData.sendMessage(TextColors.AQUA, "Brush Type: ", TextColors.LIGHT_PURPLE, brushName);
     }
 
     /**
      * Display Center Parameter.
      */
-    public void center()
-    {
-        snipeData.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + snipeData.getcCen());
+    public void center() {
+        this.snipeData.sendMessage(TextColors.DARK_BLUE, "Brush Center: ", TextColors.DARK_RED, this.snipeData.getcCen());
     }
 
     /**
@@ -52,25 +47,19 @@ public class Message
      *
      * @param message
      */
-    public void custom(String message)
-    {
-        snipeData.sendMessage(message);
+    public void custom(Text message) {
+        this.snipeData.sendMessage(message);
     }
-
-    /**
-     * Display data value.
-     */
-    public void data()
-    {
-        snipeData.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + snipeData.getData());
+    
+    public void custom(Object... args) {
+        this.snipeData.sendMessage(args);
     }
 
     /**
      * Display voxel height.
      */
-    public void height()
-    {
-        snipeData.sendMessage(ChatColor.DARK_AQUA + "Brush Height: " + ChatColor.DARK_RED + snipeData.getVoxelHeight());
+    public void height() {
+        this.snipeData.sendMessage(TextColors.DARK_AQUA, "Brush Height: ", TextColors.DARK_RED, this.snipeData.getVoxelHeight());
     }
 
     /**
@@ -78,101 +67,84 @@ public class Message
      *
      * @param performerName
      */
-    public void performerName(String performerName)
-    {
-        this.snipeData.sendMessage(ChatColor.DARK_PURPLE + "Performer: " + ChatColor.DARK_GREEN + performerName);
+    public void performerName(String performerName) {
+        this.snipeData.sendMessage(TextColors.DARK_PURPLE, "Performer: ", TextColors.DARK_GREEN, performerName);
     }
 
     /**
-     * Displaye replace material.
+     * Display replace material.
      */
-    @SuppressWarnings("deprecation")
-    public void replace()
-    {
-        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getReplaceId()).toString() + ")");
-    }
-
-    /**
-     * Display replace data value.
-     */
-    public void replaceData()
-    {
-        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + snipeData.getReplaceData());
+    public void replace() {
+        this.snipeData.sendMessage(TextColors.AQUA, "Replace Material: ", TextColors.RED, this.snipeData.getReplaceId(), TextColors.GRAY, " (",
+                this.snipeData.getReplaceId(), ")");
     }
 
     /**
      * Display brush size.
      */
-    public void size()
-    {
-        snipeData.sendMessage(ChatColor.GREEN + "Brush Size: " + ChatColor.DARK_RED + snipeData.getBrushSize());
-        if (snipeData.getBrushSize() >= BRUSH_SIZE_WARNING_THRESHOLD)
-        {
-            snipeData.sendMessage(ChatColor.RED + "WARNING: Large brush size selected!");
+    public void size() {
+        this.snipeData.sendMessage(TextColors.GREEN, "Brush Size: ", TextColors.DARK_RED, this.snipeData.getBrushSize());
+        if (this.snipeData.getBrushSize() >= BRUSH_SIZE_WARNING_THRESHOLD) {
+            this.snipeData.sendMessage(TextColors.RED, "WARNING: Large brush size selected!");
         }
     }
 
     /**
      * Display toggle lightning message.
      */
-    public void toggleLightning()
-    {
-        snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).isLightningEnabled()) ? "on" : "off"));
+    public void toggleLightning() {
+        this.snipeData.sendMessage(TextColors.GOLD, "Lightning mode has been toggled ", TextColors.DARK_RED,
+                ((this.snipeData.owner().getSnipeData(this.snipeData.owner().getCurrentToolId()).isLightningEnabled()) ? "on" : "off"));
     }
 
     /**
      * Display toggle printout message.
      */
-    public final void togglePrintout()
-    {
-        snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).isLightningEnabled()) ? "on" : "off"));
+    public final void togglePrintout() {
+        this.snipeData.sendMessage(TextColors.GOLD, "Brush info printout mode has been toggled ", TextColors.DARK_RED,
+                ((this.snipeData.owner().getSnipeData(this.snipeData.owner().getCurrentToolId()).isLightningEnabled()) ? "on" : "off"));
     }
 
     /**
      * Display toggle range message.
      */
-    public void toggleRange()
-    {
-        snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).isRanged()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + (double) snipeData.owner().getSnipeData(snipeData.owner().getCurrentToolId()).getRange());
+    public void toggleRange() {
+        this.snipeData.sendMessage(TextColors.GOLD, "Distance Restriction toggled ", TextColors.DARK_RED,
+                ((this.snipeData.owner().getSnipeData(this.snipeData.owner().getCurrentToolId()).isRanged()) ? "on" : "off"), TextColors.GOLD,
+                ". Range is ", TextColors.LIGHT_PURPLE,
+                (double) this.snipeData.owner().getSnipeData(this.snipeData.owner().getCurrentToolId()).getRange());
     }
 
     /**
      * Display voxel type.
      */
-    @SuppressWarnings("deprecation")
-    public void voxel()
-    {
-        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getVoxelId()).toString() + ")");
+    public void voxel() {
+        this.snipeData.sendMessage(TextColors.GOLD, "Voxel: ", TextColors.RED, this.snipeData.getVoxelId(), TextColors.GRAY, " (",
+                this.snipeData.getVoxelId(), ")");
     }
 
     /**
      * Display voxel list.
      */
-    public void voxelList()
-    {
-        if (snipeData.getVoxelList().isEmpty())
-        {
-            snipeData.sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
-        }
-        else
-        {
-            StringBuilder returnValueBuilder = new StringBuilder();
-            returnValueBuilder.append(ChatColor.DARK_GREEN);
-            returnValueBuilder.append("Block Types Selected: ");
-            returnValueBuilder.append(ChatColor.AQUA);
+    public void voxelList() {
+        if (this.snipeData.getVoxelList().isEmpty()) {
+            this.snipeData.sendMessage(TextColors.DARK_GREEN, "No blocks selected!");
+        } else {
+            Text.Builder returnValueBuilder = Text.builder();
+            returnValueBuilder.append(Text.of(TextColors.DARK_GREEN, "Block Types Selected: "));
 
-            for (int[] valuePair : snipeData.getVoxelList().getList())
-            {
-                returnValueBuilder.append(valuePair[0]);
-                if (valuePair[1] != -1)
-                {
-                    returnValueBuilder.append(":");
-                    returnValueBuilder.append(valuePair[1]);
-                }
-                returnValueBuilder.append(" ");
+            StringBuilder vl = new StringBuilder();
+            for (BlockType type : this.snipeData.getVoxelList().getWildcardTypes()) {
+                vl.append(type.getId());
+                vl.append(" ");
             }
+            for (BlockState type : this.snipeData.getVoxelList().getSpecificTypes()) {
+                vl.append(type.getId());
+                vl.append(" ");
+            }
+            returnValueBuilder.append(Text.of(TextColors.AQUA, vl.toString().trim()));
 
-            snipeData.sendMessage(returnValueBuilder.toString());
+            this.snipeData.sendMessage(returnValueBuilder.toText());
         }
     }
 }

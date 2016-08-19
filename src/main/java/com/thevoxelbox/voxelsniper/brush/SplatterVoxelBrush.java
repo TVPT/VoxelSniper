@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 import java.util.Random;
@@ -41,17 +41,17 @@ public class SplatterVoxelBrush extends PerformBrush
     {
         if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX)
         {
-            v.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
+            v.sendMessage(TextColors.BLUE + "Seed percent set to: 10%");
             this.seedPercent = SEED_PERCENT_DEFAULT;
         }
         if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX)
         {
-            v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            v.sendMessage(TextColors.BLUE + "Growth percent set to: 10%");
             this.growPercent = GROW_PERCENT_DEFAULT;
         }
         if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX)
         {
-            v.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
+            v.sendMessage(TextColors.BLUE + "Recursions set to: 3");
             this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
         }
         final int[][][] splat = new int[2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1];
@@ -199,9 +199,9 @@ public class SplatterVoxelBrush extends PerformBrush
         }
         vm.brushName("Splatter Voxel");
         vm.size();
-        vm.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
-        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
-        vm.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterRecursions);
+        vm.custom(TextColors.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
+        vm.custom(TextColors.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+        vm.custom(TextColors.BLUE + "Recursions set to: " + this.splatterRecursions);
     }
 
     @Override
@@ -213,10 +213,10 @@ public class SplatterVoxelBrush extends PerformBrush
 
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Splatter Voxel brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b sv s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-                v.sendMessage(ChatColor.AQUA + "/b sv g[int] -- set a growth percentage (1-9999).  Default is 1000");
-                v.sendMessage(ChatColor.AQUA + "/b sv r[int] -- set a recursion (1-10).  Default is 3");
+                v.sendMessage(TextColors.GOLD + "Splatter Voxel brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b sv s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
+                v.sendMessage(TextColors.AQUA + "/b sv g[int] -- set a growth percentage (1-9999).  Default is 1000");
+                v.sendMessage(TextColors.AQUA + "/b sv r[int] -- set a recursion (1-10).  Default is 3");
                 return;
             }
             else if (parameter.startsWith("s"))
@@ -224,12 +224,12 @@ public class SplatterVoxelBrush extends PerformBrush
                 final double temp = Integer.parseInt(parameter.replace("s", ""));
                 if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX)
                 {
-                    v.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
+                    v.sendMessage(TextColors.AQUA + "Seed percent set to: " + temp / 100 + "%");
                     this.seedPercent = (int) temp;
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
+                    v.sendMessage(TextColors.RED + "Seed percent must be an integer 1-9999!");
                 }
             }
             else if (parameter.startsWith("g"))
@@ -237,12 +237,12 @@ public class SplatterVoxelBrush extends PerformBrush
                 final double temp = Integer.parseInt(parameter.replace("g", ""));
                 if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX)
                 {
-                    v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
+                    v.sendMessage(TextColors.AQUA + "Growth percent set to: " + temp / 100 + "%");
                     this.growPercent = (int) temp;
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                    v.sendMessage(TextColors.RED + "Growth percent must be an integer 1-9999!");
                 }
             }
             else if (parameter.startsWith("r"))
@@ -250,17 +250,17 @@ public class SplatterVoxelBrush extends PerformBrush
                 final int temp = Integer.parseInt(parameter.replace("r", ""));
                 if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX)
                 {
-                    v.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
+                    v.sendMessage(TextColors.AQUA + "Recursions set to: " + temp);
                     this.splatterRecursions = temp;
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+                    v.sendMessage(TextColors.RED + "Recursions must be an integer 1-10!");
                 }
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

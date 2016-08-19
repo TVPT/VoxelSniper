@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
@@ -174,7 +174,7 @@ public class ExtrudeBrush extends Brush
         vm.height();
         vm.voxelList();
 
-        vm.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
+        vm.custom(TextColors.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
     }
 
     @Override
@@ -188,29 +188,29 @@ public class ExtrudeBrush extends Brush
             {
                 if (parameter.equalsIgnoreCase("info"))
                 {
-                    v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
-                    v.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
+                    v.sendMessage(TextColors.GOLD + "Extrude brush Parameters:");
+                    v.sendMessage(TextColors.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
                     return;
                 }
                 else if (parameter.startsWith("true"))
                 {
                     this.trueCircle = 0.5;
-                    v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                    v.sendMessage(TextColors.AQUA + "True circle mode ON.");
                 }
                 else if (parameter.startsWith("false"))
                 {
                     this.trueCircle = 0;
-                    v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                    v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                     return;
                 }
             }
             catch (final Exception exception)
             {
-                v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+                v.sendMessage(TextColors.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
             }
         }
     }

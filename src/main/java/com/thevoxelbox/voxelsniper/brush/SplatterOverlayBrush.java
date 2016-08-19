@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 
 import java.util.Random;
 
@@ -355,10 +355,10 @@ public class SplatterOverlayBrush extends PerformBrush
         }
         vm.brushName(this.getName());
         vm.size();
-        vm.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
-        vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
-        vm.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterRecursions);
-        vm.custom(ChatColor.BLUE + "Y-Offset set to: " + this.yOffset);
+        vm.custom(TextColors.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
+        vm.custom(TextColors.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+        vm.custom(TextColors.BLUE + "Recursions set to: " + this.splatterRecursions);
+        vm.custom(TextColors.BLUE + "Y-Offset set to: " + this.yOffset);
     }
 
     @Override
@@ -371,18 +371,18 @@ public class SplatterOverlayBrush extends PerformBrush
             {
                 if (parameter.equalsIgnoreCase("info"))
                 {
-                    v.sendMessage(ChatColor.GOLD + "Splatter Overlay brush parameters:");
-                    v.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-                    v.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
-                    v.sendMessage(ChatColor.AQUA + "/b sover s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-                    v.sendMessage(ChatColor.AQUA + "/b sover g[int] -- set a growth percentage (1-9999).  Default is 1000");
-                    v.sendMessage(ChatColor.AQUA + "/b sover r[int] -- set a recursion (1-10).  Default is 3");
+                    v.sendMessage(TextColors.GOLD + "Splatter Overlay brush parameters:");
+                    v.sendMessage(TextColors.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
+                    v.sendMessage(TextColors.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
+                    v.sendMessage(TextColors.AQUA + "/b sover s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
+                    v.sendMessage(TextColors.AQUA + "/b sover g[int] -- set a growth percentage (1-9999).  Default is 1000");
+                    v.sendMessage(TextColors.AQUA + "/b sover r[int] -- set a recursion (1-10).  Default is 3");
                     return;
                 }
                 else if (parameter.startsWith("d"))
                 {
                     this.depth = Integer.parseInt(parameter.replace("d", ""));
-                    v.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+                    v.sendMessage(TextColors.AQUA + "Depth set to " + this.depth);
                     if (this.depth < 1)
                     {
                         this.depth = 1;
@@ -391,24 +391,24 @@ public class SplatterOverlayBrush extends PerformBrush
                 else if (parameter.startsWith("all"))
                 {
                     this.allBlocks = true;
-                    v.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
+                    v.sendMessage(TextColors.BLUE + "Will overlay over any block." + this.depth);
                 }
                 else if (parameter.startsWith("some"))
                 {
                     this.allBlocks = false;
-                    v.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
+                    v.sendMessage(TextColors.BLUE + "Will overlay only natural block types." + this.depth);
                 }
                 else if (par[i].startsWith("s"))
                 {
                     final double temp = Integer.parseInt(parameter.replace("s", ""));
                     if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX)
                     {
-                        v.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
+                        v.sendMessage(TextColors.AQUA + "Seed percent set to: " + temp / 100 + "%");
                         this.seedPercent = (int) temp;
                     }
                     else
                     {
-                        v.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
+                        v.sendMessage(TextColors.RED + "Seed percent must be an integer 1-9999!");
                     }
                 }
                 else if (parameter.startsWith("g"))
@@ -416,30 +416,30 @@ public class SplatterOverlayBrush extends PerformBrush
                     final double temp = Integer.parseInt(parameter.replace("g", ""));
                     if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX)
                     {
-                        v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
+                        v.sendMessage(TextColors.AQUA + "Growth percent set to: " + temp / 100 + "%");
                         this.growPercent = (int) temp;
                     }
                     else
                     {
-                        v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                        v.sendMessage(TextColors.RED + "Growth percent must be an integer 1-9999!");
                     }
                 }
                 else if (parameter.startsWith("randh"))
                 {
                     randomizeHeight = !randomizeHeight;
-                    v.sendMessage(ChatColor.RED + "RandomizeHeight set to: " + randomizeHeight);
+                    v.sendMessage(TextColors.RED + "RandomizeHeight set to: " + randomizeHeight);
                 }
                 else if (parameter.startsWith("r"))
                 {
                     final int temp = Integer.parseInt(parameter.replace("r", ""));
                     if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX)
                     {
-                        v.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
+                        v.sendMessage(TextColors.AQUA + "Recursions set to: " + temp);
                         this.splatterRecursions = temp;
                     }
                     else
                     {
-                        v.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+                        v.sendMessage(TextColors.RED + "Recursions must be an integer 1-10!");
                     }
                 }
                 else if (parameter.startsWith("yoff"))
@@ -447,17 +447,17 @@ public class SplatterOverlayBrush extends PerformBrush
                     final int temp = Integer.parseInt(parameter.replace("yoff", ""));
                     if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX)
                     {
-                        v.sendMessage(ChatColor.AQUA + "Y-Offset set to: " + temp);
+                        v.sendMessage(TextColors.AQUA + "Y-Offset set to: " + temp);
                         this.yOffset = temp;
                     }
                     else
                     {
-                        v.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+                        v.sendMessage(TextColors.RED + "Recursions must be an integer 1-10!");
                     }
                 }
                 else
                 {
-                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                    v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
                 }
             }
             catch (Exception exception)

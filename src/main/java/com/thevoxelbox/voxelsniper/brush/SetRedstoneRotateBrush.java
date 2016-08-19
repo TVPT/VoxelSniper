@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
@@ -70,7 +70,7 @@ public class SetRedstoneRotateBrush extends Brush
     {
         if (this.set(this.getTargetBlock()))
         {
-            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(TextColors.GRAY + "Point one");
         }
         else
         {
@@ -83,7 +83,7 @@ public class SetRedstoneRotateBrush extends Brush
     {
         if (this.set(this.getLastBlock()))
         {
-            v.owner().getPlayer().sendMessage(ChatColor.GRAY + "Point one");
+            v.owner().getPlayer().sendMessage(TextColors.GRAY + "Point one");
         }
         else
         {

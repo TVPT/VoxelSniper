@@ -6,7 +6,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -351,7 +351,7 @@ public class StampBrush extends Brush
                 break;
 
             default:
-                v.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+                v.sendMessage(TextColors.DARK_RED + "Error while stamping! Report");
                 break;
         }
     }

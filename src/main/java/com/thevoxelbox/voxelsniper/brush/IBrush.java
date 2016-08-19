@@ -3,10 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.block.Action;
+
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
  * Brush Interface.
@@ -28,7 +27,7 @@ public interface IBrush
      */
     void parameters(String[] par, SnipeData v);
 
-    boolean perform(SnipeAction action, SnipeData data, Block targetBlock, Block lastBlock);
+    boolean perform(SnipeAction action, SnipeData data, Location<World> targetBlock, Location<World> lastBlock);
 
     /**
      * @return The name of the Brush

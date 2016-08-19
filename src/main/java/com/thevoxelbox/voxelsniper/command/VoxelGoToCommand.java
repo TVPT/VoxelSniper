@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -23,12 +23,12 @@ public class VoxelGoToCommand extends VoxelCommand
             final int x = Integer.parseInt(args[0]);
             final int z = Integer.parseInt(args[1]);
             player.teleport(new Location(player.getWorld(), x, player.getWorld().getHighestBlockYAt(x, z), z));
-            player.sendMessage(ChatColor.GREEN + "Woosh!");
+            player.sendMessage(TextColors.GREEN + "Woosh!");
             return true;
         }
         catch (final Exception exception)
         {
-            player.sendMessage(ChatColor.RED + "Invalid syntax.");
+            player.sendMessage(TextColors.RED + "Invalid syntax.");
             return true;
         }
     }

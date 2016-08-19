@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Triangle_Brush
@@ -40,7 +40,7 @@ public class TriangleBrush extends PerformBrush
                 this.coordsOne[1] = this.getTargetBlock().getY() + .5;
                 this.coordsOne[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
                 this.cornernumber = 2;
-                v.sendMessage(ChatColor.GRAY + "First Corner set.");
+                v.sendMessage(TextColors.GRAY + "First Corner set.");
                 break;
             case 2:
                 this.coordsTwo[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
@@ -48,7 +48,7 @@ public class TriangleBrush extends PerformBrush
                 this.coordsTwo[1] = this.getTargetBlock().getY() + .5;
                 this.coordsTwo[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
                 this.cornernumber = 3;
-                v.sendMessage(ChatColor.GRAY + "Second Corner set.");
+                v.sendMessage(TextColors.GRAY + "Second Corner set.");
                 break;
             case 3:
                 this.coordsThree[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
@@ -56,7 +56,7 @@ public class TriangleBrush extends PerformBrush
                 this.coordsThree[1] = this.getTargetBlock().getY() + .5;
                 this.coordsThree[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
                 this.cornernumber = 1;
-                v.sendMessage(ChatColor.GRAY + "Third Corner set.");
+                v.sendMessage(TextColors.GRAY + "Third Corner set.");
                 break;
             default:
                 break;
@@ -101,7 +101,7 @@ public class TriangleBrush extends PerformBrush
 
         if (lengthOne == 0 || lengthTwo == 0 || (this.coordsOne[0] == 0 && this.coordsOne[1] == 0 && this.coordsOne[2] == 0) || (this.coordsTwo[0] == 0 && this.coordsTwo[1] == 0 && this.coordsTwo[2] == 0) || (this.coordsThree[0] == 0 && this.coordsThree[1] == 0 && this.coordsThree[2] == 0))
         {
-            v.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
+            v.sendMessage(TextColors.RED + "ERROR: Invalid corners, please try again.");
         }
         else
         {
@@ -322,7 +322,7 @@ public class TriangleBrush extends PerformBrush
     {
         if (par[1].equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
+            v.sendMessage(TextColors.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
         }
     }
 

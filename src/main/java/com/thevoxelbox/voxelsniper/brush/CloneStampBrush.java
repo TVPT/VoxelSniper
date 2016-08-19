@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 
 /**
  * The CloneStamp class is used to create a collection of blocks in a cylinder shape according to the selection the player has set.
@@ -45,23 +45,23 @@ public class CloneStampBrush extends StampBrush
         if (yStartingPoint < 0)
         {
             yStartingPoint = 0;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            v.sendMessage(TextColors.DARK_PURPLE + "Warning: off-world start position.");
         }
         else if (yStartingPoint > this.getWorld().getMaxHeight() - 1)
         {
             yStartingPoint = this.getWorld().getMaxHeight() - 1;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            v.sendMessage(TextColors.DARK_PURPLE + "Warning: off-world start position.");
         }
 
         if (yEndPoint < 0)
         {
             yEndPoint = 0;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            v.sendMessage(TextColors.DARK_PURPLE + "Warning: off-world end position.");
         }
         else if (yEndPoint > this.getWorld().getMaxHeight() - 1)
         {
             yEndPoint = this.getWorld().getMaxHeight() - 1;
-            v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            v.sendMessage(TextColors.DARK_PURPLE + "Warning: off-world end position.");
         }
 
         final double bSquared = Math.pow(brushSize, 2);
@@ -91,7 +91,7 @@ public class CloneStampBrush extends StampBrush
                 }
             }
         }
-        v.sendMessage(ChatColor.GREEN + String.valueOf(this.clone.size()) + ChatColor.AQUA + " blocks copied sucessfully.");
+        v.sendMessage(TextColors.GREEN + String.valueOf(this.clone.size()) + TextColors.AQUA + " blocks copied sucessfully.");
     }
 
     @Override
@@ -122,7 +122,7 @@ public class CloneStampBrush extends StampBrush
                 break;
 
             default:
-                vm.custom(ChatColor.DARK_RED + "Error while stamping! Report");
+                vm.custom(TextColors.DARK_RED + "Error while stamping! Report");
                 break;
         }
     }
@@ -134,33 +134,33 @@ public class CloneStampBrush extends StampBrush
 
         if (parameter.equalsIgnoreCase("info"))
         {
-            v.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
-            v.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
-            v.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
-            v.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
+            v.sendMessage(TextColors.GOLD + "Clone / Stamp Cylinder brush parameters");
+            v.sendMessage(TextColors.GREEN + "cs f -- Activates Fill mode");
+            v.sendMessage(TextColors.GREEN + "cs a -- Activates No-Air mode");
+            v.sendMessage(TextColors.GREEN + "cs d -- Activates Default mode");
         }
         if (parameter.equalsIgnoreCase("a"))
         {
             this.setStamp(StampType.NO_AIR);
             this.reSort();
-            v.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
+            v.sendMessage(TextColors.AQUA + "No-Air stamp brush");
         }
         else if (parameter.equalsIgnoreCase("f"))
         {
             this.setStamp(StampType.FILL);
             this.reSort();
-            v.sendMessage(ChatColor.AQUA + "Fill stamp brush");
+            v.sendMessage(TextColors.AQUA + "Fill stamp brush");
         }
         else if (parameter.equalsIgnoreCase("d"))
         {
             this.setStamp(StampType.DEFAULT);
             this.reSort();
-            v.sendMessage(ChatColor.AQUA + "Default stamp brush");
+            v.sendMessage(TextColors.AQUA + "Default stamp brush");
         }
         else if (parameter.startsWith("c"))
         {
             v.setcCen(Integer.parseInt(parameter.replace("c", "")));
-            v.sendMessage(ChatColor.BLUE + "Center set to " + v.getcCen());
+            v.sendMessage(TextColors.BLUE + "Center set to " + v.getcCen());
         }
     }
 

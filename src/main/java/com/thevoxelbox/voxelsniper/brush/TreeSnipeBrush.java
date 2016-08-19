@@ -5,7 +5,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.UndoDelegate;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
@@ -72,7 +72,7 @@ public class TreeSnipeBrush extends Brush
             {
                 printout += ", ";
             }
-            printout += ((treeType.equals(this.treeType)) ? ChatColor.GRAY + treeType.name().toLowerCase() : ChatColor.DARK_GRAY + treeType.name().toLowerCase()) + ChatColor.WHITE;
+            printout += ((treeType.equals(this.treeType)) ? TextColors.GRAY + treeType.name().toLowerCase() : TextColors.DARK_GRAY + treeType.name().toLowerCase()) + TextColors.WHITE;
         }
 
         vm.custom(printout);
@@ -105,8 +105,8 @@ public class TreeSnipeBrush extends Brush
         {
             if (par[i].equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-                v.sendMessage(ChatColor.AQUA + "/b t treetype");
+                v.sendMessage(TextColors.GOLD + "Tree snipe brush:");
+                v.sendMessage(TextColors.AQUA + "/b t treetype");
                 this.printTreeType(v.getVoxelMessage());
                 return;
             }

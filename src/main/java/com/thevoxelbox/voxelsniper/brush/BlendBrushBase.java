@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.Material;
 
 /**
@@ -50,7 +50,7 @@ public abstract class BlendBrushBase extends Brush
         vm.brushName(this.getName());
         vm.size();
         vm.voxel();
-        vm.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+        vm.custom(TextColors.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
     }
 
     @Override
@@ -61,7 +61,7 @@ public abstract class BlendBrushBase extends Brush
             if (par[i].equalsIgnoreCase("water"))
             {
                 this.excludeWater = !this.excludeWater;
-                v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+                v.sendMessage(TextColors.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
             }
         }
     }

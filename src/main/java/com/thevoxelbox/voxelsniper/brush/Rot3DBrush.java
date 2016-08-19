@@ -5,7 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -49,38 +49,38 @@ public class Rot3DBrush extends Brush
             // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
             if (parameter.equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");
-                v.sendMessage(ChatColor.AQUA + "p[0-359] -- set degrees of pitch rotation (rotation about the Z axis).");
-                v.sendMessage(ChatColor.BLUE + "r[0-359] -- set degrees of roll rotation (rotation about the X axis).");
-                v.sendMessage(ChatColor.LIGHT_PURPLE + "y[0-359] -- set degrees of yaw rotation (Rotation about the Y axis).");
+                v.sendMessage(TextColors.GOLD + "Rotate brush Parameters:");
+                v.sendMessage(TextColors.AQUA + "p[0-359] -- set degrees of pitch rotation (rotation about the Z axis).");
+                v.sendMessage(TextColors.BLUE + "r[0-359] -- set degrees of roll rotation (rotation about the X axis).");
+                v.sendMessage(TextColors.LIGHT_PURPLE + "y[0-359] -- set degrees of yaw rotation (Rotation about the Y axis).");
 
                 return;
             }
             else if (parameter.startsWith("p"))
             {
                 this.sePitch = Math.toRadians(Double.parseDouble(parameter.replace("p", "")));
-                v.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch);
+                v.sendMessage(TextColors.AQUA + "Around Z-axis degrees set to " + this.sePitch);
                 if (this.sePitch < 0 || this.sePitch > 359)
                 {
-                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
+                    v.sendMessage(TextColors.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
             }
             else if (parameter.startsWith("r"))
             {
                 this.seRoll = Math.toRadians(Double.parseDouble(parameter.replace("r", "")));
-                v.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll);
+                v.sendMessage(TextColors.AQUA + "Around X-axis degrees set to " + this.seRoll);
                 if (this.seRoll < 0 || this.seRoll > 359)
                 {
-                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
+                    v.sendMessage(TextColors.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
             }
             else if (parameter.startsWith("y"))
             {
                 this.seYaw = Math.toRadians(Double.parseDouble(parameter.replace("y", "")));
-                v.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw);
+                v.sendMessage(TextColors.AQUA + "Around Y-axis degrees set to " + this.seYaw);
                 if (this.seYaw < 0 || this.seYaw > 359)
                 {
-                    v.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
+                    v.sendMessage(TextColors.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
             }
         }
@@ -255,7 +255,7 @@ public class Rot3DBrush extends Brush
                 break;
 
             default:
-                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
+                v.owner().getPlayer().sendMessage(TextColors.RED + "Something went wrong.");
                 break;
         }
     }
@@ -273,7 +273,7 @@ public class Rot3DBrush extends Brush
                 break;
 
             default:
-                v.owner().getPlayer().sendMessage(ChatColor.RED + "Something went wrong.");
+                v.owner().getPlayer().sendMessage(TextColors.RED + "Something went wrong.");
                 break;
         }
     }

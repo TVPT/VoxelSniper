@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.ChatColor;
+import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 
 /**
@@ -99,43 +99,43 @@ public class FillDownBrush extends PerformBrush
         {
             if (par[i].equalsIgnoreCase("info"))
             {
-                v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
-                v.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm.");
-                v.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
-                v.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
-                v.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
-                v.sendMessage(ChatColor.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
+                v.sendMessage(TextColors.GOLD + "Fill Down Parameters:");
+                v.sendMessage(TextColors.AQUA + "/b fd true -- will use a true circle algorithm.");
+                v.sendMessage(TextColors.AQUA + "/b fd false -- will switch back. (Default)");
+                v.sendMessage(TextColors.AQUA + "/b fd some -- Fills only into air.");
+                v.sendMessage(TextColors.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
+                v.sendMessage(TextColors.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
                 return;
             }
             else if (par[i].equalsIgnoreCase("true"))
             {
                 this.trueCircle = 0.5;
-                v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
             }
             else if (par[i].equalsIgnoreCase("false"))
             {
                 this.trueCircle = 0;
-                v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
             }
             else if (par[i].equalsIgnoreCase("all"))
             {
                 this.fillLiquid = true;
-                v.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
+                v.sendMessage(TextColors.AQUA + "Now filling liquids as well as air.");
             }
             else if (par[i].equalsIgnoreCase("some"))
             {
                 this.fillLiquid = false;
                 v.setReplaceId(0);
-                v.sendMessage(ChatColor.AQUA + "Now only filling air.");
+                v.sendMessage(TextColors.AQUA + "Now only filling air.");
             }
             else if (par[i].equalsIgnoreCase("-e"))
             {
             	this.fromExisting = !this.fromExisting;
-            	v.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
+            	v.sendMessage(TextColors.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
             }
             else
             {
-                v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }
