@@ -2,107 +2,67 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
-import org.bukkit.TextColors;
-import org.bukkit.block.Block;
-import org.bukkit.util.Vector;
+import com.flowpowered.math.GenericMath;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Disc_Brush
- *
- * @author Voxel
+ * A 1-block tall cylinder.
  */
-public class DiscBrush extends PerformBrush
-{
-    private double trueCircle = 0;
+public class DiscBrush extends PerformBrush {
 
-    /**
-     * Default Constructor.
-     */
-    public DiscBrush()
-    {
+    public DiscBrush() {
         this.setName("Disc");
     }
 
-    /**
-     * Disc executor.
-     *
-     * @param v
-     */
-    private void disc(final SnipeData v, final Block targetBlock)
-    {
-        final double radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
-        final Vector centerPoint = targetBlock.getLocation().toVector();
-        final Vector currentPoint = centerPoint.clone();
+    private void disc(final SnipeData v, final Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
 
-        for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
-        {
-            currentPoint.setX(centerPoint.getX() + x);
-            for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
-            {
-                currentPoint.setZ(centerPoint.getZ() + z);
-                if (centerPoint.distanceSquared(currentPoint) <= radiusSquared)
-                {
-                    this.current.perform(this.clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ()));
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+
+        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1)));
+
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int z = minz; z <= maxz; z++) {
+                double zs = (minz - z) * (minz - z);
+                if (xs + zs < brushSizeSquared) {
+                    perform(v, x, targetBlock.getBlockY(), z);
                 }
             }
         }
-        v.owner().storeUndo(this.current.getUndo());
+
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.disc(v, this.getTargetBlock());
+    protected final void arrow(final SnipeData v) {
+        this.disc(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.disc(v, this.getLastBlock());
+    protected final void powder(final SnipeData v) {
+        this.disc(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        for (int i = 1; i < par.length; i++)
-        {
-            final String parameter = par[i].toLowerCase();
-
-            if (parameter.equalsIgnoreCase("info"))
-            {
-                v.sendMessage(TextColors.GOLD + "Disc Brush Parameters:");
-                v.sendMessage(TextColors.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
-                return;
-            }
-            else if (parameter.startsWith("true"))
-            {
-                this.trueCircle = 0.5;
-                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
-            }
-            else if (parameter.startsWith("false"))
-            {
-                this.trueCircle = 0;
-                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
-            }
-            else
-            {
-                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
-    }
-
-    @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.disc";
     }
 }

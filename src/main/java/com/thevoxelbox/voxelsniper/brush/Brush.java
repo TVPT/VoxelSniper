@@ -73,7 +73,7 @@ public abstract class Brush implements IBrush {
 
     @Override
     public void parameters(final String[] par, final SnipeData v) {
-        // @Usability support a --no-undo parameter
+        // @Usability support a --no-undo parameter flag
         v.sendMessage(TextColors.RED, "This brush does not accept additional parameters.");
     }
 

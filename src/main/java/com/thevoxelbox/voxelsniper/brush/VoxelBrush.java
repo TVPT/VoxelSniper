@@ -2,60 +2,66 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
+import com.flowpowered.math.GenericMath;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Brush
- *
- * @author Piotr
+ * A cuboid shape.
  */
-public class VoxelBrush extends PerformBrush
-{
-    /**
-     *
-     */
-    public VoxelBrush()
-    {
+public class VoxelBrush extends PerformBrush {
+
+    public VoxelBrush() {
         this.setName("Voxel");
     }
 
-    private void voxel(final SnipeData v)
-    {
-        for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--)
-        {
-            for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
-            {
-                for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
-                {
-                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + z, this.getTargetBlock().getZ() + y));
+    private void voxel(final SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
+        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+
+        this.undo = new Undo(GenericMath.floor(8 * (brushSize + 1) * (brushSize + 1) * (brushSize + 1)));
+
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            for (int y = miny; y <= maxy; y++) {
+                for (int z = minz; z <= maxz; z++) {
+                    perform(v, x, y, z);
                 }
             }
         }
-        v.owner().storeUndo(this.current.getUndo());
+
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.voxel(v);
+    protected final void arrow(final SnipeData v) {
+        this.voxel(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.voxel(v);
+    protected final void powder(final SnipeData v) {
+        this.voxel(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.voxel";
     }
 }

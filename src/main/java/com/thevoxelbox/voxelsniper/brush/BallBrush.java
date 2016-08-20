@@ -6,7 +6,6 @@ import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 import com.flowpowered.math.GenericMath;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -23,16 +22,12 @@ public class BallBrush extends PerformBrush {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
-        int blockPositionX = targetBlock.getBlockX();
-        int blockPositionY = targetBlock.getBlockY();
-        int blockPositionZ = targetBlock.getBlockZ();
-
-        int minx = GenericMath.floor(blockPositionX - brushSize);
-        int maxx = GenericMath.floor(blockPositionX + brushSize) + 1;
-        int miny = Math.max(GenericMath.floor(blockPositionY - brushSize), 0);
-        int maxy = Math.min(GenericMath.floor(blockPositionY + brushSize) + 1, WORLD_HEIGHT);
-        int minz = GenericMath.floor(blockPositionZ - brushSize);
-        int maxz = GenericMath.floor(blockPositionZ + brushSize) + 1;
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
+        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
 
         // Approximate the size of the undo to the volume of a one larger sphere
         this.undo = new Undo(GenericMath.floor(4 * Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));

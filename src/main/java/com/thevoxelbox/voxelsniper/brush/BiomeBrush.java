@@ -63,7 +63,7 @@ public class BiomeBrush extends Brush {
 
     @Override
     public final void parameters(final String[] args, final SnipeData v) {
-        if (args[1].equalsIgnoreCase("info")) {
+        if (args[0].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.GOLD + "Biome Brush Parameters:");
             String availableBiomes = "";
 
@@ -74,8 +74,7 @@ public class BiomeBrush extends Brush {
 
             v.sendMessage(TextColors.DARK_BLUE, "Available biomes: ", TextColors.DARK_GREEN, availableBiomes);
         } else {
-            String biomeName = args[1];
-
+            String biomeName = args[0];
             Optional<BiomeType> biome = Sponge.getRegistry().getType(BiomeType.class, biomeName);
             if (!biome.isPresent()) {
                 v.sendMessage(TextColors.RED, "Unknown biome type: ", TextColors.DARK_AQUA, biomeName);

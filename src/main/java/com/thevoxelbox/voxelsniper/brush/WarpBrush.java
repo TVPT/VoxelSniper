@@ -2,57 +2,53 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 
-/**
- * @author MikeMatrix
- */
-public class WarpBrush extends Brush
-{
-    /**
-     *
-     */
-    public WarpBrush()
-    {
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
+import java.util.Optional;
+
+public class WarpBrush extends Brush {
+
+    public WarpBrush() {
         this.setName("Warp");
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
+    protected final void arrow(final SnipeData v) {
         Player player = v.owner().getPlayer();
-        Location location = this.getLastBlock().getLocation();
-        Location playerLocation = player.getLocation();
-        location.setPitch(playerLocation.getPitch());
-        location.setYaw(playerLocation.getYaw());
+        player.setLocation(this.lastBlock);
+    }
 
-        player.teleport(location);
+    private void strikeLightning(Location<World> pos, Player player) {
+        Optional<Entity> e = pos.getExtent().createEntity(EntityTypes.LIGHTNING, pos.getBlockPosition());
+        if (e.isPresent()) {
+            pos.getExtent().spawnEntity(e.get(), Cause.of(NamedCause.of("plugin", VoxelSniper.getInstance()), NamedCause.source(player)));
+        }
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
+    protected final void powder(final SnipeData v) {
         Player player = v.owner().getPlayer();
-        Location location = this.getLastBlock().getLocation();
-        Location playerLocation = player.getLocation();
-        location.setPitch(playerLocation.getPitch());
-        location.setYaw(playerLocation.getYaw());
 
-        getWorld().strikeLightning(location);
-        player.teleport(location);
-        getWorld().strikeLightning(location);
+        strikeLightning(player.getLocation(), player);
+        player.setLocation(this.lastBlock);
+        strikeLightning(this.lastBlock, player);
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.warp";
     }
 }

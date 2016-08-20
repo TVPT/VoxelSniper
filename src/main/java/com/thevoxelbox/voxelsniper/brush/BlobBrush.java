@@ -1,17 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.Random;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
-import org.bukkit.TextColors;
+import org.spongepowered.api.text.format.TextColors;
+
+import java.util.Random;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Blob_Brush
- *
- * @author Giltwist
+ * Creates a 
  */
 public class BlobBrush extends PerformBrush
 {
@@ -35,16 +33,17 @@ public class BlobBrush extends PerformBrush
         if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX)
         {
             this.growPercent = GROW_PERCENT_DEFAULT;
-            v.sendMessage(TextColors.BLUE + "Growth percent set to: 10%");
+            v.sendMessage(TextColors.BLUE,  "Growth percent set to: 10%");
         }
     }
 
     private void digBlob(final SnipeData v)
     {
-        final int brushSize = v.getBrushSize();
-        final int brushSizeDoubled = 2 * brushSize;
-        final int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
-        final int[][][] tempSplat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
+        // @Cleanup change these 3d arrays to BlockBuffers
+        final double brushSize = v.getBrushSize();
+        final double brushSizeDoubled = 2 * brushSize;
+        final int[][][] splat = new int[(int) (brushSizeDoubled + 1)][(int) (brushSizeDoubled + 1)][(int) (brushSizeDoubled + 1)];
+        final int[][][] tempSplat = new int[(int) (brushSizeDoubled + 1)][(int) (brushSizeDoubled + 1)][(int) (brushSizeDoubled + 1)];
 
         this.checkValidGrowPercent(v);
 
@@ -114,7 +113,6 @@ public class BlobBrush extends PerformBrush
                 }
             }
 
-            // shouldn't this just be splat = tempsplat;? -Gavjenks
             // integrate tempsplat back into splat at end of iteration
             for (int x = brushSizeDoubled; x >= 0; x--)
             {

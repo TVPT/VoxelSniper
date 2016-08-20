@@ -2,114 +2,80 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
+
+import com.flowpowered.math.GenericMath;
+import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Disc_Face_Brush
- *
- * @author Voxel
+ * Places a disc aligned to the face of the block that you target.
  */
-public class VoxelDiscFaceBrush extends PerformBrush
-{
-    /**
-     *
-     */
-    public VoxelDiscFaceBrush()
-    {
+public class VoxelDiscFaceBrush extends PerformBrush {
+
+    public VoxelDiscFaceBrush() {
         this.setName("Voxel Disc Face");
     }
 
-    private void disc(final SnipeData v, Block targetBlock)
-    {
-        for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
-        {
-            for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
-            {
-                this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
+    private void disc(final SnipeData v, Location<World> targetBlock, Direction axis) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
+
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+
+        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1)));
+
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            for (int z = minz; z <= maxz; z++) {
+                if (axis == Direction.UP) {
+                    perform(v, x, targetBlock.getBlockY(), z);
+                } else if (axis == Direction.NORTH) {
+                    perform(v, x, z, targetBlock.getBlockZ());
+                } else if (axis == Direction.EAST) {
+                    perform(v, targetBlock.getBlockX(), x, z);
+                }
             }
         }
 
-        v.owner().storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
-    private void discNS(final SnipeData v, Block targetBlock)
-    {
-        for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
-        {
-            for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
-            {
-                this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
-            }
-        }
-
-        v.owner().storeUndo(this.current.getUndo());
-    }
-
-    private void discEW(final SnipeData v, Block targetBlock)
-    {
-        for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--)
-        {
-            for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--)
-            {
-                this.current.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
-            }
-        }
-
-        v.owner().storeUndo(this.current.getUndo());
-    }
-
-    private void pre(final SnipeData v, final BlockFace bf, Block targetBlock)
-    {
-        if (bf == null)
-        {
-            return;
-        }
-        switch (bf)
-        {
-            case NORTH:
-            case SOUTH:
-                this.discNS(v, targetBlock);
-                break;
-
-            case EAST:
-            case WEST:
-                this.discEW(v, targetBlock);
-                break;
-
-            case UP:
-            case DOWN:
-                this.disc(v, targetBlock);
-                break;
-
-            default:
-                break;
+    private void pre(final SnipeData v, Location<World> target) {
+        if (this.lastBlock.getBlockY() != this.targetBlock.getBlockY()) {
+            disc(v, target, Direction.UP);
+        } else if (this.lastBlock.getBlockX() != this.targetBlock.getBlockX()) {
+            disc(v, target, Direction.EAST);
+        } else if (this.lastBlock.getBlockZ() != this.targetBlock.getBlockZ()) {
+            disc(v, target, Direction.NORTH);
         }
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()), this.getTargetBlock());
+    protected final void arrow(final SnipeData v) {
+        this.pre(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.pre(v, this.getTargetBlock().getFace(this.getLastBlock()), this.getLastBlock());
+    protected final void powder(final SnipeData v) {
+        this.pre(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.voxeldiscface";
     }
 }

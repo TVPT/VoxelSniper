@@ -81,6 +81,7 @@ public class VoxelBrushCommand implements CommandExecutor {
                     ((PerformBrush) currentBrush).parse(bargs, snipeData);
                     return CommandResult.success();
                 } else {
+                    // @Cleanup parse out flags and pass as separate set
                     currentBrush.parameters(bargs, snipeData);
                     return CommandResult.success();
                 }
