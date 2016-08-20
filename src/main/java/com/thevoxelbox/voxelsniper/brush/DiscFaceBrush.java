@@ -3,8 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;

@@ -3,8 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
@@ -21,7 +19,6 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 
     private void disc(final SnipeData v, Location<World> targetBlock, Direction axis) {
         double brushSize = v.getBrushSize();
-        double brushSizeSquared = brushSize * brushSize;
 
         int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;

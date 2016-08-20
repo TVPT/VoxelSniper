@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
-
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -11,8 +10,6 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-
-import java.util.Optional;
 
 public class WarpBrush extends Brush {
 
@@ -32,10 +29,8 @@ public class WarpBrush extends Brush {
     }
 
     private void strikeLightning(Location<World> pos, Player player) {
-        Optional<Entity> e = pos.getExtent().createEntity(EntityTypes.LIGHTNING, pos.getBlockPosition());
-        if (e.isPresent()) {
-            pos.getExtent().spawnEntity(e.get(), Cause.of(NamedCause.of("plugin", VoxelSniper.getInstance()), NamedCause.source(player)));
-        }
+        Entity e = pos.getExtent().createEntity(EntityTypes.LIGHTNING, pos.getBlockPosition());
+        pos.getExtent().spawnEntity(e, Cause.of(NamedCause.of("plugin", VoxelSniper.getInstance()), NamedCause.source(player)));
     }
 
     @Override

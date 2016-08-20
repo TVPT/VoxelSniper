@@ -6,8 +6,7 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
+import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -80,11 +79,10 @@ public class VoxelBrushCommand implements CommandExecutor {
                 if (currentBrush instanceof PerformBrush) {
                     ((PerformBrush) currentBrush).parse(bargs, snipeData);
                     return CommandResult.success();
-                } else {
-                    // @Cleanup parse out flags and pass as separate set
-                    currentBrush.parameters(bargs, snipeData);
-                    return CommandResult.success();
                 }
+                // @Cleanup parse out flags and pass as separate set
+                currentBrush.parameters(bargs, snipeData);
+                return CommandResult.success();
             }
             // @Spongify add new event
 //            SniperBrushChangedEvent event = new SniperBrushChangedEvent(sniper, currentToolId, orignalBrush, sniper.getBrush(currentToolId));

@@ -78,20 +78,19 @@ public class VoxelBrushToolCommand implements CommandExecutor {
                 if (args.length == 2) {
                     sniper.removeTool(args[1]);
                     return CommandResult.success();
-                } else {
-                    ItemType itemInHand =
-                            (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) ? player.getItemInHand(HandTypes.MAIN_HAND).get().getItem() : null;
-                    if (itemInHand == null) {
-                        player.sendMessage(Text.of(TextColors.RED, "Can't unassign empty hands."));
-                        return CommandResult.success();
-                    }
-                    if (sniper.getCurrentToolId() == null) {
-                        player.sendMessage(Text.of(TextColors.RED, "Can't unassign default tool."));
-                        return CommandResult.success();
-                    }
-                    sniper.removeTool(sniper.getCurrentToolId(), itemInHand);
+                }
+                ItemType itemInHand =
+                        (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) ? player.getItemInHand(HandTypes.MAIN_HAND).get().getItem() : null;
+                if (itemInHand == null) {
+                    player.sendMessage(Text.of(TextColors.RED, "Can't unassign empty hands."));
                     return CommandResult.success();
                 }
+                if (sniper.getCurrentToolId() == null) {
+                    player.sendMessage(Text.of(TextColors.RED, "Can't unassign default tool."));
+                    return CommandResult.success();
+                }
+                sniper.removeTool(sniper.getCurrentToolId(), itemInHand);
+                return CommandResult.success();
             }
         }
         player.sendMessage(Text.of(TextColors.RED, "Usage: /btool assign <arrow|powder> <toolid>"));

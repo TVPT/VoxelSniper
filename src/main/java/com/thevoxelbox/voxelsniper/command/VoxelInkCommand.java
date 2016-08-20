@@ -1,57 +1,57 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import com.thevoxelbox.voxelsniper.RangeBlockHelper;
-import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
-public class VoxelInkCommand extends VoxelCommand
-{
-    public VoxelInkCommand(final VoxelSniper plugin)
-    {
-        super("VoxelInk", plugin);
-        setIdentifier("vi");
-        setPermission("voxelsniper.sniper");
+public class VoxelInkCommand implements CommandExecutor {
+
+    public static void setup(Object plugin) {
+        Sponge.getCommandManager().register(plugin, CommandSpec.builder()
+                .arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.string(Text.of("key")),
+                        GenericArguments.literal(Text.of("equals"), "="), GenericArguments.string(Text.of("value")))
+                .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                .description(Text.of("VoxelSniper Ink selection")).build(), "vi");
     }
 
     @Override
-    public boolean onCommand(Player player, String[] args)
-    {
-        Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
+    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+        Player player = (Player) gargs.getOne("sniper").get();
+        Sniper sniper = SniperManager.get().getSniperForPlayer(player);
 
-        byte dataValue;
-
-        if (args.length == 0)
-        {
-            Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
-            if (targetBlock != null)
-            {
-                dataValue = targetBlock.getData();
-            }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            try
-            {
-                dataValue = Byte.parseByte(args[0]);
-            }
-            catch (NumberFormatException exception)
-            {
-                player.sendMessage("Couldn't parse input.");
-                return true;
-            }
-        }
-
-        SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
-        snipeData.setData(dataValue);
-        snipeData.getVoxelMessage().data();
-        return true;
+        String key = (String) gargs.getOne("key").get();
+        String value = (String) gargs.getOne("value").get();
+        
+        // @Spongify turn these into a key and value for a blockstate
+//        if (args.length == 0) {
+//            Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
+//            if (targetBlock != null) {
+//                dataValue = targetBlock.getData();
+//            } else {
+//                return true;
+//            }
+//        } else {
+//            try {
+//                dataValue = Byte.parseByte(args[0]);
+//            } catch (NumberFormatException exception) {
+//                player.sendMessage("Couldn't parse input.");
+//                return true;
+//            }
+//        }
+//
+//        SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+//        snipeData.setData(dataValue);
+//        snipeData.getVoxelMessage().data();
+        return CommandResult.success();
     }
 }

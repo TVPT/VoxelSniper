@@ -4,8 +4,6 @@ import java.util.Random;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-
 import org.bukkit.TextColors;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;

@@ -2,37 +2,37 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.TextColors;
-import org.bukkit.entity.Player;
+import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
-public class VoxelHeightCommand extends VoxelCommand
-{
-    public VoxelHeightCommand(final VoxelSniper plugin)
-    {
-        super("VoxelHeight", plugin);
-        setIdentifier("vh");
-        setPermission("voxelsniper.sniper");
+public class VoxelHeightCommand implements CommandExecutor {
+
+    public static void setup(Object plugin) {
+        Sponge.getCommandManager().register(plugin,
+                CommandSpec.builder().arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.integer(Text.of("height")))
+                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .description(Text.of("VoxelSniper Height selection")).build(),
+                "vh");
     }
 
     @Override
-    public boolean onCommand(Player player, String[] args)
-    {
-        Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
+    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+        Player player = (Player) gargs.getOne("sniper").get();
+        Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 
-        try
-        {
-            int height = Integer.parseInt(args[0]);
-            snipeData.setVoxelHeight(height);
-            snipeData.getVoxelMessage().height();
-            return true;
-        }
-        catch (final Exception exception)
-        {
-            player.sendMessage(TextColors.RED + "Invalid input.");
-            return true;
-        }
+        snipeData.setVoxelHeight((int) gargs.getOne("height").get());
+        snipeData.getVoxelMessage().height();
+        return CommandResult.success();
     }
 }
