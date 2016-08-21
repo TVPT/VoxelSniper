@@ -33,6 +33,9 @@ public class SignOverwriteBrush extends Brush {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
+        int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
         int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
@@ -42,11 +45,11 @@ public class SignOverwriteBrush extends Brush {
 
         boolean signFound = false;
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int y = miny; y <= maxy; y++) {
-                double ys = (miny - y) * (miny - y);
+                double ys = (ty - y) * (ty - y);
                 for (int z = minz; z <= maxz; z++) {
-                    double zs = (minz - z) * (minz - z);
+                    double zs = (tz - z) * (tz - z);
                     if (xs + ys + zs < brushSizeSquared) {
                         BlockState block = this.world.getBlock(x, y, z);
                         if (block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN) {

@@ -24,6 +24,8 @@ public class EllipseBrush extends PerformBrush {
     private void ellipse(final SnipeData v, Location<World> targetBlock, Direction axis) {
         double xrads = this.xrad * this.xrad;
         double yrads = this.yrad * this.yrad;
+        int tx = targetBlock.getBlockX();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(targetBlock.getBlockX() - this.xrad);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + this.xrad) + 1;
         int minz = GenericMath.floor(targetBlock.getBlockZ() - this.yrad);
@@ -34,9 +36,9 @@ public class EllipseBrush extends PerformBrush {
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (minz - z) * (minz - z);
+                double zs = (tz - z) * (tz - z);
                 if (xs / xrads + zs / yrads < 1) {
                     if (axis == Direction.UP) {
                         perform(v, x, targetBlock.getBlockY(), z);

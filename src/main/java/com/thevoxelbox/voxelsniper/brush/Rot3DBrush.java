@@ -83,6 +83,9 @@ public class Rot3DBrush extends Brush {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
+        int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(this.targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(this.targetBlock.getBlockX() + brushSize) + 1;
         int miny = Math.max(GenericMath.floor(this.targetBlock.getBlockY() - brushSize), 0);
@@ -96,11 +99,11 @@ public class Rot3DBrush extends Brush {
         this.undo = new Undo(GenericMath.floor(4 * Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));
 
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int y = miny; y <= maxy; y++) {
-                double ys = (miny - y) * (miny - y);
+                double ys = (ty - y) * (ty - y);
                 for (int z = minz; z <= maxz; z++) {
-                    double zs = (minz - z) * (minz - z);
+                    double zs = (tz - z) * (tz - z);
                     if (xs + ys + zs < brushSizeSquared) {
 
                     }

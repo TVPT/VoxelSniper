@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityTypes;
 
 public class LightningBrush extends Brush {
 
@@ -14,16 +16,16 @@ public class LightningBrush extends Brush {
         vm.brushName(this.getName());
         vm.brushMessage("Lightning Brush!  Please use in moderation.");
     }
-    // @Spongify
 
     @Override
     protected final void arrow(final SnipeData v) {
-//        this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
+        Entity e = this.world.createEntity(EntityTypes.LIGHTNING, this.targetBlock.getBlockPosition());
+        this.world.spawnEntity(e, this.cause);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-//        this.getWorld().strikeLightning(this.getTargetBlock().getLocation());
+        arrow(v);
     }
 
     @Override

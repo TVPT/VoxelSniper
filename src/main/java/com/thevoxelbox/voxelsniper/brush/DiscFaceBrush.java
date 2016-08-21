@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -21,26 +21,23 @@ public class DiscFaceBrush extends PerformBrush {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
-        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
-        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
-        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
-        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+        int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
+        int tz = targetBlock.getBlockZ();
 
         this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1)));
-
+        int size = GenericMath.floor(brushSize) + 1;
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
-        for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
-            for (int z = minz; z <= maxz; z++) {
-                double zs = (minz - z) * (minz - z);
-                if (xs + zs < brushSizeSquared) {
+        for (int x = -size; x <= size; x++) {
+            for (int z = -size; z <= size; z++) {
+                if (x * x + z * z < brushSizeSquared) {
                     if (axis == Direction.UP) {
-                        perform(v, x, targetBlock.getBlockY(), z);
+                        perform(v, x + tx, targetBlock.getBlockY(), z + tz);
                     } else if (axis == Direction.NORTH) {
-                        perform(v, x, z, targetBlock.getBlockZ());
+                        perform(v, x + tx, z + ty, targetBlock.getBlockZ());
                     } else if (axis == Direction.EAST) {
-                        perform(v, targetBlock.getBlockX(), x, z);
+                        perform(v, targetBlock.getBlockX(), x + ty, z + tz);
                     }
                 }
             }

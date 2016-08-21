@@ -53,12 +53,16 @@ public class VoxelVoxelCommand implements CommandExecutor {
             snipeData.getVoxelMessage().voxel();
             return CommandResult.success();
         }
-        Optional<BlockType> type = Sponge.getRegistry().getType(BlockType.class, material.get());
+        String materialName = material.get();
+        if (!materialName.contains(":")) {
+            materialName = "minecraft:" + materialName;
+        }
+        Optional<BlockType> type = Sponge.getRegistry().getType(BlockType.class, materialName);
         if (type.isPresent()) {
             snipeData.setVoxelId(type.get().getDefaultState());
             snipeData.getVoxelMessage().voxel();
         } else {
-            Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, material.get());
+            Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, materialName);
             if (state.isPresent()) {
                 snipeData.setVoxelId(state.get());
                 snipeData.getVoxelMessage().voxel();

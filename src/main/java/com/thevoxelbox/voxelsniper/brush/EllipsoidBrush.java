@@ -26,6 +26,9 @@ public class EllipsoidBrush extends PerformBrush {
         double yrads = this.yrad * this.yrad;
         double zrads = this.zrad * this.zrad;
 
+        int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(targetBlock.getBlockX() - this.xrad);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + this.xrad) + 1;
         int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - this.yrad), 0);
@@ -38,11 +41,11 @@ public class EllipsoidBrush extends PerformBrush {
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int y = miny; y <= maxy; y++) {
-                double ys = (miny - y) * (miny - y);
+                double ys = (ty - y) * (ty - y);
                 for (int z = minz; z <= maxz; z++) {
-                    double zs = (minz - z) * (minz - z);
+                    double zs = (tz - z) * (tz - z);
                     if (xs / xrads + ys / yrads + zs / zrads < 1) {
                         perform(v, x, y, z);
                     }

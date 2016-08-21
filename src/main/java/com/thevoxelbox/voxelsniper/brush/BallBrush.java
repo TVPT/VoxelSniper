@@ -23,17 +23,26 @@ public class BallBrush extends PerformBrush {
         int tx = targetBlock.getBlockX();
         int ty = targetBlock.getBlockY();
         int tz = targetBlock.getBlockZ();
-        
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
+        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+
         // Approximate the size of the undo to the volume of a one larger sphere
         this.undo = new Undo(GenericMath.floor(4 * Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));
-        int size = GenericMath.floor(brushSize) + 1;
+
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
-        for (int x = -size; x <= size; x++) {
-            for (int y = -size; y <= size; y++) {
-                for (int z = -size; z <= size; z++) {
-                    if (x * x + y * y + z * z < brushSizeSquared) {
-                        perform(v, x + tx, y + ty, z + tz);
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (tx - x) * (tx - x);
+            for (int y = miny; y <= maxy; y++) {
+                double ys = (ty - y) * (ty - y);
+                for (int z = minz; z <= maxz; z++) {
+                    double zs = (tz - z) * (tz - z);
+                    if (xs + ys + zs < brushSizeSquared) {
+                        perform(v, x, y, z);
                     }
                 }
             }

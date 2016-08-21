@@ -54,7 +54,7 @@ public class VoxelBrushCommand implements CommandExecutor {
         }
 
         try {
-            int newBrushSize = Integer.parseInt(brush_selection.get());
+            double newBrushSize = Double.parseDouble(brush_selection.get());
             if (!player.hasPermission(VoxelSniperConfiguration.PERMISSION_IGNORE_SIZE_LIMITS)
                     && newBrushSize > VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE) {
                 player.sendMessage(
@@ -81,11 +81,10 @@ public class VoxelBrushCommand implements CommandExecutor {
                 IBrush currentBrush = sniper.getBrush(currentToolId);
                 if (currentBrush instanceof PerformBrush) {
                     ((PerformBrush) currentBrush).parse(bargs, snipeData);
-                    return CommandResult.success();
+                } else {
+                    // @Cleanup parse out flags and pass as separate set
+                    currentBrush.parameters(bargs, snipeData);
                 }
-                // @Cleanup parse out flags and pass as separate set
-                currentBrush.parameters(bargs, snipeData);
-                return CommandResult.success();
             }
             // @Spongify add new event
 //            SniperBrushChangedEvent event = new SniperBrushChangedEvent(sniper, currentToolId, orignalBrush, sniper.getBrush(currentToolId));

@@ -13,7 +13,7 @@ public class VoxelSniperConfiguration {
     public static final String PERMISSION_COMMAND_UNDO_OTHER = "voxelsniper.command.uu";
 
     // Config
-    public static int LITESNIPER_MAX_BRUSH_SIZE = 10;
+    public static double LITESNIPER_MAX_BRUSH_SIZE = 10.5;
     public static int UNDO_CACHE_SIZE = 10;
     public static boolean LOGIN_MESSAGE_ENABLED = true;
 

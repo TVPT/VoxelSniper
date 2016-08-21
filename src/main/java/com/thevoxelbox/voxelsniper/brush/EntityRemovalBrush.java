@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.Sets;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
@@ -33,16 +32,17 @@ public class EntityRemovalBrush extends Brush {
     }
 
     private void radialRemoval(SnipeData v) {
-        Vector3i chunkPos = this.targetBlock.getChunkPosition();
+        int cx = this.targetBlock.getChunkPosition().getX();
+        int cz = this.targetBlock.getChunkPosition().getZ();
         int entityCount = 0;
         int chunkCount = 0;
 
         int radius = (int) Math.round(v.getBrushSize() / 16);
         int radiusSquared = radius * radius;
-        for (int x = chunkPos.getX() - radius; x <= chunkPos.getX() + radius; x++) {
-            for (int z = chunkPos.getZ() - radius; z <= chunkPos.getZ() + radius; z++) {
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
                 if (x * x + z * z < radiusSquared) {
-                    Optional<Chunk> chunk = this.world.getChunk(x, 0, z);
+                    Optional<Chunk> chunk = this.world.getChunk(x + cx, 0, z + cz);
                     if (chunk.isPresent()) {
                         entityCount += removeEntities(chunk.get());
                         chunkCount++;

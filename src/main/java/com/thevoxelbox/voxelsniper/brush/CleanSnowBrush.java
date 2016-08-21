@@ -22,6 +22,9 @@ public class CleanSnowBrush extends Brush {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
+        int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
         int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
@@ -37,11 +40,11 @@ public class CleanSnowBrush extends Brush {
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (minz - z) * (minz - z);
+                double zs = (tz - z) * (tz - z);
                 for (int y = maxy; y >= miny; y--) {
-                    double ys = (miny - y) * (miny - y);
+                    double ys = (ty - y) * (ty - y);
                     if (xs + ys + zs < brushSizeSquared) {
                         BlockType below = this.world.getBlockType(x, y, z);
                         if (below == BlockTypes.SNOW_LAYER || below == BlockTypes.AIR) {

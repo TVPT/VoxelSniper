@@ -20,6 +20,8 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
+        int tx = targetBlock.getBlockX();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
         int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
@@ -30,11 +32,11 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (minz - z) * (minz - z);
+                double zs = (tz - z) * (tz - z);
                 if (xs + zs < brushSizeSquared) {
-                    final int sum = this.useWorldCoordinates ? x + z : x - minx + z - minz;
+                    final int sum = this.useWorldCoordinates ? x + z : x - tx + z - tx;
                     if (sum % 2 != 0) {
                         perform(v, x, targetBlock.getBlockY(), z);
                     }

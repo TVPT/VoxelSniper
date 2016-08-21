@@ -119,8 +119,7 @@ public class Message {
      * Display voxel type.
      */
     public void voxel() {
-        this.snipeData.sendMessage(TextColors.GOLD, "Voxel: ", TextColors.RED, this.snipeData.getVoxelId(), TextColors.GRAY, " (",
-                this.snipeData.getVoxelId(), ")");
+        this.snipeData.sendMessage(TextColors.GOLD, "Voxel: ", TextColors.RED, this.snipeData.getVoxelId());
     }
 
     /**

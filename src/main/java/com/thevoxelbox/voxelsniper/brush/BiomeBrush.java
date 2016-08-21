@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
-import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.biome.BiomeType;
 import org.spongepowered.api.world.biome.BiomeTypes;
 
@@ -22,10 +23,12 @@ public class BiomeBrush extends Brush {
         this.setName("Biome (/b biome [Biome Name])");
     }
 
-    private void biome(final SnipeData v) {
+    private void biome(SnipeData v, Location<World> targetBlock) {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
+        int tx = targetBlock.getBlockX();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(this.targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(this.targetBlock.getBlockX() + brushSize) + 1;
         int minz = GenericMath.floor(this.targetBlock.getBlockZ() - brushSize);
@@ -34,9 +37,9 @@ public class BiomeBrush extends Brush {
         // @Robustness undo capturing for biome changes
 
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (minz - z) * (minz - z);
+                double zs = (tz - z) * (tz - z);
                 if ((xs + zs) <= brushSizeSquared) {
                     this.world.setBiome(x, z, this.selectedBiome);
                 }
@@ -46,12 +49,12 @@ public class BiomeBrush extends Brush {
 
     @Override
     protected final void arrow(final SnipeData v) {
-        this.biome(v);
+        this.biome(v, this.targetBlock);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.biome(v);
+        this.biome(v, this.lastBlock);
     }
 
     @Override
