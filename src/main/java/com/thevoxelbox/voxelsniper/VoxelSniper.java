@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.google.inject.Inject;
 import com.thevoxelbox.voxelsniper.brush.BallBrush;
 import com.thevoxelbox.voxelsniper.brush.BiomeBrush;
 import com.thevoxelbox.voxelsniper.brush.BlendBallBrush;
@@ -76,9 +77,20 @@ import com.thevoxelbox.voxelsniper.brush.VoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelDiscFaceBrush;
 import com.thevoxelbox.voxelsniper.brush.WarpBrush;
 import com.thevoxelbox.voxelsniper.command.VoxelBrushCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelBrushToolCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelCenterCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelDefaultCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelHeightCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelInkCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelInkReplaceCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelListCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelPerformerCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelReplaceCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelSniperCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelUndoCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelUndoUserCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelVoxelCommand;
 import com.thevoxelbox.voxelsniper.util.SniperStats;
-
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -135,12 +147,26 @@ public class VoxelSniper {
         // @Spongify loadSniperConfiguration();
 
         Sponge.getEventManager().registerListeners(this, this.voxelSniperListener);
-        
+
         registerCommands();
     }
-    
+
     private void registerCommands() {
+        // @Cleanup autodetect and load these?
         VoxelBrushCommand.setup(this);
+        VoxelBrushToolCommand.setup(this);
+        VoxelCenterCommand.setup(this);
+        VoxelDefaultCommand.setup(this);
+        VoxelHeightCommand.setup(this);
+        VoxelInkCommand.setup(this);
+        VoxelInkReplaceCommand.setup(this);
+        VoxelListCommand.setup(this);
+        VoxelPerformerCommand.setup(this);
+        VoxelReplaceCommand.setup(this);
+        VoxelSniperCommand.setup(this);
+        VoxelUndoCommand.setup(this);
+        VoxelUndoUserCommand.setup(this);
+        VoxelVoxelCommand.setup(this);
     }
 
     /**
