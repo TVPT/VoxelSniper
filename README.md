@@ -1,16 +1,15 @@
 VoxelSniper
 ===========
 
-The premiere long-distance brush editor for [Bukkit][Bukkit].
+The premiere long-distance brush editor for [Sponge][Sponge].
 
 Compilation
 -----------
 
-We use maven to handle our dependencies.
+We use gradle to handle our dependencies.
 
-- Install [Maven 3][Maven]
 - Check out this repository.
-- Run ```mvn clean package```
+- Run ```./gradlew build```
 
 The master branch is automatically build on our jenkins server ([VoxelSniper Jenkins Job][JenkinsJob]).
 
@@ -40,12 +39,9 @@ Experienced behaviour:
 Brush A created a cube instead.
 
 Additional Information:
-CraftBukkit 1.3.2-R1.0
-VoxelSniper 5.166.11
-java -version output:
-java version "1.7.0_07"
-Java(TM) SE Runtime Environment (build 1.7.0_07-b11)
-Java HotSpot(TM) Client VM (build 23.3-b01, mixed mode)
+SpongeForge: 1.10.2-2052-5.0.0-BETA-1675
+Minecraft Forge: 12.18.1.2057
+VoxelSniper: 8.0.0
 ```
 
 Additional Information like what java version the server runs on would be appriciated, but is not required at all times.
@@ -86,5 +82,5 @@ Some rough guidelines for now:
 
 [VoxelSniperWiki]: http://voxelwiki.com/minecraft/VoxelSniper/
 [JenkinsJob]: http://ci.thevoxelbox.com/job/VoxelSniper/
-[Bukkit]: http://bukkit.org/
-[Maven]: http://maven.apache.org/
+[Sponge]: https://www.spongepowered.org/
+[Gradle]: https://gradle.org/
