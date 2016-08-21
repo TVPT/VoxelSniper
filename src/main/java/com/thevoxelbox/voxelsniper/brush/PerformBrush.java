@@ -117,13 +117,7 @@ public abstract class PerformBrush extends Brush {
                     }
                     break;
                 case STATE:
-                    Optional<?> value = current.get(v.getReplaceInkKey());
-                    if (!value.isPresent()) {
-                        return false;
-                    }
-                    if (!value.get().equals(v.getReplaceInkValue())) {
-                        return false;
-                    }
+                    // @Todo filter by key and value
                     break;
                 case COMBO:
                     if (current != v.getReplaceIdState()) {

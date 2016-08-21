@@ -38,3 +38,4 @@ target/
 # Testfiles
 test.sh
 /bin/
+/build/
