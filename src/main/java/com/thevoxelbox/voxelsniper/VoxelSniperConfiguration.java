@@ -9,6 +9,8 @@ public class VoxelSniperConfiguration {
     public static final int CHUNK_SIZE = 16;
     public static final String PERMISSION_SNIPER = "voxelsniper.sniper";
     public static final String PERMISSION_IGNORE_SIZE_LIMITS = "voxelsniper.ignorelimitations";
+    public static final String PERMISSION_COMMAND_ENABLE = "voxelsniper.command.vs.enable";
+    public static final String PERMISSION_COMMAND_UNDO_OTHER = "voxelsniper.command.uu";
 
     // Config
     public static int LITESNIPER_MAX_BRUSH_SIZE = 10;

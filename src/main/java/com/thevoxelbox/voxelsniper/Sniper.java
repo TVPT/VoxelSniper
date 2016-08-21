@@ -298,10 +298,6 @@ public class Sniper {
         }
     }
 
-    public void undo() {
-        undo(1);
-    }
-
     public void undo(int amount) {
         int sum = 0;
         if (this.undoList.isEmpty()) {

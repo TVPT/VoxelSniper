@@ -1,56 +1,71 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.TextColors;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.blockray.BlockRay;
+import org.spongepowered.api.util.blockray.BlockRay.BlockRayBuilder;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-public class VoxelReplaceCommand extends VoxelCommand
-{
-    public VoxelReplaceCommand(final VoxelSniper plugin)
-    {
-        super("VoxelReplace", plugin);
-        setIdentifier("vr");
-        setPermission("voxelsniper.sniper");
+import java.util.Optional;
+
+public class VoxelReplaceCommand implements CommandExecutor {
+
+    public static void setup(Object plugin) {
+        Sponge.getCommandManager().register(plugin,
+                CommandSpec.builder()
+                        .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
+                                GenericArguments.optional(GenericArguments.string(Text.of("material"))))
+                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .description(Text.of("VoxelSniper replace material selection")).build(),
+                "vr");
     }
 
     @Override
-    public boolean onCommand(Player player, String[] args)
-    {
-        Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
+    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+        Player player = (Player) gargs.getOne("sniper").get();
+        Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
-
-        if (args.length == 0)
-        {
-            Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
-            if (targetBlock != null)
-            {
-                snipeData.setReplaceId(targetBlock.getTypeId());
-                snipeData.getVoxelMessage().replace();
+        Optional<String> material = gargs.getOne("material");
+        if (!material.isPresent()) {
+            Location<World> targetBlock = null;
+            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).filter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1));
+            BlockRay<World> ray = rayBuilder.build();
+            while (ray.hasNext()) {
+                targetBlock = ray.next().getLocation();
             }
-            return true;
+            snipeData.setReplaceId(targetBlock.getBlock());
+            snipeData.getVoxelMessage().replace();
+            return CommandResult.success();
         }
-
-        Material material = Material.matchMaterial(args[0]);
-        if (material != null)
-        {
-            if (material.isBlock())
-            {
-                snipeData.setReplaceId(material.getId());
+        Optional<BlockType> type = Sponge.getRegistry().getType(BlockType.class, material.get());
+        if (type.isPresent()) {
+            snipeData.setReplaceId(type.get().getDefaultState());
+            snipeData.getVoxelMessage().replace();
+        } else {
+            Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, material.get());
+            if (state.isPresent()) {
+                snipeData.setReplaceId(state.get());
                 snipeData.getVoxelMessage().replace();
-                return true;
-            }
-            else
-            {
-                player.sendMessage(TextColors.RED + "You have entered an invalid Item ID.");
-                return true;
+            } else {
+                player.sendMessage(Text.of(TextColors.RED, "Material not found."));
             }
         }
-        return false;
+        return CommandResult.success();
     }
 }

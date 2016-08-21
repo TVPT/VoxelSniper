@@ -63,7 +63,7 @@ public final class SniperStats extends Metrics {
 
     @Override
     public String getServerVersion() {
-        return "Sponge " + Sponge.getPlatform().getMinecraftVersion().getName();
+        return Sponge.getPlatform().getImplementation().getName() + " " + Sponge.getPlatform().getMinecraftVersion().getName();
     }
 
     @Override

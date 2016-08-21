@@ -2,61 +2,46 @@ package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
+import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.perform.Performer;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.entity.Player;
+import com.thevoxelbox.voxelsniper.brush.PerformBrush;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
-import java.util.logging.Level;
+public class VoxelPerformerCommand implements CommandExecutor {
 
-public class VoxelPerformerCommand extends VoxelCommand
-{
-    public VoxelPerformerCommand(final VoxelSniper plugin)
-    {
-        super("VoxelPerformer", plugin);
-        setIdentifier("p");
-        setPermission("voxelsniper.sniper");
+    public static void setup(Object plugin) {
+        Sponge.getCommandManager().register(plugin,
+                CommandSpec.builder().arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.string(Text.of("performer")))
+                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .description(Text.of("VoxelSniper performer selection")).build(),
+                "p");
     }
 
     @Override
-    public boolean onCommand(Player player, String[] args)
-    {
-        Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
+    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+        Player player = (Player) gargs.getOne("sniper").get();
+        Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 
-        try
-        {
-            if (args == null || args.length == 0)
-            {
-                IBrush brush = sniper.getBrush(sniper.getCurrentToolId());
-                if (brush instanceof Performer)
-                {
-                    ((Performer) brush).parse(new String[]{ "m" }, snipeData);
-                }
-                else
-                {
-                    player.sendMessage("This brush is not a performer brush.");
-                }
-            }
-            else
-            {
-                IBrush brush = sniper.getBrush(sniper.getCurrentToolId());
-                if (brush instanceof Performer)
-                {
-                    ((Performer) brush).parse(args, snipeData);
-                }
-                else
-                {
-                    player.sendMessage("This brush is not a performer brush.");
-                }
-            }
-            return true;
+        String performer = (String) gargs.getOne("performer").get();
+
+        IBrush brush = sniper.getBrush(sniper.getCurrentToolId());
+        if (brush instanceof PerformBrush) {
+            ((PerformBrush) brush).parse(new String[] { performer }, snipeData);
+        } else {
+            player.sendMessage(Text.of(TextColors.RED, "This brush is not a performer brush."));
         }
-        catch (Exception exception)
-        {
-            plugin.getLogger().log(Level.WARNING, "Command error from " + player.getName(), exception);
-            return true;
-        }
+        return CommandResult.success();
     }
 }

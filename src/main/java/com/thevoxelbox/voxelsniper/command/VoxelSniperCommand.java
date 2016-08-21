@@ -1,111 +1,83 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
+import com.thevoxelbox.voxelsniper.Brushes;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
-import org.bukkit.TextColors;
-import org.bukkit.entity.Player;
+import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
-import java.util.List;
+import java.util.Optional;
 
-public class VoxelSniperCommand extends VoxelCommand
-{
+public class VoxelSniperCommand implements CommandExecutor {
 
-    public VoxelSniperCommand(final VoxelSniper plugin)
-    {
-
-        super("VoxelSniper", plugin);
-        setIdentifier("vs");
-        setPermission("voxelsniper.sniper");
+    public static void setup(Object plugin) {
+        Sponge.getCommandManager().register(plugin,
+                CommandSpec.builder()
+                        .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
+                                GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("args"))))
+                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .description(Text.of("VoxelSniper material list selection")).build(),
+                "vs");
     }
 
     @Override
-    public boolean onCommand(Player player, String[] args)
-    {
-        Sniper sniper = VoxelSniper.getInstance().getSniperManager().getSniperForPlayer(player);
-
-        if (args.length >= 1)
-        {
-            if (args[0].equalsIgnoreCase("brushes"))
-            {
-                Multimap<Class<? extends IBrush>, String> registeredBrushesMultimap = VoxelSniper.getInstance().getBrushManager().getRegisteredBrushesMultimap();
-                List<String> allHandles = Lists.newLinkedList();
-                for (Class<? extends IBrush> brushClass : registeredBrushesMultimap.keySet())
-                {
-                    allHandles.addAll(registeredBrushesMultimap.get(brushClass));
-                }
-                player.sendMessage(Joiner.on(", ").skipNulls().join(allHandles));
-                return true;
-            }
-            else if (args[0].equalsIgnoreCase("range"))
-            {
+    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+        Player player = (Player) gargs.getOne("sniper").get();
+        Sniper sniper = SniperManager.get().getSniperForPlayer(player);
+        Optional<String> oargs = gargs.getOne("args");
+        if (oargs.isPresent()) {
+            String[] args = oargs.get().split(" ");
+            if (args[0].equalsIgnoreCase("brushes")) {
+                player.sendMessage(Text.of(TextColors.AQUA, "All available brushes:"));
+                player.sendMessage(Text.of(Brushes.get().getAllBrushes()));
+                return CommandResult.success();
+            } else if (args[0].equalsIgnoreCase("range")) {
                 SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
-                if (args.length == 2)
-                {
-                    try
-                    {
+                if (args.length == 2) {
+                    try {
                         int range = Integer.parseInt(args[1]);
-                        if (range < 0)
-                        {
-                            player.sendMessage("Negative values are not allowed.");
+                        if (range < 0) {
+                            player.sendMessage(Text.of(TextColors.RED, "Negative range values are not allowed."));
                         }
                         snipeData.setRange(range);
                         snipeData.setRanged(true);
                         snipeData.getVoxelMessage().toggleRange();
 
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Text.of(TextColors.RED, "Failed to parse number for range '" + args[1] + "'"));
                     }
-                    catch (NumberFormatException exception)
-                    {
-                        player.sendMessage("Can't parse number.");
-                    }
-                    return true;
+                    return CommandResult.success();
                 }
-                else
-                {
-                    snipeData.setRanged(!snipeData.isRanged());
-                    snipeData.getVoxelMessage().toggleRange();
-                    return true;
-                }
-            }
-            else if (args[0].equalsIgnoreCase("perf"))
-            {
-                player.sendMessage(TextColors.AQUA + "Available performers (abbreviated):");
-                player.sendMessage(PerformerE.performer_list_short);
-                return true;
-            }
-            else if (args[0].equalsIgnoreCase("perflong"))
-            {
-                player.sendMessage(TextColors.AQUA + "Available performers:");
-                player.sendMessage(PerformerE.performer_list_long);
-                return true;
-            }
-            else if (args[0].equalsIgnoreCase("enable"))
-            {
+                snipeData.setRanged(!snipeData.isRanged());
+                snipeData.getVoxelMessage().toggleRange();
+                return CommandResult.success();
+            } else if (args[0].equalsIgnoreCase("enable") && player.hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
                 sniper.setEnabled(true);
-                player.sendMessage("VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
-                return true;
-            }
-            else if (args[0].equalsIgnoreCase("disable"))
-            {
+                player.sendMessage(Text.of(TextColors.GREEN, "VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled")));
+                return CommandResult.success();
+            } else if (args[0].equalsIgnoreCase("disable") && player.hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
                 sniper.setEnabled(false);
-                player.sendMessage("VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
-                return true;
-            }
-            else if (args[0].equalsIgnoreCase("toggle"))
-            {
+                player.sendMessage(Text.of(TextColors.GREEN, "VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled")));
+                return CommandResult.success();
+            } else if (args[0].equalsIgnoreCase("toggle") && player.hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
                 sniper.setEnabled(!sniper.isEnabled());
-                player.sendMessage("VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
-                return true;
+                player.sendMessage(Text.of(TextColors.GREEN, "VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled")));
+                return CommandResult.success();
             }
         }
-        player.sendMessage(TextColors.DARK_RED + "VoxelSniper - Current Brush Settings:");
+        player.sendMessage(Text.of(TextColors.DARK_RED, "VoxelSniper - Current Brush Settings:"));
         sniper.displayInfo();
-        return true;
+        return CommandResult.success();
     }
 }

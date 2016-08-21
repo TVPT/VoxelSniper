@@ -2,9 +2,8 @@ package com.thevoxelbox.voxelsniper;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-
 import com.google.common.collect.Maps;
+import com.thevoxelbox.voxelsniper.brush.IBrush;
 
 import java.util.Map;
 
@@ -65,5 +64,13 @@ public class Brushes {
      */
     public int registeredSniperBrushHandles() {
         return this.brushes.size();
+    }
+
+    public String getAllBrushes() {
+        StringBuilder brushes = new StringBuilder();
+        for (String brush : this.brushes.keySet()) {
+            brushes.append(", ").append(brush);
+        }
+        return brushes.toString().substring(2);
     }
 }
