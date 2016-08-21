@@ -2,15 +2,14 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.TextColors;
+import com.thevoxelbox.voxelsniper.Undo;
+import org.spongepowered.api.text.format.TextColors;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Triangle_Brush
- *
- * @author Giltwist
+ * Creates a triangle shape.
  */
-public class TriangleBrush extends PerformBrush
-{
+public class TriangleBrush extends PerformBrush {
+
     private double[] coordsOne = new double[3]; // Three corners
     private double[] coordsTwo = new double[3];
     private double[] coordsThree = new double[3];
@@ -18,44 +17,36 @@ public class TriangleBrush extends PerformBrush
     private double[] currentCoords = new double[3]; // For loop tracking
     private double[] vectorOne = new double[3]; // Point 1 to 2
     private double[] vectorTwo = new double[3]; // Point 1 to 3
-    private double[] vectorThree = new double[3]; // Point 2 to 3, for area calculations
+    private double[] vectorThree = new double[3]; // Point 2 to 3, for area
+                                                  // calculations
     private double[] normalVector = new double[3];
 
-    /**
-     *
-     */
-    public TriangleBrush()
-    {
+    public TriangleBrush() {
         this.setName("Triangle");
     }
 
-    private void triangleA(final SnipeData v)
-    {
-        switch (this.cornernumber)
-        {
+    private void triangleA(final SnipeData v) {
+        switch (this.cornernumber) {
             case 1:
-                this.coordsOne[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
-                // different?
-                this.coordsOne[1] = this.getTargetBlock().getY() + .5;
-                this.coordsOne[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
+                this.coordsOne[0] = this.targetBlock.getX() + .5 * this.targetBlock.getX() / Math.abs(this.targetBlock.getX());
+                this.coordsOne[1] = this.targetBlock.getY() + .5;
+                this.coordsOne[2] = this.targetBlock.getZ() + .5 * this.targetBlock.getZ() / Math.abs(this.targetBlock.getZ());
                 this.cornernumber = 2;
-                v.sendMessage(TextColors.GRAY + "First Corner set.");
+                v.sendMessage(TextColors.GRAY, "First Corner set.");
                 break;
             case 2:
-                this.coordsTwo[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
-                // different?
-                this.coordsTwo[1] = this.getTargetBlock().getY() + .5;
-                this.coordsTwo[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
+                this.coordsTwo[0] = this.targetBlock.getX() + .5 * this.targetBlock.getX() / Math.abs(this.targetBlock.getX());
+                this.coordsTwo[1] = this.targetBlock.getY() + .5;
+                this.coordsTwo[2] = this.targetBlock.getZ() + .5 * this.targetBlock.getZ() / Math.abs(this.targetBlock.getZ());
                 this.cornernumber = 3;
-                v.sendMessage(TextColors.GRAY + "Second Corner set.");
+                v.sendMessage(TextColors.GRAY, "Second Corner set.");
                 break;
             case 3:
-                this.coordsThree[0] = this.getTargetBlock().getX() + .5 * this.getTargetBlock().getX() / Math.abs(this.getTargetBlock().getX()); // I hate you sometimes, Notch. Really? Every quadrant is
-                // different?
-                this.coordsThree[1] = this.getTargetBlock().getY() + .5;
-                this.coordsThree[2] = this.getTargetBlock().getZ() + .5 * this.getTargetBlock().getZ() / Math.abs(this.getTargetBlock().getZ());
+                this.coordsThree[0] = this.targetBlock.getX() + .5 * this.targetBlock.getX() / Math.abs(this.targetBlock.getX());
+                this.coordsThree[1] = this.targetBlock.getY() + .5;
+                this.coordsThree[2] = this.targetBlock.getZ() + .5 * this.targetBlock.getZ() / Math.abs(this.targetBlock.getZ());
                 this.cornernumber = 1;
-                v.sendMessage(TextColors.GRAY + "Third Corner set.");
+                v.sendMessage(TextColors.GRAY, "Third Corner set.");
                 break;
             default:
                 break;
@@ -64,16 +55,14 @@ public class TriangleBrush extends PerformBrush
 
     }
 
-    private void triangleP(final SnipeData v)
-    {
+    private void triangleP(final SnipeData v) {
         double lengthOne = 0;
         double lengthTwo = 0;
         double lengthThree = 0;
         double heronBig = 0;
 
         // Calculate slope vectors
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
             this.vectorOne[i] = this.coordsTwo[i] - this.coordsOne[i];
             this.vectorTwo[i] = this.coordsThree[i] - this.coordsOne[i];
             this.vectorThree[i] = this.coordsThree[i] - this.coordsTwo[i];
@@ -93,33 +82,35 @@ public class TriangleBrush extends PerformBrush
         final int brushSize = (int) Math.ceil((lengthOne > lengthTwo) ? lengthOne : lengthTwo);
 
         // Calculate constant term
-        final double planeConstant = this.normalVector[0] * this.coordsOne[0] + this.normalVector[1] * this.coordsOne[1] + this.normalVector[2] * this.coordsOne[2];
+        final double planeConstant =
+                this.normalVector[0] * this.coordsOne[0] + this.normalVector[1] * this.coordsOne[1] + this.normalVector[2] * this.coordsOne[2];
 
         // Calculate the area of the full triangle
-        heronBig = .25 * Math.pow(Math.pow(Math.pow(lengthOne, 2) + Math.pow(lengthTwo, 2) + Math.pow(lengthThree, 2), 2) - 2 * (Math.pow(lengthOne, 4) + Math.pow(lengthTwo, 4) + Math.pow(lengthThree, 4)), .5);
+        heronBig = .25 * Math.pow(Math.pow(Math.pow(lengthOne, 2) + Math.pow(lengthTwo, 2) + Math.pow(lengthThree, 2), 2)
+                - 2 * (Math.pow(lengthOne, 4) + Math.pow(lengthTwo, 4) + Math.pow(lengthThree, 4)), .5);
 
-        if (lengthOne == 0 || lengthTwo == 0 || (this.coordsOne[0] == 0 && this.coordsOne[1] == 0 && this.coordsOne[2] == 0) || (this.coordsTwo[0] == 0 && this.coordsTwo[1] == 0 && this.coordsTwo[2] == 0) || (this.coordsThree[0] == 0 && this.coordsThree[1] == 0 && this.coordsThree[2] == 0))
-        {
+        // @Performance, no idea how to size this undo correctly
+        this.undo = new Undo(16);
+        if (lengthOne == 0 || lengthTwo == 0 || (this.coordsOne[0] == 0 && this.coordsOne[1] == 0 && this.coordsOne[2] == 0)
+                || (this.coordsTwo[0] == 0 && this.coordsTwo[1] == 0 && this.coordsTwo[2] == 0)
+                || (this.coordsThree[0] == 0 && this.coordsThree[1] == 0 && this.coordsThree[2] == 0)) {
             v.sendMessage(TextColors.RED + "ERROR: Invalid corners, please try again.");
-        }
-        else
-        {
+        } else {
             // Make the Changes
             final double[] cVectorOne = new double[3];
             final double[] cVectorTwo = new double[3];
             final double[] cVectorThree = new double[3];
 
-            for (int y = -brushSize; y <= brushSize; y++)
-            { // X DEPENDENT
-                for (int z = -brushSize; z <= brushSize; z++)
-                {
+            for (int y = -brushSize; y <= brushSize; y++) { // X DEPENDENT
+                for (int z = -brushSize; z <= brushSize; z++) {
                     this.currentCoords[1] = this.coordsOne[1] + y;
                     this.currentCoords[2] = this.coordsOne[2] + z;
-                    this.currentCoords[0] = (planeConstant - this.normalVector[1] * this.currentCoords[1] - this.normalVector[2] * this.currentCoords[2]) / this.normalVector[0];
+                    this.currentCoords[0] =
+                            (planeConstant - this.normalVector[1] * this.currentCoords[1] - this.normalVector[2] * this.currentCoords[2])
+                                    / this.normalVector[0];
 
                     // Area of triangle currentcoords, coordsone, coordstwo
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsTwo[i] - this.coordsOne[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsOne[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
@@ -128,11 +119,11 @@ public class TriangleBrush extends PerformBrush
                     double cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     double cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
 
-                    final double heronOne = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronOne = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                            - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordstwo
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsTwo[i] - this.coordsThree[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
@@ -140,11 +131,11 @@ public class TriangleBrush extends PerformBrush
                     cLengthOne = Math.pow(Math.pow(cVectorOne[0], 2) + Math.pow(cVectorOne[1], 2) + Math.pow(cVectorOne[2], 2), .5);
                     cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
-                    final double heronTwo = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronTwo = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                            - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordsone
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsOne[i] - this.coordsThree[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsOne[i];
@@ -152,31 +143,31 @@ public class TriangleBrush extends PerformBrush
                     cLengthOne = Math.pow(Math.pow(cVectorOne[0], 2) + Math.pow(cVectorOne[1], 2) + Math.pow(cVectorOne[2], 2), .5);
                     cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
-                    final double heronThree = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronThree =
+                            .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                                    - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     final double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 
-                    if (barycentric <= 1.1)
-                    {
+                    if (barycentric <= 1.1) {
 
-                        this.current.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
+                        perform(v, (int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]);
 
                     }
 
                 }
             } // END X DEPENDENT
 
-            for (int x = -brushSize; x <= brushSize; x++)
-            { // Y DEPENDENT
-                for (int z = -brushSize; z <= brushSize; z++)
-                {
+            for (int x = -brushSize; x <= brushSize; x++) { // Y DEPENDENT
+                for (int z = -brushSize; z <= brushSize; z++) {
                     this.currentCoords[0] = this.coordsOne[0] + x;
                     this.currentCoords[2] = this.coordsOne[2] + z;
-                    this.currentCoords[1] = (planeConstant - this.normalVector[0] * this.currentCoords[0] - this.normalVector[2] * this.currentCoords[2]) / this.normalVector[1];
+                    this.currentCoords[1] =
+                            (planeConstant - this.normalVector[0] * this.currentCoords[0] - this.normalVector[2] * this.currentCoords[2])
+                                    / this.normalVector[1];
 
                     // Area of triangle currentcoords, coordsone, coordstwo
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsTwo[i] - this.coordsOne[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsOne[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
@@ -185,11 +176,11 @@ public class TriangleBrush extends PerformBrush
                     double cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     double cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
 
-                    final double heronOne = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronOne = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                            - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordstwo
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsTwo[i] - this.coordsThree[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
@@ -197,11 +188,11 @@ public class TriangleBrush extends PerformBrush
                     cLengthOne = Math.pow(Math.pow(cVectorOne[0], 2) + Math.pow(cVectorOne[1], 2) + Math.pow(cVectorOne[2], 2), .5);
                     cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
-                    final double heronTwo = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronTwo = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                            - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordsone
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsOne[i] - this.coordsThree[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsOne[i];
@@ -209,30 +200,30 @@ public class TriangleBrush extends PerformBrush
                     cLengthOne = Math.pow(Math.pow(cVectorOne[0], 2) + Math.pow(cVectorOne[1], 2) + Math.pow(cVectorOne[2], 2), .5);
                     cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
-                    final double heronThree = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronThree =
+                            .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                                    - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     final double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 
-                    if (barycentric <= 1.1)
-                    {
+                    if (barycentric <= 1.1) {
 
-                        this.current.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
+                        perform(v, (int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]);
 
                     }
 
                 }
             } // END Y DEPENDENT
-            for (int x = -brushSize; x <= brushSize; x++)
-            { // Z DEPENDENT
-                for (int y = -brushSize; y <= brushSize; y++)
-                {
+            for (int x = -brushSize; x <= brushSize; x++) { // Z DEPENDENT
+                for (int y = -brushSize; y <= brushSize; y++) {
                     this.currentCoords[0] = this.coordsOne[0] + x;
                     this.currentCoords[1] = this.coordsOne[1] + y;
-                    this.currentCoords[2] = (planeConstant - this.normalVector[0] * this.currentCoords[0] - this.normalVector[1] * this.currentCoords[1]) / this.normalVector[2];
+                    this.currentCoords[2] =
+                            (planeConstant - this.normalVector[0] * this.currentCoords[0] - this.normalVector[1] * this.currentCoords[1])
+                                    / this.normalVector[2];
 
                     // Area of triangle currentcoords, coordsone, coordstwo
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsTwo[i] - this.coordsOne[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsOne[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
@@ -241,11 +232,11 @@ public class TriangleBrush extends PerformBrush
                     double cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     double cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
 
-                    final double heronOne = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronOne = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                            - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordstwo
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsTwo[i] - this.coordsThree[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsTwo[i];
@@ -253,11 +244,11 @@ public class TriangleBrush extends PerformBrush
                     cLengthOne = Math.pow(Math.pow(cVectorOne[0], 2) + Math.pow(cVectorOne[1], 2) + Math.pow(cVectorOne[2], 2), .5);
                     cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
-                    final double heronTwo = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronTwo = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                            - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     // Area of triangle currentcoords, coordsthree, coordsone
-                    for (int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         cVectorOne[i] = this.coordsOne[i] - this.coordsThree[i];
                         cVectorTwo[i] = this.currentCoords[i] - this.coordsThree[i];
                         cVectorThree[i] = this.currentCoords[i] - this.coordsOne[i];
@@ -265,21 +256,24 @@ public class TriangleBrush extends PerformBrush
                     cLengthOne = Math.pow(Math.pow(cVectorOne[0], 2) + Math.pow(cVectorOne[1], 2) + Math.pow(cVectorOne[2], 2), .5);
                     cLengthTwo = Math.pow(Math.pow(cVectorTwo[0], 2) + Math.pow(cVectorTwo[1], 2) + Math.pow(cVectorTwo[2], 2), .5);
                     cLengthThree = Math.pow(Math.pow(cVectorThree[0], 2) + Math.pow(cVectorThree[1], 2) + Math.pow(cVectorThree[2], 2), .5);
-                    final double heronThree = .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
+                    final double heronThree =
+                            .25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2)
+                                    - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), .5);
 
                     final double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 
-                    // VoxelSniper.log.info("Bary: "+barycentric+", hb: "+heronbig+", h1: "+heronone+", h2: "+herontwo+", h3: "+heronthree);
+                    // VoxelSniper.log.info("Bary: "+barycentric+", hb:
+                    // "+heronbig+", h1: "+heronone+", h2: "+herontwo+", h3:
+                    // "+heronthree);
 
-                    if (barycentric <= 1.1)
-                    {
-                        this.current.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
+                    if (barycentric <= 1.1) {
+                        perform(v, (int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]);
                     }
                 }
             } // END Z DEPENDENT
 
-            v.owner().storeUndo(this.current.getUndo());
-
+            v.owner().storeUndo(this.undo);
+            this.undo = null;
         }
 
         // RESET BRUSH
@@ -298,36 +292,30 @@ public class TriangleBrush extends PerformBrush
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
+    protected final void arrow(final SnipeData v) {
         this.triangleA(v);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    { // Add a point
+    protected final void powder(final SnipeData v) { // Add a point
         this.triangleP(v);
     }
 
-
     @Override
-    public final void info(final Message vm)
-    { // Make the triangle
+    public final void info(final Message vm) { // Make the triangle
         vm.brushName(this.getName());
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        if (par[1].equalsIgnoreCase("info"))
-        {
-            v.sendMessage(TextColors.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
+    public final void parameters(final String[] par, final SnipeData v) {
+        if (par[1].equalsIgnoreCase("info")) {
+            v.sendMessage(TextColors.GOLD,
+                    "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
         }
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.triangle";
     }
 }

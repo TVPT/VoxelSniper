@@ -1,484 +1,116 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
+import com.google.common.collect.Lists;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import org.bukkit.TextColors;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Overwrites signs. (Wiki:
- * http://www.voxelwiki.com/minecraft/VoxelSniper#Sign_Overwrite_Brush)
- *
- * @author Monofraps
+ * Overwrites signs.
  */
-public class SignOverwriteBrush extends Brush
-{
-    private static final int MAX_SIGN_LINE_LENGTH = 15;
-    private static final int NUM_SIGN_LINES = 4;
-    // these are no array indices
-    private static final int SIGN_LINE_1 = 1;
-    private static final int SIGN_LINE_2 = 2;
-    private static final int SIGN_LINE_3 = 3;
-    private static final int SIGN_LINE_4 = 4;
-    private String[] signTextLines = new String[NUM_SIGN_LINES];
-    private boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
-    private boolean rangedMode = false;
+public class SignOverwriteBrush extends Brush {
 
-    /**
-     *
-     */
-    public SignOverwriteBrush()
-    {
+    private List<Text> signTextLines = Lists.newArrayList(Text.of(), Text.of(), Text.of(), Text.of());
+
+    public SignOverwriteBrush() {
         this.setName("Sign Overwrite Brush");
-
-        clearBuffer();
-        resetStates();
     }
 
-    /**
-     * Sets the text of a given sign.
-     *
-     * @param sign
-     */
-    private void setSignText(final Sign sign)
-    {
-        for (int i = 0; i < this.signTextLines.length; i++)
-        {
-            if (this.signLinesEnabled[i])
-            {
-                sign.setLine(i, this.signTextLines[i]);
-            }
-        }
+    private void setRanged(final SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
 
-        sign.update();
-    }
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
+        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
 
-    /**
-     * Sets the text of the target sign if the target block is a sign.
-     *
-     * @param v
-     */
-    private void setSingle(final SnipeData v)
-    {
-        if (this.getTargetBlock().getState() instanceof Sign)
-        {
-            setSignText((Sign) this.getTargetBlock().getState());
-        }
-        else
-        {
-            v.sendMessage(TextColors.RED + "Target block is not a sign.");
-            return;
-        }
-    }
-
-    /**
-     * Sets all signs in a range of box{x=z=brushSize*2+1 ; z=voxelHeight*2+1}.
-     *
-     * @param v
-     */
-    private void setRanged(final SnipeData v)
-    {
-        final int minX = getTargetBlock().getX() - v.getBrushSize();
-        final int maxX = getTargetBlock().getX() + v.getBrushSize();
-        final int minY = getTargetBlock().getY() - v.getVoxelHeight();
-        final int maxY = getTargetBlock().getY() + v.getVoxelHeight();
-        final int minZ = getTargetBlock().getZ() - v.getBrushSize();
-        final int maxZ = getTargetBlock().getZ() + v.getBrushSize();
-
-        boolean signFound = false; // indicates whether or not a sign was set
-
-        for (int x = minX; x <= maxX; x++)
-        {
-            for (int y = minY; y <= maxY; y++)
-            {
-                for (int z = minZ; z <= maxZ; z++)
-                {
-                    BlockState blockState = this.getWorld().getBlockAt(x, y, z).getState();
-                    if (blockState instanceof Sign)
-                    {
-                        setSignText((Sign) blockState);
-                        signFound = true;
+        boolean signFound = false;
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int y = miny; y <= maxy; y++) {
+                double ys = (miny - y) * (miny - y);
+                for (int z = minz; z <= maxz; z++) {
+                    double zs = (minz - z) * (minz - z);
+                    if (xs + ys + zs < brushSizeSquared) {
+                        BlockState block = this.world.getBlock(x, y, z);
+                        if (block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN) {
+                            Optional<TileEntity> te = this.world.getTileEntity(x, y, z);
+                            if (te.isPresent()) {
+                                Sign sign = (Sign) te.get();
+                                SignData data = sign.getSignData();
+                                data.set(Keys.SIGN_LINES, this.signTextLines);
+                                sign.offer(data);
+                                signFound = true;
+                            }
+                        }
                     }
                 }
             }
         }
 
-        if (!signFound)
-        {
+        if (!signFound) {
             v.sendMessage(TextColors.RED + "Did not found any sign in selection box.");
         }
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        if (this.rangedMode)
-        {
-            setRanged(v);
-        }
-        else
-        {
-            setSingle(v);
-        }
+    protected final void arrow(final SnipeData v) {
+        setRanged(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        if (this.getTargetBlock().getState() instanceof Sign)
-        {
-            Sign sign = (Sign) this.getTargetBlock().getState();
-
-            for (int i = 0; i < this.signTextLines.length; i++)
-            {
-                if (this.signLinesEnabled[i])
-                {
-                    this.signTextLines[i] = sign.getLine(i);
-                }
+    protected final void powder(final SnipeData v) {
+        BlockState block = this.targetBlock.getBlock();
+        if (block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN) {
+            Optional<TileEntity> te = this.targetBlock.getTileEntity();
+            if (te.isPresent()) {
+                Sign sign = (Sign) te.get();
+                SignData data = sign.getSignData();
+                this.signTextLines = data.asList();
             }
-
             displayBuffer(v);
-        }
-        else
-        {
+        } else {
             v.sendMessage(TextColors.RED + "Target block is not a sign.");
         }
     }
 
-    @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        boolean textChanged = false;
-
-        for (int i = 0; i < par.length; i++)
-        {
-            String parameter = par[i];
-
-            try
-            {
-                if (parameter.equalsIgnoreCase("info"))
-                {
-                    v.sendMessage(TextColors.AQUA + "Sign Overwrite Brush Powder/Arrow:");
-                    v.sendMessage(TextColors.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
-                    v.sendMessage(TextColors.BLUE + "The powder reads the text of the target sign into the internal buffer.");
-                    v.sendMessage(TextColors.AQUA + "Sign Overwrite Brush Parameters:");
-                    v.sendMessage(TextColors.GREEN + "-1[:(enabled|disabled)] ... " + TextColors.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
-                    v.sendMessage(TextColors.GREEN + "-2[:(enabled|disabled)] ... " + TextColors.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
-                    v.sendMessage(TextColors.GREEN + "-3[:(enabled|disabled)] ... " + TextColors.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
-                    v.sendMessage(TextColors.GREEN + "-4[:(enabled|disabled)] ... " + TextColors.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
-                    v.sendMessage(TextColors.GREEN + "-clear " + TextColors.BLUE + "-- Clears the line buffer. (Alias: -c)");
-                    v.sendMessage(TextColors.GREEN + "-clearall " + TextColors.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
-                    v.sendMessage(TextColors.GREEN + "-multiple [on|off] " + TextColors.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
-                    v.sendMessage(TextColors.GREEN + "-save (name) " + TextColors.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)");
-                    v.sendMessage(TextColors.GREEN + "-open (name) " + TextColors.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)");
-                }
-                else if (parameter.startsWith("-1"))
-                {
-                    textChanged = true;
-                    i = parseSignLineFromParam(par, SIGN_LINE_1, v, i);
-                }
-                else if (parameter.startsWith("-2"))
-                {
-                    textChanged = true;
-                    i = parseSignLineFromParam(par, SIGN_LINE_2, v, i);
-                }
-                else if (parameter.startsWith("-3"))
-                {
-                    textChanged = true;
-                    i = parseSignLineFromParam(par, SIGN_LINE_3, v, i);
-                }
-                else if (parameter.startsWith("-4"))
-                {
-                    textChanged = true;
-                    i = parseSignLineFromParam(par, SIGN_LINE_4, v, i);
-                }
-                else if (parameter.equalsIgnoreCase("-clear") || parameter.equalsIgnoreCase("-c"))
-                {
-                    clearBuffer();
-                    v.sendMessage(TextColors.BLUE + "Internal text buffer cleard.");
-                }
-                else if (parameter.equalsIgnoreCase("-clearall") || parameter.equalsIgnoreCase("-ca"))
-                {
-                    clearBuffer();
-                    resetStates();
-                    v.sendMessage(TextColors.BLUE + "Internal text buffer cleard and states back to enabled.");
-                }
-                else if (parameter.equalsIgnoreCase("-multiple") || parameter.equalsIgnoreCase("-m"))
-                {
-                    if ((i + 1) >= par.length)
-                    {
-                        v.sendMessage(TextColors.RED + String.format("Missing parameter after %s.", parameter));
-                        continue;
-                    }
-
-                    rangedMode = (par[++i].equalsIgnoreCase("on") || par[++i].equalsIgnoreCase("yes"));
-                    v.sendMessage(TextColors.BLUE + String.format("Ranged mode is %s", TextColors.GREEN + (rangedMode ? "enabled" : "disabled")));
-                    if (this.rangedMode)
-                    {
-                        v.sendMessage(TextColors.GREEN + "Brush size set to " + TextColors.RED + v.getBrushSize());
-                        v.sendMessage(TextColors.AQUA + "Brush height set to " + TextColors.RED + v.getVoxelHeight());
-                    }
-                }
-                else if (parameter.equalsIgnoreCase("-save") || parameter.equalsIgnoreCase("-s"))
-                {
-                    if ((i + 1) >= par.length)
-                    {
-                        v.sendMessage(TextColors.RED + String.format("Missing parameter after %s.", parameter));
-                        continue;
-                    }
-
-                    String fileName = par[++i];
-                    saveBufferToFile(fileName, v);
-                }
-                else if (parameter.equalsIgnoreCase("-open") || parameter.equalsIgnoreCase("-o"))
-                {
-                    if ((i + 1) >= par.length)
-                    {
-                        v.sendMessage(TextColors.RED + String.format("Missing parameter after %s.", parameter));
-                        continue;
-                    }
-
-                    String fileName = par[++i];
-                    loadBufferFromFile(fileName, "", v);
-                    textChanged = true;
-                }
-            }
-            catch (Exception exception)
-            {
-                v.sendMessage(TextColors.RED + String.format("Error while parsing parameter %s", parameter));
-                exception.printStackTrace();
-            }
-        }
-
-        if (textChanged)
-        {
-            displayBuffer(v);
-        }
-    }
-
-    /**
-     * Parses parameter input text of line [param:lineNumber].
-     * Iterates though the given array until the next top level param (a parameter which starts
-     * with a dash -) is found.
-     *
-     * @param params
-     * @param lineNumber
-     * @param v
-     * @param i
-     * @return
-     */
-    private int parseSignLineFromParam(final String[] params, final int lineNumber, final SnipeData v, int i)
-    {
-        final int lineIndex = lineNumber - 1;
-        final String parameter = params[i];
-
-        boolean statusSet = false;
-
-        if (parameter.contains(":"))
-        {
-            this.signLinesEnabled[lineIndex] = parameter.substring(parameter.indexOf(":")).equalsIgnoreCase(":enabled");
-            v.sendMessage(TextColors.BLUE + "Line " + lineNumber + " is " + TextColors.GREEN + (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled"));
-            statusSet = true;
-        }
-
-        if ((i + 1) >= params.length)
-        {
-            // return if the user just wanted to set the status
-            if (statusSet)
-            {
-                return i;
-            }
-
-            v.sendMessage(TextColors.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
-            signTextLines[lineIndex] = "";
-            return i;
-        }
-
-        String newText = "";
-
-        // go through the array until the next top level parameter is found
-        for (i++; i < params.length; i++)
-        {
-            final String currentParameter = params[i];
-
-            if (currentParameter.startsWith("-"))
-            {
-                i--;
-                break;
-            }
-            else
-            {
-                newText += currentParameter + " ";
-            }
-        }
-
-        newText = TextColors.translateAlternateColorCodes('&', newText);
-
-        // remove last space or return if the string is empty and the user just wanted to set the status
-        if (!newText.isEmpty() && newText.endsWith(" "))
-        {
-            newText = newText.substring(0, newText.length() - 1);
-        }
-        else if (newText.isEmpty())
-        {
-            if (statusSet)
-            {
-                return i;
-            }
-            v.sendMessage(TextColors.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
-        }
-
-        // check the line length and cut the text if needed
-        if (newText.length() > MAX_SIGN_LINE_LENGTH)
-        {
-            v.sendMessage(TextColors.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
-            newText = newText.substring(0, MAX_SIGN_LINE_LENGTH);
-        }
-
-        this.signTextLines[lineIndex] = newText;
-        return i;
-    }
-
-    private void displayBuffer(final SnipeData v)
-    {
+    private void displayBuffer(final SnipeData v) {
         v.sendMessage(TextColors.BLUE + "Buffer text set to: ");
-        for (int i = 0; i < this.signTextLines.length; i++)
-        {
-            v.sendMessage((this.signLinesEnabled[i] ? TextColors.GREEN + "(E): " : TextColors.RED + "(D): ") + TextColors.BLACK + this.signTextLines[i]);
-        }
-    }
-
-    /**
-     * Saves the buffer to file.
-     *
-     * @param fileName
-     * @param v
-     */
-    private void saveBufferToFile(final String fileName, final SnipeData v)
-    {
-        final File store = new File(VoxelSniper.getInstance().getDataFolder() + "/" + fileName + ".vsign");
-        if (store.exists())
-        {
-            v.sendMessage("This file already exists.");
-            return;
-        }
-
-        try
-        {
-            store.createNewFile();
-            FileWriter outFile = new FileWriter(store);
-            BufferedWriter outStream = new BufferedWriter(outFile);
-
-            for (int i = 0; i < this.signTextLines.length; i++)
-            {
-                outStream.write(String.valueOf(this.signLinesEnabled[i]) + "\n");
-                outStream.write(this.signTextLines[i] + "\n");
-            }
-
-            outStream.close();
-            outFile.close();
-
-            v.sendMessage(TextColors.BLUE + "File saved successfully.");
-        }
-        catch (IOException exception)
-        {
-            v.sendMessage(TextColors.RED + "Failed to save file. " + exception.getMessage());
-            exception.printStackTrace();
-        }
-    }
-
-    /**
-     * Loads a buffer from a file.
-     *
-     * @param fileName
-     * @param userDomain
-     * @param v
-     */
-    private void loadBufferFromFile(final String fileName, final String userDomain, final SnipeData v)
-    {
-        final File store = new File(VoxelSniper.getInstance().getDataFolder() + "/" + fileName + ".vsign");
-        if (!store.exists())
-        {
-            v.sendMessage("This file does not exist.");
-            return;
-        }
-
-        try
-        {
-            FileReader inFile = new FileReader(store);
-            BufferedReader inStream = new BufferedReader(inFile);
-
-            for (int i = 0; i < this.signTextLines.length; i++)
-            {
-                this.signLinesEnabled[i] = Boolean.valueOf(inStream.readLine());
-                this.signTextLines[i] = inStream.readLine();
-            }
-
-            inStream.close();
-            inFile.close();
-
-            v.sendMessage(TextColors.BLUE + "File loaded successfully.");
-        }
-        catch (IOException exception)
-        {
-            v.sendMessage(TextColors.RED + "Failed to load file. " + exception.getMessage());
-            exception.printStackTrace();
-        }
-    }
-
-    /**
-     * Clears the internal text buffer. (Sets it to empty strings)
-     */
-    private void clearBuffer()
-    {
-        for (int i = 0; i < this.signTextLines.length; i++)
-        {
-            this.signTextLines[i] = "";
-        }
-    }
-
-    /**
-     * Resets line enabled states to enabled.
-     */
-    private void resetStates()
-    {
-        for (int i = 0; i < this.signLinesEnabled.length; i++)
-        {
-            this.signLinesEnabled[i] = true;
+        for (int i = 0; i < this.signTextLines.size(); i++) {
+            v.sendMessage(i + ": ", this.signTextLines.get(i));
         }
     }
 
     @Override
-    public final void info(final Message vm)
-    {
-        vm.brushName("Sign Overwrite Brush");
-
-        vm.custom(TextColors.BLUE + "Buffer text: ");
-        for (int i = 0; i < this.signTextLines.length; i++)
-        {
-            vm.custom((this.signLinesEnabled[i] ? TextColors.GREEN + "(E): " : TextColors.RED + "(D): ") + TextColors.BLACK + this.signTextLines[i]);
+    public final void info(final Message vm) {
+        vm.custom(TextColors.AQUA + "Sign Overwrite Brush Powder/Arrow:");
+        vm.custom(TextColors.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
+        vm.custom(TextColors.BLUE + "The powder reads the text of the target sign into the internal buffer.");
+        vm.custom(TextColors.BLUE + "Buffer text set to: ");
+        for (int i = 0; i < this.signTextLines.size(); i++) {
+            vm.custom(i + ": ", this.signTextLines.get(i));
         }
-
-        vm.custom(TextColors.BLUE + String.format("Ranged mode is %s", TextColors.GREEN + (rangedMode ? "enabled" : "disabled")));
-        if (rangedMode)
-        {
-            vm.size();
-            vm.height();
-        }
+        vm.size();
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.signoverwrite";
     }
 }

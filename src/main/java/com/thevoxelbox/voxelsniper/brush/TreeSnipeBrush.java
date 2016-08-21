@@ -1,130 +1,122 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.google.common.base.Objects;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.util.UndoDelegate;
-import org.bukkit.TextColors;
-import org.bukkit.Material;
-import org.bukkit.TreeType;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.gen.PopulatorObject;
+import org.spongepowered.api.world.gen.type.BiomeTreeType;
+import org.spongepowered.api.world.gen.type.BiomeTreeTypes;
 
+import java.util.Optional;
+import java.util.Random;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Tree_Brush
- *
- * @author Mick
+ * Places trees.
  */
-public class TreeSnipeBrush extends Brush
-{
-    private TreeType treeType = TreeType.TREE;
+public class TreeSnipeBrush extends Brush {
 
-    /**
-     *
-     */
-    public TreeSnipeBrush()
-    {
+    private Random random = new Random();
+    private BiomeTreeType treeType = BiomeTreeTypes.OAK;
+    private boolean large = false;
+
+    public TreeSnipeBrush() {
         this.setName("Tree Snipe");
     }
 
-    @SuppressWarnings("deprecation")
-	private void single(final SnipeData v, Block targetBlock)
-    {
-        UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
-        Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
-        BlockState currentState = blockBelow.getState();
-        undoDelegate.setBlock(blockBelow);
-        blockBelow.setType(Material.GRASS);
-        this.getWorld().generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
-        Undo undo = undoDelegate.getUndo();
-        blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
-        undo.put(blockBelow);
-        v.owner().storeUndo(undo);
-    }
-
-    private int getYOffset()
-    {
-        for (int i = 1; i < (getTargetBlock().getWorld().getMaxHeight() - 1 - getTargetBlock().getY()); i++)
-        {
-            if (Objects.equal(getTargetBlock().getRelative(0, i + 1, 0).getType(), Material.AIR))
-            {
-                return i;
+    private void single(final SnipeData v, Location<World> targetBlock) {
+        // @Robustness how to store the undo for this operations
+        // could place the tree into a proxy world and store the undo based on
+        // that
+        if (this.large) {
+            Optional<PopulatorObject> obj = this.treeType.getLargePopulatorObject();
+            if (obj.isPresent()) {
+                obj.get().placeObject(this.world, this.random, targetBlock.getBlockX(), targetBlock.getBlockY(),
+                        targetBlock.getBlockZ());
+                return;
             }
         }
-        return 0;
+        this.treeType.getPopulatorObject().placeObject(this.world, this.random, targetBlock.getBlockX(), targetBlock.getBlockY(),
+                targetBlock.getBlockZ());
     }
 
-    private void printTreeType(final Message vm)
-    {
-        String printout = "";
-
-        boolean delimiterHelper = true;
-        for (final TreeType treeType : TreeType.values())
-        {
-            if (delimiterHelper)
-            {
-                delimiterHelper = false;
+    private int getYOffset() {
+        int y = 1;
+        for (int y0 = this.targetBlock.getBlockY() + y; y0 < Brush.WORLD_HEIGHT; y0 = this.targetBlock.getBlockY() + (++y)) {
+            if (this.world.getBlockType(this.targetBlock.getBlockX(), y0, this.targetBlock.getBlockZ()) == BlockTypes.AIR) {
+                break;
             }
-            else
-            {
-                printout += ", ";
-            }
-            printout += ((treeType.equals(this.treeType)) ? TextColors.GRAY + treeType.name().toLowerCase() : TextColors.DARK_GRAY + treeType.name().toLowerCase()) + TextColors.WHITE;
         }
+        return y;
+    }
 
-        vm.custom(printout);
+    private void printTreeType(final Message vm) {
+        vm.custom(TextColors.AQUA, "Currently selected tree type: ", TextColors.GRAY, this.treeType.getId());
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        Block targetBlock = getTargetBlock().getRelative(0, getYOffset(), 0);
+    protected final void arrow(final SnipeData v) {
+        Location<World> targetBlock = this.targetBlock.add(0, getYOffset(), 0);
         this.single(v, targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.single(v, getTargetBlock());
+    protected final void powder(final SnipeData v) {
+        this.single(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         this.printTreeType(vm);
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        for (int i = 1; i < par.length; i++)
-        {
-            if (par[i].equalsIgnoreCase("info"))
-            {
-                v.sendMessage(TextColors.GOLD + "Tree snipe brush:");
-                v.sendMessage(TextColors.AQUA + "/b t treetype");
-                this.printTreeType(v.getVoxelMessage());
-                return;
+    public final void parameters(final String[] par, final SnipeData v) {
+        if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
+            v.sendMessage(TextColors.GOLD + "Tree snipe brush:");
+            v.sendMessage(TextColors.AQUA + "/b t treetype");
+            this.printTreeType(v.getVoxelMessage());
+            return;
+        } else if (par[0].equalsIgnoreCase("types")) {
+            StringBuilder types = new StringBuilder();
+            for (BiomeTreeType type : Sponge.getRegistry().getAllOf(BiomeTreeType.class)) {
+                types.append(", ").append(type.getId());
+                if (type.getLargePopulatorObject().isPresent()) {
+                    types.append(", ").append(type.getId() + "_large");
+                }
             }
-            try
-            {
-                this.treeType = TreeType.valueOf(par[i].toUpperCase());
-                this.printTreeType(v.getVoxelMessage());
+            v.sendMessage(TextColors.AQUA, "Available tree types:");
+            v.sendMessage(types.toString().substring(2));
+            return;
+        }
+        String typename = par[0];
+        boolean large = false;
+        if (typename.endsWith("_large")) {
+            typename = par[0].substring(0, typename.length() - 7);
+            large = true;
+        }
+        Optional<BiomeTreeType> tree = Sponge.getRegistry().getType(BiomeTreeType.class, par[0]);
+        if (tree.isPresent()) {
+            this.treeType = tree.get();
+            if (large) {
+                if (!this.treeType.getLargePopulatorObject().isPresent()) {
+                    v.sendMessage(TextColors.RED, "No large tree for that type");
+                    return;
+                }
+                this.large = true;
             }
-            catch (final IllegalArgumentException exception)
-            {
-                v.getVoxelMessage().brushMessage("No such tree type.");
-            }
+            this.printTreeType(v.getVoxelMessage());
+        } else {
+            v.sendMessage(TextColors.RED, "Tree type not found. Use '/b tree types' to list all types.");
         }
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.treesnipe";
     }
 }

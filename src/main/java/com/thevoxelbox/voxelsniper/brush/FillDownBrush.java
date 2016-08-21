@@ -1,147 +1,122 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.TextColors;
-import org.bukkit.block.Block;
+import com.thevoxelbox.voxelsniper.Undo;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.property.block.MatterProperty;
+import org.spongepowered.api.data.property.block.MatterProperty.Matter;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-/**
- * @author Voxel
- */
-public class FillDownBrush extends PerformBrush
-{
-    private double trueCircle = 0;
+import java.util.Optional;
+
+public class FillDownBrush extends PerformBrush {
+
     private boolean fillLiquid = true;
     private boolean fromExisting = false;
 
-    /**
-     *
-     */
-    public FillDownBrush()
-    {
+    public FillDownBrush() {
         this.setName("Fill Down");
     }
 
-    private void fillDown(final SnipeData v, final Block b)
-    {
-        final int brushSize = v.getBrushSize();
-        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        final Block targetBlock = this.getTargetBlock();
-        for (int x = -brushSize; x <= brushSize; x++)
-        {
-            final double currentXSquared = Math.pow(x, 2);
+    private void fillDown(SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
 
-            for (int z = -brushSize; z <= brushSize; z++)
-            {
-                if (currentXSquared + Math.pow(z, 2) <= brushSizeSquared)
-                {
-                	int y = 0;
-                	boolean found = false;
-                	if(this.fromExisting) {
-                		for(y = -v.getVoxelHeight(); y < v.getVoxelHeight(); y++) {
-                			final Block currentBlock = this.getWorld().getBlockAt(
-	                                targetBlock.getX() + x,
-	                                targetBlock.getY() + y,
-	                                targetBlock.getZ() + z);
-                			if(!currentBlock.isEmpty()) {
-                    			found = true;
-                				break;
-                			}
-                		}
-                    	if(!found) continue;
-                    	y--;
-                	}
-            		for (; y >= -targetBlock.getY(); --y)
-                    {
-                        final Block currentBlock = this.getWorld().getBlockAt(
-                                targetBlock.getX() + x,
-                                targetBlock.getY() + y,
-                                targetBlock.getZ() + z);
-                        if (currentBlock.isEmpty() || (fillLiquid && currentBlock.isLiquid()))
-                        {
-                            this.current.perform(currentBlock);
-                        } else
-                        {
-                            break;
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+
+        this.undo = new Undo(GenericMath.floor(4 * Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));
+
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int z = minz; z <= maxz; z++) {
+                double zs = (minz - z) * (minz - z);
+                if (xs + zs < brushSizeSquared) {
+                    int y = targetBlock.getBlockY();
+                    if (this.fromExisting) {
+                        for (int y0 = -v.getVoxelHeight(); y0 < v.getVoxelHeight(); y0++) {
+                            if (this.world.getBlock(x, y + y0, z) != v.getReplaceIdState()) {
+                                y += y0 - 1;
+                                break;
+                            }
+                        }
+                    }
+                    for (; y >= 0; y--) {
+                        if (this.replace != PerformerType.NONE) {
+                            if (!perform(v, x, y, z)) {
+                                break;
+                            }
+                        } else {
+                            BlockState current = this.world.getBlock(x, y, z);
+                            if (current.getType() == BlockTypes.AIR) {
+                                perform(v, x, y, z);
+                            } else if (this.fillLiquid) {
+                                Optional<MatterProperty> matter = current.getProperty(MatterProperty.class);
+                                if (matter.isPresent()) {
+                                    Matter m = matter.get().getValue();
+                                    if (m == Matter.LIQUID) {
+                                        perform(v, x, y, z);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-
-        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.fillDown(v, this.getTargetBlock());
+    protected final void arrow(final SnipeData v) {
+        this.fillDown(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.fillDown(v, this.getLastBlock());
+    protected final void powder(final SnipeData v) {
+        this.fillDown(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        for (int i = 1; i < par.length; i++)
-        {
-            if (par[i].equalsIgnoreCase("info"))
-            {
-                v.sendMessage(TextColors.GOLD + "Fill Down Parameters:");
-                v.sendMessage(TextColors.AQUA + "/b fd true -- will use a true circle algorithm.");
-                v.sendMessage(TextColors.AQUA + "/b fd false -- will switch back. (Default)");
-                v.sendMessage(TextColors.AQUA + "/b fd some -- Fills only into air.");
-                v.sendMessage(TextColors.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
-                v.sendMessage(TextColors.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
+    public final void parameters(final String[] par, final SnipeData v) {
+        for (int i = 1; i < par.length; i++) {
+            if (par[i].equalsIgnoreCase("info")) {
+                v.sendMessage(TextColors.GOLD, "Fill Down Parameters:");
+                v.sendMessage(TextColors.AQUA, "/b fd some -- Fills only into air.");
+                v.sendMessage(TextColors.AQUA, "/b fd all -- Fills into liquids as well. (Default)");
+                v.sendMessage(TextColors.AQUA, "/b fd -e -- Fills only own from existing blocks. (Toggle)");
                 return;
-            }
-            else if (par[i].equalsIgnoreCase("true"))
-            {
-                this.trueCircle = 0.5;
-                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
-            }
-            else if (par[i].equalsIgnoreCase("false"))
-            {
-                this.trueCircle = 0;
-                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
-            }
-            else if (par[i].equalsIgnoreCase("all"))
-            {
+            } else if (par[i].equalsIgnoreCase("all")) {
                 this.fillLiquid = true;
-                v.sendMessage(TextColors.AQUA + "Now filling liquids as well as air.");
-            }
-            else if (par[i].equalsIgnoreCase("some"))
-            {
+                v.sendMessage(TextColors.AQUA, "Now filling liquids as well as air.");
+            } else if (par[i].equalsIgnoreCase("some")) {
                 this.fillLiquid = false;
-                v.setReplaceId(0);
-                v.sendMessage(TextColors.AQUA + "Now only filling air.");
-            }
-            else if (par[i].equalsIgnoreCase("-e"))
-            {
-            	this.fromExisting = !this.fromExisting;
-            	v.sendMessage(TextColors.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
-            }
-            else
-            {
-                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.AQUA, "Now only filling air.");
+            } else if (par[i].equalsIgnoreCase("-e")) {
+                this.fromExisting = !this.fromExisting;
+                v.sendMessage(TextColors.AQUA, "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
+            } else {
+                v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.filldown";
     }
 }

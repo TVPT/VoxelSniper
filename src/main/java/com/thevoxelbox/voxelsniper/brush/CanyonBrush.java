@@ -1,143 +1,115 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.TextColors;
-import org.bukkit.Chunk;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Chunk;
+
+import java.util.Optional;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_CANYONATOR
- *
- * @author Voxel
+ * Shifts terrain vertically chunk by chunk.
  */
-public class CanyonBrush extends Brush
-{
-    private static final int SHIFT_LEVEL_MIN = 10;
-    private static final int SHIFT_LEVEL_MAX = 60;
-    private int yLevel = 10;
+public class CanyonBrush extends Brush {
 
-    /**
-     *
-     */
-    public CanyonBrush()
-    {
+    private static final int SHIFT_LEVEL_MIN = -255;
+    private static final int SHIFT_LEVEL_MAX = 255;
+    protected int yLevel = -10;
+
+    public CanyonBrush() {
         this.setName("Canyon");
     }
 
-    /**
-     * @param chunk
-     * @param undo
-     */
-    @SuppressWarnings("deprecation")
-	protected final void canyon(final Chunk chunk, final Undo undo)
-    {
-        for (int x = 0; x < CHUNK_SIZE; x++)
-        {
-            for (int z = 0; z < CHUNK_SIZE; z++)
-            {
-                int currentYLevel = this.yLevel;
-
-                for (int y = 63; y < this.getWorld().getMaxHeight(); y++)
-                {
-                    final Block block = chunk.getBlock(x, y, z);
-                    final Block currentYLevelBlock = chunk.getBlock(x, currentYLevel, z);
-
-                    undo.put(block);
-                    undo.put(currentYLevelBlock);
-
-                    currentYLevelBlock.setTypeId(block.getTypeId(), false);
-                    block.setType(Material.AIR);
-
-                    currentYLevel++;
-                }
-
-                final Block block = chunk.getBlock(x, 0, z);
-                undo.put(block);
-                block.setTypeId(Material.BEDROCK.getId());
-
-                for (int y = 1; y < SHIFT_LEVEL_MIN; y++)
-                {
-                    final Block currentBlock = chunk.getBlock(x, y, z);
-                    undo.put(currentBlock);
-                    currentBlock.setType(Material.STONE);
+    protected final void canyon(SnipeData v, Chunk chunk) {
+        int minx = chunk.getBlockMin().getX();
+        int minz = chunk.getBlockMin().getZ();
+        BlockState fillBlock = v.getVoxelIdState();
+        if (fillBlock.getType() == BlockTypes.AIR) {
+            fillBlock = BlockTypes.STONE.getDefaultState();
+        }
+        int sy = this.yLevel < 0 ? 0 : WORLD_HEIGHT;
+        int ey = this.yLevel < 0 ? WORLD_HEIGHT : 0;
+        int dir = this.yLevel < 0 ? 1 : -1;
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = sy; y != ey; y += dir) {
+                    int srcy = y - this.yLevel;
+                    if (srcy < 0) {
+                        setBlockState(minx + x, y, minz + z, fillBlock);
+                    } else if (srcy > WORLD_HEIGHT) {
+                        setBlockType(minx + x, y, minz + z, BlockTypes.AIR);
+                    } else {
+                        setBlockState(minx + x, y, minz + z, this.world.getBlock(minx + x, srcy, minz + z));
+                    }
                 }
             }
         }
     }
 
     @Override
-    protected void arrow(final SnipeData v)
-    {
-        final Undo undo = new Undo();
-
-        canyon(getTargetBlock().getChunk(), undo);
-
-        v.owner().storeUndo(undo);
+    protected void arrow(final SnipeData v) {
+        if (this.yLevel == 0) {
+            return;
+        }
+        Optional<Chunk> chunk = this.world.getChunk(this.targetBlock.getChunkPosition());
+        if (chunk.isPresent()) {
+            this.undo = new Undo(4 * 16 * 256);
+            canyon(v, chunk.get());
+            v.owner().storeUndo(this.undo);
+            this.undo = null;
+        }
     }
 
     @Override
-    protected void powder(final SnipeData v)
-    {
-        final Undo undo = new Undo();
+    protected void powder(final SnipeData v) {
+        if (this.yLevel == 0) {
+            return;
+        }
+        this.undo = new Undo(2 * 16 * 16 * 256);
 
-        Chunk targetChunk = getTargetBlock().getChunk();
-        for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++)
-        {
-            for (int z = targetChunk.getX() - 1; z <= targetChunk.getX() + 1; z++)
-            {
-                canyon(getWorld().getChunkAt(x, z), undo);
+        Vector3i chunkPos = this.targetBlock.getChunkPosition();
+        for (int x = chunkPos.getX() - 1; x <= chunkPos.getX() + 1; x++) {
+            for (int z = chunkPos.getZ() - 1; z <= chunkPos.getZ() + 1; z++) {
+                Optional<Chunk> chunk = this.world.getChunk(x, 0, z);
+                if (chunk.isPresent()) {
+                    canyon(v, chunk.get());
+                }
             }
         }
 
-        v.owner().storeUndo(undo);
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
-    public void info(final Message vm)
-    {
+    public void info(final Message vm) {
         vm.brushName(this.getName());
         vm.custom(TextColors.GREEN + "Shift Level set to " + this.yLevel);
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        if (par[1].equalsIgnoreCase("info"))
-        {
+    public final void parameters(final String[] par, final SnipeData v) {
+        if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.GREEN + "y[number] to set the Level to which the land will be shifted down");
         }
-        if (par[1].startsWith("y"))
-        {
+        if (par[0].startsWith("y")) {
             int _i = Integer.parseInt(par[1].replace("y", ""));
-            if (_i < SHIFT_LEVEL_MIN)
-            {
+            if (_i < SHIFT_LEVEL_MIN) {
                 _i = SHIFT_LEVEL_MIN;
-            }
-            else if (_i > SHIFT_LEVEL_MAX)
-            {
+            } else if (_i > SHIFT_LEVEL_MAX) {
                 _i = SHIFT_LEVEL_MAX;
             }
             this.yLevel = _i;
-            v.sendMessage(TextColors.GREEN + "Shift Level set to " + this.yLevel);
+            v.sendMessage(TextColors.GREEN, "Shift Level set to " + this.yLevel);
         }
     }
 
-    protected final int getYLevel()
-    {
-        return yLevel;
-    }
-
-    protected final void setYLevel(int yLevel)
-    {
-        this.yLevel = yLevel;
-    }
-
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.canyon";
     }
 }

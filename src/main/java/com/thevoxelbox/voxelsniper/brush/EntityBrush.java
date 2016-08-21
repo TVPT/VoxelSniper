@@ -2,97 +2,70 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.text.format.TextColors;
 
-import org.bukkit.TextColors;
-import org.bukkit.entity.EntityType;
+import java.util.Optional;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Entity_Brush
- *
- * @author Piotr
+ * Spawns entities
  */
-public class EntityBrush extends Brush
-{
-    private EntityType entityType = EntityType.ZOMBIE;
+public class EntityBrush extends Brush {
 
-    /**
-     *
-     */
-    public EntityBrush()
-    {
+    private EntityType entityType = EntityTypes.ZOMBIE;
+
+    public EntityBrush() {
         this.setName("Entity");
     }
 
-    private void spawn(final SnipeData v)
-    {
-        for (int x = 0; x < v.getBrushSize(); x++)
-        {
-            try
-            {
-                this.getWorld().spawn(this.getLastBlock().getLocation(), this.entityType.getEntityClass());
-            }
-            catch (final IllegalArgumentException exception)
-            {
-                v.sendMessage(TextColors.RED + "Cannot spawn entity!");
-            }
+    private void spawn(final SnipeData v) {
+        for (int x = 0; x < v.getBrushSize(); x++) {
+            Entity e = this.world.createEntity(this.entityType, this.lastBlock.getBlockPosition());
+            this.world.spawnEntity(e, this.cause);
         }
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
+    protected final void arrow(final SnipeData v) {
         this.spawn(v);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
+    protected final void powder(final SnipeData v) {
         this.spawn(v);
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
-    public final void info(final Message vm)
-    {
+    @Override
+    public final void info(final Message vm) {
         vm.brushMessage(TextColors.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
         vm.size();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        if (par[1].equalsIgnoreCase("info"))
-        {
-            String names = "";
-
-            v.sendMessage(TextColors.BLUE + "The available entity types are as follows:");
-            for (final EntityType currentEntity : EntityType.values())
-            {
-
-                names += TextColors.AQUA + " | " + TextColors.DARK_GREEN + currentEntity.getName();
+    @Override
+    public final void parameters(final String[] par, final SnipeData v) {
+        if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
+            v.sendMessage(TextColors.AQUA + "Available entity types:");
+            StringBuilder types = new StringBuilder();
+            for (EntityType type : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                types.append(", ").append(type.getId());
             }
-            names += TextColors.AQUA + " |";
-            v.sendMessage(names);
-        }
-        else
-        {
-            final EntityType currentEntity = EntityType.fromName(par[1]);
-            if (currentEntity != null)
-            {
-                this.entityType = currentEntity;
-                v.sendMessage(TextColors.GREEN + "Entity type set to " + this.entityType.getName());
-            }
-            else
-            {
+            v.sendMessage(types.toString().substring(2));
+        } else {
+            Optional<EntityType> selection = Sponge.getRegistry().getType(EntityType.class, par[0]);
+            if (!selection.isPresent()) {
                 v.sendMessage(TextColors.RED + "This is not a valid entity!");
+            } else {
+                this.entityType = selection.get();
+                v.sendMessage(TextColors.GREEN + "Entity type set to " + this.entityType.getName());
             }
         }
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.entity";
     }
 }

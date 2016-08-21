@@ -12,20 +12,16 @@ import org.spongepowered.api.world.World;
 /**
  * Same as overlay but for the bottom of blocks.
  */
-
 public class UnderlayBrush extends PerformBrush {
 
+    // @Cleanup move to config
     private static final int DEFAULT_DEPTH = 3;
     private int depth = DEFAULT_DEPTH;
-    private boolean allBlocks = false;
 
-    /**
-     *
-     */
     public UnderlayBrush() {
         this.setName("Underlay (Reverse Overlay)");
     }
-    
+
     private void underlay(SnipeData v, Location<World> targetBlock) {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
@@ -44,10 +40,22 @@ public class UnderlayBrush extends PerformBrush {
             for (int z = minz; z <= maxz; z++) {
                 double zs = (minz - z) * (minz - z);
                 if (xs + zs < brushSizeSquared) {
-                    
-                    for(int y = targetBlock.getBlockY(); y < targetBlock.getBlockY() + this.depth; y++) {
-                        if(this.world.getBlockType(x, y, z) != BlockTypes.AIR) {
-                            perform(v, x, y, z);
+                    int y = targetBlock.getBlockY();
+                    for (; y <= Brush.WORLD_HEIGHT; y++) {
+                        if (this.world.getBlockType(x, y, z) != BlockTypes.AIR) {
+                            break;
+                        }
+                    }
+                    if (y == targetBlock.getBlockY() && y > 0) {
+                        if (this.world.getBlockType(x, y - 1, z) != BlockTypes.AIR) {
+                            // if theres no air below our start block then don't
+                            // perform
+                            break;
+                        }
+                    }
+                    for (int y0 = y; y0 < y + this.depth; y0++) {
+                        if (this.world.getBlockType(x, y0, z) != BlockTypes.AIR) {
+                            perform(v, x, y0, z);
                         }
                     }
                 }
@@ -56,163 +64,19 @@ public class UnderlayBrush extends PerformBrush {
 
         v.owner().storeUndo(this.undo);
         this.undo = null;
-        
-    }
 
-    @SuppressWarnings("deprecation")
-    private void underlay(final SnipeData v) {
-        final int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
-        final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
-
-        for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
-            for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-                for (int y = this.getTargetBlock().getY(); y < this.getTargetBlock().getY() + this.depth; y++) {
-                    // start scanning from the height you clicked at
-                    if (memory[x + v.getBrushSize()][z + v.getBrushSize()] != 1) {
-                        // if haven't already found the surface in this column
-                        if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) {
-                            // if inside of the column...
-                            if (!this.allBlocks) {
-                                // if the override parameter has not been
-                                // activated, go to the switch that filters out
-                                // manmade stuff.
-                                switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)) {
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                    case 12:
-                                    case 13:
-                                    case 24:
-                                        // These cases filter out any
-                                        // manufactured or refined blocks, any
-                                        // trees and leas, etc. that you don't
-                                        // want to mess with.
-                                    case 48:
-                                    case 82:
-                                    case 49:
-                                    case 78:
-                                        for (int d = 0; (d < this.depth); d++) {
-                                            if (this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)
-                                                    .getTypeId() != 0) {
-                                                this.current.perform(
-                                                        this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z));
-                                                // fills down as many layers as
-                                                // you specify in
-                                                // parameters
-                                                memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
-                                                // stop it from checking any
-                                                // other blocks in this vertical
-                                                // 1x1 column.
-                                            }
-                                        }
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-                            } else {
-                                for (int d = 0; (d < this.depth); d++) {
-                                    if (this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z).getTypeId() != 0) {
-                                        this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z));
-                                        // fills down as many layers as you
-                                        // specify in
-                                        // parameters
-                                        memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
-                                        // stop it from checking any other
-                                        // blocks in this vertical 1x1 column.
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-
-        v.owner().storeUndo(this.current.getUndo());
-    }
-
-    private void underlay2(final SnipeData v) {
-        final int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
-        final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
-
-        for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
-            for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-                for (int y = this.getTargetBlock().getY(); y < this.getTargetBlock().getY() + this.depth; y++) {
-                    // start scanning from the height you clicked at
-                    if (memory[x + v.getBrushSize()][z + v.getBrushSize()] != 1) {
-                        // if haven't already found the surface in this column
-                        if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) {
-                            // if inside of the column...
-
-                            if (!this.allBlocks) {
-                                // if the override parameter has not been
-                                // activated, go to the switch that filters out
-                                // manmade stuff.
-
-                                switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)) {
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                    case 12:
-                                    case 13:
-                                    case 14:
-                                        // These cases filter out any
-                                        // manufactured or refined blocks, any
-                                        // trees and leas, etc. that you don't
-                                        // want to mess
-                                        // with.
-                                    case 15:
-                                    case 16:
-                                    case 24:
-                                    case 48:
-                                    case 82:
-                                    case 49:
-                                    case 78:
-                                        for (int d = -1; (d < this.depth - 1); d++) {
-                                            this.current
-                                                    .perform(this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z));
-                                            // fills down as many layers as you
-                                            // specify in
-                                            // parameters
-                                            memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
-                                            // stop it from checking any other
-                                            // blocks in this vertical 1x1
-                                            // column.
-                                        }
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            } else {
-                                for (int d = -1; (d < this.depth - 1); d++) {
-                                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z));
-                                    // fills down as many layers as you specify
-                                    // in
-                                    // parameters
-                                    memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
-                                    // stop it from checking any other blocks in
-                                    // this vertical 1x1 column.
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        v.owner().storeUndo(this.current.getUndo());
     }
 
     @Override
     public final void arrow(final SnipeData v) {
-        this.underlay(v);
+        this.underlay(v, this.targetBlock);
     }
 
     @Override
     public final void powder(final SnipeData v) {
-        this.underlay2(v);
+        this.underlay(v, this.lastBlock);
+        // @Feature the gunpowder should stack one block higher than the
+        // existing land
     }
 
     @Override

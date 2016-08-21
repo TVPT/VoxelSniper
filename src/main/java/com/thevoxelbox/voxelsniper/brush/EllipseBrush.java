@@ -1,302 +1,135 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.TextColors;
-import org.bukkit.block.Block;
+import com.thevoxelbox.voxelsniper.Undo;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipse_Brush
- *
- * @author psanker
+ * Creates an ellipse.
  */
-public class EllipseBrush extends PerformBrush
-{
-    private static final double TWO_PI = (2 * Math.PI);
-    private static final int SCL_MIN = 1;
-    private static final int SCL_MAX = 9999;
-    private static final int SCL_DEFAULT = 10;
-    private static final int STEPS_MIN = 1;
-    private static final int STEPS_MAX = 2000;
-    private static final int STEPS_DEFAULT = 200;
-    private int xscl;
-    private int yscl;
-    private int steps;
-    private double stepSize;
-    private boolean fill;
+public class EllipseBrush extends PerformBrush {
 
-    /**
-     *
-     */
-    public EllipseBrush()
-    {
+    private double xrad = -1;
+    private double yrad = -1;
+
+    public EllipseBrush() {
         this.setName("Ellipse");
     }
 
-    private void ellipse(final SnipeData v, Block targetBlock)
-    {
-        try
-        {
-            for (double steps = 0; (steps <= TWO_PI); steps += stepSize)
-            {
-                final int x = (int) Math.round(this.xscl * Math.cos(steps));
-                final int y = (int) Math.round(this.yscl * Math.sin(steps));
+    private void ellipse(final SnipeData v, Location<World> targetBlock, Direction axis) {
+        double xrads = this.xrad * this.xrad;
+        double yrads = this.yrad * this.yrad;
+        int minx = GenericMath.floor(targetBlock.getBlockX() - this.xrad);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + this.xrad) + 1;
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - this.yrad);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + this.yrad) + 1;
 
-                switch (getTargetBlock().getFace(this.getLastBlock()))
-                {
-                    case NORTH:
-                    case SOUTH:
-                        current.perform(targetBlock.getRelative(0, x, y));
-                        break;
-                    case EAST:
-                    case WEST:
-                        current.perform(targetBlock.getRelative(x, y, 0));
-                        break;
-                    case UP:
-                    case DOWN:
-                        current.perform(targetBlock.getRelative(x, 0, y));
-                    default:
-                        break;
-                }
+        this.undo = new Undo(GenericMath.floor(Math.PI * (this.xrad + 1) * (this.yrad + 1)));
 
-                if (steps >= TWO_PI)
-                {
-                    break;
-                }
-            }
-        }
-        catch (final Exception exception)
-        {
-            v.sendMessage(TextColors.RED + "Invalid target.");
-        }
-
-        v.owner().storeUndo(this.current.getUndo());
-    }
-
-    private void ellipsefill(final SnipeData v, Block targetBlock)
-    {
-        int ix = this.xscl;
-        int iy = this.yscl;
-
-        current.perform(targetBlock);
-
-        try
-        {
-            if (ix >= iy)
-            { // Need this unless you want weird holes
-                for (iy = this.yscl; iy > 0; iy--)
-                {
-                    for (double steps = 0; (steps <= TWO_PI); steps += stepSize)
-                    {
-                        final int x = (int) Math.round(ix * Math.cos(steps));
-                        final int y = (int) Math.round(iy * Math.sin(steps));
-
-                        switch (getTargetBlock().getFace(this.getLastBlock()))
-                        {
-                            case NORTH:
-                            case SOUTH:
-                                current.perform(targetBlock.getRelative(0, x, y));
-                                break;
-                            case EAST:
-                            case WEST:
-                                current.perform(targetBlock.getRelative(x, y, 0));
-                                break;
-                            case UP:
-                            case DOWN:
-                                current.perform(targetBlock.getRelative(x, 0, y));
-                            default:
-                                break;
-                        }
-
-                        if (steps >= TWO_PI)
-                        {
-                            break;
-                        }
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int z = minz; z <= maxz; z++) {
+                double zs = (minz - z) * (minz - z);
+                if (xs / xrads + zs / yrads < 1) {
+                    if (axis == Direction.UP) {
+                        perform(v, x, targetBlock.getBlockY(), z);
+                    } else if (axis == Direction.NORTH) {
+                        perform(v, x, z, targetBlock.getBlockZ());
+                    } else if (axis == Direction.EAST) {
+                        perform(v, targetBlock.getBlockX(), x, z);
                     }
-                    ix--;
-                }
-            }
-            else
-            {
-                for (ix = this.xscl; ix > 0; ix--)
-                {
-                    for (double steps = 0; (steps <= TWO_PI); steps += stepSize)
-                    {
-                        final int x = (int) Math.round(ix * Math.cos(steps));
-                        final int y = (int) Math.round(iy * Math.sin(steps));
-
-                        switch (getTargetBlock().getFace(this.getLastBlock()))
-                        {
-                            case NORTH:
-                            case SOUTH:
-                                current.perform(targetBlock.getRelative(0, x, y));
-                                break;
-                            case EAST:
-                            case WEST:
-                                current.perform(targetBlock.getRelative(x, y, 0));
-                                break;
-                            case UP:
-                            case DOWN:
-                                current.perform(targetBlock.getRelative(x, 0, y));
-                            default:
-                                break;
-                        }
-
-                        if (steps >= TWO_PI)
-                        {
-                            break;
-                        }
-                    }
-                    iy--;
                 }
             }
         }
-        catch (final Exception exception)
-        {
-            v.sendMessage(TextColors.RED + "Invalid target.");
-        }
 
-        v.owner().storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
-    private void execute(final SnipeData v, Block targetBlock)
-    {
-        this.stepSize = (TWO_PI / this.steps);
-
-        if (this.fill)
-        {
-            this.ellipsefill(v, targetBlock);
-        }
-        else
-        {
-            this.ellipse(v, targetBlock);
+    private void pre(final SnipeData v, Location<World> target) {
+        if (this.lastBlock.getBlockY() != this.targetBlock.getBlockY()) {
+            ellipse(v, target, Direction.UP);
+        } else if (this.lastBlock.getBlockX() != this.targetBlock.getBlockX()) {
+            ellipse(v, target, Direction.EAST);
+        } else if (this.lastBlock.getBlockZ() != this.targetBlock.getBlockZ()) {
+            ellipse(v, target, Direction.NORTH);
         }
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.execute(v, this.getTargetBlock());
+    protected final void arrow(final SnipeData v) {
+        this.pre(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.execute(v, this.getLastBlock());
+    protected final void powder(final SnipeData v) {
+        this.pre(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
-        if (this.xscl < SCL_MIN || this.xscl > SCL_MAX)
-        {
-            this.xscl = SCL_DEFAULT;
-        }
-
-        if (this.yscl < SCL_MIN || this.yscl > SCL_MAX)
-        {
-            this.yscl = SCL_DEFAULT;
-        }
-
-        if (this.steps < STEPS_MIN || this.steps > STEPS_MAX)
-        {
-            this.steps = STEPS_DEFAULT;
-        }
-
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
-        vm.custom(TextColors.AQUA + "X-size set to: " + TextColors.DARK_AQUA + this.xscl);
-        vm.custom(TextColors.AQUA + "Y-size set to: " + TextColors.DARK_AQUA + this.yscl);
-        vm.custom(TextColors.AQUA + "Render step number set to: " + TextColors.DARK_AQUA + this.steps);
-        if (this.fill)
-        {
-            vm.custom(TextColors.AQUA + "Fill mode is enabled");
-        }
-        else
-        {
-            vm.custom(TextColors.AQUA + "Fill mode is disabled");
-        }
+        vm.custom(TextColors.AQUA, "X-radius set to: ", TextColors.DARK_AQUA, this.xrad);
+        vm.custom(TextColors.AQUA, "Y-radius set to: ", TextColors.DARK_AQUA, this.yrad);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v)
-    {
-        for (int i = 1; i < par.length; i++)
-        {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+        for (int i = 0; i < par.length; i++) {
             final String parameter = par[i];
 
-            try
-            {
-                if (parameter.equalsIgnoreCase("info"))
-                {
-                    v.sendMessage(TextColors.GOLD + "Ellipse brush parameters");
-                    v.sendMessage(TextColors.AQUA + "x[n]: Set X size modifier to n");
-                    v.sendMessage(TextColors.AQUA + "y[n]: Set Y size modifier to n");
-                    v.sendMessage(TextColors.AQUA + "t[n]: Set the amount of time steps");
-                    v.sendMessage(TextColors.AQUA + "fill: Toggles fill mode");
-                    return;
-                }
-                else if (parameter.startsWith("x"))
-                {
-                    int tempXScale = Integer.parseInt(par[i].replace("x", ""));
-                    if (tempXScale < SCL_MIN || tempXScale > SCL_MAX)
-                    {
-                        v.sendMessage(TextColors.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
-                        continue;
+            if (parameter.equalsIgnoreCase("info")) {
+                v.sendMessage(TextColors.GOLD + "Ellipse brush parameters");
+                v.sendMessage(TextColors.AQUA + "x[n]: Set X radius to n");
+                v.sendMessage(TextColors.AQUA + "y[n]: Set Y radius to n");
+                return;
+            } else if (parameter.startsWith("x")) {
+                try {
+                    double val = Double.parseDouble(parameter.replace("x", ""));
+                    if (val <= 0) {
+                        v.sendMessage(TextColors.RED, "X radius must be greater than zero.");
+                    } else {
+                        this.xrad = val;
+                        v.sendMessage(TextColors.GREEN, "X radius  set to " + this.xrad);
                     }
-                    this.xscl = tempXScale;
-                    v.sendMessage(TextColors.AQUA + "X-scale modifier set to: " + this.xscl);
+                } catch (NumberFormatException e) {
+                    v.sendMessage(TextColors.RED, "Invalid X radius value.");
                 }
-                else if (parameter.startsWith("y"))
-                {
-                    int tempYScale = Integer.parseInt(par[i].replace("y", ""));
-                    if (tempYScale < SCL_MIN || tempYScale > SCL_MAX)
-                    {
-                        v.sendMessage(TextColors.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
-                        continue;
+            } else if (parameter.startsWith("y")) {
+                try {
+                    double val = Double.parseDouble(parameter.replace("y", ""));
+                    if (val <= 0) {
+                        v.sendMessage(TextColors.RED, "Y radius must be greater than zero.");
+                    } else {
+                        this.yrad = val;
+                        v.sendMessage(TextColors.GREEN, "Y radius  set to " + this.yrad);
                     }
-                    this.yscl = tempYScale;
-                    v.sendMessage(TextColors.AQUA + "Y-scale modifier set to: " + this.yscl);
+                } catch (NumberFormatException e) {
+                    v.sendMessage(TextColors.RED, "Invalid Y radius value.");
                 }
-                else if (parameter.startsWith("t"))
-                {
-                    int tempSteps = Integer.parseInt(par[i].replace("t", ""));
-                    if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX)
-                    {
-                        v.sendMessage(TextColors.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
-                        continue;
-                    }
-                    this.steps = tempSteps;
-                    v.sendMessage(TextColors.AQUA + "Render step number set to: " + this.steps);
-                }
-                else if (parameter.equalsIgnoreCase("fill"))
-                {
-                    if (this.fill)
-                    {
-                        this.fill = false;
-                        v.sendMessage(TextColors.AQUA + "Fill mode is disabled");
-                    }
-                    else
-                    {
-                        this.fill = true;
-                        v.sendMessage(TextColors.AQUA + "Fill mode is enabled");
-                    }
-                }
-                else
-                {
-                    v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
-                }
-
+            } else {
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
             }
-            catch (final Exception exception)
-            {
-                v.sendMessage(TextColors.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
-            }
+        }
+        if (this.xrad <= 0) {
+            this.xrad = v.getBrushSize();
+            v.sendMessage(TextColors.GREEN, "X radius  set to " + this.xrad);
+        }
+        if (this.yrad <= 0) {
+            this.yrad = v.getBrushSize();
+            v.sendMessage(TextColors.GREEN, "Y radius  set to " + this.yrad);
         }
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.ellipse";
     }
 }

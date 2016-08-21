@@ -1,172 +1,78 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.property.block.MatterProperty;
+import org.spongepowered.api.data.property.block.MatterProperty.Matter;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-import org.bukkit.TextColors;
-import org.bukkit.Material;
+import java.util.Optional;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Drain_Brush
- *
- * @author Gavjenks
- * @author psanker
+ * Drains liquids from the area.
  */
-public class DrainBrush extends Brush
-{
-    private double trueCircle = 0;
-    private boolean disc = false;
+public class DrainBrush extends Brush {
 
-    /**
-     *
-     */
-    public DrainBrush()
-    {
+    public DrainBrush() {
         this.setName("Drain");
     }
 
-    @SuppressWarnings("deprecation")
-	private void drain(final SnipeData v)
-    {
-        final int brushSize = v.getBrushSize();
-        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        final Undo undo = new Undo();
+    private void drain(final SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
 
-        if (this.disc)
-        {
-            for (int x = brushSize; x >= 0; x--)
-            {
-                final double xSquared = Math.pow(x, 2);
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
+        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
 
-                for (int y = brushSize; y >= 0; y--)
-                {
-                    if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared)
-                    {
-                        if (this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.STATIONARY_LAVA.getId())
-                        {
-                            undo.put(this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y));
-                            this.setBlockIdAt(this.getTargetBlock().getZ() + y, this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), Material.AIR.getId());
-                        }
+        this.undo = new Undo(GenericMath.floor(8 * (brushSize + 1) * (brushSize + 1) * (brushSize + 1)));
 
-                        if (this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.STATIONARY_LAVA.getId())
-                        {
-                            undo.put(this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y));
-                            this.setBlockIdAt(this.getTargetBlock().getZ() - y, this.getTargetBlock().getX() + x, this.getTargetBlock().getY(), Material.AIR.getId());
-                        }
-
-                        if (this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y) == Material.STATIONARY_LAVA.getId())
-                        {
-                            undo.put(this.clampY(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() + y));
-                            this.setBlockIdAt(this.getTargetBlock().getZ() + y, this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), Material.AIR.getId());
-                        }
-
-                        if (this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y) == Material.STATIONARY_LAVA.getId())
-                        {
-                            undo.put(this.clampY(this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - y));
-                            this.setBlockIdAt(this.getTargetBlock().getZ() - y, this.getTargetBlock().getX() - x, this.getTargetBlock().getY(), Material.AIR.getId());
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (int y = (brushSize + 1) * 2; y >= 0; y--)
-            {
-                final double ySquared = Math.pow(y - brushSize, 2);
-
-                for (int x = (brushSize + 1) * 2; x >= 0; x--)
-                {
-                    final double xSquared = Math.pow(x - brushSize, 2);
-
-                    for (int z = (brushSize + 1) * 2; z >= 0; z--)
-                    {
-                        if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared)
-                        {
-                            if (this.getBlockIdAt(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, this.getTargetBlock().getZ() + y - brushSize) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, this.getTargetBlock().getZ() + y - brushSize) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, this.getTargetBlock().getZ() + y - brushSize) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, this.getTargetBlock().getZ() + y - brushSize) == Material.STATIONARY_LAVA.getId())
-                            {
-                                undo.put(this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + z, this.getTargetBlock().getZ() + y));
-                                this.setBlockIdAt(this.getTargetBlock().getZ() + y - brushSize, this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, Material.AIR.getId());
-                            }
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            for (int z = minz; z <= maxz; z++) {
+                for (int y = maxy; y >= miny; y--) {
+                    BlockState block = this.world.getBlock(x, y, z);
+                    Optional<MatterProperty> matter = block.getProperty(MatterProperty.class);
+                    if (matter.isPresent()) {
+                        Matter m = matter.get().getValue();
+                        if (m == Matter.LIQUID) {
+                            setBlockType(x, y, z, BlockTypes.AIR);
                         }
                     }
                 }
             }
         }
 
-        v.owner().storeUndo(undo);
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.drain(v);
+    protected final void arrow(final SnipeData v) {
+        this.drain(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.drain(v);
+    protected final void powder(final SnipeData v) {
+        this.drain(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
-
-        vm.custom(TextColors.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
-        vm.custom(TextColors.AQUA + ((this.disc) ? "Disc drain mode ON" : "Disc drain mode OFF"));
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        for (int i = 1; i < par.length; i++)
-        {
-            final String parameter = par[i];
-
-            if (parameter.equalsIgnoreCase("info"))
-            {
-                v.sendMessage(TextColors.GOLD + "Drain Brush Parameters:");
-                v.sendMessage(TextColors.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
-                v.sendMessage(TextColors.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
-                return;
-            }
-            else if (parameter.startsWith("true"))
-            {
-                this.trueCircle = 0.5;
-                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
-            }
-            else if (parameter.startsWith("false"))
-            {
-                this.trueCircle = 0;
-                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
-            }
-            else if (parameter.equalsIgnoreCase("d"))
-            {
-                if (this.disc)
-                {
-                    this.disc = false;
-                    v.sendMessage(TextColors.AQUA + "Disc drain mode OFF");
-                }
-                else
-                {
-                    this.disc = true;
-                    v.sendMessage(TextColors.AQUA + "Disc drain mode ON");
-                }
-            }
-            else
-            {
-                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
-    }
-
-    @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.drain";
     }
 }

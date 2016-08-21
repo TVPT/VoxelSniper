@@ -1,88 +1,68 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.bukkit.TextColors;
-import org.bukkit.Chunk;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Chunk;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Canyon_Selection_Brush
- *
- * @author Voxel
- */
-public class CanyonSelectionBrush extends CanyonBrush
-{
-    private boolean first = true;
-    private int fx;
-    private int fz;
+import java.util.Optional;
+import java.util.UUID;
 
-    /**
-     *
-     */
-    public CanyonSelectionBrush()
-    {
+public class CanyonSelectionBrush extends CanyonBrush {
+
+    private Vector3i pos;
+    private UUID worldUid;
+
+    public CanyonSelectionBrush() {
         this.setName("Canyon Selection");
     }
 
-    private void execute(final SnipeData v)
-    {
-        final Chunk chunk = getTargetBlock().getChunk();
-
-        if (this.first)
-        {
-            this.fx = chunk.getX();
-            this.fz = chunk.getZ();
-
+    private void execute(final SnipeData v) {
+        if (this.pos == null || this.worldUid == null || !this.worldUid.equals(this.targetBlock.getExtent().getUniqueId())) {
+            this.worldUid = this.targetBlock.getExtent().getUniqueId();
+            this.pos = this.targetBlock.getChunkPosition();
             v.sendMessage(TextColors.YELLOW + "First point selected!");
-            this.first = !this.first;
-        }
-        else
-        {
+        } else {
+            Vector3i other = this.targetBlock.getChunkPosition();
             v.sendMessage(TextColors.YELLOW + "Second point selected!");
-            selection(Math.min(fx, chunk.getX()), Math.min(fz, chunk.getZ()), Math.max(fx, chunk.getX()), Math.max(fz, chunk.getZ()), v);
-
-            this.first = !this.first;
-        }
-    }
-
-    private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final SnipeData v)
-    {
-        final Undo undo = new Undo();
-
-        for (int x = lowX; x <= highX; x++)
-        {
-            for (int z = lowZ; z <= highZ; z++)
-            {
-                canyon(getWorld().getChunkAt(x, z), undo);
+            Vector3i min = other.min(this.pos);
+            Vector3i max = other.max(this.pos);
+            this.undo = new Undo((max.getX() - min.getX()) * (max.getZ() - min.getZ()) * 16 * 4 * 256);
+            for (int x = min.getX(); x <= max.getX(); x++) {
+                for (int z = min.getZ(); z <= max.getZ(); z++) {
+                    Optional<Chunk> chunk = this.world.getChunk(x, 0, z);
+                    if (chunk.isPresent()) {
+                        canyon(v, chunk.get());
+                    }
+                }
             }
+            v.owner().storeUndo(this.undo);
+            this.undo = null;
+            this.worldUid = null;
+            this.pos = null;
         }
-
-        v.owner().storeUndo(undo);
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
+    protected final void arrow(final SnipeData v) {
         execute(v);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
+    protected final void powder(final SnipeData v) {
         execute(v);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
-        vm.custom(TextColors.GREEN + "Shift Level set to " + this.getYLevel());
+        vm.custom(TextColors.GREEN + "Shift Level set to " + this.yLevel);
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.canyonselection";
     }
 }

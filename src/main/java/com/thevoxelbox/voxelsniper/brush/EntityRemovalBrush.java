@@ -1,77 +1,70 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.vector.Vector3i;
+import com.google.common.collect.Sets;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.TextColors;
-import org.bukkit.Chunk;
-import org.bukkit.entity.Entity;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Chunk;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.PatternSyntaxException;
+import java.util.Optional;
+import java.util.Set;
 
-/**
- *
- */
-public class EntityRemovalBrush extends Brush
-{
-    private final List<String> exemptions = new ArrayList<String>(3);
+public class EntityRemovalBrush extends Brush {
 
-    /**
-     *
-     */
-    public EntityRemovalBrush()
-    {
-        this.setName("Entity Removal");
+    private static final Set<EntityType> default_exemptions = Sets.newHashSet();
 
-        exemptions.add("org.bukkit.entity.Player");
-        exemptions.add("org.bukkit.entity.Hanging");
-        exemptions.add("org.bukkit.entity.NPC");
+    static {
+        default_exemptions.add(EntityTypes.PLAYER);
+        default_exemptions.add(EntityTypes.PAINTING);
+        default_exemptions.add(EntityTypes.ITEM_FRAME);
+        default_exemptions.add(EntityTypes.ARMOR_STAND);
+        default_exemptions.add(EntityTypes.ENDER_CRYSTAL);
     }
 
-    private void radialRemoval(SnipeData v)
-    {
-        final Chunk targetChunk = getTargetBlock().getChunk();
+    private Set<EntityType> special_exemptions;
+
+    public EntityRemovalBrush() {
+        this.setName("Entity Removal");
+    }
+
+    private void radialRemoval(SnipeData v) {
+        Vector3i chunkPos = this.targetBlock.getChunkPosition();
         int entityCount = 0;
         int chunkCount = 0;
 
-        try
-        {
-            entityCount += removeEntities(targetChunk);
-
-            int radius = Math.round(v.getBrushSize() / 16);
-
-            for (int x = targetChunk.getX() - radius; x <= targetChunk.getX() + radius; x++)
-            {
-                for (int z = targetChunk.getZ() - radius; z <= targetChunk.getZ() + radius; z++)
-                {
-                    entityCount += removeEntities(getWorld().getChunkAt(x, z));
-
-                    chunkCount++;
+        int radius = (int) Math.round(v.getBrushSize() / 16);
+        int radiusSquared = radius * radius;
+        for (int x = chunkPos.getX() - radius; x <= chunkPos.getX() + radius; x++) {
+            for (int z = chunkPos.getZ() - radius; z <= chunkPos.getZ() + radius; z++) {
+                if (x * x + z * z < radiusSquared) {
+                    Optional<Chunk> chunk = this.world.getChunk(x, 0, z);
+                    if (chunk.isPresent()) {
+                        entityCount += removeEntities(chunk.get());
+                        chunkCount++;
+                    }
                 }
             }
         }
-        catch (final PatternSyntaxException pse)
-        {
-            pse.printStackTrace();
-            v.sendMessage(TextColors.RED + "Error in RegEx: " + TextColors.LIGHT_PURPLE + pse.getPattern());
-            v.sendMessage(TextColors.RED + String.format("%s (Index: %d)", pse.getDescription(), pse.getIndex()));
-        }
-        v.sendMessage(TextColors.GREEN + "Removed " + TextColors.RED + entityCount + TextColors.GREEN + " entities out of " + TextColors.BLUE + chunkCount + TextColors.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
+        v.sendMessage(TextColors.GREEN + "Removed " + TextColors.RED + entityCount + TextColors.GREEN + " entities out of " + TextColors.BLUE
+                + chunkCount + TextColors.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
     }
 
-    private int removeEntities(Chunk chunk) throws PatternSyntaxException
-    {
+    private int removeEntities(Chunk chunk) {
         int entityCount = 0;
-
-        for (Entity entity : chunk.getEntities())
-        {
-            if (isClassInExemptionList(entity.getClass()))
-            {
+        Set<EntityType> exempt = this.special_exemptions;
+        if (exempt == null) {
+            exempt = default_exemptions;
+        }
+        for (Entity entity : chunk.getEntities()) {
+            EntityType type = entity.getType();
+            if (exempt.contains(type)) {
                 continue;
             }
-
             entity.remove();
             entityCount++;
         }
@@ -79,109 +72,70 @@ public class EntityRemovalBrush extends Brush
         return entityCount;
     }
 
-    private boolean isClassInExemptionList(Class<? extends Entity> entityClass) throws PatternSyntaxException
-    {
-        // Create a list of superclasses and interfaces implemented by the current entity type
-        final List<String> entityClassHierarchy = new ArrayList<String>();
-
-        Class<?> currentClass = entityClass;
-        while (currentClass != null && !currentClass.equals(Object.class))
-        {
-            entityClassHierarchy.add(currentClass.getCanonicalName());
-
-            for (final Class<?> intrf : currentClass.getInterfaces())
-            {
-                entityClassHierarchy.add(intrf.getCanonicalName());
-            }
-
-            currentClass = currentClass.getSuperclass();
-        }
-
-        for (final String exemptionPattern : exemptions)
-        {
-            for (final String typeName : entityClassHierarchy)
-            {
-                if (typeName.matches(exemptionPattern))
-                {
-                    return true;
-                }
-
-            }
-        }
-
-        return false;
-    }
-
     @Override
-    protected void arrow(SnipeData v)
-    {
+    protected void arrow(SnipeData v) {
         this.radialRemoval(v);
     }
 
     @Override
-    protected void powder(SnipeData v)
-    {
+    protected void powder(SnipeData v) {
         this.radialRemoval(v);
     }
 
     @Override
-    public void info(Message vm)
-    {
+    public void info(Message vm) {
         vm.brushName(getName());
-
-        final StringBuilder exemptionsList = new StringBuilder(TextColors.GREEN + "Exemptions: " + TextColors.LIGHT_PURPLE);
-        for (Iterator it = exemptions.iterator(); it.hasNext(); )
-        {
-            exemptionsList.append(it.next());
-            if (it.hasNext())
-            {
-                exemptionsList.append(", ");
-            }
+        Set<EntityType> exempt = this.special_exemptions;
+        if (exempt == null) {
+            exempt = default_exemptions;
         }
-        vm.custom(exemptionsList.toString());
+        StringBuilder types = new StringBuilder();
+        for (EntityType type : exempt) {
+            types.append(", ").append(type.getId());
+        }
+        vm.custom(TextColors.AQUA, "Exempted entity types:");
+        vm.custom(types.toString().substring(2));
 
         vm.size();
     }
 
     @Override
-    public void parameters(final String[] par, final SnipeData v)
-    {
-        for (final String currentParam : par)
-        {
-            if (currentParam.startsWith("+") || currentParam.startsWith("-"))
-            {
-                final boolean isAddOperation = currentParam.startsWith("+");
-
-                // +#/-# will suppress auto-prefixing
-                final String exemptionPattern = currentParam.startsWith("+#") || currentParam.startsWith("-#") ?
-                        currentParam.substring(2) :
-                        (currentParam.contains(".") ? currentParam.substring(1) : ".*." + currentParam.substring(1));
-
-                if (isAddOperation)
-                {
-                    exemptions.add(exemptionPattern);
-                    v.sendMessage(String.format("Added %s to entity exemptions list.", exemptionPattern));
-                }
-                else
-                {
-                    exemptions.remove(exemptionPattern);
-                    v.sendMessage(String.format("Removed %s from entity exemptions list.", exemptionPattern));
-                }
+    public void parameters(final String[] par, final SnipeData v) {
+        if (par.length != 0 && par[0].equalsIgnoreCase("info")) {
+            Set<EntityType> exempt = this.special_exemptions;
+            if (exempt == null) {
+                exempt = default_exemptions;
             }
-
-            if (currentParam.equalsIgnoreCase("list-exemptions") || currentParam.equalsIgnoreCase("lex"))
-            {
-                for (final String exemption : exemptions)
-                {
-                    v.sendMessage(TextColors.LIGHT_PURPLE + exemption);
+            StringBuilder types = new StringBuilder();
+            for (EntityType type : exempt) {
+                types.append(", ").append(type.getId());
+            }
+            v.sendMessage(TextColors.AQUA, "Exempted entity types:");
+            v.sendMessage(types.toString().substring(2));
+            return;
+        }
+        for (final String currentParam : par) {
+            if (currentParam.startsWith("+") || currentParam.startsWith("-")) {
+                final boolean isAddOperation = currentParam.startsWith("+");
+                Optional<EntityType> type = Sponge.getRegistry().getType(EntityType.class, currentParam.substring(1));
+                if (type.isPresent()) {
+                    if (this.special_exemptions == null) {
+                        this.special_exemptions = Sets.newHashSet(default_exemptions);
+                    }
+                    if (isAddOperation) {
+                        this.special_exemptions.add(type.get());
+                        v.sendMessage(String.format("Added %s to entity exemptions list.", type.get().getId()));
+                    } else {
+                        this.special_exemptions.remove(type.get());
+                        v.sendMessage(String.format("Removed %s to entity exemptions list.", type.get().getId()));
+                    }
                 }
             }
         }
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.entityremoval";
     }
 }

@@ -14,19 +14,10 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
  */
 public class VoxelSniperListener {
 
-    private final VoxelSniper plugin;
-
-    /**
-     * @param plugin
-     */
-    public VoxelSniperListener(final VoxelSniper plugin) {
-        this.plugin = plugin;
+    public VoxelSniperListener() {
         SniperStats.setSnipeCounterInitTimeStamp(System.currentTimeMillis());
     }
 
-    /**
-     * @param event
-     */
     @Listener
     public final void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Root Player player) {
 
@@ -45,9 +36,6 @@ public class VoxelSniperListener {
         }
     }
 
-    /**
-     * @param event
-     */
     @Listener
     public final void onPlayerJoin(ClientConnectionEvent.Join event) {
         Player player = event.getTargetEntity();

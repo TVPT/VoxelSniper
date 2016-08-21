@@ -8,6 +8,8 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,8 +23,8 @@ public abstract class PerformBrush extends Brush {
 
     private static Pattern PERFORMER_PATTERN = Pattern.compile("([mMiIcC])([mMiIcC])?");
 
-    private PerformerType place;
-    private PerformerType replace;
+    protected PerformerType place;
+    protected PerformerType replace;
 
     public void parse(String[] args, SnipeData v) {
         String handle = args[0];
@@ -74,7 +76,14 @@ public abstract class PerformBrush extends Brush {
         }
     }
 
+    protected boolean perform(SnipeData v, Location<World> pos) {
+        return perform(v, pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
+    }
+
     protected boolean perform(SnipeData v, int x, int y, int z) {
+        if (y < 0 || y > Brush.WORLD_HEIGHT) {
+            return false;
+        }
         if (this.replace != PerformerType.NONE) {
             BlockState current = this.world.getBlock(x, y, z);
             switch (this.replace) {
@@ -109,8 +118,8 @@ public abstract class PerformBrush extends Brush {
             case STATE:
                 BlockState current = this.world.getBlock(x, y, z);
                 @SuppressWarnings({"unchecked", "rawtypes"})
-                Optional<BlockState> place = current.with((Key)v.getVoxelInkKey(), v.getVoxelInkValue());
-                if(!place.isPresent()) {
+                Optional<BlockState> place = current.with((Key) v.getVoxelInkKey(), v.getVoxelInkValue());
+                if (!place.isPresent()) {
                     return false;
                 }
                 setBlockState(x, y, z, place.get());

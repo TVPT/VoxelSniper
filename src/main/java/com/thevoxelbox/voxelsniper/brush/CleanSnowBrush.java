@@ -1,113 +1,79 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
-import org.bukkit.TextColors;
-import org.bukkit.Material;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Clean_Snow_Brush
- *
- * @author psanker
+ * Removes floating snow tiles.
  */
-public class CleanSnowBrush extends Brush
-{
-    private double trueCircle = 0;
+public class CleanSnowBrush extends Brush {
 
-    /**
-     *
-     */
-    public CleanSnowBrush()
-    {
+    public CleanSnowBrush() {
         this.setName("Clean Snow");
     }
 
-    private void cleanSnow(final SnipeData v)
-    {
-        final int brushSize = v.getBrushSize();
-        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-        final Undo undo = new Undo();
+    private void cleanSnow(SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
 
-        for (int y = (brushSize + 1) * 2; y >= 0; y--)
-        {
-            final double ySquared = Math.pow(y - brushSize, 2);
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
+        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+        if (miny <= 0) {
+            miny = 1;
+        }
+        // Approximate the size of the undo
+        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));
 
-            for (int x = (brushSize + 1) * 2; x >= 0; x--)
-            {
-                final double xSquared = Math.pow(x - brushSize, 2);
-
-                for (int z = (brushSize + 1) * 2; z >= 0; z--)
-                {
-                    if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared)
-                    {
-                        if ((this.clampY(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, this.getTargetBlock().getZ() + y - brushSize).getType() == Material.SNOW) && ((this.clampY(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize - 1, this.getTargetBlock().getZ() + y - brushSize).getType() == Material.SNOW) || (this.clampY(this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize - 1, this.getTargetBlock().getZ() + y - brushSize).getType() == Material.AIR)))
-                        {
-                            undo.put(this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + z, this.getTargetBlock().getZ() + y));
-                            this.setBlockIdAt(this.getTargetBlock().getZ() + y - brushSize, this.getTargetBlock().getX() + x - brushSize, this.getTargetBlock().getY() + z - brushSize, 0);
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int z = minz; z <= maxz; z++) {
+                double zs = (minz - z) * (minz - z);
+                for (int y = maxy; y >= miny; y--) {
+                    double ys = (miny - y) * (miny - y);
+                    if (xs + ys + zs < brushSizeSquared) {
+                        BlockType below = this.world.getBlockType(x, y, z);
+                        if (below == BlockTypes.SNOW_LAYER || below == BlockTypes.AIR) {
+                            setBlockType(x, y, z, BlockTypes.AIR);
                         }
-
                     }
                 }
             }
         }
 
-        v.owner().storeUndo(undo);
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.cleanSnow(v);
+    protected final void arrow(final SnipeData v) {
+        this.cleanSnow(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.cleanSnow(v);
+    protected final void powder(final SnipeData v) {
+        this.cleanSnow(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        for (int i = 1; i < par.length; i++)
-        {
-            final String parameter = par[i];
-
-            if (parameter.equalsIgnoreCase("info"))
-            {
-                v.sendMessage(TextColors.GOLD + "Clean Snow Brush Parameters:");
-                v.sendMessage(TextColors.AQUA + "/b cls true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b cls false will switch back. (false is default)");
-                return;
-            }
-            else if (parameter.startsWith("true"))
-            {
-                this.trueCircle = 0.5;
-                v.sendMessage(TextColors.AQUA + "True circle mode ON.");
-            }
-            else if (parameter.startsWith("false"))
-            {
-                this.trueCircle = 0;
-                v.sendMessage(TextColors.AQUA + "True circle mode OFF.");
-            }
-            else
-            {
-                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-            }
-        }
-    }
-
-    @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.cleansnow";
     }
 }

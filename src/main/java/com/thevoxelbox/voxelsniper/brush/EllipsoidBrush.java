@@ -1,145 +1,144 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.TextColors;
-import org.bukkit.block.Block;
+import com.thevoxelbox.voxelsniper.Undo;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipsoid_Brush
- *
+ * Creates an ellipsoid.
  */
-public class EllipsoidBrush extends PerformBrush
-{
-    private double xRad;
-    private double yRad;
-    private double zRad;
-    private boolean istrue;
+public class EllipsoidBrush extends PerformBrush {
 
-    /**
-     *
-     */
-    public EllipsoidBrush()
-    {
+    private double xrad = -1;
+    private double yrad = -1;
+    private double zrad = -1;
+
+    public EllipsoidBrush() {
         this.setName("Ellipsoid");
     }
 
-    private void execute(final SnipeData v, Block targetBlock)
-    {
-        this.current.perform(targetBlock);
-        double istrueoffset = istrue ? 0.5 : 0;
-        int blockPositionX = targetBlock.getX();
-        int blockPositionY = targetBlock.getY();
-        int blockPositionZ = targetBlock.getZ();
+    private void ellipsoid(final SnipeData v, Location<World> targetBlock) {
+        double xrads = this.xrad * this.xrad;
+        double yrads = this.yrad * this.yrad;
+        double zrads = this.zrad * this.zrad;
 
-        for (double x = 0; x <= xRad; x++)
-        {
+        int minx = GenericMath.floor(targetBlock.getBlockX() - this.xrad);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + this.xrad) + 1;
+        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - this.yrad), 0);
+        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + this.yrad) + 1, WORLD_HEIGHT);
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - this.zrad);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + this.zrad) + 1;
 
-            final double xSquared = (x / (xRad + istrueoffset)) * (x / (xRad + istrueoffset));
+        this.undo = new Undo(GenericMath.floor(4 * Math.PI * (this.xrad + 1) * (this.yrad + 1) * (this.zrad + 1) / 3));
 
-            for (double z = 0; z <= zRad; z++)
-            {
-
-                final double zSquared = (z / (zRad + istrueoffset)) * (z / (zRad + istrueoffset));
-
-                for (double y = 0; y <= yRad; y++)
-                {
-
-                    final double ySquared = (y / (yRad + istrueoffset)) * (y / (yRad + istrueoffset));
-
-                    if (xSquared + ySquared + zSquared <= 1)
-                    {
-                        this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
-                        this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
-                        this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
-                        this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
-                        this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
-                        this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
-                        this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
-                        this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int y = miny; y <= maxy; y++) {
+                double ys = (miny - y) * (miny - y);
+                for (int z = minz; z <= maxz; z++) {
+                    double zs = (minz - z) * (minz - z);
+                    if (xs / xrads + ys / yrads + zs / zrads < 1) {
+                        perform(v, x, y, z);
                     }
-
                 }
             }
         }
 
-        v.owner().storeUndo(this.current.getUndo());
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.execute(v, this.getTargetBlock());
+    protected final void arrow(final SnipeData v) {
+        this.ellipsoid(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.execute(v, this.getLastBlock());
+    protected final void powder(final SnipeData v) {
+        this.ellipsoid(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
-        vm.custom(TextColors.AQUA + "X-size set to: " + TextColors.DARK_AQUA + this.xRad);
-        vm.custom(TextColors.AQUA + "Y-size set to: " + TextColors.DARK_AQUA + this.yRad);
-        vm.custom(TextColors.AQUA + "Z-size set to: " + TextColors.DARK_AQUA + this.zRad);
+        vm.custom(TextColors.AQUA, "X-radius set to: ", TextColors.DARK_AQUA, this.xrad);
+        vm.custom(TextColors.AQUA, "Y-radius set to: ", TextColors.DARK_AQUA, this.yrad);
+        vm.custom(TextColors.AQUA, "Z-radius set to: ", TextColors.DARK_AQUA, this.zrad);
     }
 
     @Override
-    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v)
-    {
-        this.istrue = false;
-        for (int i = 1; i < par.length; i++)
-        {
+    public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+        for (int i = 0; i < par.length; i++) {
             final String parameter = par[i];
 
-            try
-            {
-                if (parameter.equalsIgnoreCase("info"))
-                {
-                    v.sendMessage(TextColors.GOLD + "Ellipse brush parameters");
-                    v.sendMessage(TextColors.AQUA + "x[n]: Set X radius to n");
-                    v.sendMessage(TextColors.AQUA + "y[n]: Set Y radius to n");
-                    v.sendMessage(TextColors.AQUA + "z[n]: Set Z radius to n");
-                    return;
+            if (parameter.equalsIgnoreCase("info")) {
+                v.sendMessage(TextColors.GOLD + "Ellipse brush parameters");
+                v.sendMessage(TextColors.AQUA + "x[n]: Set X radius to n");
+                v.sendMessage(TextColors.AQUA + "y[n]: Set Y radius to n");
+                v.sendMessage(TextColors.AQUA + "z[n]: Set Z radius to n");
+                return;
+            } else if (parameter.startsWith("x")) {
+                try {
+                    double val = Double.parseDouble(parameter.replace("x", ""));
+                    if (val <= 0) {
+                        v.sendMessage(TextColors.RED, "X radius must be greater than zero.");
+                    } else {
+                        this.xrad = val;
+                        v.sendMessage(TextColors.GREEN, "X radius  set to " + this.xrad);
+                    }
+                } catch (NumberFormatException e) {
+                    v.sendMessage(TextColors.RED, "Invalid X radius value.");
                 }
-                else if (parameter.startsWith("x"))
-                {
-                    this.xRad = Integer.parseInt(par[i].replace("x", ""));
-                    v.sendMessage(TextColors.AQUA + "X radius set to: " + this.xRad);
+            } else if (parameter.startsWith("y")) {
+                try {
+                    double val = Double.parseDouble(parameter.replace("y", ""));
+                    if (val <= 0) {
+                        v.sendMessage(TextColors.RED, "Y radius must be greater than zero.");
+                    } else {
+                        this.yrad = val;
+                        v.sendMessage(TextColors.GREEN, "Y radius  set to " + this.yrad);
+                    }
+                } catch (NumberFormatException e) {
+                    v.sendMessage(TextColors.RED, "Invalid Y radius value.");
                 }
-                else if (parameter.startsWith("y"))
-                {
-                    this.yRad = Integer.parseInt(par[i].replace("y", ""));
-                    v.sendMessage(TextColors.AQUA + "Y radius set to: " + this.yRad);
+            } else if (parameter.startsWith("z")) {
+                try {
+                    double val = Double.parseDouble(parameter.replace("z", ""));
+                    if (val <= 0) {
+                        v.sendMessage(TextColors.RED, "Z radius must be greater than zero.");
+                    } else {
+                        this.zrad = val;
+                        v.sendMessage(TextColors.GREEN, "Z radius  set to " + this.zrad);
+                    }
+                } catch (NumberFormatException e) {
+                    v.sendMessage(TextColors.RED, "Invalid Z radius value.");
                 }
-                else if (parameter.startsWith("z"))
-                {
-                    this.zRad = Integer.parseInt(par[i].replace("z", ""));
-                    v.sendMessage(TextColors.AQUA + "Z radius set to: " + this.zRad);
-                }
-                else if (parameter.equalsIgnoreCase("true"))
-                {
-                    this.istrue = true;
-                }
-                else
-                {
-                    v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
-                }
-
+            } else {
+                v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
             }
-            catch (final Exception exception)
-            {
-                v.sendMessage(TextColors.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
-            }
+        }
+        if (this.xrad <= 0) {
+            this.xrad = v.getBrushSize();
+            v.sendMessage(TextColors.GREEN, "X radius  set to " + this.xrad);
+        }
+        if (this.yrad <= 0) {
+            this.yrad = v.getBrushSize();
+            v.sendMessage(TextColors.GREEN, "Y radius  set to " + this.yrad);
+        }
+        if (this.zrad <= 0) {
+            this.zrad = v.getBrushSize();
+            v.sendMessage(TextColors.GREEN, "Z radius  set to " + this.zrad);
         }
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.ellipsoid";
     }
 }

@@ -27,7 +27,7 @@ public interface IBrush
      */
     void parameters(String[] par, SnipeData v);
 
-    boolean perform(SnipeAction action, SnipeData data, Location<World> targetBlock, Location<World> lastBlock);
+    void perform(SnipeAction action, SnipeData data, Location<World> targetBlock, Location<World> lastBlock);
 
     /**
      * @return The name of the Brush
