@@ -30,7 +30,7 @@ public class VoxelBrushToolCommand implements CommandExecutor {
                         CommandSpec.builder()
                                 .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
                                         GenericArguments.remainingJoinedStrings(Text.of("args")))
-                                .executor(new VoxelBrushCommand())
+                                .executor(new VoxelBrushToolCommand())
                                 .permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                                 .description(Text.of("VoxelSniper brush tool settings")).build(),
                         "btool");

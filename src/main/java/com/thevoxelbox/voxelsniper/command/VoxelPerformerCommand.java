@@ -23,7 +23,7 @@ public class VoxelPerformerCommand implements CommandExecutor {
     public static void setup(Object plugin) {
         Sponge.getCommandManager().register(plugin,
                 CommandSpec.builder().arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.string(Text.of("performer")))
-                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .executor(new VoxelPerformerCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                         .description(Text.of("VoxelSniper performer selection")).build(),
                 "p");
     }

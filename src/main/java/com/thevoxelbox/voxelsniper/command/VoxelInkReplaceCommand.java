@@ -20,7 +20,7 @@ public class VoxelInkReplaceCommand implements CommandExecutor {
         Sponge.getCommandManager().register(plugin, CommandSpec.builder()
                 .arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.string(Text.of("key")),
                         GenericArguments.literal(Text.of("equals"), "="), GenericArguments.string(Text.of("value")))
-                .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                .executor(new VoxelInkReplaceCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                 .description(Text.of("VoxelSniper Replace Ink selection")).build(), "vir");
     }
 

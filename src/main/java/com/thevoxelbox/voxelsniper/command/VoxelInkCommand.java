@@ -20,7 +20,7 @@ public class VoxelInkCommand implements CommandExecutor {
         Sponge.getCommandManager().register(plugin, CommandSpec.builder()
                 .arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.string(Text.of("key")),
                         GenericArguments.literal(Text.of("equals"), "="), GenericArguments.string(Text.of("value")))
-                .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                .executor(new VoxelInkCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                 .description(Text.of("VoxelSniper Ink selection")).build(), "vi");
     }
 

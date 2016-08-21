@@ -126,7 +126,7 @@ public abstract class Metrics {
      * @param pluginVersion The plugin version
      * @throws IOException If there is an issue reading the configuration file
      */
-    public Metrics(String pluginName, String pluginVersion) throws IOException {
+    public Metrics(String pluginName, String pluginVersion, File configFile) throws IOException {
         if (pluginName == null || pluginVersion == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
@@ -134,7 +134,7 @@ public abstract class Metrics {
         this.pluginName = pluginName;
         this.pluginVersion = pluginVersion;
 
-        this.configurationFile = getConfigFile();
+        this.configurationFile = configFile;
 
         if (!this.configurationFile.exists()) {
             if (this.configurationFile.getPath().contains("/") || this.configurationFile.getPath().contains("\\")) {
@@ -170,14 +170,6 @@ public abstract class Metrics {
      * @return Players online
      */
     public abstract int getPlayersOnline();
-
-    /**
-     * Gets the File object of the config file that should be used to store data
-     * such as the GUID and opt-out status.
-     * 
-     * @return The File object for the config file
-     */
-    public abstract File getConfigFile();
 
     /**
      * Construct and create a Graph that can be used to separate specific

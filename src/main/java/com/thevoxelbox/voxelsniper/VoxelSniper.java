@@ -84,6 +84,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -102,6 +103,7 @@ public class VoxelSniper {
     }
 
     @Inject private Logger logger;
+    @Inject private PluginContainer container;
     @ConfigDir(sharedRoot = false) @Inject private Path configDir;
 
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener();
@@ -110,7 +112,7 @@ public class VoxelSniper {
     @Listener
     public void onInit(GameInitializationEvent event) {
         VoxelSniper.instance = this;
-        plugin_cause = Cause.of(NamedCause.of("VoxelSniper", this));
+        plugin_cause = Cause.of(NamedCause.of("VoxelSniper", this.container));
         registerBrushes();
         this.logger.info("Registered " + Brushes.get().registeredSniperBrushes() + " Sniper Brushes with "
                 + Brushes.get().registeredSniperBrushHandles() + " handles.");

@@ -16,9 +16,6 @@ public class OverlayBrush extends PerformBrush {
     private boolean allBlocks = false;
 
     // @Spongify
-    /**
-     *
-     */
     public OverlayBrush() {
         this.setName("Overlay (Topsoil Filling)");
     }

@@ -19,7 +19,7 @@ public class VoxelDefaultCommand implements CommandExecutor {
 
     public static void setup(Object plugin) {
         Sponge.getCommandManager().register(plugin,
-                CommandSpec.builder().arguments(GenericArguments.playerOrSource(Text.of("sniper"))).executor(new VoxelBrushCommand())
+                CommandSpec.builder().arguments(GenericArguments.playerOrSource(Text.of("sniper"))).executor(new VoxelDefaultCommand())
                         .permission(VoxelSniperConfiguration.PERMISSION_SNIPER).description(Text.of("Resets your VoxelSniper brush settings"))
                         .build(),
                 "d");

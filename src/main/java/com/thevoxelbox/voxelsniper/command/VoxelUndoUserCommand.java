@@ -21,7 +21,7 @@ public class VoxelUndoUserCommand implements CommandExecutor {
                 CommandSpec.builder()
                         .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
                                 GenericArguments.player(Text.of("target")))
-                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_COMMAND_UNDO_OTHER)
+                        .executor(new VoxelUndoUserCommand()).permission(VoxelSniperConfiguration.PERMISSION_COMMAND_UNDO_OTHER)
                         .description(Text.of("VoxelSniper undo other user")).build(),
                 "uu");
     }

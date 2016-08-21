@@ -20,7 +20,8 @@ import org.spongepowered.api.world.World;
  */
 public abstract class Brush implements IBrush {
 
-    protected static int WORLD_HEIGHT = Sponge.getServer().getChunkLayout().getSpaceMax().getY();
+    protected static int WORLD_HEIGHT =
+            (Sponge.getServer().getChunkLayout().getSpaceMax().getY() + 1) * Sponge.getServer().getChunkLayout().getChunkSize().getY();
 
     public static Location<World> clampY(World world, int x, int y, int z) {
         if (y < 0) {
@@ -48,8 +49,10 @@ public abstract class Brush implements IBrush {
         switch (action) {
             case ARROW:
                 this.arrow(data);
+                break;
             case GUNPOWDER:
                 this.powder(data);
+                break;
             default:
         }
         this.cause = null;

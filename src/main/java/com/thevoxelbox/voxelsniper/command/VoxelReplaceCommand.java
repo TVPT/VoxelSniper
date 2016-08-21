@@ -31,7 +31,7 @@ public class VoxelReplaceCommand implements CommandExecutor {
                 CommandSpec.builder()
                         .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
                                 GenericArguments.optional(GenericArguments.string(Text.of("material"))))
-                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .executor(new VoxelReplaceCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                         .description(Text.of("VoxelSniper replace material selection")).build(),
                 "vr");
     }

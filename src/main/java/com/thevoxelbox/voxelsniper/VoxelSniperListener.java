@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.util.SniperStats;
-
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -25,14 +24,11 @@ public class VoxelSniperListener {
             return;
         }
 
-        try {
-            Sniper sniper = SniperManager.get().getSniperForPlayer(player);
-            if (sniper.isEnabled() && sniper.snipe(InteractionType.SECONDARY_MAINHAND, player.getItemInHand(HandTypes.MAIN_HAND).orElse(null),
-                    event.getTargetBlock().getLocation().orElse(null), event.getTargetSide())) {
-                SniperStats.increaseSnipeCounter();
-                event.setCancelled(true);
-            }
-        } catch (final Exception ignored) {
+        Sniper sniper = SniperManager.get().getSniperForPlayer(player);
+        if (sniper.isEnabled() && sniper.snipe(InteractionType.SECONDARY_MAINHAND, player.getItemInHand(HandTypes.MAIN_HAND).orElse(null),
+                event.getTargetBlock().getLocation().orElse(null), event.getTargetSide())) {
+            SniperStats.increaseSnipeCounter();
+            event.setCancelled(true);
         }
     }
 

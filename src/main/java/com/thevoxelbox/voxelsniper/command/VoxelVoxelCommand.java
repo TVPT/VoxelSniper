@@ -31,7 +31,7 @@ public class VoxelVoxelCommand implements CommandExecutor {
                 CommandSpec.builder()
                         .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
                                 GenericArguments.optional(GenericArguments.string(Text.of("material"))))
-                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .executor(new VoxelVoxelCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                         .description(Text.of("VoxelSniper material selection")).build(),
                 "v");
     }

@@ -23,8 +23,8 @@ public abstract class PerformBrush extends Brush {
 
     private static Pattern PERFORMER_PATTERN = Pattern.compile("([mMiIcC])([mMiIcC])?");
 
-    protected PerformerType place;
-    protected PerformerType replace;
+    protected PerformerType place = PerformerType.TYPE;
+    protected PerformerType replace = PerformerType.NONE;
 
     public void parse(String[] args, SnipeData v) {
         String handle = args[0];

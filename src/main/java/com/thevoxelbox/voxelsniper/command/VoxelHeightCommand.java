@@ -20,7 +20,7 @@ public class VoxelHeightCommand implements CommandExecutor {
     public static void setup(Object plugin) {
         Sponge.getCommandManager().register(plugin,
                 CommandSpec.builder().arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.integer(Text.of("height")))
-                        .executor(new VoxelBrushCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .executor(new VoxelHeightCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                         .description(Text.of("VoxelSniper Height selection")).build(),
                 "vh");
     }

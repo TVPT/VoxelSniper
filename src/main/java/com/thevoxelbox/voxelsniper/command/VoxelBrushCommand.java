@@ -27,7 +27,7 @@ public class VoxelBrushCommand implements CommandExecutor {
         Sponge.getCommandManager()
                 .register(plugin,
                         CommandSpec.builder()
-                                .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
+                                .arguments(
                                         GenericArguments.optional(GenericArguments.string(Text.of("brush"))),
                                         GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("brush_args"))))
                                 .executor(new VoxelBrushCommand())
@@ -38,14 +38,17 @@ public class VoxelBrushCommand implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        Player player = (Player) args.getOne("sniper").get();
+        if (!(src instanceof Player)) {
+            src.sendMessage(Text.of("Player only."));
+            return CommandResult.success();
+        }
+        Player player = (Player) src;
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         String currentToolId = sniper.getCurrentToolId();
         SnipeData snipeData = sniper.getSnipeData(currentToolId);
 
         Optional<String> brush_selection = args.getOne("brush");
         if (!brush_selection.isPresent()) {
-            sniper.previousBrush(currentToolId);
             sniper.displayInfo();
             return CommandResult.success();
         }

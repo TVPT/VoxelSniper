@@ -48,8 +48,6 @@ public final class SniperStats extends Metrics {
         SniperStats.snipeCounterInitTimeStamp = currentTimeMillis;
     }
 
-    private File configFile;
-
     /**
      * Creates a new instance of SniperStats for Metrics.
      * 
@@ -57,8 +55,7 @@ public final class SniperStats extends Metrics {
      * @throws IOException In the event Metrics is unable to start
      */
     public SniperStats(String pluginVersion, File configFile) throws IOException {
-        super("VoxelSniper", pluginVersion);
-        this.configFile = configFile;
+        super("VoxelSniper", pluginVersion, configFile);
     }
 
     @Override
@@ -69,11 +66,6 @@ public final class SniperStats extends Metrics {
     @Override
     public int getPlayersOnline() {
         return Sponge.getServer().getOnlinePlayers().size();
-    }
-
-    @Override
-    public File getConfigFile() {
-        return this.configFile;
     }
 
     /**
