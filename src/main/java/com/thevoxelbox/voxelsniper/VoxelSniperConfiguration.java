@@ -29,6 +29,10 @@ package com.thevoxelbox.voxelsniper;
  */
 public class VoxelSniperConfiguration {
 
+    public static final String PLUGIN_ID = "voxelsniper";
+    public static final String PLUGIN_NAME = "VoxelSniper";
+    public static final String PLUGIN_VERSION = "8.0.0";
+
     // Constants
     public static final int CHUNK_SIZE = 16;
     public static final String PERMISSION_SNIPER = "voxelsniper.sniper";

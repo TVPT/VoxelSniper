@@ -66,6 +66,9 @@ public class VoxelSniperCommand implements CommandExecutor {
                 player.sendMessage(Text.of(TextColors.AQUA, "All available brushes:"));
                 player.sendMessage(Text.of(Brushes.get().getAllBrushes()));
                 return CommandResult.success();
+            } else if (args[0].equalsIgnoreCase("version")) {
+                player.sendMessage(Text.of(TextColors.AQUA, "VoxelSniper version " + VoxelSniperConfiguration.PLUGIN_VERSION));
+                return CommandResult.success();
             } else if (args[0].equalsIgnoreCase("range")) {
                 SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
                 if (args.length == 2) {

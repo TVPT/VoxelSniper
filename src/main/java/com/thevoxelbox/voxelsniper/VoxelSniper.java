@@ -116,7 +116,7 @@ import java.nio.file.Path;
 /**
  * VoxelSniper main plugin class.
  */
-@Plugin(id = "voxelsniper", name = "VoxelSniper", version = "8.0.0")
+@Plugin(id = VoxelSniperConfiguration.PLUGIN_ID, name = VoxelSniperConfiguration.PLUGIN_NAME, version = VoxelSniperConfiguration.PLUGIN_VERSION)
 public class VoxelSniper {
 
     public static Cause plugin_cause;
@@ -142,7 +142,7 @@ public class VoxelSniper {
                 + Brushes.get().registeredSniperBrushHandles() + " handles.");
 
         try {
-            this.stats = new SniperStats("8.0.0", this.configDir.resolve("metrics.properties").toFile());
+            this.stats = new SniperStats(VoxelSniperConfiguration.PLUGIN_VERSION, this.configDir.resolve("metrics.properties").toFile());
         } catch (IOException e) {
             this.logger.error("Error setting up metrics", this.stats);
         }
