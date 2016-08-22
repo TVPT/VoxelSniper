@@ -31,7 +31,6 @@ import org.spongepowered.api.text.format.TextColors;
 
 public class Message {
 
-    private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
     private final SnipeData snipeData;
 
     /**
@@ -74,7 +73,7 @@ public class Message {
     public void custom(Text message) {
         this.snipeData.sendMessage(message);
     }
-    
+
     public void custom(Object... args) {
         this.snipeData.sendMessage(args);
     }
@@ -107,7 +106,7 @@ public class Message {
      */
     public void size() {
         this.snipeData.sendMessage(TextColors.GREEN, "Brush Size: ", TextColors.DARK_RED, this.snipeData.getBrushSize());
-        if (this.snipeData.getBrushSize() >= BRUSH_SIZE_WARNING_THRESHOLD) {
+        if (this.snipeData.getBrushSize() >= VoxelSniperConfiguration.BRUSH_SIZE_WARNING_THRESHOLD) {
             this.snipeData.sendMessage(TextColors.RED, "WARNING: Large brush size selected!");
         }
     }

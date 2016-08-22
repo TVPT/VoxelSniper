@@ -44,6 +44,7 @@ public class VoxelSniperConfiguration {
     public static double LITESNIPER_MAX_BRUSH_SIZE = 10.5;
     public static int UNDO_CACHE_SIZE = 10;
     public static boolean LOGIN_MESSAGE_ENABLED = true;
+    public static int BRUSH_SIZE_WARNING_THRESHOLD = 25;
 
     // @Spongify load from hocon container
 }
