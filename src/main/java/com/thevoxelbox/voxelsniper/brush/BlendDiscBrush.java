@@ -29,8 +29,10 @@ import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.BlockBuffer;
 
 import com.flowpowered.math.vector.Vector3i;
-import org.spongepowered.api.world.schematic.BlockPalette;
-import org.spongepowered.api.world.schematic.BlockPaletteTypes;
+import com.google.common.collect.Maps;
+import org.spongepowered.api.block.BlockState;
+
+import java.util.Map;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
@@ -56,8 +58,7 @@ public class BlendDiscBrush extends BlendBrushBase {
         int ty = this.targetBlock.getBlockY();
         int tz = this.targetBlock.getBlockZ();
 
-        BlockPalette palette = BlockPaletteTypes.GLOBAL.create();
-        int[] materials = new int[9];
+        Map<BlockState, Integer> frequency = Maps.newHashMap();
 
         for (int x = -brushSize; x <= brushSize; x++) {
             int x0 = x + tx;
@@ -66,43 +67,32 @@ public class BlendDiscBrush extends BlendBrushBase {
                     continue;
                 }
                 int z0 = z + tz;
-                // fill the materials array with the 27 blocks in a 3x3x3
-                // are around this block
+                int highest = 1;
+                BlockState currentState = this.world.getBlock(x0, ty, z0);
+                BlockState highestState = currentState;
+                frequency.clear();
+                boolean tie = false;
                 for (int ox = -1; ox <= 1; ox++) {
                     for (int oz = -1; oz <= 1; oz++) {
-                        materials[(ox + 1) + (oz + 1) * 3] =
-                                palette.getOrAssign(this.world.getBlock(x0 + ox, ty, z0 + oz));
+                        BlockState state = this.world.getBlock(x0 + ox, ty, z0 + oz);
+                        Integer count = frequency.get(state);
+                        if (count == null) {
+                            count = 1;
+                        } else {
+                            count++;
+                        }
+                        if (count > highest) {
+                            highest = count;
+                            highestState = state;
+                            tie = false;
+                        } else if (count == highest) {
+                            tie = true;
+                        }
+                        frequency.put(state, count);
                     }
                 }
-                // find the most common material
-                int highest = 1;
-                // default index is 5 which is the index of the center
-                // block, so if every block is different the highest will be
-                // the center block and no change will occur
-                int highestIndex = 5;
-                for (int i = 0; i < 9; i++) {
-                    if (materials[i] == -1) {
-                        continue;
-                    }
-                    int c = 0;
-                    for (int j = 0; j < 9; j++) {
-                        if (j == i) {
-                            continue;
-                        }
-                        if (materials[i] == materials[j]) {
-                            c++;
-                        }
-                    }
-                    if (c > highest) {
-                        highest = c;
-                        highestIndex = i;
-                    }
-                }
-                // if the highest found material was different than what we
-                // had then we set it into the buffer
-                if (materials[highestIndex] != materials[13]) {
-                    buffer.set(x, 0, z, palette.get(materials[highestIndex]).get());
-
+                if (!tie && currentState != highestState) {
+                    buffer.set(x, 0, z, highestState);
                 }
             }
         }
@@ -120,7 +110,6 @@ public class BlendDiscBrush extends BlendBrushBase {
         }
         v.owner().storeUndo(this.undo);
         this.undo = null;
-
     }
 
     @Override

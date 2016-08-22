@@ -24,19 +24,17 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.BlockHelper;
+
+import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.property.block.MatterProperty;
-import org.spongepowered.api.data.property.block.MatterProperty.Matter;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-
-import java.util.Optional;
 
 public class FillDownBrush extends PerformBrush {
 
@@ -86,12 +84,8 @@ public class FillDownBrush extends PerformBrush {
                             if (current.getType() == BlockTypes.AIR) {
                                 perform(v, x, y, z);
                             } else if (this.fillLiquid) {
-                                Optional<MatterProperty> matter = current.getProperty(MatterProperty.class);
-                                if (matter.isPresent()) {
-                                    Matter m = matter.get().getValue();
-                                    if (m == Matter.LIQUID) {
-                                        perform(v, x, y, z);
-                                    }
+                                if (BlockHelper.isLiquid(current)) {
+                                    perform(v, x, y, z);
                                 }
                             }
                         }

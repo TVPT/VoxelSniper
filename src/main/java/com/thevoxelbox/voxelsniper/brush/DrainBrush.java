@@ -28,6 +28,8 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.BlockHelper;
+
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.property.block.MatterProperty;
@@ -64,12 +66,8 @@ public class DrainBrush extends Brush {
             for (int z = minz; z <= maxz; z++) {
                 for (int y = maxy; y >= miny; y--) {
                     BlockState block = this.world.getBlock(x, y, z);
-                    Optional<MatterProperty> matter = block.getProperty(MatterProperty.class);
-                    if (matter.isPresent()) {
-                        Matter m = matter.get().getValue();
-                        if (m == Matter.LIQUID) {
-                            setBlockType(x, y, z, BlockTypes.AIR);
-                        }
+                    if (BlockHelper.isLiquid(block)) {
+                        setBlockType(x, y, z, BlockTypes.AIR);
                     }
                 }
             }
