@@ -47,10 +47,10 @@ public class CanyonSelectionBrush extends CanyonBrush {
         if (this.pos == null || this.worldUid == null || !this.worldUid.equals(this.targetBlock.getExtent().getUniqueId())) {
             this.worldUid = this.targetBlock.getExtent().getUniqueId();
             this.pos = this.targetBlock.getChunkPosition();
-            v.sendMessage(TextColors.YELLOW + "First point selected!");
+            v.sendMessage(TextColors.YELLOW, "First point selected!");
         } else {
             Vector3i other = this.targetBlock.getChunkPosition();
-            v.sendMessage(TextColors.YELLOW + "Second point selected!");
+            v.sendMessage(TextColors.YELLOW, "Second point selected!");
             Vector3i min = other.min(this.pos);
             Vector3i max = other.max(this.pos);
             this.undo = new Undo((max.getX() - min.getX()) * (max.getZ() - min.getZ()) * 16 * 4 * 256);

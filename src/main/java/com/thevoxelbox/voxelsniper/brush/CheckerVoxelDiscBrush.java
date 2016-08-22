@@ -42,7 +42,6 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 
     private void applyBrush(SnipeData v, Location<World> targetBlock) {
         double brushSize = v.getBrushSize();
-        double brushSizeSquared = brushSize * brushSize;
 
         int tx = targetBlock.getBlockX();
         int tz = targetBlock.getBlockZ();
@@ -56,14 +55,10 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (tz - z) * (tz - z);
-                if (xs + zs < brushSizeSquared) {
-                    final int sum = this.useWorldCoordinates ? x + z : x - tx + z - tx;
-                    if (sum % 2 != 0) {
-                        perform(v, x, targetBlock.getBlockY(), z);
-                    }
+                final int sum = this.useWorldCoordinates ? x + z : x - tx + z - tz;
+                if (sum % 2 != 0) {
+                    perform(v, x, targetBlock.getBlockY(), z);
                 }
             }
         }
@@ -89,26 +84,24 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-        for (int x = 1; x < par.length; x++) {
-            final String parameter = par[x].toLowerCase();
-
-            if (parameter.equals("info")) {
-                v.sendMessage(TextColors.GOLD, this.getName() + " Parameters:");
-                v.sendMessage(TextColors.AQUA, "true  -- Enables using World Coordinates.");
-                v.sendMessage(TextColors.AQUA, "false -- Disables using World Coordinates.");
-                return;
-            }
-            if (parameter.startsWith("true")) {
-                this.useWorldCoordinates = true;
-                v.sendMessage(TextColors.AQUA, "Enabled using World Coordinates.");
-            } else if (parameter.startsWith("false")) {
-                this.useWorldCoordinates = false;
-                v.sendMessage(TextColors.AQUA, "Disabled using World Coordinates.");
-            } else {
-                v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
-                break;
-            }
+    public void parameters(final String[] par, final SnipeData v) {
+        if (par.length == 0) {
+            return;
+        }
+        if (par[0].equals("info")) {
+            v.sendMessage(TextColors.GOLD, this.getName() + " Parameters:");
+            v.sendMessage(TextColors.AQUA, "true  -- Enables using World Coordinates.");
+            v.sendMessage(TextColors.AQUA, "false -- Disables using World Coordinates.");
+            return;
+        }
+        if (par[0].startsWith("true")) {
+            this.useWorldCoordinates = true;
+            v.sendMessage(TextColors.AQUA, "Enabled using World Coordinates.");
+        } else if (par[0].startsWith("false")) {
+            this.useWorldCoordinates = false;
+            v.sendMessage(TextColors.AQUA, "Disabled using World Coordinates.");
+        } else {
+            v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
         }
     }
 
