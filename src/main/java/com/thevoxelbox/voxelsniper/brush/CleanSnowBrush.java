@@ -70,9 +70,11 @@ public class CleanSnowBrush extends Brush {
                 for (int y = maxy; y >= miny; y--) {
                     double ys = (ty - y) * (ty - y);
                     if (xs + ys + zs < brushSizeSquared) {
-                        BlockType below = this.world.getBlockType(x, y, z);
-                        if (below == BlockTypes.SNOW_LAYER || below == BlockTypes.AIR) {
-                            setBlockType(x, y, z, BlockTypes.AIR);
+                        if(this.world.getBlockType(x, y, z) == BlockTypes.SNOW_LAYER) {
+                            BlockType below = this.world.getBlockType(x, y - 1, z);
+                            if (below == BlockTypes.SNOW_LAYER || below == BlockTypes.AIR) {
+                                setBlockType(x, y, z, BlockTypes.AIR);
+                            }
                         }
                     }
                 }
