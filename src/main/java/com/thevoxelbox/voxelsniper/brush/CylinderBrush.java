@@ -79,7 +79,7 @@ public class CylinderBrush extends PerformBrush {
                 double zs = (tz - z) * (tz - z);
                 if (xs + zs < brushSizeSquared) {
                     for (int y = yEndPoint; y >= yStartingPoint; y--) {
-                        perform(v, x, targetBlock.getBlockY(), z);
+                        perform(v, x, y, z);
                     }
                 }
             }

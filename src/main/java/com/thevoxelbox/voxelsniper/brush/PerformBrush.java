@@ -80,6 +80,8 @@ public abstract class PerformBrush extends Brush {
                     parameters(args, v);
                     return;
                 }
+            } else {
+                this.replace = PerformerType.NONE;
             }
             // we defer setting the place performer until here incase the replace doesn't match and we want to pass the args to the brush instead
             this.place = pl;
@@ -108,7 +110,7 @@ public abstract class PerformBrush extends Brush {
     }
 
     protected boolean perform(SnipeData v, int x, int y, int z) {
-        if (y < 0 || y > Brush.WORLD_HEIGHT) {
+        if (y < 0 || y >= Brush.WORLD_HEIGHT) {
             return false;
         }
         if (this.replace != PerformerType.NONE) {
