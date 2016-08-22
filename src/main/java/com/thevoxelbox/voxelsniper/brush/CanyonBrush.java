@@ -121,7 +121,7 @@ public class CanyonBrush extends Brush {
             v.sendMessage(TextColors.GREEN + "y[number] to set the Level to which the land will be shifted down");
         }
         if (par[0].startsWith("y")) {
-            int _i = Integer.parseInt(par[1].replace("y", ""));
+            int _i = Integer.parseInt(par[0].replace("y", ""));
             if (_i < SHIFT_LEVEL_MIN) {
                 _i = SHIFT_LEVEL_MIN;
             } else if (_i > SHIFT_LEVEL_MAX) {

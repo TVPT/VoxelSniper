@@ -32,6 +32,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -45,34 +46,34 @@ import java.util.regex.Pattern;
  */
 public abstract class PerformBrush extends Brush {
 
-    private static Pattern PERFORMER_PATTERN = Pattern.compile("([mMiIcC])([mMiIcC])?");
-
     protected PerformerType place = PerformerType.TYPE;
     protected PerformerType replace = PerformerType.NONE;
 
     public void parse(String[] args, SnipeData v) {
         String handle = args[0];
-        Matcher m = PERFORMER_PATTERN.matcher(handle);
-        if (m.find()) {
+        if (handle.length() == 1 || handle.length() == 2) {
             // @Spongify throw brush change event?
-            char p = m.group(1).charAt(0);
+            PerformerType pl = null;
+            char p = handle.charAt(0);
             if (p == 'm' || p == 'M') {
-                this.place = PerformerType.TYPE;
+                pl = PerformerType.TYPE;
             } else if (p == 'i' || p == 'I') {
-                this.place = PerformerType.STATE;
+                pl = PerformerType.STATE;
+                v.sendMessage(TextColors.RED, "Warning: Ink performers are currently unsupported in version 8.0.0 due to changes in world format");
             } else if (p == 'c' || p == 'C') {
-                this.place = PerformerType.COMBO;
+                pl = PerformerType.COMBO;
             } else {
                 parameters(args, v);
                 return;
             }
-            char r = 0;
-            if (m.groupCount() > 2) {
-                r = m.group(2).charAt(0);
+            if (handle.length() == 2) {
+                char r = handle.charAt(1);
                 if (r == 'm' || r == 'M') {
                     this.replace = PerformerType.TYPE;
                 } else if (r == 'i' || r == 'I') {
                     this.replace = PerformerType.STATE;
+                    v.sendMessage(TextColors.RED,
+                            "Warning: Ink performers are currently unsupported in version 8.0.0 due to changes in world format");
                 } else if (r == 'c' || r == 'C') {
                     this.replace = PerformerType.COMBO;
                 } else {
@@ -80,6 +81,8 @@ public abstract class PerformBrush extends Brush {
                     return;
                 }
             }
+            // we defer setting the place performer until here incase the replace doesn't match and we want to pass the args to the brush instead
+            this.place = pl;
             if (args.length > 1) {
                 parameters(Arrays.copyOfRange(args, 1, args.length), v);
             }

@@ -99,8 +99,7 @@ public class Message {
      * Display replace material.
      */
     public void replace() {
-        this.snipeData.sendMessage(TextColors.AQUA, "Replace Material: ", TextColors.RED, this.snipeData.getReplaceId(), TextColors.GRAY, " (",
-                this.snipeData.getReplaceId(), ")");
+        this.snipeData.sendMessage(TextColors.AQUA, "Replace Material: ", TextColors.RED, this.snipeData.getReplaceId());
     }
 
     /**
