@@ -25,125 +25,94 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.spongepowered.api.text.format.TextColors;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.BlockBuffer;
+
+import com.flowpowered.math.vector.Vector3i;
+import org.spongepowered.api.world.schematic.BlockPalette;
+import org.spongepowered.api.world.schematic.BlockPaletteTypes;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
  */
 public class BlendVoxelDiscBrush extends BlendBrushBase {
 
-    /**
-     *
-     */
     public BlendVoxelDiscBrush() {
         this.setName("Blend Voxel Disc");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected final void blend(final SnipeData v) {
-        // @Spongify
-//        final int brushSize = v.getBrushSize();
-//        final int brushSizeDoubled = 2 * brushSize;
-//        final int[][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
-//        final int[][] newMaterials = new int[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Array that holds the blended materials
-//
-//        // Log current materials into oldmats
-//        for (int x = 0; x <= 2 * (brushSize + 1); x++)
-//        {
-//            for (int z = 0; z <= 2 * (brushSize + 1); z++)
-//            {
-//                oldMaterials[x][z] = this.getBlockIdAt(this.getTargetBlock().getX() - brushSize - 1 + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - brushSize - 1 + z);
-//            }
-//        }
-//
-//        // Log current materials into newmats
-//        for (int x = 0; x <= brushSizeDoubled; x++)
-//        {
-//            for (int z = 0; z <= brushSizeDoubled; z++)
-//            {
-//                newMaterials[x][z] = oldMaterials[x + 1][z + 1];
-//            }
-//        }
-//
-//        // Blend materials
-//        for (int x = 0; x <= brushSizeDoubled; x++)
-//        {
-//            for (int z = 0; z <= brushSizeDoubled; z++)
-//            {
-//                final int[] materialFrequency = new int[BlendBrushBase.getMaxBlockMaterialID() + 1]; // Array that tracks frequency of materials neighboring given block
-//                int modeMatCount = 0;
-//                int modeMatId = 0;
-//                boolean tiecheck = true;
-//
-//                for (int m = -1; m <= 1; m++)
-//                {
-//                    for (int n = -1; n <= 1; n++)
-//                    {
-//                        if (!(m == 0 && n == 0))
-//                        {
-//                            materialFrequency[oldMaterials[x + 1 + m][z + 1 + n]]++;
-//                        }
-//                    }
-//                }
-//
-//                // Find most common neighboring material.
-//                for (int i = 0; i <= BlendBrushBase.getMaxBlockMaterialID(); i++)
-//                {
-//                    if (materialFrequency[i] > modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId())))
-//                    {
-//                        modeMatCount = materialFrequency[i];
-//                        modeMatId = i;
-//                    }
-//                }
-//                // Make sure there'world not a tie for most common
-//                for (int i = 0; i < modeMatId; i++)
-//                {
-//                    if (materialFrequency[i] == modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId())))
-//                    {
-//                        tiecheck = false;
-//                    }
-//                }
-//
-//                // Record most common neighbor material for this block
-//                if (tiecheck)
-//                {
-//                    newMaterials[x][z] = modeMatId;
-//                }
-//            }
-//        }
-//
-//        final Undo undo = new Undo();
-//
-//        // Make the changes
-//        for (int x = brushSizeDoubled; x >= 0; x--)
-//        {
-//            for (int z = brushSizeDoubled; z >= 0; z--)
-//            {
-//                if (!(this.excludeAir && newMaterials[x][z] == Material.AIR.getId()) && !(this.excludeWater && (newMaterials[x][z] == Material.WATER.getId() || newMaterials[x][z] == Material.STATIONARY_WATER.getId())))
-//                {
-//                    if (this.getBlockIdAt(this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - brushSize + z) != newMaterials[x][z])
-//                    {
-//                        undo.put(this.clampY(this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY(), this.getTargetBlock().getZ() - brushSize + z));
-//                    }
-//                    this.setBlockIdAt(this.getTargetBlock().getZ() - brushSize + z, this.getTargetBlock().getX() - brushSize + x, this.getTargetBlock().getY(), newMaterials[x][z]);
-//
-//                }
-//            }
-//        }
-//
-//        v.owner().storeUndo(undo);
-    }
+        final int brushSize = (int) v.getBrushSize() + 1;
+        // all changes are initially performed into a buffer to prevent the
+        // results bleeding into each other
+        BlockBuffer buffer = new BlockBuffer(new Vector3i(-brushSize, 0, -brushSize), new Vector3i(brushSize, 0, brushSize));
 
-    @Override
-    public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(TextColors.GOLD, "Blend Voxel Disc Parameters:");
-            v.sendMessage(TextColors.AQUA, "/b bvd water -- toggle include or exclude (default) water");
-            return;
+        int tx = this.targetBlock.getBlockX();
+        int ty = this.targetBlock.getBlockY();
+        int tz = this.targetBlock.getBlockZ();
+
+        BlockPalette palette = BlockPaletteTypes.GLOBAL.create();
+        int[] materials = new int[9];
+
+        for (int x = -brushSize; x <= brushSize; x++) {
+            int x0 = x + tx;
+            for (int z = -brushSize; z <= brushSize; z++) {
+                int z0 = z + tz;
+                // fill the materials array with the 27 blocks in a 3x3x3
+                // are around this block
+                for (int ox = -1; ox <= 1; ox++) {
+                    for (int oz = -1; oz <= 1; oz++) {
+                        materials[(ox + 1) + (oz + 1) * 3] =
+                                palette.getOrAssign(this.world.getBlock(x0 + ox, ty, z0 + oz));
+                    }
+                }
+                // find the most common material
+                int highest = 1;
+                // default index is 5 which is the index of the center
+                // block, so if every block is different the highest will be
+                // the center block and no change will occur
+                int highestIndex = 5;
+                for (int i = 0; i < 9; i++) {
+                    if (materials[i] == -1) {
+                        continue;
+                    }
+                    int c = 0;
+                    for (int j = 0; j < 9; j++) {
+                        if (j == i) {
+                            continue;
+                        }
+                        if (materials[i] == materials[j]) {
+                            c++;
+                        }
+                    }
+                    if (c > highest) {
+                        highest = c;
+                        highestIndex = i;
+                    }
+                }
+                // if the highest found material was different than what we
+                // had then we set it into the buffer
+                if (materials[highestIndex] != materials[13]) {
+                    buffer.set(x, 0, z, palette.get(materials[highestIndex]).get());
+
+                }
+            }
         }
 
-        super.parameters(par, v);
+        this.undo = new Undo(buffer.getBlockCount());
+        // apply the buffer to the world
+        for (int x = -brushSize; x <= brushSize; x++) {
+            int x0 = x + tx;
+            for (int z = -brushSize; z <= brushSize; z++) {
+                int z0 = z + tz;
+                if (buffer.contains(x, 0, z)) {
+                    setBlockState(x0, ty, z0, buffer.get(x, ty, z));
+                }
+            }
+        }
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
