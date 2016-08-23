@@ -24,7 +24,6 @@
  */
 package com.thevoxelbox.voxelsniper;
 
-import com.google.inject.Inject;
 import com.thevoxelbox.voxelsniper.brush.BallBrush;
 import com.thevoxelbox.voxelsniper.brush.BiomeBrush;
 import com.thevoxelbox.voxelsniper.brush.BlendBallBrush;
@@ -71,7 +70,6 @@ import com.thevoxelbox.voxelsniper.brush.SplatterBallBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterOverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.SplineBrush;
 import com.thevoxelbox.voxelsniper.brush.StencilBrush;
 import com.thevoxelbox.voxelsniper.brush.StencilListBrush;
 import com.thevoxelbox.voxelsniper.brush.ThreePointCircleBrush;
@@ -97,7 +95,11 @@ import com.thevoxelbox.voxelsniper.command.VoxelSniperCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelUndoCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelUndoUserCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelVoxelCommand;
+import com.thevoxelbox.voxelsniper.util.SchematicHelper;
 import com.thevoxelbox.voxelsniper.util.SniperStats;
+import com.thevoxelbox.voxelsniper.util.StencilUpdater;
+
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -108,6 +110,7 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -143,6 +146,13 @@ public class VoxelSniper {
             this.stats = new SniperStats(VoxelSniperConfiguration.PLUGIN_VERSION, this.configDir.resolve("metrics.properties").toFile());
         } catch (IOException e) {
             this.logger.error("Error setting up metrics", this.stats);
+        }
+
+        SchematicHelper.setSchematicsDir(this.configDir.resolve("schematics"));
+        File stencils = this.configDir.resolve("stencils").toFile();
+        if (stencils.exists() && stencils.isDirectory()) {
+            this.logger.info("Found a stencils directory, porting all stencils inside to schematics.");
+            StencilUpdater.update(stencils);
         }
 
         // @Spongify loadSniperConfiguration();
@@ -222,7 +232,6 @@ public class VoxelSniper {
         Brushes.get().registerSniperBrush(SplatterOverlayBrush.class, "sover", "splatteroverlay");
         Brushes.get().registerSniperBrush(SplatterVoxelBrush.class, "sv", "splattervoxel");
         Brushes.get().registerSniperBrush(SplatterDiscBrush.class, "svd", "splatvoxeldisc");
-        Brushes.get().registerSniperBrush(SplineBrush.class, "sp", "spline");
         Brushes.get().registerSniperBrush(StencilBrush.class, "st", "stencil");
         Brushes.get().registerSniperBrush(StencilListBrush.class, "sl", "stencillist");
         Brushes.get().registerSniperBrush(ThreePointCircleBrush.class, "tpc", "threepointcircle");

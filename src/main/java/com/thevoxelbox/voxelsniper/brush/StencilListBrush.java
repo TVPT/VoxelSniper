@@ -32,9 +32,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Scanner;
 
-/**
- * @author Gavjenks
- */
 public class StencilListBrush extends Brush {
 
     private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
@@ -48,9 +45,6 @@ public class StencilListBrush extends Brush {
     private byte pasteParam = 0;
     private HashMap<Integer, String> stencilList = new HashMap<Integer, String>();
 
-    /**
-     *
-     */
     public StencilListBrush() {
         this.setName("StencilList");
     }

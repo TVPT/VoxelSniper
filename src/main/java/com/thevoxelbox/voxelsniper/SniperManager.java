@@ -38,6 +38,7 @@ public class SniperManager {
         return instance;
     }
 
+    // @Robustness: use cache with expiry time
     private Map<UUID, Sniper> sniperInstances = Maps.newHashMap();
 
     private SniperManager() {

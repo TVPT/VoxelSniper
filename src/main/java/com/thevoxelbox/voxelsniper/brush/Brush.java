@@ -134,11 +134,10 @@ public abstract class Brush implements IBrush {
         if (this.world.getBlockType(x, y, z) == type) {
             return;
         }
-        if (this.world.setBlockType(x, y, z, type, flag, this.cause)) {
-            if (this.undo != null) {
-                this.undo.put(new Location<World>(this.world, x, y, z));
-            }
+        if (this.undo != null) {
+            this.undo.put(new Location<World>(this.world, x, y, z));
         }
+        this.world.setBlockType(x, y, z, type, flag, this.cause);
     }
 
     protected void setBlockState(int x, int y, int z, BlockState type) {
@@ -150,10 +149,9 @@ public abstract class Brush implements IBrush {
         if (this.world.getBlock(x, y, z) == type) {
             return;
         }
-        if (this.world.setBlock(x, y, z, type, flag, this.cause)) {
-            if (this.undo != null) {
-                this.undo.put(new Location<World>(this.world, x, y, z));
-            }
+        if (this.undo != null) {
+            this.undo.put(new Location<World>(this.world, x, y, z));
         }
+        this.world.setBlock(x, y, z, type, flag, this.cause);
     }
 }

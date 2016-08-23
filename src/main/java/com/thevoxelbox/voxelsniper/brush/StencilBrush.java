@@ -26,444 +26,200 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.SchematicHelper;
+
+import com.flowpowered.math.vector.Vector3i;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.TileEntityArchetype;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.persistence.DataFormats;
+import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.extent.ArchetypeVolume;
+import org.spongepowered.api.world.schematic.BlockPaletteTypes;
+import org.spongepowered.api.world.schematic.Schematic;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
-/**
- * This is paste only currently. Assumes files exist, and thus has no usefulness
- * until I add in saving stencils later. Uses sniper-exclusive stencil format: 3
- * shorts for X,Z,Y size of cuboid 3 shorts for X,Z,Y offsets from the -X,-Z,-Y
- * corner. This is the reference point for pasting, corresponding to where you
- * click your brush. 1 long integer saying how many runs of blocks are in the
- * schematic (data is compressed into runs) 1 per run: ( 1 boolean: true =
- * compressed line ahead, false = locally unique block ahead. This wastes a bit
- * instead of a byte, and overall saves space, as long as at least 1/8 of all
- * RUNS are going to be size 1, which in Minecraft is almost definitely true. IF
- * boolean was true, next unsigned byte stores the number of consecutive blocks
- * of the same type, up to 256. IF boolean was false, there is no byte here,
- * goes straight to ID and data instead, which applies to just one block. 2
- * bytes to identify type of block. First byte is ID, second is data. This
- * applies to every one of the line of consecutive blocks if boolean was true. )
- * 
- * TODO: Make limit a config option
- *
- * @author Gavjenks
- */
 public class StencilBrush extends Brush {
 
-    private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
-    private String filename = "NoFileLoaded";
-    private short x;
-    private short z;
-    private short y;
-    private short xRef;
-    private short zRef;
-    private short yRef;
-    private byte pasteParam = 0;
-    private int[] firstPoint = new int[3];
-    private int[] secondPoint = new int[3];
-    private int[] pastePoint = new int[3];
-    private byte point = 1;
+    public static enum PasteOption {
+        FULL,
+        FILL,
+        REPLACE
+    }
 
-    /**
-     *
-     */
+    private String filename = null;
+    private File file = null;
+    private long lastMod;
+    private Schematic schematic = null;
+    private PasteOption pasteOption = PasteOption.FULL;
+    private UUID worldUid;
+    private Vector3i pos1;
+    private Vector3i pos2;
+
     public StencilBrush() {
         this.setName("Stencil");
     }
 
-    @SuppressWarnings("deprecation")
-    private void stencilPaste(final SnipeData v) {
-        // @Spongify
-//        if (this.filename.matches("NoFileLoaded"))
-//        {
-//            v.sendMessage(TextColors.RED + "You did not specify a filename.  This is required.");
-//            return;
-//        }
-//
-//        final Undo undo = new Undo();
-//        final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
-//
-//        if (file.exists())
-//        {
-//            try
-//            {
-//                final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-//
-//                this.x = in.readShort();
-//                this.z = in.readShort();
-//                this.y = in.readShort();
-//
-//                this.xRef = in.readShort();
-//                this.zRef = in.readShort();
-//                this.yRef = in.readShort();
-//
-//                final int numRuns = in.readInt();
-//
-//                int currX = -this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
-//                // corner, for example.
-//                int currZ = -this.zRef;
-//                int currY = -this.yRef;
-//                int id;
-//                int data;
-//                int blockPositionX = getTargetBlock().getX();
-//                int blockPositionY = getTargetBlock().getY();
-//                int blockPositionZ = getTargetBlock().getZ();
-//                if (this.pasteOption == 0)
-//                {
-//                    for (int i = 1; i < numRuns + 1; i++)
-//                    {
-//                        if (in.readBoolean())
-//                        {
-//                            final int numLoops = in.readByte() + 128;
-//                            id = (in.readByte() + 128);
-//                            data = (in.readByte() + 128);
-//                            for (int j = 0; j < numLoops; j++)
-//                            {
-//                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-//                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
-//                                currX++;
-//                                if (currX == this.x - this.xRef)
-//                                {
-//                                    currX = -this.xRef;
-//                                    currZ++;
-//                                    if (currZ == this.z - this.zRef)
-//                                    {
-//                                        currZ = -this.zRef;
-//                                        currY++;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        else
-//                        {
-//                            undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-//                            this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData((in.readByte() + 128), (byte) (in.readByte() + 128), false);
-//                            currX++;
-//                            if (currX == this.x - this.xRef)
-//                            {
-//                                currX = -this.xRef;
-//                                currZ++;
-//                                if (currZ == this.z - this.zRef)
-//                                {
-//                                    currZ = -this.zRef;
-//                                    currY++;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                else if (this.pasteOption == 1)
-//                {
-//                    for (int i = 1; i < numRuns + 1; i++)
-//                    {
-//                        if (in.readBoolean())
-//                        {
-//                            final int numLoops = in.readByte() + 128;
-//                            id = (in.readByte() + 128);
-//                            data = (in.readByte() + 128);
-//                            for (int j = 0; j < numLoops; j++)
-//                            {
-//                                if (id != 0 && this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).getTypeId() == 0)
-//                                {
-//                                    undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-//                                    this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
-//                                }
-//                                currX++;
-//                                if (currX == this.x - this.xRef)
-//                                {
-//                                    currX = -this.xRef;
-//                                    currZ++;
-//                                    if (currZ == this.z - this.zRef)
-//                                    {
-//                                        currZ = -this.zRef;
-//                                        currY++;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        else
-//                        {
-//                            id = (in.readByte() + 128);
-//                            data = (in.readByte() + 128);
-//                            if (id != 0 && this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).getTypeId() == 0)
-//                            {
-//                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-//                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-//                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
-//                            }
-//                            currX++;
-//                            if (currX == this.x - this.xRef)
-//                            {
-//                                currX = -this.xRef;
-//                                currZ++;
-//                                if (currZ == this.z - this.zRef)
-//                                {
-//                                    currZ = -this.zRef;
-//                                    currY++;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                else
-//                { // replace
-//                    for (int i = 1; i < numRuns + 1; i++)
-//                    {
-//                        if (in.readBoolean())
-//                        {
-//                            final int numLoops = in.readByte() + 128;
-//                            id = (in.readByte() + 128);
-//                            data = (in.readByte() + 128);
-//                            for (int j = 0; j < (numLoops); j++)
-//                            {
-//                                if (id != 0)
-//                                {
-//                                    undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-//                                    this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
-//                                }
-//                                currX++;
-//                                if (currX == this.x - this.xRef)
-//                                {
-//                                    currX = -this.xRef;
-//                                    currZ++;
-//                                    if (currZ == this.z - this.zRef)
-//                                    {
-//                                        currZ = -this.zRef;
-//                                        currY++;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        else
-//                        {
-//                            id = (in.readByte() + 128);
-//                            data = (in.readByte() + 128);
-//                            if (id != 0)
-//                            {
-//                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-//                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
-//                            }
-//                            currX++;
-//                            if (currX == this.x)
-//                            {
-//                                currX = 0;
-//                                currZ++;
-//                                if (currZ == this.z)
-//                                {
-//                                    currZ = 0;
-//                                    currY++;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                in.close();
-//                v.owner().storeUndo(undo);
-//
-//            }
-//            catch (final Exception exception)
-//            {
-//                v.sendMessage(TextColors.RED + "Something went wrong.");
-//                exception.printStackTrace();
-//            }
-//        }
-//        else
-//        {
-//            v.sendMessage(TextColors.RED + "You need to type a stencil name / your specified stencil does not exist.");
-//        }
-    }
+    @Override
+    protected final void arrow(final SnipeData v) {
+        if (this.file == null) {
+            v.sendMessage(TextColors.RED, "You need to specify a schematic name.");
+            return;
+        }
+        if (this.pos1 == null || !this.worldUid.equals(this.targetBlock.getExtent().getUniqueId())) {
+            this.pos1 = this.targetBlock.getBlockPosition();
+            this.pos2 = null;
+            this.worldUid = this.targetBlock.getExtent().getUniqueId();
+            v.sendMessage(TextColors.GRAY, "First point selected.");
+        } else if (this.pos2 == null) {
+            this.pos2 = this.targetBlock.getBlockPosition();
+            v.sendMessage(TextColors.GRAY, "Second point selected.");
+        } else {
+            Vector3i origin = this.targetBlock.getBlockPosition();
+            ArchetypeVolume volume = this.world.createArchetypeVolume(this.pos1, this.pos2, origin);
+            this.schematic = Schematic.builder()
+                    .paletteType(BlockPaletteTypes.LOCAL)
+                    .volume(volume)
+                    .metaValue("Name", this.filename)
+                    .metaValue("Author", v.owner().getPlayer().getName())
+                    .metaValue("Date", System.currentTimeMillis())
+                    .build();
+            try (GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(this.file))) {
+                DataContainer data = DataTranslators.SCHEMATIC.translate(this.schematic);
+                DataFormats.NBT.writeTo(out, data);
+                v.sendMessage(TextColors.GREEN, "Schematic saved successfully. Ready for pasting.");
+                this.lastMod = this.file.lastModified();
+                this.pos1 = null;
+                this.pos2 = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                v.sendMessage(TextColors.RED, "Error Saving schematic, see console for details.");
+                return;
+            }
+        }
 
-    @SuppressWarnings("deprecation")
-    private void stencilSave(final SnipeData v) {
-
-//        final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
-//        try
-//        {
-//            this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
-//            this.z = (short) (Math.abs((this.firstPoint[1] - this.secondPoint[1])) + 1);
-//            this.y = (short) (Math.abs((this.firstPoint[2] - this.secondPoint[2])) + 1);
-//            this.xRef = (short) ((this.firstPoint[0] > this.secondPoint[0]) ? (this.pastePoint[0] - this.secondPoint[0]) : (this.pastePoint[0] - this.firstPoint[0]));
-//            this.zRef = (short) ((this.firstPoint[1] > this.secondPoint[1]) ? (this.pastePoint[1] - this.secondPoint[1]) : (this.pastePoint[1] - this.firstPoint[1]));
-//            this.yRef = (short) ((this.firstPoint[2] > this.secondPoint[2]) ? (this.pastePoint[2] - this.secondPoint[2]) : (this.pastePoint[2] - this.firstPoint[2]));
-//
-//            if ((this.x * this.y * this.z) > 50000)
-//            {
-//                v.sendMessage(TextColors.AQUA + "Volume exceeds maximum limit.");
-//                return;
-//            }
-//
-//            Files.createParentDirs(file);
-//            file.createNewFile();
-//            final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-//            int blockPositionX = (this.firstPoint[0] > this.secondPoint[0]) ? this.secondPoint[0] : this.firstPoint[0];
-//            int blockPositionZ = (this.firstPoint[1] > this.secondPoint[1]) ? this.secondPoint[1] : this.firstPoint[1];
-//            int blockPositionY = (this.firstPoint[2] > this.secondPoint[2]) ? this.secondPoint[2] : this.firstPoint[2];
-//            out.writeShort(this.x);
-//            out.writeShort(this.z);
-//            out.writeShort(this.y);
-//            out.writeShort(this.xRef);
-//            out.writeShort(this.zRef);
-//            out.writeShort(this.yRef);
-//
-//            v.sendMessage(TextColors.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
-//
-//            byte[] blockArray = new byte[this.x * this.z * this.y];
-//            byte[] dataArray = new byte[this.x * this.z * this.y];
-//            byte[] runSizeArray = new byte[this.x * this.z * this.y];
-//
-//            byte lastId = (byte) (this.getWorld().getBlockTypeIdAt(blockPositionX, blockPositionY, blockPositionZ) - 128);
-//            byte lastData = (byte) (this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() - 128);
-//            byte thisId;
-//            byte thisData;
-//            int counter = 0;
-//            int arrayIndex = 0;
-//            for (int y = 0; y < this.y; y++)
-//            {
-//                for (int z = 0; z < this.z; z++)
-//                {
-//                    for (int x = 0; x < this.x; x++)
-//                    {
-//                        Block currentBlock = getWorld().getBlockAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z);
-//                        thisId = (byte) (currentBlock.getTypeId() - 128);
-//                        thisData = (byte) (currentBlock.getData() - 128);
-//                        if (thisId != lastId || thisData != lastData || counter == 255)
-//                        {
-//                            blockArray[arrayIndex] = lastId;
-//                            dataArray[arrayIndex] = lastData;
-//                            runSizeArray[arrayIndex] = (byte) (counter - 128);
-//                            arrayIndex++;
-//                            counter = 1;
-//                            lastId = thisId;
-//                            lastData = thisData;
-//                        }
-//                        else
-//                        {
-//                            counter++;
-//                            lastId = thisId;
-//                            lastData = thisData;
-//                        }
-//                    }
-//                }
-//            }
-//            blockArray[arrayIndex] = lastId; // saving last run, which will always be left over.
-//            dataArray[arrayIndex] = lastData;
-//            runSizeArray[arrayIndex] = (byte) (counter - 128);
-//
-//            out.writeInt(arrayIndex + 1);
-//            // v.sendMessage("number of runs = " + arrayIndex);
-//            for (int i = 0; i < arrayIndex + 1; i++)
-//            {
-//                if (runSizeArray[i] > -127)
-//                {
-//                    out.writeBoolean(true);
-//                    out.writeByte(runSizeArray[i]);
-//                    out.writeByte(blockArray[i]);
-//                    out.writeByte(dataArray[i]);
-//                }
-//                else
-//                {
-//                    out.writeBoolean(false);
-//                    out.writeByte(blockArray[i]);
-//                    out.writeByte(dataArray[i]);
-//                }
-//            }
-//
-//            v.sendMessage(TextColors.BLUE + "Saved as '" + this.filename + "'.");
-//            out.close();
-//
-//        }
-//        catch (final Exception exception)
-//        {
-//            v.sendMessage(TextColors.RED + "Something went wrong.");
-//            exception.printStackTrace();
-//        }
     }
 
     @Override
-    protected final void arrow(final SnipeData v) { // will be used to copy/save
-                                                    // later on?
-//        if (this.point == 1)
-//        {
-//            this.firstPoint[0] = this.getTargetBlock().getX();
-//            this.firstPoint[1] = this.getTargetBlock().getZ();
-//            this.firstPoint[2] = this.getTargetBlock().getY();
-//            v.sendMessage(TextColors.GRAY + "First point");
-//            v.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
-//            this.point = 2;
-//        }
-//        else if (this.point == 2)
-//        {
-//            this.secondPoint[0] = this.getTargetBlock().getX();
-//            this.secondPoint[1] = this.getTargetBlock().getZ();
-//            this.secondPoint[2] = this.getTargetBlock().getY();
-//            if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(this.firstPoint[2] - this.secondPoint[2])) > 5000000)
-//            {
-//                v.sendMessage(TextColors.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
-//                this.point = 1;
-//            }
-//            else
-//            {
-//                v.sendMessage(TextColors.GRAY + "Second point");
-//                v.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
-//                this.point = 3;
-//            }
-//        }
-//        else if (this.point == 3)
-//        {
-//            this.pastePoint[0] = this.getTargetBlock().getX();
-//            this.pastePoint[1] = this.getTargetBlock().getZ();
-//            this.pastePoint[2] = this.getTargetBlock().getY();
-//            v.sendMessage(TextColors.GRAY + "Paste Reference point");
-//            v.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
-//            this.point = 1;
-//
-//            this.stencilSave(v);
-//        }
-    }
-
-    @Override
-    protected final void powder(final SnipeData v) { // will be used to paste
-                                                     // later on
-        this.stencilPaste(v);
+    protected final void powder(final SnipeData v) {
+        if (this.file == null) {
+            v.sendMessage(TextColors.RED, "You need to specify a schematic name.");
+            return;
+        }
+        if (!this.file.exists()) {
+            v.sendMessage(TextColors.RED, "Scehmatic does not exist, must be saved to first.");
+            return;
+        }
+        if (this.schematic == null || this.file.lastModified() != this.lastMod) {
+            if (this.schematic != null) {
+                v.sendMessage(TextColors.GREEN, "Reloading schematic from disk");
+            }
+            try (GZIPInputStream in = new GZIPInputStream(new FileInputStream(this.file))) {
+                DataContainer data = DataFormats.NBT.readFrom(in);
+                this.schematic = DataTranslators.SCHEMATIC.translate(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+                v.sendMessage(TextColors.RED, "Error loading schematic, see console for details.");
+                return;
+            }
+            this.lastMod = this.file.lastModified();
+        }
+        this.undo = new Undo(this.schematic.getBlockSize().getX() * this.schematic.getBlockSize().getY() * this.schematic.getBlockSize().getZ());
+        if (this.pasteOption == PasteOption.FULL) {
+            this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
+                setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
+                        z + this.targetBlock.getBlockZ(), e.getBlock(x, y, z));
+            });
+            for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
+                TileEntityArchetype archetype = this.schematic.getTileEntityArchetypes().get(pos);
+                archetype.apply(this.targetBlock.add(pos), this.cause);
+            }
+        } else if (this.pasteOption == PasteOption.FILL) {
+            this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
+                if (this.targetBlock.getExtent().getBlockType(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
+                        z + this.targetBlock.getBlockZ()) == BlockTypes.AIR) {
+                    setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
+                            z + this.targetBlock.getBlockZ(), e.getBlock(x, y, z));
+                }
+            });
+            for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
+                if (this.targetBlock.getExtent().getBlockType(pos.getX() + this.targetBlock.getBlockX(), pos.getY() + this.targetBlock.getBlockY(),
+                        pos.getZ() + this.targetBlock.getBlockZ()) == BlockTypes.AIR) {
+                    TileEntityArchetype archetype = this.schematic.getTileEntityArchetypes().get(pos);
+                    archetype.apply(this.targetBlock.add(pos), this.cause);
+                }
+            }
+        } else { // replace
+            this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
+                if (e.getBlockType(x, y, z) != BlockTypes.AIR) {
+                    setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
+                            z + this.targetBlock.getBlockZ(), e.getBlock(x, y, z));
+                }
+            });
+            for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
+                TileEntityArchetype archetype = this.schematic.getTileEntityArchetypes().get(pos);
+                archetype.apply(this.targetBlock.add(pos), this.cause);
+            }
+        }
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
     }
 
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.getName());
-        vm.custom("File loaded: " + this.filename);
+        vm.custom(TextColors.YELLOW, "Paste option: " + this.pasteOption.name().toLowerCase());
+        vm.custom(TextColors.GREEN, "File loaded: " + this.filename);
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
+        if (par.length == 0) {
+            v.sendMessage(TextColors.RED, "You need to specify a stencil name.");
+            return;
+        }
+        if (par[0].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.GOLD, "Stencil brush Parameters:");
             v.sendMessage(TextColors.AQUA,
-                    "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
-            v.sendMessage(TextColors.BLUE, "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
+                    "/b st [name] [full|fill|replace] -- Loads the specified schematic. Full = paste all blocks, "
+                            + "fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
             return;
-        } else if (par[1].equalsIgnoreCase("full")) {
-            this.pasteOption = 0;
-            this.pasteParam = 1;
-        } else if (par[1].equalsIgnoreCase("fill")) {
-            this.pasteOption = 1;
-            this.pasteParam = 1;
-        } else if (par[1].equalsIgnoreCase("replace")) {
-            this.pasteOption = 2;
-            this.pasteParam = 1;
         }
-        try {
-            this.filename = par[1 + this.pasteParam];
-            final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
-            if (file.exists()) {
-                v.sendMessage(TextColors.RED, "Stencil '" + this.filename
-                        + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
+
+        if (!this.filename.equals(par[0])) {
+            this.lastMod = 0;
+            this.schematic = null;
+        }
+        this.filename = par[0];
+        File schematic = SchematicHelper.getSchematicsDir().resolve(this.filename + ".schem").toFile();
+        if (schematic.exists()) {
+            v.sendMessage(TextColors.RED,
+                    "Stencil '" + this.filename + "' exists and was loaded. Paste with the powder, overwrite with the arrow.");
+        } else {
+            v.sendMessage(TextColors.AQUA, "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
+        }
+        this.file = schematic;
+        if (par.length > 1) {
+            if (par[1].equalsIgnoreCase("full")) {
+                this.pasteOption = PasteOption.FULL;
+            } else if (par[1].equalsIgnoreCase("fill")) {
+                this.pasteOption = PasteOption.FULL;
+            } else if (par[1].equalsIgnoreCase("replace")) {
+                this.pasteOption = PasteOption.FULL;
             } else {
-                v.sendMessage(TextColors.AQUA, "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
+                v.sendMessage(TextColors.RED, "Invalid paste option, choices are: full, fill, replace");
+                return;
             }
-        } catch (final Exception exception) {
-            v.sendMessage(TextColors.RED, "You need to type a stencil name.");
+            v.sendMessage(TextColors.YELLOW, "Paste option: " + this.pasteOption.name().toLowerCase());
         }
     }
 

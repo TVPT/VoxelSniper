@@ -108,8 +108,8 @@ public class Undo {
      */
     public Undo(int suggested_size) {
         this.all = Lists.newArrayListWithExpectedSize(suggested_size);
-        this.falloff = Lists.newArrayListWithExpectedSize(suggested_size);
-        this.dropdown = Lists.newArrayListWithExpectedSize(suggested_size);
+        this.falloff = Lists.newArrayList();
+        this.dropdown = Lists.newArrayList();
     }
 
     /**
