@@ -49,8 +49,7 @@ public class JockeyBrush extends Brush {
         this.setName("Jockey");
     }
 
-    @Override
-    protected final void arrow(final SnipeData v) {
+    private void dismount(SnipeData v) {
         if (this.sittingEntity != null && this.sittingEntity.get() != null) {
             Entity entity = this.sittingEntity.get();
             Optional<PassengerData> data = entity.get(PassengerData.class);
@@ -69,6 +68,11 @@ public class JockeyBrush extends Brush {
             }
             this.sittingEntity = null;
         }
+    }
+
+    @Override
+    protected final void arrow(final SnipeData v) {
+        dismount(v);
         double distance = Double.MAX_VALUE;
         Entity nearest = null;
         Vector3d target = this.targetBlock.getPosition();
@@ -93,24 +97,7 @@ public class JockeyBrush extends Brush {
     @Override
     protected final void powder(final SnipeData v) {
         v.owner().getPlayer().remove(PassengerData.class);
-        if (this.sittingEntity != null && this.sittingEntity.get() != null) {
-            Entity entity = this.sittingEntity.get();
-            Optional<PassengerData> data = entity.get(PassengerData.class);
-            if (data.isPresent()) {
-                for (Iterator<EntitySnapshot> it = data.get().passengers().iterator(); it.hasNext();) {
-                    EntitySnapshot e = it.next();
-                    if (e.getType() == EntityTypes.PLAYER) {
-                        Optional<Entity> re = e.restore();
-                        if (re.isPresent() && re.get() == v.owner().getPlayer()) {
-                            it.remove();
-                            break;
-                        }
-                    }
-                }
-                entity.offer(data.get());
-            }
-            this.sittingEntity = null;
-        }
+        dismount(v);
     }
 
     @Override

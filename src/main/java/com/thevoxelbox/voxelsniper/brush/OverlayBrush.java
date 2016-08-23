@@ -24,188 +24,88 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Overlay_.2F_Topsoil_Brush
- *
- * @author Gavjenks
+ * Overlays the terrain with blocks.
  */
 public class OverlayBrush extends PerformBrush {
 
     private static final int DEFAULT_DEPTH = 3;
     private int depth = DEFAULT_DEPTH;
-    private boolean allBlocks = false;
 
     // @Spongify
     public OverlayBrush() {
         this.setName("Overlay (Topsoil Filling)");
     }
 
-    private void overlay(final SnipeData v) {
-//        final int brushSize = v.getBrushSize();
-//        final double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
-//
-//
-//        for (int z = brushSize; z >= -brushSize; z--)
-//        {
-//            for (int x = brushSize; x >= -brushSize; x--)
-//            {
-//                // check if column is valid
-//                // column is valid if it has no solid block right above the clicked layer
-//                final int materialId = this.getBlockIdAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + 1, this.getTargetBlock().getZ() + z);
-//                if (isIgnoredBlock(materialId))
-//                {
-//                    if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared)
-//                    {
-//                        for (int y = this.getTargetBlock().getY(); y > 0; y--)
-//                        {
-//                            // check for surface
-//                            final int layerBlockId = this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z);
-//                            if (!isIgnoredBlock(layerBlockId))
-//                            {
-//                                for (int currentDepth = y; y - currentDepth < depth; currentDepth--)
-//                                {
-//                                    final int currentBlockId = this.getBlockIdAt(this.getTargetBlock().getX() + x, currentDepth, this.getTargetBlock().getZ() + z);
-//                                    if (isOverrideableMaterial(currentBlockId))
-//                                    {
-//                                        this.current.perform(this.clampY(this.getTargetBlock().getX() + x, currentDepth, this.getTargetBlock().getZ() + z));
-//                                    }
-//                                }
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        v.owner().storeUndo(this.current.getUndo());
-    }
+    private void overlay(SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
 
-//    @SuppressWarnings("deprecation")
-//	private boolean isIgnoredBlock(int materialId)
-//    {
-//        return materialId == 9 || materialId == 8 || Material.getMaterial(materialId).isTransparent() || materialId == Material.CACTUS.getId();
-//    }
-//
-//    @SuppressWarnings("deprecation")
-//	private boolean isOverrideableMaterial(int materialId)
-//    {
-//        if (allBlocks && !(materialId == Material.AIR.getId()))
-//        {
-//            return true;
-//        }
-//
-//        switch (materialId)
-//        {
-//            case 1:
-//            case 2:
-//            case 3:
-//            case 12:
-//            case 13:
-//            case 24:
-//            case 48:
-//            case 82:
-//            case 49:
-//            case 78:
-//                return true;
-//
-//            default:
-//                return false;
-//        }
-//    }
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
 
-    private void overlayTwo(final SnipeData v) {
-//        final int brushSize = v.getBrushSize();
-//        final double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
-//        final int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
-//
-//        for (int z = brushSize; z >= -brushSize; z--)
-//        {
-//            for (int x = brushSize; x >= -brushSize; x--)
-//            {
-//                boolean surfaceFound = false;
-//                for (int y = this.getTargetBlock().getY(); y > 0 && !surfaceFound; y--)
-//                { // start scanning from the height you clicked at
-//                    if (memory[x + brushSize][z + brushSize] != 1)
-//                    { // if haven't already found the surface in this column
-//                        if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared)
-//                        { // if inside of the column...
-//                            if (this.getBlockIdAt(this.getTargetBlock().getX() + x, y - 1, this.getTargetBlock().getZ() + z) != 0)
-//                            { // if not a floating block (like one of Notch'world pools)
-//                                if (this.getBlockIdAt(this.getTargetBlock().getX() + x, y + 1, this.getTargetBlock().getZ() + z) == 0)
-//                                { // must start at surface... this prevents it filling stuff in if
-//                                    // you click in a wall and it starts out below surface.
-//                                    if (!this.allBlocks)
-//                                    { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-//
-//                                        switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
-//                                        {
-//                                            case 1:
-//                                            case 2:
-//                                            case 3:
-//                                            case 12:
-//                                            case 13:
-//                                            case 14:
-//                                            case 15:
-//                                            case 16:
-//                                            case 24:
-//                                            case 48:
-//                                            case 82:
-//                                            case 49:
-//                                            case 78:
-//                                                for (int d = 1; (d < this.depth + 1); d++)
-//                                                {
-//                                                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify
-//                                                    // in parameters
-//                                                    memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-//                                                }
-//                                                surfaceFound = true;
-//                                                break;
-//
-//                                            default:
-//                                                break;
-//                                        }
-//                                    }
-//                                    else
-//                                    {
-//                                        for (int d = 1; (d < this.depth + 1); d++)
-//                                        {
-//                                            this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
-//                                            // parameters
-//                                            memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-//                                        }
-//                                        surfaceFound = true;
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        v.owner().storeUndo(this.current.getUndo());
+        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1)));
+
+        // @Cleanup Should wrap this within a block worker so that it works
+        // better with the cause tracker
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (minx - x) * (minx - x);
+            for (int z = minz; z <= maxz; z++) {
+                double zs = (minz - z) * (minz - z);
+                if (xs + zs < brushSizeSquared) {
+                    int y = targetBlock.getBlockY();
+                    for (; y >= Brush.WORLD_HEIGHT; y--) {
+                        if (this.world.getBlockType(x, y, z) != BlockTypes.AIR) {
+                            break;
+                        }
+                    }
+                    if (y == targetBlock.getBlockY() && y < WORLD_HEIGHT) {
+                        if (this.world.getBlockType(x, y + 1, z) != BlockTypes.AIR) {
+                            // if theres no air above our start block then don't
+                            // perform
+                            continue;
+                        }
+                    }
+                    for (int y0 = y; y0 > y - this.depth; y0--) {
+                        if (this.world.getBlockType(x, y0, z) != BlockTypes.AIR) {
+                            perform(v, x, y0, z);
+                        }
+                    }
+                }
+            }
+        }
+
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+
     }
 
     @Override
     protected final void arrow(final SnipeData v) {
-        this.overlay(v);
+        this.overlay(v, this.targetBlock);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.overlayTwo(v);
+        this.overlay(v, this.lastBlock);
     }
 
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
+        vm.custom(TextColors.AQUA, "Depth set to " + this.depth);
     }
 
     @Override
@@ -216,8 +116,6 @@ public class OverlayBrush extends PerformBrush {
             if (parameter.equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Overlay brush parameters:");
                 v.sendMessage(TextColors.AQUA, "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-                v.sendMessage(TextColors.BLUE,
-                        "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
                 return;
             }
             if (parameter.startsWith("d")) {
@@ -232,12 +130,6 @@ public class OverlayBrush extends PerformBrush {
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Depth isn't a number.");
                 }
-            } else if (parameter.startsWith("all")) {
-                this.allBlocks = true;
-                v.sendMessage(TextColors.BLUE, "Will overlay over any block." + this.depth);
-            } else if (parameter.startsWith("some")) {
-                this.allBlocks = false;
-                v.sendMessage(TextColors.BLUE, "Will overlay only natural block types." + this.depth);
             } else {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }

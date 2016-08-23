@@ -24,6 +24,7 @@
  */
 package com.thevoxelbox.voxelsniper;
 
+import com.google.inject.Inject;
 import com.thevoxelbox.voxelsniper.brush.BallBrush;
 import com.thevoxelbox.voxelsniper.brush.BiomeBrush;
 import com.thevoxelbox.voxelsniper.brush.BlendBallBrush;
@@ -52,7 +53,6 @@ import com.thevoxelbox.voxelsniper.brush.HeatRayBrush;
 import com.thevoxelbox.voxelsniper.brush.JockeyBrush;
 import com.thevoxelbox.voxelsniper.brush.LightningBrush;
 import com.thevoxelbox.voxelsniper.brush.LineBrush;
-import com.thevoxelbox.voxelsniper.brush.MoveBrush;
 import com.thevoxelbox.voxelsniper.brush.OceanBrush;
 import com.thevoxelbox.voxelsniper.brush.OverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.RandomErodeBrush;
@@ -98,8 +98,6 @@ import com.thevoxelbox.voxelsniper.command.VoxelUndoCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelUndoUserCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelVoxelCommand;
 import com.thevoxelbox.voxelsniper.util.SniperStats;
-
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -205,7 +203,6 @@ public class VoxelSniper {
         Brushes.get().registerSniperBrush(JockeyBrush.class, "jockey");
         Brushes.get().registerSniperBrush(LightningBrush.class, "light", "lightning");
         Brushes.get().registerSniperBrush(LineBrush.class, "l", "line");
-        Brushes.get().registerSniperBrush(MoveBrush.class, "mv", "move");
         Brushes.get().registerSniperBrush(OceanBrush.class, "o", "ocean");
         Brushes.get().registerSniperBrush(OverlayBrush.class, "over", "overlay");
         Brushes.get().registerSniperBrush(RandomErodeBrush.class, "re", "randomerode");

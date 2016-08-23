@@ -7,6 +7,7 @@ package com.thevoxelbox.voxelsniper.util;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.data.property.block.MatterProperty.Matter;
+import org.spongepowered.api.data.property.block.SolidCubeProperty;
 
 import java.util.Optional;
 
@@ -30,6 +31,14 @@ public class BlockHelper {
             if (m != Matter.SOLID) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    public static boolean isSolid(BlockState state) {
+        Optional<SolidCubeProperty> matter = state.getProperty(SolidCubeProperty.class);
+        if (matter.isPresent()) {
+            return matter.get().getValue();
         }
         return false;
     }

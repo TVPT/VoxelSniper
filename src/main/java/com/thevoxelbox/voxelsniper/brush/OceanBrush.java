@@ -24,142 +24,118 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.google.common.collect.Sets;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.BlockHelper;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Chunk;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_OCEANATOR_5000
- *
- * @author Voxel
- */
+import java.util.Optional;
+import java.util.Set;
+
 public class OceanBrush extends Brush {
 
-    // @Spongify
-    private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using
-                                                       // array indices here
+    private static final int WATER_LEVEL_DEFAULT = 62;
     private static final int WATER_LEVEL_MIN = 12;
-    private static final int LOW_CUT_LEVEL = 12;
-//    private static final List<Material> EXCLUDED_MATERIALS = new LinkedList<Material>();
-//
-//    static
-//    {
-//        EXCLUDED_MATERIALS.add(Material.AIR);
-//        EXCLUDED_MATERIALS.add(Material.SAPLING);
-//        EXCLUDED_MATERIALS.add(Material.WATER);
-//        EXCLUDED_MATERIALS.add(Material.STATIONARY_WATER);
-//        EXCLUDED_MATERIALS.add(Material.LAVA);
-//        EXCLUDED_MATERIALS.add(Material.STATIONARY_LAVA);
-//        EXCLUDED_MATERIALS.add(Material.LOG);
-//        EXCLUDED_MATERIALS.add(Material.LEAVES);
-//        EXCLUDED_MATERIALS.add(Material.YELLOW_FLOWER);
-//        EXCLUDED_MATERIALS.add(Material.RED_ROSE);
-//        EXCLUDED_MATERIALS.add(Material.RED_MUSHROOM);
-//        EXCLUDED_MATERIALS.add(Material.BROWN_MUSHROOM);
-//        EXCLUDED_MATERIALS.add(Material.MELON_BLOCK);
-//        EXCLUDED_MATERIALS.add(Material.MELON_STEM);
-//        EXCLUDED_MATERIALS.add(Material.PUMPKIN);
-//        EXCLUDED_MATERIALS.add(Material.PUMPKIN_STEM);
-//        EXCLUDED_MATERIALS.add(Material.COCOA);
-//        EXCLUDED_MATERIALS.add(Material.SNOW);
-//        EXCLUDED_MATERIALS.add(Material.SNOW_BLOCK);
-//        EXCLUDED_MATERIALS.add(Material.ICE);
-//        EXCLUDED_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
-//        EXCLUDED_MATERIALS.add(Material.LONG_GRASS);
-//        EXCLUDED_MATERIALS.add(Material.SNOW);
-//    }
+    private static final int WATER_DEPTH_MIN = 6;
+    private static final Set<BlockType> EXCLUDED_MATERIALS = Sets.newHashSet();
+
+    static {
+        EXCLUDED_MATERIALS.add(BlockTypes.LOG);
+        EXCLUDED_MATERIALS.add(BlockTypes.LEAVES);
+        EXCLUDED_MATERIALS.add(BlockTypes.LOG2);
+        EXCLUDED_MATERIALS.add(BlockTypes.LEAVES2);
+        EXCLUDED_MATERIALS.add(BlockTypes.BROWN_MUSHROOM_BLOCK);
+        EXCLUDED_MATERIALS.add(BlockTypes.RED_MUSHROOM_BLOCK);
+        EXCLUDED_MATERIALS.add(BlockTypes.MELON_BLOCK);
+        EXCLUDED_MATERIALS.add(BlockTypes.PUMPKIN);
+    }
 
     private int waterLevel = WATER_LEVEL_DEFAULT;
     private boolean coverFloor = false;
 
-    /**
-     *
-     */
     public OceanBrush() {
         this.setName("OCEANATOR 5000(tm)");
     }
 
-    private int getHeight(final int bx, final int bz) {
-//        for (int y = this.getWorld().getHighestBlockYAt(bx, bz); y > 0; y--)
-//        {
-//            final Material material = this.clampY(bx, y, bz).getType();
-//            if (!EXCLUDED_MATERIALS.contains(material))
-//            {
-//                return y;
-//            }
-//        }
+    // @Cleanup: abstract out chunk based brushes
+
+    private int getActualHeight(final int bx, final int bz) {
+        for (int y = WORLD_HEIGHT; y > 0; y--) {
+            BlockState state = this.world.getBlock(bx, y, bz);
+            if (state.getType() == BlockTypes.AIR) {
+                return y;
+            }
+        }
         return 0;
     }
 
-    /**
-     * @param v
-     * @param undo
-     */
-    @SuppressWarnings("deprecation")
-    protected final void oceanator(final SnipeData v, final Undo undo) {
-//        final World world = this.getWorld();
-//
-//        final int minX = (int) Math.floor((this.getTargetBlock().getX() - v.getBrushSize()));
-//        final int minZ = (int) Math.floor((this.getTargetBlock().getZ() - v.getBrushSize()));
-//        final int maxX = (int) Math.floor((this.getTargetBlock().getX() + v.getBrushSize()));
-//        final int maxZ = (int) Math.floor((this.getTargetBlock().getZ() + v.getBrushSize()));
-//
-//        for (int x = minX; x <= maxX; x++)
-//        {
-//            for (int z = minZ; z <= maxZ; z++)
-//            {
-//                final int currentHeight = getHeight(x, z);
-//                final int wLevelDiff = currentHeight - (this.waterLevel - 1);
-//                final int newSeaFloorLevel = ((this.waterLevel - wLevelDiff) >= LOW_CUT_LEVEL) ? this.waterLevel - wLevelDiff : LOW_CUT_LEVEL;
-//
-//                final int highestY = this.getWorld().getHighestBlockYAt(x, z);
-//
-//                // go down from highest Y block down to new sea floor
-//                for (int y = highestY; y > newSeaFloorLevel; y--)
-//                {
-//                    final Block block = world.getBlockAt(x, y, z);
-//                    if (!block.getType().equals(Material.AIR))
-//                    {
-//                        undo.put(block);
-//                        block.setType(Material.AIR);
-//                    }
-//                }
-//
-//                // go down from water level to new sea level
-//                for (int y = this.waterLevel; y > newSeaFloorLevel; y--)
-//                {
-//                    final Block block = world.getBlockAt(x, y, z);
-//                    if (!block.getType().equals(Material.STATIONARY_WATER))
-//                    {
-//                        // do not put blocks into the undo we already put into
-//                        if (!block.getType().equals(Material.AIR))
-//                        {
-//                            undo.put(block);
-//                        }
-//                        block.setType(Material.STATIONARY_WATER);
-//                    }
-//                }
-//
-//                // cover the sea floor of required
-//                if (this.coverFloor && (newSeaFloorLevel < this.waterLevel))
-//                {
-//                    Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-//                    if (block.getTypeId() != v.getVoxelId())
-//                    {
-//                        undo.put(block);
-//                        block.setTypeId(v.getVoxelId());
-//                    }
-//                }
-//            }
-//        }
+    private int getHeight(final int bx, final int bz, int start) {
+        for (int y = start; y > 0; y--) {
+            BlockState state = this.world.getBlock(bx, y, bz);
+            if (!BlockHelper.isLiquidOrGas(state)) {
+                if (BlockHelper.isSolid(state)) {
+                    return y;
+                }
+                if (EXCLUDED_MATERIALS.contains(state.getType())) {
+                    return y;
+                }
+            }
+        }
+        return 0;
+    }
+
+    protected final void oceanator(SnipeData v, Chunk chunk) {
+        int minx = chunk.getBlockMin().getX();
+        int minz = chunk.getBlockMin().getZ();
+        BlockState fillBlock = v.getVoxelIdState();
+        if (fillBlock.getType() == BlockTypes.AIR) {
+            fillBlock = BlockTypes.DIRT.getDefaultState();
+        }
+        for (int x = 0; x < 16; x++) {
+            int x0 = minx + x;
+            for (int z = 0; z < 16; z++) {
+                int z0 = minz + z;
+                int actualheight = getActualHeight(x0, z0);
+                int height = getHeight(x0, z0, actualheight);
+                int depth = height;
+                if (height > this.waterLevel) {
+                    depth = this.waterLevel - (height - this.waterLevel) - WATER_DEPTH_MIN;
+                }
+                if (depth > this.waterLevel - WATER_DEPTH_MIN) {
+                    depth = WATER_DEPTH_MIN;
+                }
+                if (depth < WATER_LEVEL_MIN) {
+                    depth = WATER_LEVEL_MIN;
+                }
+                int y = actualheight;
+                for(; y > this.waterLevel; y--) {
+                    setBlockType(x0, y, z0, BlockTypes.AIR);
+                }
+                for(; y > depth; y--) {
+                    setBlockType(x0, y, z0, BlockTypes.WATER);
+                }
+                if(this.coverFloor) {
+                    setBlockState(x0, y, z0, v.getVoxelIdState());
+                }
+            }
+        }
     }
 
     @Override
     protected final void arrow(final SnipeData v) {
-//        Undo undo = new Undo();
-//        this.oceanator(v, undo);
-//        v.owner().storeUndo(undo);
+        Optional<Chunk> chunk = this.world.getChunk(this.targetBlock.getChunkPosition());
+        if (chunk.isPresent()) {
+            this.undo = new Undo(4 * 16 * 256);
+            oceanator(v, chunk.get());
+            v.owner().storeUndo(this.undo);
+            this.undo = null;
+        }
     }
 
     @Override
@@ -169,42 +145,34 @@ public class OceanBrush extends Brush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
+        this.coverFloor = false;
         for (int i = 0; i < par.length; i++) {
             final String parameter = par[i];
 
-            try {
-                if (parameter.equalsIgnoreCase("info")) {
-                    v.sendMessage(TextColors.BLUE, "Parameters:");
-                    v.sendMessage(TextColors.GREEN, "-wlevel #  ", TextColors.BLUE, "--  Sets the water level (e.g. -wlevel 64)");
-                    v.sendMessage(TextColors.GREEN, "-cfloor [y|n]  ", TextColors.BLUE,
-                            "--  Enables or disables sea floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
-                } else if (parameter.equalsIgnoreCase("-wlevel")) {
-                    if ((i + 1) >= par.length) {
-                        v.sendMessage(TextColors.RED, "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
-                        continue;
-                    }
-
+            if (parameter.equalsIgnoreCase("info")) {
+                v.sendMessage(TextColors.BLUE, "Parameters:");
+                v.sendMessage(TextColors.GREEN, "-wlevel #  ", TextColors.BLUE, "--  Sets the water level (e.g. -wlevel 64)");
+                v.sendMessage(TextColors.GREEN, "-cfloor    ", TextColors.BLUE,
+                        "--  Enables or disables sea floor cover (Cover material will be your voxel material)");
+            } else if (parameter.equalsIgnoreCase("-wlevel")) {
+                if ((i + 1) >= par.length) {
+                    v.sendMessage(TextColors.RED, "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
+                    continue;
+                }
+                try {
                     int temp = Integer.parseInt(par[++i]);
-
                     if (temp <= WATER_LEVEL_MIN) {
                         v.sendMessage(TextColors.RED, "Error: Your specified water level was below 12.");
                         continue;
                     }
-
-                    this.waterLevel = temp - 1;
-                    v.sendMessage(TextColors.BLUE, "Water level set to ", TextColors.GREEN, (waterLevel + 1));
-                } else if (parameter.equalsIgnoreCase("-cfloor") || parameter.equalsIgnoreCase("-coverfloor")) {
-                    if ((i + 1) >= par.length) {
-                        v.sendMessage(TextColors.RED, "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
-                        continue;
-                    }
-
-                    this.coverFloor = par[++i].equalsIgnoreCase("y");
-                    v.sendMessage(TextColors.BLUE, String.format("Floor cover %s.", TextColors.GREEN, (this.coverFloor ? "enabled" : "disabled")));
+                    this.waterLevel = temp;
+                    v.sendMessage(TextColors.BLUE, "Water level set to ", TextColors.GREEN, this.waterLevel);
+                } catch (NumberFormatException e) {
+                    v.sendMessage(TextColors.RED, "Invalud water level.");
                 }
-            } catch (Exception exception) {
-                v.sendMessage(TextColors.RED, String.format("Error while parsing parameter: %s", parameter));
-                exception.printStackTrace();
+            } else if (parameter.equalsIgnoreCase("-cfloor") || parameter.equalsIgnoreCase("-coverfloor")) {
+                this.coverFloor = true;
+                v.sendMessage(TextColors.BLUE, "Floor cover ", TextColors.GREEN, "enabled.");
             }
         }
     }
@@ -212,7 +180,7 @@ public class OceanBrush extends Brush {
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.getName());
-        vm.custom(TextColors.BLUE, "Water level set to ", TextColors.GREEN, (waterLevel + 1));
+        vm.custom(TextColors.BLUE, "Water level set to ", TextColors.GREEN, this.waterLevel);
         vm.custom(TextColors.BLUE, "Floor cover ", TextColors.GREEN, (this.coverFloor ? "enabled" : "disabled") + ".");
     }
 

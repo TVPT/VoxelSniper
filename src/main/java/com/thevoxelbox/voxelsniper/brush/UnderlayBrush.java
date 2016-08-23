@@ -74,7 +74,7 @@ public class UnderlayBrush extends PerformBrush {
                         if (this.world.getBlockType(x, y - 1, z) != BlockTypes.AIR) {
                             // if theres no air below our start block then don't
                             // perform
-                            break;
+                            continue;
                         }
                     }
                     for (int y0 = y; y0 < y + this.depth; y0++) {

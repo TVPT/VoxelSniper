@@ -24,24 +24,65 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.blockray.BlockRay;
+import org.spongepowered.api.world.World;
+
+import java.util.UUID;
 
 /**
  * Creates a line
  */
 public class LineBrush extends PerformBrush {
-//    private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
-//    private Vector originCoords = null;
-//    private Vector targetCoords = new Vector();
-//    private World targetWorld;
 
-    /**
-     *
-     */
+    private boolean continuous = false;
+    private Vector3d origin;
+    private UUID worldUid;
+
     public LineBrush() {
         this.setName("Line");
+    }
+
+    private void linePowder(final SnipeData v) {
+        Vector3d target = this.targetBlock.getBlockPosition().toDouble().add(0.5, 0.5, 0.5);
+        Vector3d dir = target.sub(this.origin);
+        double dist = target.distance(this.origin);
+        this.undo = new Undo((int) (dist + 2));
+
+        BlockRay<World> ray = BlockRay.from(this.world, this.origin).filter(BlockRay.maxDistanceFilter(this.origin, dist)).direction(dir).build();
+        perform(v, this.origin.getFloorX(), this.origin.getFloorY(), this.origin.getFloorZ());
+        while (ray.hasNext()) {
+            Vector3i pos = ray.next().getBlockPosition();
+            perform(v, pos.getX(), pos.getY(), pos.getZ());
+        }
+
+        if (this.continuous) {
+            this.origin = target;
+        }
+
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
+
+    @Override
+    protected final void arrow(final SnipeData v) {
+        this.worldUid = this.world.getUniqueId();
+        this.origin = this.targetBlock.getBlockPosition().toDouble().add(0.5, 0.5, 0.5);
+        v.sendMessage(TextColors.DARK_PURPLE, "First point selected.");
+    }
+
+    @Override
+    protected final void powder(final SnipeData v) {
+        if (this.origin == null || !this.world.getUniqueId().equals(this.worldUid)) {
+            v.sendMessage(TextColors.RED, "Warning: You did not select a first coordinate with the arrow");
+        } else {
+            linePowder(v);
+        }
     }
 
     @Override
@@ -54,45 +95,15 @@ public class LineBrush extends PerformBrush {
         if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.GOLD,
                     "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
+            v.sendMessage(TextColors.GOLD + "Line brush Parameters:");
+            v.sendMessage(TextColors.AQUA + "/b line continue -- Each line will be drawn from the endpoint of the last line.");
+            return;
         }
-    }
-    // @Spongify
-
-    private void linePowder(final SnipeData v) {
-//        final Vector originClone = this.originCoords.clone().add(LineBrush.HALF_BLOCK_OFFSET);
-//        final Vector targetClone = this.targetCoords.clone().add(LineBrush.HALF_BLOCK_OFFSET);
-//
-//        final Vector direction = targetClone.clone().subtract(originClone);
-//        final double length = this.targetCoords.distance(this.originCoords);
-//
-//        if (length == 0) {
-//            this.current.perform(this.targetCoords.toLocation(this.targetWorld).getBlock());
-//        } else {
-//            for (final BlockIterator blockIterator =
-//                    new BlockIterator(this.targetWorld, originClone, direction, 0, NumberConversions.round(length)); blockIterator.hasNext();) {
-//                final Block currentBlock = blockIterator.next();
-//                this.current.perform(currentBlock);
-//            }
-//        }
-//
-//        v.owner().storeUndo(this.current.getUndo());
-    }
-
-    @Override
-    protected final void arrow(final SnipeData v) {
-//        this.originCoords = this.getTargetBlock().getLocation().toVector();
-//        this.targetWorld = this.getTargetBlock().getWorld();
-//        v.owner().getPlayer().sendMessage(TextColors.DARK_PURPLE + "First point selected.");
-    }
-
-    @Override
-    protected final void powder(final SnipeData v) {
-//        if (this.originCoords == null || !this.getTargetBlock().getWorld().equals(this.targetWorld)) {
-//            v.owner().getPlayer().sendMessage(TextColors.RED + "Warning: You did not select a first coordinate with the arrow");
-//        } else {
-//            this.targetCoords = this.getTargetBlock().getLocation().toVector();
-//            this.linePowder(v);
-//        }
+        this.continuous = false;
+        if (par[0].equalsIgnoreCase("continue")) {
+            this.continuous = true;
+            v.sendMessage(TextColors.AQUA, "Line brush Continuous mode enabled.");
+        }
     }
 
     @Override
