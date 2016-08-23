@@ -24,18 +24,13 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+
+import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.Vector;
-
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Three-Point_Circle_Brush
- *
- * @author Giltwist
- */
 public class ThreePointCircleBrush extends PerformBrush {
 
     private Vector3d coordsOne;
@@ -53,16 +48,16 @@ public class ThreePointCircleBrush extends PerformBrush {
     @Override
     protected final void arrow(final SnipeData v) {
         if (this.coordsOne == null) {
-            this.coordsOne = this.targetBlock.getPosition();
+            this.coordsOne = this.targetBlock.getPosition().add(0.5, 0.5, 0.5);
             v.sendMessage(TextColors.GRAY + "First Corner set.");
         } else if (this.coordsTwo == null) {
-            this.coordsTwo = this.targetBlock.getPosition();
+            this.coordsTwo = this.targetBlock.getPosition().add(0.5, 0.5, 0.5);
             v.sendMessage(TextColors.GRAY + "Second Corner set.");
         } else if (this.coordsThree == null) {
-            this.coordsThree = this.targetBlock.getPosition();
+            this.coordsThree = this.targetBlock.getPosition().add(0.5, 0.5, 0.5);
             v.sendMessage(TextColors.GRAY + "Third Corner set.");
         } else {
-            this.coordsOne = this.targetBlock.getPosition();
+            this.coordsOne = this.targetBlock.getPosition().add(0.5, 0.5, 0.5);
             this.coordsTwo = null;
             this.coordsThree = null;
             v.sendMessage(TextColors.GRAY + "First Corner set.");
@@ -71,97 +66,87 @@ public class ThreePointCircleBrush extends PerformBrush {
 
     @Override
     protected final void powder(final SnipeData v) {
-        // @Spongify
-//        if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
-//            return;
-//        }
-//
-//        // Calculate triangle defining vectors
-//        final Vector3d vectorOne = this.coordsTwo.sub(this.coordsOne);
-//        final Vector3d vectorTwo = this.coordsThree.sub(this.coordsOne);
-//        final Vector3d vectorThree = coordsThree.sub(vectorTwo);
-//
-//        // Redundant data check
-//        if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0 || vectorOne.angle(vectorTwo) == 0
-//                || vectorOne.angle(vectorThree) == 0 || vectorThree.angle(vectorTwo) == 0) {
-//
-//            v.sendMessage(TextColors.RED + "ERROR: Invalid points, try again.");
-//            this.coordsOne = null;
-//            this.coordsTwo = null;
-//            this.coordsThree = null;
-//            return;
-//        }
-//
-//        // Calculate normal vector of the plane.
-//        final Vector normalVector = vectorOne.clone();
-//        normalVector.crossProduct(vectorTwo);
-//
-//        // Calculate constant term of the plane.
-//        final double planeConstant = normalVector.getX() * this.coordsOne.getX() + normalVector.getY() * this.coordsOne.getY()
-//                + normalVector.getZ() * this.coordsOne.getZ();
-//
-//        final Vector midpointOne = this.coordsOne.getMidpoint(this.coordsTwo);
-//        final Vector midpointTwo = this.coordsOne.getMidpoint(this.coordsThree);
-//
-//        // Find perpendicular vectors to two sides in the plane
-//        final Vector perpendicularOne = normalVector.clone();
-//        perpendicularOne.crossProduct(vectorOne);
-//        final Vector perpendicularTwo = normalVector.clone();
-//        perpendicularTwo.crossProduct(vectorTwo);
-//
-//        // determine value of parametric variable at intersection of two
-//        // perpendicular bisectors
-//        final Vector tNumerator = midpointTwo.clone();
-//        tNumerator.subtract(midpointOne);
-//        tNumerator.crossProduct(perpendicularTwo);
-//        final Vector tDenominator = perpendicularOne.clone();
-//        tDenominator.crossProduct(perpendicularTwo);
-//        final double t = tNumerator.length() / tDenominator.length();
-//
-//        // Calculate Circumcenter and Brushcenter.
-//        final Vector circumcenter = new Vector();
-//        circumcenter.copy(perpendicularOne);
-//        circumcenter.multiply(t);
-//        circumcenter.add(midpointOne);
-//
-//        final Vector brushCenter = new Vector(Math.round(circumcenter.getX()), Math.round(circumcenter.getY()), Math.round(circumcenter.getZ()));
-//
-//        // Calculate radius of circumcircle and determine brushsize
-//        final double radius = circumcenter.distance(new Vector(this.coordsOne.getX(), this.coordsOne.getY(), this.coordsOne.getZ()));
-//        final int brushSize = NumberConversions.ceil(radius) + 1;
-//
-//        for (int x = -brushSize; x <= brushSize; x++) {
-//            for (int y = -brushSize; y <= brushSize; y++) {
-//                for (int z = -brushSize; z <= brushSize; z++) {
-//                    // Calculate distance from center
-//                    final double tempDistance = Math.pow(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2), .5);
-//
-//                    // gets corner-on blocks
-//                    final double cornerConstant = normalVector.getX() * (circumcenter.getX() + x) + normalVector.getY() * (circumcenter.getY() + y)
-//                            + normalVector.getZ() * (circumcenter.getZ() + z);
-//
-//                    // gets center-on blocks
-//                    final double centerConstant = normalVector.getX() * (circumcenter.getX() + x + .5)
-//                            + normalVector.getY() * (circumcenter.getY() + y + .5) + normalVector.getZ() * (circumcenter.getZ() + z + .5);
-//
-//                    // Check if point is within sphere and on plane (some
-//                    // tolerance given)
-//                    if (tempDistance <= radius && (Math.abs(cornerConstant - planeConstant) < this.tolerance.getValue()
-//                            || Math.abs(centerConstant - planeConstant) < this.tolerance.getValue())) {
-//                        this.current.perform(this.clampY(brushCenter.getBlockX() + x, brushCenter.getBlockY() + y, brushCenter.getBlockZ() + z));
-//                    }
-//
-//                }
-//            }
-//        }
-//
-//        v.sendMessage(TextColors.GREEN + "Done.");
-//        v.owner().storeUndo(this.current.getUndo());
-//
-//        // Reset Brush
-//        this.coordsOne = null;
-//        this.coordsTwo = null;
-//        this.coordsThree = null;
+        if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
+            return;
+        }
+
+        // Calculate triangle defining vectors
+        final Vector3d vectorOne = this.coordsTwo.sub(this.coordsOne);
+        final Vector3d vectorTwo = this.coordsThree.sub(this.coordsOne);
+        final Vector3d vectorThree = this.coordsThree.sub(vectorTwo);
+
+        // Redundant data check
+        if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0) {
+            v.sendMessage(TextColors.RED + "ERROR: Invalid points, try again.");
+            this.coordsOne = null;
+            this.coordsTwo = null;
+            this.coordsThree = null;
+            return;
+        }
+
+        // Calculate normal vector of the plane.
+        final Vector3d normalVector = vectorOne.cross(vectorTwo);
+
+        // Calculate constant term of the plane.
+        final double planeConstant = normalVector.getX() * this.coordsOne.getX() + normalVector.getY() * this.coordsOne.getY()
+                + normalVector.getZ() * this.coordsOne.getZ();
+
+        final Vector3d midpointOne = this.coordsOne.add(this.coordsTwo.sub(this.coordsOne).mul(0.5));
+        final Vector3d midpointTwo = this.coordsOne.add(this.coordsThree.sub(this.coordsOne).mul(0.5));
+
+        // Find perpendicular vectors to two sides in the plane
+        final Vector3d perpendicularOne = normalVector.cross(vectorOne);
+        final Vector3d perpendicularTwo = normalVector.cross(vectorTwo);
+
+        // determine value of parametric variable at intersection of two
+        // perpendicular bisectors
+        final Vector3d tNumerator = midpointTwo.sub(midpointOne).cross(perpendicularTwo);
+        final Vector3d tDenominator = perpendicularOne.cross(perpendicularTwo);
+        final double t = tNumerator.length() / tDenominator.length();
+
+        // Calculate Circumcenter and Brushcenter.
+        final Vector3d circumcenter = perpendicularOne.mul(t);
+        circumcenter.add(midpointOne);
+
+        final Vector3d brushCenter = new Vector3d(Math.round(circumcenter.getX()), Math.round(circumcenter.getY()), Math.round(circumcenter.getZ()));
+
+        // Calculate radius of circumcircle and determine brushsize
+        final double radius = circumcenter.distance(this.coordsOne);
+        final int brushSize = (int) (Math.ceil(radius) + 1);
+        this.undo = new Undo((int) (4 * v.getBrushSize() * v.getBrushSize()));
+        for (int x = -brushSize; x <= brushSize; x++) {
+            for (int y = -brushSize; y <= brushSize; y++) {
+                for (int z = -brushSize; z <= brushSize; z++) {
+                    // Calculate distance from center
+                    final double tempDistance = Math.pow(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2), .5);
+
+                    // gets corner-on blocks
+                    final double cornerConstant = normalVector.getX() * (circumcenter.getX() + x) + normalVector.getY() * (circumcenter.getY() + y)
+                            + normalVector.getZ() * (circumcenter.getZ() + z);
+
+                    // gets center-on blocks
+                    final double centerConstant = normalVector.getX() * (circumcenter.getX() + x + .5)
+                            + normalVector.getY() * (circumcenter.getY() + y + .5) + normalVector.getZ() * (circumcenter.getZ() + z + .5);
+
+                    // Check if point is within sphere and on plane (some
+                    // tolerance given)
+                    if (tempDistance <= radius && (Math.abs(cornerConstant - planeConstant) < this.tolerance.getValue()
+                            || Math.abs(centerConstant - planeConstant) < this.tolerance.getValue())) {
+                        perform(v, brushCenter.getFloorX() + x, brushCenter.getFloorY() + y, brushCenter.getFloorZ() + z);
+                    }
+
+                }
+            }
+        }
+
+        v.sendMessage(TextColors.GREEN + "Done.");
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+
+        // Reset Brush
+        this.coordsOne = null;
+        this.coordsTwo = null;
+        this.coordsThree = null;
 
     }
 

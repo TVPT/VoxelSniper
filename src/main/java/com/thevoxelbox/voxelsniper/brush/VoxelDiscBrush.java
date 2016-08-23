@@ -43,10 +43,10 @@ public class VoxelDiscBrush extends PerformBrush {
     private void disc(final SnipeData v, Location<World> targetBlock) {
         double brushSize = v.getBrushSize();
 
-        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
-        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
-        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
-        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+        int minx = (int) Math.round(targetBlock.getBlockX() - brushSize);
+        int maxx = (int) Math.round(targetBlock.getBlockX() + brushSize);
+        int minz = (int) Math.round(targetBlock.getBlockZ() - brushSize);
+        int maxz = (int) Math.round(targetBlock.getBlockZ() + brushSize);
 
         this.undo = new Undo(GenericMath.floor(4 * brushSize * brushSize));
 

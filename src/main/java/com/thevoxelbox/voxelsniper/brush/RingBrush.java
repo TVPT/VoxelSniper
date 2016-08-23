@@ -26,56 +26,60 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+
+import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Ring_Brush
- *
- * @author Voxel
+ * Ring shape brush.
  */
 public class RingBrush extends PerformBrush {
 
-    private double trueCircle = 0;
     private double innerSize = 0;
 
     public RingBrush() {
         this.setName("Ring");
     }
 
-    // @Spongify
-//    private void ring(final SnipeData v, Block targetBlock)
-//    {
-//        final int brushSize = v.getBrushSize();
-//        final double outerSquared = Math.pow(brushSize + this.trueCircle, 2);
-//        final double innerSquared = Math.pow(this.innerSize, 2);
-//
-//        for (int x = brushSize; x >= 0; x--)
-//        {
-//            final double xSquared = Math.pow(x, 2);
-//            for (int z = brushSize; z >= 0; z--)
-//            {
-//                final double ySquared = Math.pow(z, 2);
-//                if ((xSquared + ySquared) <= outerSquared && (xSquared + ySquared) >= innerSquared)
-//                {
-//                    current.perform(targetBlock.getRelative(x, 0, z));
-//                    current.perform(targetBlock.getRelative(x, 0, -z));
-//                    current.perform(targetBlock.getRelative(-x, 0, z));
-//                    current.perform(targetBlock.getRelative(-x, 0, -z));
-//                }
-//            }
-//        }
-//
-//        v.owner().storeUndo(this.current.getUndo());
-//    }
+    private void ring(final SnipeData v, Location<World> targetBlock) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
+        double innerRadiusSquared = this.innerSize * this.innerSize;
+
+        int tx = targetBlock.getBlockX();
+        int tz = targetBlock.getBlockZ();
+        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
+        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
+        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
+        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+
+        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1)));
+
+        for (int x = minx; x <= maxx; x++) {
+            double xs = (tx - x) * (tx - x);
+            for (int z = minz; z <= maxz; z++) {
+                double zs = (tz - z) * (tz - z);
+                if (xs + zs < brushSizeSquared && xs + zs >= innerRadiusSquared) {
+                    perform(v, x, targetBlock.getBlockY(), z);
+                }
+            }
+        }
+
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
 
     @Override
     protected final void arrow(final SnipeData v) {
-//        this.ring(v, this.getTargetBlock());
+        this.ring(v, this.targetBlock);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-//        this.ring(v, this.getLastBlock());
+        this.ring(v, this.lastBlock);
     }
 
     @Override
@@ -90,23 +94,15 @@ public class RingBrush extends PerformBrush {
         for (int i = 1; i < par.length; i++) {
             if (par[i].equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Ring Brush Parameters:");
-                v.sendMessage(TextColors.AQUA,
-                        "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
                 v.sendMessage(TextColors.AQUA, "/b ri ir2.5 -- will set the inner radius to 2.5 units");
                 return;
-            } else if (par[i].startsWith("true")) {
-                this.trueCircle = 0.5;
-                v.sendMessage(TextColors.AQUA, "True circle mode ON.");
-            } else if (par[i].startsWith("false")) {
-                this.trueCircle = 0;
-                v.sendMessage(TextColors.AQUA, "True circle mode OFF.");
             } else if (par[i].startsWith("ir")) {
                 try {
                     final double d = Double.parseDouble(par[i].replace("ir", ""));
                     this.innerSize = d;
                     v.sendMessage(TextColors.AQUA, "The inner radius has been set to ", TextColors.RED, this.innerSize);
                 } catch (final Exception exception) {
-                    v.sendMessage(TextColors.RED, "The parameters included are invalid.");
+                    v.sendMessage(TextColors.RED, "Inner radius must be a number.");
                 }
             } else {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");

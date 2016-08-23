@@ -38,24 +38,6 @@ public class RegenerateChunkBrush extends Brush {
 
     private void generateChunk(final SnipeData v) {
         // @Spongify pending regenerate chunk method
-//        final Chunk chunk = this.getTargetBlock().getChunk();
-//        final Undo undo = new Undo();
-//
-//        for (int z = CHUNK_SIZE; z >= 0; z--)
-//        {
-//            for (int x = CHUNK_SIZE; x >= 0; x--)
-//            {
-//                for (int y = this.getWorld().getMaxHeight(); y >= 0; y--)
-//                {
-//                    undo.put(chunk.getBlock(x, y, z));
-//                }
-//            }
-//        }
-//        v.owner().storeUndo(undo);
-//
-//        v.sendMessage("Generate that chunk! " + chunk.getX() + " " + chunk.getZ());
-//        this.getWorld().regenerateChunk(chunk.getX(), chunk.getZ());
-//        this.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
     }
 
     @Override

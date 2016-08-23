@@ -51,8 +51,9 @@ public class ErodeBrush extends Brush {
         this.setName("Erode");
     }
 
-    private void erosion(SnipeData v, ErosionParameters erosionPreset) {
+    protected void erosion(SnipeData v, int erodeFaces, int erodeRec, int fillFaces, int fillRec) {
         int brushSize = (int) v.getBrushSize() + 1;
+        double brushSizeSquared = v.getBrushSize() * v.getBrushSize();
 
         int tx = this.targetBlock.getBlockX();
         int ty = this.targetBlock.getBlockY();
@@ -79,13 +80,13 @@ public class ErodeBrush extends Brush {
             }
         }
         int swap = 0;
-        for (int i = 0; i < erosionPreset.getErosionRecursion(); ++i) {
-            erosionIteration(v, erosionPreset, swap % 2 == 0 ? buffer1 : buffer2, swap % 2 == 1 ? buffer1 : buffer2);
+        for (int i = 0; i < erodeRec; ++i) {
+            erosionIteration(v, erodeFaces, swap % 2 == 0 ? buffer1 : buffer2, swap % 2 == 1 ? buffer1 : buffer2);
             swap++;
         }
 
-        for (int i = 0; i < erosionPreset.getFillRecursion(); ++i) {
-            fillIteration(v, erosionPreset, swap % 2 == 0 ? buffer1 : buffer2, swap % 2 == 1 ? buffer1 : buffer2);
+        for (int i = 0; i < fillRec; ++i) {
+            fillIteration(v, fillFaces, swap % 2 == 0 ? buffer1 : buffer2, swap % 2 == 1 ? buffer1 : buffer2);
             swap++;
         }
         BlockBuffer finalBuffer = swap % 2 == 0 ? buffer1 : buffer2;
@@ -97,7 +98,7 @@ public class ErodeBrush extends Brush {
                 int y0 = y + ty;
                 for (int z = -brushSize; z <= brushSize; z++) {
                     int z0 = z + tz;
-                    if (finalBuffer.contains(x, y, z)) {
+                    if (x * x + y * y + z * z >= brushSizeSquared && finalBuffer.contains(x, y, z)) {
                         setBlockState(x0, y0, z0, finalBuffer.get(x, y, z));
                     }
                 }
@@ -107,7 +108,7 @@ public class ErodeBrush extends Brush {
         this.undo = null;
     }
 
-    private void fillIteration(SnipeData v, ErosionParameters params, BlockBuffer current, BlockBuffer target) {
+    private void fillIteration(SnipeData v, int fillFaces, BlockBuffer current, BlockBuffer target) {
         int brushSize = (int) v.getBrushSize() + 1;
         double brushSizeSquared = v.getBrushSize() * v.getBrushSize();
         Map<BlockState, Integer> frequency = Maps.newHashMap();
@@ -144,7 +145,7 @@ public class ErodeBrush extends Brush {
                         }
                         frequency.put(next, count);
                     }
-                    if (total > params.getFillFaces()) {
+                    if (total > fillFaces) {
                         target.set(x, y, z, highestState);
                     }
                 }
@@ -152,7 +153,7 @@ public class ErodeBrush extends Brush {
         }
     }
 
-    private void erosionIteration(SnipeData v, ErosionParameters params, BlockBuffer current, BlockBuffer target) {
+    private void erosionIteration(SnipeData v, int erodeFaces, BlockBuffer current, BlockBuffer target) {
         int brushSize = (int) v.getBrushSize() + 1;
         double brushSizeSquared = v.getBrushSize() * v.getBrushSize();
         Map<BlockType, Integer> frequency = Maps.newHashMap();
@@ -189,7 +190,7 @@ public class ErodeBrush extends Brush {
                         }
                         frequency.put(next.getType(), count);
                     }
-                    if (total > params.getErosionFaces()) {
+                    if (total > erodeFaces) {
                         target.set(x, y, z, highestState.getDefaultState());
                     }
                 }
@@ -198,17 +199,19 @@ public class ErodeBrush extends Brush {
     }
 
     @Override
-    protected final void arrow(final SnipeData v) {
-        this.erosion(v, this.currentPreset);
+    protected void arrow(final SnipeData v) {
+        this.erosion(v, this.currentPreset.getErosionFaces(), this.currentPreset.getErosionRecursion(), this.currentPreset.getFillFaces(),
+                this.currentPreset.getFillRecursion());
     }
 
     @Override
-    protected final void powder(final SnipeData v) {
-        this.erosion(v, this.currentPreset.getInverted());
+    protected void powder(final SnipeData v) {
+        ErosionParameters i = this.currentPreset.getInverted();
+        this.erosion(v, i.getErosionFaces(), i.getErosionRecursion(), i.getFillFaces(), i.getFillRecursion());
     }
 
     @Override
-    public final void info(final Message vm) {
+    public void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.custom(TextColors.AQUA, "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
@@ -232,7 +235,7 @@ public class ErodeBrush extends Brush {
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v) {
+    public void parameters(final String[] par, final SnipeData v) {
 
         ErosionParameters currentPresetBackup = this.currentPreset;
 

@@ -27,6 +27,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -54,21 +56,24 @@ public class SplatterBallBrush extends PerformBrush {
     }
 
     private void splatterBall(final SnipeData v, Location<World> targetBlock) {
-        int size = GenericMath.floor(v.getBrushSize()) + 1;
-        final int[][][] splat = new int[2 * size][2 * size][2 * size];
+        int size = (int) Math.round(v.getBrushSize());
+        final boolean[][][] splat = new boolean[2 * size][2 * size][2 * size];
+
+        // @Cleanup: a 3d bitset would make this a lot smaller in memory
+        // footprint
 
         // Seed the array
         for (int x = 2 * size; x >= 0; x--) {
             for (int y = 2 * size; y >= 0; y--) {
                 for (int z = 2 * size; z >= 0; z--) {
                     if (this.generator.nextDouble() <= this.seedPercent) {
-                        splat[x][y][z] = 1;
+                        splat[x][y][z] = true;
                     }
                 }
             }
         }
         // Grow the seeds
-        final int[][][] tempSplat = new int[2 * size][2 * size][2 * size];
+        final boolean[][][] tempSplat = new boolean[2 * size][2 * size][2 * size];
         int growcheck;
 
         for (int r = 0; r < this.splatterRecursions; r++) {
@@ -79,29 +84,29 @@ public class SplatterBallBrush extends PerformBrush {
                         tempSplat[x][y][z] = splat[x][y][z]; // prime tempsplat
 
                         growcheck = 0;
-                        if (splat[x][y][z] == 0) {
-                            if (x != 0 && splat[x - 1][y][z] == 1) {
+                        if (!splat[x][y][z]) {
+                            if (x != 0 && splat[x - 1][y][z]) {
                                 growcheck++;
                             }
-                            if (y != 0 && splat[x][y - 1][z] == 1) {
+                            if (y != 0 && splat[x][y - 1][z]) {
                                 growcheck++;
                             }
-                            if (z != 0 && splat[x][y][z - 1] == 1) {
+                            if (z != 0 && splat[x][y][z - 1]) {
                                 growcheck++;
                             }
-                            if (x != 2 * v.getBrushSize() && splat[x + 1][y][z] == 1) {
+                            if (x != 2 * size && splat[x + 1][y][z]) {
                                 growcheck++;
                             }
-                            if (y != 2 * v.getBrushSize() && splat[x][y + 1][z] == 1) {
+                            if (y != 2 * size && splat[x][y + 1][z]) {
                                 growcheck++;
                             }
-                            if (z != 2 * v.getBrushSize() && splat[x][y][z + 1] == 1) {
+                            if (z != 2 * size && splat[x][y][z + 1]) {
                                 growcheck++;
                             }
                         }
 
                         if (growcheck >= 0 && this.generator.nextDouble() <= grow) {
-                            tempSplat[x][y][z] = 1;
+                            tempSplat[x][y][z] = true;
                         }
 
                     }
@@ -117,31 +122,31 @@ public class SplatterBallBrush extends PerformBrush {
             }
         }
         // Fill 1x1x1 holes
-        for (int x = 2 * size; x >= 0; x--) {
-            for (int y = size; y >= 0; y--) {
-                for (int z = size; z >= 0; z--) {
-                    if (splat[Math.max(x - 1, 0)][y][z] == 1 && splat[Math.min(x + 1, 2 * size)][y][z] == 1
-                            && splat[x][Math.max(0, y - 1)][z] == 1 && splat[x][Math.min(2 * size, y + 1)][z] == 1) {
-                        splat[x][y][z] = 1;
+        for (int x = 2 * size - 2; x >= 1; x--) {
+            for (int y = 2 * size - 2; y >= 1; y--) {
+                for (int z = 2 * size - 2; z >= 1; z--) {
+                    if (splat[x - 1][y][z] && splat[x + 1][y][z] && splat[x][y - 1][z] && splat[x][y + 1][z] && splat[x][y][z - 1]
+                            && splat[x][y][z + 1]) {
+                        splat[x][y][z] = true;
                     }
                 }
             }
         }
 
+        this.undo = new Undo(GenericMath.floor(4 * Math.PI * (v.getBrushSize() + 1) * (v.getBrushSize() + 1) * (v.getBrushSize() + 1) / 3));
         // Make the changes
-        final double rSquared = Math.pow(v.getBrushSize() + 1, 2);
+        final double rSquared = v.getBrushSize() * v.getBrushSize();
 
         for (int x = 2 * size; x >= 0; x--) {
             final double xSquared = (x - size) * (x - size);
-            int x0 = x - size + this.targetBlock.getBlockX();
+            int x0 = x - size + targetBlock.getBlockX();
             for (int y = 2 * size; y >= 0; y--) {
                 final double ySquared = (y - size) * (y - size);
-                int y0 = y - size + this.targetBlock.getBlockY();
-
+                int y0 = y - size + targetBlock.getBlockY();
                 for (int z = 2 * size; z >= 0; z--) {
                     final double zSquared = (z - size) * (z - size);
-                    int z0 = z - size + this.targetBlock.getBlockZ();
-                    if (splat[x][y][z] == 1 && xSquared + ySquared + zSquared <= rSquared) {
+                    int z0 = z - size + targetBlock.getBlockZ();
+                    if (splat[x][y][z] && xSquared + ySquared + zSquared <= rSquared) {
                         perform(v, x0, y0, z0);
                     }
                 }
@@ -166,8 +171,8 @@ public class SplatterBallBrush extends PerformBrush {
     public final void info(final Message vm) {
         vm.brushName("Splatter Ball");
         vm.size();
-        vm.custom(TextColors.BLUE, "Seed percent set to: " + this.seedPercent / 100 + "%");
-        vm.custom(TextColors.BLUE, "Growth percent set to: " + this.growPercent / 100 + "%");
+        vm.custom(TextColors.BLUE, "Seed percent set to: " + this.seedPercent * 100 + "%");
+        vm.custom(TextColors.BLUE, "Growth percent set to: " + this.growPercent * 100 + "%");
         vm.custom(TextColors.BLUE, "Recursions set to: " + this.splatterRecursions);
     }
 
@@ -178,8 +183,8 @@ public class SplatterBallBrush extends PerformBrush {
 
             if (parameter.equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Splatter Ball brush Parameters:");
-                v.sendMessage(TextColors.AQUA, "/b sb s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-                v.sendMessage(TextColors.AQUA, "/b sb g[int] -- set a growth percentage (1-9999).  Default is 1000");
+                v.sendMessage(TextColors.AQUA, "/b sb s[float] -- set a seed percentage (0-1). Default is 0.1");
+                v.sendMessage(TextColors.AQUA, "/b sb g[float] -- set a growth percentage (0-1). Default is 0.1");
                 v.sendMessage(TextColors.AQUA, "/b sb r[int] -- set a recursion (1-10).  Default is 3");
                 return;
             } else if (parameter.startsWith("s")) {
@@ -224,7 +229,6 @@ public class SplatterBallBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-
     }
 
     @Override

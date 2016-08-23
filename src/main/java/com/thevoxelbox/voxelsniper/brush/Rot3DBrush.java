@@ -24,12 +24,18 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.BlockBuffer;
 import com.thevoxelbox.voxelsniper.util.Rot3d;
+
+import com.flowpowered.math.GenericMath;
+import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class Rot3DBrush extends Brush {
 
@@ -103,50 +109,57 @@ public class Rot3DBrush extends Brush {
         }
     }
 
-    private void rotate(final SnipeData v) {
-        double brushSize = v.getBrushSize();
+    private void rotate(final SnipeData v, Location<World> targetBlock) {
+        int brushSize = GenericMath.floor(v.getBrushSize()) + 1;
         double brushSizeSquared = brushSize * brushSize;
 
         int tx = targetBlock.getBlockX();
         int ty = targetBlock.getBlockY();
         int tz = targetBlock.getBlockZ();
-        int minx = GenericMath.floor(this.targetBlock.getBlockX() - brushSize);
-        int maxx = GenericMath.floor(this.targetBlock.getBlockX() + brushSize) + 1;
-        int miny = Math.max(GenericMath.floor(this.targetBlock.getBlockY() - brushSize), 0);
-        int maxy = Math.min(GenericMath.floor(this.targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
-        int minz = GenericMath.floor(this.targetBlock.getBlockZ() - brushSize);
-        int maxz = GenericMath.floor(this.targetBlock.getBlockZ() + brushSize) + 1;
 
-        // @Spongify need a block buffer
-        
-        // Approximate the size of the undo to the volume of a one larger sphere
-        this.undo = new Undo(GenericMath.floor(4 * Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));
+        BlockBuffer buffer = new BlockBuffer(new Vector3i(-brushSize, -brushSize, -brushSize), new Vector3i(brushSize, brushSize, brushSize));
 
-        for (int x = minx; x <= maxx; x++) {
-            double xs = (tx - x) * (tx - x);
-            for (int y = miny; y <= maxy; y++) {
-                double ys = (ty - y) * (ty - y);
-                for (int z = minz; z <= maxz; z++) {
-                    double zs = (tz - z) * (tz - z);
-                    if (xs + ys + zs < brushSizeSquared) {
-
+        for (int x = -brushSize; x <= brushSize; x++) {
+            int x0 = tx + x;
+            for (int y = -brushSize; y <= brushSize; y++) {
+                int y0 = ty + y;
+                for (int z = -brushSize; z <= brushSize; z++) {
+                    int z0 = tz + z;
+                    if (x * x + y * y + z * z >= brushSizeSquared) {
+                        continue;
                     }
+                    Vector3d rot = this.rotUtil.rotate(x, y, z);
+                    buffer.set(x + rot.getFloorX(), y + rot.getFloorY(), z + rot.getFloorZ(), this.world.getBlock(x0, y0, z0));
                 }
             }
         }
 
+        this.undo = new Undo(buffer.getBlockCount());
+        // apply the buffer to the world
+        for (int x = -brushSize; x <= brushSize; x++) {
+            int x0 = x + tx;
+            for (int y = -brushSize; y <= brushSize; y++) {
+                int y0 = y + ty;
+                for (int z = -brushSize; z <= brushSize; z++) {
+                    int z0 = z + tz;
+                    if (buffer.contains(x, y, z)) {
+                        setBlockState(x0, y0, z0, buffer.get(x, y, z));
+                    }
+                }
+            }
+        }
         v.owner().storeUndo(this.undo);
         this.undo = null;
     }
 
     @Override
     protected final void arrow(final SnipeData v) {
-        rotate(v);
+        rotate(v, this.targetBlock);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        rotate(v);
+        rotate(v, this.lastBlock);
     }
 
     @Override

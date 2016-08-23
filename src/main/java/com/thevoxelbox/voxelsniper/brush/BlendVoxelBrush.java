@@ -45,7 +45,7 @@ public class BlendVoxelBrush extends BlendBrushBase {
 
     @Override
     protected final void blend(final SnipeData v) {
-        final int brushSize = (int) v.getBrushSize() + 1;
+        final int brushSize = (int) Math.round(v.getBrushSize());
         // all changes are initially performed into a buffer to prevent the
         // results bleeding into each other
         BlockBuffer buffer = new BlockBuffer(new Vector3i(-brushSize, -brushSize, -brushSize), new Vector3i(brushSize, brushSize, brushSize));

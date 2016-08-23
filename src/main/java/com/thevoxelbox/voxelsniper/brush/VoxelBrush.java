@@ -43,12 +43,12 @@ public class VoxelBrush extends PerformBrush {
     private void voxel(final SnipeData v, Location<World> targetBlock) {
         double brushSize = v.getBrushSize();
 
-        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
-        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
-        int miny = Math.max(GenericMath.floor(targetBlock.getBlockY() - brushSize), 0);
-        int maxy = Math.min(GenericMath.floor(targetBlock.getBlockY() + brushSize) + 1, WORLD_HEIGHT);
-        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
-        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+        int minx = (int) Math.round(targetBlock.getBlockX() - brushSize);
+        int maxx = (int) Math.round(targetBlock.getBlockX() + brushSize);
+        int miny = Math.max((int) Math.round(targetBlock.getBlockY() - brushSize), 0);
+        int maxy = Math.min((int) Math.round(targetBlock.getBlockY() + brushSize), WORLD_HEIGHT);
+        int minz = (int) Math.round(targetBlock.getBlockZ() - brushSize);
+        int maxz = (int) Math.round(targetBlock.getBlockZ() + brushSize);
 
         this.undo = new Undo(GenericMath.floor(8 * (brushSize + 1) * (brushSize + 1) * (brushSize + 1)));
 

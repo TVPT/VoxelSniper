@@ -24,6 +24,8 @@
  */
 package com.thevoxelbox.voxelsniper.util;
 
+import com.flowpowered.math.vector.Vector3d;
+
 /**
  * Implements a rotation matrix to assist with rotating points in 3d space with
  * an arbitrary yaw, pitch, and roll.
@@ -79,5 +81,12 @@ public class Rot3d {
         p[1] = this.r[1][0] * xyz[0] + this.r[1][1] * xyz[1] + this.r[1][2] * xyz[2];
         p[2] = this.r[2][0] * xyz[0] + this.r[2][1] * xyz[1] + this.r[2][2] * xyz[2];
         return p;
+    }
+
+    public Vector3d rotate(double x, double y, double z) {
+        double x0 = this.r[0][0] * x + this.r[0][1] * y + this.r[0][2] * z;
+        double y0 = this.r[1][0] * x + this.r[1][1] * y + this.r[1][2] * z;
+        double z0 = this.r[2][0] * x + this.r[2][1] * y + this.r[2][2] * z;
+        return new Vector3d(x0, y0, z0);
     }
 }

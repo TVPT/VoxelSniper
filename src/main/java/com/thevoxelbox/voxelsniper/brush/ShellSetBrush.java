@@ -27,141 +27,108 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import org.spongepowered.api.effect.particle.ParticleType.Block;
+import com.thevoxelbox.voxelsniper.util.BlockBuffer;
+
+import com.flowpowered.math.GenericMath;
+import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-import java.util.ArrayList;
+import java.util.UUID;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
- *
- * @author Piotr
- */
-public class ShellSetBrush extends Brush
-{
+public class ShellSetBrush extends Brush {
+
     private static final int MAX_SIZE = 5000000;
-//    private Block block = null;
 
-    /**
-     *
-     */
-    public ShellSetBrush()
-    {
+    private Vector3i pos1;
+    private UUID worldUid;
+
+    public ShellSetBrush() {
         this.setName("Shell Set");
     }
 
-//    @SuppressWarnings("deprecation")
-//	private boolean set(final Block bl, final SnipeData v)
-//    {
-//        if (this.block == null)
-//        {
-//            this.block = bl;
-//            return true;
-//        }
-//        else
-//        {
-//            if (!this.block.getWorld().getName().equals(bl.getWorld().getName()))
-//            {
-//                v.sendMessage(TextColors.RED + "You selected points in different worlds!");
-//                this.block = null;
-//                return true;
-//            }
-//
-//            final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-//            final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-//            final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-//            final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-//            final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-//            final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
-//
-//            if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_SIZE)
-//            {
-//                v.sendMessage(TextColors.RED + "Selection size above hardcoded limit, please use a smaller selection.");
-//            }
-//            else
-//            {
-//                final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY)) / 2));
-//                for (int y = lowY; y <= highY; y++)
-//                {
-//                    for (int x = lowX; x <= highX; x++)
-//                    {
-//                        for (int z = lowZ; z <= highZ; z++)
-//                        {
-//                            if (this.getWorld().getBlockTypeIdAt(x, y, z) == v.getReplaceId())
-//                            {
-//                                continue;
-//                            }
-//                            else if (this.getWorld().getBlockTypeIdAt(x + 1, y, z) == v.getReplaceId())
-//                            {
-//                                continue;
-//                            }
-//                            else if (this.getWorld().getBlockTypeIdAt(x - 1, y, z) == v.getReplaceId())
-//                            {
-//                                continue;
-//                            }
-//                            else if (this.getWorld().getBlockTypeIdAt(x, y, z + 1) == v.getReplaceId())
-//                            {
-//                                continue;
-//                            }
-//                            else if (this.getWorld().getBlockTypeIdAt(x, y, z - 1) == v.getReplaceId())
-//                            {
-//                                continue;
-//                            }
-//                            else if (this.getWorld().getBlockTypeIdAt(x, y + 1, z) == v.getReplaceId())
-//                            {
-//                                continue;
-//                            }
-//                            else if (this.getWorld().getBlockTypeIdAt(x, y - 1, z) == v.getReplaceId())
-//                            {
-//                                continue;
-//                            }
-//                            else
-//                            {
-//                                blocks.add(this.getWorld().getBlockAt(x, y, z));
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                final Undo undo = new Undo();
-//                for (final Block currentBlock : blocks)
-//                {
-//                    if (currentBlock.getTypeId() != v.getVoxelId())
-//                    {
-//                        undo.put(currentBlock);
-//                        currentBlock.setTypeId(v.getVoxelId());
-//                    }
-//                }
-//                v.owner().storeUndo(undo);
-//                v.sendMessage(TextColors.AQUA + "Shell complete.");
-//            }
-//
-//            this.block = null;
-//            return false;
-//        }
-//    }
+    private void sShell(final SnipeData v, Vector3i pos1, Vector3i pos2) {
+        int minx = Math.min(pos1.getX(), pos2.getX());
+        int miny = Math.min(pos1.getY(), pos2.getY());
+        int minz = Math.min(pos1.getZ(), pos2.getZ());
+        int maxx = Math.max(pos1.getX(), pos2.getX());
+        int maxy = Math.max(pos1.getY(), pos2.getY());
+        int maxz = Math.max(pos1.getZ(), pos2.getZ());
 
-    @Override
-    protected final void arrow(final SnipeData v)
-    {
-//        if (this.set(this.getTargetBlock(), v))
-//        {
-//            v.owner().getPlayer().sendMessage(TextColors.GRAY + "Point one");
-//        }
+        BlockBuffer buffer = new BlockBuffer(new Vector3i(minx, miny, minz), new Vector3i(maxx, maxy, maxz));
+
+        for (int x = minx; x <= maxx; x++) {
+            for (int y = miny; y <= maxy; y++) {
+                for (int z = minz; z <= maxz; z++) {
+                    if (y <= 0 || y >= WORLD_HEIGHT) {
+                        continue;
+                    }
+                    if (this.world.getBlock(x, y, z) != v.getReplaceIdState()) {
+                        continue;
+                    }
+                    int blocks = 0;
+                    if (this.world.getBlock(x + 1, y, z) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x - 1, y, z) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x, y + 1, z) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x, y - 1, z) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x, y, z + 1) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x, y, z - 1) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (blocks == 6) {
+                        buffer.set(x, y, z, v.getVoxelIdState());
+                    }
+                }
+            }
+        }
+
+        this.undo = new Undo(buffer.getBlockCount());
+        // apply the buffer to the world
+        for (int x = minx; x <= maxx; x++) {
+            for (int y = miny; y <= maxy; y++) {
+                for (int z = minz; z <= maxz; z++) {
+                    if (buffer.contains(x, y, z)) {
+                        setBlockState(x, y, z, buffer.get(x, y, z));
+                    }
+                }
+            }
+        }
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
+
+    private void pos(SnipeData v, Location<World> target) {
+        if (this.worldUid == null || !target.getExtent().getUniqueId().equals(this.worldUid)) {
+            this.pos1 = target.getBlockPosition();
+            v.sendMessage(TextColors.GRAY, "First point set.");
+        } else {
+            sShell(v, target.getBlockPosition(), this.pos1);
+        }
     }
 
     @Override
-    protected final void powder(final SnipeData v)
-    {
-//        if (this.set(this.getLastBlock(), v))
-//        {
-//            v.owner().getPlayer().sendMessage(TextColors.GRAY + "Point one");
-//        }
+    protected final void arrow(final SnipeData v) {
+        pos(v, this.targetBlock);
     }
 
     @Override
-    public final void info(final Message vm)
-    {
+    protected final void powder(final SnipeData v) {
+        pos(v, this.lastBlock);
+    }
+
+    @Override
+    public final void info(final Message vm) {
         vm.brushName(this.getName());
         vm.size();
         vm.voxel();
@@ -169,8 +136,7 @@ public class ShellSetBrush extends Brush
     }
 
     @Override
-    public String getPermissionNode()
-    {
+    public String getPermissionNode() {
         return "voxelsniper.brush.shellset";
     }
 }

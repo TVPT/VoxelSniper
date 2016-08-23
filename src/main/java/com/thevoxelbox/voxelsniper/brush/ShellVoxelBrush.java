@@ -26,132 +26,99 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.BlockBuffer;
 
-/**
- * THIS BRUSH SHOULD NOT USE PERFORMERS.
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
- *
- * @author Voxel
- */
+import com.flowpowered.math.vector.Vector3i;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
 public class ShellVoxelBrush extends Brush {
 
-    // @Spongify
     public ShellVoxelBrush() {
         this.setName("Shell Voxel");
     }
+    
+    // @Usability: add parameters for checking for any solid block rather than replace material
 
-//    private void vShell(final SnipeData v, Block targetBlock)
-//    {
-//        final int brushSize = v.getBrushSize();
-//        final int brushSizeSquared = 2 * brushSize;
-//        final int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
-//        final int[][][] newMaterials = new int[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1]; // Array that holds the hollowed materials
-//
-//        int blockPositionX = targetBlock.getX();
-//        int blockPositionY = targetBlock.getY();
-//        int blockPositionZ = targetBlock.getZ();
-//        // Log current materials into oldmats
-//        for (int x = 0; x <= 2 * (brushSize + 1); x++)
-//        {
-//            for (int y = 0; y <= 2 * (brushSize + 1); y++)
-//            {
-//                for (int z = 0; z <= 2 * (brushSize + 1); z++)
-//                {
-//                    oldMaterials[x][y][z] = this.getBlockIdAt(blockPositionX - brushSize - 1 + x, blockPositionY - brushSize - 1 + y, blockPositionZ - brushSize - 1 + z);
-//                }
-//            }
-//        }
-//
-//        // Log current materials into newmats
-//        for (int x = 0; x <= brushSizeSquared; x++)
-//        {
-//            for (int y = 0; y <= brushSizeSquared; y++)
-//            {
-//                for (int z = 0; z <= brushSizeSquared; z++)
-//                {
-//                    newMaterials[x][y][z] = oldMaterials[x + 1][y + 1][z + 1];
-//                }
-//            }
-//        }
-//        int temp;
-//
-//        // Hollow Brush Area
-//        for (int x = 0; x <= brushSizeSquared; x++)
-//        {
-//            for (int z = 0; z <= brushSizeSquared; z++)
-//            {
-//                for (int y = 0; y <= brushSizeSquared; y++)
-//                {
-//                    temp = 0;
-//
-//                    if (oldMaterials[x + 1 + 1][z + 1][y + 1] == v.getReplaceId())
-//                    {
-//                        temp++;
-//                    }
-//                    if (oldMaterials[x + 1 - 1][z + 1][y + 1] == v.getReplaceId())
-//                    {
-//                        temp++;
-//                    }
-//                    if (oldMaterials[x + 1][z + 1 + 1][y + 1] == v.getReplaceId())
-//                    {
-//                        temp++;
-//                    }
-//                    if (oldMaterials[x + 1][z + 1 - 1][y + 1] == v.getReplaceId())
-//                    {
-//                        temp++;
-//                    }
-//                    if (oldMaterials[x + 1][z + 1][y + 1 + 1] == v.getReplaceId())
-//                    {
-//                        temp++;
-//                    }
-//                    if (oldMaterials[x + 1][z + 1][y + 1 - 1] == v.getReplaceId())
-//                    {
-//                        temp++;
-//                    }
-//
-//                    if (temp == 0)
-//                    {
-//                        newMaterials[x][z][y] = v.getVoxelId();
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Make the changes
-//        final Undo undo = new Undo();
-//
-//        for (int x = brushSizeSquared; x >= 0; x--)
-//        {
-//            for (int y = 0; y <= brushSizeSquared; y++)
-//            {
-//                for (int z = brushSizeSquared; z >= 0; z--)
-//                {
-//                    if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z) != newMaterials[x][y][z])
-//                    {
-//                        undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z));
-//                    }
-//                    this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - brushSize + y, newMaterials[x][y][z]);
-//                }
-//            }
-//        }
-//        v.owner().storeUndo(undo);
-//
-//        v.owner().getPlayer().sendMessage(TextColors.AQUA + "Shell complete.");
-//    }
+    private void vShell(final SnipeData v, Location<World> targetBlock) {
+        int brushSize = (int) Math.round(v.getBrushSize());
+
+        int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
+        int tz = targetBlock.getBlockZ();
+
+        BlockBuffer buffer = new BlockBuffer(new Vector3i(-brushSize, -brushSize, -brushSize), new Vector3i(brushSize, brushSize, brushSize));
+
+        for (int x = -brushSize; x <= brushSize; x++) {
+            int x0 = tx + x;
+            for (int y = -brushSize; y <= brushSize; y++) {
+                int y0 = ty + y;
+                for (int z = -brushSize; z <= brushSize; z++) {
+                    int z0 = tz + z;
+                    if (y <= 0 || y >= WORLD_HEIGHT) {
+                        continue;
+                    }
+                    if (this.world.getBlock(x0, y0, z0) != v.getReplaceIdState()) {
+                        continue;
+                    }
+                    int blocks = 0;
+                    if (this.world.getBlock(x0 + 1, y0, z0) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x0 - 1, y0, z0) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x0, y0 + 1, z0) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x0, y0 - 1, z0) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x0, y0, z0 + 1) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (this.world.getBlock(x0, y0, z0 - 1) == v.getReplaceIdState()) {
+                        blocks++;
+                    }
+                    if (blocks == 6) {
+                        buffer.set(x, y, z, v.getVoxelIdState());
+                    }
+                }
+            }
+        }
+
+        this.undo = new Undo(buffer.getBlockCount());
+        // apply the buffer to the world
+        for (int x = -brushSize; x <= brushSize; x++) {
+            int x0 = x + tx;
+            for (int y = -brushSize; y <= brushSize; y++) {
+                int y0 = y + ty;
+                for (int z = -brushSize; z <= brushSize; z++) {
+                    int z0 = z + tz;
+                    if (buffer.contains(x, y, z)) {
+                        setBlockState(x0, y0, z0, buffer.get(x, y, z));
+                    }
+                }
+            }
+        }
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
 
     @Override
     protected final void arrow(final SnipeData v) {
-//        this.vShell(v, this.getTargetBlock());
+        vShell(v, this.targetBlock);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-//        this.vShell(v, this.getLastBlock());
+        vShell(v, this.targetBlock);
     }
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(getName());
         vm.size();
         vm.voxel();
         vm.replace();
