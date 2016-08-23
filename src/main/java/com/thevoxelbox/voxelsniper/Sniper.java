@@ -24,16 +24,17 @@
  */
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.PerformBrush;
+import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
+import com.thevoxelbox.voxelsniper.util.SniperStats;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.MutableClassToInstanceMap;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.PerformBrush;
-import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
-import com.thevoxelbox.voxelsniper.util.SniperStats;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
@@ -49,7 +50,6 @@ import org.spongepowered.api.util.blockray.BlockRay.BlockRayBuilder;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.extent.Extent;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -443,12 +443,7 @@ public class Sniper {
             if (brushInstance == null) {
                 brushInstance = instanciateBrush(brush);
                 Preconditions.checkNotNull(brushInstance, "Could not instanciate brush class.");
-                if (this.snipeData.owner().getPlayer().hasPermission(brushInstance.getPermissionNode())) {
-                    this.brushes.put(brush, brushInstance);
-                    this.previousBrush = this.currentBrush;
-                    this.currentBrush = brush;
-                    return brushInstance;
-                }
+                this.brushes.put(brush, brushInstance);
             }
 
             if (this.snipeData.owner().getPlayer().hasPermission(brushInstance.getPermissionNode())) {

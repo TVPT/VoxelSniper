@@ -58,8 +58,10 @@ public class ErodeBrush extends Brush {
         int ty = this.targetBlock.getBlockY();
         int tz = this.targetBlock.getBlockZ();
 
-        // all changes are initially performed into a buffer to prevent the
-        // results bleeding into each other
+        // @Safety there is no bounds checks done here
+
+        // writes cycle back and fourth between these two buffers to prevent
+        // bleeding between iterations
         BlockBuffer buffer1 = new BlockBuffer(new Vector3i(-brushSize - 1, -brushSize - 1, -brushSize - 1),
                 new Vector3i(brushSize + 1, brushSize + 1, brushSize + 1));
         BlockBuffer buffer2 = new BlockBuffer(new Vector3i(-brushSize - 1, -brushSize - 1, -brushSize - 1),

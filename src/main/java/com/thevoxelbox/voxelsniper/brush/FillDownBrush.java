@@ -58,8 +58,6 @@ public class FillDownBrush extends PerformBrush {
 
         this.undo = new Undo(GenericMath.floor(4 * Math.PI * (brushSize + 1) * (brushSize + 1) * (brushSize + 1) / 3));
 
-        // @Cleanup Should wrap this within a block worker so that it works
-        // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
             double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {

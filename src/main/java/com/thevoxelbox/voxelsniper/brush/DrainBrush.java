@@ -24,20 +24,16 @@
  */
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.BlockHelper;
 
+import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.property.block.MatterProperty;
-import org.spongepowered.api.data.property.block.MatterProperty.Matter;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-
-import java.util.Optional;
 
 /**
  * Drains liquids from the area.

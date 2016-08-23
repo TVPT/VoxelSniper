@@ -26,6 +26,13 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+
+import com.flowpowered.math.GenericMath;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
  * Extrude
@@ -34,6 +41,67 @@ public class ExtrudeBrush extends Brush {
 
     public ExtrudeBrush() {
         this.setName("Extrude");
+    }
+
+    private void extrude(final SnipeData v, Location<World> targetBlock, Direction axis) {
+        double brushSize = v.getBrushSize();
+        double brushSizeSquared = brushSize * brushSize;
+        // @Safety there is no bounds checks done here
+        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1) * v.getVoxelHeight()));
+        int size = GenericMath.floor(brushSize) + 1;
+
+        for (int x = -size; x <= size; x++) {
+            for (int z = -size; z <= size; z++) {
+                if (x * x + z * z < brushSizeSquared) {
+                    if (v.getVoxelList().contains(get(x, z, axis, targetBlock))) {
+                        for (int y = 0; y < v.getVoxelHeight(); y++) {
+                            set(x, z, axis, targetBlock, v.getVoxelIdState(), y);
+                        }
+                    }
+                }
+            }
+        }
+
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
+
+    private BlockState get(int x, int y, Direction axis, Location<World> target) {
+        if (axis == Direction.UP || axis == Direction.DOWN) {
+            return this.world.getBlock(x + target.getBlockX(), target.getBlockY(), y + target.getBlockZ());
+        } else if (axis == Direction.EAST || axis == Direction.WEST) {
+            return this.world.getBlock(target.getBlockX(), x + target.getBlockY(), y + target.getBlockZ());
+        }
+        return this.world.getBlock(x + target.getBlockX(), y + target.getBlockY(), target.getBlockZ());
+    }
+
+    private void set(int x, int y, Direction axis, Location<World> target, BlockState state, int offs) {
+        if (axis == Direction.UP || axis == Direction.DOWN) {
+            if(axis == Direction.DOWN) {
+                offs *= -1;
+            }
+            setBlockState(x + target.getBlockX(), target.getBlockY() + offs, y + target.getBlockZ(), state);
+        } else if (axis == Direction.EAST || axis == Direction.WEST) {
+            if(axis == Direction.EAST) {
+                offs *= -1;
+            }
+            setBlockState(target.getBlockX() + offs, x + target.getBlockY(), y + target.getBlockZ(), state);
+        } else {
+            if(axis == Direction.NORTH) {
+                offs *= -1;
+            }
+            setBlockState(x + target.getBlockX(), y + target.getBlockY(), target.getBlockZ() + offs, state);
+        }
+    }
+
+    private void pre(final SnipeData v, Location<World> target, boolean towards) {
+        if (this.lastBlock.getBlockY() != this.targetBlock.getBlockY()) {
+            extrude(v, target, this.lastBlock.getBlockY() > this.targetBlock.getBlockY() ^ towards ? Direction.DOWN : Direction.UP);
+        } else if (this.lastBlock.getBlockX() != this.targetBlock.getBlockX()) {
+            extrude(v, target, this.lastBlock.getBlockX() > this.targetBlock.getBlockX() ^ towards ? Direction.EAST : Direction.WEST);
+        } else if (this.lastBlock.getBlockZ() != this.targetBlock.getBlockZ()) {
+            extrude(v, target, this.lastBlock.getBlockZ() > this.targetBlock.getBlockZ() ^ towards ? Direction.NORTH : Direction.SOUTH);
+        }
     }
     // @Spongify
 
@@ -65,116 +133,15 @@ public class ExtrudeBrush extends Brush {
 //
 //        v.owner().storeUndo(undo);
 //    }
-//
-//    private void extrudeNorthOrSouth(final SnipeData v, boolean isSouth)
-//    {
-//        final int brushSize = v.getBrushSize();
-//        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-//        Undo undo = new Undo();
-//
-//        for (int x = -brushSize; x <= brushSize; x++)
-//        {
-//            final double xSquared = Math.pow(x, 2);
-//            for (int y = -brushSize; y <= brushSize; y++)
-//            {
-//                if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared)
-//                {
-//                    final int direction = (isSouth) ? 1 : -1;
-//                    for (int z = 0; z < Math.abs(v.getVoxelHeight()); z++)
-//                    {
-//                        final int tempZ = z * direction;
-//                        undo = this.perform(
-//                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + tempZ),
-//                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + tempZ + direction),
-//                                v, undo);
-//                    }
-//
-//                }
-//            }
-//        }
-//
-//        v.owner().storeUndo(undo);
-//    }
-//
-//    private void extrudeEastOrWest(final SnipeData v, boolean isEast)
-//    {
-//        final int brushSize = v.getBrushSize();
-//        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-//        Undo undo = new Undo();
-//
-//        for (int y = -brushSize; y <= brushSize; y++)
-//        {
-//            final double ySquared = Math.pow(y, 2);
-//            for (int z = -brushSize; z <= brushSize; z++)
-//            {
-//                if ((ySquared + Math.pow(z, 2)) <= brushSizeSquared)
-//                {
-//                    final int direction = (isEast) ? 1 : -1;
-//                    for (int x = 0; x < Math.abs(v.getVoxelHeight()); x++)
-//                    {
-//                        final int tempX = x * direction;
-//                        undo = this.perform(
-//                                this.clampY(this.getTargetBlock().getX() + tempX, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z),
-//                                this.clampY(this.getTargetBlock().getX() + tempX + direction, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z),
-//                                v, undo);
-//                    }
-//
-//                }
-//            }
-//        }
-//        v.owner().storeUndo(undo);
-//    }
-//
-//    @SuppressWarnings("deprecation")
-//	private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo)
-//    {
-//        if (v.getVoxelList().contains(new int[]{this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), this.getBlockDataAt(b1.getX(), b1.getY(), b1.getZ())}))
-//        {
-//            undo.put(b2);
-//            this.setBlockIdAt(b2.getZ(), b2.getX(), b2.getY(), this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()));
-//            this.clampY(b2.getX(), b2.getY(), b2.getZ()).setData(this.clampY(b1.getX(), b1.getY(), b1.getZ()).getData());
-//        }
-//
-//        return undo;
-//    }
-//
-//    private void selectExtrudeMethod(final SnipeData v, final BlockFace blockFace, final boolean towardsUser)
-//    {
-//        if (blockFace == null || v.getVoxelHeight() == 0)
-//        {
-//            return;
-//        }
-//        boolean tempDirection = towardsUser;
-//        switch (blockFace)
-//        {
-//            case DOWN:
-//                tempDirection = !towardsUser;
-//            case UP:
-//                extrudeUpOrDown(v, tempDirection);
-//                break;
-//            case NORTH:
-//                tempDirection = !towardsUser;
-//            case SOUTH:
-//                extrudeNorthOrSouth(v, tempDirection);
-//                break;
-//            case WEST:
-//                tempDirection = !towardsUser;
-//            case EAST:
-//                extrudeEastOrWest(v, tempDirection);
-//                break;
-//            default:
-//                break;
-//        }
-//    }
 
     @Override
     protected final void arrow(final SnipeData v) {
-//        this.selectExtrudeMethod(v, this.getTargetBlock().getFace(this.getLastBlock()), false);
+        pre(v, this.targetBlock, false);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-//        this.selectExtrudeMethod(v, this.getTargetBlock().getFace(this.getLastBlock()), true);
+        pre(v, this.targetBlock, true);
     }
 
     @Override
