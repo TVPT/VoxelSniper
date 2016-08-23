@@ -30,6 +30,9 @@ public class BlockBuffer {
     }
 
     private int index(int x, int y, int z) {
+        x -= this.min.getX();
+        y -= this.min.getY();
+        z -= this.min.getZ();
         return x + y * this.size.getX() + z * this.size.getX() * this.size.getY();
     }
 
@@ -53,6 +56,10 @@ public class BlockBuffer {
     }
 
     public BlockState get(int x, int y, int z) {
+        if (x < this.min.getX() || x > this.max.getX() || y < this.min.getY() || y > this.max.getY() || z < this.min.getZ() || z > this.max.getZ()) {
+            throw new IllegalArgumentException(
+                    "Expected block buffer position in range " + this.min + " to " + this.max + " but was (" + x + ", " + y + ", " + z + ")");
+        }
         char id = this.buffer[index(x, y, z)];
         if (id == Character.MAX_VALUE) {
             return null;
@@ -61,6 +68,10 @@ public class BlockBuffer {
     }
 
     public void set(int x, int y, int z, BlockState state) {
+        if (x < this.min.getX() || x > this.max.getX() || y < this.min.getY() || y > this.max.getY() || z < this.min.getZ() || z > this.max.getZ()) {
+            throw new IllegalArgumentException(
+                    "Expected block buffer position in range " + this.min + " to " + this.max + " but was (" + x + ", " + y + ", " + z + ")");
+        }
         if (state == null) {
             if (this.buffer[index(x, y, z)] != Character.MAX_VALUE) {
                 this.count--;

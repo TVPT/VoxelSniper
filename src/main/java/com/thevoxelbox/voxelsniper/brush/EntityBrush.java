@@ -30,6 +30,10 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Optional;
@@ -46,9 +50,12 @@ public class EntityBrush extends Brush {
     }
 
     private void spawn(final SnipeData v) {
+        Cause cause = Cause.builder()
+                .named(NamedCause.of("spawnCause", SpawnCause.builder().type(SpawnTypes.PLUGIN).build()))
+                .from(this.cause).build();
         for (int x = 0; x < v.getBrushSize(); x++) {
             Entity e = this.world.createEntity(this.entityType, this.lastBlock.getBlockPosition());
-            this.world.spawnEntity(e, this.cause);
+            this.world.spawnEntity(e, cause);
         }
     }
 
@@ -64,26 +71,26 @@ public class EntityBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushMessage(TextColors.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
+        vm.custom(TextColors.LIGHT_PURPLE, "Entity brush" + " (", TextColors.DARK_PURPLE, this.entityType.getName(), TextColors.LIGHT_PURPLE, ")");
         vm.size();
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
         if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
-            v.sendMessage(TextColors.AQUA + "Available entity types:");
+            v.sendMessage(TextColors.AQUA, "Available entity types:");
             StringBuilder types = new StringBuilder();
             for (EntityType type : Sponge.getRegistry().getAllOf(EntityType.class)) {
-                types.append(", ").append(type.getId());
+                types.append(", ").append(type.getId().replace("minecraft:", ""));
             }
             v.sendMessage(types.toString().substring(2));
         } else {
             Optional<EntityType> selection = Sponge.getRegistry().getType(EntityType.class, par[0]);
             if (!selection.isPresent()) {
-                v.sendMessage(TextColors.RED + "This is not a valid entity!");
+                v.sendMessage(TextColors.RED, "This is not a valid entity!");
             } else {
                 this.entityType = selection.get();
-                v.sendMessage(TextColors.GREEN + "Entity type set to " + this.entityType.getName());
+                v.sendMessage(TextColors.GREEN, "Entity type set to " + this.entityType.getName());
             }
         }
     }

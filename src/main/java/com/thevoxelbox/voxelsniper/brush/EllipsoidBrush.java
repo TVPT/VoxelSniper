@@ -64,11 +64,11 @@ public class EllipsoidBrush extends PerformBrush {
 
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
-        for (int x = minx; x <= maxx; x++) {
+        for (int x = maxx; x >= minx; x--) {
             double xs = (tx - x) * (tx - x);
-            for (int y = miny; y <= maxy; y++) {
+            for (int y = maxy; y >= miny; y--) {
                 double ys = (ty - y) * (ty - y);
-                for (int z = minz; z <= maxz; z++) {
+                for (int z = maxz; z >= minz; z--) {
                     double zs = (tz - z) * (tz - z);
                     if (xs / xrads + ys / yrads + zs / zrads < 1) {
                         perform(v, x, y, z);

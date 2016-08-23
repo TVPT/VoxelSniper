@@ -80,9 +80,7 @@ public abstract class PerformBrush extends Brush {
             }
             // we defer setting the place performer until here incase the replace doesn't match and we want to pass the args to the brush instead
             this.place = pl;
-            if (args.length > 1) {
-                parameters(Arrays.copyOfRange(args, 1, args.length), v);
-            }
+            parameters(Arrays.copyOfRange(args, 1, args.length), v);
         } else {
             parameters(args, v);
         }

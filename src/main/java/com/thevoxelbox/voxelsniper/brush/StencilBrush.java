@@ -93,6 +93,8 @@ public class StencilBrush extends Brush {
                     .metaValue("Author", v.owner().getPlayer().getName())
                     .metaValue("Date", System.currentTimeMillis())
                     .build();
+            
+            this.file.getParentFile().mkdirs();
             try (GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(this.file))) {
                 DataContainer data = DataTranslators.SCHEMATIC.translate(this.schematic);
                 DataFormats.NBT.writeTo(out, data);
@@ -195,7 +197,7 @@ public class StencilBrush extends Brush {
             return;
         }
 
-        if (!this.filename.equals(par[0])) {
+        if (!par[0].equals(this.filename)) {
             this.lastMod = 0;
             this.schematic = null;
         }

@@ -61,21 +61,30 @@ public class EntityRemovalBrush extends Brush {
         int entityCount = 0;
         int chunkCount = 0;
 
-        int radius = (int) Math.round(v.getBrushSize() / 16);
-        int radiusSquared = radius * radius;
-        for (int x = -radius; x <= radius; x++) {
-            for (int z = -radius; z <= radius; z++) {
-                if (x * x + z * z < radiusSquared) {
-                    Optional<Chunk> chunk = this.world.getChunk(x + cx, 0, z + cz);
-                    if (chunk.isPresent()) {
-                        entityCount += removeEntities(chunk.get());
-                        chunkCount++;
+        if (v.getBrushSize() < 16) {
+            Optional<Chunk> chunk = this.world.getChunk(cx, 0, cz);
+            if (chunk.isPresent()) {
+                entityCount += removeEntities(chunk.get());
+                chunkCount++;
+            }
+        } else {
+            int radius = (int) Math.ceil(v.getBrushSize() / 16);
+            int radiusSquared = radius * radius;
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x * x + z * z <= radiusSquared) {
+                        Optional<Chunk> chunk = this.world.getChunk(x + cx, 0, z + cz);
+                        if (chunk.isPresent()) {
+                            entityCount += removeEntities(chunk.get());
+                            chunkCount++;
+                        }
                     }
                 }
             }
         }
-        v.sendMessage(TextColors.GREEN + "Removed " + TextColors.RED + entityCount + TextColors.GREEN + " entities out of " + TextColors.BLUE
-                + chunkCount + TextColors.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
+
+        v.sendMessage(TextColors.GREEN, "Removed ", TextColors.RED, entityCount, TextColors.GREEN, " entities out of ", TextColors.BLUE,
+                chunkCount, TextColors.GREEN, (chunkCount == 1 ? " chunk." : " chunks."));
     }
 
     private int removeEntities(Chunk chunk) {

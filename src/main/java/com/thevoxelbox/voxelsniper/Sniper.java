@@ -243,7 +243,13 @@ public class Sniper {
                     }
                 }
 
-                sniperTool.getCurrentBrush().perform(snipeAction, snipeData, targetBlock, lastBlock);
+                try {
+                    sniperTool.getCurrentBrush().perform(snipeAction, snipeData, targetBlock, lastBlock);
+                } catch (Exception e) {
+                    player.sendMessage(Text.of(TextColors.DARK_RED, "Error performing brush operation, see console for details."));
+                    VoxelSniper.getLogger().error("Error performing brush " + sniperTool.getCurrentBrush().getName());
+                    e.printStackTrace();
+                }
                 SniperStats.increaseBrushUsage(sniperTool.getCurrentBrush().getName());
                 return true;
             }

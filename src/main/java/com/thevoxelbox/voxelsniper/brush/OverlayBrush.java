@@ -49,6 +49,9 @@ public class OverlayBrush extends PerformBrush {
     private void overlay(SnipeData v, Location<World> targetBlock) {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
+        
+        int tx = this.targetBlock.getBlockX();
+        int tz = this.targetBlock.getBlockZ();
 
         int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
@@ -60,12 +63,12 @@ public class OverlayBrush extends PerformBrush {
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (minz - z) * (minz - z);
+                double zs = (tz - z) * (tz - z);
                 if (xs + zs < brushSizeSquared) {
                     int y = targetBlock.getBlockY();
-                    for (; y >= Brush.WORLD_HEIGHT; y--) {
+                    for (; y >= 0; y--) {
                         if (this.world.getBlockType(x, y, z) != BlockTypes.AIR) {
                             break;
                         }
@@ -110,17 +113,15 @@ public class OverlayBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 1; i < par.length; i++) {
-            final String parameter = par[i];
-
-            if (parameter.equalsIgnoreCase("info")) {
+        if (par.length > 0) {
+            if (par[0].equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Overlay brush parameters:");
                 v.sendMessage(TextColors.AQUA, "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
                 return;
             }
-            if (parameter.startsWith("d")) {
+            if (par[0].startsWith("d")) {
                 try {
-                    this.depth = Integer.parseInt(parameter.replace("d", ""));
+                    this.depth = Integer.parseInt(par[0].replace("d", ""));
 
                     if (this.depth < 1) {
                         this.depth = 1;

@@ -127,6 +127,10 @@ public class VoxelSniper {
         return VoxelSniper.instance;
     }
 
+    public static Logger getLogger() {
+        return instance.logger;
+    }
+
     @Inject private Logger logger;
     @Inject private PluginContainer container;
     @ConfigDir(sharedRoot = false) @Inject private Path configDir;

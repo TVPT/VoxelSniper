@@ -52,7 +52,7 @@ public class ErodeBrush extends Brush {
     }
 
     protected void erosion(SnipeData v, int erodeFaces, int erodeRec, int fillFaces, int fillRec) {
-        int brushSize = (int) v.getBrushSize() + 1;
+        int brushSize = (int) Math.ceil(v.getBrushSize());
         double brushSizeSquared = v.getBrushSize() * v.getBrushSize();
 
         int tx = this.targetBlock.getBlockX();
@@ -68,14 +68,15 @@ public class ErodeBrush extends Brush {
         BlockBuffer buffer2 = new BlockBuffer(new Vector3i(-brushSize - 1, -brushSize - 1, -brushSize - 1),
                 new Vector3i(brushSize + 1, brushSize + 1, brushSize + 1));
 
-        for (int x = -brushSize + 1; x <= brushSize + 1; x++) {
+        for (int x = -brushSize - 1; x <= brushSize + 1; x++) {
             int x0 = x + tx;
-            for (int y = -brushSize + 1; y <= brushSize + 1; y++) {
+            for (int y = -brushSize - 1; y <= brushSize + 1; y++) {
                 int y0 = y + ty;
-                for (int z = -brushSize + 1; z <= brushSize + 1; z++) {
+                for (int z = -brushSize - 1; z <= brushSize + 1; z++) {
                     int z0 = z + tz;
-                    buffer1.set(x, y, z, this.world.getBlock(x0, y0, z0));
-                    buffer2.set(x, y, z, this.world.getBlock(x0, y0, z0));
+                    BlockState state = this.world.getBlock(x0, y0, z0);
+                    buffer1.set(x, y, z, state);
+                    buffer2.set(x, y, z, state);
                 }
             }
         }
@@ -98,7 +99,7 @@ public class ErodeBrush extends Brush {
                 int y0 = y + ty;
                 for (int z = -brushSize; z <= brushSize; z++) {
                     int z0 = z + tz;
-                    if (x * x + y * y + z * z >= brushSizeSquared && finalBuffer.contains(x, y, z)) {
+                    if (x * x + y * y + z * z <= brushSizeSquared && finalBuffer.contains(x, y, z)) {
                         setBlockState(x0, y0, z0, finalBuffer.get(x, y, z));
                     }
                 }
@@ -116,6 +117,7 @@ public class ErodeBrush extends Brush {
         for (int x = -brushSize; x <= brushSize; x++) {
             for (int y = -brushSize; y <= brushSize; y++) {
                 for (int z = -brushSize; z <= brushSize; z++) {
+                    target.set(x, y, z, current.get(x, y, z));
                     if (x * x + y * y + z * z >= brushSizeSquared) {
                         continue;
                     }
@@ -161,6 +163,7 @@ public class ErodeBrush extends Brush {
         for (int x = -brushSize; x <= brushSize; x++) {
             for (int y = -brushSize; y <= brushSize; y++) {
                 for (int z = -brushSize; z <= brushSize; z++) {
+                    target.set(x, y, z, current.get(x, y, z));
                     if (x * x + y * y + z * z >= brushSizeSquared) {
                         continue;
                     }

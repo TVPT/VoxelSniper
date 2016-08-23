@@ -51,9 +51,9 @@ public class EllipseBrush extends PerformBrush {
         int tx = targetBlock.getBlockX();
         int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(targetBlock.getBlockX() - this.xrad);
-        int maxx = GenericMath.floor(targetBlock.getBlockX() + this.xrad) + 1;
+        int maxx = (int) Math.ceil(targetBlock.getBlockX() + this.xrad);
         int minz = GenericMath.floor(targetBlock.getBlockZ() - this.yrad);
-        int maxz = GenericMath.floor(targetBlock.getBlockZ() + this.yrad) + 1;
+        int maxz = (int) Math.ceil(targetBlock.getBlockZ() + this.yrad);
 
         this.undo = new Undo(GenericMath.floor(Math.PI * (this.xrad + 1) * (this.yrad + 1)));
 
@@ -112,9 +112,9 @@ public class EllipseBrush extends PerformBrush {
             final String parameter = par[i];
 
             if (parameter.equalsIgnoreCase("info")) {
-                v.sendMessage(TextColors.GOLD + "Ellipse brush parameters");
-                v.sendMessage(TextColors.AQUA + "x[n]: Set X radius to n");
-                v.sendMessage(TextColors.AQUA + "y[n]: Set Y radius to n");
+                v.sendMessage(TextColors.GOLD, "Ellipse brush parameters");
+                v.sendMessage(TextColors.AQUA, "  x[n]: Set X radius to n");
+                v.sendMessage(TextColors.AQUA, "  y[n]: Set Y radius to n");
                 return;
             } else if (parameter.startsWith("x")) {
                 try {
