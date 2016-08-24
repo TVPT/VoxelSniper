@@ -28,7 +28,6 @@ import com.google.common.collect.Sets;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.util.BlockHelper;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
@@ -36,10 +35,9 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Chunk;
 
-import java.util.Optional;
 import java.util.Set;
 
-public class OceanBrush extends Brush {
+public class OceanBrush extends ChunkBrush {
 
     private static final int WATER_LEVEL_DEFAULT = 62;
     private static final int WATER_LEVEL_MIN = 12;
@@ -64,7 +62,16 @@ public class OceanBrush extends Brush {
         this.setName("OCEANATOR 5000(tm)");
     }
 
-    // @Cleanup: abstract out chunk based brushes
+    @Override
+    protected void createUndo(int chunks) {
+        this.undo = new Undo(chunks * 16384);
+    }
+
+    @Override
+    protected void storeUndo(SnipeData v) {
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
 
     private int getActualHeight(final int bx, final int bz) {
         for (int y = WORLD_HEIGHT; y > 0; y--) {
@@ -91,7 +98,8 @@ public class OceanBrush extends Brush {
         return 0;
     }
 
-    protected final void oceanator(SnipeData v, Chunk chunk) {
+    @Override
+    protected void operate(SnipeData v, Chunk chunk) {
         int minx = chunk.getBlockMin().getX();
         int minz = chunk.getBlockMin().getZ();
         BlockState fillBlock = v.getVoxelIdState();
@@ -126,22 +134,6 @@ public class OceanBrush extends Brush {
                 }
             }
         }
-    }
-
-    @Override
-    protected final void arrow(final SnipeData v) {
-        Optional<Chunk> chunk = this.world.getChunk(this.targetBlock.getChunkPosition());
-        if (chunk.isPresent()) {
-            this.undo = new Undo(4 * 16 * 256);
-            oceanator(v, chunk.get());
-            v.owner().storeUndo(this.undo);
-            this.undo = null;
-        }
-    }
-
-    @Override
-    protected final void powder(final SnipeData v) {
-        arrow(v);
     }
 
     @Override

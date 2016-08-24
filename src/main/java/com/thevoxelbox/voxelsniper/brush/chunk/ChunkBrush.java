@@ -24,47 +24,44 @@
  */
 package com.thevoxelbox.voxelsniper.brush.chunk;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
-import org.spongepowered.api.text.format.TextColors;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.world.Chunk;
 
-/**
- * Regenerates the target chunk.
- */
-public class RegenerateChunkBrush extends ChunkBrush {
+import java.util.Optional;
 
-    public RegenerateChunkBrush() {
-        this.setName("Chunk Generator 40k");
+public abstract class ChunkBrush extends Brush {
+
+    protected abstract void createUndo(int chunks);
+
+    protected abstract void storeUndo(SnipeData v);
+
+    protected abstract void operate(SnipeData v, Chunk chunk);
+
+    @Override
+    protected void arrow(SnipeData v) {
+        Optional<Chunk> chunk = this.world.getChunk(this.targetBlock.getChunkPosition());
+        if (chunk.isPresent()) {
+            createUndo(1);
+            operate(v, chunk.get());
+            storeUndo(v);
+        }
     }
 
     @Override
-    protected void createUndo(int chunks) {
-        this.undo = new Undo(chunks * 16384);
+    protected void powder(final SnipeData v) {
+        createUndo(9);
+        Vector3i chunkPos = this.targetBlock.getChunkPosition();
+        for (int x = chunkPos.getX() - 1; x <= chunkPos.getX() + 1; x++) {
+            for (int z = chunkPos.getZ() - 1; z <= chunkPos.getZ() + 1; z++) {
+                Optional<Chunk> chunk = this.world.getChunk(x, 0, z);
+                if (chunk.isPresent()) {
+                    operate(v, chunk.get());
+                }
+            }
+        }
+        storeUndo(v);
     }
 
-    @Override
-    protected void storeUndo(SnipeData v) {
-        v.owner().storeUndo(this.undo);
-        this.undo = null;
-    }
-
-    @Override
-    protected void operate(SnipeData v, Chunk chunk) {
-        // @Spongify pending regenerate chunk method
-        v.sendMessage(TextColors.YELLOW, "Sorry, this brush is pending changes to sponge.");
-    }
-
-    @Override
-    public final void info(final Message vm) {
-        vm.brushName(this.getName());
-        vm.brushMessage("Tread lightly.");
-        vm.brushMessage("This brush will melt your spleen and sell your kidneys.");
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.regeneratechunk";
-    }
 }

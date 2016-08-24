@@ -26,18 +26,16 @@ package com.thevoxelbox.voxelsniper.brush.chunk;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.Undo;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Chunk;
 
-import java.util.Optional;
-
 /**
  * Creates flat oceans.
  */
-public class FlatOceanBrush extends Brush {
+public class FlatOceanBrush extends ChunkBrush {
 
     private static final int DEFAULT_WATER_LEVEL = 29;
     private static final int DEFAULT_FLOOR_LEVEL = 8;
@@ -48,7 +46,19 @@ public class FlatOceanBrush extends Brush {
         this.setName("FlatOcean");
     }
 
-    private void flatOcean(final Chunk chunk) {
+    @Override
+    protected void createUndo(int chunks) {
+        this.undo = new Undo(chunks * 16384);
+    }
+
+    @Override
+    protected void storeUndo(SnipeData v) {
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
+
+    @Override
+    protected void operate(SnipeData v, Chunk chunk) {
         int minx = chunk.getBlockMin().getX();
         int miny = chunk.getBlockMin().getY();
         int minz = chunk.getBlockMin().getZ();
@@ -56,7 +66,6 @@ public class FlatOceanBrush extends Brush {
         int maxy = chunk.getBlockMax().getY();
         int maxz = chunk.getBlockMax().getZ();
 
-        // @Robustness store undo?
         for (int x = minx; x <= maxx; x++) {
             for (int z = minz; z <= maxz; z++) {
                 for (int y = miny; y <= maxy; y++) {
@@ -67,26 +76,6 @@ public class FlatOceanBrush extends Brush {
                     } else {
                         setBlockType(x, y, z, BlockTypes.AIR);
                     }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected final void arrow(final SnipeData v) {
-        Optional<Chunk> chunk = this.world.getChunk(this.targetBlock.getChunkPosition());
-        if (chunk.isPresent()) {
-            flatOcean(chunk.get());
-        }
-    }
-
-    @Override
-    protected final void powder(final SnipeData v) {
-        for (int x = -1; x <= 1; x++) {
-            for (int z = -1; z <= 1; z++) {
-                Optional<Chunk> chunk = this.world.getChunk(this.targetBlock.getChunkPosition().add(x, 0, z));
-                if (chunk.isPresent()) {
-                    flatOcean(chunk.get());
                 }
             }
         }

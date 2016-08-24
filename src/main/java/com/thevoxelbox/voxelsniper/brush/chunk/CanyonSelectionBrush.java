@@ -58,7 +58,7 @@ public class CanyonSelectionBrush extends CanyonBrush {
                 for (int z = min.getZ(); z <= max.getZ(); z++) {
                     Optional<Chunk> chunk = this.world.getChunk(x, 0, z);
                     if (chunk.isPresent()) {
-                        canyon(v, chunk.get());
+                        operate(v, chunk.get());
                     }
                 }
             }

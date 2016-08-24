@@ -39,7 +39,7 @@ import java.util.Optional;
 /**
  * Shifts terrain vertically chunk by chunk.
  */
-public class CanyonBrush extends Brush {
+public class CanyonBrush extends ChunkBrush {
 
     private static final int SHIFT_LEVEL_MIN = -255;
     private static final int SHIFT_LEVEL_MAX = 255;
@@ -49,7 +49,19 @@ public class CanyonBrush extends Brush {
         this.setName("Canyon");
     }
 
-    protected final void canyon(SnipeData v, Chunk chunk) {
+    @Override
+    protected void createUndo(int chunks) {
+        this.undo = new Undo(chunks * 16384);
+    }
+
+    @Override
+    protected void storeUndo(SnipeData v) {
+        v.owner().storeUndo(this.undo);
+        this.undo = null;
+    }
+
+    @Override
+    protected void operate(SnipeData v, Chunk chunk) {
         int minx = chunk.getBlockMin().getX();
         int minz = chunk.getBlockMin().getZ();
         BlockState fillBlock = v.getVoxelIdState();
@@ -73,41 +85,6 @@ public class CanyonBrush extends Brush {
                 }
             }
         }
-    }
-
-    @Override
-    protected void arrow(final SnipeData v) {
-        if (this.yLevel == 0) {
-            return;
-        }
-        Optional<Chunk> chunk = this.world.getChunk(this.targetBlock.getChunkPosition());
-        if (chunk.isPresent()) {
-            this.undo = new Undo(4 * 16 * 256);
-            canyon(v, chunk.get());
-            v.owner().storeUndo(this.undo);
-            this.undo = null;
-        }
-    }
-
-    @Override
-    protected void powder(final SnipeData v) {
-        if (this.yLevel == 0) {
-            return;
-        }
-        this.undo = new Undo(2 * 16 * 16 * 256);
-
-        Vector3i chunkPos = this.targetBlock.getChunkPosition();
-        for (int x = chunkPos.getX() - 1; x <= chunkPos.getX() + 1; x++) {
-            for (int z = chunkPos.getZ() - 1; z <= chunkPos.getZ() + 1; z++) {
-                Optional<Chunk> chunk = this.world.getChunk(x, 0, z);
-                if (chunk.isPresent()) {
-                    canyon(v, chunk.get());
-                }
-            }
-        }
-
-        v.owner().storeUndo(this.undo);
-        this.undo = null;
     }
 
     @Override
