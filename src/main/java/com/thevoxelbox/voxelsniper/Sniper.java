@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
+import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
 import com.thevoxelbox.voxelsniper.util.SniperStats;
 
 import com.google.common.base.Preconditions;
@@ -39,6 +40,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -453,6 +455,9 @@ public class Sniper {
             }
 
             if (this.snipeData.owner().getPlayer().hasPermission(brushInstance.getPermissionNode())) {
+                ChangeBrushEvent event =
+                        new ChangeBrushEvent(brushInstance, this.currentBrush, this.snipeData, VoxelSniper.plugin_cause.with(NamedCause.source(this.snipeData.owner().getPlayer())));
+                Sponge.getEventManager().post(event);
                 this.previousBrush = this.currentBrush;
                 this.currentBrush = brush;
                 return brushInstance;

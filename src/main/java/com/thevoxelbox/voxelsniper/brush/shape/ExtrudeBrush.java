@@ -77,17 +77,17 @@ public class ExtrudeBrush extends Brush {
 
     private void set(int x, int y, Direction axis, Location<World> target, BlockState state, int offs) {
         if (axis == Direction.UP || axis == Direction.DOWN) {
-            if(axis == Direction.DOWN) {
+            if (axis == Direction.DOWN) {
                 offs *= -1;
             }
             setBlockState(x + target.getBlockX(), target.getBlockY() + offs, y + target.getBlockZ(), state);
         } else if (axis == Direction.EAST || axis == Direction.WEST) {
-            if(axis == Direction.EAST) {
+            if (axis == Direction.EAST) {
                 offs *= -1;
             }
             setBlockState(target.getBlockX() + offs, x + target.getBlockY(), y + target.getBlockZ(), state);
         } else {
-            if(axis == Direction.NORTH) {
+            if (axis == Direction.NORTH) {
                 offs *= -1;
             }
             setBlockState(x + target.getBlockX(), y + target.getBlockY(), target.getBlockZ() + offs, state);
@@ -103,36 +103,6 @@ public class ExtrudeBrush extends Brush {
             extrude(v, target, this.lastBlock.getBlockZ() > this.targetBlock.getBlockZ() ^ towards ? Direction.NORTH : Direction.SOUTH);
         }
     }
-    // @Spongify
-
-//    private void extrudeUpOrDown(final SnipeData v, boolean isUp)
-//    {
-//        final int brushSize = v.getBrushSize();
-//        final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-//        Undo undo = new Undo();
-//
-//        for (int x = -brushSize; x <= brushSize; x++)
-//        {
-//            final double xSquared = Math.pow(x, 2);
-//            for (int z = -brushSize; z <= brushSize; z++)
-//            {
-//                if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared)
-//                {
-//                    final int direction = (isUp ? 1 : -1);
-//                    for (int y = 0; y < Math.abs(v.getVoxelHeight()); y++)
-//                    {
-//                        final int tempY = y * direction;
-//                        undo = this.perform(
-//                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + tempY, this.getTargetBlock().getZ() + z),
-//                                this.clampY(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + tempY + direction, this.getTargetBlock().getZ() + z),
-//                                v, undo);
-//                    }
-//                }
-//            }
-//        }
-//
-//        v.owner().storeUndo(undo);
-//    }
 
     @Override
     protected final void arrow(final SnipeData v) {

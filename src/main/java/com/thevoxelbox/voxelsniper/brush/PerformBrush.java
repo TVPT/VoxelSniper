@@ -47,7 +47,6 @@ public abstract class PerformBrush extends Brush {
     public void parse(String[] args, SnipeData v) {
         String handle = args[0];
         if (handle.length() == 1 || handle.length() == 2) {
-            // @Spongify throw brush change event?
             PerformerType pl = null;
             char p = handle.charAt(0);
             if (p == 'm' || p == 'M') {

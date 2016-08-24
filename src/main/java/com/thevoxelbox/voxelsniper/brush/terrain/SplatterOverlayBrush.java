@@ -49,7 +49,6 @@ public class SplatterOverlayBrush extends PerformBrush {
     private Random generator = new Random();
     private int depth = 3;
 
-    // @Spongify
     public SplatterOverlayBrush() {
         this.setName("Splatter Overlay");
     }

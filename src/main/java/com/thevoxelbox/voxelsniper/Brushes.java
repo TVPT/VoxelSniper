@@ -28,6 +28,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.Maps;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.event.RegisterBrushEvent;
+import org.spongepowered.api.Sponge;
 
 import java.util.Map;
 
@@ -57,7 +59,9 @@ public class Brushes {
      */
     public void registerSniperBrush(Class<? extends IBrush> clazz, String... handles) {
         checkNotNull(clazz, "Cannot register null as a brush.");
-        for (String handle : handles) {
+        RegisterBrushEvent event = new RegisterBrushEvent(clazz, handles, VoxelSniper.plugin_cause);
+        Sponge.getEventManager().post(event);
+        for (String handle : event.getAliases()) {
             this.brushes.put(handle.toLowerCase(), clazz);
         }
         this.brush_count++;
