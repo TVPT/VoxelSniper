@@ -26,7 +26,7 @@ package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
-import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
+import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
 import com.thevoxelbox.voxelsniper.util.SniperStats;
 
 import com.google.common.base.Preconditions;
