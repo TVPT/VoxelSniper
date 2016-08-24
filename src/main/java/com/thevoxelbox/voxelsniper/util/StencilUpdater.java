@@ -10,7 +10,6 @@ import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.DataView.SafetyMode;
 import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.DataFormats;
-import org.spongepowered.common.data.util.DataQueries;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -105,17 +104,17 @@ public class StencilUpdater {
             }
 
             DataContainer schematic = new MemoryDataContainer(SafetyMode.NO_DATA_CLONED);
-            schematic.set(DataQueries.Schematic.WIDTH, w);
-            schematic.set(DataQueries.Schematic.HEIGHT, h);
-            schematic.set(DataQueries.Schematic.LENGTH, l);
+            schematic.set(DataQuery.of("Width"), w);
+            schematic.set(DataQuery.of("Height"), h);
+            schematic.set(DataQuery.of("Length"), l);
 
-            schematic.set(DataQueries.Schematic.VERSION, 1);
+            schematic.set(DataQuery.of("Version"), 1);
 
-            DataView metadata = schematic.createView(DataQueries.Schematic.METADATA);
+            DataView metadata = schematic.createView(DataQuery.of("Metadata"));
             metadata.set(DataQuery.of("Name"), name);
 
             int[] offset = new int[] {xRef, yRef, zRef};
-            schematic.set(DataQueries.Schematic.OFFSET, offset);
+            schematic.set(DataQuery.of("Offset"), offset);
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream(w * h * l);
 
@@ -132,7 +131,7 @@ public class StencilUpdater {
                 }
             }
 
-            schematic.set(DataQueries.Schematic.BLOCK_DATA, buffer.toByteArray());
+            schematic.set(DataQuery.of("BlockData"), buffer.toByteArray());
 
             try (GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(schematicFile))) {
                 DataFormats.NBT.writeTo(out, schematic);

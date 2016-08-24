@@ -214,9 +214,9 @@ public class StencilBrush extends Brush {
             if (par[1].equalsIgnoreCase("full")) {
                 this.pasteOption = PasteOption.FULL;
             } else if (par[1].equalsIgnoreCase("fill")) {
-                this.pasteOption = PasteOption.FULL;
+                this.pasteOption = PasteOption.FILL;
             } else if (par[1].equalsIgnoreCase("replace")) {
-                this.pasteOption = PasteOption.FULL;
+                this.pasteOption = PasteOption.REPLACE;
             } else {
                 v.sendMessage(TextColors.RED, "Invalid paste option, choices are: full, fill, replace");
                 return;
