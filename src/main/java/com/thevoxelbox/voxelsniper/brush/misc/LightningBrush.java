@@ -30,6 +30,8 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 
+import java.util.Optional;
+
 public class LightningBrush extends Brush {
 
     public LightningBrush() {
@@ -44,8 +46,11 @@ public class LightningBrush extends Brush {
 
     @Override
     protected final void arrow(final SnipeData v) {
-        Entity e = this.world.createEntity(EntityTypes.LIGHTNING, this.targetBlock.getBlockPosition());
-        this.world.spawnEntity(e, this.cause);
+        Optional<Entity> e = this.world.createEntity(EntityTypes.LIGHTNING, this.targetBlock.getBlockPosition());
+        if(!e.isPresent()) {
+            return;
+        }
+        this.world.spawnEntity(e.get(), this.cause);
     }
 
     @Override

@@ -36,6 +36,8 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.Optional;
+
 public class WarpBrush extends Brush {
 
     public WarpBrush() {
@@ -54,8 +56,11 @@ public class WarpBrush extends Brush {
     }
 
     private void strikeLightning(Location<World> pos, Player player) {
-        Entity e = pos.getExtent().createEntity(EntityTypes.LIGHTNING, pos.getBlockPosition());
-        pos.getExtent().spawnEntity(e, Cause.of(NamedCause.of("plugin", VoxelSniper.getInstance()), NamedCause.source(player)));
+        Optional<Entity> e = pos.getExtent().createEntity(EntityTypes.LIGHTNING, pos.getBlockPosition());
+        if(!e.isPresent()) {
+            return;
+        }
+        pos.getExtent().spawnEntity(e.get(), Cause.of(NamedCause.of("plugin", VoxelSniper.getInstance()), NamedCause.source(player)));
     }
 
     @Override

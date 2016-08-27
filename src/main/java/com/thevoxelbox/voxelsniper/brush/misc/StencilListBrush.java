@@ -35,43 +35,43 @@ import java.util.Scanner;
 
 public class StencilListBrush extends Brush {
 
-    private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
-    private String filename = "NoFileLoaded";
-    private short x;
-    private short z;
-    private short y;
-    private short xRef;
-    private short zRef;
-    private short yRef;
-    private byte pasteParam = 0;
-    private HashMap<Integer, String> stencilList = new HashMap<Integer, String>();
+//    private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
+//    private String filename = "NoFileLoaded";
+//    private short x;
+//    private short z;
+//    private short y;
+//    private short xRef;
+//    private short zRef;
+//    private short yRef;
+//    private byte pasteParam = 0;
+//    private HashMap<Integer, String> stencilList = new HashMap<Integer, String>();
 
     public StencilListBrush() {
         this.setName("StencilList");
     }
 
-    private String readRandomStencil(final SnipeData v) {
-        double rand = Math.random() * (this.stencilList.size());
-        final int choice = (int) rand;
-        return this.stencilList.get(choice);
-    }
-
-    private void readStencilList(final String listname, final SnipeData v) {
-        final File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
-        if (file.exists()) {
-            try {
-                final Scanner scanner = new Scanner(file);
-                int counter = 0;
-                while (scanner.hasNext()) {
-                    this.stencilList.put(counter, scanner.nextLine());
-                    counter++;
-                }
-                scanner.close();
-            } catch (final Exception exception) {
-                exception.printStackTrace();
-            }
-        }
-    }
+//    private String readRandomStencil(final SnipeData v) {
+//        double rand = Math.random() * (this.stencilList.size());
+//        final int choice = (int) rand;
+//        return this.stencilList.get(choice);
+//    }
+//
+//    private void readStencilList(final String listname, final SnipeData v) {
+//        final File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
+//        if (file.exists()) {
+//            try {
+//                final Scanner scanner = new Scanner(file);
+//                int counter = 0;
+//                while (scanner.hasNext()) {
+//                    this.stencilList.put(counter, scanner.nextLine());
+//                    counter++;
+//                }
+//                scanner.close();
+//            } catch (final Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//    }
 
     @SuppressWarnings("deprecation")
     private void stencilPaste(final SnipeData v) {
@@ -302,51 +302,54 @@ public class StencilListBrush extends Brush {
 
     @Override
     protected final void arrow(final SnipeData v) {
-        this.stencilPaste(v);
+        v.sendMessage(TextColors.RED, "This brush is not supported on Sponge 1.8.9.");
+//        this.stencilPaste(v);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.stencilPasteRotation(v);
+        v.sendMessage(TextColors.RED, "This brush is not supported on Sponge 1.8.9.");
+//        this.stencilPasteRotation(v);
     }
 
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.getName());
-        vm.custom("File loaded: " + this.filename);
+//        vm.custom("File loaded: " + this.filename);
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
-            v.sendMessage(TextColors.GOLD, "Stencil List brush Parameters:");
-            v.sendMessage(TextColors.AQUA,
-                    "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
-            return;
-        } else if (par[1].equalsIgnoreCase("full")) {
-            this.pasteOption = 0;
-            this.pasteParam = 1;
-        } else if (par[1].equalsIgnoreCase("fill")) {
-            this.pasteOption = 1;
-            this.pasteParam = 1;
-        } else if (par[1].equalsIgnoreCase("replace")) {
-            this.pasteOption = 2;
-            this.pasteParam = 1;
-        }
-        try {
-            this.filename = par[1 + this.pasteParam];
-            final File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
-            if (file.exists()) {
-                v.sendMessage(TextColors.RED, "Stencil List '" + this.filename + "' exists and was loaded.");
-                this.readStencilList(this.filename, v);
-            } else {
-                v.sendMessage(TextColors.AQUA,
-                        "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
-                this.filename = "NoFileLoaded";
-            }
-        } catch (final Exception exception) {
-            v.sendMessage(TextColors.RED, "You need to type a stencil name.");
-        }
+        v.sendMessage(TextColors.RED, "This brush is not supported on Sponge 1.8.9.");
+//        if (par[1].equalsIgnoreCase("info")) {
+//            v.sendMessage(TextColors.GOLD, "Stencil List brush Parameters:");
+//            v.sendMessage(TextColors.AQUA,
+//                    "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+//            return;
+//        } else if (par[1].equalsIgnoreCase("full")) {
+//            this.pasteOption = 0;
+//            this.pasteParam = 1;
+//        } else if (par[1].equalsIgnoreCase("fill")) {
+//            this.pasteOption = 1;
+//            this.pasteParam = 1;
+//        } else if (par[1].equalsIgnoreCase("replace")) {
+//            this.pasteOption = 2;
+//            this.pasteParam = 1;
+//        }
+//        try {
+//            this.filename = par[1 + this.pasteParam];
+//            final File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
+//            if (file.exists()) {
+//                v.sendMessage(TextColors.RED, "Stencil List '" + this.filename + "' exists and was loaded.");
+//                this.readStencilList(this.filename, v);
+//            } else {
+//                v.sendMessage(TextColors.AQUA,
+//                        "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
+//                this.filename = "NoFileLoaded";
+//            }
+//        } catch (final Exception exception) {
+//            v.sendMessage(TextColors.RED, "You need to type a stencil name.");
+//        }
     }
 
     @Override

@@ -25,27 +25,30 @@
 package com.thevoxelbox.voxelsniper.util;
 
 import com.flowpowered.math.vector.Vector3i;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.world.schematic.BlockPalette;
-import org.spongepowered.api.world.schematic.BlockPaletteTypes;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BlockBuffer {
 
-    private BlockPalette palette = BlockPaletteTypes.LOCAL.create();
-
-    private final Vector3i min;
-    private final Vector3i max;
-    private final Vector3i size;
-    private char[] buffer;
-    private int count;
+//    private BlockPalette palette = BlockPaletteTypes.LOCAL.create();
+    private BiMap<BlockState, Integer> palette = HashBiMap.create();
+    private AtomicInteger next_id = new AtomicInteger(0);
+    
+    private final Vector3i             min;
+    private final Vector3i             max;
+    private final Vector3i             size;
+    private int[]                     buffer;
+    private int                        count;
 
     public BlockBuffer(Vector3i min, Vector3i max) {
         this.min = min;
         this.max = max;
         this.size = this.max.sub(this.min).add(1, 1, 1);
-        this.buffer = new char[this.size.getX() * this.size.getY() * this.size.getZ()];
+        this.buffer = new int[this.size.getX() * this.size.getY() * this.size.getZ()];
         Arrays.fill(this.buffer, Character.MAX_VALUE);
     }
 
@@ -80,11 +83,11 @@ public class BlockBuffer {
             throw new IllegalArgumentException(
                     "Expected block buffer position in range " + this.min + " to " + this.max + " but was (" + x + ", " + y + ", " + z + ")");
         }
-        char id = this.buffer[index(x, y, z)];
+        int id = this.buffer[index(x, y, z)];
         if (id == Character.MAX_VALUE) {
             return null;
         }
-        return this.palette.get(id).get();
+        return this.palette.inverse().get(id);
     }
 
     public void set(int x, int y, int z, BlockState state) {
@@ -102,8 +105,12 @@ public class BlockBuffer {
         if (this.buffer[index(x, y, z)] == Character.MAX_VALUE) {
             this.count++;
         }
-        int id = this.palette.getOrAssign(state);
-        this.buffer[index(x, y, z)] = (char) id;
+        Integer id = this.palette.get(state);
+        if(id == null) {
+            id = this.next_id.getAndIncrement();
+            this.palette.put(state, id);
+        }
+        this.buffer[index(x, y, z)] = id.intValue();
     }
 
     public int getBlockCount() {

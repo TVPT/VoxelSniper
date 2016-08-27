@@ -42,7 +42,7 @@ import java.util.Optional;
 
 public class JockeyBrush extends Brush {
 
-    private boolean inverse = false;
+    private boolean               inverse = false;
     private WeakReference<Entity> sittingEntity;
 
     public JockeyBrush() {
@@ -54,17 +54,18 @@ public class JockeyBrush extends Brush {
             Entity entity = this.sittingEntity.get();
             Optional<PassengerData> data = entity.get(PassengerData.class);
             if (data.isPresent()) {
-                for (Iterator<EntitySnapshot> it = data.get().passengers().iterator(); it.hasNext();) {
-                    EntitySnapshot e = it.next();
-                    if (e.getType() == EntityTypes.PLAYER) {
-                        Optional<Entity> re = e.restore();
-                        if (re.isPresent() && re.get() == v.owner().getPlayer()) {
-                            it.remove();
-                            break;
-                        }
+//                for (Iterator<EntitySnapshot> it = data.get().passengers().iterator(); it.hasNext();) {
+//                    EntitySnapshot e = it.next();
+                EntitySnapshot e = data.get().passenger().get();
+                if (e.getType() == EntityTypes.PLAYER) {
+                    Optional<Entity> re = e.restore();
+                    if (re.isPresent() && re.get() == v.owner().getPlayer()) {
+                        entity.remove(PassengerData.class);
+                        return;
                     }
                 }
-                entity.offer(data.get());
+//                }
+//                entity.offer(data.get());
             }
             this.sittingEntity = null;
         }
@@ -87,7 +88,8 @@ public class JockeyBrush extends Brush {
             Optional<PassengerData> data = nearest.getOrCreate(PassengerData.class);
             if (data.isPresent()) {
                 PassengerData passengers = data.get();
-                passengers.addElement(v.owner().getPlayer().createSnapshot());
+                passengers.passenger().set(v.owner().getPlayer().createSnapshot());
+//                passengers.addElement(v.owner().getPlayer().createSnapshot());
                 nearest.offer(passengers);
             }
             this.sittingEntity = new WeakReference<>(nearest);

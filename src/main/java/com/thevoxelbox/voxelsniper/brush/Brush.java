@@ -35,7 +35,6 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -126,10 +125,10 @@ public abstract class Brush implements IBrush {
     }
 
     protected void setBlockType(int x, int y, int z, BlockType type) {
-        setBlockType(x, y, z, type, BlockChangeFlag.ALL);
+        setBlockType(x, y, z, type, true);
     }
 
-    protected void setBlockType(int x, int y, int z, BlockType type, BlockChangeFlag flag) {
+    protected void setBlockType(int x, int y, int z, BlockType type, boolean flag) {
         // Don't store undos if we aren't changing the block
         if (this.world.getBlockType(x, y, z) == type) {
             return;
@@ -141,10 +140,10 @@ public abstract class Brush implements IBrush {
     }
 
     protected void setBlockState(int x, int y, int z, BlockState type) {
-        setBlockState(x, y, z, type, BlockChangeFlag.ALL);
+        setBlockState(x, y, z, type, true);
     }
 
-    protected void setBlockState(int x, int y, int z, BlockState type, BlockChangeFlag flag) {
+    protected void setBlockState(int x, int y, int z, BlockState type, boolean flag) {
         // Don't store undos if we aren't changing the block
         if (this.world.getBlock(x, y, z) == type) {
             return;

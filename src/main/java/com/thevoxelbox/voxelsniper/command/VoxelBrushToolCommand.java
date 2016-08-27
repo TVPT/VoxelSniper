@@ -28,7 +28,6 @@ import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -37,7 +36,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
-import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -85,7 +83,7 @@ public class VoxelBrushToolCommand implements CommandExecutor {
                 }
 
                 if (args.length == 3) {
-                    Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+                    Optional<ItemStack> itemInHand = player.getItemInHand();
                     if (!itemInHand.isPresent()) {
                         player.sendMessage(Text.of(TextColors.RED, "You must have an item in your main hand to assign a brush tool."));
                         return CommandResult.success();
@@ -104,7 +102,7 @@ public class VoxelBrushToolCommand implements CommandExecutor {
                     return CommandResult.success();
                 }
                 ItemType itemInHand =
-                        (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) ? player.getItemInHand(HandTypes.MAIN_HAND).get().getItem() : null;
+                        (player.getItemInHand().isPresent()) ? player.getItemInHand().get().getItem() : null;
                 if (itemInHand == null) {
                     player.sendMessage(Text.of(TextColors.RED, "Can't unassign empty hands."));
                     return CommandResult.success();

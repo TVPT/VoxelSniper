@@ -55,8 +55,11 @@ public class EntityBrush extends Brush {
                 .named(NamedCause.of("spawnCause", SpawnCause.builder().type(SpawnTypes.PLUGIN).build()))
                 .from(this.cause).build();
         for (int x = 0; x < v.getBrushSize(); x++) {
-            Entity e = this.world.createEntity(this.entityType, this.lastBlock.getBlockPosition());
-            this.world.spawnEntity(e, cause);
+            Optional<Entity> e = this.world.createEntity(this.entityType, this.lastBlock.getBlockPosition());
+            if(!e.isPresent()) {
+                continue;
+            }
+            this.world.spawnEntity(e.get(), cause);
         }
     }
 
