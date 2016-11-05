@@ -24,18 +24,17 @@
  */
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.PerformBrush;
-import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
-import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
-import com.thevoxelbox.voxelsniper.util.SniperStats;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.PerformBrush;
+import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
+import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
+import com.thevoxelbox.voxelsniper.util.SniperStats;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
@@ -46,7 +45,6 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRay.BlockRayBuilder;
 import org.spongepowered.api.util.blockray.BlockRayHit;
@@ -60,10 +58,10 @@ import java.util.function.Predicate;
 
 public class Sniper {
 
-    private final UUID player;
-    private boolean enabled = true;
-    private LinkedList<Undo> undoList = new LinkedList<Undo>();
-    private Map<String, SniperTool> tools = Maps.newHashMap();
+    private final UUID              player;
+    private boolean                 enabled  = true;
+    private LinkedList<Undo>        undoList = new LinkedList<Undo>();
+    private Map<String, SniperTool> tools    = Maps.newHashMap();
 
     public Sniper(Player player) {
         this.player = player.getUniqueId();
@@ -74,9 +72,11 @@ public class Sniper {
     }
 
     public String getCurrentToolId() {
-        // @Update should have some support for dual wielding sniper tools
+        // @Update should have some support for sniper tools in offhands
         return getToolId((getPlayer().getItemInHand(HandTypes.MAIN_HAND).isPresent()) ? getPlayer().getItemInHand(HandTypes.MAIN_HAND).get() : null);
     }
+
+    // @Cleanup Just tear this whole tool system out and replace
 
     public String getToolId(ItemStack itemInHand) {
         if (itemInHand == null) {
@@ -91,6 +91,19 @@ public class Sniper {
         return null;
     }
 
+    public SniperTool getSniperTool(ItemStack itemInHand) {
+        if (itemInHand == null) {
+            return null;
+        }
+
+        for (SniperTool entry : this.tools.values()) {
+            if (entry.hasToolAssigned(itemInHand.getItem())) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
     public Player getPlayer() {
         return Sponge.getServer().getPlayer(this.player).get();
     }
@@ -98,18 +111,14 @@ public class Sniper {
     /**
      * Sniper execution call.
      *
-     * @param action Action player performed
-     * @param itemInHand Item in hand of player
-     * @param clickedBlock Block that the player targeted/interacted with
-     * @param clickedFace Face of that targeted Block
+     * @param action
+     *            Action player performed
+     * @param itemInHand
+     *            Item in hand of player
      * @return true if command visibly processed, false otherwise.
      */
-    public boolean snipe(InteractionType action, ItemStack itemInHand, Location<World> clickedBlock, Direction clickedFace) {
-        String toolId = getToolId(itemInHand);
-        if(toolId == null) {
-            return false;
-        }
-        SniperTool sniperTool = this.tools.get(toolId);
+    public boolean snipe(InteractionType action, ItemStack itemInHand) {
+        SniperTool sniperTool = getSniperTool(itemInHand);
         Player player = getPlayer();
         // @Cleanup: invert this if statement
         if (sniperTool != null && sniperTool.hasToolAssigned(itemInHand.getItem())) {
@@ -129,87 +138,69 @@ public class Sniper {
                 Location<World> targetBlock = null;
                 SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand.getItem());
 
-                switch (action) {
-                    case PRIMARY_MAINHAND:
-                    case PRIMARY_OFFHAND:
-                        if (clickedBlock != null) {
-                            targetBlock = clickedBlock;
-                        } else {
-                            Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
-                            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
-                            if (snipeData.isRanged()) {
-                                rayBuilder.distanceLimit(snipeData.getRange());
-                            }
-                            BlockRay<World> ray = rayBuilder.build();
-                            while (ray.hasNext()) {
-                                targetBlock = ray.next().getLocation();
-                            }
-                        }
+                Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
+                BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
+                if (snipeData.isRanged()) {
+                    rayBuilder.distanceLimit(snipeData.getRange());
+                }
+                BlockRay<World> ray = rayBuilder.build();
+                while (ray.hasNext()) {
+                    targetBlock = ray.next().getLocation();
+                }
 
-                        switch (snipeAction) {
-                            case ARROW:
+                switch (action) {
+                case PRIMARY_MAINHAND:
+                case PRIMARY_OFFHAND:
+                    switch (snipeAction) {
+                    case ARROW:
 //                                    int originalVoxel = snipeData.getVoxelId();
-                                snipeData.setVoxelId(targetBlock.getBlockType().getDefaultState());
+                        snipeData.setVoxelId(targetBlock.getBlockType().getDefaultState());
 //                                    SniperMaterialChangedEvent event =
 //                                            new SniperMaterialChangedEvent(this, toolId, new MaterialData(originalVoxel, snipeData.getData()),
 //                                                    new MaterialData(snipeData.getVoxelId(), snipeData.getData()));
 //                                    Bukkit.getPluginManager().callEvent(event);
-                                snipeData.getVoxelMessage().voxel();
-                                return true;
-                            case GUNPOWDER:
+                        snipeData.getVoxelMessage().voxel();
+                        return true;
+                    case GUNPOWDER:
 //                                byte originalData = snipeData.getData();
-                                snipeData.setVoxelId(targetBlock.getBlock());
+                        snipeData.setVoxelId(targetBlock.getBlock());
 //                                SniperMaterialChangedEvent event =
 //                                        new SniperMaterialChangedEvent(this, toolId, new MaterialData(snipeData.getVoxelId(), originalData),
 //                                                new MaterialData(snipeData.getVoxelId(), snipeData.getData()));
 //                                Bukkit.getPluginManager().callEvent(event);
-                                snipeData.getVoxelMessage().voxel();
-                                return true;
-                            default:
-                                break;
-                        }
+                        snipeData.getVoxelMessage().voxel();
+                        return true;
+                    default:
                         break;
-                    case SECONDARY_MAINHAND:
-                    case SECONDARY_OFFHAND:
-                        if (clickedBlock != null) {
-                            targetBlock = clickedBlock;
-                        } else {
-                            Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
-                            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
-                            if (snipeData.isRanged()) {
-                                rayBuilder.distanceLimit(snipeData.getRange());
-                            }
-                            BlockRay<World> ray = rayBuilder.build();
-                            while (ray.hasNext()) {
-                                targetBlock = ray.next().getLocation();
-                            }
-                        }
-
-                        switch (snipeAction) {
-                            case ARROW:
+                    }
+                    break;
+                case SECONDARY_MAINHAND:
+                case SECONDARY_OFFHAND:
+                    switch (snipeAction) {
+                    case ARROW:
 //                                int originalId = snipeData.getReplaceId();
-                                snipeData.setReplaceId(targetBlock.getBlockType().getDefaultState());
+                        snipeData.setReplaceId(targetBlock.getBlockType().getDefaultState());
 //                                SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId,
 //                                        new MaterialData(originalId, snipeData.getReplaceData()),
 //                                        new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
 //                                Bukkit.getPluginManager().callEvent(event);
-                                snipeData.getVoxelMessage().replace();
-                                return true;
-                            case GUNPOWDER:
+                        snipeData.getVoxelMessage().replace();
+                        return true;
+                    case GUNPOWDER:
 //                                byte originalData = snipeData.getReplaceData();
-                                snipeData.setReplaceId(targetBlock.getBlock());
+                        snipeData.setReplaceId(targetBlock.getBlock());
 //                                SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId,
 //                                        new MaterialData(snipeData.getReplaceId(), originalData),
 //                                        new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
 //                                Bukkit.getPluginManager().callEvent(event);
-                                snipeData.getVoxelMessage().replace();
-                                return true;
-                            default:
-                                break;
-                        }
-                        break;
+                        snipeData.getVoxelMessage().replace();
+                        return true;
                     default:
-                        return false;
+                        break;
+                    }
+                    break;
+                default:
+                    return false;
                 }
             } else {
                 Location<World> targetBlock = null;
@@ -220,31 +211,22 @@ public class Sniper {
                     return false;
                 }
 
-                if (clickedBlock != null) {
-                    targetBlock = clickedBlock;
-                    lastBlock = clickedBlock.getRelative(clickedFace);
-                    if (lastBlock == null) {
-                        player.sendMessage(Text.of(TextColors.RED, "Snipe target block must be visible."));
-                        return true;
-                    }
-                } else {
-                    Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
-                    BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
-                    if (snipeData.isRanged()) {
-                        rayBuilder.distanceLimit(snipeData.getRange());
-                    }
-                    BlockRay<World> ray = rayBuilder.build();
-                    while (ray.hasNext()) {
-                        lastBlock = targetBlock;
-                        targetBlock = ray.next().getLocation();
-                    }
-                    if (targetBlock == null) {
-                        player.sendMessage(Text.of(TextColors.RED, "Snipe target block must be visible."));
-                        return false;
-                    }
-                    if (lastBlock == null) {
-                        lastBlock = targetBlock;
-                    }
+                Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
+                BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
+                if (snipeData.isRanged()) {
+                    rayBuilder.distanceLimit(snipeData.getRange());
+                }
+                BlockRay<World> ray = rayBuilder.build();
+                while (ray.hasNext()) {
+                    lastBlock = targetBlock;
+                    targetBlock = ray.next().getLocation();
+                }
+                if (targetBlock == null) {
+                    player.sendMessage(Text.of(TextColors.RED, "Snipe target block must be visible."));
+                    return false;
+                }
+                if (lastBlock == null) {
+                    lastBlock = targetBlock;
                 }
 
                 try {
@@ -390,11 +372,11 @@ public class Sniper {
     public class SniperTool {
 
         private BiMap<SnipeAction, ItemType> actionTools = HashBiMap.create();
-        private ClassToInstanceMap<IBrush> brushes = MutableClassToInstanceMap.create();
-        private Class<? extends IBrush> currentBrush;
-        private Class<? extends IBrush> previousBrush;
-        private SnipeData snipeData;
-        private Message messageHelper;
+        private ClassToInstanceMap<IBrush>   brushes     = MutableClassToInstanceMap.create();
+        private Class<? extends IBrush>      currentBrush;
+        private Class<? extends IBrush>      previousBrush;
+        private SnipeData                    snipeData;
+        private Message                      messageHelper;
 
         SniperTool(Sniper owner) {
             this(SnipeBrush.class, new SnipeData(owner));
@@ -457,8 +439,8 @@ public class Sniper {
             }
 
             if (this.snipeData.owner().getPlayer().hasPermission(brushInstance.getPermissionNode())) {
-                ChangeBrushEvent event =
-                        new ChangeBrushEvent(brushInstance, this.currentBrush, this.snipeData, VoxelSniper.plugin_cause.with(NamedCause.source(this.snipeData.owner().getPlayer())));
+                ChangeBrushEvent event = new ChangeBrushEvent(brushInstance, this.currentBrush, this.snipeData,
+                        VoxelSniper.plugin_cause.with(NamedCause.source(this.snipeData.owner().getPlayer())));
                 Sponge.getEventManager().post(event);
                 this.previousBrush = this.currentBrush;
                 this.currentBrush = brush;

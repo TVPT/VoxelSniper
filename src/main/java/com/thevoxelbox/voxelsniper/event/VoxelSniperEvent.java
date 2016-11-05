@@ -24,13 +24,13 @@
  */
 package com.thevoxelbox.voxelsniper.event;
 
-import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.impl.AbstractEvent;
 
 /**
  * Top level event for all voxelsniper events.
  */
-public class VoxelSniperEvent implements Event {
+public class VoxelSniperEvent extends AbstractEvent {
 
     private final Cause cause;
 
