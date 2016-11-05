@@ -68,7 +68,7 @@ public class VoxelReplaceCommand implements CommandExecutor {
         Optional<String> material = gargs.getOne("material");
         if (!material.isPresent()) {
             Location<World> targetBlock = null;
-            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).filter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1));
+            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1));
             BlockRay<World> ray = rayBuilder.build();
             while (ray.hasNext()) {
                 targetBlock = ray.next().getLocation();

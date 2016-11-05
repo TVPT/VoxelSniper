@@ -55,7 +55,7 @@ public class LineBrush extends PerformBrush {
         double dist = target.distance(this.origin);
         this.undo = new Undo((int) (dist + 2));
 
-        BlockRay<World> ray = BlockRay.from(this.world, this.origin).filter(BlockRay.maxDistanceFilter(this.origin, dist)).direction(dir).build();
+        BlockRay<World> ray = BlockRay.from(this.world, this.origin).distanceLimit(dist).direction(dir).build();
         perform(v, this.origin.getFloorX(), this.origin.getFloorY(), this.origin.getFloorZ());
         while (ray.hasNext()) {
             Vector3i pos = ray.next().getBlockPosition();

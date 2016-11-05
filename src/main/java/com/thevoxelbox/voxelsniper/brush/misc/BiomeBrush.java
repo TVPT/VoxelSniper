@@ -66,7 +66,7 @@ public class BiomeBrush extends Brush {
             for (int z = minz; z <= maxz; z++) {
                 double zs = (tz - z) * (tz - z);
                 if ((xs + zs) <= brushSizeSquared) {
-                    this.world.setBiome(x, z, this.selectedBiome);
+                    this.world.setBiome(x, 0, z, this.selectedBiome);
                 }
             }
         }

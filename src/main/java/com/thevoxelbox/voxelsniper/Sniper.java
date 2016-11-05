@@ -106,9 +106,13 @@ public class Sniper {
      */
     public boolean snipe(InteractionType action, ItemStack itemInHand, Location<World> clickedBlock, Direction clickedFace) {
         String toolId = getToolId(itemInHand);
+        if(toolId == null) {
+            return false;
+        }
         SniperTool sniperTool = this.tools.get(toolId);
         Player player = getPlayer();
-        if (sniperTool.hasToolAssigned(itemInHand.getItem())) {
+        // @Cleanup: invert this if statement
+        if (sniperTool != null && sniperTool.hasToolAssigned(itemInHand.getItem())) {
             if (sniperTool.getCurrentBrush() == null) {
                 player.sendMessage(Text.of(TextColors.RED, "No Brush selected."));
                 return true;
@@ -132,11 +136,10 @@ public class Sniper {
                             targetBlock = clickedBlock;
                         } else {
                             Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
+                            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
                             if (snipeData.isRanged()) {
-                                filter = filter
-                                        .and(BlockRay.maxDistanceFilter(player.getLocation().getPosition().add(0, 1.72, 0), snipeData.getRange()));
+                                rayBuilder.distanceLimit(snipeData.getRange());
                             }
-                            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).filter(filter);
                             BlockRay<World> ray = rayBuilder.build();
                             while (ray.hasNext()) {
                                 targetBlock = ray.next().getLocation();
@@ -172,11 +175,10 @@ public class Sniper {
                             targetBlock = clickedBlock;
                         } else {
                             Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
+                            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
                             if (snipeData.isRanged()) {
-                                filter = filter
-                                        .and(BlockRay.maxDistanceFilter(player.getLocation().getPosition().add(0, 1.72, 0), snipeData.getRange()));
+                                rayBuilder.distanceLimit(snipeData.getRange());
                             }
-                            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).filter(filter);
                             BlockRay<World> ray = rayBuilder.build();
                             while (ray.hasNext()) {
                                 targetBlock = ray.next().getLocation();
@@ -227,10 +229,10 @@ public class Sniper {
                     }
                 } else {
                     Predicate<BlockRayHit<World>> filter = BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1);
+                    BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(filter);
                     if (snipeData.isRanged()) {
-                        filter = filter.and(BlockRay.maxDistanceFilter(player.getLocation().getPosition().add(0, 1.72, 0), snipeData.getRange()));
+                        rayBuilder.distanceLimit(snipeData.getRange());
                     }
-                    BlockRayBuilder<World> rayBuilder = BlockRay.from(player).filter(filter);
                     BlockRay<World> ray = rayBuilder.build();
                     while (ray.hasNext()) {
                         lastBlock = targetBlock;
