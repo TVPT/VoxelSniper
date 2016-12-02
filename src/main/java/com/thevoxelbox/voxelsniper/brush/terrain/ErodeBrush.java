@@ -43,7 +43,7 @@ import java.util.Map;
 
 public class ErodeBrush extends Brush {
 
-    private static final Vector3i[] FACES_TO_CHECK = {new Vector3i(0, 0, 1), new Vector3i(0, 0, -1), new Vector3i(0, 1, 0), new Vector3i(0, -1, 0),
+    private static final Vector3i[] FACES_TO_CHECK = {new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1),
             new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0)};
 
     private ErosionParameters currentPreset = Preset.MELT.getParameters();
