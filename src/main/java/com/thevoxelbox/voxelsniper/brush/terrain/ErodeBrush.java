@@ -148,7 +148,7 @@ public class ErodeBrush extends Brush {
                         }
                         frequency.put(next, count);
                     }
-                    if (total > fillFaces) {
+                    if (total >= fillFaces) {
                         target.set(x, y, z, highestState);
                     }
                 }
@@ -194,7 +194,7 @@ public class ErodeBrush extends Brush {
                         }
                         frequency.put(next.getType(), count);
                     }
-                    if (total > erodeFaces) {
+                    if (total >= erodeFaces) {
                         target.set(x, y, z, highestState.getDefaultState());
                     }
                 }
