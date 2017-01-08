@@ -117,7 +117,8 @@ import java.nio.file.Path;
 /**
  * VoxelSniper main plugin class.
  */
-@Plugin(id = VoxelSniperConfiguration.PLUGIN_ID, name = VoxelSniperConfiguration.PLUGIN_NAME, version = VoxelSniperConfiguration.PLUGIN_VERSION)
+@Plugin(id = VoxelSniperConfiguration.PLUGIN_ID, name = VoxelSniperConfiguration.PLUGIN_NAME, version = VoxelSniperConfiguration.PLUGIN_VERSION,
+        description = VoxelSniperConfiguration.PLUGIN_DESC)
 public class VoxelSniper {
 
     public static Cause plugin_cause;

@@ -31,7 +31,8 @@ public class VoxelSniperConfiguration {
 
     public static final String PLUGIN_ID = "voxelsniper";
     public static final String PLUGIN_NAME = "VoxelSniper";
-    public static final String PLUGIN_VERSION = "8.0.0";
+    public static final String PLUGIN_VERSION = "8.2.0";
+    public static final String PLUGIN_DESC = "Long range terrain editing";
 
     // Constants
     public static final int CHUNK_SIZE = 16;
