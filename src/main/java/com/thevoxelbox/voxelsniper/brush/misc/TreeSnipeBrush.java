@@ -121,12 +121,13 @@ public class TreeSnipeBrush extends Brush {
         String typename = par[0];
         boolean large = false;
         if (typename.endsWith("_large")) {
-            typename = par[0].substring(0, typename.length() - 7);
+            typename = typename.substring(0, typename.length() - 6);
             large = true;
         }
-        Optional<BiomeTreeType> tree = Sponge.getRegistry().getType(BiomeTreeType.class, par[0]);
+        Optional<BiomeTreeType> tree = Sponge.getRegistry().getType(BiomeTreeType.class, typename);
         if (tree.isPresent()) {
             this.treeType = tree.get();
+            this.large = false;
             if (large) {
                 if (!this.treeType.getLargePopulatorObject().isPresent()) {
                     v.sendMessage(TextColors.RED, "No large tree for that type");
