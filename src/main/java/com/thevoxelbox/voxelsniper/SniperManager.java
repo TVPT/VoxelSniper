@@ -24,11 +24,12 @@
  */
 package com.thevoxelbox.voxelsniper;
 
-import com.google.common.collect.Maps;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.spongepowered.api.entity.living.player.Player;
 
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class SniperManager {
 
@@ -38,15 +39,18 @@ public class SniperManager {
         return instance;
     }
 
-    // @Robustness: use cache with expiry time
-    private Map<UUID, Sniper> sniperInstances = Maps.newHashMap();
+    private final Cache<UUID, Sniper> sniperInstances;
 
     private SniperManager() {
-
+        Caffeine<Object, Object> builder = Caffeine.newBuilder();
+        if (VoxelSniperConfiguration.SNIPER_CACHE_EXPIRY > 0) {
+            builder.expireAfterAccess(VoxelSniperConfiguration.SNIPER_CACHE_EXPIRY, TimeUnit.SECONDS);
+        }
+        this.sniperInstances = builder.<UUID, Sniper>build();
     }
 
     public Sniper getSniperForPlayer(Player player) {
-        Sniper sniper = this.sniperInstances.get(player.getUniqueId());
+        Sniper sniper = this.sniperInstances.getIfPresent(player.getUniqueId());
         if (sniper == null) {
             this.sniperInstances.put(player.getUniqueId(), sniper = new Sniper(player));
         }

@@ -25,9 +25,11 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.util.SniperStats;
+
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.InteractItemEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
@@ -41,13 +43,10 @@ public class VoxelSniperListener {
     }
 
     @Listener
-    public final void onPlayerInteract(InteractItemEvent.Secondary.MainHand event) {
-
-        Player player = (Player) event.getCause().root();
+    public final void onPlayerInteract(InteractItemEvent.Secondary.MainHand event, @Root Player player) {
         if (!player.hasPermission(VoxelSniperConfiguration.PERMISSION_SNIPER)) {
             return;
         }
-
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         if (sniper.isEnabled() && sniper.snipe(InteractionType.SECONDARY_MAINHAND, player.getItemInHand(HandTypes.MAIN_HAND).orElse(null))) {
             SniperStats.increaseSnipeCounter();

@@ -46,6 +46,7 @@ public class VoxelSniperConfiguration {
     public static int UNDO_CACHE_SIZE = 10;
     public static boolean LOGIN_MESSAGE_ENABLED = true;
     public static int BRUSH_SIZE_WARNING_THRESHOLD = 25;
+    public static int SNIPER_CACHE_EXPIRY = -1;
 
     // @Spongify load from hocon container
 }

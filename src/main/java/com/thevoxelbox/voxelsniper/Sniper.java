@@ -111,10 +111,8 @@ public class Sniper {
     /**
      * Sniper execution call.
      *
-     * @param action
-     *            Action player performed
-     * @param itemInHand
-     *            Item in hand of player
+     * @param action Action player performed
+     * @param itemInHand Item in hand of player
      * @return true if command visibly processed, false otherwise.
      */
     public boolean snipe(InteractionType action, ItemStack itemInHand) {
