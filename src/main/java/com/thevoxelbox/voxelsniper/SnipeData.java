@@ -38,27 +38,21 @@ import java.util.Optional;
 
 public class SnipeData {
 
-    public static final int DEFAULT_CYLINDER_CENTER = 0;
-    public static final int DEFAULT_VOXEL_HEIGHT = 1;
-    public static final double DEFAULT_BRUSH_SIZE = 3.5;
-    public static final String DEFAULT_REPLACE_ID = "air";
-    public static final String DEFAULT_VOXEL_ID = "air";
-
     private Sniper owner;
     private Message voxelMessage;
 
-    private double brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
-    private BlockState voxelId = Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
+    private double brushSize = VoxelSniperConfiguration.DEFAULT_BRUSH_SIZE;
+    private BlockState voxelId = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
     private BlockState replaceId =
-            Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
+            Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
     private VoxelList voxelList = new VoxelList();
     private Key<?> voxelInkKey = null;
     private Object voxelInkValue = null;
     private Key<?> replaceInkKey = null;
     private Object replaceInkValue = null;
 
-    private int voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
-    private int cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
+    private int voxelHeight = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
+    private int cCen = VoxelSniperConfiguration.DEFAULT_CYLINDER_CENTER;
     private int range = 0;
     private boolean ranged = false;
     private boolean lightning = false;
@@ -213,11 +207,11 @@ public class SnipeData {
      * Reset to default values.
      */
     public void reset() {
-        this.voxelId = Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
-        this.replaceId = Sponge.getRegistry().getType(BlockState.class, SnipeData.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
-        this.brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
-        this.voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
-        this.cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
+        this.voxelId = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
+        this.replaceId = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
+        this.brushSize = VoxelSniperConfiguration.DEFAULT_BRUSH_SIZE;
+        this.voxelHeight = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
+        this.cCen = VoxelSniperConfiguration.DEFAULT_CYLINDER_CENTER;
         this.voxelList = new VoxelList();
 
         this.voxelInkKey = null;

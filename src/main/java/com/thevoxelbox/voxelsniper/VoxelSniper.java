@@ -106,6 +106,7 @@ import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -117,8 +118,7 @@ import java.nio.file.Path;
 /**
  * VoxelSniper main plugin class.
  */
-@Plugin(id = VoxelSniperConfiguration.PLUGIN_ID, name = VoxelSniperConfiguration.PLUGIN_NAME, version = VoxelSniperConfiguration.PLUGIN_VERSION,
-        description = VoxelSniperConfiguration.PLUGIN_DESC)
+@Plugin(id = VoxelSniperConfiguration.PLUGIN_ID, name = VoxelSniperConfiguration.PLUGIN_NAME, version = VoxelSniperConfiguration.PLUGIN_VERSION, description = VoxelSniperConfiguration.PLUGIN_DESC)
 public class VoxelSniper {
 
     public static Cause plugin_cause;
@@ -143,6 +143,11 @@ public class VoxelSniper {
     public void onInit(GameInitializationEvent event) {
         VoxelSniper.instance = this;
         plugin_cause = Cause.of(NamedCause.of("VoxelSniper", this.container));
+
+        this.logger.info("Loading VoxelSniper configuration");
+        Path config = this.configDir.resolve("voxelsniper.conf");
+        VoxelSniperConfiguration.init(config);
+
         registerBrushes();
         this.logger.info("Registered " + Brushes.get().registeredSniperBrushes() + " Sniper Brushes with "
                 + Brushes.get().registeredSniperBrushHandles() + " handles.");
@@ -160,11 +165,16 @@ public class VoxelSniper {
             StencilUpdater.update(stencils);
         }
 
-        // @Spongify loadSniperConfiguration();
-
         Sponge.getEventManager().registerListeners(this, this.voxelSniperListener);
 
         registerCommands();
+    }
+
+    @Listener
+    public void onReload(GameReloadEvent event) {
+        this.logger.info("Reloading VoxelSniper configuration");
+        Path config = this.configDir.resolve("voxelsniper.conf");
+        VoxelSniperConfiguration.init(config);
     }
 
     private void registerCommands() {
