@@ -121,7 +121,7 @@ public class Sniper {
         // @Cleanup: invert this if statement
         if (sniperTool != null && sniperTool.hasToolAssigned(itemInHand.getItem())) {
             if (sniperTool.getCurrentBrush() == null) {
-                player.sendMessage(Text.of(TextColors.RED, "No Brush selected."));
+                player.sendMessage(VoxelSniperMessages.NO_BRUSH);
                 return true;
             }
 

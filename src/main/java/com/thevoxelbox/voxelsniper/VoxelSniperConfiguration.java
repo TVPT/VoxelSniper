@@ -76,6 +76,9 @@ public class VoxelSniperConfiguration {
     public static String DEFAULT_REPLACE_ID = "air";
     @ConfigValue(name = "defaults.voxel_material", comment = " The default voxel material (default: air)")
     public static String DEFAULT_VOXEL_ID = "air";
+
+    @ConfigValue(name = "messages.no_brush")
+    public static String MESSAGE_NO_BRUSH = "&4No brush selected.";
     // @formatter:on
 
     public static void createDefaults(CommentedConfigurationNode config) {
@@ -151,6 +154,7 @@ public class VoxelSniperConfiguration {
                 e.printStackTrace();
             }
         }
+        VoxelSniperMessages.reload();
     }
 
     private VoxelSniperConfiguration() {
