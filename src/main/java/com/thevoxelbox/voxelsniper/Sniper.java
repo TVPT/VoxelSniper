@@ -105,7 +105,7 @@ public class Sniper {
     }
 
     public Player getPlayer() {
-        return Sponge.getServer().getPlayer(this.player).get();
+        return Sponge.getServer().getPlayer(this.player).orElse(null);
     }
 
     /**

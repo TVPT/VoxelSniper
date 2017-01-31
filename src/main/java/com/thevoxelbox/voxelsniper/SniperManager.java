@@ -26,6 +26,7 @@ package com.thevoxelbox.voxelsniper;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalCause;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.UUID;
@@ -44,9 +45,23 @@ public class SniperManager {
     private SniperManager() {
         Caffeine<Object, Object> builder = Caffeine.newBuilder();
         if (VoxelSniperConfiguration.SNIPER_CACHE_EXPIRY > 0) {
-            builder.expireAfterAccess(VoxelSniperConfiguration.SNIPER_CACHE_EXPIRY, TimeUnit.SECONDS);
+            int time = VoxelSniperConfiguration.SNIPER_CACHE_EXPIRY;
+            if (VoxelSniperConfiguration.SNIPER_CACHE_EXPIRY < 300) {
+                VoxelSniper.getLogger().warn("Sniper cache expiry time is very low, this can cause some thrashing as it checks online players");
+                VoxelSniper.getLogger().warn("It is suggested to use a minimal cache expiry time of around 3600 seconds (1 hour)");
+                time = 300;
+            }
+            builder.expireAfterAccess(time, TimeUnit.SECONDS);
+            Caffeine<UUID, Sniper> builder2 = builder.removalListener((UUID uid, Sniper sniper, RemovalCause cause) -> {
+                // If the player is still online then don't reset their settings
+                if (sniper.getPlayer() != null) {
+                    this.sniperInstances.put(uid, sniper);
+                }
+            });
+            this.sniperInstances = builder2.build();
+        } else {
+            this.sniperInstances = builder.<UUID, Sniper>build();
         }
-        this.sniperInstances = builder.<UUID, Sniper>build();
     }
 
     public Sniper getSniperForPlayer(Player player) {
