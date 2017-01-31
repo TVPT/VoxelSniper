@@ -27,11 +27,10 @@ package com.thevoxelbox.voxelsniper.brush.misc;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.Brush;
+
 import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.data.manipulator.mutable.entity.PassengerData;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntitySnapshot;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -39,6 +38,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.UUID;
 
 public class JockeyBrush extends Brush {
 
@@ -54,14 +54,11 @@ public class JockeyBrush extends Brush {
             Entity entity = this.sittingEntity.get();
             Optional<PassengerData> data = entity.get(PassengerData.class);
             if (data.isPresent()) {
-                for (Iterator<EntitySnapshot> it = data.get().passengers().iterator(); it.hasNext();) {
-                    EntitySnapshot e = it.next();
-                    if (e.getType() == EntityTypes.PLAYER) {
-                        Optional<Entity> re = e.restore();
-                        if (re.isPresent() && re.get() == v.owner().getPlayer()) {
-                            it.remove();
-                            break;
-                        }
+                for (Iterator<UUID> it = data.get().passengers().iterator(); it.hasNext();) {
+                    Optional<Entity> re = entity.getWorld().getEntity(it.next());
+                    if (re.isPresent() && re.get() == v.owner().getPlayer()) {
+                        it.remove();
+                        break;
                     }
                 }
                 entity.offer(data.get());
@@ -87,7 +84,7 @@ public class JockeyBrush extends Brush {
             Optional<PassengerData> data = nearest.getOrCreate(PassengerData.class);
             if (data.isPresent()) {
                 PassengerData passengers = data.get();
-                passengers.addElement(v.owner().getPlayer().createSnapshot());
+                passengers.addElement(v.owner().getPlayer().getUniqueId());
                 nearest.offer(passengers);
             }
             this.sittingEntity = new WeakReference<>(nearest);
