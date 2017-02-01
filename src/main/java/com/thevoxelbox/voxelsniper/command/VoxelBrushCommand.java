@@ -28,9 +28,12 @@ import com.thevoxelbox.voxelsniper.Brushes;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
+import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushSizeEvent;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -85,11 +88,9 @@ public class VoxelBrushCommand implements CommandExecutor {
                         Text.of(TextColors.RED, "Size is restricted to " + VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE + " for you."));
                 newBrushSize = VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE;
             }
-//            int originalSize = snipeData.getBrushSize();
+            ChangeBrushSizeEvent event = new ChangeBrushSizeEvent(VoxelSniper.plugin_cause, snipeData, newBrushSize);
+            Sponge.getEventManager().post(event);
             snipeData.setBrushSize(newBrushSize);
-            // @Spongify create new events
-//            SniperBrushSizeChangedEvent event = new SniperBrushSizeChangedEvent(sniper, currentToolId, originalSize, snipeData.getBrushSize());
-//            Bukkit.getPluginManager().callEvent(event);
             snipeData.getVoxelMessage().size();
             return CommandResult.success();
         } catch (NumberFormatException ingored) {
@@ -97,7 +98,6 @@ public class VoxelBrushCommand implements CommandExecutor {
         Optional<String> brush_args = args.getOne("brush_args");
         Class<? extends IBrush> brush = Brushes.get().getBrushForHandle(brush_selection.get());
         if (brush != null) {
-//            IBrush orignalBrush = sniper.getBrush(currentToolId);
             sniper.setBrush(currentToolId, brush);
 
             if (brush_args.isPresent()) {
@@ -110,8 +110,6 @@ public class VoxelBrushCommand implements CommandExecutor {
                     currentBrush.parameters(bargs, snipeData);
                 }
             }
-            // @Spongify add new event
-//            SniperBrushChangedEvent event = new SniperBrushChangedEvent(sniper, currentToolId, orignalBrush, sniper.getBrush(currentToolId));
             sniper.displayInfo();
         } else {
             player.sendMessage(Text.of(TextColors.RED, "Couldn't find Brush for brush handle \"" + brush_selection.get() + "\""));

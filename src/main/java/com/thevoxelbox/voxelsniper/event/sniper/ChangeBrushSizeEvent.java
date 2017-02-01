@@ -25,30 +25,20 @@
 package com.thevoxelbox.voxelsniper.event.sniper;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.event.VoxelSniperEvent;
-import org.spongepowered.api.entity.living.player.Player;
+
 import org.spongepowered.api.event.cause.Cause;
 
-public class VoxelSniperPlayerEvent extends VoxelSniperEvent {
+public class ChangeBrushSizeEvent extends VoxelSniperPlayerEvent {
 
-    private final SnipeData v;
+    private final double newSize;
 
-    public VoxelSniperPlayerEvent(Cause c, SnipeData v) {
-        super(c);
-        this.v = v;
+    public ChangeBrushSizeEvent(Cause c, SnipeData v, double size) {
+        super(c, v);
+        this.newSize = size;
     }
 
-    public SnipeData getSnipeData() {
-        return this.v;
-    }
-
-    public Sniper getSniper() {
-        return this.v.owner();
-    }
-
-    public Player getPlayer() {
-        return this.v.owner().getPlayer();
+    public double getNewSize() {
+        return this.newSize;
     }
 
 }

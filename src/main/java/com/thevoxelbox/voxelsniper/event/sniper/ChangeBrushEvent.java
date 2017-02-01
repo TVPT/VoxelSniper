@@ -31,20 +31,14 @@ import org.spongepowered.api.event.cause.Cause;
 public class ChangeBrushEvent extends VoxelSniperPlayerEvent {
 
     private final IBrush brush;
-    private final Class<? extends IBrush> previous;
 
-    public ChangeBrushEvent(IBrush brush, Class<? extends IBrush> prev, SnipeData v, Cause c) {
-        super(v, c);
+    public ChangeBrushEvent(Cause c, SnipeData v, IBrush brush) {
+        super(c, v);
         this.brush = brush;
-        this.previous = prev;
     }
 
     public IBrush getNewBrush() {
         return this.brush;
-    }
-
-    public Class<? extends IBrush> getPreviousBrush() {
-        return this.previous;
     }
 
 }

@@ -55,7 +55,7 @@ public class WarpBrush extends Brush {
 
     private void strikeLightning(Location<World> pos, Player player) {
         Entity e = pos.getExtent().createEntity(EntityTypes.LIGHTNING, pos.getBlockPosition());
-        pos.getExtent().spawnEntity(e, Cause.of(NamedCause.of("plugin", VoxelSniper.getInstance()), NamedCause.source(player)));
+        pos.getExtent().spawnEntity(e, this.cause);
     }
 
     @Override
