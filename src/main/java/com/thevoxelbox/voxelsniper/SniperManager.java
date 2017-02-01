@@ -40,7 +40,9 @@ public class SniperManager {
         return instance;
     }
 
-    private final Cache<UUID, Sniper> sniperInstances;
+    // @CheckInFuture: not final because the compiler on jenkins throws an error
+    // that the var in the remove listener isn't initialized
+    private Cache<UUID, Sniper> sniperInstances = null;
 
     private SniperManager() {
         Caffeine<Object, Object> builder = Caffeine.newBuilder();
