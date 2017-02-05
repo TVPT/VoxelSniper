@@ -79,7 +79,7 @@ public class TreeSnipeBrush extends Brush {
     }
 
     private void printTreeType(final Message vm) {
-        vm.custom(TextColors.AQUA, "Currently selected tree type: ", TextColors.GRAY, this.treeType.getId());
+        vm.custom(TextColors.AQUA, "Currently selected tree type: ", TextColors.GRAY, this.treeType.getId() + (this.large ? "_large" : ""));
     }
 
     @Override
@@ -135,7 +135,6 @@ public class TreeSnipeBrush extends Brush {
                 }
                 this.large = true;
             }
-            this.printTreeType(v.getVoxelMessage());
         } else {
             v.sendMessage(TextColors.RED, "Tree type not found. Use '/b tree types' to list all types.");
         }
