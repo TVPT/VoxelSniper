@@ -53,7 +53,7 @@ public class SplatterVoxelDiscBrush extends PerformBrush {
 
     private void splatterVoxelDisc(final SnipeData v, Location<World> targetBlock) {
         int size = (int) Math.round(v.getBrushSize());
-        final boolean[][] splat = new boolean[2 * size][2 * size];
+        final boolean[][] splat = new boolean[2 * size + 1][2 * size + 1];
 
         // @Cleanup: a 3d bitset would make this a lot smaller in memory
         // footprint
@@ -67,7 +67,7 @@ public class SplatterVoxelDiscBrush extends PerformBrush {
             }
         }
         // Grow the seeds
-        final boolean[][] tempSplat = new boolean[2 * size][2 * size];
+        final boolean[][] tempSplat = new boolean[2 * size + 1][2 * size + 1];
         int growcheck;
 
         for (int r = 0; r < this.splatterRecursions; r++) {
