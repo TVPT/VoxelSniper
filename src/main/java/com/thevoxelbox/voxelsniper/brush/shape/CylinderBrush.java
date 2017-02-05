@@ -110,7 +110,7 @@ public class CylinderBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 1; i < par.length; i++) {
+        for (int i = 0; i < par.length; i++) {
             final String parameter = par[i];
 
             if (parameter.equalsIgnoreCase("info")) {

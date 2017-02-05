@@ -213,7 +213,7 @@ public class SplatterOverlayBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 1; i < par.length; i++) {
+        for (int i = 0; i < par.length; i++) {
             final String parameter = par[i];
             if (parameter.equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Splatter Overlay brush parameters:");
@@ -238,7 +238,7 @@ public class SplatterOverlayBrush extends PerformBrush {
 
                     if (temp >= 0 && temp <= 1) {
                         v.sendMessage(TextColors.AQUA, "Seed percent set to: " + temp * 100 + "%");
-                        this.seedPercent = (int) temp;
+                        this.seedPercent = temp;
                     } else {
                         v.sendMessage(TextColors.RED, "Seed percent must be a decimal between 0 and 1!");
                     }
@@ -250,7 +250,7 @@ public class SplatterOverlayBrush extends PerformBrush {
                     final double temp = Double.parseDouble(parameter.replace("g", ""));
                     if (temp >= 0 && temp <= 1) {
                         v.sendMessage(TextColors.AQUA, "Growth percent set to: " + temp * 100 + "%");
-                        this.growPercent = (int) temp;
+                        this.growPercent = temp;
                     } else {
                         v.sendMessage(TextColors.RED, "Growth percent must be a decimal between 0 and 1!");
                     }

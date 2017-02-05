@@ -113,7 +113,7 @@ public class FillDownBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 1; i < par.length; i++) {
+        for (int i = 0; i < par.length; i++) {
             if (par[i].equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Fill Down Parameters:");
                 v.sendMessage(TextColors.AQUA, "/b fd some -- Fills only into air.");

@@ -59,7 +59,7 @@ public class Rot3DBrush extends Brush {
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
         boolean changed = false;
-        for (int i = 1; i < par.length; i++) {
+        for (int i = 0; i < par.length; i++) {
             final String parameter = par[i];
             // which way is clockwise is less obvious for roll and pitch...
             // should probably fix that / make it clear

@@ -172,7 +172,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        if (par[1].equalsIgnoreCase("info")) {
+        if (par.length > 0 && par[0].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.YELLOW,
                     "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
             String toleranceOptions = "";
@@ -186,7 +186,7 @@ public class ThreePointCircleBrush extends PerformBrush {
             return;
         }
 
-        for (int i = 1; i < par.length; i++) {
+        for (int i = 0; i < par.length; i++) {
             final String parameter = par[i].toUpperCase();
             try {
                 this.tolerance = Tolerance.valueOf(parameter);

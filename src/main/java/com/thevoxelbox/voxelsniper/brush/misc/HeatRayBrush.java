@@ -191,7 +191,7 @@ public class HeatRayBrush extends Brush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 1; i < par.length; i++) {
+        for (int i = 0; i < par.length; i++) {
             final String parameter = par[i].toLowerCase();
 
             if (parameter.equalsIgnoreCase("info")) {

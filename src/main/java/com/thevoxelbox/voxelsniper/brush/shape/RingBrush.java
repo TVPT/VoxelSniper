@@ -91,7 +91,7 @@ public class RingBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 1; i < par.length; i++) {
+        for (int i = 0; i < par.length; i++) {
             if (par[i].equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Ring Brush Parameters:");
                 v.sendMessage(TextColors.AQUA, "/b ri ir2.5 -- will set the inner radius to 2.5 units");
