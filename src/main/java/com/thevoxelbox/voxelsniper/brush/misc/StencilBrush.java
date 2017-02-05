@@ -35,6 +35,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntityArchetype;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.persistence.DataFormats;
+import org.spongepowered.api.data.persistence.DataTranslator;
 import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.extent.ArchetypeVolume;
@@ -57,11 +58,25 @@ public class StencilBrush extends Brush {
         REPLACE
     }
 
+    public static enum SchematicType {
+        LEGACY(DataTranslators.LEGACY_SCHEMATIC, ".schematic"),
+        SPONGE(DataTranslators.SCHEMATIC, ".schem");
+
+        public DataTranslator<Schematic> translator;
+        public String fileEnding;
+
+        SchematicType(DataTranslator<Schematic> translator, String ending) {
+            this.translator = translator;
+            this.fileEnding = ending;
+        }
+    }
+
     private String filename = null;
     private File file = null;
     private long lastMod;
     private Schematic schematic = null;
     private PasteOption pasteOption = PasteOption.FULL;
+    private SchematicType schematicType = SchematicType.SPONGE;
     private UUID worldUid;
     private Vector3i pos1;
     private Vector3i pos2;
@@ -87,17 +102,12 @@ public class StencilBrush extends Brush {
         } else {
             Vector3i origin = this.targetBlock.getBlockPosition();
             ArchetypeVolume volume = this.world.createArchetypeVolume(this.pos1, this.pos2, origin);
-            this.schematic = Schematic.builder()
-                    .paletteType(BlockPaletteTypes.LOCAL)
-                    .volume(volume)
-                    .metaValue("Name", this.filename)
-                    .metaValue("Author", v.owner().getPlayer().getName())
-                    .metaValue("Date", System.currentTimeMillis())
-                    .build();
-            
+            this.schematic = Schematic.builder().paletteType(BlockPaletteTypes.LOCAL).volume(volume).metaValue("Name", this.filename)
+                    .metaValue("Author", v.owner().getPlayer().getName()).metaValue("Date", System.currentTimeMillis()).build();
+
             this.file.getParentFile().mkdirs();
             try (GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(this.file))) {
-                DataContainer data = DataTranslators.SCHEMATIC.translate(this.schematic);
+                DataContainer data = this.schematicType.translator.translate(this.schematic);
                 DataFormats.NBT.writeTo(out, data);
                 v.sendMessage(TextColors.GREEN, "Schematic saved successfully. Ready for pasting.");
                 this.lastMod = this.file.lastModified();
@@ -128,7 +138,7 @@ public class StencilBrush extends Brush {
             }
             try (GZIPInputStream in = new GZIPInputStream(new FileInputStream(this.file))) {
                 DataContainer data = DataFormats.NBT.readFrom(in);
-                this.schematic = DataTranslators.SCHEMATIC.translate(data);
+                this.schematic = this.schematicType.translator.translate(data);
             } catch (IOException e) {
                 e.printStackTrace();
                 v.sendMessage(TextColors.RED, "Error loading schematic, see console for details.");
@@ -139,8 +149,8 @@ public class StencilBrush extends Brush {
         this.undo = new Undo(this.schematic.getBlockSize().getX() * this.schematic.getBlockSize().getY() * this.schematic.getBlockSize().getZ());
         if (this.pasteOption == PasteOption.FULL) {
             this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
-                setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
-                        z + this.targetBlock.getBlockZ(), e.getBlock(x, y, z));
+                setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(), z + this.targetBlock.getBlockZ(),
+                        e.getBlock(x, y, z));
             });
             for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
                 TileEntityArchetype archetype = this.schematic.getTileEntityArchetypes().get(pos);
@@ -150,8 +160,8 @@ public class StencilBrush extends Brush {
             this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
                 if (this.targetBlock.getExtent().getBlockType(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
                         z + this.targetBlock.getBlockZ()) == BlockTypes.AIR) {
-                    setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
-                            z + this.targetBlock.getBlockZ(), e.getBlock(x, y, z));
+                    setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(), z + this.targetBlock.getBlockZ(),
+                            e.getBlock(x, y, z));
                 }
             });
             for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
@@ -164,8 +174,8 @@ public class StencilBrush extends Brush {
         } else { // replace
             this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
                 if (e.getBlockType(x, y, z) != BlockTypes.AIR) {
-                    setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
-                            z + this.targetBlock.getBlockZ(), e.getBlock(x, y, z));
+                    setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(), z + this.targetBlock.getBlockZ(),
+                            e.getBlock(x, y, z));
                 }
             });
             for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
@@ -192,31 +202,42 @@ public class StencilBrush extends Brush {
         }
         if (par[0].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.GOLD, "Stencil brush Parameters:");
-            v.sendMessage(TextColors.AQUA,
-                    "/b st [name] [full|fill|replace] -- Loads the specified schematic. Full = paste all blocks, "
-                            + "fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+            v.sendMessage(TextColors.AQUA, "/b st [name] [full|fill|replace] [--legacy] -- Loads the specified schematic. Full = paste all blocks, "
+                    + "fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way. The --legacy flag specifies that the MCEdit"
+                    + "schematic format should be used rather than the sponge schematic format.");
             return;
         }
+        SchematicType type = SchematicType.SPONGE;
+        int next = 1;
+        if(par.length > 1 && par[1].equalsIgnoreCase("--legacy")) {
+            type = SchematicType.LEGACY;
+            v.sendMessage(TextColors.AQUA, "Using lagacy schematic format.");
+            next = 2;
+        }
+        if(par.length > 2 && par[2].equalsIgnoreCase("--legacy")) {
+            type = SchematicType.LEGACY;
+            v.sendMessage(TextColors.AQUA, "Using lagacy schematic format.");
+        }
+        this.schematicType = type;
 
         if (!par[0].equals(this.filename)) {
             this.lastMod = 0;
             this.schematic = null;
         }
         this.filename = par[0];
-        File schematic = SchematicHelper.getSchematicsDir().resolve(this.filename + ".schem").toFile();
+        File schematic = SchematicHelper.getSchematicsDir().resolve(this.filename + type.fileEnding).toFile();
         if (schematic.exists()) {
-            v.sendMessage(TextColors.RED,
-                    "Stencil '" + this.filename + "' exists and was loaded. Paste with the powder, overwrite with the arrow.");
+            v.sendMessage(TextColors.RED, "Stencil '" + this.filename + "' exists and was loaded. Paste with the powder, overwrite with the arrow.");
         } else {
             v.sendMessage(TextColors.AQUA, "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
         }
         this.file = schematic;
-        if (par.length > 1) {
-            if (par[1].equalsIgnoreCase("full")) {
+        if (par.length > next) {
+            if (par[next].equalsIgnoreCase("full")) {
                 this.pasteOption = PasteOption.FULL;
-            } else if (par[1].equalsIgnoreCase("fill")) {
+            } else if (par[next].equalsIgnoreCase("fill")) {
                 this.pasteOption = PasteOption.FILL;
-            } else if (par[1].equalsIgnoreCase("replace")) {
+            } else if (par[next].equalsIgnoreCase("replace")) {
                 this.pasteOption = PasteOption.REPLACE;
             } else {
                 v.sendMessage(TextColors.RED, "Invalid paste option, choices are: full, fill, replace");
