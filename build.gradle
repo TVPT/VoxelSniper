@@ -20,7 +20,7 @@ defaultTasks 'build'
 
 group = 'com.thevoxelbox'
 archivesBaseName = 'VoxelSniper'
-version = '8.2.0'
+version = '8.3.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
