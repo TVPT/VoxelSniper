@@ -26,6 +26,7 @@ package com.thevoxelbox.voxelsniper.util;
 
 import com.google.common.collect.Maps;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.Platform.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public final class SniperStats extends Metrics {
 
     @Override
     public String getServerVersion() {
-        return Sponge.getPlatform().getImplementation().getName() + " " + Sponge.getPlatform().getMinecraftVersion().getName();
+        return Sponge.getPlatform().getContainer(Component.IMPLEMENTATION).getName() + " " + Sponge.getPlatform().getMinecraftVersion().getName();
     }
 
     @Override
