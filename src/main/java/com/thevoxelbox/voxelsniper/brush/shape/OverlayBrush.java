@@ -47,7 +47,7 @@ public class OverlayBrush extends PerformBrush {
         this.setName("Overlay (Topsoil Filling)");
     }
 
-    private void overlay(SnipeData v, Location<World> targetBlock) {
+    private void overlay(SnipeData v, Location<World> targetBlock, int offset) {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
         
@@ -65,10 +65,11 @@ public class OverlayBrush extends PerformBrush {
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
             double xs = (tx - x) * (tx - x);
+            outer:
             for (int z = minz; z <= maxz; z++) {
                 double zs = (tz - z) * (tz - z);
                 if (xs + zs < brushSizeSquared) {
-                    int y = targetBlock.getBlockY();
+                    int y = Math.min(targetBlock.getBlockY() + offset, WORLD_HEIGHT);
                     for (; y >= 0; y--) {
                         if (this.world.getBlockType(x, y, z) != BlockTypes.AIR) {
                             break;
@@ -78,13 +79,14 @@ public class OverlayBrush extends PerformBrush {
                         if (this.world.getBlockType(x, y + 1, z) != BlockTypes.AIR) {
                             // if theres no air above our start block then don't
                             // perform
-                            continue;
+                            continue outer;
                         }
                     }
-                    for (int y0 = y; y0 > y - this.depth; y0--) {
-                        if (this.world.getBlockType(x, y0, z) != BlockTypes.AIR) {
-                            perform(v, x, y0, z);
+                    for (int y0 = Math.min(y + offset, WORLD_HEIGHT); y0 > y - this.depth; y0--) {
+                        if(y0 <= y && this.world.getBlockType(x, y0, z) == BlockTypes.AIR) {
+                            break;
                         }
+                        perform(v, x, y0, z);
                     }
                 }
             }
@@ -97,12 +99,12 @@ public class OverlayBrush extends PerformBrush {
 
     @Override
     protected final void arrow(final SnipeData v) {
-        this.overlay(v, this.targetBlock);
+        this.overlay(v, this.targetBlock, 0);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        this.overlay(v, this.lastBlock);
+        this.overlay(v, this.lastBlock, 1);
     }
 
     @Override
