@@ -43,8 +43,6 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRay.BlockRayBuilder;
 import org.spongepowered.api.util.blockray.BlockRayHit;
@@ -126,8 +124,7 @@ public class Sniper {
             }
 
             if (!player.hasPermission(sniperTool.getCurrentBrush().getPermissionNode())) {
-                player.sendMessage(Text.of(TextColors.RED, "You are not allowed to use this brush. You're missing the permission node '"
-                        + sniperTool.getCurrentBrush().getPermissionNode() + "'"));
+                player.sendMessage(VoxelSniperMessages.BRUSH_PERMISSION_ERROR.create(sniperTool.getCurrentBrush().getPermissionNode()));
                 return true;
             }
 
@@ -220,7 +217,7 @@ public class Sniper {
                     targetBlock = ray.next().getLocation();
                 }
                 if (targetBlock == null) {
-                    player.sendMessage(Text.of(TextColors.RED, "Snipe target block must be visible."));
+                    player.sendMessage(VoxelSniperMessages.SNIPE_TARGET_NOT_VISIBLE);
                     return false;
                 }
                 if (lastBlock == null) {
@@ -230,7 +227,7 @@ public class Sniper {
                 try {
                     sniperTool.getCurrentBrush().perform(snipeAction, snipeData, targetBlock, lastBlock);
                 } catch (Exception e) {
-                    player.sendMessage(Text.of(TextColors.DARK_RED, "Error performing brush operation, see console for details."));
+                    player.sendMessage(VoxelSniperMessages.BRUSH_ERROR);
                     VoxelSniper.getLogger().error("Error performing brush " + sniperTool.getCurrentBrush().getName());
                     e.printStackTrace();
                 }
@@ -318,7 +315,7 @@ public class Sniper {
     public void undo(int amount) {
         int sum = 0;
         if (this.undoList.isEmpty()) {
-            getPlayer().sendMessage(Text.of(TextColors.GREEN, "There's nothing to undo."));
+            getPlayer().sendMessage(VoxelSniperMessages.NOTHING_TO_UNDO);
         } else {
             for (int x = 0; x < amount && !this.undoList.isEmpty(); x++) {
                 Undo undo = this.undoList.pop();
@@ -329,8 +326,7 @@ public class Sniper {
                     break;
                 }
             }
-            getPlayer().sendMessage(
-                    Text.of(TextColors.GREEN, "Undo successful:  ", TextColors.RED, sum, TextColors.GREEN, " blocks have been replaced."));
+            getPlayer().sendMessage(VoxelSniperMessages.UNDO_SUCCESSFUL.create(sum + ""));
         }
     }
 
@@ -352,9 +348,9 @@ public class Sniper {
         String currentToolId = getCurrentToolId();
         SniperTool sniperTool = this.tools.get(currentToolId);
         IBrush brush = sniperTool.getCurrentBrush();
-        getPlayer().sendMessage(Text.of(TextColors.AQUA, "Current Tool: " + ((currentToolId != null) ? currentToolId : "Default Tool")));
+        getPlayer().sendMessage(VoxelSniperMessages.CURRENT_TOOL.create((currentToolId != null) ? currentToolId : "Default Tool"));
         if (brush == null) {
-            getPlayer().sendMessage(Text.of(TextColors.RED, "No brush selected."));
+            getPlayer().sendMessage(VoxelSniperMessages.NO_BRUSH);
             return;
         }
         brush.info(sniperTool.getMessageHelper());
@@ -437,8 +433,8 @@ public class Sniper {
             }
 
             if (this.snipeData.owner().getPlayer().hasPermission(brushInstance.getPermissionNode())) {
-                ChangeBrushEvent event = new ChangeBrushEvent(
-                        VoxelSniper.plugin_cause.with(NamedCause.source(this.snipeData.owner().getPlayer())), this.snipeData, brushInstance);
+                ChangeBrushEvent event = new ChangeBrushEvent(VoxelSniper.plugin_cause.with(NamedCause.source(this.snipeData.owner().getPlayer())),
+                        this.snipeData, brushInstance);
                 Sponge.getEventManager().post(event);
                 this.previousBrush = this.currentBrush;
                 this.currentBrush = brush;

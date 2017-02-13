@@ -24,14 +24,12 @@
  */
 package com.thevoxelbox.voxelsniper.brush.shape;
 
+import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.util.BlockBuffer;
-
-import com.flowpowered.math.GenericMath;
-import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -39,8 +37,6 @@ import org.spongepowered.api.world.World;
 import java.util.UUID;
 
 public class ShellSetBrush extends Brush {
-
-    private static final int MAX_SIZE = 5000000;
 
     private Vector3i pos1;
     private UUID worldUid;

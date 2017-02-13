@@ -24,17 +24,13 @@
  */
 package com.thevoxelbox.voxelsniper.brush.shape;
 
+import com.flowpowered.math.GenericMath;
+import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.util.BlockBuffer;
-import com.thevoxelbox.voxelsniper.util.BlockHelper;
-
-import com.flowpowered.math.GenericMath;
-import com.flowpowered.math.vector.Vector3d;
-import com.flowpowered.math.vector.Vector3i;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 

@@ -79,6 +79,18 @@ public class VoxelSniperConfiguration {
 
     @ConfigValue(name = "messages.no_brush")
     public static String MESSAGE_NO_BRUSH = "&4No brush selected.";
+    @ConfigValue(name = "messages.current_tool")
+    public static String MESSAGE_CURRENT_TOOL = "&9Current tool: {0}";
+    @ConfigValue(name = "messages.undo_successful")
+    public static String MESSAGE_UNDO_SUCCESSFUL = "&aUndo successful: &c{0} &ablocks have been replaced.";
+    @ConfigValue(name = "messages.nothing_to_undo")
+    public static String MESSAGE_NOTHING_TO_UNDO = "&aThere's nothing to undo.";
+    @ConfigValue(name = "messages.brush_error")
+    public static String MESSAGE_BRUSH_ERROR = "&4Error performing brush operation, see console for details.";
+    @ConfigValue(name = "messages.snipe_target_missed")
+    public static String MESSAGE_SNIPE_TARGET_NOT_VISIBLE = "&cSnipe target block must be visible.";
+    @ConfigValue(name = "messages.brush_permission_error")
+    public static String MESSAGE_BRUSH_PERMISSION_ERROR = "&cYou are not allowed to use this brush. You're missing the permission node '{0}'";
     // @formatter:on
 
     public static void createDefaults(CommentedConfigurationNode config) {

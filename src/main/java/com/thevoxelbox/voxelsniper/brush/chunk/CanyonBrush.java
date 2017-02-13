@@ -24,17 +24,13 @@
  */
 package com.thevoxelbox.voxelsniper.brush.chunk;
 
-import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Chunk;
-
-import java.util.Optional;
 
 /**
  * Shifts terrain vertically chunk by chunk.

@@ -24,11 +24,10 @@
  */
 package com.thevoxelbox.voxelsniper.brush.shape;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
-import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.text.format.TextColors;
 
 public class ThreePointCircleBrush extends PerformBrush {
