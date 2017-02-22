@@ -24,8 +24,6 @@
  */
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.util.SniperStats;
-
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -39,7 +37,6 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 public class VoxelSniperListener {
 
     public VoxelSniperListener() {
-        SniperStats.setSnipeCounterInitTimeStamp(System.currentTimeMillis());
     }
 
     @Listener
@@ -49,7 +46,6 @@ public class VoxelSniperListener {
         }
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         if (sniper.isEnabled() && sniper.snipe(InteractionType.SECONDARY_MAINHAND, player.getItemInHand(HandTypes.MAIN_HAND).orElse(null))) {
-            SniperStats.increaseSnipeCounter();
             event.setCancelled(true);
         }
     }

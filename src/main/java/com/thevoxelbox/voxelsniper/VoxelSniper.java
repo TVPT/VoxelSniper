@@ -96,7 +96,6 @@ import com.thevoxelbox.voxelsniper.command.VoxelUndoCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelUndoUserCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelVoxelCommand;
 import com.thevoxelbox.voxelsniper.util.SchematicHelper;
-import com.thevoxelbox.voxelsniper.util.SniperStats;
 import com.thevoxelbox.voxelsniper.util.StencilUpdater;
 
 import com.google.inject.Inject;
@@ -112,7 +111,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -137,7 +135,6 @@ public class VoxelSniper {
     @ConfigDir(sharedRoot = false) @Inject private Path configDir;
 
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener();
-    private SniperStats stats;
 
     @Listener
     public void onInit(GameInitializationEvent event) {
@@ -151,12 +148,6 @@ public class VoxelSniper {
         registerBrushes();
         this.logger.info("Registered " + Brushes.get().registeredSniperBrushes() + " Sniper Brushes with "
                 + Brushes.get().registeredSniperBrushHandles() + " handles.");
-
-        try {
-            this.stats = new SniperStats(VoxelSniperConfiguration.PLUGIN_VERSION, this.configDir.resolve("metrics.properties").toFile());
-        } catch (IOException e) {
-            this.logger.error("Error setting up metrics", this.stats);
-        }
 
         SchematicHelper.setSchematicsDir(this.configDir.resolve("schematics"));
         File stencils = this.configDir.resolve("stencils").toFile();

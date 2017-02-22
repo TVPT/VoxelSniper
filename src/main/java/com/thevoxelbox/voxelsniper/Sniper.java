@@ -24,17 +24,17 @@
  */
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.PerformBrush;
+import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
+import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.MutableClassToInstanceMap;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.PerformBrush;
-import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
-import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
-import com.thevoxelbox.voxelsniper.util.SniperStats;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
@@ -231,7 +231,6 @@ public class Sniper {
                     VoxelSniper.getLogger().error("Error performing brush " + sniperTool.getCurrentBrush().getName());
                     e.printStackTrace();
                 }
-                SniperStats.increaseBrushUsage(sniperTool.getCurrentBrush().getName());
                 return true;
             }
         }
