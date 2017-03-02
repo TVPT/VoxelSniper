@@ -33,6 +33,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.block.SolidCubeProperty;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -81,9 +82,7 @@ public class SnowConeBrush extends Brush {
                             }
                         }
                         BlockState block = this.world.getBlock(x, y, z);
-                        if (block.getType() != BlockTypes.SNOW_LAYER) {
-                            setBlockType(x, y + 1, z, BlockTypes.SNOW_LAYER);
-                        } else {
+                        if (block.getType() == BlockTypes.SNOW_LAYER) {
                             Optional<Integer> height = block.get(Keys.LAYER);
                             if (!height.isPresent()) {
                                 BlockState newSnow = BlockTypes.SNOW_LAYER.getDefaultState().with(Keys.LAYER, 2).get();
@@ -97,6 +96,13 @@ public class SnowConeBrush extends Brush {
                                     BlockState newSnow = BlockTypes.SNOW_LAYER.getDefaultState().with(Keys.LAYER, sheight + 1).get();
                                     setBlockState(x, y, z, newSnow);
                                 }
+                            }
+                        } else if (block.getType() == BlockTypes.WATER || block.getType() == BlockTypes.FLOWING_WATER) {
+                            setBlockType(x, y, z, BlockTypes.ICE);
+                        } else {
+                            Optional<SolidCubeProperty> prop = block.getProperty(SolidCubeProperty.class);
+                            if(prop.isPresent() && prop.get().getValue()) {
+                                setBlockType(x, y + 1, z, BlockTypes.SNOW_LAYER);
                             }
                         }
                     }
