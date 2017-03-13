@@ -116,6 +116,7 @@ public class VoxelSniperConfiguration {
             CommentedConfigurationNode node = loader.createEmptyNode();
             createDefaults(node);
             try {
+                Files.createDirectories(config.toAbsolutePath().getParent());
                 loader.save(node);
             } catch (IOException e) {
                 VoxelSniper.getLogger().error("Failed to save default configuration");
