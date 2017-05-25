@@ -269,6 +269,7 @@ public class ErodeBrush extends Brush {
         FILL(new ErosionParameters(5, 1, 2, 1)),
         SMOOTH(new ErosionParameters(3, 1, 3, 1)),
         LIFT(new ErosionParameters(6, 0, 1, 1)),
+        LOWER(new ErosionParameters(1, 1, 6, 0)),
         FLOATCLEAN(new ErosionParameters(6, 1, 6, 1));
 
         public static Preset tryValueOf(String name) {
