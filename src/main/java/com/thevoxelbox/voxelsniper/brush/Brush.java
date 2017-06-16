@@ -71,13 +71,13 @@ public abstract class Brush implements IBrush {
         this.lastBlock = lastBlock;
         this.cause = VoxelSniper.plugin_cause.with(NamedCause.source(data.owner().getPlayer()));
         switch (action) {
-            case ARROW:
-                this.arrow(data);
-                break;
-            case GUNPOWDER:
-                this.powder(data);
-                break;
-            default:
+        case ARROW:
+            this.arrow(data);
+            break;
+        case GUNPOWDER:
+            this.powder(data);
+            break;
+        default:
         }
         this.cause = null;
         this.world = null;
@@ -107,7 +107,9 @@ public abstract class Brush implements IBrush {
     @Override
     public void parameters(final String[] par, final SnipeData v) {
         // @Usability support a --no-undo parameter flag
-        v.sendMessage(TextColors.RED, "This brush does not accept additional parameters.");
+        if (par.length != 0) {
+            v.sendMessage(TextColors.RED, "This brush does not accept additional parameters.");
+        }
     }
 
     @Override
