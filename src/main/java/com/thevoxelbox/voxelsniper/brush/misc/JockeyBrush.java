@@ -50,45 +50,45 @@ public class JockeyBrush extends Brush {
     }
 
     private void dismount(SnipeData v) {
-//        if (this.sittingEntity != null && this.sittingEntity.get() != null) {
-//            Entity entity = this.sittingEntity.get();
-//            Optional<PassengerData> data = entity.get(PassengerData.class);
-//            if (data.isPresent()) {
-//                for (Iterator<UUID> it = data.get().passengers().iterator(); it.hasNext();) {
-//                    Optional<Entity> re = entity.getWorld().getEntity(it.next());
-//                    if (re.isPresent() && re.get() == v.owner().getPlayer()) {
-//                        it.remove();
-//                        break;
-//                    }
-//                }
-//                entity.offer(data.get());
-//            }
-//            this.sittingEntity = null;
-//        }
+        if (this.sittingEntity != null && this.sittingEntity.get() != null) {
+            Entity entity = this.sittingEntity.get();
+            Optional<PassengerData> data = entity.get(PassengerData.class);
+            if (data.isPresent()) {
+                for (Iterator<UUID> it = data.get().passengers().iterator(); it.hasNext();) {
+                    Optional<Entity> re = entity.getWorld().getEntity(it.next());
+                    if (re.isPresent() && re.get() == v.owner().getPlayer()) {
+                        it.remove();
+                        break;
+                    }
+                }
+                entity.offer(data.get());
+            }
+            this.sittingEntity = null;
+        }
     }
 
     @Override
     protected final void arrow(final SnipeData v) {
-//        dismount(v);
-//        double distance = Double.MAX_VALUE;
-//        Entity nearest = null;
-//        Vector3d target = this.targetBlock.getPosition();
-//        Collection<Entity> entities = this.inverse ? this.world.getEntities((e) -> e instanceof Living) : this.world.getEntities();
-//        for (Entity e : entities) {
-//            double dist = e.getLocation().getPosition().distanceSquared(target);
-//            if (dist < distance) {
-//                nearest = e;
-//            }
-//        }
-//        if (nearest != null) {
-//            Optional<PassengerData> data = nearest.getOrCreate(PassengerData.class);
-//            if (data.isPresent()) {
-//                PassengerData passengers = data.get();
-//                passengers.addElement(v.owner().getPlayer().getUniqueId());
-//                nearest.offer(passengers);
-//            }
-//            this.sittingEntity = new WeakReference<>(nearest);
-//        }
+        dismount(v);
+        double distance = Double.MAX_VALUE;
+        Entity nearest = null;
+        Vector3d target = this.targetBlock.getPosition();
+        Collection<Entity> entities = this.inverse ? this.world.getEntities((e) -> e instanceof Living) : this.world.getEntities();
+        for (Entity e : entities) {
+            double dist = e.getLocation().getPosition().distanceSquared(target);
+            if (dist < distance) {
+                nearest = e;
+            }
+        }
+        if (nearest != null) {
+            Optional<PassengerData> data = nearest.getOrCreate(PassengerData.class);
+            if (data.isPresent()) {
+                PassengerData passengers = data.get();
+                passengers.addElement(v.owner().getPlayer().getUniqueId());
+                nearest.offer(passengers);
+            }
+            this.sittingEntity = new WeakReference<>(nearest);
+        }
     }
 
     @Override

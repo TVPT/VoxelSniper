@@ -20,7 +20,7 @@ defaultTasks 'build'
 
 group = 'com.thevoxelbox'
 archivesBaseName = 'VoxelSniper'
-version = '8.4.0-SNAPSHOT'
+version = '8.5.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -35,8 +35,8 @@ repositories {
 
 // Common dependencies
 dependencies {
-    compile 'com.google.guava:guava:17.0'
-    compile 'org.spongepowered:spongeapi:5.1.0'
+    compile 'com.google.guava:guava:21.0'
+    compile 'org.spongepowered:spongeapi:7.0.0-SNAPSHOT'
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:1.9.5'
