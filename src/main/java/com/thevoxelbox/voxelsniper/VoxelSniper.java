@@ -216,7 +216,7 @@ public class VoxelSniper {
         Brushes.get().registerSniperBrush(FillDownBrush.class, "fd", "filldown");
         Brushes.get().registerSniperBrush(FlatOceanBrush.class, "fo", "flatocean");
         Brushes.get().registerSniperBrush(HeatRayBrush.class, "hr", "heatray");
-        Brushes.get().registerSniperBrush(JockeyBrush.class, "jockey");
+        //Brushes.get().registerSniperBrush(JockeyBrush.class, "jockey");
         Brushes.get().registerSniperBrush(LightningBrush.class, "light", "lightning");
         Brushes.get().registerSniperBrush(LineBrush.class, "l", "line");
         Brushes.get().registerSniperBrush(OceanBrush.class, "o", "ocean");

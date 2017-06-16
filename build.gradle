@@ -36,7 +36,7 @@ repositories {
 // Common dependencies
 dependencies {
     compile 'com.google.guava:guava:17.0'
-    compile 'org.spongepowered:spongeapi:6.0.0-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:5.1.0'
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:1.9.5'
