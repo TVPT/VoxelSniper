@@ -32,53 +32,52 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public abstract class PerformBrush extends Brush {
 
+    private static final Pattern PERFORMER = Pattern.compile("[mMcC][mMcC]?[pP]?");
+
     protected PerformerType place = PerformerType.TYPE;
     protected PerformerType replace = PerformerType.NONE;
+    protected boolean physics = true;
 
     public void parse(String[] args, SnipeData v) {
         String handle = args[0];
-        if (handle.length() == 1 || handle.length() == 2) {
-            PerformerType pl = null;
+        if (PERFORMER.matcher(handle).matches()) {
             char p = handle.charAt(0);
             if (p == 'm' || p == 'M') {
-                pl = PerformerType.TYPE;
-            } else if (p == 'i' || p == 'I') {
-                pl = PerformerType.STATE;
-                v.sendMessage(TextColors.RED, "Warning: Ink performers are currently unsupported in version 8.0.0 due to changes in world format");
+                this.place = PerformerType.TYPE;
             } else if (p == 'c' || p == 'C') {
-                pl = PerformerType.COMBO;
-            } else {
-                parameters(args, v);
-                return;
+                this.place = PerformerType.COMBO;
             }
-            if (handle.length() == 2) {
-                char r = handle.charAt(1);
+            int i = 1;
+            if (handle.length() >= 2) {
+                char r = handle.charAt(i);
+                i = 2;
                 if (r == 'm' || r == 'M') {
                     this.replace = PerformerType.TYPE;
-                } else if (r == 'i' || r == 'I') {
-                    this.replace = PerformerType.STATE;
-                    v.sendMessage(TextColors.RED,
-                            "Warning: Ink performers are currently unsupported in version 8.0.0 due to changes in world format");
                 } else if (r == 'c' || r == 'C') {
                     this.replace = PerformerType.COMBO;
                 } else {
-                    parameters(args, v);
-                    return;
+                    i = 1;
+                    this.replace = PerformerType.NONE;
                 }
-            } else {
-                this.replace = PerformerType.NONE;
             }
-            // we defer setting the place performer until here incase the replace doesn't match and we want to pass the args to the brush instead
-            this.place = pl;
+            if (handle.length() >= i + 1) {
+                char e = handle.charAt(i);
+                if (e == 'p' || e == 'P') {
+                    this.physics = false;
+                } else {
+                    this.physics = true;
+                }
+            }
             parameters(Arrays.copyOfRange(args, 1, args.length), v);
         } else {
             parameters(args, v);
@@ -108,43 +107,43 @@ public abstract class PerformBrush extends Brush {
         if (this.replace != PerformerType.NONE) {
             BlockState current = this.world.getBlock(x, y, z);
             switch (this.replace) {
-                case TYPE:
-                    if (current.getType() != v.getReplaceIdState().getType()) {
-                        return false;
-                    }
-                    break;
-                case STATE:
-                    // @Todo filter by key and value
-                    break;
-                case COMBO:
-                    if (current != v.getReplaceIdState()) {
-                        return false;
-                    }
-                    break;
-                case NONE:
-                default:
-                    break;
-            }
-        }
-        switch (this.place) {
             case TYPE:
-                setBlockType(x, y, z, v.getVoxelIdState().getType());
-                break;
-            case STATE:
-                BlockState current = this.world.getBlock(x, y, z);
-                @SuppressWarnings({"unchecked", "rawtypes"})
-                Optional<BlockState> place = current.with((Key) v.getVoxelInkKey(), v.getVoxelInkValue());
-                if (!place.isPresent()) {
+                if (current.getType() != v.getReplaceIdState().getType()) {
                     return false;
                 }
-                setBlockState(x, y, z, place.get());
+                break;
+            case STATE:
+                // @Todo filter by key and value
                 break;
             case COMBO:
-                setBlockState(x, y, z, v.getVoxelIdState());
+                if (current != v.getReplaceIdState()) {
+                    return false;
+                }
                 break;
             case NONE:
             default:
-                throw new IllegalStateException("Unsupported place type " + this.place.name());
+                break;
+            }
+        }
+        switch (this.place) {
+        case TYPE:
+            setBlockType(x, y, z, v.getVoxelIdState().getType(), this.physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+            break;
+        case STATE:
+            BlockState current = this.world.getBlock(x, y, z);
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            Optional<BlockState> place = current.with((Key) v.getVoxelInkKey(), v.getVoxelInkValue());
+            if (!place.isPresent()) {
+                return false;
+            }
+            setBlockState(x, y, z, place.get(), this.physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+            break;
+        case COMBO:
+            setBlockState(x, y, z, v.getVoxelIdState(), this.physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+            break;
+        case NONE:
+        default:
+            throw new IllegalStateException("Unsupported place type " + this.place.name());
         }
         return true;
     }
