@@ -35,7 +35,7 @@ public class RegisterBrushEvent extends VoxelSniperEvent {
     private final Class<? extends IBrush> type;
     private final List<String> aliases;
 
-    public RegisterBrushEvent(Class<? extends IBrush> type, String[] aliases, Cause c) {
+    public RegisterBrushEvent(Cause c, Class<? extends IBrush> type, String[] aliases) {
         super(c);
         this.type = type;
         this.aliases = Lists.newArrayList(aliases);

@@ -59,7 +59,7 @@ public class Brushes {
      */
     public void registerSniperBrush(Class<? extends IBrush> clazz, String... handles) {
         checkNotNull(clazz, "Cannot register null as a brush.");
-        RegisterBrushEvent event = new RegisterBrushEvent(clazz, handles, VoxelSniper.plugin_cause);
+        RegisterBrushEvent event = new RegisterBrushEvent(Sponge.getCauseStackManager().getCurrentCause(), clazz, handles);
         Sponge.getEventManager().post(event);
         for (String handle : event.getAliases()) {
             this.brushes.put(handle.toLowerCase(), clazz);

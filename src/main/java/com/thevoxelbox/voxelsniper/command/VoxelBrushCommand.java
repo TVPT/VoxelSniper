@@ -28,12 +28,10 @@ import com.thevoxelbox.voxelsniper.Brushes;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushSizeEvent;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -88,7 +86,7 @@ public class VoxelBrushCommand implements CommandExecutor {
                         Text.of(TextColors.RED, "Size is restricted to " + VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE + " for you."));
                 newBrushSize = VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE;
             }
-            ChangeBrushSizeEvent event = new ChangeBrushSizeEvent(VoxelSniper.plugin_cause, snipeData, newBrushSize);
+            ChangeBrushSizeEvent event = new ChangeBrushSizeEvent(Sponge.getCauseStackManager().getCurrentCause(), snipeData, newBrushSize);
             Sponge.getEventManager().post(event);
             snipeData.setBrushSize(newBrushSize);
             snipeData.getVoxelMessage().size();

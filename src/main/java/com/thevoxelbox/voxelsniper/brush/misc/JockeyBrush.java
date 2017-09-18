@@ -24,11 +24,10 @@
  */
 package com.thevoxelbox.voxelsniper.brush.misc;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-
-import com.flowpowered.math.vector.Vector3d;
 import org.spongepowered.api.data.manipulator.mutable.entity.PassengerData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;

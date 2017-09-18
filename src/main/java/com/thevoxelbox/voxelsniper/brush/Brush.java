@@ -28,12 +28,9 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
@@ -60,7 +57,6 @@ public abstract class Brush implements IBrush {
     protected World world;
     protected Location<World> targetBlock;
     protected Location<World> lastBlock;
-    protected Cause cause;
     protected Undo undo;
     private String name = "Undefined";
 
@@ -69,7 +65,7 @@ public abstract class Brush implements IBrush {
         this.world = targetBlock.getExtent();
         this.targetBlock = targetBlock;
         this.lastBlock = lastBlock;
-        this.cause = VoxelSniper.plugin_cause.with(NamedCause.source(data.owner().getPlayer()));
+        Sponge.getCauseStackManager().pushCause(data.owner().getPlayer());
         switch (action) {
         case ARROW:
             this.arrow(data);
@@ -79,7 +75,7 @@ public abstract class Brush implements IBrush {
             break;
         default:
         }
-        this.cause = null;
+        Sponge.getCauseStackManager().popCause();
         this.world = null;
         this.targetBlock = null;
         this.lastBlock = null;
@@ -139,7 +135,7 @@ public abstract class Brush implements IBrush {
         if (this.undo != null) {
             this.undo.put(new Location<World>(this.world, x, y, z));
         }
-        this.world.setBlockType(x, y, z, type, flag, this.cause);
+        this.world.setBlockType(x, y, z, type, flag);
     }
 
     protected void setBlockState(int x, int y, int z, BlockState type) {
@@ -154,6 +150,6 @@ public abstract class Brush implements IBrush {
         if (this.undo != null) {
             this.undo.put(new Location<World>(this.world, x, y, z));
         }
-        this.world.setBlock(x, y, z, type, flag, this.cause);
+        this.world.setBlock(x, y, z, type, flag);
     }
 }

@@ -28,7 +28,6 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.DataView.SafetyMode;
-import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.DataFormats;
 
 import java.io.BufferedInputStream;
@@ -123,7 +122,7 @@ public class StencilUpdater {
                 }
             }
 
-            DataContainer schematic = new MemoryDataContainer(SafetyMode.NO_DATA_CLONED);
+            DataContainer schematic = DataContainer.createNew(SafetyMode.NO_DATA_CLONED);
             schematic.set(DataQuery.of("Width"), w);
             schematic.set(DataQuery.of("Height"), h);
             schematic.set(DataQuery.of("Length"), l);

@@ -24,6 +24,7 @@
  */
 package com.thevoxelbox.voxelsniper;
 
+import com.google.inject.Inject;
 import com.thevoxelbox.voxelsniper.brush.chunk.CanyonBrush;
 import com.thevoxelbox.voxelsniper.brush.chunk.CanyonSelectionBrush;
 import com.thevoxelbox.voxelsniper.brush.chunk.EntityRemovalBrush;
@@ -97,18 +98,13 @@ import com.thevoxelbox.voxelsniper.command.VoxelUndoUserCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelVoxelCommand;
 import com.thevoxelbox.voxelsniper.util.SchematicHelper;
 import com.thevoxelbox.voxelsniper.util.StencilUpdater;
-
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -119,7 +115,6 @@ import java.nio.file.Path;
 @Plugin(id = VoxelSniperConfiguration.PLUGIN_ID, name = VoxelSniperConfiguration.PLUGIN_NAME, version = VoxelSniperConfiguration.PLUGIN_VERSION, description = VoxelSniperConfiguration.PLUGIN_DESC)
 public class VoxelSniper {
 
-    public static Cause plugin_cause;
     private static VoxelSniper instance;
 
     public static VoxelSniper getInstance() {
@@ -131,7 +126,6 @@ public class VoxelSniper {
     }
 
     @Inject private Logger logger;
-    @Inject private PluginContainer container;
     @ConfigDir(sharedRoot = false) @Inject private Path configDir;
 
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener();
@@ -139,7 +133,6 @@ public class VoxelSniper {
     @Listener
     public void onInit(GameInitializationEvent event) {
         VoxelSniper.instance = this;
-        plugin_cause = Cause.of(NamedCause.of("VoxelSniper", this.container));
 
         this.logger.info("Loading VoxelSniper configuration");
         Path config = this.configDir.resolve("voxelsniper.conf");
@@ -216,6 +209,7 @@ public class VoxelSniper {
         Brushes.get().registerSniperBrush(FillDownBrush.class, "fd", "filldown");
         Brushes.get().registerSniperBrush(FlatOceanBrush.class, "fo", "flatocean");
         Brushes.get().registerSniperBrush(HeatRayBrush.class, "hr", "heatray");
+        Brushes.get().registerSniperBrush(JockeyBrush.class, "jockey");
         Brushes.get().registerSniperBrush(LightningBrush.class, "light", "lightning");
         Brushes.get().registerSniperBrush(LineBrush.class, "l", "line");
         Brushes.get().registerSniperBrush(OceanBrush.class, "o", "ocean");

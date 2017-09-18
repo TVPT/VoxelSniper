@@ -148,16 +148,16 @@ public class StencilBrush extends Brush {
         }
         this.undo = new Undo(this.schematic.getBlockSize().getX() * this.schematic.getBlockSize().getY() * this.schematic.getBlockSize().getZ());
         if (this.pasteOption == PasteOption.FULL) {
-            this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
+            this.schematic.getBlockWorker().iterate((e, x, y, z) -> {
                 setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(), z + this.targetBlock.getBlockZ(),
                         e.getBlock(x, y, z));
             });
             for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
                 TileEntityArchetype archetype = this.schematic.getTileEntityArchetypes().get(pos);
-                archetype.apply(this.targetBlock.add(pos), this.cause);
+                archetype.apply(this.targetBlock.add(pos));
             }
         } else if (this.pasteOption == PasteOption.FILL) {
-            this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
+            this.schematic.getBlockWorker().iterate((e, x, y, z) -> {
                 if (this.targetBlock.getExtent().getBlockType(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(),
                         z + this.targetBlock.getBlockZ()) == BlockTypes.AIR) {
                     setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(), z + this.targetBlock.getBlockZ(),
@@ -168,11 +168,11 @@ public class StencilBrush extends Brush {
                 if (this.targetBlock.getExtent().getBlockType(pos.getX() + this.targetBlock.getBlockX(), pos.getY() + this.targetBlock.getBlockY(),
                         pos.getZ() + this.targetBlock.getBlockZ()) == BlockTypes.AIR) {
                     TileEntityArchetype archetype = this.schematic.getTileEntityArchetypes().get(pos);
-                    archetype.apply(this.targetBlock.add(pos), this.cause);
+                    archetype.apply(this.targetBlock.add(pos));
                 }
             }
         } else { // replace
-            this.schematic.getBlockWorker(this.cause).iterate((e, x, y, z) -> {
+            this.schematic.getBlockWorker().iterate((e, x, y, z) -> {
                 if (e.getBlockType(x, y, z) != BlockTypes.AIR) {
                     setBlockState(x + this.targetBlock.getBlockX(), y + this.targetBlock.getBlockY(), z + this.targetBlock.getBlockZ(),
                             e.getBlock(x, y, z));
@@ -180,7 +180,7 @@ public class StencilBrush extends Brush {
             });
             for (Vector3i pos : this.schematic.getTileEntityArchetypes().keySet()) {
                 TileEntityArchetype archetype = this.schematic.getTileEntityArchetypes().get(pos);
-                archetype.apply(this.targetBlock.add(pos), this.cause);
+                archetype.apply(this.targetBlock.add(pos));
             }
         }
         v.owner().storeUndo(this.undo);

@@ -31,9 +31,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
+import org.spongepowered.api.event.CauseStackManager;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -51,12 +50,12 @@ public class EntityBrush extends Brush {
     }
 
     private void spawn(final SnipeData v) {
-        Cause cause = Cause.builder()
-                .named(NamedCause.of("spawnCause", SpawnCause.builder().type(SpawnTypes.PLUGIN).build()))
-                .from(this.cause).build();
-        for (int x = 0; x < v.getBrushSize(); x++) {
-            Entity e = this.world.createEntity(this.entityType, this.lastBlock.getBlockPosition());
-            this.world.spawnEntity(e, cause);
+        try (CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
+            Sponge.getCauseStackManager().addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.PLUGIN);
+            for (int x = 0; x < v.getBrushSize(); x++) {
+                Entity e = this.world.createEntity(this.entityType, this.lastBlock.getBlockPosition());
+                this.world.spawnEntity(e);
+            }
         }
     }
 

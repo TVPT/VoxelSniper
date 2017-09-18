@@ -45,7 +45,7 @@ public class LightningBrush extends Brush {
     @Override
     protected final void arrow(final SnipeData v) {
         Entity e = this.world.createEntity(EntityTypes.LIGHTNING, this.targetBlock.getBlockPosition());
-        this.world.spawnEntity(e, this.cause);
+        this.world.spawnEntity(e);
     }
 
     @Override

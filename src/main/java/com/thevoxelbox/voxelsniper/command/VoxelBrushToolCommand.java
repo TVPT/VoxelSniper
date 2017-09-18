@@ -90,9 +90,9 @@ public class VoxelBrushToolCommand implements CommandExecutor {
                         player.sendMessage(Text.of(TextColors.RED, "You must have an item in your main hand to assign a brush tool."));
                         return CommandResult.success();
                     }
-                    if (sniper.setTool(args[2], action, itemInHand.get().getItem())) {
+                    if (sniper.setTool(args[2], action, itemInHand.get().getType())) {
                         player.sendMessage(Text.of(TextColors.GREEN,
-                                itemInHand.get().getItem().getId() + " has been assigned to '" + args[2] + "' as action " + action.name() + "."));
+                                itemInHand.get().getType().getId() + " has been assigned to '" + args[2] + "' as action " + action.name() + "."));
                     } else {
                         player.sendMessage(Text.of(TextColors.RED, "Couldn't assign tool."));
                     }
@@ -104,7 +104,7 @@ public class VoxelBrushToolCommand implements CommandExecutor {
                     return CommandResult.success();
                 }
                 ItemType itemInHand =
-                        (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) ? player.getItemInHand(HandTypes.MAIN_HAND).get().getItem() : null;
+                        (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) ? player.getItemInHand(HandTypes.MAIN_HAND).get().getType() : null;
                 if (itemInHand == null) {
                     player.sendMessage(Text.of(TextColors.RED, "Can't unassign empty hands."));
                     return CommandResult.success();

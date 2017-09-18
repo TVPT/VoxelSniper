@@ -59,21 +59,18 @@ public class StencilListBrush extends Brush {
     private void readStencilList(final String listname, final SnipeData v) {
         final File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
         if (file.exists()) {
-            try {
-                final Scanner scanner = new Scanner(file);
+            try (final Scanner scanner = new Scanner(file)) {
                 int counter = 0;
                 while (scanner.hasNext()) {
                     this.stencilList.put(counter, scanner.nextLine());
                     counter++;
                 }
-                scanner.close();
             } catch (final Exception exception) {
                 exception.printStackTrace();
             }
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void stencilPaste(final SnipeData v) {
         // @Spongify
 //        if (this.filename.matches("NoFileLoaded"))
