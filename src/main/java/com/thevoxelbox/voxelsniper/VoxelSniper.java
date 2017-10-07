@@ -8,12 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +18,6 @@ import java.util.logging.Level;
  */
 public class VoxelSniper extends JavaPlugin
 {
-    private static final String PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML = "plugins/VoxelSniper/SniperConfig.xml";
     private static VoxelSniper instance;
     private SniperManager sniperManager = new SniperManager(this);
     private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener(this);
@@ -70,59 +63,6 @@ public class VoxelSniper extends JavaPlugin
         return sniperManager;
     }
 
-    /**
-     * Load and migrate legacy configuration.
-     */
-    public void loadSniperConfiguration()
-    {
-        File configurationFile = new File(VoxelSniper.PLUGINS_VOXEL_SNIPER_SNIPER_CONFIG_XML);
-
-        if (!configurationFile.exists())
-        {
-            return;
-        }
-
-        JAXBContext context;
-        Unmarshaller unmarshaller;
-        try
-        {
-            context = JAXBContext.newInstance(LegacyConfigurationContainer.class);
-            unmarshaller = context.createUnmarshaller();
-        }
-        catch (JAXBException exception)
-        {
-            getLogger().log(Level.SEVERE, "Couldn't create Unmarshaller, while attempting to load legacy configuration.", exception);
-            return;
-        }
-
-        try
-        {
-            Object unmarshal = unmarshaller.unmarshal(configurationFile);
-            Preconditions.checkState(unmarshal instanceof LegacyConfigurationContainer, "Unmarshalled object is not of expected type.");
-            LegacyConfigurationContainer legacyConfiguration = (LegacyConfigurationContainer) unmarshal;
-            voxelSniperConfiguration.setUndoCacheSize(legacyConfiguration.undoCacheSize);
-            voxelSniperConfiguration.setLitesniperRestrictedItems(legacyConfiguration.litesniperRestrictedItems);
-            voxelSniperConfiguration.setLiteSniperMaxBrushSize(legacyConfiguration.liteSniperMaxBrushSize);
-        }
-        catch (JAXBException exception)
-        {
-            getLogger().log(Level.SEVERE, "Couldn't unmarshall legacy configuration.", exception);
-            return;
-        }
-        catch (IllegalStateException exception)
-        {
-            getLogger().log(Level.SEVERE, exception.getMessage(), exception);
-            return;
-        }
-
-        if (configurationFile.delete())
-        {
-            saveConfig();
-            reloadConfig();
-            getLogger().info("Migrated legacy configuration file.");
-        }
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
     {
@@ -155,7 +95,6 @@ public class VoxelSniper extends JavaPlugin
 
         saveDefaultConfig();
         voxelSniperConfiguration = new VoxelSniperConfiguration(getConfig());
-        loadSniperConfiguration();
 
         Bukkit.getPluginManager().registerEvents(this.voxelSniperListener, this);
         getLogger().info("Registered Sniper Listener.");
@@ -244,19 +183,4 @@ public class VoxelSniper extends JavaPlugin
         brushManager.registerSniperBrush(WarpBrush.class, "w", "warp");
     }
 
-    @XmlRootElement(name = "VoxelSniper")
-    private static class LegacyConfigurationContainer
-    {
-        private LegacyConfigurationContainer()
-        {
-        }
-
-        @XmlElementWrapper(name = "LiteSniperBannedIDs", required = false)
-        @XmlElement(name = "id", type = Integer.class)
-        List<Integer> litesniperRestrictedItems = new ArrayList<Integer>();
-        @XmlElement(name = "MaxLiteBrushSize", required = true, defaultValue = "5")
-        int liteSniperMaxBrushSize = 5;
-        @XmlElement(name = "SniperUndoCache", required = true, defaultValue = "20")
-        int undoCacheSize = 20;
-    }
 }
