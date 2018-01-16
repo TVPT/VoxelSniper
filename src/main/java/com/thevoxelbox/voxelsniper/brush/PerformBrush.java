@@ -33,6 +33,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.world.BlockChangeFlag;
+import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -127,7 +128,7 @@ public abstract class PerformBrush extends Brush {
         }
         switch (this.place) {
         case TYPE:
-            setBlockType(x, y, z, v.getVoxelIdState().getType(), this.physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+            setBlockType(x, y, z, v.getVoxelIdState().getType(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
             break;
         case STATE:
             BlockState current = this.world.getBlock(x, y, z);
@@ -136,10 +137,10 @@ public abstract class PerformBrush extends Brush {
             if (!place.isPresent()) {
                 return false;
             }
-            setBlockState(x, y, z, place.get(), this.physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+            setBlockState(x, y, z, place.get(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
             break;
         case COMBO:
-            setBlockState(x, y, z, v.getVoxelIdState(), this.physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+            setBlockState(x, y, z, v.getVoxelIdState(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
             break;
         case NONE:
         default:
