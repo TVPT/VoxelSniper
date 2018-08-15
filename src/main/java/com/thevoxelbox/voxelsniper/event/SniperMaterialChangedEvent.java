@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.event;
 
 import com.thevoxelbox.voxelsniper.Sniper;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,11 +14,11 @@ public class SniperMaterialChangedEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
     private final Sniper sniper;
-    private final MaterialData originalMaterial;
-    private final MaterialData newMaterial;
+    private final BlockData originalMaterial;
+    private final BlockData newMaterial;
     private final String toolId;
 
-    public SniperMaterialChangedEvent(Sniper sniper, String toolId, MaterialData originalMaterial, MaterialData newMaterial)
+    public SniperMaterialChangedEvent(Sniper sniper, String toolId, BlockData originalMaterial, BlockData newMaterial)
     {
         this.sniper = sniper;
         this.originalMaterial = originalMaterial;
@@ -30,12 +31,12 @@ public class SniperMaterialChangedEvent extends Event
         return handlers;
     }
 
-    public MaterialData getOriginalMaterial()
+    public BlockData getOriginalMaterial()
     {
         return originalMaterial;
     }
 
-    public MaterialData getNewMaterial()
+    public BlockData getNewMaterial()
     {
         return newMaterial;
     }

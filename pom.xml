@@ -53,16 +53,12 @@
 
     <repositories>
         <repository>
+            <id>tvpt-repo</id>
+            <url>http://vault.voxelmodpack.com/content/repositories/central/</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>Plugin Metrics</id>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
-        </repository>
-        <repository>
-            <id>tvpt-repo</id>
-            <url>http://vault.voxelmodpack.com/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -70,12 +66,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.9-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mcstats.bukkit</groupId>
-            <artifactId>metrics</artifactId>
-            <version>R8-SNAPSHOT</version>
+            <version>1.13-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.martiansoftware</groupId>

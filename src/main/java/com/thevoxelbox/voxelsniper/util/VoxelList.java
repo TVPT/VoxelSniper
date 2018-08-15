@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.util;
 
 import com.google.common.collect.ImmutableList;
+import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,22 +14,24 @@ import java.util.List;
 public class VoxelList
 {
 
-    private List<int[]> valuePairs = new ArrayList<int[]>();
+    private static final BlockData AIR = Material.AIR.createBlockData();
+
+    private List<BlockData[]> valuePairs = new ArrayList<BlockData[]>();
 
     /**
      * Adds the specified id, data value pair to the VoxelList. A data value of -1 will operate on all data values of that id.
      * 
      * @param i
      */
-    public void add(int[] i)
+    public void add(BlockData[] i)
     {
-        if (i[1] == -1)
+        if (i[1] == AIR)
         {
             if (!valuePairs.contains(i))
             {
-                for (Iterator<int[]> it = valuePairs.iterator(); it.hasNext(); )
+                for (Iterator<BlockData[]> it = valuePairs.iterator(); it.hasNext(); )
                 {
-                    int[] in = it.next();
+                    BlockData[] in = it.next();
                     if (in[0] == i[0])
                     {
                         it.remove();
@@ -51,7 +55,7 @@ public class VoxelList
      * @param i
      * @return true if this list contained the specified element
      */
-    public boolean removeValue(final int[] i)
+    public boolean removeValue(final BlockData[] i)
     {
         if (valuePairs.isEmpty())
         {
@@ -84,11 +88,11 @@ public class VoxelList
      * @param i
      * @return true if this list contains the specified element
      */
-    public boolean contains(final int[] i)
+    public boolean contains(final BlockData[] i)
     {
-        for (int[] in : valuePairs)
+        for (BlockData[] in : valuePairs)
         {
-            if (in[0] == i[0] && (in[1] == i[1] || in[1] == -1))
+            if (in[0].matches(i[0]) && (in[1] == i[1] || in[1] == AIR))
             {
                 return true;
             }

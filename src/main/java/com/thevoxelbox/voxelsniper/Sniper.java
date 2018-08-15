@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.material.MaterialData;
@@ -44,7 +45,7 @@ public class Sniper
         this.player = player.getUniqueId();
         SniperTool sniperTool = new SniperTool(this);
         sniperTool.assignAction(SnipeAction.ARROW, Material.ARROW);
-        sniperTool.assignAction(SnipeAction.GUNPOWDER, Material.SULPHUR);
+        sniperTool.assignAction(SnipeAction.GUNPOWDER, Material.GUNPOWDER);
         tools.put(null, sniperTool);
     }
 
@@ -139,9 +140,10 @@ public class Sniper
                             case ARROW:
                                 if (targetBlock != null)
                                 {
-                                    int originalVoxel = snipeData.getVoxelId();
-                                    snipeData.setVoxelId(targetBlock.getTypeId());
-                                    SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, toolId, new MaterialData(originalVoxel, snipeData.getData()), new MaterialData(snipeData.getVoxelId(), snipeData.getData()));
+                                    BlockData originalVoxel = snipeData.getVoxelData();
+                                    final BlockData blockData = targetBlock.getBlockData();
+                                    snipeData.setVoxelData(blockData);
+                                    SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, toolId, originalVoxel, blockData);
                                     Bukkit.getPluginManager().callEvent(event);
                                     snipeData.getVoxelMessage().voxel();
                                     return true;

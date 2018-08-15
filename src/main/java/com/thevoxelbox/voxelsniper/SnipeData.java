@@ -2,7 +2,9 @@ package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Piotr
@@ -27,18 +29,22 @@ public class SnipeData
     /**
      * Voxel Id -- set blockPositionY /v (#,name).
      */
+    @Deprecated
     private int voxelId = SnipeData.DEFAULT_VOXEL_ID;
     /**
      * Voxel Replace Id -- set blockPositionY /vr #.
      */
+    @Deprecated
     private int replaceId = SnipeData.DEFAULT_REPLACE_ID;
     /**
      * Voxel 'ink' -- set blockPositionY /vi #.
      */
+    @Deprecated
     private byte data = SnipeData.DEFAULT_DATA_VALUE;
     /**
      * Voxel 'ink' Replace -- set blockPositionY /vir #.
      */
+    @Deprecated
     private byte replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
     /**
      * Voxel List of ID's -- set blockPositionY /vl # # # -#.
@@ -55,6 +61,7 @@ public class SnipeData
     private int range = 0;
     private boolean ranged = false;
     private boolean lightning = false;
+    private BlockData blockData = Material.AIR.createBlockData();
 
     /**
      * @param vs
@@ -83,6 +90,7 @@ public class SnipeData
     /**
      * @return the data
      */
+    @Deprecated
     public final byte getData()
     {
         return this.data;
@@ -91,6 +99,7 @@ public class SnipeData
     /**
      * @return the replaceData
      */
+    @Deprecated
     public final byte getReplaceData()
     {
         return this.replaceData;
@@ -99,6 +108,7 @@ public class SnipeData
     /**
      * @return the replaceId
      */
+    @Deprecated
     public final int getReplaceId()
     {
         return this.replaceId;
@@ -115,6 +125,7 @@ public class SnipeData
     /**
      * @return the voxelId
      */
+    @Deprecated
     public final int getVoxelId()
     {
         return this.voxelId;
@@ -284,5 +295,13 @@ public class SnipeData
     public void setLightningEnabled(boolean lightning)
     {
         this.lightning = lightning;
+    }
+
+    public void setVoxelData(BlockData blockData) {
+        this.blockData = blockData;
+    }
+
+    public BlockData getVoxelData() {
+        return this.blockData;
     }
 }
