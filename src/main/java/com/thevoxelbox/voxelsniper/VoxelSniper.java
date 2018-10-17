@@ -1,17 +1,86 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.google.common.base.Preconditions;
-import com.thevoxelbox.voxelsniper.brush.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
+import com.thevoxelbox.voxelsniper.brush.BallBrush;
+import com.thevoxelbox.voxelsniper.brush.BiomeBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendBallBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.BlendVoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.BlobBrush;
+import com.thevoxelbox.voxelsniper.brush.BlockResetBrush;
+import com.thevoxelbox.voxelsniper.brush.BlockResetSurfaceBrush;
+import com.thevoxelbox.voxelsniper.brush.CanyonBrush;
+import com.thevoxelbox.voxelsniper.brush.CanyonSelectionBrush;
+import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.CleanSnowBrush;
+import com.thevoxelbox.voxelsniper.brush.CloneStampBrush;
+import com.thevoxelbox.voxelsniper.brush.CometBrush;
+import com.thevoxelbox.voxelsniper.brush.CopyPastaBrush;
+import com.thevoxelbox.voxelsniper.brush.CylinderBrush;
+import com.thevoxelbox.voxelsniper.brush.DiscBrush;
+import com.thevoxelbox.voxelsniper.brush.DiscFaceBrush;
+import com.thevoxelbox.voxelsniper.brush.DomeBrush;
+import com.thevoxelbox.voxelsniper.brush.DrainBrush;
+import com.thevoxelbox.voxelsniper.brush.EllipseBrush;
+import com.thevoxelbox.voxelsniper.brush.EllipsoidBrush;
+import com.thevoxelbox.voxelsniper.brush.EntityBrush;
+import com.thevoxelbox.voxelsniper.brush.EntityRemovalBrush;
+import com.thevoxelbox.voxelsniper.brush.EraserBrush;
+import com.thevoxelbox.voxelsniper.brush.ErodeBrush;
+import com.thevoxelbox.voxelsniper.brush.ExtrudeBrush;
+import com.thevoxelbox.voxelsniper.brush.FillDownBrush;
+import com.thevoxelbox.voxelsniper.brush.FlatOceanBrush;
+import com.thevoxelbox.voxelsniper.brush.GenerateTreeBrush;
+import com.thevoxelbox.voxelsniper.brush.HeatRayBrush;
+import com.thevoxelbox.voxelsniper.brush.JaggedLineBrush;
+import com.thevoxelbox.voxelsniper.brush.JockeyBrush;
+import com.thevoxelbox.voxelsniper.brush.LightningBrush;
+import com.thevoxelbox.voxelsniper.brush.LineBrush;
+import com.thevoxelbox.voxelsniper.brush.MoveBrush;
+import com.thevoxelbox.voxelsniper.brush.OceanBrush;
+import com.thevoxelbox.voxelsniper.brush.OverlayBrush;
+import com.thevoxelbox.voxelsniper.brush.PaintingBrush;
+import com.thevoxelbox.voxelsniper.brush.PullBrush;
+import com.thevoxelbox.voxelsniper.brush.PunishBrush;
+import com.thevoxelbox.voxelsniper.brush.RandomErodeBrush;
+import com.thevoxelbox.voxelsniper.brush.RegenerateChunkBrush;
+import com.thevoxelbox.voxelsniper.brush.RingBrush;
+import com.thevoxelbox.voxelsniper.brush.Rot2DBrush;
+import com.thevoxelbox.voxelsniper.brush.Rot2DvertBrush;
+import com.thevoxelbox.voxelsniper.brush.Rot3DBrush;
+import com.thevoxelbox.voxelsniper.brush.RulerBrush;
+import com.thevoxelbox.voxelsniper.brush.ScannerBrush;
+import com.thevoxelbox.voxelsniper.brush.SetBrush;
+import com.thevoxelbox.voxelsniper.brush.SetRedstoneFlipBrush;
+import com.thevoxelbox.voxelsniper.brush.ShellBallBrush;
+import com.thevoxelbox.voxelsniper.brush.ShellSetBrush;
+import com.thevoxelbox.voxelsniper.brush.ShellVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.SignOverwriteBrush;
+import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
+import com.thevoxelbox.voxelsniper.brush.SnowConeBrush;
+import com.thevoxelbox.voxelsniper.brush.SpiralStaircaseBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterBallBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterOverlayBrush;
+import com.thevoxelbox.voxelsniper.brush.SplatterVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.SplineBrush;
+import com.thevoxelbox.voxelsniper.brush.StencilBrush;
+import com.thevoxelbox.voxelsniper.brush.StencilListBrush;
+import com.thevoxelbox.voxelsniper.brush.ThreePointCircleBrush;
+import com.thevoxelbox.voxelsniper.brush.TreeSnipeBrush;
+import com.thevoxelbox.voxelsniper.brush.TriangleBrush;
+import com.thevoxelbox.voxelsniper.brush.UnderlayBrush;
+import com.thevoxelbox.voxelsniper.brush.VoltMeterBrush;
+import com.thevoxelbox.voxelsniper.brush.VoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.VoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.VoxelDiscFaceBrush;
+import com.thevoxelbox.voxelsniper.brush.WarpBrush;
 
 /**
  * Bukkit extension point.
@@ -89,8 +158,6 @@ public class VoxelSniper extends JavaPlugin
 
         registerBrushes();
         getLogger().info("Registered " + brushManager.registeredSniperBrushes() + " Sniper Brushes with " + brushManager.registeredSniperBrushHandles() + " handles.");
-
-        MetricsManager.getInstance().start();
 
 
         saveDefaultConfig();

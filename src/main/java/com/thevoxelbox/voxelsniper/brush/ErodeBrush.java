@@ -1,5 +1,19 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.util.ChatPaginator;
+import org.bukkit.util.Vector;
+
 import com.google.common.base.Objects;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAPException;
@@ -11,19 +25,6 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.jsap.HelpJSAP;
 import com.thevoxelbox.voxelsniper.jsap.NullableIntegerStringParser;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.util.ChatPaginator;
-import org.bukkit.util.Vector;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * http://www.voxelwiki.com/minecraft/VoxelSniper#The_Erosion_Brush
@@ -83,7 +84,6 @@ public class ErodeBrush extends Brush
         this.erosion(v, this.currentPreset);
     }
 
-    @SuppressWarnings("deprecation")
 	private void erosion(final SnipeData v, final ErosionPreset erosionPreset)
     {
 
@@ -105,7 +105,7 @@ public class ErodeBrush extends Brush
         for (final BlockWrapper blockWrapper : blockChangeTracker.getAll())
         {
             undo.put(blockWrapper.getBlock());
-            blockWrapper.getBlock().setTypeIdAndData(blockWrapper.getMaterial().getId(), blockWrapper.getData(), true);
+            blockWrapper.getBlock().setBlockData(blockWrapper.getBlock().getBlockData(), true);
         }
 
         v.owner().storeUndo(undo);
@@ -417,7 +417,6 @@ public class ErodeBrush extends Brush
         private final Material material;
         private final byte data;
 
-        @SuppressWarnings("deprecation")
 		public BlockWrapper(final Block block)
         {
             this.block = block;
@@ -472,9 +471,7 @@ public class ErodeBrush extends Brush
             switch (this.material)
             {
                 case WATER:
-                case STATIONARY_WATER:
                 case LAVA:
-                case STATIONARY_LAVA:
                     return true;
                 default:
                     return false;

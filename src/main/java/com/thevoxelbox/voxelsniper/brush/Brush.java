@@ -1,15 +1,18 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 /**
  * Abstract implementation of the {@link IBrush} interface.
@@ -220,10 +223,9 @@ public abstract class Brush implements IBrush
      * @param z Z coordinate
      * @return Type ID of Block at given coordinates in the world of the targeted Block.
      */
-    @SuppressWarnings("deprecation")
-	protected int getBlockIdAt(int x, int y, int z)
+	protected Material getBlockTypeAt(int x, int y, int z)
     {
-        return getWorld().getBlockTypeIdAt(x, y, z);
+        return getWorld().getBlockAt(x, y, z).getType();
     }
 
     /**
@@ -234,10 +236,9 @@ public abstract class Brush implements IBrush
      * @param z Z coordinate
      * @return Block Data Value of Block at given coordinates in the world of the targeted Block.
      */
-    @SuppressWarnings("deprecation")
-	protected byte getBlockDataAt(int x, int y, int z)
+	protected BlockData getBlockDataAt(int x, int y, int z)
     {
-        return this.getWorld().getBlockAt(x, y, z).getData();
+        return this.getWorld().getBlockAt(x, y, z).getBlockData();
     }
 
     /**
@@ -264,7 +265,7 @@ public abstract class Brush implements IBrush
     @Deprecated
     protected final void setBlock(BlockWrapper blockWrapper)
     {
-        this.getWorld().getBlockAt(blockWrapper.getX(), blockWrapper.getY(), blockWrapper.getZ()).setTypeId(blockWrapper.getId());
+        this.getWorld().getBlockAt(blockWrapper.getX(), blockWrapper.getY(), blockWrapper.getZ()).setBlockData(blockWrapper.getBlockData());
     }
 
     /**
@@ -273,12 +274,11 @@ public abstract class Brush implements IBrush
      * @param z  Z coordinate
      * @param x  X coordinate
      * @param y  Y coordinate
-     * @param id The id the block will be set to
+     * @param type The type the block will be set to
      */
-    @SuppressWarnings("deprecation")
-	protected final void setBlockIdAt(int z, int x, int y, int id)
+	protected final void setBlockTypeAt(int z, int x, int y, Material type)
     {
-        this.getWorld().getBlockAt(x, y, z).setTypeId(id);
+        this.getWorld().getBlockAt(x, y, z).setType(type);
     }
 
     /**
@@ -287,12 +287,10 @@ public abstract class Brush implements IBrush
      * @param x    X coordinate
      * @param y    Y coordinate
      * @param z    Z coordinate
-     * @param id   The id the block will be set to
-     * @param data The data value the block will be set to
+     * @param blockData The block data the block will be set to
      */
-    @SuppressWarnings("deprecation")
-	protected final void setBlockIdAndDataAt(int x, int y, int z, int id, byte data)
+	protected final void setBlockDataAt(int x, int y, int z, BlockData blockData)
     {
-        this.getWorld().getBlockAt(x, y, z).setTypeIdAndData(id, data, true);
+        this.getWorld().getBlockAt(x, y, z).setBlockData(blockData, true);
     }
 }

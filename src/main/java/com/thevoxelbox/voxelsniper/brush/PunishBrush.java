@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -13,8 +13,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.List;
-import java.util.Random;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Punish_Brush
@@ -46,7 +47,6 @@ public class PunishBrush extends PerformBrush
         this.setName("Punish");
     }
 
-    @SuppressWarnings("deprecation")
 	private void applyPunishment(final LivingEntity entity, final SnipeData v)
     {
         switch (this.punishment)
@@ -169,7 +169,7 @@ public class PunishBrush extends PerformBrush
                                 }
                                 target = location.clone();
                                 target.add(x, y, z);
-                                ((Player) entity).sendBlockChange(target, v.getVoxelId(), v.getData());
+                                ((Player) entity).sendBlockChange(target, v.getVoxelData());
                             }
                         }
                     }

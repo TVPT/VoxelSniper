@@ -1,15 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_OCEANATOR_5000
@@ -25,19 +26,32 @@ public class OceanBrush extends Brush
 
     static
     {
-        EXCLUDED_MATERIALS.add(Material.AIR);
-        EXCLUDED_MATERIALS.add(Material.SAPLING);
+		EXCLUDED_MATERIALS.add(Material.AIR);
+		EXCLUDED_MATERIALS.add(Material.OAK_SAPLING);
+		EXCLUDED_MATERIALS.add(Material.JUNGLE_SAPLING);
+		EXCLUDED_MATERIALS.add(Material.DARK_OAK_SAPLING);
+		EXCLUDED_MATERIALS.add(Material.BIRCH_SAPLING);
+		EXCLUDED_MATERIALS.add(Material.ACACIA_SAPLING);
+		EXCLUDED_MATERIALS.add(Material.SPRUCE_SAPLING);
         EXCLUDED_MATERIALS.add(Material.WATER);
-        EXCLUDED_MATERIALS.add(Material.STATIONARY_WATER);
         EXCLUDED_MATERIALS.add(Material.LAVA);
-        EXCLUDED_MATERIALS.add(Material.STATIONARY_LAVA);
-        EXCLUDED_MATERIALS.add(Material.LOG);
-        EXCLUDED_MATERIALS.add(Material.LEAVES);
-        EXCLUDED_MATERIALS.add(Material.YELLOW_FLOWER);
-        EXCLUDED_MATERIALS.add(Material.RED_ROSE);
+        EXCLUDED_MATERIALS.add(Material.ACACIA_LOG);
+        EXCLUDED_MATERIALS.add(Material.BIRCH_LOG);
+        EXCLUDED_MATERIALS.add(Material.DARK_OAK_LOG);
+        EXCLUDED_MATERIALS.add(Material.JUNGLE_LOG);
+        EXCLUDED_MATERIALS.add(Material.OAK_LOG);
+        EXCLUDED_MATERIALS.add(Material.SPRUCE_LOG);
+        EXCLUDED_MATERIALS.add(Material.ACACIA_LEAVES);
+        EXCLUDED_MATERIALS.add(Material.BIRCH_LEAVES);
+        EXCLUDED_MATERIALS.add(Material.DARK_OAK_LEAVES);
+        EXCLUDED_MATERIALS.add(Material.JUNGLE_LEAVES);
+        EXCLUDED_MATERIALS.add(Material.OAK_LEAVES);
+        EXCLUDED_MATERIALS.add(Material.SPRUCE_LEAVES);
+        EXCLUDED_MATERIALS.add(Material.DANDELION);
+        EXCLUDED_MATERIALS.add(Material.POPPY);
         EXCLUDED_MATERIALS.add(Material.RED_MUSHROOM);
         EXCLUDED_MATERIALS.add(Material.BROWN_MUSHROOM);
-        EXCLUDED_MATERIALS.add(Material.MELON_BLOCK);
+        EXCLUDED_MATERIALS.add(Material.MELON);
         EXCLUDED_MATERIALS.add(Material.MELON_STEM);
         EXCLUDED_MATERIALS.add(Material.PUMPKIN);
         EXCLUDED_MATERIALS.add(Material.PUMPKIN_STEM);
@@ -45,8 +59,8 @@ public class OceanBrush extends Brush
         EXCLUDED_MATERIALS.add(Material.SNOW);
         EXCLUDED_MATERIALS.add(Material.SNOW_BLOCK);
         EXCLUDED_MATERIALS.add(Material.ICE);
-        EXCLUDED_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
-        EXCLUDED_MATERIALS.add(Material.LONG_GRASS);
+        EXCLUDED_MATERIALS.add(Material.SUGAR_CANE);
+        EXCLUDED_MATERIALS.add(Material.TALL_GRASS);
         EXCLUDED_MATERIALS.add(Material.SNOW);
     }
 
@@ -78,7 +92,6 @@ public class OceanBrush extends Brush
      * @param v
      * @param undo
      */
-    @SuppressWarnings("deprecation")
 	protected final void oceanator(final SnipeData v, final Undo undo)
     {
         final World world = this.getWorld();
@@ -113,14 +126,14 @@ public class OceanBrush extends Brush
                 for (int y = this.waterLevel; y > newSeaFloorLevel; y--)
                 {
                     final Block block = world.getBlockAt(x, y, z);
-                    if (!block.getType().equals(Material.STATIONARY_WATER))
+                    if (!block.getType().equals(Material.WATER))
                     {
                         // do not put blocks into the undo we already put into
                         if (!block.getType().equals(Material.AIR))
                         {
                             undo.put(block);
                         }
-                        block.setType(Material.STATIONARY_WATER);
+                        block.setType(Material.WATER);
                     }
                 }
 
@@ -128,10 +141,10 @@ public class OceanBrush extends Brush
                 if (this.coverFloor && (newSeaFloorLevel < this.waterLevel))
                 {
                     Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-                    if (block.getTypeId() != v.getVoxelId())
+                    if (block.getType() != v.getVoxelData().getMaterial())
                     {
                         undo.put(block);
-                        block.setTypeId(v.getVoxelId());
+                        block.setType(v.getVoxelData().getMaterial());
                     }
                 }
             }

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 
 /**
  *
@@ -58,14 +58,6 @@ public class Message
     }
 
     /**
-     * Display data value.
-     */
-    public void data()
-    {
-        snipeData.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + snipeData.getData());
-    }
-
-    /**
      * Display voxel height.
      */
     public void height()
@@ -86,18 +78,9 @@ public class Message
     /**
      * Displaye replace material.
      */
-    @SuppressWarnings("deprecation")
     public void replace()
     {
-        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getReplaceId()).toString() + ")");
-    }
-
-    /**
-     * Display replace data value.
-     */
-    public void replaceData()
-    {
-        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + snipeData.getReplaceData());
+        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceData().getAsString());
     }
 
     /**
@@ -139,10 +122,9 @@ public class Message
     /**
      * Display voxel type.
      */
-    @SuppressWarnings("deprecation")
     public void voxel()
     {
-        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getVoxelId()).toString() + ")");
+        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelData().getAsString());
     }
 
     /**
@@ -161,14 +143,9 @@ public class Message
             returnValueBuilder.append("Block Types Selected: ");
             returnValueBuilder.append(ChatColor.AQUA);
 
-            for (int[] valuePair : snipeData.getVoxelList().getList())
+            for (BlockData data : snipeData.getVoxelList().getList())
             {
-                returnValueBuilder.append(valuePair[0]);
-                if (valuePair[1] != -1)
-                {
-                    returnValueBuilder.append(":");
-                    returnValueBuilder.append(valuePair[1]);
-                }
+                returnValueBuilder.append(data.getAsString());
                 returnValueBuilder.append(" ");
             }
 

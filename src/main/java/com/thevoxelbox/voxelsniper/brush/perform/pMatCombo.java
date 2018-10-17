@@ -4,9 +4,11 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.Message;
-
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author Voxel
@@ -14,9 +16,8 @@ import org.bukkit.block.Block;
 public class pMatCombo extends vPerformer
 {
 
-    private byte dr;
-    private int i;
-    private int ir;
+	private BlockData rd;
+	private Material t;
 
     public pMatCombo()
     {
@@ -27,9 +28,8 @@ public class pMatCombo extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        dr = v.getReplaceData();
-        i = v.getVoxelId();
-        ir = v.getReplaceId();
+        rd = v.getReplaceData();
+        t = v.getVoxelData().getMaterial();
     }
 
     @Override
@@ -38,17 +38,15 @@ public class pMatCombo extends vPerformer
         vm.performerName(name);
         vm.voxel();
         vm.replace();
-        vm.replaceData();
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public void perform(Block b)
     {
-        if (b.getTypeId() == ir && b.getData() == dr)
+        if (b.getBlockData().matches(rd))
         {
             h.put(b);
-            b.setTypeId(i, true);
+            b.setType(t, true);
         }
     }
 

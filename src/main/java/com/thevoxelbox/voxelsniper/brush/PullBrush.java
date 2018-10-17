@@ -1,11 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.HashSet;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-
-import java.util.HashSet;
 
 /**
  * @author Piotr
@@ -100,45 +103,39 @@ public class PullBrush extends Brush
      */
     private boolean isSurface(final int x, final int y, final int z)
     {
-        return this.getBlockIdAt(x, y, z) != 0 && ((this.getBlockIdAt(x, y - 1, z) == 0) || (this.getBlockIdAt(x, y + 1, z) == 0) || (this.getBlockIdAt(x + 1, y, z) == 0) || (this.getBlockIdAt(x - 1, y, z) == 0) || (this.getBlockIdAt(x, y, z + 1) == 0) || (this.getBlockIdAt(x, y, z - 1) == 0));
+        return this.getBlockTypeAt(x, y, z) != Material.AIR && ((this.getBlockTypeAt(x, y - 1, z) == Material.AIR) || (this.getBlockTypeAt(x, y + 1, z) == Material.AIR) || (this.getBlockTypeAt(x + 1, y, z) == Material.AIR) || (this.getBlockTypeAt(x - 1, y, z) == Material.AIR) || (this.getBlockTypeAt(x, y, z + 1) == Material.AIR) || (this.getBlockTypeAt(x, y, z - 1) == Material.AIR));
 
     }
 
-    @SuppressWarnings("deprecation")
 	private void setBlock(final BlockWrapper block)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
-        if (this.getBlockIdAt(block.getX(), block.getY() - 1, block.getZ()) == 0)
+        if (this.getBlockTypeAt(block.getX(), block.getY() - 1, block.getZ()) == Material.AIR)
         {
-            currentBlock.setTypeId(block.getId());
-            currentBlock.setData(block.getD());
+        	currentBlock.setBlockData(block.getBD());
             for (int y = block.getY(); y < currentBlock.getY(); y++)
             {
-                this.setBlockIdAt(block.getZ(), block.getX(), y, 0);
+                this.setBlockTypeAt(block.getZ(), block.getX(), y, Material.AIR);
             }
         }
         else
         {
-            currentBlock.setTypeId(block.getId());
-            currentBlock.setData(block.getD());
+        	currentBlock.setBlockData(block.getBD());
             for (int y = block.getY() - 1; y < currentBlock.getY(); y++)
             {
                 final Block current = this.clampY(block.getX(), y, block.getZ());
-                current.setTypeId(block.getId());
-                current.setData(block.getD());
+                current.setBlockData(block.getBD());
             }
         }
     }
 
-    @SuppressWarnings("deprecation")
 	private void setBlockDown(final BlockWrapper block)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
-        currentBlock.setTypeId(block.getId());
-        currentBlock.setData(block.getD());
+        currentBlock.setBlockData(block.getBD());
         for (int y = block.getY(); y > currentBlock.getY(); y--)
         {
-            this.setBlockIdAt(block.getZ(), block.getX(), y, 0);
+            this.setBlockTypeAt(block.getZ(), block.getX(), y, Material.AIR);
         }
         // }
     }
@@ -165,7 +162,6 @@ public class PullBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     protected final void powder(final SnipeData v)
     {
@@ -179,7 +175,7 @@ public class PullBrush extends Brush
         double str;
         final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
 
-        int id;
+        Material mat;
 
         // Are we pulling up ?
         if (this.vh > 0)
@@ -206,7 +202,7 @@ public class PullBrush extends Brush
                         final double volume = zSquared + xSquared + (y * y);
 
                         // Is this in the range of the brush?
-                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getTargetBlock().getY() + y, actualZ) != 0)
+                        if (volume <= brushSizeSquared && this.getWorld().getBlockAt(actualX, this.getTargetBlock().getY() + y, actualZ).getType() != Material.AIR)
                         {
 
                             int actualY = this.getTargetBlock().getY() + y;
@@ -216,7 +212,7 @@ public class PullBrush extends Brush
                             lastStr = (int) (this.vh * str);
                             lastY = actualY + lastStr;
 
-                            this.clampY(actualX, lastY, actualZ).setTypeId(this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ));
+                            this.clampY(actualX, lastY, actualZ).setType(this.getWorld().getBlockAt(actualX, actualY, actualZ).getType());
 
                             if (str == 1)
                             {
@@ -231,10 +227,10 @@ public class PullBrush extends Brush
                                 }
                                 lastStr = (int) (this.vh * str);
                                 newY = actualY + lastStr;
-                                id = this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ);
+                                mat = this.getWorld().getBlockAt(actualX, actualY, actualZ).getType();
                                 for (int i = newY; i < lastY; i++)
                                 {
-                                    this.clampY(actualX, i, actualZ).setTypeId(id);
+                                    this.clampY(actualX, i, actualZ).setType(mat);
                                 }
                                 lastY = newY;
                                 actualY--;
@@ -258,20 +254,20 @@ public class PullBrush extends Brush
                     for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
                     {
                         double volume = (xSquared + Math.pow(y, 2) + zSquared);
-                        if (volume <= brushSizeSquared && this.getWorld().getBlockTypeIdAt(actualX, this.getTargetBlock().getY() + y, actualZ) != 0)
+                        if (volume <= brushSizeSquared && this.getWorld().getBlockAt(actualX, this.getTargetBlock().getY() + y, actualZ).getType() != Material.AIR)
                         {
                             final int actualY = this.getTargetBlock().getY() + y;
                             lastY = actualY + (int) (this.vh * this.getStr(volume / brushSizeSquared));
-                            this.clampY(actualX, lastY, actualZ).setTypeId(this.getWorld().getBlockTypeIdAt(actualX, actualY, actualZ));
+                            this.clampY(actualX, lastY, actualZ).setType(this.getWorld().getBlockAt(actualX, actualY, actualZ).getType());
                             y++;
                             volume = (xSquared + Math.pow(y, 2) + zSquared);
                             while (volume <= brushSizeSquared)
                             {
                                 final int blockY = this.getTargetBlock().getY() + y + (int) (this.vh * this.getStr(volume / brushSizeSquared));
-                                final int blockId = this.getWorld().getBlockTypeIdAt(actualX, this.getTargetBlock().getY() + y, actualZ);
+                                final Material mat2 = this.getWorld().getBlockAt(actualX, this.getTargetBlock().getY() + y, actualZ).getType();
                                 for (int i = blockY; i < lastY; i++)
                                 {
-                                    this.clampY(actualX, i, actualZ).setTypeId(blockId);
+                                    this.clampY(actualX, i, actualZ).setType(mat2);
                                 }
                                 lastY = blockY;
                                 y++;
@@ -291,8 +287,7 @@ public class PullBrush extends Brush
     private final class BlockWrapper
     {
 
-        private final int id;
-        private final byte d;
+    	private final BlockData bd;
         private final double str;
         private final int x;
         private final int y;
@@ -302,11 +297,9 @@ public class PullBrush extends Brush
          * @param block
          * @param st
          */
-        @SuppressWarnings("deprecation")
 		public BlockWrapper(final Block block, final double st)
         {
-            this.id = block.getTypeId();
-            this.d = block.getData();
+            this.bd = block.getBlockData();
             this.x = block.getX();
             this.y = block.getY();
             this.z = block.getZ();
@@ -314,19 +307,11 @@ public class PullBrush extends Brush
         }
 
         /**
-         * @return the d
+         * @return the bd
          */
-        public byte getD()
+        public BlockData getBD()
         {
-            return this.d;
-        }
-
-        /**
-         * @return the id
-         */
-        public int getId()
-        {
-            return this.id;
+            return this.bd;
         }
 
         /**

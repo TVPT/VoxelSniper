@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
+
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Entity_Brush
@@ -50,7 +50,6 @@ public class EntityBrush extends Brush
         this.spawn(v);
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public final void info(final Message vm)
     {
@@ -58,7 +57,6 @@ public class EntityBrush extends Brush
         vm.size();
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public final void parameters(final String[] par, final SnipeData v)
     {

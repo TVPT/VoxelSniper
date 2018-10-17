@@ -1,16 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.google.common.base.Objects;
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.util.UndoDelegate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+
+import com.google.common.base.Objects;
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.UndoDelegate;
 
 
 /**
@@ -30,7 +31,6 @@ public class TreeSnipeBrush extends Brush
         this.setName("Tree Snipe");
     }
 
-    @SuppressWarnings("deprecation")
 	private void single(final SnipeData v, Block targetBlock)
     {
         UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
@@ -40,7 +40,7 @@ public class TreeSnipeBrush extends Brush
         blockBelow.setType(Material.GRASS);
         this.getWorld().generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
         Undo undo = undoDelegate.getUndo();
-        blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
+        blockBelow.setBlockData(currentState.getBlockData(), true);
         undo.put(blockBelow);
         v.owner().storeUndo(undo);
     }

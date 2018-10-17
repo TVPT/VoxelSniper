@@ -4,16 +4,17 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.Message;
-
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author Voxel
  */
 public class pMaterialNoPhys extends vPerformer
 {
-    private int i;
+    private Material t;
 
     public pMaterialNoPhys()
     {
@@ -24,7 +25,7 @@ public class pMaterialNoPhys extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        i = v.getVoxelId();
+        t = v.getVoxelData().getMaterial();
     }
 
     @Override
@@ -34,14 +35,13 @@ public class pMaterialNoPhys extends vPerformer
         vm.voxel();
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public void perform(Block b)
     {
-        if (b.getTypeId() != i)
+        if (b.getType() != t)
         {
             h.put(b);
-            b.setTypeId(i, false);
+            b.setType(t, false);
         }
     }
 }

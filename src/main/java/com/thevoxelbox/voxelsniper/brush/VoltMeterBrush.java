@@ -1,10 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Volt-Meter_Brush
@@ -21,7 +22,6 @@ public class VoltMeterBrush extends Brush
         this.setName("VoltMeter");
     }
 
-    @SuppressWarnings("deprecation")
 	private void data(final SnipeData v)
     {
         final Block block = this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());

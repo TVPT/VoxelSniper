@@ -4,9 +4,10 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.Message;
-
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+
+import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author Voxel
@@ -14,8 +15,7 @@ import org.bukkit.block.Block;
 public class pCombo extends vPerformer
 {
 
-    private int i;
-    private byte d;
+    private BlockData bd;
 
     public pCombo()
     {
@@ -27,22 +27,19 @@ public class pCombo extends vPerformer
     {
         vm.performerName(name);
         vm.voxel();
-        vm.data();
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        i = v.getVoxelId();
-        d = v.getData();
+        bd = v.getVoxelData();
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public void perform(Block b)
     {
         h.put(b);
-        b.setTypeIdAndData(i, d, true);
+        b.setBlockData(bd, true);
     }
 }

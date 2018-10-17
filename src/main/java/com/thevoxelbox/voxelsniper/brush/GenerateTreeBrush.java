@@ -54,7 +54,6 @@ public class GenerateTreeBrush extends Brush
     }
 
     // Branch Creation based on direction chosen from the parameters passed.
-    @SuppressWarnings("deprecation")
 	private void branchCreate(final int xDirection, final int zDirection)
     {
 
@@ -88,7 +87,7 @@ public class GenerateTreeBrush extends Brush
             }
 
             // Add block to undo function.
-            if (this.getBlockIdAt(blockPositionX, blockPositionY, blockPositionZ) != Material.LOG.getId())
+            if (this.getBlockTypeAt(blockPositionX, blockPositionY, blockPositionZ) != Material.LOG)
             {
                 this.undo.put(this.clampY(blockPositionX, blockPositionY, blockPositionZ));
             }
@@ -104,7 +103,6 @@ public class GenerateTreeBrush extends Brush
         blockPositionZ = originZ;
     }
 
-    @SuppressWarnings("deprecation")
 	private void leafNodeCreate()
     {
         // Generates the node size.
@@ -131,10 +129,10 @@ public class GenerateTreeBrush extends Brush
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
                             // If block is Air, create a leaf block.
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z).getType() == Material.AIR)
                             {
                                 // Adds block to undo function.
-                                if (this.getBlockIdAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z));
                                 }
@@ -144,9 +142,9 @@ public class GenerateTreeBrush extends Brush
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX + x, blockPositionY + y, blockPositionZ - z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX + x, blockPositionY + y, blockPositionZ - z).getType() == Material.AIR)
                             {
-                                if (this.getBlockIdAt(blockPositionX + x, blockPositionY + y, blockPositionZ - z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX + x, blockPositionY + y, blockPositionZ - z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z));
                                 }
@@ -155,9 +153,9 @@ public class GenerateTreeBrush extends Brush
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY + y, blockPositionZ + z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX - x, blockPositionY + y, blockPositionZ + z).getType() == Material.AIR)
                             {
-                                if (this.getBlockIdAt(blockPositionX - x, blockPositionY + y, blockPositionZ + z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX - x, blockPositionY + y, blockPositionZ + z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z));
                                 }
@@ -166,9 +164,9 @@ public class GenerateTreeBrush extends Brush
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY + y, blockPositionZ - z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX - x, blockPositionY + y, blockPositionZ - z).getType() == Material.AIR)
                             {
-                                if (this.getBlockIdAt(blockPositionX - x, blockPositionY + y, blockPositionZ - z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX - x, blockPositionY + y, blockPositionZ - z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z));
                                 }
@@ -177,46 +175,46 @@ public class GenerateTreeBrush extends Brush
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX + x, blockPositionY - y, blockPositionZ + z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX + x, blockPositionY - y, blockPositionZ + z).getType() == Material.AIR)
                             {
-                                if (this.getBlockIdAt(blockPositionX + x, blockPositionY - y, blockPositionZ + z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX + x, blockPositionY - y, blockPositionZ + z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z));
                                 }
-                                this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                                this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES, this.leafType, false);
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX + x, blockPositionY - y, blockPositionZ - z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX + x, blockPositionY - y, blockPositionZ - z).getType() == Material.AIR)
                             {
-                                if (this.getBlockIdAt(blockPositionX + x, blockPositionY - y, blockPositionZ - z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX + x, blockPositionY - y, blockPositionZ - z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z));
                                 }
-                                this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                                this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES, this.leafType, false);
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY - y, blockPositionZ + z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX - x, blockPositionY - y, blockPositionZ + z).getType() == Material.AIR)
                             {
-                                if (this.getBlockIdAt(blockPositionX - x, blockPositionY - y, blockPositionZ + z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX - x, blockPositionY - y, blockPositionZ + z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z));
                                 }
-                                this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                                this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z).setTypeIdAndData(Material.LEAVES, this.leafType, false);
                             }
                         }
                         if (this.randGenerator.nextInt(100) >= 30)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY - y, blockPositionZ - z) == Material.AIR.getId())
+                            if (this.getWorld().getBlockAt(blockPositionX - x, blockPositionY - y, blockPositionZ - z).getType() == Material.AIR)
                             {
-                                if (this.getBlockIdAt(blockPositionX - x, blockPositionY - y, blockPositionZ - z) != Material.LEAVES.getId())
+                                if (this.getBlockTypeAt(blockPositionX - x, blockPositionY - y, blockPositionZ - z) != Material.LEAVES)
                                 {
                                     this.undo.put(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z));
                                 }
-                                this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES.getId(), this.leafType, false);
+                                this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z).setTypeIdAndData(Material.LEAVES, this.leafType, false);
                             }
                         }
                     }
@@ -231,7 +229,6 @@ public class GenerateTreeBrush extends Brush
      * @param xDirection
      * @param zDirection
      */
-    @SuppressWarnings("deprecation")
 	private void rootCreate(final int xDirection, final int zDirection)
     {
         // Sets Origin.
@@ -265,12 +262,12 @@ public class GenerateTreeBrush extends Brush
 
                 // If not solid then...
                 // Save for undo function
-                if (this.getBlockIdAt(blockPositionX, blockPositionY, blockPositionZ) != Material.LOG.getId())
+                if (this.getBlockTypeAt(blockPositionX, blockPositionY, blockPositionZ) != Material.LOG)
                 {
                     this.undo.put(this.clampY(blockPositionX, blockPositionY, blockPositionZ));
 
                     // Place log block.
-                    this.clampY(blockPositionX, blockPositionY, blockPositionZ).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                    this.clampY(blockPositionX, blockPositionY, blockPositionZ).setTypeIdAndData(Material.LOG, this.woodType, false);
                 }
                 else
                 {
@@ -338,7 +335,6 @@ public class GenerateTreeBrush extends Brush
         this.rootCreate(-1, -1);
     }
 
-    @SuppressWarnings("deprecation")
 	private void trunkCreate()
     {
         // Creates true circle discs of the set size using the wood type selected.
@@ -353,39 +349,39 @@ public class GenerateTreeBrush extends Brush
                 if ((xSquared + Math.pow(z, 2)) <= bSquared)
                 {
                     // If block is air, then create a block.
-                    if (this.getWorld().getBlockTypeIdAt(blockPositionX + x, blockPositionY, blockPositionZ + z) == Material.AIR.getId())
+                    if (this.getWorld().getBlockAt(blockPositionX + x, blockPositionY, blockPositionZ + z).getType() == Material.AIR)
                     {
                         // Adds block to undo function.
-                        if (this.getBlockIdAt(blockPositionX + x, blockPositionY, blockPositionZ + z) != Material.LOG.getId())
+                        if (this.getBlockTypeAt(blockPositionX + x, blockPositionY, blockPositionZ + z) != Material.LOG)
                         {
                             this.undo.put(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ + z));
                         }
                         // Creates block.
-                        this.clampY(blockPositionX + x, blockPositionY, blockPositionZ + z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                        this.clampY(blockPositionX + x, blockPositionY, blockPositionZ + z).setTypeIdAndData(Material.LOG, this.woodType, false);
                     }
-                    if (this.getWorld().getBlockTypeIdAt(blockPositionX + x, blockPositionY, blockPositionZ - z) == Material.AIR.getId())
+                    if (this.getWorld().getBlockAt(blockPositionX + x, blockPositionY, blockPositionZ - z).getType() == Material.AIR)
                     {
-                        if (this.getBlockIdAt(blockPositionX + x, blockPositionY, blockPositionZ - z) != Material.LOG.getId())
+                        if (this.getBlockTypeAt(blockPositionX + x, blockPositionY, blockPositionZ - z) != Material.LOG)
                         {
                             this.undo.put(this.clampY(blockPositionX + x, blockPositionY, blockPositionZ - z));
                         }
-                        this.clampY(blockPositionX + x, blockPositionY, blockPositionZ - z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                        this.clampY(blockPositionX + x, blockPositionY, blockPositionZ - z).setTypeIdAndData(Material.LOG, this.woodType, false);
                     }
-                    if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY, blockPositionZ + z) == Material.AIR.getId())
+                    if (this.getWorld().getBlockAt(blockPositionX - x, blockPositionY, blockPositionZ + z).getType() == Material.AIR)
                     {
-                        if (this.getBlockIdAt(blockPositionX - x, blockPositionY, blockPositionZ + z) != Material.LOG.getId())
+                        if (this.getBlockTypeAt(blockPositionX - x, blockPositionY, blockPositionZ + z) != Material.LOG)
                         {
                             this.undo.put(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ + z));
                         }
-                        this.clampY(blockPositionX - x, blockPositionY, blockPositionZ + z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                        this.clampY(blockPositionX - x, blockPositionY, blockPositionZ + z).setTypeIdAndData(Material.LOG, this.woodType, false);
                     }
-                    if (this.getWorld().getBlockTypeIdAt(blockPositionX - x, blockPositionY, blockPositionZ - z) == Material.AIR.getId())
+                    if (this.getWorld().getBlockAt(blockPositionX - x, blockPositionY, blockPositionZ - z).getType() == Material.AIR)
                     {
-                        if (this.getBlockIdAt(blockPositionX - x, blockPositionY, blockPositionZ - z) != Material.LOG.getId())
+                        if (this.getBlockTypeAt(blockPositionX - x, blockPositionY, blockPositionZ - z) != Material.LOG)
                         {
                             this.undo.put(this.clampY(blockPositionX - x, blockPositionY, blockPositionZ - z));
                         }
-                        this.clampY(blockPositionX - x, blockPositionY, blockPositionZ - z).setTypeIdAndData(Material.LOG.getId(), this.woodType, false);
+                        this.clampY(blockPositionX - x, blockPositionY, blockPositionZ - z).setTypeIdAndData(Material.LOG, this.woodType, false);
                     }
                 }
             }

@@ -3,13 +3,13 @@ package com.thevoxelbox.voxelsniper.brush;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
-
 import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Dome_Brush
@@ -40,7 +40,6 @@ public class DomeBrush extends Brush
      * @param v
      * @param targetBlock
      */
-    @SuppressWarnings("deprecation")
 	private void generateDome(final SnipeData v, final Block targetBlock)
     {
 
@@ -88,10 +87,10 @@ public class DomeBrush extends Brush
         for (final Vector vector : changeablePositions)
         {
             final Block currentTargetBlock = vector.toLocation(this.getTargetBlock().getWorld()).getBlock();
-            if (currentTargetBlock.getTypeId() != v.getVoxelId() || currentTargetBlock.getData() != v.getData())
+            if (!currentTargetBlock.getBlockData().matches(v.getVoxelData()))
             {
                 undo.put(currentTargetBlock);
-                currentTargetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
+                currentTargetBlock.setBlockData(v.getVoxelData(), true);
             }
         }
 

@@ -2,12 +2,14 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.HashSet;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 /**
  *
@@ -19,11 +21,10 @@ public class StampBrush extends Brush
      */
     protected class BlockWrapper
     {
-        public int id;
+        public BlockData bd;
         public int x;
         public int y;
         public int z;
-        public byte d;
 
         /**
          * @param b
@@ -31,11 +32,9 @@ public class StampBrush extends Brush
          * @param bly
          * @param blz
          */
-        @SuppressWarnings("deprecation")
 		public BlockWrapper(final Block b, final int blx, final int bly, final int blz)
         {
-            this.id = b.getTypeId();
-            this.d = b.getData();
+            this.bd = b.getBlockData();
             this.x = blx;
             this.y = bly;
             this.z = blz;
@@ -80,9 +79,18 @@ public class StampBrush extends Brush
      *
      * @return
      */
-    protected final boolean falling(final int id)
+    protected final boolean falling(final BlockData id)
     {
-        return (id > 7 && id < 14);
+    	switch(id.getMaterial())
+		{
+			case WATER:
+			case LAVA:
+			case SAND:
+			case GRAVEL:
+				return true;
+			default:
+				return false;
+		}
     }
 
     /**
@@ -90,36 +98,70 @@ public class StampBrush extends Brush
      *
      * @return
      */
-    protected final boolean fallsOff(final int id)
+    protected final boolean fallsOff(final BlockData id)
     {
-        switch (id)
+        switch (id.getMaterial())
         {
-            // 6, 37, 38, 39, 40, 50, 51, 55, 59, 63, 64, 65, 66, 69, 70, 71, 72, 75, 76, 77, 83
-            case (6):
-            case (37):
-            case (38):
-            case (39):
-            case (40):
-            case (50):
-            case (51):
-            case (55):
-            case (59):
-            case (63):
-            case (64):
-            case (65):
-            case (66):
-            case (68):
-            case (69):
-            case (70):
-            case (71):
-            case (72):
-            case (75):
-            case (76):
-            case (77):
-            case (78):
-            case (83):
-            case (93):
-            case (94):
+			case OAK_SAPLING:
+			case SPRUCE_SAPLING:
+			case BIRCH_SAPLING:
+			case ACACIA_SAPLING:
+			case JUNGLE_SAPLING:
+			case DARK_OAK_SAPLING:
+			case DANDELION:
+			case POPPY:
+			case BLUE_ORCHID:
+			case ALLIUM:
+			case AZURE_BLUET:
+			case RED_TULIP:
+			case PINK_TULIP:
+			case WHITE_TULIP:
+			case ORANGE_TULIP:
+			case OXEYE_DAISY:
+			case RED_MUSHROOM:
+			case BROWN_MUSHROOM:
+			case TORCH:
+			case WALL_TORCH:
+			case FIRE:
+			case REDSTONE_WIRE:
+			case WHEAT:
+			case SIGN:
+			case WALL_SIGN:
+			case OAK_DOOR:
+			case IRON_DOOR:
+			case BIRCH_DOOR:
+			case ACACIA_DOOR:
+			case JUNGLE_DOOR:
+			case SPRUCE_DOOR:
+			case DARK_OAK_DOOR:
+			case LADDER:
+			case RAIL:
+			case POWERED_RAIL:
+			case DETECTOR_RAIL:
+			case ACTIVATOR_RAIL:
+			case LEVER:
+			case OAK_PRESSURE_PLATE:
+			case BIRCH_PRESSURE_PLATE:
+			case STONE_PRESSURE_PLATE:
+			case ACACIA_PRESSURE_PLATE:
+			case JUNGLE_PRESSURE_PLATE:
+			case SPRUCE_PRESSURE_PLATE:
+			case DARK_OAK_PRESSURE_PLATE:
+			case HEAVY_WEIGHTED_PRESSURE_PLATE:
+			case LIGHT_WEIGHTED_PRESSURE_PLATE:
+			case REDSTONE_TORCH:
+			case REDSTONE_WALL_TORCH:
+			case OAK_BUTTON:
+			case BIRCH_BUTTON:
+			case STONE_BUTTON:
+			case ACACIA_BUTTON:
+			case JUNGLE_BUTTON:
+			case SPRUCE_BUTTON:
+			case DARK_OAK_BUTTON:
+			case SUGAR_CANE:
+			case REPEATER:
+			case COMPARATOR:
+				return true;
             default:
                 return false;
         }
@@ -128,27 +170,23 @@ public class StampBrush extends Brush
     /**
      * @param cb
      */
-    @SuppressWarnings("deprecation")
 	protected final void setBlock(final BlockWrapper cb)
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         this.undo.put(block);
-        block.setTypeId(cb.id);
-        block.setData(cb.d);
+        block.setBlockData(cb.bd);
     }
 
     /**
      * @param cb
      */
-    @SuppressWarnings("deprecation")
 	protected final void setBlockFill(final BlockWrapper cb)
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
-        if (block.getTypeId() == 0)
+        if (block.getType() == Material.AIR)
         {
             this.undo.put(block);
-            block.setTypeId(cb.id);
-            block.setData(cb.d);
+            block.setBlockData(cb.bd);
         }
     }
 
@@ -189,11 +227,11 @@ public class StampBrush extends Brush
             this.solid.clear();
             for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(block.id))
+                if (this.fallsOff(block.bd))
                 {
                     this.fall.add(block);
                 }
-                else if (this.falling(block.id))
+                else if (this.falling(block.bd))
                 {
                     this.drop.add(block);
                 }
@@ -247,15 +285,15 @@ public class StampBrush extends Brush
             this.solid.clear();
             for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(block.id))
+                if (this.fallsOff(block.bd))
                 {
                     this.fall.add(block);
                 }
-                else if (this.falling(block.id))
+                else if (this.falling(block.bd))
                 {
                     this.drop.add(block);
                 }
-                else if (block.id != 0)
+                else if (block.bd.getMaterial() != Material.AIR)
                 {
                     this.solid.add(block);
                     this.setBlockFill(block);
@@ -305,15 +343,15 @@ public class StampBrush extends Brush
             this.solid.clear();
             for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(block.id))
+                if (this.fallsOff(block.bd))
                 {
                     this.fall.add(block);
                 }
-                else if (this.falling(block.id))
+                else if (this.falling(block.bd))
                 {
                     this.drop.add(block);
                 }
-                else if (block.id != 0)
+                else if (block.bd.getMaterial() != Material.AIR)
                 {
                     this.solid.add(block);
                     this.setBlock(block);

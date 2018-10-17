@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * @author DivineRage
@@ -143,19 +143,17 @@ public class ScannerBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     protected final void arrow(final SnipeData v)
     {
-        this.checkFor = Material.getMaterial(v.getVoxelId());
+        this.checkFor = v.getVoxelData().getMaterial();
         this.scan(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     protected final void powder(final SnipeData v)
     {
-        this.checkFor = Material.getMaterial(v.getVoxelId());
+        this.checkFor = v.getVoxelData().getMaterial();
         this.scan(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 

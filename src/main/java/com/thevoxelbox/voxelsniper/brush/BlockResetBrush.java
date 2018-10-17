@@ -2,11 +2,11 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 
 /**
  * @author MikeMatrix
@@ -43,7 +43,6 @@ public class BlockResetBrush extends Brush
         this.setName("Block Reset Brush");
     }
 
-    @SuppressWarnings("deprecation")
 	private void applyBrush(final SnipeData v)
     {
         for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)

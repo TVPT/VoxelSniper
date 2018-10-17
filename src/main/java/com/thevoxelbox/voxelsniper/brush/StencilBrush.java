@@ -53,7 +53,6 @@ public class StencilBrush extends Brush
         this.setName("Stencil");
     }
 
-    @SuppressWarnings("deprecation")
 	private void stencilPaste(final SnipeData v)
     {
         if (this.filename.matches("NoFileLoaded"))
@@ -255,7 +254,6 @@ public class StencilBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
 	private void stencilSave(final SnipeData v)
     {
 
