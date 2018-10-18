@@ -1,10 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
+import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -26,32 +24,6 @@ import org.bukkit.block.Block;
  */
 public class BlockResetSurfaceBrush extends Brush
 {
-    private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
-
-    static
-    {
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WALL_SIGN);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.CHEST);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FURNACE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_WIRE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REPEATER);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SPRUCE_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.OAK_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.JUNGLE_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.BIRCH_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.ACACIA_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DARK_OAK_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.ACACIA_FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.BIRCH_FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.JUNGLE_FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.OAK_FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SPRUCE_FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DARK_OAK_FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.AIR);
-    }
 
     /**
      *
@@ -73,7 +45,7 @@ public class BlockResetSurfaceBrush extends Brush
                 {
 
                     Block block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                    if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(block.getType()))
+                    if (VTags.RESET_DENIED_UPDATE.isTagged(block.getType()))
                     {
                         continue;
                     }

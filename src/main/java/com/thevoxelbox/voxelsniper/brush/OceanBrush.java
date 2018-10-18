@@ -1,16 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_OCEANATOR_5000
@@ -22,47 +19,6 @@ public class OceanBrush extends Brush
     private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
     private static final int WATER_LEVEL_MIN = 12;
     private static final int LOW_CUT_LEVEL = 12;
-    private static final List<Material> EXCLUDED_MATERIALS = new LinkedList<Material>();
-
-    static
-    {
-        EXCLUDED_MATERIALS.add(Material.AIR);
-        EXCLUDED_MATERIALS.add(Material.OAK_SAPLING);
-        EXCLUDED_MATERIALS.add(Material.JUNGLE_SAPLING);
-        EXCLUDED_MATERIALS.add(Material.DARK_OAK_SAPLING);
-        EXCLUDED_MATERIALS.add(Material.BIRCH_SAPLING);
-        EXCLUDED_MATERIALS.add(Material.ACACIA_SAPLING);
-        EXCLUDED_MATERIALS.add(Material.SPRUCE_SAPLING);
-        EXCLUDED_MATERIALS.add(Material.WATER);
-        EXCLUDED_MATERIALS.add(Material.LAVA);
-        EXCLUDED_MATERIALS.add(Material.ACACIA_LOG);
-        EXCLUDED_MATERIALS.add(Material.BIRCH_LOG);
-        EXCLUDED_MATERIALS.add(Material.DARK_OAK_LOG);
-        EXCLUDED_MATERIALS.add(Material.JUNGLE_LOG);
-        EXCLUDED_MATERIALS.add(Material.OAK_LOG);
-        EXCLUDED_MATERIALS.add(Material.SPRUCE_LOG);
-        EXCLUDED_MATERIALS.add(Material.ACACIA_LEAVES);
-        EXCLUDED_MATERIALS.add(Material.BIRCH_LEAVES);
-        EXCLUDED_MATERIALS.add(Material.DARK_OAK_LEAVES);
-        EXCLUDED_MATERIALS.add(Material.JUNGLE_LEAVES);
-        EXCLUDED_MATERIALS.add(Material.OAK_LEAVES);
-        EXCLUDED_MATERIALS.add(Material.SPRUCE_LEAVES);
-        EXCLUDED_MATERIALS.add(Material.DANDELION);
-        EXCLUDED_MATERIALS.add(Material.POPPY);
-        EXCLUDED_MATERIALS.add(Material.RED_MUSHROOM);
-        EXCLUDED_MATERIALS.add(Material.BROWN_MUSHROOM);
-        EXCLUDED_MATERIALS.add(Material.MELON);
-        EXCLUDED_MATERIALS.add(Material.MELON_STEM);
-        EXCLUDED_MATERIALS.add(Material.PUMPKIN);
-        EXCLUDED_MATERIALS.add(Material.PUMPKIN_STEM);
-        EXCLUDED_MATERIALS.add(Material.COCOA);
-        EXCLUDED_MATERIALS.add(Material.SNOW);
-        EXCLUDED_MATERIALS.add(Material.SNOW_BLOCK);
-        EXCLUDED_MATERIALS.add(Material.ICE);
-        EXCLUDED_MATERIALS.add(Material.SUGAR_CANE);
-        EXCLUDED_MATERIALS.add(Material.TALL_GRASS);
-        EXCLUDED_MATERIALS.add(Material.SNOW);
-    }
 
     private int waterLevel = WATER_LEVEL_DEFAULT;
     private boolean coverFloor = false;
@@ -80,7 +36,7 @@ public class OceanBrush extends Brush
         for (int y = this.getWorld().getHighestBlockYAt(bx, bz); y > 0; y--)
         {
             final Material material = this.clampY(bx, y, bz).getType();
-            if (!EXCLUDED_MATERIALS.contains(material))
+            if (!VTags.OCEAN_EXCLUDED.isTagged(material))
             {
                 return y;
             }

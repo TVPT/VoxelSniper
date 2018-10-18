@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.collect.ImmutableList;
+import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Container class for multiple ID/Datavalue pairs.
@@ -13,36 +14,65 @@ import com.google.common.collect.ImmutableList;
 public class VoxelList
 {
 
-    private List<BlockData> values = new ArrayList<BlockData>();
+    private List<BlockData> blocks = new ArrayList<BlockData>();
+    private List<Tag<Material>> tags = new ArrayList<Tag<Material>>();
 
     /**
      * Adds the specified block data the VoxelList.
      * 
      * @param i
      */
-    public void add(BlockData i)
+    public void addBlock(BlockData i)
     {
-        if (!values.contains(i))
+        if (!blocks.contains(i))
         {
-            values.add(i);
+            blocks.add(i);
+        }
+    }
+
+    /**
+     * Adds the specified tag to the VoxelList.
+     */
+    public void addTag(Tag<Material> tag)
+    {
+        if (!tags.contains(tag))
+        {
+            tags.add(tag);
         }
     }
 
     /**
      * Removes the specified block data from the VoxelList.
-     * 
+     *
      * @param i
      * @return true if this list contained the specified element
      */
-    public boolean removeValue(final BlockData i)
+    public boolean removeBlock(final BlockData i)
     {
-        if (values.isEmpty())
+        if (blocks.isEmpty())
         {
             return false;
         }
         else
         {
-            return values.remove(i);
+            return blocks.remove(i);
+        }
+    }
+
+    /**
+     * Removes the specified tag from the VoxelList.
+     *
+     * @return true if this list contained the specified element
+     */
+    public boolean removeTag(final Tag<Material> tag)
+    {
+        if (tags.isEmpty())
+        {
+            return false;
+        }
+        else
+        {
+            return tags.remove(tag);
         }
     }
 
@@ -52,9 +82,16 @@ public class VoxelList
      */
     public boolean contains(final BlockData i)
     {
-        for (BlockData in : values)
+        for (BlockData in : blocks)
         {
-            if(i.matches(in)) {
+            if (i.matches(in)) {
+                return true;
+            }
+        }
+
+        for (Tag<Material> tag : tags)
+        {
+            if (tag.isTagged(i.getMaterial())) {
                 return true;
             }
         }
@@ -66,7 +103,8 @@ public class VoxelList
      */
     public void clear()
     {
-        values.clear();
+        blocks.clear();
+        tags.clear();
     }
 
     /**
@@ -76,18 +114,27 @@ public class VoxelList
      */
     public boolean isEmpty()
     {
-        return values.isEmpty();
+        return blocks.isEmpty() || tags.isEmpty();
     }
 
     /**
-     * Returns a defensive copy of the List with pairs.
+     * Returns a defensive copy of the List.
      *
-     * @return defensive copy of the List with pairs
+     * @return defensive copy of the List
      */
-    public List<BlockData> getList()
+    public List<BlockData> getBlockList()
     {
-        return ImmutableList.copyOf(values);
+        return ImmutableList.copyOf(blocks);
     }
 
+    /**
+     * Returns a defensive copy of the List.
+     *
+     * @return defensive copy of the List
+     */
+    public List<Tag<Material>> getTagList()
+    {
+        return ImmutableList.copyOf(tags);
+    }
 
 }

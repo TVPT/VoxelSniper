@@ -28,7 +28,7 @@ public class VoxelListCommand extends VoxelCommand
         {
             final RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(player, player.getWorld());
             final Block targetBlock = rangeBlockHelper.getTargetBlock();
-            snipeData.getVoxelList().add(new int[]{ targetBlock.getTypeId(), targetBlock.getData() });
+            snipeData.getVoxelList().addBlock(new int[]{ targetBlock.getTypeId(), targetBlock.getData() });
             snipeData.getVoxelMessage().voxelList();
             return true;
         }
@@ -78,12 +78,12 @@ public class VoxelListCommand extends VoxelCommand
                 {
                     if (!remove)
                     {
-                        snipeData.getVoxelList().add(new int[]{ xint, xdat });
+                        snipeData.getVoxelList().addBlock(new int[]{ xint, xdat });
                         snipeData.getVoxelMessage().voxelList();
                     }
                     else
                     {
-                        snipeData.getVoxelList().removeValue(new int[]{ xint, xdat });
+                        snipeData.getVoxelList().removeBlock(new int[]{ xint, xdat });
                         snipeData.getVoxelMessage().voxelList();
                     }
                 }

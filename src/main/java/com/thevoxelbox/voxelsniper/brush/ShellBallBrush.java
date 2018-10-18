@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * THIS BRUSH SHOULD NOT USE PERFORMERS.
@@ -27,8 +28,8 @@ public class ShellBallBrush extends Brush
     {
         final int brushSize = v.getBrushSize();
         final int brushSizeDoubled = 2 * brushSize;
-        final int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
-        final int[][][] newMaterials = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1]; // Array that holds the hollowed materials
+        final BlockData[][][] oldMaterials = new BlockData[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
+        final BlockData[][][] newMaterials = new BlockData[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1]; // Array that holds the hollowed materials
 
         int blockPositionX = targetBlock.getX();
         int blockPositionY = targetBlock.getY();
@@ -40,7 +41,7 @@ public class ShellBallBrush extends Brush
             {
                 for (int z = 0; z <= 2 * (brushSize + 1); z++)
                 {
-                    oldMaterials[x][y][z] = this.getBlockIdAt(blockPositionX - brushSize - 1 + x, blockPositionY - brushSize - 1 + y, blockPositionZ - brushSize - 1 + z);
+                    oldMaterials[x][y][z] = this.getBlockDataAt(blockPositionX - brushSize - 1 + x, blockPositionY - brushSize - 1 + y, blockPositionZ - brushSize - 1 + z);
                 }
             }
         }
@@ -68,34 +69,34 @@ public class ShellBallBrush extends Brush
                 {
                     temp = 0;
 
-                    if (oldMaterials[x + 1 + 1][y + 1][z + 1] == v.getReplaceId())
+                    if (oldMaterials[x + 1 + 1][y + 1][z + 1].matches(v.getReplaceData()))
                     {
                         temp++;
                     }
-                    if (oldMaterials[x + 1 - 1][y + 1][z + 1] == v.getReplaceId())
+                    if (oldMaterials[x + 1 - 1][y + 1][z + 1].matches(v.getReplaceData()))
                     {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1 + 1][z + 1] == v.getReplaceId())
+                    if (oldMaterials[x + 1][y + 1 + 1][z + 1].matches(v.getReplaceData()))
                     {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1 - 1][z + 1] == v.getReplaceId())
+                    if (oldMaterials[x + 1][y + 1 - 1][z + 1].matches(v.getReplaceData()))
                     {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1][z + 1 + 1] == v.getReplaceId())
+                    if (oldMaterials[x + 1][y + 1][z + 1 + 1].matches(v.getReplaceData()))
                     {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1][z + 1 - 1] == v.getReplaceId())
+                    if (oldMaterials[x + 1][y + 1][z + 1 - 1].matches(v.getReplaceData()))
                     {
                         temp++;
                     }
 
                     if (temp == 0)
                     {
-                        newMaterials[x][y][z] = v.getVoxelId();
+                        newMaterials[x][y][z] = v.getVoxelData();
                     }
                 }
             }
@@ -117,11 +118,11 @@ public class ShellBallBrush extends Brush
                 {
                     if (xSquared + ySquared + Math.pow(z - brushSize, 2) <= rSquared)
                     {
-                        if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z) != newMaterials[x][y][z])
+                        if (this.getBlockDataAt(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z) != newMaterials[x][y][z])
                         {
                             undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z));
                         }
-                        this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - brushSize + y, newMaterials[x][y][z]);
+                        this.setBlockDataAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - brushSize + y, newMaterials[x][y][z]);
                     }
                 }
             }

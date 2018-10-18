@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 
 /**
@@ -143,9 +145,20 @@ public class Message
             returnValueBuilder.append("Block Types Selected: ");
             returnValueBuilder.append(ChatColor.AQUA);
 
-            for (BlockData data : snipeData.getVoxelList().getList())
+            for (BlockData data : snipeData.getVoxelList().getBlockList())
             {
                 returnValueBuilder.append(data.getAsString());
+                returnValueBuilder.append(" ");
+            }
+
+            returnValueBuilder.append(ChatColor.DARK_GREEN);
+            returnValueBuilder.append("Tags Selected: ");
+            returnValueBuilder.append(ChatColor.AQUA);
+
+            for (Tag<Material> tag: snipeData.getVoxelList().getTagList())
+            {
+                //TODO: Create a wrapper for tag that holds the name?
+                returnValueBuilder.append(tag.toString());
                 returnValueBuilder.append(" ");
             }
 

@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.VTags;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Underlay_Brush
@@ -113,31 +113,14 @@ public class UnderlayBrush extends PerformBrush
                             if (!this.allBlocks)
                             { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
+                                if(VTags.NATURAL.isTagged(this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)))
                                 {
-                                    case STONE:
-                                    case GRASS:
-                                    case DIRT:
-                                    case SAND:
-                                    case GRAVEL:
-                                    case GOLD_ORE: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess
-                                        // with.
-                                    case IRON_ORE:
-                                    case COAL_ORE:
-                                    case SANDSTONE:
-                                    case MOSSY_COBBLESTONE:
-                                    case CLAY:
-                                    case OBSIDIAN:
-                                    case SNOW:
-                                        for (int d = -1; (d < this.depth - 1); d++)
-                                        {
-                                            this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
-                                            // parameters
-                                            memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                        }
-                                        break;
-                                    default:
-                                        break;
+                                    for (int d = -1; (d < this.depth - 1); d++)
+                                    {
+                                        this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
+                                        // parameters
+                                        memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+                                    }
                                 }
                             }
                             else

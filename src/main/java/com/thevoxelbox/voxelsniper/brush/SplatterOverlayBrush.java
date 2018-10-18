@@ -1,13 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.Random;
-
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.VTags;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import java.util.Random;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Splatter_Overlay_Brush
@@ -134,33 +134,20 @@ public class SplatterOverlayBrush extends PerformBrush
                                 if (!this.allBlocks)
                                 {
                                     // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                    switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
+                                    if (VTags.NATURAL.isTagged(this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)))
                                     {
-                                        case STONE:
-                                        case DIRT:
-                                        case GRASS:
-                                        case SAND:
-                                        case GRAVEL:
-                                        case SANDSTONE:// These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess with.
-                                        case MOSSY_COBBLESTONE:
-                                        case CLAY:
-                                        case OBSIDIAN:
-                                        case SNOW:
-                                            final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
+                                        final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
 
-                                            for (int d = this.depth - 1; ((this.depth - d) <= depth); d--)
+                                        for (int d = this.depth - 1; ((this.depth - d) <= depth); d--)
+                                        {
+                                            if (this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z).getType() != Material.AIR)
                                             {
-                                                if (this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z).getType() != Material.AIR)
-                                                {
-                                                    // fills down as many layers as you specify in parameters
-                                                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d + yOffset, this.getTargetBlock().getZ() + z));
-                                                    // stop it from checking any other blocks in this vertical 1x1 column.
-                                                    memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
-                                                }
+                                                // fills down as many layers as you specify in parameters
+                                                this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d + yOffset, this.getTargetBlock().getZ() + z));
+                                                // stop it from checking any other blocks in this vertical 1x1 column.
+                                                memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
                                             }
-                                            break;
-                                        default:
-                                            break;
+                                        }
                                     }
                                 }
                                 else
@@ -278,32 +265,15 @@ public class SplatterOverlayBrush extends PerformBrush
                                     if (!this.allBlocks)
                                     { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                        switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
+                                        if (VTags.NATURAL.isTagged(this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)))
                                         {
-                                            case STONE:
-                                            case DIRT:
-                                            case GRASS:
-                                            case SAND:
-                                            case GRAVEL:
-                                            case GOLD_ORE: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to
-                                                // mess with.
-                                            case IRON_ORE:
-                                            case COAL_ORE:
-                                            case SANDSTONE:
-                                            case MOSSY_COBBLESTONE:
-                                            case CLAY:
-                                            case OBSIDIAN:
-                                            case SNOW:
-                                                final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
-                                                for (int d = 1; (d < depth + 1); d++)
-                                                {
-                                                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d + yOffset, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify
-                                                    // in parameters
-                                                    memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                                }
-                                                break;
-                                            default:
-                                                break;
+                                            final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
+                                            for (int d = 1; (d < depth + 1); d++)
+                                            {
+                                                this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d + yOffset, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify
+                                                // in parameters
+                                                memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+                                            }
                                         }
                                     }
                                     else

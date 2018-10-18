@@ -1,18 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-
+import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
+
+import java.util.Random;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Heat_Ray
@@ -22,40 +21,15 @@ import org.bukkit.util.noise.PerlinNoiseGenerator;
 public class HeatRayBrush extends Brush
 {
 
-    /**
-     * @author MikeMatrix
-     */
-    private enum FlameableBlock
-    {
-        WOOD(Material.WOOD), SAPLING(Material.SAPLING), LOG(Material.LOG), LEAVES(Material.LEAVES), SPONGE(Material.SPONGE), WEB(Material.WEB), LONG_GRASS(Material.LONG_GRASS), DEAD_BUSH(Material.DEAD_BUSH), WOOL(Material.WOOL), YELLOW_FLOWER(Material.YELLOW_FLOWER), RED_ROSE(Material.RED_ROSE), TORCH(Material.TORCH), FIRE(Material.FIRE), WOOD_STAIRS(Material.WOOD_STAIRS), CROPS(Material.CROPS), SIGN_POST(Material.SIGN_POST), WOODEN_DOOR(Material.WOODEN_DOOR), LADDER(Material.LADDER), WALL_SIGN(Material.WALL_SIGN), WOOD_PLATE(Material.WOOD_PLATE), SNOW(Material.SNOW), ICE(Material.ICE), SUGAR_CANE_BLOCK(Material.SUGAR_CANE_BLOCK), FENCE(Material.FENCE), TRAP_DOOR(Material.TRAP_DOOR), VINE(Material.VINE), FENCE_GATE(Material.FENCE_GATE), WATER_LILLY(Material.WATER_LILY);
-
-        private Material material;
-
-        FlameableBlock(final Material material)
-        {
-            this.material = material;
-        }
-    }
-
     private static final double REQUIRED_OBSIDIAN_DENSITY = 0.6;
     private static final double REQUIRED_COBBLE_DENSITY = 0.5;
     private static final double REQUIRED_FIRE_DENSITY = -0.25;
     private static final double REQUIRED_AIR_DENSITY = 0;
 
-    private static final ArrayList<Material> FLAMABLE_BLOCKS = new ArrayList<Material>();
-
     private int octaves = 5;
     private double frequency = 1;
 
     private double amplitude = 0.3;
-
-    static
-    {
-        for (final FlameableBlock flameableBlock : FlameableBlock.values())
-        {
-            HeatRayBrush.FLAMABLE_BLOCKS.add(flameableBlock.material);
-        }
-    }
 
 
     /**
@@ -105,7 +79,7 @@ public class HeatRayBrush extends Brush
                             continue;
                         }
 
-                        if (HeatRayBrush.FLAMABLE_BLOCKS.contains(currentBlock.getType()))
+                        if (VTags.FLAMABLE.isTagged(currentBlock.getType()))
                         {
                             undo.put(currentBlock);
                             currentBlock.setType(Material.FIRE);

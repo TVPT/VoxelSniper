@@ -1,15 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.HashSet;
-
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
+import java.util.HashSet;
 
 /**
  *
@@ -75,99 +75,6 @@ public class StampBrush extends Brush
     }
 
     /**
-     * @param id
-     *
-     * @return
-     */
-    protected final boolean falling(final BlockData id)
-    {
-        switch(id.getMaterial())
-        {
-            case WATER:
-            case LAVA:
-            case SAND:
-            case GRAVEL:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * @param id
-     *
-     * @return
-     */
-    protected final boolean fallsOff(final BlockData id)
-    {
-        switch (id.getMaterial())
-        {
-            case OAK_SAPLING:
-            case SPRUCE_SAPLING:
-            case BIRCH_SAPLING:
-            case ACACIA_SAPLING:
-            case JUNGLE_SAPLING:
-            case DARK_OAK_SAPLING:
-            case DANDELION:
-            case POPPY:
-            case BLUE_ORCHID:
-            case ALLIUM:
-            case AZURE_BLUET:
-            case RED_TULIP:
-            case PINK_TULIP:
-            case WHITE_TULIP:
-            case ORANGE_TULIP:
-            case OXEYE_DAISY:
-            case RED_MUSHROOM:
-            case BROWN_MUSHROOM:
-            case TORCH:
-            case WALL_TORCH:
-            case FIRE:
-            case REDSTONE_WIRE:
-            case WHEAT:
-            case SIGN:
-            case WALL_SIGN:
-            case OAK_DOOR:
-            case IRON_DOOR:
-            case BIRCH_DOOR:
-            case ACACIA_DOOR:
-            case JUNGLE_DOOR:
-            case SPRUCE_DOOR:
-            case DARK_OAK_DOOR:
-            case LADDER:
-            case RAIL:
-            case POWERED_RAIL:
-            case DETECTOR_RAIL:
-            case ACTIVATOR_RAIL:
-            case LEVER:
-            case OAK_PRESSURE_PLATE:
-            case BIRCH_PRESSURE_PLATE:
-            case STONE_PRESSURE_PLATE:
-            case ACACIA_PRESSURE_PLATE:
-            case JUNGLE_PRESSURE_PLATE:
-            case SPRUCE_PRESSURE_PLATE:
-            case DARK_OAK_PRESSURE_PLATE:
-            case HEAVY_WEIGHTED_PRESSURE_PLATE:
-            case LIGHT_WEIGHTED_PRESSURE_PLATE:
-            case REDSTONE_TORCH:
-            case REDSTONE_WALL_TORCH:
-            case OAK_BUTTON:
-            case BIRCH_BUTTON:
-            case STONE_BUTTON:
-            case ACACIA_BUTTON:
-            case JUNGLE_BUTTON:
-            case SPRUCE_BUTTON:
-            case DARK_OAK_BUTTON:
-            case SUGAR_CANE:
-            case REPEATER:
-            case COMPARATOR:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
      * @param cb
      */
     protected final void setBlock(final BlockWrapper cb)
@@ -227,11 +134,11 @@ public class StampBrush extends Brush
             this.solid.clear();
             for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(block.bd))
+                if (VTags.POP_OFF.isTagged(block.bd.getMaterial()))
                 {
                     this.fall.add(block);
                 }
-                else if (this.falling(block.bd))
+                else if (VTags.FALLING.isTagged(block.bd.getMaterial()))
                 {
                     this.drop.add(block);
                 }
@@ -285,11 +192,11 @@ public class StampBrush extends Brush
             this.solid.clear();
             for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(block.bd))
+                if (VTags.POP_OFF.isTagged(block.bd.getMaterial()))
                 {
                     this.fall.add(block);
                 }
-                else if (this.falling(block.bd))
+                else if (VTags.FALLING.isTagged(block.bd.getMaterial()))
                 {
                     this.drop.add(block);
                 }
@@ -343,11 +250,11 @@ public class StampBrush extends Brush
             this.solid.clear();
             for (final BlockWrapper block : this.clone)
             {
-                if (this.fallsOff(block.bd))
+                if (VTags.POP_OFF.isTagged(block.bd.getMaterial()))
                 {
                     this.fall.add(block);
                 }
-                else if (this.falling(block.bd))
+                else if (VTags.FALLING.isTagged(block.bd.getMaterial()))
                 {
                     this.drop.add(block);
                 }

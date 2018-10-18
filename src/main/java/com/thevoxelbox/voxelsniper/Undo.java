@@ -1,11 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.bukkit.Material;
+import com.google.common.collect.Sets;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
@@ -17,7 +12,9 @@ import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
-import com.google.common.collect.Sets;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Holds {@link BlockState}s that can be later on used to reset those block
@@ -25,89 +22,6 @@ import com.google.common.collect.Sets;
  */
 public class Undo {
 
-    private static final Set<Material> FALLING_MATERIALS = EnumSet.of(
-            Material.WATER,
-            Material.LAVA);
-    private static final Set<Material> FALLOFF_MATERIALS = EnumSet.of(
-            Material.OAK_SAPLING,
-            Material.JUNGLE_SAPLING,
-            Material.DARK_OAK_SAPLING,
-            Material.BIRCH_SAPLING,
-            Material.ACACIA_SAPLING,
-            Material.SPRUCE_SAPLING,
-            Material.BLACK_BED,
-            Material.BLUE_BED,
-            Material.BROWN_BED,
-            Material.CYAN_BED,
-            Material.GRAY_BED,
-            Material.GREEN_BED,
-            Material.LIGHT_BLUE_BED,
-            Material.LIGHT_GRAY_BED,
-            Material.LIME_BED,
-            Material.MAGENTA_BED,
-            Material.ORANGE_BED,
-            Material.PINK_BED,
-            Material.PURPLE_BED,
-            Material.RED_BED,
-            Material.WHITE_BED,
-            Material.YELLOW_BED,
-            Material.POWERED_RAIL,
-            Material.DETECTOR_RAIL,
-            Material.TALL_GRASS,
-            Material.DEAD_BUSH,
-            Material.PISTON_HEAD,
-            Material.DANDELION,
-            Material.POPPY,
-            Material.BROWN_MUSHROOM,
-            Material.RED_MUSHROOM,
-            Material.TORCH,
-            Material.FIRE,
-            Material.WHEAT,
-            Material.SIGN,
-            Material.DARK_OAK_DOOR,
-            Material.ACACIA_DOOR,
-            Material.BIRCH_DOOR,
-            Material.IRON_DOOR,
-            Material.JUNGLE_DOOR,
-            Material.OAK_DOOR,
-            Material.SPRUCE_DOOR,
-            Material.LADDER,
-            Material.RAIL,
-            Material.ACTIVATOR_RAIL,
-            Material.DETECTOR_RAIL,
-            Material.POWERED_RAIL,
-            Material.WALL_SIGN,
-            Material.LEVER,
-            Material.ACACIA_PRESSURE_PLATE,
-            Material.BIRCH_PRESSURE_PLATE,
-            Material.JUNGLE_PRESSURE_PLATE,
-            Material.OAK_PRESSURE_PLATE,
-            Material.SPRUCE_PRESSURE_PLATE,
-            Material.STONE_PRESSURE_PLATE,
-            Material.DARK_OAK_PRESSURE_PLATE,
-            Material.HEAVY_WEIGHTED_PRESSURE_PLATE,
-            Material.LIGHT_WEIGHTED_PRESSURE_PLATE,
-            Material.IRON_DOOR,
-            Material.REDSTONE_TORCH,
-            Material.REDSTONE_WIRE,
-            Material.STONE_BUTTON,
-            Material.SNOW,
-            Material.CACTUS,
-            Material.SUGAR_CANE,
-            Material.CAKE,
-            Material.REPEATER,
-            Material.ACACIA_TRAPDOOR,
-            Material.BIRCH_TRAPDOOR,
-            Material.DARK_OAK_TRAPDOOR,
-            Material.IRON_TRAPDOOR,
-            Material.JUNGLE_TRAPDOOR,
-            Material.OAK_TRAPDOOR,
-            Material.SPRUCE_TRAPDOOR,
-            Material.PUMPKIN_STEM,
-            Material.MELON_STEM,
-            Material.VINE,
-            Material.LILY_PAD,
-            Material.NETHER_WART);
     private final Set<Vector> containing = Sets.newHashSet();
     private final List<BlockState> all;
     private final List<BlockState> falloff;
@@ -142,9 +56,9 @@ public class Undo {
             return;
         }
         this.containing.add(pos);
-        if (Undo.FALLING_MATERIALS.contains(block.getType())) {
+        if (VTags.POP_OFF.isTagged(block.getType())) {
             dropdown.add(block.getState());
-        } else if (Undo.FALLOFF_MATERIALS.contains(block.getType())) {
+        } else if (VTags.POP_OFF.isTagged(block.getType())) {
             falloff.add(block.getState());
         } else {
             all.add(block.getState());

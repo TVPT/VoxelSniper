@@ -3,9 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import java.util.EnumSet;
-import java.util.Set;
-
+import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,11 +15,6 @@ import org.bukkit.block.Block;
  */
 public class EraserBrush extends Brush
 {
-
-    private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(
-            Material.AIR, Material.STONE, Material.GRASS, Material.DIRT, Material.SAND, Material.GRAVEL, Material.SANDSTONE);
-    private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(
-            Material.WATER, Material.STATIONARY_WATER, Material.LAVA, Material.STATIONARY_LAVA);
 
     /**
      *
@@ -48,8 +41,7 @@ public class EraserBrush extends Brush
                 {
                     int currentZ = this.getTargetBlock().getZ() - brushSize + z;
                     Block currentBlock = world.getBlockAt(currentX, currentY, currentZ);
-                    if (EXCLUSIVE_MATERIALS.contains(currentBlock.getType())
-                            || (keepWater && EXCLUSIVE_LIQUIDS.contains(currentBlock.getType())))
+                    if (VTags.ERASER_EXCLUSIVE.isTagged(currentBlock.getType()) || (keepWater && VTags.LIQUID.isTagged(currentBlock.getType())))
                     {
                         continue;
                     }

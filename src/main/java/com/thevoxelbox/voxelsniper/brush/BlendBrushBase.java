@@ -1,9 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.ChatColor;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Monofraps
@@ -12,6 +15,22 @@ public abstract class BlendBrushBase extends Brush
 {
     protected boolean excludeAir = true;
     protected boolean excludeWater = true;
+    protected static final Material[] BLOCK_MATERIALS;
+
+    static
+    {
+        List<Material> temp = new ArrayList<Material>();
+
+        for (Material mat : Material.values())
+        {
+            if (mat.isBlock())
+            {
+                temp.add(mat);
+            }
+        }
+
+        BLOCK_MATERIALS = temp.toArray(new Material[0]);
+    }
 
     /**
      * @param v

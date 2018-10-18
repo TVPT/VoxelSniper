@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.EnumMap;
-import java.util.Map;
-
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
@@ -85,7 +84,7 @@ public class BlendBallBrush extends BlendBrushBase
                     }
 
                     // Find most common neighboring material.
-                    for (Material material : Material.values())
+                    for (Material material : BLOCK_MATERIALS)
                     {
                         int freq = materialFrequency.get(material);
                         if (freq > modeMatCount && !(this.excludeAir && material == Material.AIR) && !(this.excludeWater && (material == Material.WATER)))
@@ -96,7 +95,7 @@ public class BlendBallBrush extends BlendBrushBase
                     }
 
                     // Make sure there'world not a tie for most common
-                    for (Material material : Material.values()) {
+                    for (Material material : BLOCK_MATERIALS) {
                         if (material == modeMat) {
                             break;
                         }
