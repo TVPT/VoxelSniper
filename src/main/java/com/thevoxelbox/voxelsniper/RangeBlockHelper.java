@@ -166,7 +166,7 @@ public class RangeBlockHelper
      *
      * @return Block
      */
-	public final Block getFaceBlock()
+    public final Block getFaceBlock()
     {
         while ((this.getNextBlock() != null) && (this.getCurBlock().getType() == Material.AIR))
         {
@@ -252,7 +252,7 @@ public class RangeBlockHelper
      *
      * @return Block
      */
-	public final Block getTargetBlock()
+    public final Block getTargetBlock()
     {
         this.fromOffworld();
         while ((this.getNextBlock() != null) && (this.getCurBlock().getType() == Material.AIR))
@@ -267,7 +267,7 @@ public class RangeBlockHelper
      *
      * @param type
      */
-	public final void setCurBlock(final Material type)
+    public final void setCurBlock(final Material type)
     {
         if (this.getCurBlock() != null)
         {
@@ -280,7 +280,7 @@ public class RangeBlockHelper
      *
      * @param type
      */
-	public final void setFaceBlock(final Material type)
+    public final void setFaceBlock(final Material type)
     {
         while ((this.getNextBlock() != null) && (this.getCurBlock().getType() == Material.AIR))
         {
@@ -297,7 +297,7 @@ public class RangeBlockHelper
      *
      * @param type
      */
-	public final void setLastBlock(final Material type)
+    public final void setLastBlock(final Material type)
     {
         if (this.getLastBlock() != null)
         {
@@ -310,7 +310,7 @@ public class RangeBlockHelper
      *
      * @param type
      */
-	public final void setTargetBlock(final Material type)
+    public final void setTargetBlock(final Material type)
     {
         while ((this.getNextBlock() != null) && (this.getCurBlock().getType() == Material.AIR))
         {
@@ -322,7 +322,7 @@ public class RangeBlockHelper
         }
     }
 
-	private Block getRange()
+    private Block getRange()
     {
         this.lastX = this.targetX;
         this.lastY = this.targetY;

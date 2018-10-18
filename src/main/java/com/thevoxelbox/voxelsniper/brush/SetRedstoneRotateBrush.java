@@ -58,32 +58,32 @@ public class SetRedstoneRotateBrush extends Brush
         }
     }
 
-	private void perform(final Block bl)
+    private void perform(final Block bl)
     {
         if (bl.getType() == Material.REPEATER)
         {
-			this.undo.put(bl);
-			Repeater repeater = (Repeater)bl.getBlockData();
-			BlockFace newFace;
-			switch(repeater.getFacing())
-			{
-				case NORTH:
-					newFace = BlockFace.EAST;
-					break;
-				case EAST:
-					newFace = BlockFace.SOUTH;
-					break;
-				case SOUTH:
-					newFace = BlockFace.WEST;
-					break;
-				case WEST:
-					newFace = BlockFace.NORTH;
-					break;
-				default:
-					newFace = null;
-					break;
-			}
-			repeater.setFacing(newFace);
+            this.undo.put(bl);
+            Repeater repeater = (Repeater)bl.getBlockData();
+            BlockFace newFace;
+            switch(repeater.getFacing())
+            {
+                case NORTH:
+                    newFace = BlockFace.EAST;
+                    break;
+                case EAST:
+                    newFace = BlockFace.SOUTH;
+                    break;
+                case SOUTH:
+                    newFace = BlockFace.WEST;
+                    break;
+                case WEST:
+                    newFace = BlockFace.NORTH;
+                    break;
+                default:
+                    newFace = null;
+                    break;
+            }
+            repeater.setFacing(newFace);
         }
     }
 

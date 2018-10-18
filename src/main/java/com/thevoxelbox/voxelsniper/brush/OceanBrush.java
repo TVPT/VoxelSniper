@@ -26,13 +26,13 @@ public class OceanBrush extends Brush
 
     static
     {
-		EXCLUDED_MATERIALS.add(Material.AIR);
-		EXCLUDED_MATERIALS.add(Material.OAK_SAPLING);
-		EXCLUDED_MATERIALS.add(Material.JUNGLE_SAPLING);
-		EXCLUDED_MATERIALS.add(Material.DARK_OAK_SAPLING);
-		EXCLUDED_MATERIALS.add(Material.BIRCH_SAPLING);
-		EXCLUDED_MATERIALS.add(Material.ACACIA_SAPLING);
-		EXCLUDED_MATERIALS.add(Material.SPRUCE_SAPLING);
+        EXCLUDED_MATERIALS.add(Material.AIR);
+        EXCLUDED_MATERIALS.add(Material.OAK_SAPLING);
+        EXCLUDED_MATERIALS.add(Material.JUNGLE_SAPLING);
+        EXCLUDED_MATERIALS.add(Material.DARK_OAK_SAPLING);
+        EXCLUDED_MATERIALS.add(Material.BIRCH_SAPLING);
+        EXCLUDED_MATERIALS.add(Material.ACACIA_SAPLING);
+        EXCLUDED_MATERIALS.add(Material.SPRUCE_SAPLING);
         EXCLUDED_MATERIALS.add(Material.WATER);
         EXCLUDED_MATERIALS.add(Material.LAVA);
         EXCLUDED_MATERIALS.add(Material.ACACIA_LOG);
@@ -92,7 +92,7 @@ public class OceanBrush extends Brush
      * @param v
      * @param undo
      */
-	protected final void oceanator(final SnipeData v, final Undo undo)
+    protected final void oceanator(final SnipeData v, final Undo undo)
     {
         final World world = this.getWorld();
 

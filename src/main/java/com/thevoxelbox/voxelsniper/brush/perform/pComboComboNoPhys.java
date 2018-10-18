@@ -15,8 +15,8 @@ import com.thevoxelbox.voxelsniper.Message;
 public class pComboComboNoPhys extends vPerformer
 {
 
-	private BlockData vd;
-	private BlockData rd;
+    private BlockData vd;
+    private BlockData rd;
 
     public pComboComboNoPhys()
     {
@@ -27,8 +27,8 @@ public class pComboComboNoPhys extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-		vd = v.getVoxelData();
-		rd = v.getReplaceData();
+        vd = v.getVoxelData();
+        rd = v.getReplaceData();
     }
 
     @Override
@@ -39,10 +39,10 @@ public class pComboComboNoPhys extends vPerformer
         vm.replace();
     }
 
-	@Override
+    @Override
     public void perform(Block b)
     {
-		if (b.getBlockData().matches(rd))
+        if (b.getBlockData().matches(rd))
         {
             h.put(b);
             b.setBlockData(vd, false);

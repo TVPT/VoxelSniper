@@ -74,7 +74,7 @@ public class RandomErodeBrush extends Brush
         }
     }
 
-	private boolean fill(final int x, final int y, final int z)
+    private boolean fill(final int x, final int y, final int z)
     {
         if (this.snap[x][y][z].isSolid())
         {
@@ -172,7 +172,7 @@ public class RandomErodeBrush extends Brush
         }
     }
 
-	private void rerosion(final SnipeData v)
+    private void rerosion(final SnipeData v)
     {
         final Undo undo = new Undo();
 
@@ -255,7 +255,7 @@ public class RandomErodeBrush extends Brush
         v.owner().storeUndo(undo);
     }
 
-	private void rfilling(final SnipeData v)
+    private void rfilling(final SnipeData v)
     {
         final Undo undo = new Undo();
 
@@ -398,7 +398,7 @@ public class RandomErodeBrush extends Brush
         /**
          * @param bl
          */
-		public BlockWrapper(final Block bl)
+        public BlockWrapper(final Block bl)
         {
             this.setNativeBlock(bl);
             this.setBD(bl.getBlockData());

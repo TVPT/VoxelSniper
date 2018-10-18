@@ -15,7 +15,7 @@ import com.thevoxelbox.voxelsniper.Message;
 public class pComboNoUndo extends vPerformer
 {
 
-	private BlockData bd;
+    private BlockData bd;
 
     public pComboNoUndo()
     {
@@ -25,8 +25,8 @@ public class pComboNoUndo extends vPerformer
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
-		w = v.getWorld();
-		bd = v.getVoxelData();
+        w = v.getWorld();
+        bd = v.getVoxelData();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class pComboNoUndo extends vPerformer
         vm.voxel();
     }
 
-	@Override
+    @Override
     public void perform(Block b)
     {
         if (b.getBlockData().matches(bd))

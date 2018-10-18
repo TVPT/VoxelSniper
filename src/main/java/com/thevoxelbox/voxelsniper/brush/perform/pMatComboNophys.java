@@ -40,14 +40,14 @@ public class pMatComboNophys extends vPerformer
         vm.replace();
     }
 
-	@Override
+    @Override
     public void perform(Block b)
     {
-		if (b.getBlockData().matches(rd))
-		{
-			h.put(b);
-			b.setType(t, false);
-		}
+        if (b.getBlockData().matches(rd))
+        {
+            h.put(b);
+            b.setType(t, false);
+        }
     }
 
     @Override

@@ -40,12 +40,12 @@ public class pExcludeCombo extends vPerformer
         excludeList = v.getVoxelList();
     }
 
-	@Override
+    @Override
     public void perform(Block b)
     {
-    	if(!excludeList.contains(b.getBlockData())) {
-			h.put(b);
-			b.setBlockData(bd, true);
-		}
+        if(!excludeList.contains(b.getBlockData())) {
+            h.put(b);
+            b.setBlockData(bd, true);
+        }
     }
 }

@@ -22,7 +22,7 @@ public class VoltMeterBrush extends Brush
         this.setName("VoltMeter");
     }
 
-	private void data(final SnipeData v)
+    private void data(final SnipeData v)
     {
         final Block block = this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
         final byte data = block.getData();

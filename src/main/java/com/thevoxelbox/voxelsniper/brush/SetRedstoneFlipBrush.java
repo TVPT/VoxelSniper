@@ -59,23 +59,23 @@ public class SetRedstoneFlipBrush extends Brush
         }
     }
 
-	private void perform(final Block bl)
+    private void perform(final Block bl)
     {
         if (bl.getType() == Material.REPEATER)
         {
-			Repeater repeater = (Repeater)bl.getBlockData();
-			BlockFace facing = repeater.getFacing();
-			if (this.northSouth)
+            Repeater repeater = (Repeater)bl.getBlockData();
+            BlockFace facing = repeater.getFacing();
+            if (this.northSouth)
             {
-            	if(facing == BlockFace.NORTH || facing == BlockFace.SOUTH) {
-            		repeater.setFacing(facing.getOppositeFace());
-				}
+                if(facing == BlockFace.NORTH || facing == BlockFace.SOUTH) {
+                    repeater.setFacing(facing.getOppositeFace());
+                }
             }
             else
             {
-				if(facing == BlockFace.WEST || facing == BlockFace.EAST) {
-					repeater.setFacing(facing.getOppositeFace());
-				}
+                if(facing == BlockFace.WEST || facing == BlockFace.EAST) {
+                    repeater.setFacing(facing.getOppositeFace());
+                }
             }
         }
     }

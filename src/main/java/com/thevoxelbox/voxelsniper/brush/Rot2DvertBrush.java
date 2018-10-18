@@ -31,7 +31,7 @@ public class Rot2DvertBrush extends Brush
         this.setName("2D Rotation");
     }
 
-	private void getMatrix()
+    private void getMatrix()
     {
         this.brushSize = (this.bSize * 2) + 1;
 

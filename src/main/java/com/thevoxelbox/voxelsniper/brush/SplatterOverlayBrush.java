@@ -42,7 +42,7 @@ public class SplatterOverlayBrush extends PerformBrush
         this.setName("Splatter Overlay");
     }
 
-	private void sOverlay(final SnipeData v)
+    private void sOverlay(final SnipeData v)
     {
 
         // Splatter Time
@@ -136,16 +136,16 @@ public class SplatterOverlayBrush extends PerformBrush
                                     // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
                                     switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
                                     {
-										case STONE:
-										case DIRT:
-										case GRASS:
-										case SAND:
-										case GRAVEL:
-										case SANDSTONE:// These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess with.
-										case MOSSY_COBBLESTONE:
-										case CLAY:
-										case OBSIDIAN:
-										case SNOW:
+                                        case STONE:
+                                        case DIRT:
+                                        case GRASS:
+                                        case SAND:
+                                        case GRAVEL:
+                                        case SANDSTONE:// These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess with.
+                                        case MOSSY_COBBLESTONE:
+                                        case CLAY:
+                                        case OBSIDIAN:
+                                        case SNOW:
                                             final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
 
                                             for (int d = this.depth - 1; ((this.depth - d) <= depth); d--)
@@ -280,20 +280,20 @@ public class SplatterOverlayBrush extends PerformBrush
 
                                         switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
                                         {
-											case STONE:
-											case DIRT:
+                                            case STONE:
+                                            case DIRT:
                                             case GRASS:
-											case SAND:
-											case GRAVEL:
-											case GOLD_ORE: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to
+                                            case SAND:
+                                            case GRAVEL:
+                                            case GOLD_ORE: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to
                                                 // mess with.
-											case IRON_ORE:
-											case COAL_ORE:
-											case SANDSTONE:
-											case MOSSY_COBBLESTONE:
-											case CLAY:
-											case OBSIDIAN:
-											case SNOW:
+                                            case IRON_ORE:
+                                            case COAL_ORE:
+                                            case SANDSTONE:
+                                            case MOSSY_COBBLESTONE:
+                                            case CLAY:
+                                            case OBSIDIAN:
+                                            case SNOW:
                                                 final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
                                                 for (int d = 1; (d < depth + 1); d++)
                                                 {

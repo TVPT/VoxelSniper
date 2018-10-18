@@ -29,7 +29,7 @@ public class UndoDelegate implements BlockChangeDelegate
         this.currentUndo = new Undo();
     }
 
-	@Override
+    @Override
     public boolean setBlockData(int x, int y, int z, BlockData data)
     {
         this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
@@ -37,14 +37,14 @@ public class UndoDelegate implements BlockChangeDelegate
         return true;
     }
     
-	public void setBlock(Block b)
+    public void setBlock(Block b)
     {
         this.currentUndo.put(this.targetWorld.getBlockAt(b.getLocation()));
         this.targetWorld.getBlockAt(b.getLocation()).setBlockData(b.getBlockData(), true);
     }
     
 
-	@Override
+    @Override
     public BlockData getBlockData(int x, int y, int z)
     {
         return this.targetWorld.getBlockAt(x, y, z).getBlockData();

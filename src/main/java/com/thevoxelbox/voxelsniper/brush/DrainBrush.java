@@ -26,16 +26,16 @@ public class DrainBrush extends Brush
         this.setName("Drain");
     }
 
-	private void drain(final SnipeData v)
+    private void drain(final SnipeData v)
     {
         final int brushSize = v.getBrushSize();
         final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
         final Undo undo = new Undo();
 
-		int tx = this.getTargetBlock().getX();
-		int ty = this.getTargetBlock().getY();
-		int tz = this.getTargetBlock().getZ();
-		if (this.disc)
+        int tx = this.getTargetBlock().getX();
+        int ty = this.getTargetBlock().getY();
+        int tz = this.getTargetBlock().getZ();
+        if (this.disc)
         {
             for (int x = brushSize; x >= 0; x--)
             {
@@ -45,7 +45,7 @@ public class DrainBrush extends Brush
                 {
                     if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared)
                     {
-						if (this.getBlockTypeAt(tx + x, ty, tz + y) == Material.WATER || this.getBlockTypeAt(tx + x, ty, tz + y) == Material.LAVA)
+                        if (this.getBlockTypeAt(tx + x, ty, tz + y) == Material.WATER || this.getBlockTypeAt(tx + x, ty, tz + y) == Material.LAVA)
                         {
                             undo.put(this.clampY(tx + x, ty, tz + y));
                             this.setBlockTypeAt(tz + y, tx + x, ty, Material.AIR);
@@ -86,13 +86,13 @@ public class DrainBrush extends Brush
                     {
                         if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared)
                         {
-							int bsx = tx + x - brushSize;
-							int bsy = ty + z - brushSize;
-							int bsz = tz + y - brushSize;
-							if (this.getBlockTypeAt(bsx, bsy, bsz) == Material.WATER || this.getBlockTypeAt(bsx, bsy, bsz) == Material.LAVA)
+                            int bsx = tx + x - brushSize;
+                            int bsy = ty + z - brushSize;
+                            int bsz = tz + y - brushSize;
+                            if (this.getBlockTypeAt(bsx, bsy, bsz) == Material.WATER || this.getBlockTypeAt(bsx, bsy, bsz) == Material.LAVA)
                             {
                                 undo.put(this.clampY(
-										tx + x, ty + z, tz + y));
+                                        tx + x, ty + z, tz + y));
                                 this.setBlockTypeAt(bsz, bsx, bsy, Material.AIR);
                             }
                         }

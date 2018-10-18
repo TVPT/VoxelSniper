@@ -47,7 +47,7 @@ public class PunishBrush extends PerformBrush
         this.setName("Punish");
     }
 
-	private void applyPunishment(final LivingEntity entity, final SnipeData v)
+    private void applyPunishment(final LivingEntity entity, final SnipeData v)
     {
         switch (this.punishment)
         {

@@ -16,8 +16,8 @@ import com.thevoxelbox.voxelsniper.Message;
 public class pComboMatNoPhys extends vPerformer
 {
 
-	private BlockData vd;
-	private Material rt;
+    private BlockData vd;
+    private Material rt;
 
     public pComboMatNoPhys()
     {
@@ -28,8 +28,8 @@ public class pComboMatNoPhys extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-		vd = v.getVoxelData();
-		rt = v.getReplaceData().getMaterial();
+        vd = v.getVoxelData();
+        rt = v.getReplaceData().getMaterial();
     }
 
     @Override
@@ -40,14 +40,14 @@ public class pComboMatNoPhys extends vPerformer
         vm.replace();
     }
 
-	@Override
+    @Override
     public void perform(Block b)
     {
-		if (b.getType() == rt)
-		{
-			h.put(b);
-			b.setBlockData(vd, false);
-		}
+        if (b.getType() == rt)
+        {
+            h.put(b);
+            b.setBlockData(vd, false);
+        }
     }
 
     @Override

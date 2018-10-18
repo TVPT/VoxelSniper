@@ -31,7 +31,7 @@ public class TreeSnipeBrush extends Brush
         this.setName("Tree Snipe");
     }
 
-	private void single(final SnipeData v, Block targetBlock)
+    private void single(final SnipeData v, Block targetBlock)
     {
         UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
         Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);

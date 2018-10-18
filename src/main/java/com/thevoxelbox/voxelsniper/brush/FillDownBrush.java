@@ -36,23 +36,23 @@ public class FillDownBrush extends PerformBrush
             {
                 if (currentXSquared + Math.pow(z, 2) <= brushSizeSquared)
                 {
-                	int y = 0;
-                	boolean found = false;
-                	if(this.fromExisting) {
-                		for(y = -v.getVoxelHeight(); y < v.getVoxelHeight(); y++) {
-                			final Block currentBlock = this.getWorld().getBlockAt(
-	                                targetBlock.getX() + x,
-	                                targetBlock.getY() + y,
-	                                targetBlock.getZ() + z);
-                			if(!currentBlock.isEmpty()) {
-                    			found = true;
-                				break;
-                			}
-                		}
-                    	if(!found) continue;
-                    	y--;
-                	}
-            		for (; y >= -targetBlock.getY(); --y)
+                    int y = 0;
+                    boolean found = false;
+                    if(this.fromExisting) {
+                        for(y = -v.getVoxelHeight(); y < v.getVoxelHeight(); y++) {
+                            final Block currentBlock = this.getWorld().getBlockAt(
+                                    targetBlock.getX() + x,
+                                    targetBlock.getY() + y,
+                                    targetBlock.getZ() + z);
+                            if(!currentBlock.isEmpty()) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(!found) continue;
+                        y--;
+                    }
+                    for (; y >= -targetBlock.getY(); --y)
                     {
                         final Block currentBlock = this.getWorld().getBlockAt(
                                 targetBlock.getX() + x,
@@ -130,8 +130,8 @@ public class FillDownBrush extends PerformBrush
             }
             else if (par[i].equalsIgnoreCase("-e"))
             {
-            	this.fromExisting = !this.fromExisting;
-            	v.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
+                this.fromExisting = !this.fromExisting;
+                v.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
             }
             else
             {

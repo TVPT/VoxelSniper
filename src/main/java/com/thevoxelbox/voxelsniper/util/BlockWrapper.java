@@ -10,7 +10,7 @@ import org.bukkit.block.data.BlockData;
 public class BlockWrapper
 {
 
-	private BlockData data;
+    private BlockData data;
     private int x;
     private int y;
     private int z;
@@ -19,9 +19,9 @@ public class BlockWrapper
     /**
      * @param block
      */
-	public BlockWrapper(final Block block)
+    public BlockWrapper(final Block block)
     {
-    	this.setBlockData(block.getBlockData());
+        this.setBlockData(block.getBlockData());
         this.setX(block.getX());
         this.setY(block.getY());
         this.setZ(block.getZ());
@@ -29,9 +29,9 @@ public class BlockWrapper
     }
 
     public final BlockData getBlockData()
-	{
-		return this.data;
-	}
+    {
+        return this.data;
+    }
 
     /**
      * @return the world
@@ -66,9 +66,9 @@ public class BlockWrapper
     }
 
     public final void setBlockData(final BlockData data)
-	{
-    	this.data = data;
-	}
+    {
+        this.data = data;
+    }
 
     /**
      * @param world

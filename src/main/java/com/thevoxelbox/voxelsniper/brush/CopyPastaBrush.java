@@ -38,7 +38,7 @@ public class CopyPastaBrush extends Brush
         this.setName("CopyPasta");
     }
 
-	private void doCopy(final SnipeData v)
+    private void doCopy(final SnipeData v)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -73,7 +73,7 @@ public class CopyPastaBrush extends Brush
         }
     }
 
-	private void doPasta(final SnipeData v)
+    private void doPasta(final SnipeData v)
     {
         final Undo undo = new Undo();
 
@@ -104,7 +104,7 @@ public class CopyPastaBrush extends Brush
 
                     if (!(this.blockDataArray[currentPosition].getMaterial() == Material.AIR && !this.pasteAir))
                     {
-                    	BlockData data = this.blockDataArray[currentPosition];
+                        BlockData data = this.blockDataArray[currentPosition];
                         if (!block.getBlockData().equals(data))
                         {
                             undo.put(block);

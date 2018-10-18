@@ -245,7 +245,7 @@ public class Sniper
                     performerBrush.initP(snipeData);
                 }
 
-				return sniperTool.getCurrentBrush().perform(snipeAction, snipeData, targetBlock, lastBlock);
+                return sniperTool.getCurrentBrush().perform(snipeAction, snipeData, targetBlock, lastBlock);
             }
         }
         return false;

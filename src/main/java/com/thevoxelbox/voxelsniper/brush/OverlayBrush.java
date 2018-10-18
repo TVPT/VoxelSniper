@@ -68,12 +68,12 @@ public class OverlayBrush extends PerformBrush
         v.owner().storeUndo(this.current.getUndo());
     }
 
-	private boolean isIgnoredBlock(Material material)
+    private boolean isIgnoredBlock(Material material)
     {
         return material == Material.WATER || material.isTransparent() || material == Material.CACTUS;
     }
 
-	private boolean isOverrideableMaterial(Material material)
+    private boolean isOverrideableMaterial(Material material)
     {
         if (allBlocks && !(material == Material.AIR))
         {
@@ -82,16 +82,16 @@ public class OverlayBrush extends PerformBrush
 
         switch (material)
         {
-			case STONE:
-			case DIRT:
-			case GRASS:
-			case SAND:
-			case GRAVEL:
-			case SANDSTONE:
-			case MOSSY_COBBLESTONE:
-			case CLAY:
-			case OBSIDIAN:
-			case SNOW:
+            case STONE:
+            case DIRT:
+            case GRASS:
+            case SAND:
+            case GRAVEL:
+            case SANDSTONE:
+            case MOSSY_COBBLESTONE:
+            case CLAY:
+            case OBSIDIAN:
+            case SNOW:
                 return true;
 
             default:
@@ -126,19 +126,19 @@ public class OverlayBrush extends PerformBrush
 
                                         switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
                                         {
-											case STONE:
-											case DIRT:
-											case GRASS:
+                                            case STONE:
+                                            case DIRT:
+                                            case GRASS:
                                             case SAND:
-											case GRAVEL:
-											case GOLD_ORE:
-											case IRON_ORE:
-											case COAL_ORE:
-											case SANDSTONE:
-											case MOSSY_COBBLESTONE:
-											case CLAY:
-											case OBSIDIAN:
-											case SNOW:
+                                            case GRAVEL:
+                                            case GOLD_ORE:
+                                            case IRON_ORE:
+                                            case COAL_ORE:
+                                            case SANDSTONE:
+                                            case MOSSY_COBBLESTONE:
+                                            case CLAY:
+                                            case OBSIDIAN:
+                                            case SNOW:
                                                 for (int d = 1; (d < this.depth + 1); d++)
                                                 {
                                                     this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify

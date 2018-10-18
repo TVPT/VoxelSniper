@@ -84,7 +84,7 @@ public class ErodeBrush extends Brush
         this.erosion(v, this.currentPreset);
     }
 
-	private void erosion(final SnipeData v, final ErosionPreset erosionPreset)
+    private void erosion(final SnipeData v, final ErosionPreset erosionPreset)
     {
 
         final BlockChangeTracker blockChangeTracker = new BlockChangeTracker(this.getTargetBlock().getWorld());
@@ -417,7 +417,7 @@ public class ErodeBrush extends Brush
         private final Material material;
         private final byte data;
 
-		public BlockWrapper(final Block block)
+        public BlockWrapper(final Block block)
         {
             this.block = block;
             this.data = block.getData();

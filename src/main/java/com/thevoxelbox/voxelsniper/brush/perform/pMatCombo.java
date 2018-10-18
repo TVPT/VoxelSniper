@@ -16,8 +16,8 @@ import com.thevoxelbox.voxelsniper.Message;
 public class pMatCombo extends vPerformer
 {
 
-	private BlockData rd;
-	private Material t;
+    private BlockData rd;
+    private Material t;
 
     public pMatCombo()
     {
@@ -40,7 +40,7 @@ public class pMatCombo extends vPerformer
         vm.replace();
     }
 
-	@Override
+    @Override
     public void perform(Block b)
     {
         if (b.getBlockData().matches(rd))

@@ -143,14 +143,14 @@ public class ScannerBrush extends Brush
         }
     }
 
-	@Override
+    @Override
     protected final void arrow(final SnipeData v)
     {
         this.checkFor = v.getVoxelData().getMaterial();
         this.scan(v, this.getTargetBlock().getFace(this.getLastBlock()));
     }
 
-	@Override
+    @Override
     protected final void powder(final SnipeData v)
     {
         this.checkFor = v.getVoxelData().getMaterial();

@@ -88,7 +88,7 @@ public class Rot3DBrush extends Brush
         }
     }
 
-	private void getMatrix()
+    private void getMatrix()
     { // only need to do once. But y needs to change + sphere
         final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
         this.brushSize = (this.bSize * 2) + 1;

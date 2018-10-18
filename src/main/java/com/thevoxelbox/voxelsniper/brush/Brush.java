@@ -223,7 +223,7 @@ public abstract class Brush implements IBrush
      * @param z Z coordinate
      * @return Type ID of Block at given coordinates in the world of the targeted Block.
      */
-	protected Material getBlockTypeAt(int x, int y, int z)
+    protected Material getBlockTypeAt(int x, int y, int z)
     {
         return getWorld().getBlockAt(x, y, z).getType();
     }
@@ -236,7 +236,7 @@ public abstract class Brush implements IBrush
      * @param z Z coordinate
      * @return Block Data Value of Block at given coordinates in the world of the targeted Block.
      */
-	protected BlockData getBlockDataAt(int x, int y, int z)
+    protected BlockData getBlockDataAt(int x, int y, int z)
     {
         return this.getWorld().getBlockAt(x, y, z).getBlockData();
     }
@@ -276,7 +276,7 @@ public abstract class Brush implements IBrush
      * @param y  Y coordinate
      * @param type The type the block will be set to
      */
-	protected final void setBlockTypeAt(int z, int x, int y, Material type)
+    protected final void setBlockTypeAt(int z, int x, int y, Material type)
     {
         this.getWorld().getBlockAt(x, y, z).setType(type);
     }
@@ -289,7 +289,7 @@ public abstract class Brush implements IBrush
      * @param z    Z coordinate
      * @param blockData The block data the block will be set to
      */
-	protected final void setBlockDataAt(int x, int y, int z, BlockData blockData)
+    protected final void setBlockDataAt(int x, int y, int z, BlockData blockData)
     {
         this.getWorld().getBlockAt(x, y, z).setBlockData(blockData, true);
     }

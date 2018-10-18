@@ -22,7 +22,7 @@ public class BlendVoxelDiscBrush extends BlendBrushBase
         this.setName("Blend Voxel Disc");
     }
 
-	@Override
+    @Override
     protected final void blend(final SnipeData v)
     {
         final int brushSize = v.getBrushSize();
@@ -53,8 +53,8 @@ public class BlendVoxelDiscBrush extends BlendBrushBase
         {
             for (int z = 0; z <= brushSizeDoubled; z++)
             {
-				// Map that tracks frequency of materials neighboring given block
-				final Map<Material, Integer> materialFrequency = new EnumMap<Material, Integer>(Material.class);
+                // Map that tracks frequency of materials neighboring given block
+                final Map<Material, Integer> materialFrequency = new EnumMap<Material, Integer>(Material.class);
                 int modeMatCount = 0;
                 Material modeMat = Material.AIR;
                 boolean tiecheck = true;
@@ -65,16 +65,16 @@ public class BlendVoxelDiscBrush extends BlendBrushBase
                     {
                         if (!(m == 0 && n == 0))
                         {
-                        	Material material = oldMaterials[x + 1 + m][z + 1 + n];
-                        	materialFrequency.put(material, materialFrequency.get(material) + 1);
+                            Material material = oldMaterials[x + 1 + m][z + 1 + n];
+                            materialFrequency.put(material, materialFrequency.get(material) + 1);
                         }
                     }
                 }
 
                 // Find most common neighboring material.
-				for (Material material : Material.values())
-				{
-					int freq = materialFrequency.get(material);
+                for (Material material : Material.values())
+                {
+                    int freq = materialFrequency.get(material);
                     if (freq > modeMatCount && !(this.excludeAir && material == Material.AIR) && !(this.excludeWater && (material == Material.WATER)))
                     {
                         modeMatCount = freq;
@@ -82,11 +82,11 @@ public class BlendVoxelDiscBrush extends BlendBrushBase
                     }
                 }
                 // Make sure there'world not a tie for most common
-				for (Material material : Material.values())
-				{
-					if (material == modeMat) {
-						break;
-					}
+                for (Material material : Material.values())
+                {
+                    if (material == modeMat) {
+                        break;
+                    }
                     if (materialFrequency.get(material) == modeMatCount && !(this.excludeAir && material == Material.AIR) && !(this.excludeWater && (material == Material.WATER)))
                     {
                         tiecheck = false;

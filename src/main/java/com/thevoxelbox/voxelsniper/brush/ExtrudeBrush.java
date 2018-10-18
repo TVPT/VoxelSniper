@@ -113,7 +113,7 @@ public class ExtrudeBrush extends Brush
         v.owner().storeUndo(undo);
     }
 
-	private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo)
+    private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo)
     {
         if (v.getVoxelList().contains(this.getBlockDataAt(b1.getX(), b1.getY(), b1.getZ())))
         {

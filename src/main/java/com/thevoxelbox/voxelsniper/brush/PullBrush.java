@@ -107,12 +107,12 @@ public class PullBrush extends Brush
 
     }
 
-	private void setBlock(final BlockWrapper block)
+    private void setBlock(final BlockWrapper block)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
         if (this.getBlockTypeAt(block.getX(), block.getY() - 1, block.getZ()) == Material.AIR)
         {
-        	currentBlock.setBlockData(block.getBD());
+            currentBlock.setBlockData(block.getBD());
             for (int y = block.getY(); y < currentBlock.getY(); y++)
             {
                 this.setBlockTypeAt(block.getZ(), block.getX(), y, Material.AIR);
@@ -120,7 +120,7 @@ public class PullBrush extends Brush
         }
         else
         {
-        	currentBlock.setBlockData(block.getBD());
+            currentBlock.setBlockData(block.getBD());
             for (int y = block.getY() - 1; y < currentBlock.getY(); y++)
             {
                 final Block current = this.clampY(block.getX(), y, block.getZ());
@@ -129,7 +129,7 @@ public class PullBrush extends Brush
         }
     }
 
-	private void setBlockDown(final BlockWrapper block)
+    private void setBlockDown(final BlockWrapper block)
     {
         final Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
         currentBlock.setBlockData(block.getBD());
@@ -162,7 +162,7 @@ public class PullBrush extends Brush
         }
     }
 
-	@Override
+    @Override
     protected final void powder(final SnipeData v)
     {
         this.vh = v.getVoxelHeight();
@@ -287,7 +287,7 @@ public class PullBrush extends Brush
     private final class BlockWrapper
     {
 
-    	private final BlockData bd;
+        private final BlockData bd;
         private final double str;
         private final int x;
         private final int y;
@@ -297,7 +297,7 @@ public class PullBrush extends Brush
          * @param block
          * @param st
          */
-		public BlockWrapper(final Block block, final double st)
+        public BlockWrapper(final Block block, final double st)
         {
             this.bd = block.getBlockData();
             this.x = block.getX();

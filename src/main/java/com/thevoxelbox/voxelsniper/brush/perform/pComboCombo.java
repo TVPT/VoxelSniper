@@ -15,8 +15,8 @@ import com.thevoxelbox.voxelsniper.Message;
 public class pComboCombo extends vPerformer
 {
 
-	private BlockData vd;
-	private BlockData rd;
+    private BlockData vd;
+    private BlockData rd;
 
     public pComboCombo()
     {
@@ -39,7 +39,7 @@ public class pComboCombo extends vPerformer
         vm.replace();
     }
 
-	@Override
+    @Override
     public void perform(Block b)
     {
         if (b.getBlockData().matches(rd))

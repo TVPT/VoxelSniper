@@ -22,10 +22,10 @@ public class VoxelList
      */
     public void add(BlockData i)
     {
-		if (!values.contains(i))
-		{
-			values.add(i);
-		}
+        if (!values.contains(i))
+        {
+            values.add(i);
+        }
     }
 
     /**
@@ -54,9 +54,9 @@ public class VoxelList
     {
         for (BlockData in : values)
         {
-        	if(i.matches(in)) {
-        		return true;
-			}
+            if(i.matches(in)) {
+                return true;
+            }
         }
         return false;
     }

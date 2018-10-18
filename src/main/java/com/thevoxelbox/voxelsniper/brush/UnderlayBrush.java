@@ -27,7 +27,7 @@ public class UnderlayBrush extends PerformBrush
         this.setName("Underlay (Reverse Overlay)");
     }
 
-	private void underlay(final SnipeData v)
+    private void underlay(final SnipeData v)
     {
         final int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
         final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
@@ -46,17 +46,17 @@ public class UnderlayBrush extends PerformBrush
                             { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
                                 switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
                                 {
-									case STONE:
-									case GRASS:
-									case DIRT:
-									case SAND:
-									case GRAVEL: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess
-										// with.
-									case SANDSTONE:
-									case MOSSY_COBBLESTONE:
-									case CLAY:
-									case OBSIDIAN:
-									case SNOW:
+                                    case STONE:
+                                    case GRASS:
+                                    case DIRT:
+                                    case SAND:
+                                    case GRAVEL: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess
+                                        // with.
+                                    case SANDSTONE:
+                                    case MOSSY_COBBLESTONE:
+                                    case CLAY:
+                                    case OBSIDIAN:
+                                    case SNOW:
                                         for (int d = 0; (d < this.depth); d++)
                                         {
                                             if (this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z).getType() != Material.AIR)
@@ -115,20 +115,20 @@ public class UnderlayBrush extends PerformBrush
 
                                 switch (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
                                 {
-									case STONE:
+                                    case STONE:
                                     case GRASS:
                                     case DIRT:
-									case SAND:
-									case GRAVEL:
-									case GOLD_ORE: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess
+                                    case SAND:
+                                    case GRAVEL:
+                                    case GOLD_ORE: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess
                                         // with.
-									case IRON_ORE:
-									case COAL_ORE:
-									case SANDSTONE:
-									case MOSSY_COBBLESTONE:
-									case CLAY:
-									case OBSIDIAN:
-									case SNOW:
+                                    case IRON_ORE:
+                                    case COAL_ORE:
+                                    case SANDSTONE:
+                                    case MOSSY_COBBLESTONE:
+                                    case CLAY:
+                                    case OBSIDIAN:
+                                    case SNOW:
                                         for (int d = -1; (d < this.depth - 1); d++)
                                         {
                                             this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in

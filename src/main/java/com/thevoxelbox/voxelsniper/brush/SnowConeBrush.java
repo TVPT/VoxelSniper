@@ -18,7 +18,7 @@ import com.thevoxelbox.voxelsniper.Undo;
  */
 public class SnowConeBrush extends Brush
 {
-	private void addSnow(final SnipeData v, Block targetBlock)
+    private void addSnow(final SnipeData v, Block targetBlock)
     {
         int brushSize;
         int blockPositionX = targetBlock.getX();
@@ -45,14 +45,14 @@ public class SnowConeBrush extends Brush
             {
                 boolean flag = true;
 
-				int brushX = blockPositionX - brushSize + x;
-				int brushZ = blockPositionZ - brushSize + z;
-				for (int i = 0; i < 10; i++)
+                int brushX = blockPositionX - brushSize + x;
+                int brushZ = blockPositionZ - brushSize + z;
+                for (int i = 0; i < 10; i++)
                 { // overlay
                     if (flag)
                     {
-						int iy = blockPositionY - i;
-						if ((this.getBlockTypeAt(brushX, iy, brushZ) == Material.AIR || this.getBlockTypeAt(brushX, iy, brushZ) == Material.SNOW) && this.getBlockTypeAt(brushX, iy - 1, brushZ) != Material.AIR && this.getBlockTypeAt(brushX, iy - 1, brushZ) != Material.SNOW)
+                        int iy = blockPositionY - i;
+                        if ((this.getBlockTypeAt(brushX, iy, brushZ) == Material.AIR || this.getBlockTypeAt(brushX, iy, brushZ) == Material.SNOW) && this.getBlockTypeAt(brushX, iy - 1, brushZ) != Material.AIR && this.getBlockTypeAt(brushX, iy - 1, brushZ) != Material.SNOW)
                         {
                             flag = false;
                             yOffset[x][z] = i;
@@ -60,8 +60,8 @@ public class SnowConeBrush extends Brush
                     }
                 }
                 snowcone[x][z] = this.getBlockTypeAt(brushX, blockPositionY - yOffset[x][z], brushZ);
-				Block dataBlock = this.clampY(brushX, blockPositionY - yOffset[x][z], brushZ);
-				snowconeData[x][z] = dataBlock.getType() == Material.SNOW ? ((Snow)dataBlock.getBlockData()).getLayers() : 0;
+                Block dataBlock = this.clampY(brushX, blockPositionY - yOffset[x][z], brushZ);
+                snowconeData[x][z] = dataBlock.getType() == Material.SNOW ? ((Snow)dataBlock.getBlockData()).getLayers() : 0;
             }
         }
 
@@ -133,16 +133,16 @@ public class SnowConeBrush extends Brush
             for (int z = 0; z <= brushSizeDoubled; z++)
             {
 
-				Block block = this.clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z);
-				Snow oldSnow = block.getType() == Material.SNOW ? (Snow)block.getBlockData() : null;
-				if (block.getType() != snowcone[x][z] || (oldSnow != null && oldSnow.getLayers() != snowconeData[x][z]))
+                Block block = this.clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z);
+                Snow oldSnow = block.getType() == Material.SNOW ? (Snow)block.getBlockData() : null;
+                if (block.getType() != snowcone[x][z] || (oldSnow != null && oldSnow.getLayers() != snowconeData[x][z]))
                 {
                     undo.put(block);
                 }
                 this.setBlockTypeAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], snowcone[x][z]);
-				if(block.getType() == Material.SNOW) {
-					((Snow)block.getBlockData()).setLayers(snowconeData[x][z]);
-				}
+                if(block.getType() == Material.SNOW) {
+                    ((Snow)block.getBlockData()).setLayers(snowconeData[x][z]);
+                }
             }
         }
         v.owner().storeUndo(undo);

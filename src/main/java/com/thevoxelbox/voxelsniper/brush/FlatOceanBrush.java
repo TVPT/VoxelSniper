@@ -25,7 +25,7 @@ public class FlatOceanBrush extends Brush
         this.setName("FlatOcean");
     }
 
-	private void flatOcean(final Chunk chunk)
+    private void flatOcean(final Chunk chunk)
     {
         for (int x = 0; x < CHUNK_SIZE; x++)
         {

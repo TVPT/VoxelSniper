@@ -32,7 +32,7 @@ public class StampBrush extends Brush
          * @param bly
          * @param blz
          */
-		public BlockWrapper(final Block b, final int blx, final int bly, final int blz)
+        public BlockWrapper(final Block b, final int blx, final int bly, final int blz)
         {
             this.bd = b.getBlockData();
             this.x = blx;
@@ -81,16 +81,16 @@ public class StampBrush extends Brush
      */
     protected final boolean falling(final BlockData id)
     {
-    	switch(id.getMaterial())
-		{
-			case WATER:
-			case LAVA:
-			case SAND:
-			case GRAVEL:
-				return true;
-			default:
-				return false;
-		}
+        switch(id.getMaterial())
+        {
+            case WATER:
+            case LAVA:
+            case SAND:
+            case GRAVEL:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -102,66 +102,66 @@ public class StampBrush extends Brush
     {
         switch (id.getMaterial())
         {
-			case OAK_SAPLING:
-			case SPRUCE_SAPLING:
-			case BIRCH_SAPLING:
-			case ACACIA_SAPLING:
-			case JUNGLE_SAPLING:
-			case DARK_OAK_SAPLING:
-			case DANDELION:
-			case POPPY:
-			case BLUE_ORCHID:
-			case ALLIUM:
-			case AZURE_BLUET:
-			case RED_TULIP:
-			case PINK_TULIP:
-			case WHITE_TULIP:
-			case ORANGE_TULIP:
-			case OXEYE_DAISY:
-			case RED_MUSHROOM:
-			case BROWN_MUSHROOM:
-			case TORCH:
-			case WALL_TORCH:
-			case FIRE:
-			case REDSTONE_WIRE:
-			case WHEAT:
-			case SIGN:
-			case WALL_SIGN:
-			case OAK_DOOR:
-			case IRON_DOOR:
-			case BIRCH_DOOR:
-			case ACACIA_DOOR:
-			case JUNGLE_DOOR:
-			case SPRUCE_DOOR:
-			case DARK_OAK_DOOR:
-			case LADDER:
-			case RAIL:
-			case POWERED_RAIL:
-			case DETECTOR_RAIL:
-			case ACTIVATOR_RAIL:
-			case LEVER:
-			case OAK_PRESSURE_PLATE:
-			case BIRCH_PRESSURE_PLATE:
-			case STONE_PRESSURE_PLATE:
-			case ACACIA_PRESSURE_PLATE:
-			case JUNGLE_PRESSURE_PLATE:
-			case SPRUCE_PRESSURE_PLATE:
-			case DARK_OAK_PRESSURE_PLATE:
-			case HEAVY_WEIGHTED_PRESSURE_PLATE:
-			case LIGHT_WEIGHTED_PRESSURE_PLATE:
-			case REDSTONE_TORCH:
-			case REDSTONE_WALL_TORCH:
-			case OAK_BUTTON:
-			case BIRCH_BUTTON:
-			case STONE_BUTTON:
-			case ACACIA_BUTTON:
-			case JUNGLE_BUTTON:
-			case SPRUCE_BUTTON:
-			case DARK_OAK_BUTTON:
-			case SUGAR_CANE:
-			case REPEATER:
-			case COMPARATOR:
-				return true;
+            case OAK_SAPLING:
+            case SPRUCE_SAPLING:
+            case BIRCH_SAPLING:
+            case ACACIA_SAPLING:
+            case JUNGLE_SAPLING:
+            case DARK_OAK_SAPLING:
+            case DANDELION:
+            case POPPY:
+            case BLUE_ORCHID:
+            case ALLIUM:
+            case AZURE_BLUET:
+            case RED_TULIP:
+            case PINK_TULIP:
+            case WHITE_TULIP:
+            case ORANGE_TULIP:
+            case OXEYE_DAISY:
+            case RED_MUSHROOM:
+            case BROWN_MUSHROOM:
+            case TORCH:
+            case WALL_TORCH:
+            case FIRE:
+            case REDSTONE_WIRE:
+            case WHEAT:
+            case SIGN:
+            case WALL_SIGN:
+            case OAK_DOOR:
+            case IRON_DOOR:
+            case BIRCH_DOOR:
+            case ACACIA_DOOR:
+            case JUNGLE_DOOR:
+            case SPRUCE_DOOR:
+            case DARK_OAK_DOOR:
+            case LADDER:
+            case RAIL:
+            case POWERED_RAIL:
+            case DETECTOR_RAIL:
+            case ACTIVATOR_RAIL:
+            case LEVER:
+            case OAK_PRESSURE_PLATE:
+            case BIRCH_PRESSURE_PLATE:
+            case STONE_PRESSURE_PLATE:
+            case ACACIA_PRESSURE_PLATE:
+            case JUNGLE_PRESSURE_PLATE:
+            case SPRUCE_PRESSURE_PLATE:
+            case DARK_OAK_PRESSURE_PLATE:
+            case HEAVY_WEIGHTED_PRESSURE_PLATE:
+            case LIGHT_WEIGHTED_PRESSURE_PLATE:
+            case REDSTONE_TORCH:
+            case REDSTONE_WALL_TORCH:
+            case OAK_BUTTON:
+            case BIRCH_BUTTON:
+            case STONE_BUTTON:
+            case ACACIA_BUTTON:
+            case JUNGLE_BUTTON:
+            case SPRUCE_BUTTON:
+            case DARK_OAK_BUTTON:
+            case SUGAR_CANE:
+            case REPEATER:
+            case COMPARATOR:
+                return true;
             default:
                 return false;
         }
@@ -170,7 +170,7 @@ public class StampBrush extends Brush
     /**
      * @param cb
      */
-	protected final void setBlock(final BlockWrapper cb)
+    protected final void setBlock(final BlockWrapper cb)
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         this.undo.put(block);
@@ -180,7 +180,7 @@ public class StampBrush extends Brush
     /**
      * @param cb
      */
-	protected final void setBlockFill(final BlockWrapper cb)
+    protected final void setBlockFill(final BlockWrapper cb)
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         if (block.getType() == Material.AIR)

@@ -39,8 +39,8 @@ public class SnipeData
     private int range = 0;
     private boolean ranged = false;
     private boolean lightning = false;
-	private BlockData voxelData = SnipeData.DEFAULT_VOXEL_DATA;
-	private BlockData replaceData = SnipeData.DEFAULT_REPLACE_DATA;
+    private BlockData voxelData = SnipeData.DEFAULT_VOXEL_DATA;
+    private BlockData replaceData = SnipeData.DEFAULT_REPLACE_DATA;
 
     /**
      * @param vs
@@ -50,7 +50,7 @@ public class SnipeData
         this.owner = vs;
     }
 
-	/**
+    /**
      * @return the brushSize
      */
     public final int getBrushSize()
@@ -111,8 +111,8 @@ public class SnipeData
      */
     public final void reset()
     {
-    	this.voxelData = SnipeData.DEFAULT_VOXEL_DATA;
-    	this.replaceData = SnipeData.DEFAULT_REPLACE_DATA;
+        this.voxelData = SnipeData.DEFAULT_VOXEL_DATA;
+        this.replaceData = SnipeData.DEFAULT_REPLACE_DATA;
         this.brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
         this.voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
         this.cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
@@ -127,7 +127,7 @@ public class SnipeData
         this.owner.getPlayer().sendMessage(message);
     }
 
-	/**
+    /**
      * @param brushSize
      *         the brushSize to set
      */
@@ -210,13 +210,13 @@ public class SnipeData
         return this.voxelData;
     }
 
-	public void setReplaceData(final BlockData replaceData)
-	{
-		this.replaceData = replaceData;
-	}
+    public void setReplaceData(final BlockData replaceData)
+    {
+        this.replaceData = replaceData;
+    }
 
-	public BlockData getReplaceData()
-	{
-		return this.replaceData;
-	}
+    public BlockData getReplaceData()
+    {
+        return this.replaceData;
+    }
 }
