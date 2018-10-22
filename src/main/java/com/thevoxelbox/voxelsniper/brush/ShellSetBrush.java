@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+
+import java.util.ArrayList;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
@@ -102,10 +101,10 @@ public class ShellSetBrush extends Brush
                 final Undo undo = new Undo();
                 for (final Block currentBlock : blocks)
                 {
-                    if (currentBlock.getType() != v.getVoxelData().getMaterial())
+                    if (currentBlock.getType() != v.getVoxelMat())
                     {
                         undo.put(currentBlock);
-                        currentBlock.setType(v.getVoxelData().getMaterial());
+                        currentBlock.setType(v.getVoxelMat());
                     }
                 }
                 v.owner().storeUndo(undo);

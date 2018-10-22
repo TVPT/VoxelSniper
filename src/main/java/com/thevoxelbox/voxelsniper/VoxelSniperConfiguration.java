@@ -1,8 +1,10 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.google.common.base.Preconditions;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,9 +74,21 @@ public class VoxelSniperConfiguration
      *
      * @return List of restricted Litesniper Items
      */
-    public List<Integer> getLiteSniperRestrictedItems()
+    public List<Material> getLiteSniperRestrictedItems()
     {
-        return configuration.getIntegerList(CONFIG_IDENTIFIER_LITESNIPER_RESTRICTED_ITEMS);
+        List<String> materialsStrs = configuration.getStringList(CONFIG_IDENTIFIER_LITESNIPER_RESTRICTED_ITEMS);
+        List<Material> materials = new ArrayList<Material>();
+
+        for (String strMat : materialsStrs)
+        {
+            Material mat = Material.getMaterial(strMat);
+            if (mat != null)
+            {
+                materials.add(mat);
+            }
+        }
+
+        return materials;
     }
 
     /**
@@ -82,10 +96,17 @@ public class VoxelSniperConfiguration
      *
      * @param restrictedItems List of restricted Litesniper Items
      */
-    public void setLitesniperRestrictedItems(List<Integer> restrictedItems)
+    public void setLitesniperRestrictedItems(List<Material> restrictedItems)
     {
         Preconditions.checkNotNull(restrictedItems, "Restricted items must be a list.");
-        configuration.set(CONFIG_IDENTIFIER_LITESNIPER_RESTRICTED_ITEMS, restrictedItems);
+        List<String> materialsStrs = new ArrayList<String>();
+
+        for (Material mat : restrictedItems)
+        {
+            materialsStrs.add(mat.name());
+        }
+
+        configuration.set(CONFIG_IDENTIFIER_LITESNIPER_RESTRICTED_ITEMS, materialsStrs);
     }
 
     /**

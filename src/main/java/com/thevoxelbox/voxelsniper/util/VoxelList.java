@@ -66,6 +66,7 @@ public class VoxelList
      */
     public boolean removeTag(final Tag<Material> tag)
     {
+        //TODO: Does equality work on tags?
         if (tags.isEmpty())
         {
             return false;

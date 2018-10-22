@@ -5,43 +5,55 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
-import org.bukkit.Material;
+import com.thevoxelbox.voxelsniper.util.Inker;
+
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
-public class pMaterial extends vPerformer
+public class pInkCombo extends vPerformer
 {
 
-    private Material t;
+    private String i;
+    private BlockData rbd;
 
-    public pMaterial()
+    public pInkCombo()
     {
-        name = "Material";
+        name = "Ink-Combo";
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        t = v.getVoxelMat();
+        i = v.getVoxelInk();
+        rbd = v.getReplaceData();
     }
 
     @Override
     public void info(Message vm)
     {
         vm.performerName(name);
-        vm.voxel();
+        vm.replace();
+        vm.voxelInk();
+        vm.replaceInk();
     }
 
     @Override
     public void perform(Block b)
     {
-        if (b.getType() != t)
+        if (b.getBlockData().matches(rbd))
         {
             h.put(b);
-            b.setType(t);
+            Inker.ink(b, i);
         }
+    }
+
+    @Override
+    public boolean isUsingReplaceMaterial()
+    {
+        return true;
     }
 }

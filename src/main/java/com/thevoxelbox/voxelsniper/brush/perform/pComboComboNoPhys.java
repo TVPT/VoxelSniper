@@ -4,10 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import com.thevoxelbox.voxelsniper.Message;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-
-import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author Voxel
@@ -36,7 +35,9 @@ public class pComboComboNoPhys extends vPerformer
     {
         vm.performerName(name);
         vm.voxel();
+        vm.voxelInk();
         vm.replace();
+        vm.replaceInk();
     }
 
     @Override

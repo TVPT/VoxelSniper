@@ -30,12 +30,12 @@ public class VoxelVoxelCommand extends VoxelCommand
             Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
             if (targetBlock != null)
             {
-                if (!player.hasPermission("voxelsniper.ignorelimitations") && plugin.getVoxelSniperConfiguration().getLiteSniperRestrictedItems().contains(targetBlock.getTypeId()))
+                if (!player.hasPermission("voxelsniper.ignorelimitations") && plugin.getVoxelSniperConfiguration().getLiteSniperRestrictedItems().contains(targetBlock.getType()))
                 {
                     player.sendMessage("You are not allowed to use " + targetBlock.getType().name() + ".");
                     return true;
                 }
-                snipeData.setVoxelId(targetBlock.getTypeId());
+                snipeData.setVoxelMat(targetBlock.getType());
                 snipeData.getVoxelMessage().voxel();
             }
             return true;
@@ -44,12 +44,12 @@ public class VoxelVoxelCommand extends VoxelCommand
         Material material = Material.matchMaterial(args[0]);
         if (material != null && material.isBlock())
         {
-            if (!player.hasPermission("voxelsniper.ignorelimitations") && plugin.getVoxelSniperConfiguration().getLiteSniperRestrictedItems().contains(material.getId()))
+            if (!player.hasPermission("voxelsniper.ignorelimitations") && plugin.getVoxelSniperConfiguration().getLiteSniperRestrictedItems().contains(material))
             {
                 player.sendMessage("You are not allowed to use " + material.name() + ".");
                 return true;
             }
-            snipeData.setVoxelId(material.getId());
+            snipeData.setVoxelMat(material);
             snipeData.getVoxelMessage().voxel();
             return true;
         }

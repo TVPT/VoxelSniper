@@ -97,10 +97,10 @@ public class OceanBrush extends Brush
                 if (this.coverFloor && (newSeaFloorLevel < this.waterLevel))
                 {
                     Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-                    if (block.getType() != v.getVoxelData().getMaterial())
+                    if (block.getType() != v.getVoxelMat())
                     {
                         undo.put(block);
-                        block.setType(v.getVoxelData().getMaterial());
+                        block.setType(v.getVoxelMat());
                     }
                 }
             }

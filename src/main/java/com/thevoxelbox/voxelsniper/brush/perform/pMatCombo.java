@@ -4,11 +4,10 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import com.thevoxelbox.voxelsniper.Message;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-
-import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author Voxel
@@ -29,7 +28,7 @@ public class pMatCombo extends vPerformer
     {
         w = v.getWorld();
         rd = v.getReplaceData();
-        t = v.getVoxelData().getMaterial();
+        t = v.getVoxelMat();
     }
 
     @Override
@@ -38,6 +37,7 @@ public class pMatCombo extends vPerformer
         vm.performerName(name);
         vm.voxel();
         vm.replace();
+        vm.replaceInk();
     }
 
     @Override

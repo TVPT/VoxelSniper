@@ -5,22 +5,23 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.Inker;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
+
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
-public class pExcludeCombo extends vPerformer
+public class pExcludeInk extends vPerformer
 {
 
     private VoxelList excludeList;
-    private BlockData bd;
+    private String ink;
 
-    public pExcludeCombo()
+    public pExcludeInk()
     {
-        name = "Exclude Combo";
+        name = "Exclude Ink";
     }
 
     @Override
@@ -28,7 +29,6 @@ public class pExcludeCombo extends vPerformer
     {
         vm.performerName(name);
         vm.voxelList();
-        vm.voxel();
         vm.voxelInk();
     }
 
@@ -36,16 +36,17 @@ public class pExcludeCombo extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        bd = v.getVoxelData();
+        ink = v.getVoxelInk();
         excludeList = v.getVoxelList();
     }
 
     @Override
     public void perform(Block b)
     {
-        if(!excludeList.contains(b.getBlockData())) {
+        if (!excludeList.contains(b.getBlockData()))
+        {
             h.put(b);
-            b.setBlockData(bd, true);
+            Inker.ink(b, ink);
         }
     }
 }

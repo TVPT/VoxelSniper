@@ -4,10 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import com.thevoxelbox.voxelsniper.Message;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-
-import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author Voxel
@@ -27,8 +26,8 @@ public class pMatMatNoPhys extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        vt = v.getVoxelData().getMaterial();
-        rt = v.getReplaceData().getMaterial();
+        vt = v.getVoxelMat();
+        rt = v.getReplaceMat();
     }
 
     @Override

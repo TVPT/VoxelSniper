@@ -56,7 +56,7 @@ public class Undo {
             return;
         }
         this.containing.add(pos);
-        if (VTags.POP_OFF.isTagged(block.getType())) {
+        if (VTags.LIQUID.isTagged(block.getType())) {
             dropdown.add(block.getState());
         } else if (VTags.POP_OFF.isTagged(block.getType())) {
             falloff.add(block.getState());

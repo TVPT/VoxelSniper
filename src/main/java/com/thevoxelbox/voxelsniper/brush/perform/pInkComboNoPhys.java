@@ -1,52 +1,49 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.Inker;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
-public class pComboCombo extends vPerformer
+public class pInkComboNoPhys extends vPerformer
 {
 
-    private BlockData vd;
-    private BlockData rd;
+    private String i;
+    private BlockData rbd;
 
-    public pComboCombo()
+    public pInkComboNoPhys()
     {
-        name = "Combo-Combo";
+        name = "Ink-Combo, No Physics";
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        vd = v.getVoxelData();
-        rd = v.getReplaceData();
+        i = v.getVoxelInk();
+        rbd = v.getReplaceData();
     }
 
     @Override
     public void info(Message vm)
     {
         vm.performerName(name);
-        vm.voxel();
-        vm.voxelInk();
         vm.replace();
+        vm.voxelInk();
         vm.replaceInk();
     }
 
     @Override
     public void perform(Block b)
     {
-        if (b.getBlockData().matches(rd))
+        if (b.getBlockData().matches(rbd))
         {
             h.put(b);
-            b.setBlockData(vd, true);
+            Inker.ink(b, i, false);
         }
     }
 

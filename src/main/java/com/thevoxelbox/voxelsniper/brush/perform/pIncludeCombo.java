@@ -4,11 +4,10 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
@@ -30,6 +29,7 @@ public class pIncludeCombo extends vPerformer
         vm.performerName(name);
         vm.voxelList();
         vm.voxel();
+        vm.voxelInk();
     }
 
     @Override

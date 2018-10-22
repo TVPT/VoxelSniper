@@ -4,10 +4,9 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import com.thevoxelbox.voxelsniper.Message;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-
-import com.thevoxelbox.voxelsniper.Message;
 
 /**
  * @author Voxel
@@ -34,6 +33,7 @@ public class pComboNoUndo extends vPerformer
     {
         vm.performerName(name);
         vm.voxel();
+        vm.voxelInk();
     }
 
     @Override

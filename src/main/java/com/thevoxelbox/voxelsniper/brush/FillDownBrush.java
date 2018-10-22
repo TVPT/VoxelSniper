@@ -125,7 +125,7 @@ public class FillDownBrush extends PerformBrush
             else if (par[i].equalsIgnoreCase("some"))
             {
                 this.fillLiquid = false;
-                v.setReplaceId(0);
+                v.setReplaceInk("");
                 v.sendMessage(ChatColor.AQUA + "Now only filling air.");
             }
             else if (par[i].equalsIgnoreCase("-e"))

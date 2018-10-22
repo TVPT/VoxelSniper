@@ -4,11 +4,10 @@
  */
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 /**
  * @author Voxel
@@ -36,7 +35,7 @@ public class pIncludeMat extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        t = v.getVoxelData().getMaterial();
+        t = v.getVoxelMat();
         includeList = v.getVoxelList();
     }
 

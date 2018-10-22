@@ -82,7 +82,21 @@ public class Message
      */
     public void replace()
     {
-        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceData().getAsString());
+        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceMat().getKey().toString());
+    }
+
+    /**
+     * Display replace ink.
+     */
+    public void replaceInk()
+    {
+        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace ink: " + ChatColor.DARK_RED + snipeData.getReplaceInk());
+    }
+
+    public void tag()
+    {
+        //TODO: Add tag which retains id?
+        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace tag: #" + ChatColor.DARK_RED + (snipeData.getTag() != null ? snipeData.getTag().toString() : "None"));
     }
 
     /**
@@ -126,7 +140,12 @@ public class Message
      */
     public void voxel()
     {
-        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelData().getAsString());
+        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelMat().getKey().toString());
+    }
+
+    public void voxelInk()
+    {
+        snipeData.sendMessage(ChatColor.BLUE + "Voxel ink: " + ChatColor.DARK_RED + snipeData.getVoxelInk());
     }
 
     /**

@@ -5,43 +5,41 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
-import org.bukkit.Material;
+import com.thevoxelbox.voxelsniper.util.Inker;
+
 import org.bukkit.block.Block;
 
 /**
  * @author Voxel
  */
-public class pMaterial extends vPerformer
+public class pInk extends vPerformer
 {
 
-    private Material t;
+    private String i;
 
-    public pMaterial()
+    public pInk()
     {
-        name = "Material";
+        name = "Ink";
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        t = v.getVoxelMat();
+        i = v.getVoxelInk();
     }
 
     @Override
     public void info(Message vm)
     {
         vm.performerName(name);
-        vm.voxel();
+        vm.voxelInk();
     }
 
     @Override
     public void perform(Block b)
     {
-        if (b.getType() != t)
-        {
-            h.put(b);
-            b.setType(t);
-        }
+        h.put(b);
+        Inker.ink(b, i);
     }
 }

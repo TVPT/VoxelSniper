@@ -1,10 +1,11 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.util.Inker;
+import com.thevoxelbox.voxelsniper.util.VoxelList;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
-
-import com.thevoxelbox.voxelsniper.util.VoxelList;
 
 /**
  * @author Piotr
@@ -15,8 +16,8 @@ public class SnipeData
     public static final int DEFAULT_CYLINDER_CENTER = 0;
     public static final int DEFAULT_VOXEL_HEIGHT = 1;
     public static final int DEFAULT_BRUSH_SIZE = 3;
-    public static final BlockData DEFAULT_VOXEL_DATA = Material.AIR.createBlockData();
-    public static final BlockData DEFAULT_REPLACE_DATA = Material.AIR.createBlockData();
+    public static final Material DEFAULT_MATERIAL = Material.AIR;
+    public static final String DEFAULT_INK = "";
 
     private final Sniper owner;
     private Message voxelMessage;
@@ -39,8 +40,13 @@ public class SnipeData
     private int range = 0;
     private boolean ranged = false;
     private boolean lightning = false;
-    private BlockData voxelData = SnipeData.DEFAULT_VOXEL_DATA;
-    private BlockData replaceData = SnipeData.DEFAULT_REPLACE_DATA;
+    private Material voxelMat = SnipeData.DEFAULT_MATERIAL;
+    private String voxelInk = SnipeData.DEFAULT_INK;
+    private BlockData voxelData = null;
+    private Material replaceMat = SnipeData.DEFAULT_MATERIAL;
+    private String replaceInk = SnipeData.DEFAULT_INK;
+    private BlockData replaceData = null;
+    private Tag<Material> tag = null;
 
     /**
      * @param vs
@@ -111,8 +117,13 @@ public class SnipeData
      */
     public final void reset()
     {
-        this.voxelData = SnipeData.DEFAULT_VOXEL_DATA;
-        this.replaceData = SnipeData.DEFAULT_REPLACE_DATA;
+        this.voxelMat = SnipeData.DEFAULT_MATERIAL;
+        this.voxelInk = SnipeData.DEFAULT_INK;
+        this.voxelData = null;
+        this.replaceMat = SnipeData.DEFAULT_MATERIAL;
+        this.replaceInk = SnipeData.DEFAULT_INK;
+        this.replaceData = null;
+        this.tag = null;
         this.brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
         this.voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
         this.cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
@@ -202,21 +213,75 @@ public class SnipeData
         this.lightning = lightning;
     }
 
-    public void setVoxelData(BlockData blockData) {
-        this.voxelData = blockData;
-    }
-
-    public BlockData getVoxelData() {
-        return this.voxelData;
-    }
-
-    public void setReplaceData(final BlockData replaceData)
+    public BlockData getVoxelData()
     {
-        this.replaceData = replaceData;
+        if(this.voxelData == null) {
+            this.voxelData = Inker.inkMat(voxelMat, voxelInk);
+        }
+
+        return voxelData;
+    }
+
+    public Material getVoxelMat()
+    {
+        return voxelMat;
+    }
+
+    public String getVoxelInk()
+    {
+        return voxelInk;
     }
 
     public BlockData getReplaceData()
     {
-        return this.replaceData;
+        if (this.replaceData == null) {
+            this.replaceData = Inker.inkMat(replaceMat, replaceInk);
+        }
+
+        return replaceData;
+    }
+
+    public Material getReplaceMat()
+    {
+        return replaceMat;
+    }
+
+    public String getReplaceInk()
+    {
+        return replaceInk;
+    }
+
+    public Tag<Material> getTag()
+    {
+        return tag;
+    }
+
+    public void setVoxelMat(Material voxelMat)
+    {
+        this.voxelData = null;
+        this.voxelMat = voxelMat;
+    }
+
+    public void setVoxelInk(String voxelInk)
+    {
+        this.voxelData = null;
+        this.voxelInk = voxelInk;
+    }
+
+    public void setReplaceMat(Material replaceMat)
+    {
+        this.replaceData = null;
+        this.replaceMat = replaceMat;
+    }
+
+    public void setReplaceInk(String replaceInk)
+    {
+        this.replaceData = null;
+        this.replaceInk = replaceInk;
+    }
+
+    public void setTag(Tag<Material> tag)
+    {
+        this.tag = tag;
     }
 }
