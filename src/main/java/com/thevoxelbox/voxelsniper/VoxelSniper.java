@@ -63,7 +63,6 @@ import com.thevoxelbox.voxelsniper.brush.ShellVoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.SignOverwriteBrush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.SnowConeBrush;
-import com.thevoxelbox.voxelsniper.brush.SpiralStaircaseBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterBallBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.SplatterOverlayBrush;
@@ -228,7 +227,6 @@ public class VoxelSniper extends JavaPlugin
         brushManager.registerSniperBrush(SignOverwriteBrush.class, "sio", "signoverwriter");
         brushManager.registerSniperBrush(SnipeBrush.class, "s", "snipe");
         brushManager.registerSniperBrush(SnowConeBrush.class, "snow", "snowcone");
-        brushManager.registerSniperBrush(SpiralStaircaseBrush.class, "sstair", "spiralstaircase");
         brushManager.registerSniperBrush(SplatterBallBrush.class, "sb", "splatball");
         brushManager.registerSniperBrush(SplatterDiscBrush.class, "sd", "splatdisc");
         brushManager.registerSniperBrush(SplatterOverlayBrush.class, "sover", "splatteroverlay");
