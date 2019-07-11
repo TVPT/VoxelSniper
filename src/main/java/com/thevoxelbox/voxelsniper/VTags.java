@@ -156,39 +156,6 @@ public class VTags {
     public static final Tag<Material> RESET_DENIED_UPDATE = getBlockTag("reset_denied_update");
 
     //TODO: Create tag for this
-    private static final Set<Material> FLAMEABLE_MATERIALS = EnumSet.of(
-            Material.WOOD,
-            Material.SAPLING,
-            Material.LOG,
-            Material.LEAVES,
-            Material.SPONGE,
-            Material.COBWEB,
-            Material.LONG_GRASS,
-            Material.DEAD_BUSH,
-            Material.WOOL,
-            Material.YELLOW_FLOWER,
-            Material.RED_ROSE,
-            Material.TORCH,
-            Material.FIRE,
-            Material.WOOD_STAIRS,
-            Material.CROPS,
-            Material.SIGN,
-            Material.WOODEN_DOOR,
-            Material.LADDER,
-            Material.WALL_SIGN,
-            Material.WOOD_PLATE,
-            Material.SNOW,
-            Material.ICE,
-            Material.SUGAR_CANE,
-            Material.FENCE,
-            Material.TRAP_DOOR,
-            Material.VINE,
-            Material.FENCE_GATE,
-            Material.LILY_PAD
-    );
-    public static final Tag<Material> FLAMABLE = getBlockTag("flameable");
-
-    //TODO: Create tag for this
     private static final Set<Material> FALLING_MATERIALS = EnumSet.of(Material.WATER, Material.LAVA, Material.SAND, Material.GRAVEL);
     public static final Tag<Material> FALLING = getBlockTag("falling");
 

@@ -79,7 +79,7 @@ public class HeatRayBrush extends Brush
                             continue;
                         }
 
-                        if (VTags.FLAMABLE.isTagged(currentBlock.getType()))
+                        if (currentBlock.getType().isFlammable())
                         {
                             undo.put(currentBlock);
                             currentBlock.setType(Material.FIRE);
