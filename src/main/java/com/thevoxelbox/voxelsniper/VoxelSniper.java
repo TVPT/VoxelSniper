@@ -14,7 +14,6 @@ import com.thevoxelbox.voxelsniper.brush.BlendVoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.BlendVoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.BlobBrush;
 import com.thevoxelbox.voxelsniper.brush.BlockResetBrush;
-import com.thevoxelbox.voxelsniper.brush.BlockResetSurfaceBrush;
 import com.thevoxelbox.voxelsniper.brush.CanyonBrush;
 import com.thevoxelbox.voxelsniper.brush.CanyonSelectionBrush;
 import com.thevoxelbox.voxelsniper.brush.CheckerVoxelDiscBrush;
@@ -180,7 +179,6 @@ public class VoxelSniper extends JavaPlugin
         brushManager.registerSniperBrush(BlendVoxelDiscBrush.class, "bvd", "blendvoxeldisc");
         brushManager.registerSniperBrush(BlobBrush.class, "blob", "splatblob");
         brushManager.registerSniperBrush(BlockResetBrush.class, "brb", "blockresetbrush");
-        brushManager.registerSniperBrush(BlockResetSurfaceBrush.class, "brbs", "blockresetbrushsurface");
         brushManager.registerSniperBrush(CanyonBrush.class, "ca", "canyon");
         brushManager.registerSniperBrush(CanyonSelectionBrush.class, "cas", "canyonselection");
         brushManager.registerSniperBrush(CheckerVoxelDiscBrush.class, "cvd", "checkervoxeldisc");
