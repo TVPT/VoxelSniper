@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.util.SetTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,12 +16,12 @@ public class VTags {
         return new NamespacedKey(VoxelSniper.getInstance(), name);
     }
 
-    private static Tag<Material> getBlockTag(String name)
+    private static Tag<Material> getBlockTag(String name, Set<Material> defaults)
     {
-        return Bukkit.getTag(Tag.REGISTRY_BLOCKS, vKey(name), Material.class);
+        Tag<Material> tag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, vKey(name), Material.class);
+        return tag == null ? new SetTag<Material>(defaults) : tag;
     }
 
-    //TODO: Create tag for this
     private static final Set<Material> NATURAL_MATERIALS = EnumSet.of(Material.STONE,
             Material.GRASS,
             Material.DIRT,
@@ -34,20 +35,17 @@ public class VTags {
             Material.CLAY,
             Material.OBSIDIAN,
             Material.SNOW);
-    public static final Tag<Material> NATURAL = getBlockTag("natural");
+    public static final Tag<Material> NATURAL = getBlockTag("natural", NATURAL_MATERIALS);
 
-    //TODO: Create tag for this
     private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(
             Material.AIR, Material.STONE, Material.GRASS, Material.DIRT, Material.SAND, Material.GRAVEL, Material.SANDSTONE);
-    public static final Tag<Material> ERASER_EXCLUSIVE = getBlockTag("eraser_exclusive");
+    public static final Tag<Material> ERASER_EXCLUSIVE = getBlockTag("eraser_exclusive", EXCLUSIVE_MATERIALS);
 
-    //TODO: Create tag for this
     private static final Set<Material> LIQUID_MATERIALS = EnumSet.of(
             Material.WATER,
             Material.LAVA);
-    public static final Tag<Material> LIQUID = getBlockTag("liquid");
+    public static final Tag<Material> LIQUID = getBlockTag("liquid", LIQUID_MATERIALS);
 
-    //TODO: Create tag for this
     private static final Set<Material> POP_OFF_MATERIALS = EnumSet.of(
             Material.OAK_SAPLING,
             Material.JUNGLE_SAPLING,
@@ -128,9 +126,8 @@ public class VTags {
             Material.VINE,
             Material.LILY_PAD,
             Material.NETHER_WART);
-    public static final Tag<Material> POP_OFF = getBlockTag("pop_off");
+    public static final Tag<Material> POP_OFF = getBlockTag("pop_off", POP_OFF_MATERIALS);
 
-    //TODO: Create tag for this
     private static final Set<Material> RESET_DENIED_UPDATE_MATERIALS = EnumSet.of(
             Material.SIGN,
             Material.WALL_SIGN,
@@ -153,11 +150,10 @@ public class VTags {
             Material.SPRUCE_FENCE_GATE,
             Material.DARK_OAK_FENCE_GATE,
             Material.AIR);
-    public static final Tag<Material> RESET_DENIED_UPDATE = getBlockTag("reset_denied_update");
+    public static final Tag<Material> RESET_DENIED_UPDATE = getBlockTag("reset_denied_update", RESET_DENIED_UPDATE_MATERIALS);
 
-    //TODO: Create tag for this
     private static final Set<Material> FALLING_MATERIALS = EnumSet.of(Material.WATER, Material.LAVA, Material.SAND, Material.GRAVEL);
-    public static final Tag<Material> FALLING = getBlockTag("falling");
+    public static final Tag<Material> FALLING = getBlockTag("falling", FALLING_MATERIALS);
 
     private static final Set<Material> OCEAN_EXLUCDED_MATERIALS = EnumSet.of(
             Material.AIR,
@@ -196,5 +192,5 @@ public class VTags {
             Material.SUGAR_CANE,
             Material.TALL_GRASS,
             Material.SNOW);
-    public static final Tag<Material> OCEAN_EXCLUDED = getBlockTag("ocean_excluded");
+    public static final Tag<Material> OCEAN_EXCLUDED = getBlockTag("ocean_excluded", OCEAN_EXLUCDED_MATERIALS);
 }
