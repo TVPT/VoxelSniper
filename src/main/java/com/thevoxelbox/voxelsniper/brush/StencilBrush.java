@@ -68,6 +68,11 @@ public class StencilBrush extends Brush
             }
         }
 
+        if(pasteOption != 0 && pasteOption != 1 && pasteOption != 2) {
+            v.sendMessage(ChatColor.RED +  "Invalid paste option: " + pasteOption);
+            return;
+        }
+
         final Undo undo = new Undo();
 
         Vector offset = schematic.getOffset();
@@ -82,11 +87,6 @@ public class StencilBrush extends Brush
         int posX = targetBlock.getX() + offX;
         int posY = targetBlock.getY() + offY;
         int posZ = targetBlock.getZ() + offZ;
-
-        if(pasteOption != 0 && pasteOption != 1 && pasteOption != 2) {
-            v.sendMessage(ChatColor.RED +  "Invalid paste option: " + pasteOption);
-            return;
-        }
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -235,7 +235,7 @@ public class StencilBrush extends Brush
                     v.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
                 }
                 catch (IOException e) {
-                    v.sendMessage(ChatColor.DARK_RED + "There was an issue loading " + this.filename + ".schematic " + e.getMessage());
+                    v.sendMessage(ChatColor.DARK_RED + "There was an issue loading " + this.filename + ".schem " + e.getMessage());
                     v.sendMessage(ChatColor.AQUA + "Running in clipboard mode. Can copy/paste but will not save to file.");
                     this.schematic = null;
                     this.filename = "";
