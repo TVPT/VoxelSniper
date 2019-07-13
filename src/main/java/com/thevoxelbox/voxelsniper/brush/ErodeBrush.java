@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
 import org.bukkit.util.Vector;
@@ -103,8 +104,9 @@ public class ErodeBrush extends Brush
         final Undo undo = new Undo();
         for (final BlockWrapper blockWrapper : blockChangeTracker.getAll())
         {
+            System.out.println(blockWrapper.getBlock());
             undo.put(blockWrapper.getBlock());
-            blockWrapper.getBlock().setBlockData(blockWrapper.getBlock().getBlockData(), true);
+            blockWrapper.getBlock().setBlockData(blockWrapper.getBlockData());
         }
 
         v.owner().storeUndo(undo);
@@ -141,7 +143,7 @@ public class ErodeBrush extends Brush
                             if (!(relativeBlock.isEmpty() || relativeBlock.isLiquid()))
                             {
                                 count++;
-                                final BlockWrapper typeBlock = new BlockWrapper(null, relativeBlock.getMaterial());
+                                final BlockWrapper typeBlock = new BlockWrapper(null, relativeBlock.getBlockData());
                                 if (blockCount.containsKey(typeBlock))
                                 {
                                     blockCount.put(typeBlock, blockCount.get(typeBlock) + 1);
@@ -153,7 +155,7 @@ public class ErodeBrush extends Brush
                             }
                         }
 
-                        BlockWrapper currentMaterial = new BlockWrapper(null, Material.AIR);
+                        BlockWrapper currentMaterial = new BlockWrapper(null, Material.AIR.createBlockData());
                         int amount = 0;
 
                         for (final BlockWrapper wrapper : blockCount.keySet())
@@ -168,7 +170,7 @@ public class ErodeBrush extends Brush
 
                         if (count >= erosionPreset.getFillFaces())
                         {
-                            blockChangeTracker.put(currentPosition, new BlockWrapper(currentBlock.getBlock(), currentMaterial.getMaterial()), currentIteration);
+                            blockChangeTracker.put(currentPosition, new BlockWrapper(currentBlock.getBlock(), currentMaterial.getBlockData()), currentIteration);
                         }
                     }
                 }
@@ -209,7 +211,7 @@ public class ErodeBrush extends Brush
 
                         if (count >= erosionPreset.getErosionFaces())
                         {
-                            blockChangeTracker.put(currentPosition, new BlockWrapper(currentBlock.getBlock(), Material.AIR), currentIteration);
+                            blockChangeTracker.put(currentPosition, new BlockWrapper(currentBlock.getBlock(), Material.AIR.createBlockData()), currentIteration);
                         }
                     }
                 }
@@ -413,18 +415,18 @@ public class ErodeBrush extends Brush
     {
 
         private final Block block;
-        private final Material material;
+        private final BlockData data;
 
         public BlockWrapper(final Block block)
         {
             this.block = block;
-            this.material = block.getType();
+            this.data = block.getBlockData();
         }
 
-        public BlockWrapper(final Block block, final Material material)
+        public BlockWrapper(final Block block, final BlockData data)
         {
             this.block = block;
-            this.material = material;
+            this.data = data;
         }
 
         /**
@@ -436,11 +438,11 @@ public class ErodeBrush extends Brush
         }
 
         /**
-         * @return the material
+         * @return the data
          */
-        public Material getMaterial()
+        public BlockData getBlockData()
         {
-            return this.material;
+            return this.data;
         }
 
         /**
@@ -448,7 +450,7 @@ public class ErodeBrush extends Brush
          */
         public boolean isEmpty()
         {
-            return this.material == Material.AIR;
+            return this.data.getMaterial() == Material.AIR;
         }
 
         /**
@@ -456,7 +458,7 @@ public class ErodeBrush extends Brush
          */
         public boolean isLiquid()
         {
-            switch (this.material)
+            switch (this.data.getMaterial())
             {
                 case WATER:
                 case LAVA:
