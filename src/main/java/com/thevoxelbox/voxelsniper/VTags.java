@@ -152,7 +152,26 @@ public class VTags {
             Material.AIR);
     public static final Tag<Material> RESET_DENIED_UPDATE = getBlockTag("reset_denied_update", RESET_DENIED_UPDATE_MATERIALS);
 
-    private static final Set<Material> FALLING_MATERIALS = EnumSet.of(Material.WATER, Material.LAVA, Material.SAND, Material.GRAVEL);
+    private static Set<Material> fallingMaterials()
+    {
+        Set<Material> accum = EnumSet.noneOf(Material.class);
+
+        for (Material material : Material.values())
+        {
+            if(material.hasGravity())
+            {
+                accum.add(material);
+            }
+        }
+
+        //Fluids aren't considered by the method
+        accum.add(Material.WATER);
+        accum.add(Material.LAVA);
+
+        return accum;
+    }
+
+    private static final Set<Material> FALLING_MATERIALS = fallingMaterials();
     public static final Tag<Material> FALLING = getBlockTag("falling", FALLING_MATERIALS);
 
     private static final Set<Material> OCEAN_EXLUCDED_MATERIALS = EnumSet.of(
