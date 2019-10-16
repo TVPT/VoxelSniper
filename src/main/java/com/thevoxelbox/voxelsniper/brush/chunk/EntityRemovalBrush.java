@@ -49,16 +49,20 @@ public class EntityRemovalBrush extends Brush {
     private static final Set<EntityType> default_exemptions = Sets.newHashSet();
 
     static {
+        // Never remove players.
         default_exemptions.add(EntityTypes.PLAYER);
+
+        // Entities commonly used as part of creative building.
         default_exemptions.add(EntityTypes.PAINTING);
         default_exemptions.add(EntityTypes.ITEM_FRAME);
         default_exemptions.add(EntityTypes.ARMOR_STAND);
         default_exemptions.add(EntityTypes.ENDER_CRYSTAL);
     }
 
-    private Set<EntityType> special_exemptions;
+    private Set<EntityType> exemptions;
 
     public EntityRemovalBrush() {
+        this.exemptions = Sets.newHashSet(default_exemptions);
     }
 
     private void radialRemoval(SnipeData v) {
@@ -95,13 +99,9 @@ public class EntityRemovalBrush extends Brush {
 
     private int removeEntities(Chunk chunk) {
         int entityCount = 0;
-        Set<EntityType> exempt = this.special_exemptions;
-        if (exempt == null) {
-            exempt = default_exemptions;
-        }
         for (Entity entity : chunk.getEntities()) {
             EntityType type = entity.getType();
-            if (exempt.contains(type)) {
+            if (this.exemptions.contains(type)) {
                 continue;
             }
             entity.remove();
@@ -124,12 +124,8 @@ public class EntityRemovalBrush extends Brush {
     @Override
     public void info(Message vm) {
         vm.brushName(this.info.name());
-        Set<EntityType> exempt = this.special_exemptions;
-        if (exempt == null) {
-            exempt = default_exemptions;
-        }
         StringBuilder types = new StringBuilder();
-        for (EntityType type : exempt) {
+        for (EntityType type : this.exemptions) {
             types.append(", ").append(type.getName());
         }
         vm.custom(TextColors.AQUA, "Exempted entity types:");
@@ -140,17 +136,11 @@ public class EntityRemovalBrush extends Brush {
 
     @Override
     public void parameters(final String[] par, final SnipeData v) {
-        if (par.length != 0 && par[0].equalsIgnoreCase("info")) {
-            Set<EntityType> exempt = this.special_exemptions;
-            if (exempt == null) {
-                exempt = default_exemptions;
-            }
-            StringBuilder types = new StringBuilder();
-            for (EntityType type : exempt) {
-                types.append(", ").append(type.getId());
-            }
-            v.sendMessage(TextColors.AQUA, "Exempted entity types:");
-            v.sendMessage(types.toString().substring(2));
+        if (par.length == 0) {
+            return;
+        }
+        if (par[0].equalsIgnoreCase("info")) {
+            info(v.getVoxelMessage());
             return;
         }
         for (final String currentParam : par) {
@@ -164,14 +154,11 @@ public class EntityRemovalBrush extends Brush {
                         v.sendMessage(TextColors.RED, "Players are always exempted from removal.");
                         continue;
                     }
-                    if (this.special_exemptions == null) {
-                        this.special_exemptions = Sets.newHashSet(default_exemptions);
-                    }
                     if (isAddOperation) {
-                        this.special_exemptions.add(type);
+                        this.exemptions.add(type);
                         v.sendMessage(String.format("Added %s to entity exemptions list.", type.getId()));
                     } else {
-                        this.special_exemptions.remove(type);
+                        this.exemptions.remove(type);
                         v.sendMessage(String.format("Removed %s to entity exemptions list.", type.getId()));
                     }
                 } else {
