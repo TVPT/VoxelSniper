@@ -29,7 +29,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushSizeEvent;
 import org.spongepowered.api.Sponge;
@@ -94,13 +94,13 @@ public class VoxelBrushCommand implements CommandExecutor {
         } catch (NumberFormatException ingored) {
         }
         Optional<String> brush_args = args.getOne("brush_args");
-        Class<? extends IBrush> brush = Brushes.get().getBrushForHandle(brush_selection.get());
+        Class<? extends Brush> brush = Brushes.get().getBrushForHandle(brush_selection.get());
         if (brush != null) {
             sniper.setBrush(currentToolId, brush);
 
             if (brush_args.isPresent()) {
                 String[] bargs = brush_args.get().split(" ");
-                IBrush currentBrush = sniper.getBrush(currentToolId);
+                Brush currentBrush = sniper.getBrush(currentToolId);
                 if (currentBrush instanceof PerformBrush) {
                     ((PerformBrush) currentBrush).parse(bargs, snipeData);
                 } else {

@@ -50,6 +50,12 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+@Brush.BrushInfo(
+    name = "Stencil",
+    aliases = {"st", "stencil"},
+    permission = "voxelsniper.brush.stencil",
+    category = Brush.BrushCategory.MISC
+)
 public class StencilBrush extends Brush {
 
     public static enum PasteOption {
@@ -82,7 +88,6 @@ public class StencilBrush extends Brush {
     private Vector3i pos2;
 
     public StencilBrush() {
-        this.setName("Stencil");
     }
 
     @Override
@@ -189,7 +194,7 @@ public class StencilBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.YELLOW, "Paste option: " + this.pasteOption.name().toLowerCase());
         vm.custom(TextColors.GREEN, "File loaded: " + this.filename);
     }
@@ -245,10 +250,5 @@ public class StencilBrush extends Brush {
             }
             v.sendMessage(TextColors.YELLOW, "Paste option: " + this.pasteOption.name().toLowerCase());
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.stencil";
     }
 }

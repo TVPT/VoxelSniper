@@ -38,6 +38,12 @@ import org.spongepowered.api.world.Chunk;
 import java.util.Optional;
 import java.util.Set;
 
+@Brush.BrushInfo(
+    name = "Entity Removal",
+    aliases = {"er", "entityremoval"},
+    permission = "voxelsniper.brush.entityremoval",
+    category = Brush.BrushCategory.CHUNK
+)
 public class EntityRemovalBrush extends Brush {
 
     private static final Set<EntityType> default_exemptions = Sets.newHashSet();
@@ -53,7 +59,6 @@ public class EntityRemovalBrush extends Brush {
     private Set<EntityType> special_exemptions;
 
     public EntityRemovalBrush() {
-        this.setName("Entity Removal");
     }
 
     private void radialRemoval(SnipeData v) {
@@ -118,7 +123,7 @@ public class EntityRemovalBrush extends Brush {
 
     @Override
     public void info(Message vm) {
-        vm.brushName(getName());
+        vm.brushName(info.name());
         Set<EntityType> exempt = this.special_exemptions;
         if (exempt == null) {
             exempt = default_exemptions;
@@ -148,6 +153,7 @@ public class EntityRemovalBrush extends Brush {
             v.sendMessage(types.toString().substring(2));
             return;
         }
+        // TODO: Don't allow removing Players from the exemption list
         for (final String currentParam : par) {
             if (currentParam.startsWith("+") || currentParam.startsWith("-")) {
                 final boolean isAddOperation = currentParam.startsWith("+");
@@ -166,10 +172,5 @@ public class EntityRemovalBrush extends Brush {
                 }
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.entityremoval";
     }
 }

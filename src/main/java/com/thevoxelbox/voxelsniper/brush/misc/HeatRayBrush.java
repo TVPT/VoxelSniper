@@ -46,6 +46,12 @@ import java.util.Set;
 /**
  * Total destruction.
  */
+@Brush.BrushInfo(
+    name = "HeatRay",
+    aliases = {"hr", "heatray"},
+    permission = "voxelsniper.brush.heatray",
+    category = Brush.BrushCategory.MISC
+)
 public class HeatRayBrush extends Brush {
 
     private static final double REQUIRED_OBSIDIAN_DENSITY = 0.6;
@@ -107,8 +113,6 @@ public class HeatRayBrush extends Brush {
     private double persistence = 0.5;
 
     public HeatRayBrush() {
-        this.setName("Heat Ray");
-
         this.perlin.setLacunarity(2);
         this.perlin.setNoiseQuality(NoiseQuality.STANDARD);
     }
@@ -182,7 +186,7 @@ public class HeatRayBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.GREEN, "Octaves: " + this.octaves);
         vm.custom(TextColors.GREEN, "Persistence: " + this.persistence);
         vm.custom(TextColors.GREEN, "Frequency: " + this.frequency);
@@ -226,10 +230,5 @@ public class HeatRayBrush extends Brush {
                 }
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.heatray";
     }
 }

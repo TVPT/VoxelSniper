@@ -33,15 +33,20 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+@Brush.BrushInfo(
+    name = "Warp",
+    aliases = {"w", "warp"},
+    permission = "voxelsniper.brush.warp",
+    category = Brush.BrushCategory.MISC
+)
 public class WarpBrush extends Brush {
 
     public WarpBrush() {
-        this.setName("Warp");
     }
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
     }
 
     @Override
@@ -62,10 +67,5 @@ public class WarpBrush extends Brush {
         strikeLightning(player.getLocation(), player);
         player.setLocation(this.lastBlock);
         strikeLightning(this.lastBlock, player);
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.warp";
     }
 }

@@ -38,6 +38,12 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+@Brush.BrushInfo(
+    name = "3D Rotation",
+    aliases = {"rot3", "rotation3d", "rot", "rotation"},
+    permission = "voxelsniper.brush.rot3d",
+    category = Brush.BrushCategory.MISC
+)
 public class Rot3DBrush extends Brush {
 
     private double yaw;
@@ -47,12 +53,11 @@ public class Rot3DBrush extends Brush {
     private Rot3d rotUtil;
 
     public Rot3DBrush() {
-        this.setName("Rotation");
     }
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.brushMessage("Rotates a spherical area by a given yaw, pitch, and roll");
     }
 
@@ -161,10 +166,5 @@ public class Rot3DBrush extends Brush {
     @Override
     protected final void powder(final SnipeData v) {
         rotate(v, this.lastBlock);
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.rot3d";
     }
 }

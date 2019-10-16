@@ -37,10 +37,15 @@ import org.spongepowered.api.world.World;
 /**
  * Extrude
  */
+@Brush.BrushInfo(
+    name = "Extrude",
+    aliases = {"ex", "extrude"},
+    permission = "voxelsniper.brush.extrude",
+    category = Brush.BrushCategory.SHAPE
+)
 public class ExtrudeBrush extends Brush {
 
     public ExtrudeBrush() {
-        this.setName("Extrude");
     }
 
     private void extrude(final SnipeData v, Location<World> targetBlock, Direction axis) {
@@ -116,14 +121,9 @@ public class ExtrudeBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.height();
         vm.voxelList();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.extrude";
     }
 }

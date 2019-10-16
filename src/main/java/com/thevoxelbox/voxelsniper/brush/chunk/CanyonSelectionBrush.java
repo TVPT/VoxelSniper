@@ -28,19 +28,25 @@ import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Chunk;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Brush.BrushInfo(
+    name = "Canyon Selection",
+    aliases = {"cas", "canyonselection"},
+    permission = "voxelsniper.brush.canyonselection",
+    category = Brush.BrushCategory.CHUNK
+)
 public class CanyonSelectionBrush extends CanyonBrush {
 
     private Vector3i pos;
     private UUID worldUid;
 
     public CanyonSelectionBrush() {
-        this.setName("Canyon Selection");
     }
 
     private void execute(final SnipeData v) {
@@ -52,6 +58,7 @@ public class CanyonSelectionBrush extends CanyonBrush {
             Vector3i other = this.targetBlock.getChunkPosition();
             v.sendMessage(TextColors.YELLOW, "Second point selected!");
             Vector3i min = other.min(this.pos);
+            // TODO Check bounds do not exceed configurable max
             Vector3i max = other.max(this.pos);
             this.undo = new Undo((max.getX() - min.getX()) * (max.getZ() - min.getZ()) * 16 * 4 * 256);
             for (int x = min.getX(); x <= max.getX(); x++) {
@@ -81,12 +88,7 @@ public class CanyonSelectionBrush extends CanyonBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.GREEN + "Shift Level set to " + this.yLevel);
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.canyonselection";
     }
 }

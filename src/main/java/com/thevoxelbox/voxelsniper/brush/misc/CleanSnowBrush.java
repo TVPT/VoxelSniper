@@ -37,10 +37,15 @@ import org.spongepowered.api.world.World;
 /**
  * Removes floating snow tiles.
  */
+@Brush.BrushInfo(
+    name = "Clean Snow",
+    aliases = {"cls", "cleansnow"},
+    permission = "voxelsniper.brush.cleansnow",
+    category = Brush.BrushCategory.MISC
+)
 public class CleanSnowBrush extends Brush {
 
     public CleanSnowBrush() {
-        this.setName("Clean Snow");
     }
 
     private void cleanSnow(SnipeData v, Location<World> targetBlock) {
@@ -98,12 +103,7 @@ public class CleanSnowBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.cleansnow";
     }
 }

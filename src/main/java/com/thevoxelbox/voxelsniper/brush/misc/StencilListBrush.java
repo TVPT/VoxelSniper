@@ -33,6 +33,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Scanner;
 
+@Brush.BrushInfo(
+    name = "Stencil List",
+    aliases = {"sl", "stencillist"},
+    permission = "voxelsniper.brush.stencillist",
+    category = Brush.BrushCategory.MISC
+)
 public class StencilListBrush extends Brush {
 
     private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
@@ -47,7 +53,6 @@ public class StencilListBrush extends Brush {
     private HashMap<Integer, String> stencilList = new HashMap<Integer, String>();
 
     public StencilListBrush() {
-        this.setName("StencilList");
     }
 
     private String readRandomStencil(final SnipeData v) {
@@ -309,7 +314,7 @@ public class StencilListBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom("File loaded: " + this.filename);
     }
 
@@ -344,10 +349,5 @@ public class StencilListBrush extends Brush {
         } catch (final Exception exception) {
             v.sendMessage(TextColors.RED, "You need to type a stencil name.");
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.stencillist";
     }
 }

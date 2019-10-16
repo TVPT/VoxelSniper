@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.world.Location;
@@ -35,10 +36,15 @@ import org.spongepowered.api.world.World;
 /**
  * A brush that creates a solid ball.
  */
+@Brush.BrushInfo(
+    name = "Ball",
+    aliases = {"b", "ball"},
+    permission = "voxelsniper.brush.ball",
+    category = Brush.BrushCategory.SHAPE
+)
 public class BallBrush extends PerformBrush {
 
     public BallBrush() {
-        this.setName("Ball");
     }
 
     private void ball(SnipeData v, Location<World> targetBlock) {
@@ -89,12 +95,7 @@ public class BallBrush extends PerformBrush {
 
     @Override
     public void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.ball";
     }
 }

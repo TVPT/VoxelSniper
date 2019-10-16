@@ -31,10 +31,15 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 /**
  * A tool to assist with redstone creation.
  */
+@Brush.BrushInfo(
+    name = "VoltMeter",
+    aliases = {"volt", "voltmeter"},
+    permission = "voxelsniper.brush.voltmeter",
+    category = Brush.BrushCategory.MISC
+)
 public class VoltMeterBrush extends Brush {
 
     public VoltMeterBrush() {
-        this.setName("VoltMeter");
     }
 
     // @spongify need to update for block data
@@ -69,12 +74,7 @@ public class VoltMeterBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.voltmeter";
     }
 }

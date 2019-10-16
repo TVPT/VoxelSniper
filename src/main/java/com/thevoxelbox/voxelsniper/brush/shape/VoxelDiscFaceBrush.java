@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.util.Direction;
@@ -36,10 +37,15 @@ import org.spongepowered.api.world.World;
 /**
  * Places a disc aligned to the face of the block that you target.
  */
+@Brush.BrushInfo(
+    name = "Voxel Disc Face",
+    aliases = {"vdf", "voxeldiscface"},
+    permission = "voxelsniper.brush.voxeldiscface",
+    category = Brush.BrushCategory.SHAPE
+)
 public class VoxelDiscFaceBrush extends PerformBrush {
 
     public VoxelDiscFaceBrush() {
-        this.setName("Voxel Disc Face");
     }
 
     private void disc(final SnipeData v, Location<World> targetBlock, Direction axis) {
@@ -92,12 +98,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.voxeldiscface";
     }
 }

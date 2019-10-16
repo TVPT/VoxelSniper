@@ -27,11 +27,18 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Random;
 
+@Brush.BrushInfo(
+    name = "Blob",
+    aliases = {"blob", "splatblob"},
+    permission = "voxelsniper.brush.blob",
+    category = Brush.BrushCategory.SHAPE
+)
 public class BlobBrush extends PerformBrush {
 
     private static final double GROW_PERCENT_DEFAULT = 0.1;
@@ -42,7 +49,6 @@ public class BlobBrush extends PerformBrush {
     private double growPercent = GROW_PERCENT_DEFAULT;
 
     public BlobBrush() {
-        this.setName("Blob");
     }
 
     private void digBlob(final SnipeData v) {
@@ -227,7 +233,7 @@ public class BlobBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.custom(TextColors.BLUE, "Growth percent set to: " + this.growPercent + "%");
     }
@@ -256,10 +262,5 @@ public class BlobBrush extends PerformBrush {
         } else {
             v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.blob";
     }
 }

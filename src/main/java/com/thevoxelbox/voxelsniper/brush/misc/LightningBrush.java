@@ -30,15 +30,20 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 
+@Brush.BrushInfo(
+    name = "Lightning",
+    aliases = {"light", "lightning"},
+    permission = "voxelsniper.brush.lightning",
+    category = Brush.BrushCategory.MISC
+)
 public class LightningBrush extends Brush {
 
     public LightningBrush() {
-        this.setName("Lightning");
     }
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.brushMessage("Lightning Brush! Please use in moderation.");
     }
 
@@ -51,10 +56,5 @@ public class LightningBrush extends Brush {
     @Override
     protected final void powder(final SnipeData v) {
         arrow(v);
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.lightning";
     }
 }

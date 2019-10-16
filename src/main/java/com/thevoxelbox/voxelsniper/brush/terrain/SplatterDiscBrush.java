@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.terrain;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.text.format.TextColors;
@@ -35,6 +36,12 @@ import org.spongepowered.api.world.World;
 
 import java.util.Random;
 
+@Brush.BrushInfo(
+    name = "Splatter Disc",
+    aliases = {"sd", "splatterdisc"},
+    permission = "voxelsniper.brush.splatterdisc",
+    category = Brush.BrushCategory.TERRAIN
+)
 public class SplatterDiscBrush extends PerformBrush {
 
     private static final double GROW_PERCENT_DEFAULT = 0.1;
@@ -48,7 +55,6 @@ public class SplatterDiscBrush extends PerformBrush {
     private Random generator = new Random();
 
     public SplatterDiscBrush() {
-        this.setName("Splatter Disc");
     }
 
     private void splatterDisc(final SnipeData v, Location<World> targetBlock) {
@@ -207,10 +213,5 @@ public class SplatterDiscBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.splatterdisc";
     }
 }

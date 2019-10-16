@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.chunk;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
@@ -35,6 +36,12 @@ import org.spongepowered.api.world.Chunk;
 /**
  * Shifts terrain vertically chunk by chunk.
  */
+@Brush.BrushInfo(
+    name = "Canyon",
+    aliases = {"ca", "canyon"},
+    permission = "voxelsniper.brush.canyon",
+    category = Brush.BrushCategory.CHUNK
+)
 public class CanyonBrush extends ChunkBrush {
 
     private static final int SHIFT_LEVEL_MIN = -255;
@@ -42,7 +49,6 @@ public class CanyonBrush extends ChunkBrush {
     protected int yLevel = -10;
 
     public CanyonBrush() {
-        this.setName("Canyon");
     }
 
     @Override
@@ -85,7 +91,7 @@ public class CanyonBrush extends ChunkBrush {
 
     @Override
     public void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.GREEN + "Shift Level set to " + this.yLevel);
     }
 
@@ -104,10 +110,5 @@ public class CanyonBrush extends ChunkBrush {
             this.yLevel = _i;
             v.sendMessage(TextColors.GREEN, "Shift Level set to " + this.yLevel);
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.canyon";
     }
 }

@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
@@ -37,11 +38,18 @@ import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-/**
- * Abstract implementation of the {@link IBrush} interface.
- */
-public abstract class Brush implements IBrush {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+/**
+ * Base class for all brushes. All brushes must be tagged with a BrushInfo
+ * annotation.
+ */
+public abstract class Brush {
+
+    // TODO: Move to centralized place
     protected static int WORLD_HEIGHT =
             (Sponge.getServer().getChunkLayout().getSpaceMax().getY() + 1) * Sponge.getServer().getChunkLayout().getChunkSize().getY();
 
@@ -55,13 +63,28 @@ public abstract class Brush implements IBrush {
         return new Location<>(world, x, y, z);
     }
 
+    protected BrushInfo info;
+
+    // TODO: Remove these, reference from snipe action
     protected World world;
     protected Location<World> targetBlock;
     protected Location<World> lastBlock;
     protected Undo undo;
-    private String name = "Undefined";
 
-    @Override
+    public Brush() {
+        this.info = this.getClass().getAnnotation(BrushInfo.class);
+        if (this.info == null) {
+            VoxelSniper.getLogger().warn("Brush type " + this.getClass().getName() + " does not have a BrushInfo annotation.");
+        }
+    }
+
+    public BrushInfo getInfo() {
+        return this.info;
+    }
+
+    /**
+     * Performs this brushes action.
+     */
     public void perform(SnipeAction action, SnipeData data, Location<World> targetBlock, Location<World> lastBlock) {
         this.world = targetBlock.getExtent();
         this.targetBlock = targetBlock;
@@ -98,30 +121,22 @@ public abstract class Brush implements IBrush {
     protected void powder(final SnipeData v) {
     }
 
-    @Override
+    /**
+     * Displays brush parameter information to the given user.
+     */
     public abstract void info(Message vm);
 
-    @Override
+    /**
+     * Handles parameters passed to brushes.
+     *
+     * @param par Array of string containing parameters
+     * @param v   Snipe Data
+     */
     public void parameters(final String[] par, final SnipeData v) {
         // @Usability support a --no-undo parameter flag
         if (par.length != 0) {
             v.sendMessage(TextColors.RED, "This brush does not accept additional parameters.");
         }
-    }
-
-    @Override
-    public final String getName() {
-        return this.name;
-    }
-
-    @Override
-    public final void setName(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getBrushCategory() {
-        return "General";
     }
 
     protected void setBlockType(int x, int y, int z, BlockType type) {
@@ -153,4 +168,26 @@ public abstract class Brush implements IBrush {
         }
         this.world.setBlock(x, y, z, type, flag);
     }
+
+    public static enum BrushCategory {
+        SHAPE,
+        CHUNK,
+        TERRAIN,
+        MISC;
+    }
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface BrushInfo {
+
+        String name();
+
+        String[] aliases();
+
+        String permission() default "";
+
+        BrushCategory category() default BrushCategory.MISC;
+
+    }
+
 }

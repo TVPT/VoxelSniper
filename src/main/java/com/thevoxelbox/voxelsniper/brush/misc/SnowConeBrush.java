@@ -42,6 +42,12 @@ import java.util.Optional;
 /**
  * Creates mounds of snow tiles.
  */
+@Brush.BrushInfo(
+    name = "Snow Cone",
+    aliases = {"snow", "snowcone"},
+    permission = "voxelsniper.brush.snowcone",
+    category = Brush.BrushCategory.MISC
+)
 public class SnowConeBrush extends Brush {
 
     private void addSnow(final SnipeData v, Location<World> targetBlock) {
@@ -127,10 +133,5 @@ public class SnowConeBrush extends Brush {
     @Override
     public final void info(final Message vm) {
         vm.brushName("Snow Cone");
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.snowcone";
     }
 }

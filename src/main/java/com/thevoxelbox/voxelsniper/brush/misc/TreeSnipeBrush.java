@@ -42,6 +42,12 @@ import java.util.Random;
 /**
  * Places trees.
  */
+@Brush.BrushInfo(
+    name = "Tree",
+    aliases = {"t", "tree", "treesnipe"},
+    permission = "voxelsniper.brush.treesnipe",
+    category = Brush.BrushCategory.MISC
+)
 public class TreeSnipeBrush extends Brush {
 
     private Random random = new Random();
@@ -49,7 +55,6 @@ public class TreeSnipeBrush extends Brush {
     private boolean large = false;
 
     public TreeSnipeBrush() {
-        this.setName("Tree Snipe");
     }
 
     private void single(final SnipeData v, Location<World> targetBlock) {
@@ -95,7 +100,7 @@ public class TreeSnipeBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         this.printTreeType(vm);
     }
 
@@ -138,10 +143,5 @@ public class TreeSnipeBrush extends Brush {
         } else {
             v.sendMessage(TextColors.RED, "Tree type not found. Use '/b tree types' to list all types.");
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.treesnipe";
     }
 }

@@ -25,19 +25,19 @@
 package com.thevoxelbox.voxelsniper.event.sniper;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.event.cause.Cause;
 
 public class ChangeBrushEvent extends VoxelSniperPlayerEvent {
 
-    private final IBrush brush;
+    private final Brush brush;
 
-    public ChangeBrushEvent(Cause c, SnipeData v, IBrush brush) {
+    public ChangeBrushEvent(Cause c, SnipeData v, Brush brush) {
         super(c, v);
         this.brush = brush;
     }
 
-    public IBrush getNewBrush() {
+    public Brush getNewBrush() {
         return this.brush;
     }
 

@@ -27,9 +27,16 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.flowpowered.math.vector.Vector3d;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 
+@Brush.BrushInfo(
+    name = "3-point Circle",
+    aliases = {"tpc", "threepointcircle"},
+    permission = "voxelsniper.brush.threepointcircle",
+    category = Brush.BrushCategory.SHAPE
+)
 public class ThreePointCircleBrush extends PerformBrush {
 
     private Vector3d coordsOne;
@@ -41,7 +48,6 @@ public class ThreePointCircleBrush extends PerformBrush {
      * Default Constructor.
      */
     public ThreePointCircleBrush() {
-        this.setName("3-Point Circle");
     }
 
     @Override
@@ -151,7 +157,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         switch (this.tolerance) {
             case ACCURATE:
                 vm.custom(TextColors.GOLD, "Mode: Accurate");
@@ -214,10 +220,5 @@ public class ThreePointCircleBrush extends PerformBrush {
         public int getValue() {
             return this.value;
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.threepointcircle";
     }
 }

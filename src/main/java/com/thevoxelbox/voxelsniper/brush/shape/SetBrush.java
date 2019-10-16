@@ -28,6 +28,7 @@ import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -38,6 +39,12 @@ import java.util.UUID;
 /**
  * Fills in a cuboid area between two selected points.
  */
+@Brush.BrushInfo(
+    name = "Set",
+    aliases = {"set"},
+    permission = "voxelsniper.brush.set",
+    category = Brush.BrushCategory.SHAPE
+)
 public class SetBrush extends PerformBrush {
 
     private static final int SELECTION_SIZE_MAX = 5000000;
@@ -45,7 +52,6 @@ public class SetBrush extends PerformBrush {
     private UUID worldUid;
 
     public SetBrush() {
-        this.setName("Set");
     }
 
     private void set(final SnipeData v, final Location<World> bl) {
@@ -95,16 +101,11 @@ public class SetBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
         super.parameters(par, v);
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.set";
     }
 }

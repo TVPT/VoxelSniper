@@ -36,13 +36,18 @@ import org.spongepowered.api.world.World;
 
 import java.util.UUID;
 
+@Brush.BrushInfo(
+    name = "Shell Set",
+    aliases = {"shs", "shellset"},
+    permission = "voxelsniper.brush.shellset",
+    category = Brush.BrushCategory.SHAPE
+)
 public class ShellSetBrush extends Brush {
 
     private Vector3i pos1;
     private UUID worldUid;
 
     public ShellSetBrush() {
-        this.setName("Shell Set");
     }
 
     private void sShell(final SnipeData v, Vector3i pos1, Vector3i pos2) {
@@ -126,14 +131,9 @@ public class ShellSetBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.voxel();
         vm.replace();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.shellset";
     }
 }

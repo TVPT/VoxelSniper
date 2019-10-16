@@ -28,6 +28,7 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -37,13 +38,18 @@ import org.spongepowered.api.world.World;
 /**
  * Creates an ellipse.
  */
+@Brush.BrushInfo(
+    name = "Ellipsse",
+    aliases = {"el", "ellipse"},
+    permission = "voxelsniper.brush.ellipse",
+    category = Brush.BrushCategory.SHAPE
+)
 public class EllipseBrush extends PerformBrush {
 
     private double xrad = -1;
     private double yrad = -1;
 
     public EllipseBrush() {
-        this.setName("Ellipse");
     }
 
     private void ellipse(final SnipeData v, Location<World> targetBlock, Direction axis) {
@@ -102,7 +108,7 @@ public class EllipseBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.AQUA, "X-radius set to: ", TextColors.DARK_AQUA, this.xrad);
         vm.custom(TextColors.AQUA, "Y-radius set to: ", TextColors.DARK_AQUA, this.yrad);
     }
@@ -153,10 +159,5 @@ public class EllipseBrush extends PerformBrush {
             this.yrad = v.getBrushSize();
             v.sendMessage(TextColors.GREEN, "Y radius  set to " + this.yrad);
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.ellipse";
     }
 }

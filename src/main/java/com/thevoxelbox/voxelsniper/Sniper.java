@@ -30,7 +30,7 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.MutableClassToInstanceMap;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
 import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
@@ -121,8 +121,9 @@ public class Sniper {
                 return true;
             }
 
-            if (!player.hasPermission(sniperTool.getCurrentBrush().getPermissionNode())) {
-                player.sendMessage(VoxelSniperMessages.BRUSH_PERMISSION_ERROR.create(sniperTool.getCurrentBrush().getPermissionNode()));
+            Brush.BrushInfo info = sniperTool.getCurrentBrush().getInfo();
+            if (!player.hasPermission(info.permission())) {
+                player.sendMessage(VoxelSniperMessages.BRUSH_PERMISSION_ERROR.create(info.permission()));
                 return true;
             }
 
@@ -226,7 +227,7 @@ public class Sniper {
                     sniperTool.getCurrentBrush().perform(snipeAction, snipeData, targetBlock, lastBlock);
                 } catch (Exception e) {
                     player.sendMessage(VoxelSniperMessages.BRUSH_ERROR);
-                    VoxelSniper.getLogger().error("Error performing brush " + sniperTool.getCurrentBrush().getName());
+                    VoxelSniper.getLogger().error("Error performing brush " + sniperTool.getCurrentBrush().getInfo().name());
                     e.printStackTrace();
                 }
                 return true;
@@ -235,7 +236,7 @@ public class Sniper {
         return false;
     }
 
-    public IBrush setBrush(String toolId, Class<? extends IBrush> brush) {
+    public Brush setBrush(String toolId, Class<? extends Brush> brush) {
         if (!this.tools.containsKey(toolId)) {
             return null;
         }
@@ -243,7 +244,7 @@ public class Sniper {
         return this.tools.get(toolId).setCurrentBrush(brush);
     }
 
-    public IBrush getBrush(String toolId) {
+    public Brush getBrush(String toolId) {
         if (!this.tools.containsKey(toolId)) {
             return null;
         }
@@ -251,7 +252,7 @@ public class Sniper {
         return this.tools.get(toolId).getCurrentBrush();
     }
 
-    public IBrush previousBrush(String toolId) {
+    public Brush previousBrush(String toolId) {
         if (!this.tools.containsKey(toolId)) {
             return null;
         }
@@ -344,7 +345,7 @@ public class Sniper {
     public void displayInfo() {
         String currentToolId = getCurrentToolId();
         SniperTool sniperTool = this.tools.get(currentToolId);
-        IBrush brush = sniperTool.getCurrentBrush();
+        Brush brush = sniperTool.getCurrentBrush();
         getPlayer().sendMessage(VoxelSniperMessages.CURRENT_TOOL.create((currentToolId != null) ? currentToolId : "Default Tool"));
         if (brush == null) {
             getPlayer().sendMessage(VoxelSniperMessages.NO_BRUSH);
@@ -363,9 +364,9 @@ public class Sniper {
     public class SniperTool {
 
         private BiMap<SnipeAction, ItemType> actionTools = HashBiMap.create();
-        private ClassToInstanceMap<IBrush> brushes = MutableClassToInstanceMap.create();
-        private Class<? extends IBrush> currentBrush;
-        private Class<? extends IBrush> previousBrush;
+        private ClassToInstanceMap<Brush> brushes = MutableClassToInstanceMap.create();
+        private Class<? extends Brush> currentBrush;
+        private Class<? extends Brush> previousBrush;
         private SnipeData snipeData;
         private Message messageHelper;
 
@@ -373,13 +374,13 @@ public class Sniper {
             this(SnipeBrush.class, new SnipeData(owner));
         }
 
-        private SniperTool(Class<? extends IBrush> currentBrush, SnipeData snipeData) {
+        private SniperTool(Class<? extends Brush> currentBrush, SnipeData snipeData) {
             this.snipeData = snipeData;
             this.messageHelper = new Message(snipeData);
             snipeData.setVoxelMessage(this.messageHelper);
 
-            IBrush newBrushInstance = instanciateBrush(currentBrush);
-            if (snipeData.owner().getPlayer().hasPermission(newBrushInstance.getPermissionNode())) {
+            Brush newBrushInstance = instanciateBrush(currentBrush);
+            if (snipeData.owner().getPlayer().hasPermission(newBrushInstance.getInfo().permission())) {
                 this.brushes.put(currentBrush, newBrushInstance);
                 this.currentBrush = currentBrush;
             }
@@ -413,23 +414,23 @@ public class Sniper {
             return this.messageHelper;
         }
 
-        public IBrush getCurrentBrush() {
+        public Brush getCurrentBrush() {
             if (this.currentBrush == null) {
                 return null;
             }
             return this.brushes.getInstance(this.currentBrush);
         }
 
-        public IBrush setCurrentBrush(Class<? extends IBrush> brush) {
+        public Brush setCurrentBrush(Class<? extends Brush> brush) {
             Preconditions.checkNotNull(brush, "Can't set brush to null.");
-            IBrush brushInstance = this.brushes.get(brush);
+            Brush brushInstance = this.brushes.get(brush);
             if (brushInstance == null) {
                 brushInstance = instanciateBrush(brush);
                 Preconditions.checkNotNull(brushInstance, "Could not instanciate brush class.");
                 this.brushes.put(brush, brushInstance);
             }
 
-            if (this.snipeData.owner().getPlayer().hasPermission(brushInstance.getPermissionNode())) {
+            if (this.snipeData.owner().getPlayer().hasPermission(brushInstance.getInfo().permission())) {
                 Sponge.getCauseStackManager().pushCause(VoxelSniper.getInstance());
                 Sponge.getCauseStackManager().pushCause(this.snipeData.owner().getPlayer());
                 ChangeBrushEvent event = new ChangeBrushEvent(Sponge.getCauseStackManager().getCurrentCause(),
@@ -444,14 +445,15 @@ public class Sniper {
             return null;
         }
 
-        public IBrush previousBrush() {
+        public Brush previousBrush() {
             if (this.previousBrush == null) {
                 return null;
             }
             return setCurrentBrush(this.previousBrush);
         }
 
-        private IBrush instanciateBrush(Class<? extends IBrush> brush) {
+        private Brush instanciateBrush(Class<? extends Brush> brush) {
+            // TODO: Check errors here and report.
             try {
                 return brush.newInstance();
             } catch (InstantiationException e) {

@@ -39,13 +39,18 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.UUID;
 
+@Brush.BrushInfo(
+    name = "Jockey",
+    aliases = {"jockey"},
+    permission = "voxelsniper.brush.jockey",
+    category = Brush.BrushCategory.MISC
+)
 public class JockeyBrush extends Brush {
 
     private boolean inverse = false;
     private WeakReference<Entity> sittingEntity;
 
     public JockeyBrush() {
-        this.setName("Jockey");
     }
 
     private void dismount(SnipeData v) {
@@ -98,7 +103,7 @@ public class JockeyBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.AQUA, "Inverse jockey mode: ", this.inverse ? TextColors.GREEN : TextColors.RED, this.inverse ? "on" : "off");
     }
 
@@ -110,10 +115,5 @@ public class JockeyBrush extends Brush {
         } else {
             this.inverse = false;
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.jockey";
     }
 }

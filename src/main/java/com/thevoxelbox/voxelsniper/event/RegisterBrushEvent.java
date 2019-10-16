@@ -25,23 +25,23 @@
 package com.thevoxelbox.voxelsniper.event;
 
 import com.google.common.collect.Lists;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.event.cause.Cause;
 
 import java.util.List;
 
 public class RegisterBrushEvent extends VoxelSniperEvent {
 
-    private final Class<? extends IBrush> type;
+    private final Class<? extends Brush> type;
     private final List<String> aliases;
 
-    public RegisterBrushEvent(Cause c, Class<? extends IBrush> type, String[] aliases) {
+    public RegisterBrushEvent(Cause c, Class<? extends Brush> type, String[] aliases) {
         super(c);
         this.type = type;
         this.aliases = Lists.newArrayList(aliases);
     }
 
-    public Class<? extends IBrush> getBrushType() {
+    public Class<? extends Brush> getBrushType() {
         return this.type;
     }
 

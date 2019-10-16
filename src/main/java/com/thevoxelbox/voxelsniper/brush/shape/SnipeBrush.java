@@ -27,15 +27,21 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 
 /**
  * A single block brush.
  */
+@Brush.BrushInfo(
+    name = "Snipe",
+    aliases = {"s", "snipe"},
+    permission = "voxelsniper.brush.snipe",
+    category = Brush.BrushCategory.SHAPE
+)
 public class SnipeBrush extends PerformBrush {
 
     public SnipeBrush() {
-        this.setName("Snipe");
     }
 
     @Override
@@ -56,11 +62,6 @@ public class SnipeBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.snipe";
+        vm.brushName(info.name());
     }
 }

@@ -29,6 +29,7 @@ import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.blockray.BlockRay;
@@ -39,6 +40,12 @@ import java.util.UUID;
 /**
  * Creates a line
  */
+@Brush.BrushInfo(
+    name = "Line",
+    aliases = {"l", "line"},
+    permission = "voxelsniper.brush.line",
+    category = Brush.BrushCategory.SHAPE
+)
 public class LineBrush extends PerformBrush {
 
     private boolean continuous = false;
@@ -46,7 +53,6 @@ public class LineBrush extends PerformBrush {
     private UUID worldUid;
 
     public LineBrush() {
-        this.setName("Line");
     }
 
     private void linePowder(final SnipeData v) {
@@ -88,7 +94,7 @@ public class LineBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
     }
 
     @Override
@@ -105,10 +111,5 @@ public class LineBrush extends PerformBrush {
             this.continuous = true;
             v.sendMessage(TextColors.AQUA, "Line brush Continuous mode enabled.");
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.line";
     }
 }

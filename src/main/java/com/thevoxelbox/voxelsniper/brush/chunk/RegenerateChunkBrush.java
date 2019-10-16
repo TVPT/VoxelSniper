@@ -27,16 +27,22 @@ package com.thevoxelbox.voxelsniper.brush.chunk;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Chunk;
 
 /**
  * Regenerates the target chunk.
  */
+@Brush.BrushInfo(
+    name = "Regenerate Chunk",
+    aliases = {"gc", "generatechunk"},
+    permission = "voxelsniper.brush.regeneratechunk",
+    category = Brush.BrushCategory.CHUNK
+)
 public class RegenerateChunkBrush extends ChunkBrush {
 
     public RegenerateChunkBrush() {
-        this.setName("Chunk Generator 40k");
     }
 
     @Override
@@ -58,13 +64,8 @@ public class RegenerateChunkBrush extends ChunkBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.brushMessage("Tread lightly.");
         vm.brushMessage("This brush will melt your spleen and sell your kidneys.");
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.regeneratechunk";
     }
 }

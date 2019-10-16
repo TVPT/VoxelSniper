@@ -40,12 +40,17 @@ import java.util.Optional;
 /**
  * Biome painting brush.
  */
+@Brush.BrushInfo(
+    name = "Biome",
+    aliases = {"bio", "biome"},
+    permission = "voxelsniper.brush.biome",
+    category = Brush.BrushCategory.MISC
+)
 public class BiomeBrush extends Brush {
 
     private BiomeType selectedBiome = BiomeTypes.PLAINS;
 
     public BiomeBrush() {
-        this.setName("Biome (/b biome [Biome Name])");
     }
 
     private void biome(SnipeData v, Location<World> targetBlock) {
@@ -84,7 +89,7 @@ public class BiomeBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.custom(TextColors.GOLD, "Currently selected biome type: ", TextColors.DARK_GREEN, this.selectedBiome.getName());
     }
@@ -112,10 +117,5 @@ public class BiomeBrush extends Brush {
             }
 
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.biome";
     }
 }

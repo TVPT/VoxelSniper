@@ -39,10 +39,15 @@ import org.spongepowered.api.world.World;
 /**
  * Drains liquids from the area.
  */
+@Brush.BrushInfo(
+    name = "Drain",
+    aliases = {"drain"},
+    permission = "voxelsniper.brush.drain",
+    category = Brush.BrushCategory.MISC
+)
 public class DrainBrush extends Brush {
 
     public DrainBrush() {
-        this.setName("Drain");
     }
 
     private void drain(final SnipeData v, Location<World> targetBlock) {
@@ -86,12 +91,7 @@ public class DrainBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.drain";
     }
 }

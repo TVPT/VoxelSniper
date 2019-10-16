@@ -41,6 +41,12 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Map;
 
+@Brush.BrushInfo(
+    name = "Erode",
+    aliases = {"e", "erode"},
+    permission = "voxelsniper.brush.erode",
+    category = Brush.BrushCategory.TERRAIN
+)
 public class ErodeBrush extends Brush {
 
     private static final Vector3i[] FACES_TO_CHECK = {new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1),
@@ -49,7 +55,6 @@ public class ErodeBrush extends Brush {
     private ErosionParameters currentPreset = Preset.MELT.getParameters();
 
     public ErodeBrush() {
-        this.setName("Erode");
     }
 
     protected void erosion(SnipeData v, int erodeFaces, int erodeRec, int fillFaces, int fillRec) {
@@ -216,7 +221,7 @@ public class ErodeBrush extends Brush {
 
     @Override
     public void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.custom(TextColors.AQUA, "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
         vm.custom(TextColors.BLUE, "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
@@ -345,10 +350,5 @@ public class ErodeBrush extends Brush {
             }
             return this.inverse;
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.erode";
     }
 }

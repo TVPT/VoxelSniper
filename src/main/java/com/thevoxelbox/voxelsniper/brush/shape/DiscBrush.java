@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.world.Location;
@@ -35,10 +36,15 @@ import org.spongepowered.api.world.World;
 /**
  * A 1-block tall cylinder.
  */
+@Brush.BrushInfo(
+    name = "Disc",
+    aliases = {"d", "disc"},
+    permission = "voxelsniper.brush.disc",
+    category = Brush.BrushCategory.SHAPE
+)
 public class DiscBrush extends PerformBrush {
 
     public DiscBrush() {
-        this.setName("Disc");
     }
 
     private void disc(final SnipeData v, final Location<World> targetBlock) {
@@ -82,12 +88,7 @@ public class DiscBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.disc";
     }
 }

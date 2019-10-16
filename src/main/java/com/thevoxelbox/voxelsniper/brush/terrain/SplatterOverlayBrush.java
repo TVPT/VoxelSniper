@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.terrain;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.block.BlockTypes;
@@ -36,6 +37,12 @@ import org.spongepowered.api.world.World;
 
 import java.util.Random;
 
+@Brush.BrushInfo(
+    name = "Splatter Overlay",
+    aliases = {"sover", "splatteroverlay"},
+    permission = "voxelsniper.brush.splatteroverlay",
+    category = Brush.BrushCategory.TERRAIN
+)
 public class SplatterOverlayBrush extends PerformBrush {
 
     private static final double GROW_PERCENT_DEFAULT = 0.1;
@@ -50,7 +57,6 @@ public class SplatterOverlayBrush extends PerformBrush {
     private int depth = 3;
 
     public SplatterOverlayBrush() {
-        this.setName("Splatter Overlay");
     }
 
     private void splatterOverlay(final SnipeData v, Location<World> targetBlock) {
@@ -204,7 +210,7 @@ public class SplatterOverlayBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.custom(TextColors.BLUE, "Seed percent set to: " + this.seedPercent / 100 + "%");
         vm.custom(TextColors.BLUE, "Growth percent set to: " + this.growPercent / 100 + "%");
@@ -273,10 +279,5 @@ public class SplatterOverlayBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.splatteroverlay";
     }
 }

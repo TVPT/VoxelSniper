@@ -46,12 +46,17 @@ import java.util.Optional;
 /**
  * Overwrites signs.
  */
+@Brush.BrushInfo(
+    name = "Sign Overwrite",
+    aliases = {"sio", "signoverwriter"},
+    permission = "voxelsniper.brush.signoverwrite",
+    category = Brush.BrushCategory.MISC
+)
 public class SignOverwriteBrush extends Brush {
 
     private List<Text> signTextLines = Lists.newArrayList(Text.of(), Text.of(), Text.of(), Text.of());
 
     public SignOverwriteBrush() {
-        this.setName("Sign Overwrite Brush");
     }
 
     private void setRanged(final SnipeData v, Location<World> targetBlock) {
@@ -135,10 +140,5 @@ public class SignOverwriteBrush extends Brush {
             vm.custom(i + ": ", this.signTextLines.get(i));
         }
         vm.size();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.signoverwrite";
     }
 }

@@ -28,6 +28,7 @@ import com.google.common.collect.Sets;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.util.BlockHelper;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
@@ -37,6 +38,12 @@ import org.spongepowered.api.world.Chunk;
 
 import java.util.Set;
 
+@Brush.BrushInfo(
+    name = "Ocean",
+    aliases = {"o", "ocean"},
+    permission = "voxelsniper.brush.ocean",
+    category = Brush.BrushCategory.CHUNK
+)
 public class OceanBrush extends ChunkBrush {
 
     private static final int WATER_LEVEL_DEFAULT = 62;
@@ -59,7 +66,6 @@ public class OceanBrush extends ChunkBrush {
     private boolean coverFloor = false;
 
     public OceanBrush() {
-        this.setName("OCEANATOR 5000(tm)");
     }
 
     @Override
@@ -172,13 +178,8 @@ public class OceanBrush extends ChunkBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.BLUE, "Water level set to ", TextColors.GREEN, this.waterLevel);
         vm.custom(TextColors.BLUE, "Floor cover ", TextColors.GREEN, (this.coverFloor ? "enabled" : "disabled") + ".");
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.ocean";
     }
 }

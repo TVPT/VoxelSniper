@@ -27,7 +27,7 @@ package com.thevoxelbox.voxelsniper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.Maps;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.event.RegisterBrushEvent;
 import org.spongepowered.api.Sponge;
 
@@ -44,7 +44,7 @@ public class Brushes {
         return instance;
     }
 
-    private Map<String, Class<? extends IBrush>> brushes = Maps.newHashMap();
+    private Map<String, Class<? extends Brush>> brushes = Maps.newHashMap();
     private int brush_count = 0;
 
     private Brushes() {
@@ -54,12 +54,17 @@ public class Brushes {
     /**
      * Register a brush for VoxelSniper to be able to use.
      *
-     * @param clazz Brush implementing IBrush interface.
+     * @param clazz Brush class.
      * @param handles Handles under which the brush can be accessed ingame.
      */
-    public void registerSniperBrush(Class<? extends IBrush> clazz, String... handles) {
+    public void registerSniperBrush(Class<? extends Brush> clazz) {
         checkNotNull(clazz, "Cannot register null as a brush.");
-        RegisterBrushEvent event = new RegisterBrushEvent(Sponge.getCauseStackManager().getCurrentCause(), clazz, handles);
+        Brush.BrushInfo info = clazz.getAnnotation(Brush.BrushInfo.class);
+        if (info == null) {
+            VoxelSniper.getLogger().warn("Brush class " + clazz.getName() + " has no BrushInfo annotation.");
+            return;
+        }
+        RegisterBrushEvent event = new RegisterBrushEvent(Sponge.getCauseStackManager().getCurrentCause(), clazz, info.aliases());
         Sponge.getEventManager().post(event);
         for (String handle : event.getAliases()) {
             this.brushes.put(handle.toLowerCase(), clazz);
@@ -73,13 +78,13 @@ public class Brushes {
      * @param handle Case insensitive brush handle
      * @return Brush class
      */
-    public Class<? extends IBrush> getBrushForHandle(String handle) {
+    public Class<? extends Brush> getBrushForHandle(String handle) {
         checkNotNull(handle, "Brushhandle can not be null.");
         return this.brushes.get(handle.toLowerCase());
     }
 
     /**
-     * @return Amount of IBrush classes registered with the system under Sniper
+     * @return Amount of Brush classes registered with the system under Sniper
      *         visibility.
      */
     public int registeredSniperBrushes() {
@@ -95,10 +100,6 @@ public class Brushes {
     }
 
     public String getAllBrushes() {
-        StringBuilder brushes = new StringBuilder();
-        for (String brush : this.brushes.keySet()) {
-            brushes.append(", ").append(brush);
-        }
-        return brushes.toString().substring(2);
+        return String.join(", ", this.brushes.keySet());
     }
 }

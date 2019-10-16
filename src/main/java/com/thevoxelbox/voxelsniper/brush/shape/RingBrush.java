@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.text.format.TextColors;
@@ -36,12 +37,17 @@ import org.spongepowered.api.world.World;
 /**
  * Ring shape brush.
  */
+@Brush.BrushInfo(
+    name = "Ring",
+    aliases = {"ri", "ring"},
+    permission = "voxelsniper.brush.ring",
+    category = Brush.BrushCategory.SHAPE
+)
 public class RingBrush extends PerformBrush {
 
     private double innerSize = 0;
 
     public RingBrush() {
-        this.setName("Ring");
     }
 
     private void ring(final SnipeData v, Location<World> targetBlock) {
@@ -84,7 +90,7 @@ public class RingBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.custom(TextColors.AQUA, "The inner radius is ", TextColors.RED, this.innerSize);
     }
@@ -108,10 +114,5 @@ public class RingBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.ring";
     }
 }

@@ -28,6 +28,7 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
@@ -37,14 +38,18 @@ import org.spongepowered.api.world.World;
 /**
  * Overlays the terrain with blocks.
  */
+@Brush.BrushInfo(
+    name = "Overlay (Topsoil Filling)",
+    aliases = {"over", "overlay"},
+    permission = "voxelsniper.brush.overlay",
+    category = Brush.BrushCategory.SHAPE
+)
 public class OverlayBrush extends PerformBrush {
 
     private static final int DEFAULT_DEPTH = 3;
     private int depth = DEFAULT_DEPTH;
 
-    // @Spongify
     public OverlayBrush() {
-        this.setName("Overlay (Topsoil Filling)");
     }
 
     private void overlay(SnipeData v, Location<World> targetBlock, int offset) {
@@ -109,7 +114,7 @@ public class OverlayBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.custom(TextColors.AQUA, "Depth set to " + this.depth);
     }
@@ -138,10 +143,5 @@ public class OverlayBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.overlay";
     }
 }

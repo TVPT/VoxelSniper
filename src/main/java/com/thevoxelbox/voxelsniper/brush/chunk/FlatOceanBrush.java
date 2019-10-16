@@ -27,6 +27,7 @@ package com.thevoxelbox.voxelsniper.brush.chunk;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.BlockChangeFlag;
@@ -36,6 +37,12 @@ import org.spongepowered.api.world.Chunk;
 /**
  * Creates flat oceans.
  */
+@Brush.BrushInfo(
+    name = "Flat Ocean",
+    aliases = {"fo", "flatocean"},
+    permission = "voxelsniper.brush.flatocean",
+    category = Brush.BrushCategory.CHUNK
+)
 public class FlatOceanBrush extends ChunkBrush {
 
     private static final int DEFAULT_WATER_LEVEL = 29;
@@ -44,7 +51,6 @@ public class FlatOceanBrush extends ChunkBrush {
     private int floorLevel = DEFAULT_FLOOR_LEVEL;
 
     public FlatOceanBrush() {
-        this.setName("FlatOcean");
     }
 
     @Override
@@ -84,7 +90,7 @@ public class FlatOceanBrush extends ChunkBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.RED + "THIS BRUSH DOES NOT UNDO");
         vm.custom(TextColors.GREEN + "Water level set to " + this.waterLevel);
         vm.custom(TextColors.GREEN + "Ocean floor level set to " + this.floorLevel);
@@ -131,10 +137,5 @@ public class FlatOceanBrush extends ChunkBrush {
         if (this.waterLevel <= this.floorLevel) {
             this.waterLevel = this.floorLevel + 1;
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.flatocean";
     }
 }

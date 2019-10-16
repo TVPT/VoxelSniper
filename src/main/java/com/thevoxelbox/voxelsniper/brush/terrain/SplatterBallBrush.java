@@ -28,6 +28,7 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -39,6 +40,12 @@ import java.util.Random;
  * Places a number of seeds in the area and then grows them over a number of
  * passes.
  */
+@Brush.BrushInfo(
+    name = "Splatter Ball",
+    aliases = {"sb", "splatterball"},
+    permission = "voxelsniper.brush.splatterball",
+    category = Brush.BrushCategory.TERRAIN
+)
 public class SplatterBallBrush extends PerformBrush {
 
     private static final double GROW_PERCENT_DEFAULT = 0.1;
@@ -52,7 +59,6 @@ public class SplatterBallBrush extends PerformBrush {
     private Random generator = new Random();
 
     public SplatterBallBrush() {
-        this.setName("Splatter Ball");
     }
 
     private void splatterBall(final SnipeData v, Location<World> targetBlock) {
@@ -229,10 +235,5 @@ public class SplatterBallBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.splatterball";
     }
 }

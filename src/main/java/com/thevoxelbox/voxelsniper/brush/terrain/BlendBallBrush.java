@@ -26,6 +26,7 @@ package com.thevoxelbox.voxelsniper.brush.terrain;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.util.BlockBuffer;
 
 import com.flowpowered.math.vector.Vector3i;
@@ -38,10 +39,15 @@ import java.util.Map;
  * Sets the block at each point in a ball to the most common block in a 3x3x3
  * box around it.
  */
+@Brush.BrushInfo(
+    name = "Blend Ball",
+    aliases = {"bb", "blendball"},
+    permission = "voxelsniper.brush.blendball",
+    category = Brush.BrushCategory.TERRAIN
+)
 public class BlendBallBrush extends BlendBrushBase {
 
     public BlendBallBrush() {
-        this.setName("Blend Ball");
     }
 
     @Override
@@ -119,10 +125,5 @@ public class BlendBallBrush extends BlendBrushBase {
         }
         v.owner().storeUndo(this.undo);
         this.undo = null;
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.blendball";
     }
 }

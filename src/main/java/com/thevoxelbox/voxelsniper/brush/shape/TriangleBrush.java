@@ -27,12 +27,19 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 
 /**
  * Creates a triangle shape.
  */
+@Brush.BrushInfo(
+    name = "Triangle",
+    aliases = {"tri", "triangle"},
+    permission = "voxelsniper.brush.triangle",
+    category = Brush.BrushCategory.SHAPE
+)
 public class TriangleBrush extends PerformBrush {
 
     private double[] coordsOne = new double[3]; // Three corners
@@ -47,7 +54,6 @@ public class TriangleBrush extends PerformBrush {
     private double[] normalVector = new double[3];
 
     public TriangleBrush() {
-        this.setName("Triangle");
     }
 
     private void triangleA(final SnipeData v) {
@@ -328,7 +334,7 @@ public class TriangleBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) { // Make the triangle
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
     }
 
     @Override
@@ -337,10 +343,5 @@ public class TriangleBrush extends PerformBrush {
             v.sendMessage(TextColors.GOLD,
                     "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.triangle";
     }
 }

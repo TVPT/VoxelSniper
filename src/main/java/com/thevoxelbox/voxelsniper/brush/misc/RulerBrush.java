@@ -36,6 +36,12 @@ import org.spongepowered.api.world.World;
 /**
  * Measures the length between two positions.
  */
+@Brush.BrushInfo(
+    name = "Ruler",
+    aliases = {"r", "ruler"},
+    permission = "voxelsniper.brush.ruler",
+    category = Brush.BrushCategory.MISC
+)
 public class RulerBrush extends Brush {
 
     private Vector3i pos;
@@ -45,7 +51,6 @@ public class RulerBrush extends Brush {
     private int zOff = 0;
 
     public RulerBrush() {
-        this.setName("Ruler");
     }
 
     @Override
@@ -77,7 +82,7 @@ public class RulerBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.voxel();
     }
 
@@ -112,10 +117,5 @@ public class RulerBrush extends Brush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.ruler";
     }
 }

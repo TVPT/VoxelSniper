@@ -34,10 +34,15 @@ import com.thevoxelbox.voxelsniper.util.BlockBuffer;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+@Brush.BrushInfo(
+    name = "Shell Ball",
+    aliases = {"shb", "shellball"},
+    permission = "voxelsniper.brush.shellball",
+    category = Brush.BrushCategory.SHAPE
+)
 public class ShellBallBrush extends Brush {
 
     public ShellBallBrush() {
-        this.setName("Shell Ball");
     }
 
     private void bShell(final SnipeData v, Location<World> targetBlock) {
@@ -121,14 +126,9 @@ public class ShellBallBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.voxel();
         vm.replace();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.shellball";
     }
 }

@@ -28,6 +28,7 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockHelper;
 import org.spongepowered.api.block.BlockState;
@@ -36,13 +37,18 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+@Brush.BrushInfo(
+    name = "Fill Down",
+    aliases = {"fd", "filldown"},
+    permission = "voxelsniper.brush.filldown",
+    category = Brush.BrushCategory.SHAPE
+)
 public class FillDownBrush extends PerformBrush {
 
     private boolean fillLiquid = true;
     private boolean fromExisting = false;
 
     public FillDownBrush() {
-        this.setName("Fill Down");
     }
 
     private void fillDown(SnipeData v, Location<World> targetBlock) {
@@ -105,7 +111,7 @@ public class FillDownBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
     }
 
@@ -131,10 +137,5 @@ public class FillDownBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.filldown";
     }
 }

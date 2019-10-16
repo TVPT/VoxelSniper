@@ -26,17 +26,23 @@ package com.thevoxelbox.voxelsniper.brush.terrain;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Random;
 
+@Brush.BrushInfo(
+    name = "Random Erode",
+    aliases = {"re", "randomerode"},
+    permission = "voxelsniper.brush.randomerode",
+    category = Brush.BrushCategory.TERRAIN
+)
 public class RandomErodeBrush extends ErodeBrush {
 
     private Random rand = new Random();
     
     public RandomErodeBrush() {
-        this.setName("RandomErode");
     }
 
     @Override
@@ -59,17 +65,12 @@ public class RandomErodeBrush extends ErodeBrush {
 
     @Override
     public void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
     }
 
     @Override
     public void parameters(final String[] par, final SnipeData v) {
         v.sendMessage(TextColors.RED, "This brush does not accept additional parameters.");
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.randomerode";
     }
 }

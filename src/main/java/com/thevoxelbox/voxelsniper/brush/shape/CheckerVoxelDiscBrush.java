@@ -28,17 +28,23 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+@Brush.BrushInfo(
+    name = "Checker Voxel Disc",
+    aliases = {"cvd", "checkervoxeldissc"},
+    permission = "voxelsniper.brush.checkervoxeldisc",
+    category = Brush.BrushCategory.SHAPE
+)
 public class CheckerVoxelDiscBrush extends PerformBrush {
 
     private boolean useWorldCoordinates = true;
 
     public CheckerVoxelDiscBrush() {
-        this.setName("Checker Voxel Disc");
     }
 
     private void applyBrush(SnipeData v, Location<World> targetBlock) {
@@ -80,7 +86,7 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
     }
 
@@ -90,7 +96,7 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
             return;
         }
         if (par[0].equals("info")) {
-            v.sendMessage(TextColors.GOLD, this.getName() + " Parameters:");
+            v.sendMessage(TextColors.GOLD, info.name() + " Parameters:");
             v.sendMessage(TextColors.AQUA, "true  -- Enables using World Coordinates.");
             v.sendMessage(TextColors.AQUA, "false -- Disables using World Coordinates.");
             return;
@@ -104,10 +110,5 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
         } else {
             v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.checkervoxeldisc";
     }
 }

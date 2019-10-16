@@ -26,6 +26,7 @@ package com.thevoxelbox.voxelsniper.brush.terrain;
 
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.util.BlockBuffer;
 
 import com.flowpowered.math.vector.Vector3i;
@@ -37,10 +38,15 @@ import java.util.Map;
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
  */
+@Brush.BrushInfo(
+    name = "Blend Voxel Disc",
+    aliases = {"bvd", "blendvoxeldisc"},
+    permission = "voxelsniper.brush.blendvoxeldisc",
+    category = Brush.BrushCategory.TERRAIN
+)
 public class BlendVoxelDiscBrush extends BlendBrushBase {
 
     public BlendVoxelDiscBrush() {
-        this.setName("Blend Voxel Disc");
     }
 
     @Override
@@ -103,10 +109,5 @@ public class BlendVoxelDiscBrush extends BlendBrushBase {
         }
         v.owner().storeUndo(this.undo);
         this.undo = null;
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.blendvoxeldisc";
     }
 }

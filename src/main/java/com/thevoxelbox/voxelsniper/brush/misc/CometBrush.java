@@ -32,10 +32,15 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.explosive.fireball.LargeFireball;
 import org.spongepowered.api.entity.projectile.explosive.fireball.SmallFireball;
 
+@Brush.BrushInfo(
+    name = "Comet",
+    aliases = {"com", "comet"},
+    permission = "voxelsniper.brush.comet",
+    category = Brush.BrushCategory.MISC
+)
 public class CometBrush extends Brush {
 
     public CometBrush() {
-        this.setName("Comet");
     }
 
     private void doFireball(final SnipeData v) {
@@ -62,11 +67,6 @@ public class CometBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.comet";
+        vm.brushName(info.name());
     }
 }

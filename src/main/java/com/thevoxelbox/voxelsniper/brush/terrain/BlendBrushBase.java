@@ -44,7 +44,7 @@ public abstract class BlendBrushBase extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.voxel();
     }

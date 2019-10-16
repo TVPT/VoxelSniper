@@ -28,6 +28,7 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -36,10 +37,15 @@ import org.spongepowered.api.world.World;
 /**
  * Creates cylinders.
  */
+@Brush.BrushInfo(
+    name = "Cylinder",
+    aliases = {"c", "cylinder"},
+    permission = "voxelsniper.brush.cylinder",
+    category = Brush.BrushCategory.SHAPE
+)
 public class CylinderBrush extends PerformBrush {
 
     public CylinderBrush() {
-        this.setName("Cylinder");
     }
 
     private void cylinder(SnipeData v, Location<World> targetBlock) {
@@ -102,7 +108,7 @@ public class CylinderBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
         vm.height();
         vm.center();
@@ -138,10 +144,5 @@ public class CylinderBrush extends PerformBrush {
                 v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.cylinder";
     }
 }

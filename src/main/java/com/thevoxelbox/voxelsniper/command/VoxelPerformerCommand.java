@@ -28,7 +28,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -60,7 +60,7 @@ public class VoxelPerformerCommand implements CommandExecutor {
 
         String performer = (String) gargs.getOne("performer").get();
 
-        IBrush brush = sniper.getBrush(sniper.getCurrentToolId());
+        Brush brush = sniper.getBrush(sniper.getCurrentToolId());
         if (brush instanceof PerformBrush) {
             ((PerformBrush) brush).parse(new String[] { performer }, snipeData);
         } else {

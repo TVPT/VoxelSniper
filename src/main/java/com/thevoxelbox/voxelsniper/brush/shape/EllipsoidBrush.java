@@ -28,6 +28,7 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -36,6 +37,12 @@ import org.spongepowered.api.world.World;
 /**
  * Creates an ellipsoid.
  */
+@Brush.BrushInfo(
+    name = "Ellipsoid",
+    aliases = {"elo", "ellipsoid"},
+    permission = "voxelsniper.brush.ellipsoid",
+    category = Brush.BrushCategory.SHAPE
+)
 public class EllipsoidBrush extends PerformBrush {
 
     private double xrad = -1;
@@ -43,7 +50,6 @@ public class EllipsoidBrush extends PerformBrush {
     private double zrad = -1;
 
     public EllipsoidBrush() {
-        this.setName("Ellipsoid");
     }
 
     private void ellipsoid(final SnipeData v, Location<World> targetBlock) {
@@ -94,7 +100,7 @@ public class EllipsoidBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.custom(TextColors.AQUA, "X-radius set to: ", TextColors.DARK_AQUA, this.xrad);
         vm.custom(TextColors.AQUA, "Y-radius set to: ", TextColors.DARK_AQUA, this.yrad);
         vm.custom(TextColors.AQUA, "Z-radius set to: ", TextColors.DARK_AQUA, this.zrad);
@@ -163,10 +169,5 @@ public class EllipsoidBrush extends PerformBrush {
             this.zrad = v.getBrushSize();
             v.sendMessage(TextColors.GREEN, "Z radius  set to " + this.zrad);
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.ellipsoid";
     }
 }

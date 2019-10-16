@@ -38,6 +38,12 @@ import org.spongepowered.api.world.World;
 /**
  * Same as overlay but for the bottom of blocks.
  */
+@Brush.BrushInfo(
+    name = "Underlay",
+    aliases = {"under", "underlay"},
+    permission = "voxelsniper.brush.underlay",
+    category = Brush.BrushCategory.SHAPE
+)
 public class UnderlayBrush extends PerformBrush {
 
     // @Cleanup move to config
@@ -45,7 +51,6 @@ public class UnderlayBrush extends PerformBrush {
     private int depth = DEFAULT_DEPTH;
 
     public UnderlayBrush() {
-        this.setName("Underlay (Reverse Overlay)");
     }
 
     private void underlay(SnipeData v, Location<World> targetBlock) {
@@ -107,7 +112,7 @@ public class UnderlayBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(this.getName());
+        vm.brushName(info.name());
         vm.size();
     }
 
@@ -132,10 +137,5 @@ public class UnderlayBrush extends PerformBrush {
             v.sendMessage(TextColors.RED, "Invalid parameter '" + par[0] + "'");
             v.sendMessage(TextColors.AQUA, "Usage: /b reover d[#]");
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.underlay";
     }
 }

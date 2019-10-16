@@ -41,12 +41,17 @@ import java.util.Optional;
 /**
  * Spawns entities
  */
+@Brush.BrushInfo(
+    name = "Entity",
+    aliases = {"en", "entity"},
+    permission = "voxelsniper.brush.entity",
+    category = Brush.BrushCategory.MISC
+)
 public class EntityBrush extends Brush {
 
     private EntityType entityType = EntityTypes.ZOMBIE;
 
     public EntityBrush() {
-        this.setName("Entity");
     }
 
     private void spawn(final SnipeData v) {
@@ -93,10 +98,5 @@ public class EntityBrush extends Brush {
                 v.sendMessage(TextColors.GREEN, "Entity type set to " + this.entityType.getName());
             }
         }
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.entity";
     }
 }

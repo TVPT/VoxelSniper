@@ -34,10 +34,15 @@ import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+@Brush.BrushInfo(
+    name = "Shell Voxel",
+    aliases = {"shv", "shellvoxel"},
+    permission = "voxelsniper.brush.shellvoxel",
+    category = Brush.BrushCategory.SHAPE
+)
 public class ShellVoxelBrush extends Brush {
 
     public ShellVoxelBrush() {
-        this.setName("Shell Voxel");
     }
     
     // @Usability: add parameters for checking for any solid block rather than replace material
@@ -119,14 +124,9 @@ public class ShellVoxelBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(getName());
+        vm.brushName(info.name());
         vm.size();
         vm.voxel();
         vm.replace();
-    }
-
-    @Override
-    public String getPermissionNode() {
-        return "voxelsniper.brush.shellvoxel";
     }
 }
