@@ -56,7 +56,7 @@ public class EntityBrush extends Brush {
 
     private void spawn(final SnipeData v) {
         try (CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
-            Sponge.getCauseStackManager().addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.PLUGIN);
+            frame.addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.PLUGIN);
             for (int x = 0; x < v.getBrushSize(); x++) {
                 Entity e = this.world.createEntity(this.entityType, this.lastBlock.getBlockPosition());
                 this.world.spawnEntity(e);

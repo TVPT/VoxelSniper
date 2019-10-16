@@ -44,7 +44,6 @@ public final class Brushes {
      * Register a brush for VoxelSniper to be able to use.
      *
      * @param clazz Brush class.
-     * @param handles Handles under which the brush can be accessed ingame.
      */
     public static void registerSniperBrush(Class<? extends Brush> clazz) {
         checkNotNull(clazz, "Cannot register null as a brush.");

@@ -30,7 +30,7 @@ import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.BlockChangeFlag;
+import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Chunk;
 
 /**
@@ -78,7 +78,7 @@ public class FlatOceanBrush extends ChunkBrush {
                     if (y <= this.floorLevel) {
                         setBlockType(x, y, z, BlockTypes.DIRT);
                     } else if (y <= this.waterLevel) {
-                        setBlockType(x, y, z, BlockTypes.WATER, BlockChangeFlag.NONE);
+                        setBlockType(x, y, z, BlockTypes.WATER, BlockChangeFlags.NONE);
                     } else {
                         setBlockType(x, y, z, BlockTypes.AIR);
                     }
