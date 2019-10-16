@@ -157,7 +157,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         switch (this.tolerance) {
             case ACCURATE:
                 vm.custom(TextColors.GOLD, "Mode: Accurate");

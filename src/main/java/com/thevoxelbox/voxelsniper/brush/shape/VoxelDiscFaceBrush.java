@@ -98,7 +98,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.size();
     }
 }

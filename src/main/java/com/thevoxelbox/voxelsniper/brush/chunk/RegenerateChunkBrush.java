@@ -64,7 +64,7 @@ public class RegenerateChunkBrush extends ChunkBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.brushMessage("Tread lightly.");
         vm.brushMessage("This brush will melt your spleen and sell your kidneys.");
     }

@@ -64,7 +64,7 @@ public class VoxelSniperCommand implements CommandExecutor {
             String[] args = oargs.get().split(" ");
             if (args[0].equalsIgnoreCase("brushes")) {
                 player.sendMessage(Text.of(TextColors.AQUA, "All available brushes:"));
-                player.sendMessage(Text.of(Brushes.get().getAllBrushes()));
+                player.sendMessage(Text.of(Brushes.getAllBrushes()));
                 return CommandResult.success();
             } else if (args[0].equalsIgnoreCase("version")) {
                 player.sendMessage(Text.of(TextColors.AQUA, "VoxelSniper version " + VoxelSniperConfiguration.PLUGIN_VERSION));

@@ -94,7 +94,7 @@ public class VoxelBrushCommand implements CommandExecutor {
         } catch (NumberFormatException ingored) {
         }
         Optional<String> brush_args = args.getOne("brush_args");
-        Class<? extends Brush> brush = Brushes.get().getBrushForHandle(brush_selection.get());
+        Class<? extends Brush> brush = Brushes.getBrushForHandle(brush_selection.get());
         if (brush != null) {
             sniper.setBrush(currentToolId, brush);
 

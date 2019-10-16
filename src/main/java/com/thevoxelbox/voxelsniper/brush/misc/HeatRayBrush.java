@@ -186,7 +186,7 @@ public class HeatRayBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.custom(TextColors.GREEN, "Octaves: " + this.octaves);
         vm.custom(TextColors.GREEN, "Persistence: " + this.persistence);
         vm.custom(TextColors.GREEN, "Frequency: " + this.frequency);

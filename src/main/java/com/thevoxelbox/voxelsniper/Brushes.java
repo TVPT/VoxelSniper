@@ -36,20 +36,9 @@ import java.util.Map;
 /**
  * Brush registration manager.
  */
-public class Brushes {
+public final class Brushes {
 
-    private static final Brushes instance = new Brushes();
-
-    public static Brushes get() {
-        return instance;
-    }
-
-    private Map<String, Class<? extends Brush>> brushes = Maps.newHashMap();
-    private int brush_count = 0;
-
-    private Brushes() {
-
-    }
+    private static Map<String, Class<? extends Brush>> brushes = Maps.newHashMap();
 
     /**
      * Register a brush for VoxelSniper to be able to use.
@@ -57,7 +46,7 @@ public class Brushes {
      * @param clazz Brush class.
      * @param handles Handles under which the brush can be accessed ingame.
      */
-    public void registerSniperBrush(Class<? extends Brush> clazz) {
+    public static void registerSniperBrush(Class<? extends Brush> clazz) {
         checkNotNull(clazz, "Cannot register null as a brush.");
         Brush.BrushInfo info = clazz.getAnnotation(Brush.BrushInfo.class);
         if (info == null) {
@@ -67,9 +56,8 @@ public class Brushes {
         RegisterBrushEvent event = new RegisterBrushEvent(Sponge.getCauseStackManager().getCurrentCause(), clazz, info.aliases());
         Sponge.getEventManager().post(event);
         for (String handle : event.getAliases()) {
-            this.brushes.put(handle.toLowerCase(), clazz);
+            brushes.put(handle.toLowerCase(), clazz);
         }
-        this.brush_count++;
     }
 
     /**
@@ -78,28 +66,23 @@ public class Brushes {
      * @param handle Case insensitive brush handle
      * @return Brush class
      */
-    public Class<? extends Brush> getBrushForHandle(String handle) {
+    public static Class<? extends Brush> getBrushForHandle(String handle) {
         checkNotNull(handle, "Brushhandle can not be null.");
-        return this.brushes.get(handle.toLowerCase());
-    }
-
-    /**
-     * @return Amount of Brush classes registered with the system under Sniper
-     *         visibility.
-     */
-    public int registeredSniperBrushes() {
-        return this.brush_count;
+        return brushes.get(handle.toLowerCase());
     }
 
     /**
      * @return Amount of handles registered with the system under Sniper
      *         visibility.
      */
-    public int registeredSniperBrushHandles() {
-        return this.brushes.size();
+    public static int getBrushCount() {
+        return brushes.size();
     }
 
-    public String getAllBrushes() {
-        return String.join(", ", this.brushes.keySet());
+    public static String getAllBrushes() {
+        return String.join(", ", brushes.keySet());
+    }
+
+    private Brushes() {
     }
 }

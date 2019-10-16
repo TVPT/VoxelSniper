@@ -32,7 +32,6 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.BlockChangeFlag;
-import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -149,15 +148,15 @@ public class Undo {
     public void undo() {
 
         for (BlockSnapshot blockState : this.all) {
-            blockState.restore(true, BlockChangeFlags.NEIGHBOR);
+            blockState.restore(true, BlockChangeFlag.NEIGHBOR);
         }
 
         for (BlockSnapshot blockState : this.falloff) {
-            blockState.restore(true, BlockChangeFlags.NEIGHBOR);
+            blockState.restore(true, BlockChangeFlag.NEIGHBOR);
         }
 
         for (BlockSnapshot blockState : this.dropdown) {
-            blockState.restore(true, BlockChangeFlags.NEIGHBOR);
+            blockState.restore(true, BlockChangeFlag.NEIGHBOR);
         }
     }
 }

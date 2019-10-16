@@ -34,7 +34,6 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.BlockChangeFlag;
-import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -140,7 +139,7 @@ public abstract class Brush {
     }
 
     protected void setBlockType(int x, int y, int z, BlockType type) {
-        setBlockType(x, y, z, type, BlockChangeFlags.ALL);
+        setBlockType(x, y, z, type, BlockChangeFlag.ALL);
     }
 
     protected void setBlockType(int x, int y, int z, BlockType type, BlockChangeFlag flag) {
@@ -155,7 +154,7 @@ public abstract class Brush {
     }
 
     protected void setBlockState(int x, int y, int z, BlockState type) {
-        setBlockState(x, y, z, type, BlockChangeFlags.ALL);
+        setBlockState(x, y, z, type, BlockChangeFlag.ALL);
     }
 
     protected void setBlockState(int x, int y, int z, BlockState type, BlockChangeFlag flag) {

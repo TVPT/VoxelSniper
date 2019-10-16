@@ -178,7 +178,7 @@ public class OceanBrush extends ChunkBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.custom(TextColors.BLUE, "Water level set to ", TextColors.GREEN, this.waterLevel);
         vm.custom(TextColors.BLUE, "Floor cover ", TextColors.GREEN, (this.coverFloor ? "enabled" : "disabled") + ".");
     }

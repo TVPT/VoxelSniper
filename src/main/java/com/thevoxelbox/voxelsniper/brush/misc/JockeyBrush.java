@@ -103,7 +103,7 @@ public class JockeyBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.custom(TextColors.AQUA, "Inverse jockey mode: ", this.inverse ? TextColors.GREEN : TextColors.RED, this.inverse ? "on" : "off");
     }
 

@@ -194,7 +194,7 @@ public class StencilBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.custom(TextColors.YELLOW, "Paste option: " + this.pasteOption.name().toLowerCase());
         vm.custom(TextColors.GREEN, "File loaded: " + this.filename);
     }

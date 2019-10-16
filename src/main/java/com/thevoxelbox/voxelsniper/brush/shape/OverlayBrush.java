@@ -114,7 +114,7 @@ public class OverlayBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.size();
         vm.custom(TextColors.AQUA, "Depth set to " + this.depth);
     }

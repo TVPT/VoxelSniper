@@ -74,7 +74,7 @@ public class VoltMeterBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
     }
 }

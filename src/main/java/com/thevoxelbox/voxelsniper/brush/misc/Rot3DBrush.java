@@ -57,7 +57,7 @@ public class Rot3DBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.brushMessage("Rotates a spherical area by a given yaw, pitch, and roll");
     }
 

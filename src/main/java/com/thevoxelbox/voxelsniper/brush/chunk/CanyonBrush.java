@@ -91,7 +91,7 @@ public class CanyonBrush extends ChunkBrush {
 
     @Override
     public void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.custom(TextColors.GREEN + "Shift Level set to " + this.yLevel);
     }
 

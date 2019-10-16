@@ -123,7 +123,7 @@ public class EntityRemovalBrush extends Brush {
 
     @Override
     public void info(Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         Set<EntityType> exempt = this.special_exemptions;
         if (exempt == null) {
             exempt = default_exemptions;

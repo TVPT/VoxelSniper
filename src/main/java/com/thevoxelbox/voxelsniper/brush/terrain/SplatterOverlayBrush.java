@@ -210,7 +210,7 @@ public class SplatterOverlayBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.size();
         vm.custom(TextColors.BLUE, "Seed percent set to: " + this.seedPercent / 100 + "%");
         vm.custom(TextColors.BLUE, "Growth percent set to: " + this.growPercent / 100 + "%");

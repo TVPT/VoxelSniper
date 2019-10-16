@@ -86,7 +86,7 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 
     @Override
     public final void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.size();
     }
 
@@ -96,7 +96,7 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
             return;
         }
         if (par[0].equals("info")) {
-            v.sendMessage(TextColors.GOLD, info.name() + " Parameters:");
+            v.sendMessage(TextColors.GOLD, this.info.name() + " Parameters:");
             v.sendMessage(TextColors.AQUA, "true  -- Enables using World Coordinates.");
             v.sendMessage(TextColors.AQUA, "false -- Disables using World Coordinates.");
             return;

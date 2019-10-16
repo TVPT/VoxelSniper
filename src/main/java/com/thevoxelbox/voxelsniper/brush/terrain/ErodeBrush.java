@@ -221,7 +221,7 @@ public class ErodeBrush extends Brush {
 
     @Override
     public void info(final Message vm) {
-        vm.brushName(info.name());
+        vm.brushName(this.info.name());
         vm.size();
         vm.custom(TextColors.AQUA, "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
         vm.custom(TextColors.BLUE, "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
