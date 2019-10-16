@@ -153,22 +153,29 @@ public class EntityRemovalBrush extends Brush {
             v.sendMessage(types.toString().substring(2));
             return;
         }
-        // TODO: Don't allow removing Players from the exemption list
         for (final String currentParam : par) {
             if (currentParam.startsWith("+") || currentParam.startsWith("-")) {
                 final boolean isAddOperation = currentParam.startsWith("+");
-                Optional<EntityType> type = Sponge.getRegistry().getType(EntityType.class, currentParam.substring(1));
-                if (type.isPresent()) {
+                String type_name = currentParam.substring(1);
+                Optional<EntityType> type_ = Sponge.getRegistry().getType(EntityType.class, type_name);
+                if (type_.isPresent()) {
+                    EntityType type = type_.get();
+                    if (type == EntityTypes.PLAYER) {
+                        v.sendMessage(TextColors.RED, "Players are always exempted from removal.");
+                        continue;
+                    }
                     if (this.special_exemptions == null) {
                         this.special_exemptions = Sets.newHashSet(default_exemptions);
                     }
                     if (isAddOperation) {
-                        this.special_exemptions.add(type.get());
-                        v.sendMessage(String.format("Added %s to entity exemptions list.", type.get().getId()));
+                        this.special_exemptions.add(type);
+                        v.sendMessage(String.format("Added %s to entity exemptions list.", type.getId()));
                     } else {
-                        this.special_exemptions.remove(type.get());
-                        v.sendMessage(String.format("Removed %s to entity exemptions list.", type.get().getId()));
+                        this.special_exemptions.remove(type);
+                        v.sendMessage(String.format("Removed %s to entity exemptions list.", type.getId()));
                     }
+                } else {
+                    v.sendMessage(String.format("No such entity type %s.", type_name));
                 }
             }
         }
