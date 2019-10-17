@@ -35,11 +35,7 @@ repositories {
 
 // Common dependencies
 dependencies {
-    compile 'com.google.guava:guava:21.0'
-    compile 'org.spongepowered:spongeapi:7.0.0'
-
-    testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-core:1.9.5'
+    compile 'org.spongepowered:spongeapi:7.1.0'
 }
 
 // Source compiler configuration
@@ -62,10 +58,6 @@ jar {
 javadoc {
   options.encoding = 'UTF-8'
   options.charSet = 'UTF-8'
-  options.links(
-          'http://docs.guava-libraries.googlecode.com/git-history/v18.0/javadoc/',
-          'https://docs.oracle.com/javase/8/docs/api/'
-  )
   // Disable the crazy super-strict doclint tool in Java 8
   options.addStringOption('Xdoclint:none', '-quiet')
 }
@@ -106,6 +98,6 @@ license {
 }
 
 // Gradle version used for generating the Gradle wrapper
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.10'
+wrapper {
+  gradleVersion = '5.6.2'
 }
