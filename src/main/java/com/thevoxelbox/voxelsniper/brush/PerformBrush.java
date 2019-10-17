@@ -108,7 +108,7 @@ public abstract class PerformBrush extends Brush {
             BlockState current = this.world.getBlock(x, y, z);
             switch (this.replace) {
             case TYPE:
-                if (current.getType() != v.getReplaceIdState().getType()) {
+                if (current.getType() != v.getReplaceState().getType()) {
                     return false;
                 }
                 break;
@@ -116,7 +116,7 @@ public abstract class PerformBrush extends Brush {
                 // @Todo filter by key and value
                 break;
             case COMBO:
-                if (current != v.getReplaceIdState()) {
+                if (current != v.getReplaceState()) {
                     return false;
                 }
                 break;
@@ -127,7 +127,7 @@ public abstract class PerformBrush extends Brush {
         }
         switch (this.place) {
         case TYPE:
-            setBlockType(x, y, z, v.getVoxelIdState().getType(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
+            setBlockType(x, y, z, v.getVoxelState().getType(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
             break;
         case STATE:
             BlockState current = this.world.getBlock(x, y, z);
@@ -139,7 +139,7 @@ public abstract class PerformBrush extends Brush {
             setBlockState(x, y, z, place.get(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
             break;
         case COMBO:
-            setBlockState(x, y, z, v.getVoxelIdState(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
+            setBlockState(x, y, z, v.getVoxelState(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
             break;
         case NONE:
         default:

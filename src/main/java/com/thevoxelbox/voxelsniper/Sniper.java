@@ -148,21 +148,11 @@ public class Sniper {
                 case PRIMARY_OFFHAND:
                     switch (snipeAction) {
                     case ARROW:
-//                                    int originalVoxel = snipeData.getVoxelId();
-                        snipeData.setVoxelId(targetBlock.getBlockType().getDefaultState());
-//                                    SniperMaterialChangedEvent event =
-//                                            new SniperMaterialChangedEvent(this, toolId, new MaterialData(originalVoxel, snipeData.getData()),
-//                                                    new MaterialData(snipeData.getVoxelId(), snipeData.getData()));
-//                                    Bukkit.getPluginManager().callEvent(event);
+                        snipeData.setVoxelState(targetBlock.getBlockType().getDefaultState());
                         snipeData.getVoxelMessage().voxel();
                         return true;
                     case GUNPOWDER:
-//                                byte originalData = snipeData.getData();
-                        snipeData.setVoxelId(targetBlock.getBlock());
-//                                SniperMaterialChangedEvent event =
-//                                        new SniperMaterialChangedEvent(this, toolId, new MaterialData(snipeData.getVoxelId(), originalData),
-//                                                new MaterialData(snipeData.getVoxelId(), snipeData.getData()));
-//                                Bukkit.getPluginManager().callEvent(event);
+                        snipeData.setVoxelState(targetBlock.getBlock());
                         snipeData.getVoxelMessage().voxel();
                         return true;
                     default:
@@ -173,21 +163,11 @@ public class Sniper {
                 case SECONDARY_OFFHAND:
                     switch (snipeAction) {
                     case ARROW:
-//                                int originalId = snipeData.getReplaceId();
-                        snipeData.setReplaceId(targetBlock.getBlockType().getDefaultState());
-//                                SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId,
-//                                        new MaterialData(originalId, snipeData.getReplaceData()),
-//                                        new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
-//                                Bukkit.getPluginManager().callEvent(event);
+                        snipeData.setReplaceState(targetBlock.getBlockType().getDefaultState());
                         snipeData.getVoxelMessage().replace();
                         return true;
                     case GUNPOWDER:
-//                                byte originalData = snipeData.getReplaceData();
-                        snipeData.setReplaceId(targetBlock.getBlock());
-//                                SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId,
-//                                        new MaterialData(snipeData.getReplaceId(), originalData),
-//                                        new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
-//                                Bukkit.getPluginManager().callEvent(event);
+                        snipeData.setReplaceState(targetBlock.getBlock());
                         snipeData.getVoxelMessage().replace();
                         return true;
                     default:

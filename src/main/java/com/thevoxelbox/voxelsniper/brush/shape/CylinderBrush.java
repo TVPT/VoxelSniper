@@ -49,8 +49,8 @@ public class CylinderBrush extends PerformBrush {
     }
 
     private void cylinder(SnipeData v, Location<World> targetBlock) {
-        int yStartingPoint = targetBlock.getBlockY() + v.getcCen();
-        int yEndPoint = targetBlock.getBlockY() + v.getVoxelHeight() + v.getcCen();
+        int yStartingPoint = targetBlock.getBlockY() + v.getCylinderCenter();
+        int yEndPoint = targetBlock.getBlockY() + v.getVoxelHeight() + v.getCylinderCenter();
 
         if (yEndPoint < yStartingPoint) {
             yEndPoint = yStartingPoint;
@@ -135,8 +135,8 @@ public class CylinderBrush extends PerformBrush {
                 }
             } else if (parameter.startsWith("c")) {
                 try {
-                    v.setcCen((int) Double.parseDouble(parameter.replace("c", "")));
-                    v.sendMessage(TextColors.AQUA, "Cylinder origin set to: " + v.getcCen());
+                    v.setCylinderCenter((int) Double.parseDouble(parameter.replace("c", "")));
+                    v.sendMessage(TextColors.AQUA, "Cylinder origin set to: " + v.getCylinderCenter());
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid origin given.");
                 }

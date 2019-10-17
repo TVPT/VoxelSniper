@@ -73,7 +73,7 @@ public class VoxelReplaceCommand implements CommandExecutor {
             while (ray.hasNext()) {
                 targetBlock = ray.next().getLocation();
             }
-            snipeData.setReplaceId(targetBlock.getBlock());
+            snipeData.setReplaceState(targetBlock.getBlock());
             snipeData.getVoxelMessage().replace();
             return CommandResult.success();
         }
@@ -83,12 +83,12 @@ public class VoxelReplaceCommand implements CommandExecutor {
         }
         Optional<BlockType> type = Sponge.getRegistry().getType(BlockType.class, materialName);
         if (type.isPresent()) {
-            snipeData.setReplaceId(type.get().getDefaultState());
+            snipeData.setReplaceState(type.get().getDefaultState());
             snipeData.getVoxelMessage().replace();
         } else {
             Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, materialName);
             if (state.isPresent()) {
-                snipeData.setReplaceId(state.get());
+                snipeData.setReplaceState(state.get());
                 snipeData.getVoxelMessage().replace();
             } else {
                 player.sendMessage(Text.of(TextColors.RED, "Material not found."));

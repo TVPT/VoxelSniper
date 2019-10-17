@@ -34,34 +34,48 @@ import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
-import java.util.Optional;
-
 public class SnipeData {
 
     private Sniper owner;
     private Message voxelMessage;
 
-    private double brushSize = VoxelSniperConfiguration.DEFAULT_BRUSH_SIZE;
-    private BlockState voxelId = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
-    private BlockState replaceId =
-            Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
-    private VoxelList voxelList = new VoxelList();
-    private Key<?> voxelInkKey = null;
-    private Object voxelInkValue = null;
-    private Key<?> replaceInkKey = null;
-    private Object replaceInkValue = null;
+    private double brushSize;
+    private BlockState voxelState;
+    private BlockState replaceState;
+    private VoxelList voxelList;
+    private Key<?> voxelInkKey;
+    private Object voxelInkValue;
+    private Key<?> replaceInkKey;
+    private Object replaceInkValue;
 
-    private int voxelHeight = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
-    private int cCen = VoxelSniperConfiguration.DEFAULT_CYLINDER_CENTER;
-    private int range = 0;
-    private boolean ranged = false;
-    private boolean lightning = false;
+    private int voxelHeight;
+    private int cylinderCenter;
+    private int range;
+    private boolean ranged;
+    private boolean lightning;
 
     public SnipeData(Sniper vs) {
         this.owner = vs;
-    }
 
-    // @Cleanup these method names are all over the place
+        this.voxelState = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_VOXEL_ID)
+                .orElse(BlockTypes.AIR.getDefaultState());
+        this.replaceState = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_REPLACE_ID)
+                .orElse(BlockTypes.AIR.getDefaultState());
+
+        this.brushSize = VoxelSniperConfiguration.DEFAULT_BRUSH_SIZE;
+        this.voxelList = new VoxelList();
+        this.voxelHeight = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
+        this.cylinderCenter = VoxelSniperConfiguration.DEFAULT_CYLINDER_CENTER;
+        this.range = 0;
+
+        this.ranged = false;
+        this.lightning = false;
+
+        this.voxelInkKey = null;
+        this.voxelInkValue = null;
+        this.replaceInkKey = null;
+        this.replaceInkValue = null;
+    }
 
     public double getBrushSize() {
         return this.brushSize;
@@ -71,12 +85,12 @@ public class SnipeData {
         this.brushSize = brushSize;
     }
 
-    public int getcCen() {
-        return this.cCen;
+    public int getCylinderCenter() {
+        return this.cylinderCenter;
     }
 
-    public void setcCen(int cCen) {
-        this.cCen = cCen;
+    public void setCylinderCenter(int cCen) {
+        this.cylinderCenter = cCen;
     }
 
     public int getRange() {
@@ -88,24 +102,15 @@ public class SnipeData {
     }
 
     public String getReplaceId() {
-        return this.replaceId.getId();
+        return this.replaceState.getId();
     }
 
-    public BlockState getReplaceIdState() {
-        return this.replaceId;
+    public BlockState getReplaceState() {
+        return this.replaceState;
     }
 
-    public boolean setReplaceId(String replaceId) {
-        Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, replaceId);
-        if (state.isPresent()) {
-            this.replaceId = state.get();
-            return true;
-        }
-        return false;
-    }
-
-    public void setReplaceId(BlockState state) {
-        this.replaceId = state;
+    public void setReplaceState(BlockState state) {
+        this.replaceState = state;
     }
 
     public int getVoxelHeight() {
@@ -117,24 +122,15 @@ public class SnipeData {
     }
 
     public String getVoxelId() {
-        return this.voxelId.getId();
+        return voxelState.getId();
     }
 
-    public BlockState getVoxelIdState() {
-        return this.voxelId;
+    public BlockState getVoxelState() {
+        return this.voxelState;
     }
 
-    public boolean setVoxelId(String voxelId) {
-        Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, voxelId);
-        if (state.isPresent()) {
-            this.voxelId = state.get();
-            return true;
-        }
-        return false;
-    }
-
-    public void setVoxelId(BlockState state) {
-        this.voxelId = state;
+    public void setVoxelState(BlockState state) {
+        this.voxelState = state;
     }
 
     public VoxelList getVoxelList() {
@@ -203,22 +199,6 @@ public class SnipeData {
         return this.owner;
     }
 
-    /**
-     * Reset to default values.
-     */
-    public void reset() {
-        this.voxelId = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_VOXEL_ID).orElse(BlockTypes.AIR.getDefaultState());
-        this.replaceId = Sponge.getRegistry().getType(BlockState.class, VoxelSniperConfiguration.DEFAULT_REPLACE_ID).orElse(BlockTypes.AIR.getDefaultState());
-        this.brushSize = VoxelSniperConfiguration.DEFAULT_BRUSH_SIZE;
-        this.voxelHeight = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
-        this.cCen = VoxelSniperConfiguration.DEFAULT_CYLINDER_CENTER;
-        this.voxelList = new VoxelList();
-
-        this.voxelInkKey = null;
-        this.voxelInkValue = null;
-        this.replaceInkKey = null;
-        this.replaceInkValue = null;
-    }
 
     public void sendMessage(Object... args) {
         this.owner.getPlayer().sendMessage(Text.of(args));

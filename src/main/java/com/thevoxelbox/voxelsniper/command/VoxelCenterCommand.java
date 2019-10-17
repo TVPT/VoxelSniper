@@ -54,7 +54,7 @@ public class VoxelCenterCommand implements CommandExecutor {
         Player player = (Player) gargs.getOne("sniper").get();
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
-        snipeData.setcCen((int) gargs.getOne("center").get());
+        snipeData.setCylinderCenter((int) gargs.getOne("center").get());
         snipeData.getVoxelMessage().center();
         return CommandResult.success();
     }

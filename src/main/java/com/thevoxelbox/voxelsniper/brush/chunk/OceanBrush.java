@@ -108,7 +108,7 @@ public class OceanBrush extends ChunkBrush {
     protected void operate(SnipeData v, Chunk chunk) {
         int minx = chunk.getBlockMin().getX();
         int minz = chunk.getBlockMin().getZ();
-        BlockState fillBlock = v.getVoxelIdState();
+        BlockState fillBlock = v.getVoxelState();
         if (fillBlock.getType() == BlockTypes.AIR) {
             fillBlock = BlockTypes.DIRT.getDefaultState();
         }
@@ -136,7 +136,7 @@ public class OceanBrush extends ChunkBrush {
                     setBlockType(x0, y, z0, BlockTypes.WATER);
                 }
                 if(this.coverFloor) {
-                    setBlockState(x0, y, z0, v.getVoxelIdState());
+                    setBlockState(x0, y, z0, v.getVoxelState());
                 }
             }
         }

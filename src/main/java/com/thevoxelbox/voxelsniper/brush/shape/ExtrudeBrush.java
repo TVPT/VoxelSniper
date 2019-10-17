@@ -60,7 +60,7 @@ public class ExtrudeBrush extends Brush {
                 if (x * x + z * z < brushSizeSquared) {
                     if (v.getVoxelList().contains(get(x, z, axis, targetBlock))) {
                         for (int y = 0; y < v.getVoxelHeight(); y++) {
-                            set(x, z, axis, targetBlock, v.getVoxelIdState(), y);
+                            set(x, z, axis, targetBlock, v.getVoxelState(), y);
                         }
                     }
                 }
