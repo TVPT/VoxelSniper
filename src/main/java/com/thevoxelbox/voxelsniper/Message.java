@@ -24,6 +24,7 @@
  */
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.text.Text;
@@ -62,7 +63,8 @@ public class Message {
      * Display Center Parameter.
      */
     public void center() {
-        this.snipeData.sendMessage(TextColors.DARK_BLUE, "Brush Center: ", TextColors.DARK_RED, this.snipeData.getCylinderCenter());
+        this.snipeData.sendMessage(TextColors.DARK_BLUE, "Brush Center: ",
+                                    TextColors.DARK_RED, this.snipeData.getCylinderCenter());
     }
 
     /**
@@ -86,19 +88,38 @@ public class Message {
     }
 
     /**
-     * Display performer.
+     * Display performer data.
      *
-     * @param performerName
+     * @param placeMethod
+     * @param replaceMethod
+     * @param usePhysics
      */
-    public void performerName(String performerName) {
-        this.snipeData.sendMessage(TextColors.DARK_PURPLE, "Performer: ", TextColors.DARK_GREEN, performerName);
+    public void performerData(PerformBrush.PerformerType placeMethod,
+                              PerformBrush.PerformerType replaceMethod,
+                              boolean usePhysics) {
+        String physics = usePhysics ? "On" : "Off";
+        this.snipeData.sendMessage(
+                TextColors.DARK_PURPLE,
+                "Performers:",
+                TextColors.GREEN,
+                " place=",
+                TextColors.AQUA,
+                placeMethod,
+                TextColors.GREEN,
+                " replace=",
+                TextColors.AQUA,
+                replaceMethod,
+                TextColors.GREEN,
+                " physics=",
+                TextColors.AQUA,
+                physics);
     }
 
     /**
      * Display replace material.
      */
     public void replace() {
-        this.snipeData.sendMessage(TextColors.AQUA, "Replace Material: ", TextColors.RED, this.snipeData.getReplaceId());
+        this.snipeData.sendMessage(TextColors.DARK_BLUE, "Replace Material: ", TextColors.RED, this.snipeData.getReplaceId());
     }
 
     /**

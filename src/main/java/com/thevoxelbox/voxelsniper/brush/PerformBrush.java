@@ -30,68 +30,67 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.util.BlockHelper;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class PerformBrush extends Brush {
 
-    private static final Pattern PERFORMER = Pattern.compile("[mMcC][mMcC]?[pP]?");
+    private static final Pattern PERFORMER = Pattern.compile("([mic])([mic]?)(p?)");
 
-    protected PerformerType place = PerformerType.TYPE;
-    protected PerformerType replace = PerformerType.NONE;
-    protected boolean physics = true;
+    protected PerformerType placeMethod = PerformerType.TYPE;
+    protected PerformerType replaceMethod = PerformerType.NONE;
+    protected boolean usePhysics = true;
 
     public void parse(String[] args, SnipeData v) {
-        String handle = args[0];
-        if (PERFORMER.matcher(handle).matches()) {
-            char p = handle.charAt(0);
-            if (p == 'm' || p == 'M') {
-                this.place = PerformerType.TYPE;
-            } else if (p == 'c' || p == 'C') {
-                this.place = PerformerType.COMBO;
+        String handle = args[0].toLowerCase();
+        Matcher performersMatch = PERFORMER.matcher(handle);
+
+        if (performersMatch.matches()) {
+            placeMethod = stringToMethod(performersMatch.group(1));
+            if (placeMethod == PerformerType.NONE) {
+                throw new IllegalArgumentException("Unknown placement method '" + performersMatch.group(1) + "'");
             }
-            int i = 1;
-            if (handle.length() >= 2) {
-                char r = handle.charAt(i);
-                i = 2;
-                if (r == 'm' || r == 'M') {
-                    this.replace = PerformerType.TYPE;
-                } else if (r == 'c' || r == 'C') {
-                    this.replace = PerformerType.COMBO;
-                } else {
-                    i = 1;
-                    this.replace = PerformerType.NONE;
-                }
-            }
-            if (handle.length() >= i + 1) {
-                char e = handle.charAt(i);
-                if (e == 'p' || e == 'P') {
-                    this.physics = false;
-                } else {
-                    this.physics = true;
-                }
-            }
+
+            replaceMethod = stringToMethod(performersMatch.group(2));
+            usePhysics = !performersMatch.group(3).equals("p");
+
             parameters(Arrays.copyOfRange(args, 1, args.length), v);
         } else {
             parameters(args, v);
         }
+
+        v.getVoxelMessage().performerData(placeMethod, replaceMethod, usePhysics);
+    }
+
+    private PerformerType stringToMethod(String rawMethod) {
+        switch (rawMethod) {
+            case "m":
+                return PerformerType.TYPE;
+            case "i":
+                return PerformerType.TRAITS;
+            case "c":
+                return PerformerType.COMBO;
+        }
+        return PerformerType.NONE;
     }
 
     public void showInfo(Message vm) {
-        String name = this.place.name().toLowerCase();
-        if (this.replace != PerformerType.NONE) {
-            name += " " + this.replace.name().toLowerCase();
+        String name = placeMethod.name().toLowerCase();
+        if (replaceMethod != PerformerType.NONE) {
+            name += replaceMethod.name().toLowerCase();
         }
-        vm.performerName(name);
+        vm.performerData(placeMethod, replaceMethod, usePhysics);
         vm.voxel();
-        if (this.replace != PerformerType.NONE) {
+        if (replaceMethod != PerformerType.NONE) {
             vm.replace();
         }
     }
@@ -104,54 +103,80 @@ public abstract class PerformBrush extends Brush {
         if (y < 0 || y >= Brush.WORLD_HEIGHT) {
             return false;
         }
-        if (this.replace != PerformerType.NONE) {
-            BlockState current = this.world.getBlock(x, y, z);
-            switch (this.replace) {
+
+        BlockState current = this.world.getBlock(x, y, z);
+        switch (replaceMethod) {
             case TYPE:
+<<<<<<< HEAD
                 if (current.getType() != v.getReplaceState().getType()) {
+=======
+                if (!sameBlockType(current, v.getReplaceState())) {
+>>>>>>> 8e15cbd... Updating the ink performers to work better
                     return false;
                 }
                 break;
-            case STATE:
-                // @Todo filter by key and value
+            case TRAITS:
+                if (!BlockHelper.hasTraits(current, v.getReplaceInkTraits())) {
+                    return false;
+                }
                 break;
             case COMBO:
+<<<<<<< HEAD
                 if (current != v.getReplaceState()) {
+=======
+                if (!sameBlockType(current, v.getReplaceState()) ||
+                    !BlockHelper.hasTraits(current, v.getReplaceInkTraits())) {
+>>>>>>> 8e15cbd... Updating the ink performers to work better
                     return false;
                 }
                 break;
             case NONE:
             default:
                 break;
-            }
         }
-        switch (this.place) {
-        case TYPE:
-            setBlockType(x, y, z, v.getVoxelState().getType(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
-            break;
-        case STATE:
-            BlockState current = this.world.getBlock(x, y, z);
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            Optional<BlockState> place = current.with((Key) v.getVoxelInkKey(), v.getVoxelInkValue());
-            if (!place.isPresent()) {
-                return false;
-            }
-            setBlockState(x, y, z, place.get(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
-            break;
-        case COMBO:
-            setBlockState(x, y, z, v.getVoxelState(), this.physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
-            break;
-        case NONE:
-        default:
-            throw new IllegalStateException("Unsupported place type " + this.place.name());
+
+        BlockChangeFlag physicsFlags = usePhysics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE;
+        switch (placeMethod) {
+            case TYPE:
+                setBlockType(x, y, z, v.getVoxelState().getType(), physicsFlags);
+                break;
+            case TRAITS:
+                BlockState place = BlockHelper.addTraits(current, v.getVoxelInkTraits());
+                setBlockState(x, y, z, place, physicsFlags);
+                break;
+            case COMBO:
+                setBlockState(x, y, z, v.getVoxelState(), physicsFlags);
+                break;
+            case NONE:
+            default:
+                throw new IllegalStateException("Unsupported place type " + placeMethod.name());
         }
         return true;
     }
 
-    public static enum PerformerType {
+    private boolean sameBlockType(BlockState a, BlockState b) {
+        return a.getType().equals(b.getType());
+    }
+
+    public enum PerformerType {
         TYPE,
-        STATE,
+        TRAITS,
         COMBO,
         NONE;
+
+        public String toString() {
+            switch (this) {
+                case TRAITS:
+                    return "Ink";
+                case TYPE:
+                    return "Material";
+                case COMBO:
+                    return "Combo";
+                case NONE:
+                    return "None";
+            }
+
+            return "Unkown";
+        }
     }
 }
