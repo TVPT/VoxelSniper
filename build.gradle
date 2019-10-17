@@ -4,6 +4,10 @@ buildscript {
     maven {
       url "https://plugins.gradle.org/m2/"
     }
+    maven {
+      name = 'sponge-repo'
+      url = 'https://repo.spongepowered.org/maven'
+    }
   }
   dependencies {
     classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.12.1"
@@ -31,15 +35,15 @@ repositories {
     maven {
         url "http://repo.spongepowered.org/maven/"
     }
+    maven {
+        name = 'sponge-repo'
+        url = 'https://repo.spongepowered.org/maven'
+    }
 }
 
 // Common dependencies
 dependencies {
-    compile 'com.google.guava:guava:21.0'
-    compile 'org.spongepowered:spongeapi:7.0.0'
-
-    testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-core:1.9.5'
+    compile 'org.spongepowered:spongeapi:7.1.0'
 }
 
 // Source compiler configuration
@@ -63,8 +67,8 @@ javadoc {
   options.encoding = 'UTF-8'
   options.charSet = 'UTF-8'
   options.links(
-          'http://docs.guava-libraries.googlecode.com/git-history/v18.0/javadoc/',
-          'https://docs.oracle.com/javase/8/docs/api/'
+          'https://docs.oracle.com/javase/8/docs/api/',
+          'https://jd.spongepowered.org/7.1.0/'
   )
   // Disable the crazy super-strict doclint tool in Java 8
   options.addStringOption('Xdoclint:none', '-quiet')
@@ -106,6 +110,6 @@ license {
 }
 
 // Gradle version used for generating the Gradle wrapper
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.10'
+wrapper {
+  gradleVersion = '5.6.2'
 }
