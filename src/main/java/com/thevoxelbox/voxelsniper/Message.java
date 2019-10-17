@@ -62,7 +62,7 @@ public class Message {
      * Display Center Parameter.
      */
     public void center() {
-        this.snipeData.sendMessage(TextColors.DARK_BLUE, "Brush Center: ", TextColors.DARK_RED, this.snipeData.getcCen());
+        this.snipeData.sendMessage(TextColors.DARK_BLUE, "Brush Center: ", TextColors.DARK_RED, this.snipeData.getCylinderCenter());
     }
 
     /**

@@ -61,30 +61,30 @@ public class ShellSetBrush extends Brush {
                     if (y <= 0 || y >= WORLD_HEIGHT) {
                         continue;
                     }
-                    if (this.world.getBlock(x, y, z) != v.getReplaceIdState()) {
+                    if (this.world.getBlock(x, y, z) != v.getReplaceState()) {
                         continue;
                     }
                     int blocks = 0;
-                    if (this.world.getBlock(x + 1, y, z) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x + 1, y, z) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x - 1, y, z) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x - 1, y, z) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x, y + 1, z) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x, y + 1, z) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x, y - 1, z) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x, y - 1, z) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x, y, z + 1) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x, y, z + 1) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x, y, z - 1) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x, y, z - 1) == v.getReplaceState()) {
                         blocks++;
                     }
                     if (blocks == 6) {
-                        buffer.set(x, y, z, v.getVoxelIdState());
+                        buffer.set(x, y, z, v.getVoxelState());
                     }
                 }
             }

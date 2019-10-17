@@ -66,7 +66,7 @@ public class FillDownBrush extends PerformBrush {
                     int y = targetBlock.getBlockY();
                     if (this.fromExisting) {
                         for (int y0 = -v.getVoxelHeight(); y0 < v.getVoxelHeight(); y0++) {
-                            if (this.world.getBlock(x, y + y0, z) != v.getReplaceIdState()) {
+                            if (this.world.getBlock(x, y + y0, z) != v.getReplaceState()) {
                                 y += y0 - 1;
                                 break;
                             }

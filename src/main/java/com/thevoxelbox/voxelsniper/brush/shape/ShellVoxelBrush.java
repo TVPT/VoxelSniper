@@ -60,30 +60,30 @@ public class ShellVoxelBrush extends Brush {
                     if (y <= 0 || y >= WORLD_HEIGHT) {
                         continue;
                     }
-                    if (this.world.getBlock(x0, y0, z0) != v.getReplaceIdState()) {
+                    if (this.world.getBlock(x0, y0, z0) != v.getReplaceState()) {
                         continue;
                     }
                     int blocks = 0;
-                    if (this.world.getBlock(x0 + 1, y0, z0) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x0 + 1, y0, z0) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x0 - 1, y0, z0) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x0 - 1, y0, z0) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x0, y0 + 1, z0) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x0, y0 + 1, z0) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x0, y0 - 1, z0) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x0, y0 - 1, z0) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x0, y0, z0 + 1) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x0, y0, z0 + 1) == v.getReplaceState()) {
                         blocks++;
                     }
-                    if (this.world.getBlock(x0, y0, z0 - 1) == v.getReplaceIdState()) {
+                    if (this.world.getBlock(x0, y0, z0 - 1) == v.getReplaceState()) {
                         blocks++;
                     }
                     if (blocks == 6) {
-                        buffer.set(x, y, z, v.getVoxelIdState());
+                        buffer.set(x, y, z, v.getVoxelState());
                     }
                 }
             }
