@@ -96,6 +96,7 @@ public class VoxelBrushCommand implements CommandExecutor {
         Optional<String> brush_args = args.getOne("brush_args");
         Class<? extends Brush> brush = Brushes.getBrushForHandle(brush_selection.get());
         if (brush != null) {
+            Brush existing = sniper.getBrush(currentToolId);
             sniper.setBrush(currentToolId, brush);
 
             if (brush_args.isPresent()) {
@@ -108,7 +109,9 @@ public class VoxelBrushCommand implements CommandExecutor {
                     currentBrush.parameters(bargs, snipeData);
                 }
             }
-            sniper.displayInfo();
+            if (existing == null || existing.getClass() != brush) {
+                sniper.displayInfo();
+            }
         } else {
             player.sendMessage(Text.of(TextColors.RED, "Couldn't find Brush for brush handle \"" + brush_selection.get() + "\""));
         }
