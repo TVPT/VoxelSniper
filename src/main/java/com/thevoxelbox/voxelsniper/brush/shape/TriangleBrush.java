@@ -30,6 +30,8 @@ import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
  * Creates a triangle shape.
@@ -56,28 +58,29 @@ public class TriangleBrush extends PerformBrush {
     public TriangleBrush() {
     }
 
-    private void triangleA(final SnipeData v) {
+    private void triangleA(final SnipeData v, Location<World> target) {
         switch (this.cornernumber) {
             case 1:
-                this.coordsOne[0] = this.targetBlock.getX() + .5 * this.targetBlock.getX() / Math.abs(this.targetBlock.getX());
-                this.coordsOne[1] = this.targetBlock.getY() + .5;
-                this.coordsOne[2] = this.targetBlock.getZ() + .5 * this.targetBlock.getZ() / Math.abs(this.targetBlock.getZ());
+                this.coordsOne[0] = target.getX() + .5 * target.getX() / Math.abs(target.getX());
+                this.coordsOne[1] = target.getY() + .5;
+                this.coordsOne[2] = target.getZ() + .5 * target.getZ() / Math.abs(target.getZ());
                 this.cornernumber = 2;
                 v.sendMessage(TextColors.GRAY, "First Corner set.");
                 break;
             case 2:
-                this.coordsTwo[0] = this.targetBlock.getX() + .5 * this.targetBlock.getX() / Math.abs(this.targetBlock.getX());
-                this.coordsTwo[1] = this.targetBlock.getY() + .5;
-                this.coordsTwo[2] = this.targetBlock.getZ() + .5 * this.targetBlock.getZ() / Math.abs(this.targetBlock.getZ());
+                this.coordsTwo[0] = target.getX() + .5 * target.getX() / Math.abs(target.getX());
+                this.coordsTwo[1] = target.getY() + .5;
+                this.coordsTwo[2] = target.getZ() + .5 * target.getZ() / Math.abs(target.getZ());
                 this.cornernumber = 3;
                 v.sendMessage(TextColors.GRAY, "Second Corner set.");
                 break;
             case 3:
-                this.coordsThree[0] = this.targetBlock.getX() + .5 * this.targetBlock.getX() / Math.abs(this.targetBlock.getX());
-                this.coordsThree[1] = this.targetBlock.getY() + .5;
-                this.coordsThree[2] = this.targetBlock.getZ() + .5 * this.targetBlock.getZ() / Math.abs(this.targetBlock.getZ());
+                this.coordsThree[0] = target.getX() + .5 * target.getX() / Math.abs(target.getX());
+                this.coordsThree[1] = target.getY() + .5;
+                this.coordsThree[2] = target.getZ() + .5 * target.getZ() / Math.abs(target.getZ());
                 this.cornernumber = 1;
-                v.sendMessage(TextColors.GRAY, "Third Corner set.");
+                v.sendMessage(TextColors.GRAY, "Third Corner set. Placing triangle.");
+                triangleP(v);
                 break;
             default:
                 break;
@@ -324,16 +327,16 @@ public class TriangleBrush extends PerformBrush {
 
     @Override
     protected final void arrow(final SnipeData v) {
-        this.triangleA(v);
+        this.triangleA(v, this.targetBlock);
     }
 
     @Override
-    protected final void powder(final SnipeData v) { // Add a point
-        this.triangleP(v);
+    protected final void powder(final SnipeData v) {
+        this.triangleA(v, this.lastBlock);
     }
 
     @Override
-    public final void info(final Message vm) { // Make the triangle
+    public final void info(final Message vm) {
         vm.brushName(this.info.name());
     }
 
@@ -341,7 +344,8 @@ public class TriangleBrush extends PerformBrush {
     public final void parameters(final String[] par, final SnipeData v) {
         if (par[1].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.GOLD,
-                    "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
+                    "Triangle Brush instructions: Select three corners with the arrow or powder brush. The triangle will be placed after the third corner.");
         }
+        this.cornernumber = 1;
     }
 }
