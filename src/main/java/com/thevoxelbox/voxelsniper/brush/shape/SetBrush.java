@@ -107,5 +107,7 @@ public class SetBrush extends PerformBrush {
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
         super.parameters(par, v);
+        this.block = null;
+        this.worldUid = null;
     }
 }
