@@ -35,6 +35,7 @@ import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.thevoxelbox.voxelsniper.brush.shape.SnipeBrush;
 import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -215,7 +216,7 @@ public class Sniper {
                     lastBlock = targetBlock;
                     targetBlock = ray.next().getLocation();
                 }
-                if (targetBlock == null) {
+                if (targetBlock == null || targetBlock.getBlockType() == BlockTypes.AIR) {
                     player.sendMessage(VoxelSniperMessages.SNIPE_TARGET_NOT_VISIBLE);
                     return false;
                 }
