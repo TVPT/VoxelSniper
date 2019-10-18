@@ -64,11 +64,11 @@ public class DiscFaceBrush extends PerformBrush {
             for (int z = -size; z <= size; z++) {
                 if (x * x + z * z < brushSizeSquared) {
                     if (axis == Direction.UP) {
-                        perform(v, x + tx, targetBlock.getBlockY(), z + tz);
+                        perform(v, x + tx, ty, z + tz);
                     } else if (axis == Direction.NORTH) {
-                        perform(v, x + tx, z + ty, targetBlock.getBlockZ());
+                        perform(v, x + tx, z + ty, tz);
                     } else if (axis == Direction.EAST) {
-                        perform(v, targetBlock.getBlockX(), x + ty, z + tz);
+                        perform(v, tx, x + ty, z + tz);
                     }
                 }
             }

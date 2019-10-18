@@ -49,25 +49,24 @@ public class VoxelDiscFaceBrush extends PerformBrush {
     }
 
     private void disc(final SnipeData v, Location<World> targetBlock, Direction axis) {
-        double brushSize = v.getBrushSize();
+        int brushSize = GenericMath.floor(v.getBrushSize());
 
-        int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
-        int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
-        int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
-        int maxz = GenericMath.floor(targetBlock.getBlockZ() + brushSize) + 1;
+        int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
+        int tz = targetBlock.getBlockZ();
 
-        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1)));
+        this.undo = new Undo((brushSize * 2 + 1) * (brushSize * 2 + 1));
 
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
-        for (int x = minx; x <= maxx; x++) {
-            for (int z = minz; z <= maxz; z++) {
+        for (int x = -brushSize; x <= brushSize; x++) {
+            for (int z = -brushSize; z <= brushSize; z++) {
                 if (axis == Direction.UP) {
-                    perform(v, x, targetBlock.getBlockY(), z);
+                    perform(v, tx + x, ty, tz + z);
                 } else if (axis == Direction.NORTH) {
-                    perform(v, x, z, targetBlock.getBlockZ());
+                    perform(v, tx + x, ty + z, tz);
                 } else if (axis == Direction.EAST) {
-                    perform(v, targetBlock.getBlockX(), x, z);
+                    perform(v, tx, ty + x, tz + z);
                 }
             }
         }
