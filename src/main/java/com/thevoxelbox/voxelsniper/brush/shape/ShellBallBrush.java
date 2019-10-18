@@ -64,7 +64,7 @@ public class ShellBallBrush extends Brush {
                     if (x * x + y * y + z * z >= brushSizeSquared) {
                         continue;
                     }
-                    if (y <= 0 || y >= WORLD_HEIGHT) {
+                    if (y0 <= 0 || y0 >= WORLD_HEIGHT) {
                         continue;
                     }
                     if (this.world.getBlock(x0, y0, z0) != v.getReplaceIdState()) {
