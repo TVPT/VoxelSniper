@@ -102,8 +102,8 @@ public class LineBrush extends PerformBrush {
         if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
             v.sendMessage(TextColors.GOLD,
                     "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
-            v.sendMessage(TextColors.GOLD + "Line brush Parameters:");
-            v.sendMessage(TextColors.AQUA + "/b line continue -- Each line will be drawn from the endpoint of the last line.");
+            v.sendMessage(TextColors.GOLD, "Line brush Parameters:");
+            v.sendMessage(TextColors.AQUA, "/b line continue -- Each line will be drawn from the endpoint of the last line.");
             return;
         }
         this.continuous = false;

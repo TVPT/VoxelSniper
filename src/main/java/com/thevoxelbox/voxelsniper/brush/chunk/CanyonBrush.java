@@ -92,13 +92,13 @@ public class CanyonBrush extends ChunkBrush {
     @Override
     public void info(final Message vm) {
         vm.brushName(this.info.name());
-        vm.custom(TextColors.GREEN + "Shift Level set to " + this.yLevel);
+        vm.custom(TextColors.GREEN, "Shift Level set to " + this.yLevel);
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
         if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
-            v.sendMessage(TextColors.GREEN + "y[number] to set the Level to which the land will be shifted down");
+            v.sendMessage(TextColors.GREEN, "y[number] to set the Level to which the land will be shifted down");
         }
         if (par[0].startsWith("y")) {
             int _i = Integer.parseInt(par[0].replace("y", ""));

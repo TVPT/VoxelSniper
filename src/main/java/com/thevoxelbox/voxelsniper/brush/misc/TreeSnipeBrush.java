@@ -107,8 +107,8 @@ public class TreeSnipeBrush extends Brush {
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
         if (par.length == 0 || par[0].equalsIgnoreCase("info")) {
-            v.sendMessage(TextColors.GOLD + "Tree snipe brush:");
-            v.sendMessage(TextColors.AQUA + "/b t treetype");
+            v.sendMessage(TextColors.GOLD, "Tree snipe brush:");
+            v.sendMessage(TextColors.AQUA, "/b t treetype");
             this.printTreeType(v.getVoxelMessage());
             return;
         } else if (par[0].equalsIgnoreCase("types")) {

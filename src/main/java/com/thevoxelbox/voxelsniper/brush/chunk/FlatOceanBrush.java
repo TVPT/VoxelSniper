@@ -90,9 +90,9 @@ public class FlatOceanBrush extends ChunkBrush {
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.info.name());
-        vm.custom(TextColors.RED + "THIS BRUSH DOES NOT UNDO");
-        vm.custom(TextColors.GREEN + "Water level set to " + this.waterLevel);
-        vm.custom(TextColors.GREEN + "Ocean floor level set to " + this.floorLevel);
+        vm.custom(TextColors.RED, "THIS BRUSH DOES NOT UNDO");
+        vm.custom(TextColors.GREEN, "Water level set to " + this.waterLevel);
+        vm.custom(TextColors.GREEN, "Ocean floor level set to " + this.floorLevel);
     }
 
     @Override
@@ -101,8 +101,8 @@ public class FlatOceanBrush extends ChunkBrush {
             final String parameter = par[i];
 
             if (parameter.equalsIgnoreCase("info")) {
-                v.sendMessage(TextColors.GREEN + "yo[number] to set the Level to which the water will rise.");
-                v.sendMessage(TextColors.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
+                v.sendMessage(TextColors.GREEN, "yo[number] to set the Level to which the water will rise.");
+                v.sendMessage(TextColors.GREEN, "yl[number] to set the Level to which the ocean floor will rise.");
             }
             if (parameter.startsWith("yo")) {
                 try {
@@ -112,7 +112,7 @@ public class FlatOceanBrush extends ChunkBrush {
                         v.sendMessage(TextColors.RED, "Water level cannot be negative.");
                         continue;
                     }
-                    v.sendMessage(TextColors.GREEN + "Water Level set to " + this.waterLevel);
+                    v.sendMessage(TextColors.GREEN, "Water Level set to " + this.waterLevel);
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid water level value.");
                 }
@@ -124,7 +124,7 @@ public class FlatOceanBrush extends ChunkBrush {
                         v.sendMessage(TextColors.RED, "Ocean floor level cannot be negative.");
                         continue;
                     }
-                    v.sendMessage(TextColors.GREEN + "Ocean floor Level set to " + this.floorLevel);
+                    v.sendMessage(TextColors.GREEN, "Ocean floor Level set to " + this.floorLevel);
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid ocean floor level value.");
                 }

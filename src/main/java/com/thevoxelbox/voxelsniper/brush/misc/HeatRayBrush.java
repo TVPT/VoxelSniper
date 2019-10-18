@@ -199,16 +199,16 @@ public class HeatRayBrush extends Brush {
             final String parameter = par[i].toLowerCase();
 
             if (parameter.equalsIgnoreCase("info")) {
-                v.sendMessage(TextColors.GOLD + "Heat Ray brush Parameters:");
-                v.sendMessage(TextColors.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
-                v.sendMessage(TextColors.AQUA + "/b hr pers[float] -- Persistence parameter for the noise generator.");
-                v.sendMessage(TextColors.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
+                v.sendMessage(TextColors.GOLD, "Heat Ray brush Parameters:");
+                v.sendMessage(TextColors.AQUA, "/b hr oct[int] -- Octaves parameter for the noise generator.");
+                v.sendMessage(TextColors.AQUA, "/b hr pers[float] -- Persistence parameter for the noise generator.");
+                v.sendMessage(TextColors.AQUA, "/b hr freq[float] -- Frequency parameter for the noise generator.");
             }
             if (parameter.startsWith("oct")) {
                 try {
                     this.octaves = Integer.valueOf(parameter.replace("oct", ""));
                     this.perlin.setOctaveCount(this.octaves);
-                    v.getVoxelMessage().custom(TextColors.GREEN + "Octaves: " + this.octaves);
+                    v.getVoxelMessage().custom(TextColors.GREEN, "Octaves: " + this.octaves);
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid octave value.");
                 }
@@ -216,7 +216,7 @@ public class HeatRayBrush extends Brush {
                 try {
                     this.persistence = Double.valueOf(parameter.replace("pers", ""));
                     this.perlin.setPersistence(this.persistence);
-                    v.getVoxelMessage().custom(TextColors.GREEN + "Amplitude: " + this.persistence);
+                    v.getVoxelMessage().custom(TextColors.GREEN, "Amplitude: " + this.persistence);
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid amplitude value.");
                 }
@@ -224,7 +224,7 @@ public class HeatRayBrush extends Brush {
                 try {
                     this.frequency = Double.valueOf(parameter.replace("freq", ""));
                     this.perlin.setFrequency(this.frequency);
-                    v.getVoxelMessage().custom(TextColors.GREEN + "Frequency: " + this.frequency);
+                    v.getVoxelMessage().custom(TextColors.GREEN, "Frequency: " + this.frequency);
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid frequency value.");
                 }

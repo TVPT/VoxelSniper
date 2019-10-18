@@ -56,7 +56,7 @@ public class RulerBrush extends Brush {
     @Override
     protected final void arrow(final SnipeData v) {
         if (this.pos == null) {
-            v.sendMessage(TextColors.DARK_PURPLE + "First point selected.");
+            v.sendMessage(TextColors.DARK_PURPLE, "First point selected.");
             this.pos = this.targetBlock.getBlockPosition();
         } else {
             final Undo undo = new Undo(1);
@@ -70,14 +70,14 @@ public class RulerBrush extends Brush {
     @Override
     protected final void powder(final SnipeData v) {
         if (this.pos == null) {
-            v.sendMessage(TextColors.RED + "Select a first point with the arrow.");
+            v.sendMessage(TextColors.RED, "Select a first point with the arrow.");
             return;
         }
-        v.sendMessage(TextColors.AQUA + "X change: " + (this.targetBlock.getX() - this.pos.getX()));
-        v.sendMessage(TextColors.AQUA + "Y change: " + (this.targetBlock.getY() - this.pos.getY()));
-        v.sendMessage(TextColors.AQUA + "Z change: " + (this.targetBlock.getZ() - this.pos.getZ()));
+        v.sendMessage(TextColors.AQUA, "X change: " + (this.targetBlock.getX() - this.pos.getX()));
+        v.sendMessage(TextColors.AQUA, "Y change: " + (this.targetBlock.getY() - this.pos.getY()));
+        v.sendMessage(TextColors.AQUA, "Z change: " + (this.targetBlock.getZ() - this.pos.getZ()));
         final double distance = this.targetBlock.getBlockPosition().sub(this.pos).length();
-        v.sendMessage(TextColors.AQUA + "Distance = " + distance);
+        v.sendMessage(TextColors.AQUA, "Distance = " + distance);
     }
 
     @Override

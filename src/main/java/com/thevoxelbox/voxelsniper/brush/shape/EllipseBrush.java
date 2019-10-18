@@ -39,7 +39,7 @@ import org.spongepowered.api.world.World;
  * Creates an ellipse.
  */
 @Brush.BrushInfo(
-    name = "Ellipsse",
+    name = "Ellipse",
     aliases = {"el", "ellipse"},
     permission = "voxelsniper.brush.ellipse",
     category = Brush.BrushCategory.SHAPE
@@ -148,7 +148,7 @@ public class EllipseBrush extends PerformBrush {
                     v.sendMessage(TextColors.RED, "Invalid Y radius value.");
                 }
             } else {
-                v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                v.sendMessage(TextColors.RED, "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
             }
         }
         if (this.xrad <= 0) {

@@ -58,8 +58,8 @@ public class RegenerateChunkBrush extends ChunkBrush {
 
     @Override
     protected void operate(SnipeData v, Chunk chunk) {
-        // @Spongify pending regenerate chunk method
         v.sendMessage(TextColors.YELLOW, "Sorry, this brush is pending changes to sponge.");
+        //chunk.getWorld().regenerateChunk(chunk.getPosition());
     }
 
     @Override

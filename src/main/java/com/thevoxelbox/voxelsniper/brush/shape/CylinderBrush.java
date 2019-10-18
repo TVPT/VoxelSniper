@@ -120,8 +120,8 @@ public class CylinderBrush extends PerformBrush {
             final String parameter = par[i];
 
             if (parameter.equalsIgnoreCase("info")) {
-                v.sendMessage(TextColors.GOLD + "Cylinder Brush Parameters:");
-                v.sendMessage(TextColors.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
+                v.sendMessage(TextColors.GOLD, "Cylinder Brush Parameters:");
+                v.sendMessage(TextColors.AQUA, "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
                 v.sendMessage(TextColors.DARK_BLUE
                         + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
                 return;
@@ -129,19 +129,19 @@ public class CylinderBrush extends PerformBrush {
             if (parameter.startsWith("h")) {
                 try {
                     v.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
-                    v.sendMessage(TextColors.AQUA + "Cylinder v.voxelHeight set to: " + v.getVoxelHeight());
+                    v.sendMessage(TextColors.AQUA, "Cylinder v.voxelHeight set to: " + v.getVoxelHeight());
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid height given.");
                 }
             } else if (parameter.startsWith("c")) {
                 try {
                     v.setcCen((int) Double.parseDouble(parameter.replace("c", "")));
-                    v.sendMessage(TextColors.AQUA + "Cylinder origin set to: " + v.getcCen());
+                    v.sendMessage(TextColors.AQUA, "Cylinder origin set to: " + v.getcCen());
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid origin given.");
                 }
             } else {
-                v.sendMessage(TextColors.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
     }

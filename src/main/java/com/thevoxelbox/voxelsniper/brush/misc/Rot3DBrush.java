@@ -59,6 +59,9 @@ public class Rot3DBrush extends Brush {
     public final void info(final Message vm) {
         vm.brushName(this.info.name());
         vm.brushMessage("Rotates a spherical area by a given yaw, pitch, and roll");
+        vm.custom(TextColors.AQUA, "Around X-axis degrees (roll) set to " + this.roll);
+        vm.custom(TextColors.AQUA, "Around y-axis degrees (yaw) set to " + this.yaw);
+        vm.custom(TextColors.AQUA, "Around Z-axis degrees (pitch) set to " + this.pitch);
     }
 
     @Override
@@ -78,10 +81,10 @@ public class Rot3DBrush extends Brush {
             } else if (parameter.startsWith("p")) {
                 try {
                     if (this.pitch < 0 || this.pitch > 359) {
-                        v.sendMessage(TextColors.RED + "Invalid brush parameters! Angles must be from 1-359");
+                        v.sendMessage(TextColors.RED, "Invalid brush parameters! Angles must be from 1-359");
                     } else {
                         this.pitch = Math.toRadians(Double.parseDouble(parameter.replace("p", "")));
-                        v.sendMessage(TextColors.AQUA + "Around Z-axis degrees set to " + this.pitch);
+                        v.sendMessage(TextColors.AQUA, "Around Z-axis degrees set to " + this.pitch);
                     }
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid pitch given.");
@@ -89,10 +92,10 @@ public class Rot3DBrush extends Brush {
             } else if (parameter.startsWith("r")) {
                 try {
                     if (this.roll < 0 || this.roll > 359) {
-                        v.sendMessage(TextColors.RED + "Invalid brush parameters! Angles must be from 1-359");
+                        v.sendMessage(TextColors.RED, "Invalid brush parameters! Angles must be from 1-359");
                     } else {
                         this.roll = Math.toRadians(Double.parseDouble(parameter.replace("r", "")));
-                        v.sendMessage(TextColors.AQUA + "Around X-axis degrees set to " + this.roll);
+                        v.sendMessage(TextColors.AQUA, "Around X-axis degrees set to " + this.roll);
                     }
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid roll given.");
@@ -100,10 +103,10 @@ public class Rot3DBrush extends Brush {
             } else if (parameter.startsWith("y")) {
                 try {
                     if (this.yaw < 0 || this.yaw > 359) {
-                        v.sendMessage(TextColors.RED + "Invalid brush parameters! Angles must be from 1-359");
+                        v.sendMessage(TextColors.RED, "Invalid brush parameters! Angles must be from 1-359");
                     } else {
                         this.yaw = Math.toRadians(Double.parseDouble(parameter.replace("y", "")));
-                        v.sendMessage(TextColors.AQUA + "Around Y-axis degrees set to " + this.yaw);
+                        v.sendMessage(TextColors.AQUA, "Around Y-axis degrees set to " + this.yaw);
                     }
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid yaw given.");

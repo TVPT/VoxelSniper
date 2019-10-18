@@ -125,7 +125,7 @@ public class TriangleBrush extends PerformBrush {
         if (lengthOne == 0 || lengthTwo == 0 || (this.coordsOne[0] == 0 && this.coordsOne[1] == 0 && this.coordsOne[2] == 0)
                 || (this.coordsTwo[0] == 0 && this.coordsTwo[1] == 0 && this.coordsTwo[2] == 0)
                 || (this.coordsThree[0] == 0 && this.coordsThree[1] == 0 && this.coordsThree[2] == 0)) {
-            v.sendMessage(TextColors.RED + "ERROR: Invalid corners, please try again.");
+            v.sendMessage(TextColors.RED, "ERROR: Invalid corners, please try again.");
         } else {
             // Make the Changes
             final double[] cVectorOne = new double[3];

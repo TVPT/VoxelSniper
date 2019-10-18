@@ -112,10 +112,10 @@ public class EllipsoidBrush extends PerformBrush {
             final String parameter = par[i];
 
             if (parameter.equalsIgnoreCase("info")) {
-                v.sendMessage(TextColors.GOLD + "Ellipse brush parameters");
-                v.sendMessage(TextColors.AQUA + "x[n]: Set X radius to n");
-                v.sendMessage(TextColors.AQUA + "y[n]: Set Y radius to n");
-                v.sendMessage(TextColors.AQUA + "z[n]: Set Z radius to n");
+                v.sendMessage(TextColors.GOLD, "Ellipsoid brush parameters");
+                v.sendMessage(TextColors.AQUA, "x[n]: Set X radius to n");
+                v.sendMessage(TextColors.AQUA, "y[n]: Set Y radius to n");
+                v.sendMessage(TextColors.AQUA, "z[n]: Set Z radius to n");
                 return;
             } else if (parameter.startsWith("x")) {
                 try {
@@ -154,7 +154,7 @@ public class EllipsoidBrush extends PerformBrush {
                     v.sendMessage(TextColors.RED, "Invalid Z radius value.");
                 }
             } else {
-                v.sendMessage(TextColors.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                v.sendMessage(TextColors.RED, "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
             }
         }
         if (this.xrad <= 0) {

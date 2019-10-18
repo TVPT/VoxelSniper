@@ -98,7 +98,7 @@ public class SignOverwriteBrush extends Brush {
         }
 
         if (!signFound) {
-            v.sendMessage(TextColors.RED + "Did not found any sign in selection box.");
+            v.sendMessage(TextColors.RED, "Did not found any sign in selection box.");
         }
     }
 
@@ -119,12 +119,12 @@ public class SignOverwriteBrush extends Brush {
             }
             displayBuffer(v);
         } else {
-            v.sendMessage(TextColors.RED + "Target block is not a sign.");
+            v.sendMessage(TextColors.RED, "Target block is not a sign.");
         }
     }
 
     private void displayBuffer(final SnipeData v) {
-        v.sendMessage(TextColors.BLUE + "Buffer text set to: ");
+        v.sendMessage(TextColors.BLUE, "Buffer text set to: ");
         for (int i = 0; i < this.signTextLines.size(); i++) {
             v.sendMessage(i + ": ", this.signTextLines.get(i));
         }
@@ -132,10 +132,10 @@ public class SignOverwriteBrush extends Brush {
 
     @Override
     public final void info(final Message vm) {
-        vm.custom(TextColors.AQUA + "Sign Overwrite Brush Powder/Arrow:");
-        vm.custom(TextColors.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
-        vm.custom(TextColors.BLUE + "The powder reads the text of the target sign into the internal buffer.");
-        vm.custom(TextColors.BLUE + "Buffer text set to: ");
+        vm.custom(TextColors.AQUA, "Sign Overwrite Brush Powder/Arrow:");
+        vm.custom(TextColors.BLUE, "The arrow writes the internal line buffer to the tearget sign.");
+        vm.custom(TextColors.BLUE, "The powder reads the text of the target sign into the internal buffer.");
+        vm.custom(TextColors.BLUE, "Buffer text set to: ");
         for (int i = 0; i < this.signTextLines.size(); i++) {
             vm.custom(i + ": ", this.signTextLines.get(i));
         }

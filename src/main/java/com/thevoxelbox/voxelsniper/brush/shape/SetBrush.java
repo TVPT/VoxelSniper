@@ -70,7 +70,7 @@ public class SetBrush extends PerformBrush {
 
         int size = Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY);
         if (size > SELECTION_SIZE_MAX) {
-            v.sendMessage(TextColors.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+            v.sendMessage(TextColors.RED, "Selection size above hardcoded limit, please use a smaller selection.");
             return;
         }
         this.undo = new Undo(size);

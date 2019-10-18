@@ -130,7 +130,7 @@ public class EntityRemovalBrush extends Brush {
         }
         StringBuilder types = new StringBuilder();
         for (EntityType type : exempt) {
-            types.append(", ").append(type.getId());
+            types.append(", ").append(type.getName());
         }
         vm.custom(TextColors.AQUA, "Exempted entity types:");
         vm.custom(types.toString().substring(2));
