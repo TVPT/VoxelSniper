@@ -44,8 +44,8 @@ import java.util.UUID;
 )
 public class ShellSetBrush extends Brush {
 
-    private Vector3i pos1;
-    private UUID worldUid;
+    private Vector3i pos1 = null;
+    private UUID worldUid = null;
 
     public ShellSetBrush() {
     }
@@ -111,11 +111,14 @@ public class ShellSetBrush extends Brush {
     }
 
     private void pos(SnipeData v, Location<World> target) {
-        if (this.worldUid == null || !target.getExtent().getUniqueId().equals(this.worldUid)) {
+        if (this.worldUid == null || this.pos1 == null || !target.getExtent().getUniqueId().equals(this.worldUid)) {
             this.pos1 = target.getBlockPosition();
+            this.worldUid = target.getExtent().getUniqueId();
             v.sendMessage(TextColors.GRAY, "First point set.");
         } else {
             sShell(v, target.getBlockPosition(), this.pos1);
+            this.pos1 = null;
+            this.worldUid = null;
         }
     }
 
