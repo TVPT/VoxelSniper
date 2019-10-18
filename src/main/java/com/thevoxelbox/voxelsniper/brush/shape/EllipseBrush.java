@@ -55,28 +55,29 @@ public class EllipseBrush extends PerformBrush {
     private void ellipse(final SnipeData v, Location<World> targetBlock, Direction axis) {
         double xrads = this.xrad * this.xrad;
         double yrads = this.yrad * this.yrad;
+
         int tx = targetBlock.getBlockX();
+        int ty = targetBlock.getBlockY();
         int tz = targetBlock.getBlockZ();
-        int minx = GenericMath.floor(targetBlock.getBlockX() - this.xrad);
-        int maxx = (int) Math.ceil(targetBlock.getBlockX() + this.xrad);
-        int minz = GenericMath.floor(targetBlock.getBlockZ() - this.yrad);
-        int maxz = (int) Math.ceil(targetBlock.getBlockZ() + this.yrad);
+
+        int minx = GenericMath.floor(-this.xrad);
+        int maxx = (int) Math.ceil(this.xrad);
+        int minz = GenericMath.floor(-this.yrad);
+        int maxz = (int) Math.ceil(this.yrad);
 
         this.undo = new Undo(GenericMath.floor(Math.PI * (this.xrad + 1) * (this.yrad + 1)));
 
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (tz - z) * (tz - z);
-                if (xs / xrads + zs / yrads < 1) {
+                if (x / xrads + z / yrads < 1) {
                     if (axis == Direction.UP) {
-                        perform(v, x, targetBlock.getBlockY(), z);
+                        perform(v, tx + x, ty, tz + z);
                     } else if (axis == Direction.NORTH) {
-                        perform(v, x, z, targetBlock.getBlockZ());
+                        perform(v, tx + x, ty + z, tz);
                     } else if (axis == Direction.EAST) {
-                        perform(v, targetBlock.getBlockX(), x, z);
+                        perform(v, tx, ty + x, tz + z);
                     }
                 }
             }
