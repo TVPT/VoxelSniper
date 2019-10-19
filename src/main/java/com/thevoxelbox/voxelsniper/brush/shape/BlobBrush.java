@@ -41,9 +41,9 @@ import java.util.Random;
 )
 public class BlobBrush extends PerformBrush {
 
-    private static final double GROW_PERCENT_DEFAULT = 0.1;
+    private static final double GROW_PERCENT_DEFAULT = 10.0;
     private static final double GROW_PERCENT_MIN = 0.0;
-    private static final double GROW_PERCENT_MAX = 1.0;
+    private static final double GROW_PERCENT_MAX = 100.0;
 
     private Random randomGenerator = new Random();
     private double growPercent = GROW_PERCENT_DEFAULT;
@@ -60,12 +60,14 @@ public class BlobBrush extends PerformBrush {
 
         this.undo = new Undo(brushSizeDoubled * brushSizeDoubled * brushSizeDoubled);
 
+        double grow_pct = this.growPercent / 100.0;
+
         // Seed the array
         for (int x = brushSizeDoubled; x >= 0; x--) {
             for (int y = brushSizeDoubled; y >= 0; y--) {
                 for (int z = brushSizeDoubled; z >= 0; z--) {
                     if ((x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled)
-                            && this.randomGenerator.nextDouble() <= this.growPercent) {
+                            && this.randomGenerator.nextDouble() <= grow_pct) {
                         splat[x][y][z] = 0;
                     } else {
                         splat[x][y][z] = 1;
@@ -102,7 +104,7 @@ public class BlobBrush extends PerformBrush {
                             }
                         }
 
-                        if (growCheck >= 1 && this.randomGenerator.nextDouble() <= this.growPercent) {
+                        if (growCheck >= 1 && this.randomGenerator.nextDouble() <= grow_pct) {
                             tempSplat[x][y][z] = 0; // prevent bleed into splat
                         }
                     }
@@ -152,6 +154,8 @@ public class BlobBrush extends PerformBrush {
         // Seed the array
         splat[brushSize][brushSize][brushSize] = 1;
 
+        double grow_pct = this.growPercent / 100.0;
+        
         // Grow the seed
         for (int r = 0; r < brushSize; r++) {
 
@@ -181,7 +185,7 @@ public class BlobBrush extends PerformBrush {
                             }
                         }
 
-                        if (growCheck >= 1 && this.randomGenerator.nextDouble() <= this.growPercent) {
+                        if (growCheck >= 1 && this.randomGenerator.nextDouble() <= grow_pct) {
                             // prevent bleed into splat
                             tempSplat[x][y][z] = 1;
                         }
@@ -254,10 +258,10 @@ public class BlobBrush extends PerformBrush {
                     v.sendMessage(TextColors.AQUA, "Growth percent set to: " + temp + "%");
                     this.growPercent = temp;
                 } else {
-                    v.sendMessage(TextColors.RED, "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
+                    v.sendMessage(TextColors.RED, "Growth percent must be a number " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
                 }
             } catch (NumberFormatException e) {
-                v.sendMessage(TextColors.RED, "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
+                v.sendMessage(TextColors.RED, "Growth percent must be a number " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
             }
         } else {
             v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
