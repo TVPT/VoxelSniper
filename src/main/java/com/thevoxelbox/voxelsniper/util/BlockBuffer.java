@@ -69,7 +69,7 @@ public class BlockBuffer {
     }
 
     public boolean contains(int x, int y, int z) {
-        if (x < this.min.getX() || x > this.max.getX() || y < this.min.getX() || y > this.max.getX() || z < this.min.getX() || z > this.max.getX()) {
+        if (x < this.min.getX() || x > this.max.getX() || y < this.min.getY() || y > this.max.getY() || z < this.min.getZ() || z > this.max.getZ()) {
             return false;
         }
         return this.buffer[index(x, y, z)] != Character.MAX_VALUE;
