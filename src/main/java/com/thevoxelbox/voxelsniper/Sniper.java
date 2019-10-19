@@ -216,7 +216,7 @@ public class Sniper {
                     lastBlock = targetBlock;
                     targetBlock = ray.next().getLocation();
                 }
-                if (targetBlock == null || targetBlock.getBlockType() == BlockTypes.AIR) {
+                if (targetBlock == null || (targetBlock.getBlockType() == BlockTypes.AIR && !snipeData.isRanged())) {
                     player.sendMessage(VoxelSniperMessages.SNIPE_TARGET_NOT_VISIBLE);
                     return false;
                 }
