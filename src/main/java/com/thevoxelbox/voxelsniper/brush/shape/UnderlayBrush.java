@@ -53,10 +53,12 @@ public class UnderlayBrush extends PerformBrush {
     public UnderlayBrush() {
     }
 
-    private void underlay(SnipeData v, Location<World> targetBlock) {
+    private void underlay(SnipeData v, Location<World> targetBlock, int offset) {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
 
+        int tx = targetBlock.getBlockX();
+        int tz = targetBlock.getBlockZ();
         int minx = GenericMath.floor(targetBlock.getBlockX() - brushSize);
         int maxx = GenericMath.floor(targetBlock.getBlockX() + brushSize) + 1;
         int minz = GenericMath.floor(targetBlock.getBlockZ() - brushSize);
@@ -67,9 +69,9 @@ public class UnderlayBrush extends PerformBrush {
         // @Cleanup Should wrap this within a block worker so that it works
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
-            double xs = (minx - x) * (minx - x);
+            double xs = (tx - x) * (tx - x);
             for (int z = minz; z <= maxz; z++) {
-                double zs = (minz - z) * (minz - z);
+                double zs = (tz - z) * (tz - z);
                 if (xs + zs < brushSizeSquared) {
                     int y = targetBlock.getBlockY();
                     for (; y <= Brush.WORLD_HEIGHT; y++) {
@@ -84,10 +86,11 @@ public class UnderlayBrush extends PerformBrush {
                             continue;
                         }
                     }
-                    for (int y0 = y; y0 < y + this.depth; y0++) {
-                        if (this.world.getBlockType(x, y0, z) != BlockTypes.AIR) {
-                            perform(v, x, y0, z);
+                    for (int y0 = Math.max(y - offset, 0); y0 < y + this.depth; y0++) {
+                        if(y0 >= y && this.world.getBlockType(x, y0, z) == BlockTypes.AIR) {
+                            break;
                         }
+                        perform(v, x, y0, z);
                     }
                 }
             }
@@ -100,14 +103,12 @@ public class UnderlayBrush extends PerformBrush {
 
     @Override
     public final void arrow(final SnipeData v) {
-        this.underlay(v, this.targetBlock);
+        this.underlay(v, this.targetBlock, 0);
     }
 
     @Override
     public final void powder(final SnipeData v) {
-        this.underlay(v, this.lastBlock);
-        // @Feature the gunpowder should stack one block higher than the
-        // existing land
+        this.underlay(v, this.lastBlock, 1);
     }
 
     @Override
