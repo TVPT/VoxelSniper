@@ -71,7 +71,7 @@ public class EllipseBrush extends PerformBrush {
         // better with the cause tracker
         for (int x = minx; x <= maxx; x++) {
             for (int z = minz; z <= maxz; z++) {
-                if (x / xrads + z / yrads < 1) {
+                if ((x * x) / xrads + (z * z) / yrads < 1) {
                     if (axis == Direction.UP) {
                         perform(v, tx + x, ty, tz + z);
                     } else if (axis == Direction.NORTH) {
