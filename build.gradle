@@ -33,11 +33,8 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url "http://repo.spongepowered.org/maven/"
-    }
-    maven {
         name = 'sponge-repo'
-        url = 'https://repo.spongepowered.org/maven'
+        url = 'http://repo.spongepowered.org/maven/'
     }
 }
 
