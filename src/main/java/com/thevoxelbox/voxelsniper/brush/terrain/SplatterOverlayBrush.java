@@ -24,17 +24,19 @@
  */
 package com.thevoxelbox.voxelsniper.brush.terrain;
 
+import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
-import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Brush.BrushInfo(
@@ -59,135 +61,111 @@ public class SplatterOverlayBrush extends PerformBrush {
     public SplatterOverlayBrush() {
     }
 
-    private void splatterOverlay(final SnipeData v, Location<World> targetBlock) {
+    private void splatterOverlay(final SnipeData v, Location<World> targetBlock, boolean isOffset) {
         int size = GenericMath.floor(v.getBrushSize()) + 1;
         double sizeSquared = v.getBrushSize() * v.getBrushSize();
 
-        int tx = targetBlock.getBlockX();
-        int ty = targetBlock.getBlockY();
-        int tz = targetBlock.getBlockZ();
+        int targetX = targetBlock.getBlockX();
+        int targetY = targetBlock.getBlockY();
+        int targetZ = targetBlock.getBlockZ();
 
         // 0 = not part of the overlay area
         // 1 = part of the overlay area but not marked
         // 2 = part of the overlay area and marked
-        final byte[][][] splat = new byte[2 * size + 1][ty][2 * size + 1];
+        final byte[][][] splatSeeds = new byte[2 * size + 1][targetY + 2][2 * size + 1];
 
         // Seed the array
         int miny = WORLD_HEIGHT;
         for (int x = -size; x <= size; x++) {
-            int x0 = tx + x;
+            int x0 = targetX + x;
             for (int z = -size; z <= size; z++) {
-                int z0 = tx + z;
-                if (x * x + z * z >= sizeSquared) {
+                int z0 = targetZ + z;
+                // If we are outside the circle based on the target block or the block at the top of the current column
+                // of blocks does not have air above it, don't do anything with this column
+                if (x * x + z * z >= sizeSquared ||
+                    this.world.getBlockType(x0, targetY, z0) != BlockTypes.AIR &&
+                    this.world.getBlockType(x0, targetY + 1, z0) != BlockTypes.AIR) {
                     continue;
                 }
-                y_search: for (int y = ty; y >= 0; y--) {
-                    if (this.world.getBlockType(x0, y, z0) != BlockTypes.AIR) {
-                        if (y == ty) {
+
+                int columnTop = targetY;
+                while (columnTop >= 0 && this.world.getBlockType(x0, columnTop, z0) == BlockTypes.AIR) {
+                    columnTop--;
+                }
+
+                if (columnTop > -1) {
+                    if (isOffset) {
+                        columnTop += 1;
+                    }
+                    int maxDepth = Math.max(columnTop - this.depth + 1, 0);
+                    for (int y0 = columnTop; y0 >= maxDepth; y0--) {
+                        if ((!isOffset || y0 != columnTop) && this.world.getBlockType(x0, y0, z0) == BlockTypes.AIR) {
                             break;
                         }
-                        for (int y0 = y; y0 >= y - this.depth; y0--) {
-                            if (this.world.getBlockType(x0, y, z0) == BlockTypes.AIR) {
-                                break y_search;
-                            }
-                            if (this.generator.nextDouble() < this.growPercent) {
-                                splat[x + size][y0][z + size] = 2;
-                            } else {
-                                splat[x + size][y0][z + size] = 1;
-                            }
-                            if (y0 < miny) {
-                                miny = y0;
-                            }
+
+                        if (this.generator.nextDouble() < this.seedPercent) {
+                            splatSeeds[x + size][y0][z + size] = 2;
+                        } else {
+                            splatSeeds[x + size][y0][z + size] = 1;
+                        }
+
+                        if (y0 < miny) {
+                            miny = y0;
                         }
                     }
                 }
             }
         }
-        int y_range = ty - miny + 1;
         // Grow the seeds
-        final byte[][][] tempSplat = new byte[2 * size + 1][y_range][2 * size + 1];
-        int growcheck;
+        List<Integer[]> newSeedPoints = new ArrayList<>();
 
         for (int r = 0; r < this.splatterRecursions; r++) {
             double grow = this.growPercent - ((this.growPercent / this.splatterRecursions) * (r));
-            for (int x = -size; x <= size; x++) {
-                int xi = x + size;
-                for (int z = -size; z <= size; z++) {
-                    int zi = z + size;
-                    for (int y = 0; y <= y_range; y++) {
-                        int y0 = miny + y;
-                        tempSplat[xi][y][zi] = splat[xi][y0][zi]; // prime
-                                                                  // tempsplat
-                        growcheck = 0;
-                        if (splat[xi][y0][zi] != 1) {
-                            continue;
+            for (int xi = 0; xi < size * 2 + 1; xi++) {
+                for (int zi = 0; zi < size * 2 + 1; zi++) {
+                    for (int y = miny; y <= targetY; y++) {
+                        // If the current block is in the overlay area and one of the adjacent blocks is seeded, see
+                        // if we should seed the current block as well
+                        if (splatSeeds[xi][y][zi] == 1 &&
+                                adjacentBlockIsSeeded(splatSeeds, xi, y, zi) &&
+                                this.generator.nextDouble() <= grow) {
+                            newSeedPoints.add(
+                                    new Integer[]{xi, y, zi}
+                            );
                         }
-                        if (xi != 0 && splat[xi - 1][y0][zi] == 2) {
-                            growcheck++;
-                        }
-                        if (y != 0 && splat[xi][y0 - 1][zi] == 2) {
-                            growcheck++;
-                        }
-                        if (zi != 0 && splat[xi][y0][zi - 1] == 2) {
-                            growcheck++;
-                        }
-                        if (xi != 2 * size && splat[xi + 1][y0][zi] == 2) {
-                            growcheck++;
-                        }
-                        if (y0 != ty && splat[xi][y0 + 1][zi] == 2) {
-                            growcheck++;
-                        }
-                        if (zi != 2 * size && splat[xi][y0][zi + 1] == 2) {
-                            growcheck++;
-                        }
-
-                        if (growcheck >= 0 && this.generator.nextDouble() <= grow) {
-                            tempSplat[xi][y][zi] = 2;
-                        }
-
                     }
                 }
             }
-            // integrate tempsplat back into splat at end of iterationfor (int x
-            // = -size; x <= size; x++) {
-            for (int x = -size; x <= size; x++) {
-                int xi = x + size;
-                for (int z = -size; z <= size; z++) {
-                    int zi = z + size;
-                    for (int y = 0; y <= y_range; y++) {
-                        int y0 = miny + y;
-                        splat[xi][y0][zi] = tempSplat[xi][y][zi];
-                    }
-                }
+
+            for (Integer[] coords : newSeedPoints) {
+                int x = coords[0], y = coords[1], z = coords[2];
+                splatSeeds[x][y][z] = 2;
             }
+
+            newSeedPoints.clear();
         }
         // Fill 1x1x1 holes
-        for (int x = -size; x <= size; x++) {
-            int xi = x + size;
-            for (int z = -size; z <= size; z++) {
-                int zi = z + size;
-                for (int y = 0; y <= y_range; y++) {
-                    int y0 = miny + y;
-                    if (splat[xi - 1][y0][zi] == 2 && splat[xi + 1][y0][zi] == 2 && splat[xi][y0 - 1][zi] == 2 && splat[xi][y0 + 1][zi] == 2
-                            && splat[xi][y0][zi - 1] == 2 && splat[xi][y0][zi + 1] == 2) {
-                        splat[xi][y0][zi] = 2;
+        for (int xi = 0; xi < 2 * size + 1; xi++) {
+            for (int zi = 0; zi < 2 * size + 1; zi++) {
+                for (int yi = miny; yi <= targetY; yi++) {
+                    if (splatSeeds[xi][yi][zi] == 1 && allAdjacentBlocksAreSeeded(splatSeeds, xi, yi, zi)) {
+                        splatSeeds[xi][yi][zi] = 2;
                     }
                 }
             }
         }
 
-        this.undo = new Undo(GenericMath.floor(4 * Math.PI * (v.getBrushSize() + 1) * (v.getBrushSize() + 1) * (v.getBrushSize() + 1) / 3));
+        this.undo = new Undo(GenericMath.floor(Math.PI * 4 * size * size * depth));
         // Make the changes
         for (int x = -size; x <= size; x++) {
             int xi = x + size;
-            int x0 = x + tx;
+            int x0 = x + targetX;
             for (int z = -size; z <= size; z++) {
                 int zi = z + size;
-                int z0 = z + tz;
-                for (int y = 0; y <= y_range; y++) {
-                    int y0 = miny + y;
-                    if (splat[xi][y0][zi] == 2) {
-                        perform(v, x0, y0, z0);
+                int z0 = z + targetZ;
+                for (int y = miny; y <= targetY; y++) {
+                    if (splatSeeds[xi][y][zi] == 2) {
+                        perform(v, x0, y, z0);
                     }
                 }
             }
@@ -197,30 +175,46 @@ public class SplatterOverlayBrush extends PerformBrush {
         this.undo = null;
     }
 
+    private boolean adjacentBlockIsSeeded(final byte[][][] seeds, int x, int y, int z) {
+        return x > 0 && seeds[x - 1][y][z] == 2 ||
+                y > 0 && seeds[x][y - 1][z] == 2 ||
+                z > 0 && seeds[x][y][z - 1] == 2 ||
+                x < seeds.length - 1 && seeds[x + 1][y][z] == 2 ||
+                y < seeds[0].length - 1 && seeds[x][y + 1][z] == 2 ||
+                z < seeds[0][0].length - 1 && seeds[x][y][z + 1] == 2;
+    }
+
+    private boolean allAdjacentBlocksAreSeeded(final byte[][][] seeds, int x, int y, int z) {
+        return (x < 0 || seeds[x - 1][y][z] == 2) &&
+                (y < 0 || seeds[x][y - 1][z] == 2) &&
+                (z < 0 || seeds[x][y][z - 1] == 2) &&
+                (x >= seeds.length - 1 || seeds[x + 1][y][z] == 2) &&
+                (y >= seeds[0].length - 1 || seeds[x][y + 1][z] == 2) &&
+                (z >= seeds[0][0].length || seeds[x][y][z + 1] == 2);
+    }
+
     @Override
     protected final void arrow(final SnipeData v) {
-        this.splatterOverlay(v, this.targetBlock);
+        this.splatterOverlay(v, this.targetBlock, false);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        // @Usability this should also splatter into the block above the terrain
-        this.splatterOverlay(v, this.lastBlock);
+        this.splatterOverlay(v, this.lastBlock, true);
     }
 
     @Override
     public final void info(final Message vm) {
         vm.brushName(this.info.name());
         vm.size();
-        vm.custom(TextColors.BLUE, "Seed percent set to: " + this.seedPercent / 100 + "%");
-        vm.custom(TextColors.BLUE, "Growth percent set to: " + this.growPercent / 100 + "%");
+        vm.custom(TextColors.BLUE, "Seed percent set to: " + this.seedPercent * 100 + "%");
+        vm.custom(TextColors.BLUE, "Growth percent set to: " + this.growPercent * 100 + "%");
         vm.custom(TextColors.BLUE, "Recursions set to: " + this.splatterRecursions);
     }
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 0; i < par.length; i++) {
-            final String parameter = par[i];
+        for (String parameter : par) {
             if (parameter.equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Splatter Overlay brush parameters:");
                 v.sendMessage(TextColors.AQUA, "d[int] (ex:  d3) How many blocks deep you want to replace from the surface.");
