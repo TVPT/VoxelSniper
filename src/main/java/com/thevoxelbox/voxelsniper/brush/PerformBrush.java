@@ -107,11 +107,7 @@ public abstract class PerformBrush extends Brush {
         BlockState current = this.world.getBlock(x, y, z);
         switch (replaceMethod) {
             case TYPE:
-<<<<<<< HEAD
-                if (current.getType() != v.getReplaceState().getType()) {
-=======
                 if (!sameBlockType(current, v.getReplaceState())) {
->>>>>>> 8e15cbd... Updating the ink performers to work better
                     return false;
                 }
                 break;
@@ -121,12 +117,8 @@ public abstract class PerformBrush extends Brush {
                 }
                 break;
             case COMBO:
-<<<<<<< HEAD
-                if (current != v.getReplaceState()) {
-=======
                 if (!sameBlockType(current, v.getReplaceState()) ||
                     !BlockHelper.hasTraits(current, v.getReplaceInkTraits())) {
->>>>>>> 8e15cbd... Updating the ink performers to work better
                     return false;
                 }
                 break;
