@@ -24,6 +24,7 @@
  */
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.util.BlockHelper;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
@@ -178,6 +179,7 @@ public class SnipeData {
     public void setVoxelInkTraits(Map<BlockTrait<?>, Object> traitValues) {
         this.voxelInkTraits.clear();
         this.voxelInkTraits.putAll(traitValues);
+        this.voxelState = BlockHelper.addTraits(this.voxelState.getType().getDefaultState(), traitValues);
     }
 
     public Map<BlockTrait<?>, Object> getReplaceInkTraits() {
@@ -189,6 +191,7 @@ public class SnipeData {
     public void setReplaceInkTraits(Map<BlockTrait<?>, Object> traitValues) {
         this.replaceInkTraits.clear();
         this.replaceInkTraits.putAll(traitValues);
+        this.replaceState = BlockHelper.addTraits(this.replaceState.getType().getDefaultState(), traitValues);
     }
 
     public Sniper owner() {
