@@ -56,16 +56,16 @@ public class ThreePointCircleBrush extends PerformBrush {
     @Override
     protected final void arrow(final SnipeData v) {
         if (this.coordsOne == null) {
-            this.coordsOne = this.targetBlock.getPosition(); //.add(0.5, 0.5, 0.5);
+            this.coordsOne = this.targetBlock.getPosition();
             v.sendMessage(TextColors.GRAY, "First Corner set.");
         } else if (this.coordsTwo == null) {
-            this.coordsTwo = this.targetBlock.getPosition(); //.add(0.5, 0.5, 0.5);
+            this.coordsTwo = this.targetBlock.getPosition();
             v.sendMessage(TextColors.GRAY, "Second Corner set.");
         } else if (this.coordsThree == null) {
-            this.coordsThree = this.targetBlock.getPosition(); //.add(0.5, 0.5, 0.5);
+            this.coordsThree = this.targetBlock.getPosition();
             v.sendMessage(TextColors.GRAY, "Third Corner set.");
         } else {
-            this.coordsOne = this.targetBlock.getPosition(); //.add(0.5, 0.5, 0.5);
+            this.coordsOne = this.targetBlock.getPosition();
             this.coordsTwo = null;
             this.coordsThree = null;
             v.sendMessage(TextColors.GRAY, "First Corner set.");
@@ -120,7 +120,7 @@ public class ThreePointCircleBrush extends PerformBrush {
         Vector3d yPrime = normalVector.cross(xPrime).normalize();
 
 
-        this.undo = new Undo((int) (2 * Math.PI * radius));
+        this.undo = new Undo((int) (Math.PI * radius * radius));
 
         // Use the parametric description of a circle with respect to theta and r to determine where to place the
         // next block
