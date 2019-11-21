@@ -89,7 +89,25 @@ public class ThreePointCircleBrush extends PerformBrush {
             return;
         }
 
-        // Column vectors for the A matrix
+        // Column vectors for the A matrix since we are trying to solve the equation
+        // Ax = b where A is:
+        // | x1, y1, z1, 1 |
+        // | x2, y2, z2, 1 |
+        // | x3, y3, z3, 1 |
+        // | Nx, Ny, Nz, 0 |
+        // Where xi, yi, zi represents the x, y, or z component of the ith coord and
+        // Nx, Ny, and Nz are the components of the normal vector
+        // and b is:
+        // | -x1^2 - y1^2 - z1^2 |
+        // | -x2^2 - y2^2 - z2^2 |
+        // | -x3^2 - y3^2 - z3^2 |
+        // | -2 * N * coordsOne  |
+        //
+        // The first three equations come from the equation of a sphere centered on the three
+        // points we get while the fourth ensures the point is on the same plane as the other
+        // three points in the circle.  This method is loosely based on method 1 from
+        // https://www.qc.edu.hk/math/Advanced%20Level/circle%20given%203%20points.htm but has
+        // been adapted for 3D.
         Vector4d A1 = new Vector4d(this.coordsOne.getX(), this.coordsTwo.getX(), this.coordsThree.getX(), normalVector.getX());
         Vector4d A2 = new Vector4d(this.coordsOne.getY(), this.coordsTwo.getY(), this.coordsThree.getY(), normalVector.getY());
         Vector4d A3 = new Vector4d(this.coordsOne.getZ(), this.coordsTwo.getZ(), this.coordsThree.getZ(), normalVector.getZ());
