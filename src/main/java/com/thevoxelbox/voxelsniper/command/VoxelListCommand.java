@@ -44,30 +44,39 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Optional;
+import java.util.regex.PatternSyntaxException;
 
 public class VoxelListCommand implements CommandExecutor {
 
     public static void setup(Object plugin) {
         Sponge.getCommandManager().register(plugin,
                 CommandSpec.builder()
-                        .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
+                        .arguments(
+                                GenericArguments.playerOrSource(Text.of("sniper")),
                                 GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("args"))))
-                        .executor(new VoxelListCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                        .executor(new VoxelListCommand())
+                        .permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
                         .description(Text.of("VoxelSniper material list selection")).build(),
                 "vl");
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext gargs) {
         Player player = (Player) gargs.getOne("sniper").get();
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         Optional<String> oargs = gargs.getOne("args");
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+
         if (!oargs.isPresent()) {
-            snipeData.getVoxelList().add(BlockHelper.stateOrWhereLooking(Optional.empty(), player).get());
+            Optional<BlockState> optBlock = BlockHelper.stateOrWhereLooking(Optional.empty(), player);
+            if (optBlock.isPresent()) {
+                snipeData.getVoxelList().add(optBlock.get());
+            }
+
             snipeData.getVoxelMessage().voxelList();
             return CommandResult.success();
         }
+
         String[] args = oargs.get().split(" ");
         if (args[0].equalsIgnoreCase("clear")) {
             snipeData.getVoxelList().clear();
@@ -76,10 +85,12 @@ public class VoxelListCommand implements CommandExecutor {
         }
 
         for (String arg : args) {
-            boolean remove = arg.startsWith("-");
-            if (remove) {
+            boolean remove = false;
+            if (arg.startsWith("-")) {
                 arg = arg.substring(1);
+                remove = true;
             }
+
             Optional<BlockType> type = Sponge.getRegistry().getType(BlockType.class, arg);
             if (type.isPresent()) {
                 if (remove) {
@@ -87,6 +98,7 @@ public class VoxelListCommand implements CommandExecutor {
                 } else {
                     snipeData.getVoxelList().add(type.get());
                 }
+
             } else {
                 Optional<BlockState> state = Sponge.getRegistry().getType(BlockState.class, arg);
                 if (state.isPresent()) {
@@ -96,10 +108,11 @@ public class VoxelListCommand implements CommandExecutor {
                         snipeData.getVoxelList().add(state.get());
                     }
                 } else {
-                    player.sendMessage(Text.of(TextColors.RED, "Material not found."));
+                    player.sendMessage(Text.of(TextColors.RED, "Material '", arg, "' not found."));
                 }
             }
         }
+
         snipeData.getVoxelMessage().voxelList();
         return CommandResult.success();
     }

@@ -32,7 +32,7 @@ import org.spongepowered.api.data.property.block.MatterProperty.Matter;
 import org.spongepowered.api.data.property.block.SolidCubeProperty;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.util.blockray.BlockRay;
-import org.spongepowered.api.world.Location;
+import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.World;
 
 import java.util.Map;
@@ -98,14 +98,19 @@ public class BlockHelper {
             return Sponge.getRegistry().getType(BlockState.class, rawState.get());
         }
 
-        Location<World> targetBlock = null;
-        BlockRay.BlockRayBuilder<World> rayBuilder =
-                BlockRay.from(player).stopFilter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1));
-        BlockRay<World> ray = rayBuilder.build();
-        while (ray.hasNext()) {
-            targetBlock = ray.next().getLocation();
+        BlockRay<World> ray =
+                BlockRay.from(player)
+                        .stopFilter(
+                                BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1)
+                        ).build();
+
+        Optional<BlockRayHit<World>> optRayHit = ray.end();
+        if (!optRayHit.isPresent()) {
+            return Optional.empty();
         }
 
-        return Optional.of(targetBlock.getBlock());
+        BlockRayHit<World> rayHit = optRayHit.get();
+        BlockState block = rayHit.getExtent().getBlock(rayHit.getBlockPosition());
+        return Optional.of(block);
     }
 }

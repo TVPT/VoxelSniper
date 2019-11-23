@@ -28,7 +28,6 @@ import com.google.common.collect.Sets;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -46,60 +45,35 @@ public class VoxelList {
      * @param i
      */
     public void add(BlockState i) {
-        if (this.wildcardTypes.contains(i.getType())) {
-            return;
+        if (!this.wildcardTypes.contains(i.getType())) {
+            this.specificTypes.add(i);
         }
-        this.specificTypes.add(i);
     }
 
     public void add(BlockType t) {
-        if (this.wildcardTypes.contains(t)) {
-            return;
+        if (!this.wildcardTypes.contains(t)) {
+            removeStatesOfType(t);
+            this.wildcardTypes.add(t);
         }
-        for (Iterator<BlockState> it = this.specificTypes.iterator(); it.hasNext();) {
-            BlockState state = it.next();
-            if (state.getType() == t) {
-                it.remove();
-            }
-        }
-        this.wildcardTypes.add(t);
     }
 
-    public boolean remove(BlockState state) {
-        return this.specificTypes.remove(state);
+    public void remove(BlockState state) {
+        this.specificTypes.remove(state);
     }
 
-    public boolean remove(BlockType t) {
-        boolean removed = this.wildcardTypes.remove(t);
-        for (Iterator<BlockState> it = this.specificTypes.iterator(); it.hasNext();) {
-            BlockState state = it.next();
-            if (state.getType() == t) {
-                it.remove();
-                removed = true;
-            }
+    public void remove(BlockType t) {
+        if(!this.wildcardTypes.remove(t)) {
+            removeStatesOfType(t);
         }
-        return removed;
     }
 
     public boolean contains(BlockState state) {
-        return this.specificTypes.contains(state);
+        return this.specificTypes.contains(state) ||
+                this.wildcardTypes.contains(state.getType());
     }
 
     public boolean contains(BlockType type) {
         return this.wildcardTypes.contains(type);
-    }
-
-    public boolean containsAny(BlockType type) {
-        boolean contains = this.wildcardTypes.contains(type);
-        if (!contains) {
-            for (Iterator<BlockState> it = this.specificTypes.iterator(); it.hasNext();) {
-                BlockState state = it.next();
-                if (state.getType() == type) {
-                    return true;
-                }
-            }
-        }
-        return contains;
     }
 
     public void clear() {
@@ -107,16 +81,30 @@ public class VoxelList {
         this.wildcardTypes.clear();
     }
 
-    public boolean isEmpty() {
-        return this.specificTypes.isEmpty() && this.wildcardTypes.isEmpty();
+    @Override
+    public String toString() {
+        if (this.specificTypes.isEmpty() && this.wildcardTypes.isEmpty()) {
+            return "No blocks selected!";
+        }
+
+        StringBuilder sb = new StringBuilder("Selected Block types: \n");
+
+        for (BlockType type : wildcardTypes) {
+            sb.append("   ")
+                .append(type.getId())
+                .append("\n");
+        }
+
+        for (BlockState state : specificTypes) {
+            sb.append("   ")
+                .append(state.getId())
+                .append("\n");
+        }
+
+        return sb.toString().trim();
     }
 
-    public Set<BlockType> getWildcardTypes() {
-        return this.wildcardTypes;
+    private void removeStatesOfType(BlockType type) {
+        this.specificTypes.removeIf((other) -> other.getType().equals(type));
     }
-
-    public Set<BlockState> getSpecificTypes() {
-        return this.specificTypes;
-    }
-
 }

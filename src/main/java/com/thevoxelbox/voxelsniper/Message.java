@@ -169,24 +169,6 @@ public class Message {
      * Display voxel list.
      */
     public void voxelList() {
-        if (this.snipeData.getVoxelList().isEmpty()) {
-            this.snipeData.sendMessage(TextColors.DARK_GREEN, "No blocks selected!");
-        } else {
-            Text.Builder returnValueBuilder = Text.builder();
-            returnValueBuilder.append(Text.of(TextColors.DARK_GREEN, "Block Types Selected: "));
-
-            StringBuilder vl = new StringBuilder();
-            for (BlockType type : this.snipeData.getVoxelList().getWildcardTypes()) {
-                vl.append(type.getId());
-                vl.append(" ");
-            }
-            for (BlockState type : this.snipeData.getVoxelList().getSpecificTypes()) {
-                vl.append(type.getId());
-                vl.append(" ");
-            }
-            returnValueBuilder.append(Text.of(TextColors.AQUA, vl.toString().trim()));
-
-            this.snipeData.sendMessage(returnValueBuilder.toText());
-        }
+        this.snipeData.sendMessage(Text.of(TextColors.DARK_GREEN, this.snipeData.getVoxelList()));
     }
 }
