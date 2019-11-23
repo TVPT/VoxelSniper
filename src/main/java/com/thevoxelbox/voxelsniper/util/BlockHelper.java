@@ -24,11 +24,18 @@
  */
 package com.thevoxelbox.voxelsniper.util;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.trait.BlockTrait;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.data.property.block.MatterProperty.Matter;
 import org.spongepowered.api.data.property.block.SolidCubeProperty;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.util.blockray.BlockRay;
+import org.spongepowered.api.util.blockray.BlockRayHit;
+import org.spongepowered.api.world.World;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class BlockHelper {
@@ -63,4 +70,47 @@ public class BlockHelper {
         return false;
     }
 
+    public static boolean hasTraits(BlockState state, Map<BlockTrait<?>, Object> traits) {
+        for (Map.Entry<BlockTrait<?>, ?> trait : state.getTraitMap().entrySet()) {
+            Object expectedValue = traits.get(trait.getKey());
+            if (!trait.getValue().equals(expectedValue)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static BlockState addTraits(BlockState state, Map<BlockTrait<?>, Object> traits) {
+        Optional<BlockState> nextState;
+        for (Map.Entry<BlockTrait<?>, Object> traitEntry : traits.entrySet()) {
+            nextState = state.withTrait(traitEntry.getKey(), traitEntry.getValue());
+            if (nextState.isPresent()) {
+                state = nextState.get();
+            }
+        }
+
+        return state;
+    }
+
+    public static Optional<BlockState> stateOrWhereLooking(Optional<String> rawState, Player player) {
+        if (rawState.isPresent()) {
+            return Sponge.getRegistry().getType(BlockState.class, rawState.get());
+        }
+
+        BlockRay<World> ray =
+                BlockRay.from(player)
+                        .stopFilter(
+                                BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1)
+                        ).build();
+
+        Optional<BlockRayHit<World>> optRayHit = ray.end();
+        if (!optRayHit.isPresent()) {
+            return Optional.empty();
+        }
+
+        BlockRayHit<World> rayHit = optRayHit.get();
+        BlockState block = rayHit.getExtent().getBlock(rayHit.getBlockPosition());
+        return Optional.of(block);
+    }
 }

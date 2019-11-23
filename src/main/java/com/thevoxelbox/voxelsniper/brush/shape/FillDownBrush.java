@@ -79,7 +79,7 @@ public class FillDownBrush extends PerformBrush {
                         }
                     }
                     for (; y >= 0; y--) {
-                        if (this.replace != PerformerType.NONE) {
+                        if (replaceMethod != PerformerType.NONE) {
                             if (!perform(v, x, y, z)) {
                                 break;
                             }

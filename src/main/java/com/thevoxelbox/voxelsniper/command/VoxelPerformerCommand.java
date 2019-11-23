@@ -48,13 +48,13 @@ public class VoxelPerformerCommand implements CommandExecutor {
         Sponge.getCommandManager().register(plugin,
                 CommandSpec.builder().arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.string(Text.of("performer")))
                         .executor(new VoxelPerformerCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
-                        .description(Text.of("VoxelSniper performer selection")).build(),
+                        .description(usageText()).build(),
                 "p");
     }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
-        Player player = (Player) gargs.getOne("sniper").get();
+        Player player = gargs.<Player>getOne("sniper").get();
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 
@@ -62,10 +62,29 @@ public class VoxelPerformerCommand implements CommandExecutor {
 
         Brush brush = sniper.getBrush(sniper.getCurrentToolId());
         if (brush instanceof PerformBrush) {
-            ((PerformBrush) brush).parse(new String[] { performer }, snipeData);
+            PerformBrush pBrush = (PerformBrush) brush;
+            pBrush.parse(new String[] { performer }, snipeData);
         } else {
             player.sendMessage(Text.of(TextColors.RED, "This brush is not a performer brush."));
         }
         return CommandResult.success();
+    }
+
+    private static Text usageText() {
+        return Text.of(
+                TextColors.RED,
+                "Performer takes in a string of up to three characters.  The first\n" +
+                        "is required and describes the placement method.  The second describes\n" +
+                        "the replacement method and is optional.  The third letter must be a p\n" +
+                        "and if present means that physics will not be applied when placing\n" +
+                        "blocks.  The either two must be one of: \n\n" +
+                        " - m for material.  Placing/replacing is solely done based on the base\n" +
+                        "   block you have selected.\n\n" +
+                        " - i for ink.  Blocks in the affected area will only have their properties\n" +
+                        "   changed when placing or will only be replace if their properties match\n" +
+                        "   the current ink\n\n" +
+                        " - c for combo.  As the name suggests, placement and replacement will use\n" +
+                        "   both the block type and ink values for placing/replacing."
+        );
     }
 }
