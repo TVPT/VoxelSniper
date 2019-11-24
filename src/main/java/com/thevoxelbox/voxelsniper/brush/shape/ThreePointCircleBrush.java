@@ -35,6 +35,9 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Brush.BrushInfo(
     name = "3-point Circle",
     aliases = {"tpc", "threepointcircle"},
@@ -43,46 +46,42 @@ import org.spongepowered.api.text.format.TextColors;
 )
 public class ThreePointCircleBrush extends PerformBrush {
 
-    private Vector3d coordsOne;
-    private Vector3d coordsTwo;
-    private Vector3d coordsThree;
+    private List<Vector3d> coords;
+    private static final String[] NUMBER_DESC = {"First", "Second", "Third"};
 
     /**
      * Default Constructor.
      */
     public ThreePointCircleBrush() {
+        coords = new ArrayList<>();
     }
 
     @Override
     protected final void arrow(final SnipeData v) {
-        if (this.coordsOne == null) {
-            this.coordsOne = this.targetBlock.getPosition();
-            v.sendMessage(TextColors.GRAY, "First Corner set.");
-        } else if (this.coordsTwo == null) {
-            this.coordsTwo = this.targetBlock.getPosition();
-            v.sendMessage(TextColors.GRAY, "Second Corner set.");
-        } else if (this.coordsThree == null) {
-            this.coordsThree = this.targetBlock.getPosition();
-            v.sendMessage(TextColors.GRAY, "Third Corner set.");
-        } else {
-            this.coordsOne = this.targetBlock.getPosition();
-            this.coordsTwo = null;
-            this.coordsThree = null;
-            v.sendMessage(TextColors.GRAY, "First Corner set.");
+        if (this.coords.size() == 3) {
+            this.coords.clear();
         }
+
+        this.coords.add(this.targetBlock.getPosition());
+        String message = NUMBER_DESC[coords.size() - 1] + " corner set.";
+        v.sendMessage(TextColors.GRAY, message);
     }
 
     @Override
     protected final void powder(final SnipeData v) {
-        if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
+        if (this.coords.size() != 3) {
             v.sendMessage(TextColors.RED, "ERROR: Set all points before creating the circle");
             return;
         }
 
+        Vector3d coordOne = this.coords.get(0);
+        Vector3d coordTwo = this.coords.get(1);
+        Vector3d coordThree = this.coords.get(2);
+
         // Calculate triangle defining vectors
-        final Vector3d delta1 = this.coordsTwo.sub(this.coordsOne);
-        final Vector3d delta2 = this.coordsThree.sub(this.coordsOne);
-        final Vector3d normalVector = delta1.cross(delta2);
+        Vector3d delta1 = coordTwo.sub(coordOne);
+        Vector3d delta2 = coordThree.sub(coordOne);
+        Vector3d normalVector = delta1.cross(delta2);
 
         if (normalVector.lengthSquared() < GenericMath.DBL_EPSILON) {
             v.sendMessage(TextColors.RED, "ERROR: Invalid points, try again.");
@@ -108,16 +107,16 @@ public class ThreePointCircleBrush extends PerformBrush {
         // three points in the circle.  This method is loosely based on method 1 from
         // https://www.qc.edu.hk/math/Advanced%20Level/circle%20given%203%20points.htm but has
         // been adapted for 3D.
-        Vector4d A1 = new Vector4d(this.coordsOne.getX(), this.coordsTwo.getX(), this.coordsThree.getX(), normalVector.getX());
-        Vector4d A2 = new Vector4d(this.coordsOne.getY(), this.coordsTwo.getY(), this.coordsThree.getY(), normalVector.getY());
-        Vector4d A3 = new Vector4d(this.coordsOne.getZ(), this.coordsTwo.getZ(), this.coordsThree.getZ(), normalVector.getZ());
+        Vector4d A1 = new Vector4d(coordOne.getX(), coordTwo.getX(), coordThree.getX(), normalVector.getX());
+        Vector4d A2 = new Vector4d(coordOne.getY(), coordTwo.getY(), coordThree.getY(), normalVector.getY());
+        Vector4d A3 = new Vector4d(coordOne.getZ(), coordTwo.getZ(), coordThree.getZ(), normalVector.getZ());
         Vector4d A4 = new Vector4d(1, 1, 1, 0);
 
-        double u1 = - this.coordsOne.lengthSquared();
-        double u2 = - this.coordsTwo.lengthSquared();
-        double u3 = - this.coordsThree.lengthSquared();
+        double u1 = - coordOne.lengthSquared();
+        double u2 = - coordTwo.lengthSquared();
+        double u3 = - coordThree.lengthSquared();
 
-        Vector4d b = new Vector4d(u1, u2, u3, -2 * normalVector.dot(this.coordsOne));
+        Vector4d b = new Vector4d(u1, u2, u3, -2 * normalVector.dot(coordOne));
 
         // Use Cramer's rule to calculate the center point
         double detA = columnsToMatrix(A1, A2, A3, A4).determinant();
@@ -131,10 +130,10 @@ public class ThreePointCircleBrush extends PerformBrush {
                 (detA3 / detA) / -2
         );
 
-        double radius = center.distance(this.coordsOne);
+        double radius = center.distance(coordOne);
 
         // Create two normal vectors on the plane that can act as the x and y unit vectors for drawing the circle
-        Vector3d xPrime = this.coordsOne.sub(center).normalize();
+        Vector3d xPrime = coordOne.sub(center).normalize();
         Vector3d yPrime = normalVector.cross(xPrime).normalize();
 
 
@@ -163,9 +162,7 @@ public class ThreePointCircleBrush extends PerformBrush {
         this.undo = null;
 
         // Reset Brush
-        this.coordsOne = null;
-        this.coordsTwo = null;
-        this.coordsThree = null;
+        this.coords.clear();
 
     }
 
