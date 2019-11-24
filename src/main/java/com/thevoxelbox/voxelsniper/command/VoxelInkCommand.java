@@ -24,11 +24,10 @@
  */
 package com.thevoxelbox.voxelsniper.command;
 
-import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
-import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
+import com.thevoxelbox.voxelsniper.*;
+import com.thevoxelbox.voxelsniper.util.BlockTraitHelper;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.block.trait.BlockTrait;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -37,45 +36,56 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 
 public class VoxelInkCommand implements CommandExecutor {
 
     public static void setup(Object plugin) {
         Sponge.getCommandManager().register(plugin, CommandSpec.builder()
-                .arguments(GenericArguments.playerOrSource(Text.of("sniper")), GenericArguments.string(Text.of("key")),
-                        GenericArguments.literal(Text.of("equals"), "="), GenericArguments.string(Text.of("value")))
-                .executor(new VoxelInkCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
-                .description(Text.of("VoxelSniper Ink selection")).build(), "vi");
+                .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
+                    GenericArguments.allOf(
+                        GenericArguments.string(Text.of("key=value"))
+                    ))
+                .executor(new VoxelInkCommand())
+                .permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
+                .description(usageText())
+                .build(), "vi");
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext gargs) {
         Player player = (Player) gargs.getOne("sniper").get();
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
+        SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 
-        String key = (String) gargs.getOne("key").get();
-        String value = (String) gargs.getOne("value").get();
-        
-        // @Spongify turn these into a key and value for a blockstate
-//        if (args.length == 0) {
-//            Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
-//            if (targetBlock != null) {
-//                dataValue = targetBlock.getData();
-//            } else {
-//                return true;
-//            }
-//        } else {
-//            try {
-//                dataValue = Byte.parseByte(args[0]);
-//            } catch (NumberFormatException exception) {
-//                player.sendMessage("Couldn't parse input.");
-//                return true;
-//            }
-//        }
-//
-//        SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
-//        snipeData.setData(dataValue);
-//        snipeData.getVoxelMessage().data();
+        Collection<String> keyValues = gargs.getAll("key=value");
+        if (keyValues.size() == 0) {
+            src.sendMessage(usageText());
+            return CommandResult.success();
+        }
+
+        Optional<Map<BlockTrait<?>, Object>> optInkTraits =
+                BlockTraitHelper.parseKeyValues(keyValues, snipeData.getVoxelState(), src);
+        if (optInkTraits.isPresent()) {
+            snipeData.setVoxelInkTraits(optInkTraits.get());
+            snipeData.getVoxelMessage().voxel();
+        }
+
         return CommandResult.success();
+    }
+
+    private static Text usageText() {
+        return Text.of(
+                TextColors.RED,
+                "Voxel ink selection\n" +
+                        "Pass one or more block property in the form key=value separated by a space. " +
+                        "These properties will be applied to blocks when placing them. E.g, passing " +
+                        "color=blue when your voxel is wool will place blue wool.  Voxel ink won't " +
+                        "be used unless you set the place method to ink or combo."
+        );
     }
 }

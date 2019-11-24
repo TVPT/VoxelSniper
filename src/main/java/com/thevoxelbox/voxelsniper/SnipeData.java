@@ -24,15 +24,19 @@
  */
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.util.BlockHelper;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.block.trait.BlockTrait;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class SnipeData {
 
@@ -43,10 +47,8 @@ public class SnipeData {
     private BlockState voxelState;
     private BlockState replaceState;
     private VoxelList voxelList;
-    private Key<?> voxelInkKey;
-    private Object voxelInkValue;
-    private Key<?> replaceInkKey;
-    private Object replaceInkValue;
+    private Map<BlockTrait<?>, Object> voxelInkTraits;
+    private Map<BlockTrait<?>, Object> replaceInkTraits;
 
     private int voxelHeight;
     private int cylinderCenter;
@@ -68,13 +70,8 @@ public class SnipeData {
         this.cylinderCenter = VoxelSniperConfiguration.DEFAULT_CYLINDER_CENTER;
         this.range = 0;
 
-        this.ranged = false;
-        this.lightning = false;
-
-        this.voxelInkKey = null;
-        this.voxelInkValue = null;
-        this.replaceInkKey = null;
-        this.replaceInkValue = null;
+        voxelInkTraits = new HashMap<>();
+        replaceInkTraits = new HashMap<>();
     }
 
     public double getBrushSize() {
@@ -111,6 +108,8 @@ public class SnipeData {
 
     public void setReplaceState(BlockState state) {
         this.replaceState = state;
+        this.replaceInkTraits.clear();
+        this.replaceInkTraits.putAll(state.getTraitMap());
     }
 
     public int getVoxelHeight() {
@@ -122,7 +121,7 @@ public class SnipeData {
     }
 
     public String getVoxelId() {
-        return voxelState.getId();
+        return this.voxelState.getId();
     }
 
     public BlockState getVoxelState() {
@@ -131,10 +130,12 @@ public class SnipeData {
 
     public void setVoxelState(BlockState state) {
         this.voxelState = state;
+        this.voxelInkTraits.clear();
+        this.voxelInkTraits.putAll(state.getTraitMap());
     }
 
     public VoxelList getVoxelList() {
-        return this.voxelList;
+        return voxelList;
     }
 
     public void setVoxelList(VoxelList voxelList) {
@@ -142,7 +143,7 @@ public class SnipeData {
     }
 
     public Message getVoxelMessage() {
-        return this.voxelMessage;
+        return voxelMessage;
     }
 
     public void setVoxelMessage(Message voxelMessage) {
@@ -150,11 +151,11 @@ public class SnipeData {
     }
 
     public World getWorld() {
-        return this.owner.getPlayer().getWorld();
+        return owner.getPlayer().getWorld();
     }
 
     public boolean isLightningEnabled() {
-        return this.lightning;
+        return lightning;
     }
 
     public void setLightningEnabled(boolean lightning) {
@@ -162,37 +163,35 @@ public class SnipeData {
     }
 
     public boolean isRanged() {
-        return this.ranged;
+        return ranged;
     }
 
     public void setRanged(boolean ranged) {
         this.ranged = ranged;
     }
 
-    public Key<? extends BaseValue<?>> getVoxelInkKey() {
-        return this.voxelInkKey;
+    public Map<BlockTrait<?>, Object> getVoxelInkTraits() {
+        return Collections.unmodifiableMap(voxelInkTraits);
     }
 
-    public Object getVoxelInkValue() {
-        return this.voxelInkValue;
+    // Attempts to add the traitValues as the current placement ink.  If the trait values can't be used with the current
+    // voxel state, no changes are made.
+    public void setVoxelInkTraits(Map<BlockTrait<?>, Object> traitValues) {
+        this.voxelInkTraits.clear();
+        this.voxelInkTraits.putAll(traitValues);
+        this.voxelState = BlockHelper.addTraits(this.voxelState.getType().getDefaultState(), traitValues);
     }
 
-    public <V extends BaseValue<T>, T> void setVoxelInk(Key<V> key, T value) {
-        this.voxelInkKey = key;
-        this.voxelInkValue = value;
+    public Map<BlockTrait<?>, Object> getReplaceInkTraits() {
+        return Collections.unmodifiableMap(replaceInkTraits);
     }
 
-    public Key<? extends BaseValue<?>> getReplaceInkKey() {
-        return this.replaceInkKey;
-    }
-
-    public Object getReplaceInkValue() {
-        return this.replaceInkValue;
-    }
-
-    public <V extends BaseValue<T>, T> void setReplaceInk(Key<V> key, T value) {
-        this.replaceInkKey = key;
-        this.replaceInkValue = value;
+    // Attempts to add the traitValues as the current replacement ink.  If the trait values can't be used with the
+    // current replacement state, no changes are made.
+    public void setReplaceInkTraits(Map<BlockTrait<?>, Object> traitValues) {
+        this.replaceInkTraits.clear();
+        this.replaceInkTraits.putAll(traitValues);
+        this.replaceState = BlockHelper.addTraits(this.replaceState.getType().getDefaultState(), traitValues);
     }
 
     public Sniper owner() {

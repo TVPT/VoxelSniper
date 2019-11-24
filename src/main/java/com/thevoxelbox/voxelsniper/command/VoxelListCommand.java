@@ -28,6 +28,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
+import com.thevoxelbox.voxelsniper.util.BlockHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
@@ -41,10 +42,6 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.blockray.BlockRay;
-import org.spongepowered.api.util.blockray.BlockRay.BlockRayBuilder;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
@@ -67,13 +64,7 @@ public class VoxelListCommand implements CommandExecutor {
         Optional<String> oargs = gargs.getOne("args");
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
         if (!oargs.isPresent()) {
-            Location<World> targetBlock = null;
-            BlockRayBuilder<World> rayBuilder = BlockRay.from(player).stopFilter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 1));
-            BlockRay<World> ray = rayBuilder.build();
-            while (ray.hasNext()) {
-                targetBlock = ray.next().getLocation();
-            }
-            snipeData.getVoxelList().add(targetBlock.getBlock());
+            snipeData.getVoxelList().add(BlockHelper.stateOrWhereLooking(Optional.empty(), player).get());
             snipeData.getVoxelMessage().voxelList();
             return CommandResult.success();
         }
