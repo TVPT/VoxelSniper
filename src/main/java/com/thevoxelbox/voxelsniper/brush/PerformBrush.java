@@ -46,29 +46,35 @@ public abstract class PerformBrush extends Brush {
 
     private static final Pattern PERFORMER = Pattern.compile("([mic])([mic]?)(p?)");
 
-    protected PerformerType placeMethod = PerformerType.TYPE;
-    protected PerformerType replaceMethod = PerformerType.NONE;
-    protected boolean usePhysics = true;
+    protected PerformerType placeMethod;
+    protected PerformerType replaceMethod;
+    protected boolean usePhysics;
+
+    public PerformBrush() {
+        this.placeMethod = PerformerType.TYPE;
+        this.replaceMethod = PerformerType.NONE;
+        this.usePhysics = true;
+    }
 
     public void parse(String[] args, SnipeData v) {
         String handle = args[0].toLowerCase();
         Matcher performersMatch = PERFORMER.matcher(handle);
 
         if (performersMatch.matches()) {
-            placeMethod = stringToMethod(performersMatch.group(1));
-            if (placeMethod == PerformerType.NONE) {
+            this.placeMethod = stringToMethod(performersMatch.group(1));
+            if (this.placeMethod == PerformerType.NONE) {
                 throw new IllegalArgumentException("Unknown placement method '" + performersMatch.group(1) + "'");
             }
 
-            replaceMethod = stringToMethod(performersMatch.group(2));
-            usePhysics = !performersMatch.group(3).equals("p");
+            this.replaceMethod = stringToMethod(performersMatch.group(2));
+            this.usePhysics = !performersMatch.group(3).equals("p");
 
             parameters(Arrays.copyOfRange(args, 1, args.length), v);
         } else {
             parameters(args, v);
         }
 
-        v.getVoxelMessage().performerData(placeMethod, replaceMethod, usePhysics);
+        v.getVoxelMessage().performerData(this.placeMethod, this.replaceMethod, this.usePhysics);
     }
 
     private PerformerType stringToMethod(String rawMethod) {
@@ -84,13 +90,9 @@ public abstract class PerformBrush extends Brush {
     }
 
     public void showInfo(Message vm) {
-        String name = placeMethod.name().toLowerCase();
-        if (replaceMethod != PerformerType.NONE) {
-            name += replaceMethod.name().toLowerCase();
-        }
-        vm.performerData(placeMethod, replaceMethod, usePhysics);
+        vm.performerData(this.placeMethod, this.replaceMethod, this.usePhysics);
         vm.voxel();
-        if (replaceMethod != PerformerType.NONE) {
+        if (this.replaceMethod != PerformerType.NONE) {
             vm.replace();
         }
     }
@@ -105,7 +107,7 @@ public abstract class PerformBrush extends Brush {
         }
 
         BlockState current = this.world.getBlock(x, y, z);
-        switch (replaceMethod) {
+        switch (this.replaceMethod) {
             case TYPE:
                 if (!sameBlockType(current, v.getReplaceState())) {
                     return false;
@@ -128,7 +130,7 @@ public abstract class PerformBrush extends Brush {
         }
 
         BlockChangeFlag physicsFlags = usePhysics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE;
-        switch (placeMethod) {
+        switch (this.placeMethod) {
             case TYPE:
                 setBlockType(x, y, z, v.getVoxelState().getType(), physicsFlags);
                 break;
@@ -141,7 +143,7 @@ public abstract class PerformBrush extends Brush {
                 break;
             case NONE:
             default:
-                throw new IllegalStateException("Unsupported place type " + placeMethod.name());
+                throw new IllegalStateException("Unsupported place type " + this.placeMethod);
         }
         return true;
     }
@@ -168,7 +170,7 @@ public abstract class PerformBrush extends Brush {
                     return "None";
             }
 
-            return "Unkown";
+            return "Unknown";
         }
     }
 }
