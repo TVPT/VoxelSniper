@@ -32,6 +32,7 @@ import com.thevoxelbox.voxelsniper.event.RegisterBrushEvent;
 import org.spongepowered.api.Sponge;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Brush registration manager.
@@ -78,8 +79,8 @@ public final class Brushes {
         return brushes.size();
     }
 
-    public static String getAllBrushes() {
-        return String.join(", ", brushes.keySet());
+    public static Set<String> getAllBrushes() {
+        return brushes.keySet();
     }
 
     private Brushes() {

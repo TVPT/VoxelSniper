@@ -30,10 +30,9 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.PerformBrush;
+import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushEvent;
 import com.thevoxelbox.voxelsniper.event.sniper.ChangeBrushSizeEvent;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -54,8 +53,8 @@ public class VoxelBrushCommand implements CommandExecutor {
                         CommandSpec.builder()
                                 .arguments(
                                         GenericArguments.playerOrSource(Text.of("sniper")),
-                                        GenericArguments.optional(GenericArguments.string(Text.of("brush"))),
-                                        GenericArguments.optional(GenericArguments.doubleNum(Text.of("brush_size"))),
+                                        GenericArguments.optional(new BrushCommandElement(Text.of("brush"))),
+                                        GenericArguments.optionalWeak(GenericArguments.doubleNum(Text.of("brush_size"))),
                                         GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("brush_args"))))
                                 .executor(new VoxelBrushCommand())
                                 .permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
@@ -70,16 +69,18 @@ public class VoxelBrushCommand implements CommandExecutor {
         String currentToolId = sniper.getCurrentToolId();
         SnipeData snipeData = sniper.getSnipeData(currentToolId);
 
-        Optional<String> brush_selection = args.getOne("brush");
-        Class<? extends Brush> brush = null;
-        if (brush_selection.isPresent()) {
-            brush = Brushes.getBrushForHandle(brush_selection.get());
-            if (brush == null) {
-                player.sendMessage(Text.of(TextColors.RED, "Couldn't find Brush for brush handle \"" + brush_selection.get() + "\""));
-                return CommandResult.success();
-            }
+        Optional<Class<? extends Brush>> optBrush = args.getOne("brush");
+        if (optBrush.isPresent()) {
+            Class<? extends Brush> newBrushClass = optBrush.get();
+            Brush oldBrush = sniper.getBrush(currentToolId);
 
-            sniper.setBrush(currentToolId, brush);
+            if (!oldBrush.getClass().equals(newBrushClass)) {
+                sniper.setBrush(currentToolId, newBrushClass);
+                Brush newBrush = sniper.getBrush(currentToolId);
+
+                ChangeBrushEvent event = new ChangeBrushEvent(Sponge.getCauseStackManager().getCurrentCause(), snipeData, newBrush);
+                Sponge.getEventManager().post(event);
+            }
         }
 
         Optional<Double> optBrushSize = args.getOne("brush_size");

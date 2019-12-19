@@ -48,40 +48,36 @@ public abstract class PerformBrush extends Brush {
     protected PerformerType replace = PerformerType.NONE;
     protected boolean physics = true;
 
-    public void parse(String[] args, SnipeData v) {
-        String handle = args[0];
+    public boolean setPerformer(String handle) {
+        handle = handle.toLowerCase();
+
         if (PERFORMER.matcher(handle).matches()) {
             char p = handle.charAt(0);
-            if (p == 'm' || p == 'M') {
+            if (p == 'm') {
                 this.place = PerformerType.TYPE;
-            } else if (p == 'c' || p == 'C') {
+            } else if (p == 'c') {
                 this.place = PerformerType.COMBO;
             }
+
             int i = 1;
             if (handle.length() >= 2) {
                 char r = handle.charAt(i);
                 i = 2;
-                if (r == 'm' || r == 'M') {
+                if (r == 'm') {
                     this.replace = PerformerType.TYPE;
-                } else if (r == 'c' || r == 'C') {
+                } else if (r == 'c') {
                     this.replace = PerformerType.COMBO;
                 } else {
                     i = 1;
                     this.replace = PerformerType.NONE;
                 }
             }
-            if (handle.length() >= i + 1) {
-                char e = handle.charAt(i);
-                if (e == 'p' || e == 'P') {
-                    this.physics = false;
-                } else {
-                    this.physics = true;
-                }
-            }
-            parameters(Arrays.copyOfRange(args, 1, args.length), v);
-        } else {
-            parameters(args, v);
+
+            this.physics = handle.length() <= i || handle.charAt(i) != p;
+            return true;
         }
+
+        return false;
     }
 
     public void showInfo(Message vm) {

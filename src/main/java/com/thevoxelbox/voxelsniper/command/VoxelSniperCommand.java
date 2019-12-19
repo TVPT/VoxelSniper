@@ -41,6 +41,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 public class VoxelSniperCommand implements CommandExecutor {
@@ -64,7 +65,7 @@ public class VoxelSniperCommand implements CommandExecutor {
             String[] args = oargs.get().split(" ");
             if (args[0].equalsIgnoreCase("brushes")) {
                 player.sendMessage(Text.of(TextColors.AQUA, "All available brushes:"));
-                player.sendMessage(Text.of(Brushes.getAllBrushes()));
+                player.sendMessage(Text.of(getBrushListString()));
                 return CommandResult.success();
             } else if (args[0].equalsIgnoreCase("version")) {
                 player.sendMessage(Text.of(TextColors.AQUA, "VoxelSniper version " + VoxelSniperConfiguration.PLUGIN_VERSION));
@@ -106,5 +107,21 @@ public class VoxelSniperCommand implements CommandExecutor {
         player.sendMessage(Text.of(TextColors.DARK_RED, "VoxelSniper - Current Brush Settings:"));
         sniper.displayInfo();
         return CommandResult.success();
+    }
+
+    private String getBrushListString() {
+        StringBuilder sb = new StringBuilder();
+        Iterator<String> brushes = Brushes.getAllBrushes().iterator();
+        if (!brushes.hasNext()) {
+            return sb.toString();
+        }
+
+        sb.append(brushes.next());
+        while (brushes.hasNext()) {
+            sb.append(", ");
+            sb.append(brushes.next());
+        }
+
+        return sb.toString();
     }
 }
