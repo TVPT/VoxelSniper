@@ -30,7 +30,6 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -41,6 +40,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class VoxelSniperCommand implements CommandExecutor {
@@ -49,62 +50,137 @@ public class VoxelSniperCommand implements CommandExecutor {
         Sponge.getCommandManager().register(plugin,
                 CommandSpec.builder()
                         .arguments(GenericArguments.playerOrSource(Text.of("sniper")),
+                                GenericArguments.choices(
+                                                Text.of("action"), getChoicesMap(), true, false),
                                 GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("args"))))
                         .executor(new VoxelSniperCommand()).permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
-                        .description(Text.of("VoxelSniper material list selection")).build(),
+                        .description(Text.of("VoxelSniper info and settings")).build(),
                 "vs");
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext gargs) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext gargs) {
         Player player = (Player) gargs.getOne("sniper").get();
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
-        Optional<String> oargs = gargs.getOne("args");
-        if (oargs.isPresent()) {
-            String[] args = oargs.get().split(" ");
-            if (args[0].equalsIgnoreCase("brushes")) {
-                player.sendMessage(Text.of(TextColors.AQUA, "All available brushes:"));
-                player.sendMessage(Text.of(Brushes.getAllBrushes()));
-                return CommandResult.success();
-            } else if (args[0].equalsIgnoreCase("version")) {
-                player.sendMessage(Text.of(TextColors.AQUA, "VoxelSniper version " + VoxelSniperConfiguration.PLUGIN_VERSION));
-                return CommandResult.success();
-            } else if (args[0].equalsIgnoreCase("range")) {
+        Optional<Action> oAction = gargs.getOne("action");
+
+        Optional<String> oArguments = gargs.getOne("args");
+        String[] args = new String[0];
+        if (oArguments.isPresent()) {
+            args = oArguments.get().split(" ");
+        }
+
+        if (oAction.isPresent()) {
+            return handleAction(oAction.get(), sniper, args);
+        }
+
+        return CommandResult.success();
+    }
+
+    private CommandResult handleAction(Action action, Sniper sniper, String[] arguments) {
+        switch (action) {
+            case BRUSHES:
+                sniper.getPlayer().sendMessage(Text.of(TextColors.AQUA, "All available brushes:"));
+                sniper.getPlayer().sendMessage(Text.of(Brushes.getAllBrushes()));
+                break;
+
+            case VERSION:
+                sniper.getPlayer().sendMessage(Text.of(TextColors.AQUA,
+                                                        "VoxelSniper version ",
+                                                        VoxelSniperConfiguration.PLUGIN_VERSION));
+                break;
+
+            case RANGE:
                 SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
-                if (args.length == 2) {
+                if (arguments.length == 1) {
                     try {
-                        int range = Integer.parseInt(args[1]);
+                        int range = Integer.parseInt(arguments[0]);
                         if (range < 0) {
-                            player.sendMessage(Text.of(TextColors.RED, "Negative range values are not allowed."));
+                            sniper.getPlayer().sendMessage(Text.of(TextColors.RED,
+                                                                    "Negative range values are not allowed."));
                         }
                         snipeData.setRange(range);
                         snipeData.setRanged(true);
                         snipeData.getVoxelMessage().toggleRange();
 
                     } catch (NumberFormatException exception) {
-                        player.sendMessage(Text.of(TextColors.RED, "Failed to parse number for range '" + args[1] + "'"));
+                        sniper.getPlayer().sendMessage(Text.of(TextColors.RED,
+                                                        "Failed to parse number for range '",
+                                                        arguments[0],
+                                                        "'"));
                     }
+
                     return CommandResult.success();
                 }
+
                 snipeData.setRanged(!snipeData.isRanged());
                 snipeData.getVoxelMessage().toggleRange();
-                return CommandResult.success();
-            } else if (args[0].equalsIgnoreCase("enable") && player.hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
-                sniper.setEnabled(true);
-                player.sendMessage(Text.of(TextColors.GREEN, "VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled")));
-                return CommandResult.success();
-            } else if (args[0].equalsIgnoreCase("disable") && player.hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
-                sniper.setEnabled(false);
-                player.sendMessage(Text.of(TextColors.GREEN, "VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled")));
-                return CommandResult.success();
-            } else if (args[0].equalsIgnoreCase("toggle") && player.hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
-                sniper.setEnabled(!sniper.isEnabled());
-                player.sendMessage(Text.of(TextColors.GREEN, "VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled")));
-                return CommandResult.success();
-            }
+                break;
+
+            case ENABLE:
+                if (sniper.getPlayer().hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
+                    sniper.setEnabled(true);
+                    sniper.getPlayer().sendMessage(Text.of(TextColors.GREEN,
+                                                    "VoxelSniper is ",
+                                                    (sniper.isEnabled() ? "enabled" : "disabled")));
+                }
+                break;
+
+            case DISABLE:
+                if (sniper.getPlayer().hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
+                    sniper.setEnabled(false);
+                    sniper.getPlayer().sendMessage(Text.of(TextColors.GREEN,
+                                                        "VoxelSniper is ",
+                                                        (sniper.isEnabled() ? "enabled" : "disabled")));
+                }
+                break;
+
+            case TOGGLE:
+                if (sniper.getPlayer().hasPermission(VoxelSniperConfiguration.PERMISSION_COMMAND_ENABLE)) {
+                    sniper.setEnabled(!sniper.isEnabled());
+                    sniper.getPlayer().sendMessage(Text.of(TextColors.GREEN,
+                                                        "VoxelSniper is ",
+                                                        (sniper.isEnabled() ? "enabled" : "disabled")));
+                }
+                break;
+
+            case INFO:
+                sniper.getPlayer().sendMessage(Text.of(TextColors.DARK_RED,
+                                                    "VoxelSniper - Current Brush Settings:"));
+                sniper.displayInfo();
+                break;
+
+            default:
+                sniper.getPlayer().sendMessage(Text.of(TextColors.RED,
+                                                    "Unknown action \"", action, "\""));
+                break;
         }
-        player.sendMessage(Text.of(TextColors.DARK_RED, "VoxelSniper - Current Brush Settings:"));
-        sniper.displayInfo();
+
         return CommandResult.success();
+    }
+
+    private static Map<String, Action> getChoicesMap() {
+        Map<String, Action> choices = new HashMap<>();
+        for (Action a : Action.values()) {
+            choices.put(a.toString(), a);
+        }
+
+        return choices;
+    }
+
+    private enum Action {
+        BRUSHES,
+        VERSION,
+        RANGE,
+        ENABLE,
+        DISABLE,
+        TOGGLE,
+        INFO;
+
+        @Override
+        public String toString() {
+            return this.name().toLowerCase();
+        }
+
     }
 }
