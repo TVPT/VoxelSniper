@@ -53,68 +53,59 @@ public class VoxelBrushCommand implements CommandExecutor {
                 .register(plugin,
                         CommandSpec.builder()
                                 .arguments(
+                                        GenericArguments.playerOrSource(Text.of("sniper")),
                                         GenericArguments.optional(GenericArguments.string(Text.of("brush"))),
+                                        GenericArguments.optional(GenericArguments.doubleNum(Text.of("brush_size"))),
                                         GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("brush_args"))))
                                 .executor(new VoxelBrushCommand())
                                 .permission(VoxelSniperConfiguration.PERMISSION_SNIPER)
-                                .description(Text.of("VoxelSniper brush settings")).build(),
+                                .description(Text.of("Set VoxelSniper brush")).build(),
                         "b", "brush");
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        if (!(src instanceof Player)) {
-            src.sendMessage(Text.of("Player only."));
-            return CommandResult.success();
-        }
-        Player player = (Player) src;
+    public CommandResult execute(CommandSource src, CommandContext args) {
+        Player player = (Player) args.getOne("sniper").get();
         Sniper sniper = SniperManager.get().getSniperForPlayer(player);
         String currentToolId = sniper.getCurrentToolId();
         SnipeData snipeData = sniper.getSnipeData(currentToolId);
 
         Optional<String> brush_selection = args.getOne("brush");
-        if (!brush_selection.isPresent()) {
-            sniper.displayInfo();
-            return CommandResult.success();
+        Class<? extends Brush> brush = null;
+        if (brush_selection.isPresent()) {
+            brush = Brushes.getBrushForHandle(brush_selection.get());
+            if (brush == null) {
+                player.sendMessage(Text.of(TextColors.RED, "Couldn't find Brush for brush handle \"" + brush_selection.get() + "\""));
+                return CommandResult.success();
+            }
+
+            sniper.setBrush(currentToolId, brush);
         }
 
-        try {
-            double newBrushSize = Double.parseDouble(brush_selection.get());
+        Optional<Double> optBrushSize = args.getOne("brush_size");
+        if (optBrushSize.isPresent()) {
+            double newBrushSize = optBrushSize.get();
             if (!player.hasPermission(VoxelSniperConfiguration.PERMISSION_IGNORE_SIZE_LIMITS)
                     && newBrushSize > VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE) {
                 player.sendMessage(
                         Text.of(TextColors.RED, "Size is restricted to " + VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE + " for you."));
                 newBrushSize = VoxelSniperConfiguration.LITESNIPER_MAX_BRUSH_SIZE;
             }
+
             ChangeBrushSizeEvent event = new ChangeBrushSizeEvent(Sponge.getCauseStackManager().getCurrentCause(), snipeData, newBrushSize);
             Sponge.getEventManager().post(event);
             snipeData.setBrushSize(newBrushSize);
             snipeData.getVoxelMessage().size();
-            return CommandResult.success();
-        } catch (NumberFormatException ingored) {
         }
-        Optional<String> brush_args = args.getOne("brush_args");
-        Class<? extends Brush> brush = Brushes.getBrushForHandle(brush_selection.get());
-        if (brush != null) {
-            Brush existing = sniper.getBrush(currentToolId);
-            sniper.setBrush(currentToolId, brush);
 
-            if (brush_args.isPresent()) {
-                String[] bargs = brush_args.get().split(" ");
-                Brush currentBrush = sniper.getBrush(currentToolId);
-                if (currentBrush instanceof PerformBrush) {
-                    ((PerformBrush) currentBrush).parse(bargs, snipeData);
-                } else {
-                    // @Cleanup parse out flags and pass as separate set
-                    currentBrush.parameters(bargs, snipeData);
-                }
-            }
-            if (existing == null || existing.getClass() != brush) {
-                sniper.displayInfo();
-            }
-        } else {
-            player.sendMessage(Text.of(TextColors.RED, "Couldn't find Brush for brush handle \"" + brush_selection.get() + "\""));
+        Optional<String> brush_args = args.getOne("brush_args");
+        if (brush_args.isPresent()) {
+            String[] bargs = brush_args.get().split(" ");
+            Brush currentBrush = sniper.getBrush(currentToolId);
+            currentBrush.parameters(bargs, snipeData);
         }
+
+        sniper.displayInfo();
         return CommandResult.success();
     }
 }
