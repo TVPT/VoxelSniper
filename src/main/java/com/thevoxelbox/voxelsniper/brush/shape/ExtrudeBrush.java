@@ -27,9 +27,11 @@ package com.thevoxelbox.voxelsniper.brush.shape;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.flowpowered.math.GenericMath;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -45,21 +47,24 @@ import org.spongepowered.api.world.World;
 )
 public class ExtrudeBrush extends Brush {
 
+    private int height;
+
     public ExtrudeBrush() {
+        this.height = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
     }
 
     private void extrude(final SnipeData v, Location<World> targetBlock, Direction axis) {
         double brushSize = v.getBrushSize();
         double brushSizeSquared = brushSize * brushSize;
         // @Safety there is no bounds checks done here
-        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1) * v.getVoxelHeight()));
+        this.undo = new Undo(GenericMath.floor(Math.PI * (brushSize + 1) * (brushSize + 1) * this.height));
         int size = GenericMath.floor(brushSize) + 1;
 
         for (int x = -size; x <= size; x++) {
             for (int z = -size; z <= size; z++) {
                 if (x * x + z * z < brushSizeSquared) {
                     if (v.getVoxelList().contains(get(x, z, axis, targetBlock))) {
-                        for (int y = 0; y < v.getVoxelHeight(); y++) {
+                        for (int y = 0; y < this.height; y++) {
                             set(x, z, axis, targetBlock, v.getVoxelState(), y);
                         }
                     }
@@ -123,7 +128,22 @@ public class ExtrudeBrush extends Brush {
     public final void info(final Message vm) {
         vm.brushName(this.info.name());
         vm.size();
-        vm.height();
+        vm.height(this.height);
         vm.voxelList();
+    }
+
+    @Override
+    public final void parameters(String[] args, SnipeData v) {
+        if (args.length == 1 && args[0].toLowerCase().startsWith("h")) {
+            try {
+                this.height = Integer.parseInt(args[0].substring(1));
+                v.sendMessage(TextColors.AQUA, "Extrude height set to: ", this.height);
+            } catch (NumberFormatException e) {
+                v.sendMessage(TextColors.RED, "Invalid height given.");
+            }
+        } else if (args.length > 0) {
+            v.sendMessage(TextColors.GOLD, "Extrude Brush Parameters:");
+            v.sendMessage(TextColors.AQUA, "/b ex h[number] -- set the extrude height.  Default is 1.");
+        }
     }
 }

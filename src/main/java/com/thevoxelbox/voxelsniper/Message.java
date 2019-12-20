@@ -59,13 +59,6 @@ public class Message {
     }
 
     /**
-     * Display Center Parameter.
-     */
-    public void center() {
-        this.snipeData.sendMessage(TextColors.DARK_BLUE, "Brush Center: ", TextColors.DARK_RED, this.snipeData.getCylinderCenter());
-    }
-
-    /**
      * Display custom message.
      *
      * @param message
@@ -81,8 +74,8 @@ public class Message {
     /**
      * Display voxel height.
      */
-    public void height() {
-        this.snipeData.sendMessage(TextColors.DARK_AQUA, "Brush Height: ", TextColors.DARK_RED, this.snipeData.getVoxelHeight());
+    public void height(int height) {
+        this.snipeData.sendMessage(TextColors.DARK_AQUA, "Brush Height: ", TextColors.DARK_RED, height);
     }
 
     /**

@@ -28,6 +28,7 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockHelper;
@@ -47,8 +48,10 @@ public class FillDownBrush extends PerformBrush {
 
     private boolean fillLiquid = true;
     private boolean fromExisting = false;
+    private int verticalLimit;
 
     public FillDownBrush() {
+        this.verticalLimit = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
     }
 
     private void fillDown(SnipeData v, Location<World> targetBlock) {
@@ -71,7 +74,7 @@ public class FillDownBrush extends PerformBrush {
                 if (xs + zs < brushSizeSquared) {
                     int y = targetBlock.getBlockY();
                     if (this.fromExisting) {
-                        for (int y0 = -v.getVoxelHeight(); y0 < v.getVoxelHeight(); y0++) {
+                        for (int y0 = -this.verticalLimit; y0 < this.verticalLimit; y0++) {
                             if (this.world.getBlock(x, y + y0, z) != v.getReplaceState()) {
                                 y += y0 - 1;
                                 break;
@@ -117,22 +120,35 @@ public class FillDownBrush extends PerformBrush {
 
     @Override
     public final void parameters(final String[] par, final SnipeData v) {
-        for (int i = 0; i < par.length; i++) {
-            if (par[i].equalsIgnoreCase("info")) {
+        for (String parameter : par) {
+            parameter = parameter.toLowerCase();
+            if (parameter.equals("info")) {
                 v.sendMessage(TextColors.GOLD, "Fill Down Parameters:");
                 v.sendMessage(TextColors.AQUA, "/b fd some -- Fills only into air.");
                 v.sendMessage(TextColors.AQUA, "/b fd all -- Fills into liquids as well. (Default)");
-                v.sendMessage(TextColors.AQUA, "/b fd -e -- Fills only own from existing blocks. (Toggle)");
+                v.sendMessage(TextColors.AQUA, "/b fd -e -- Fills down only from existing blocks. (Toggle)");
+                v.sendMessage(TextColors.AQUA, "/b fd r[number] -- Vertical range for checking where to fill down when using -e.  Default 5.");
                 return;
-            } else if (par[i].equalsIgnoreCase("all")) {
+
+            } else if (parameter.equals("all")) {
                 this.fillLiquid = true;
                 v.sendMessage(TextColors.AQUA, "Now filling liquids as well as air.");
-            } else if (par[i].equalsIgnoreCase("some")) {
+
+            } else if (parameter.equals("some")) {
                 this.fillLiquid = false;
                 v.sendMessage(TextColors.AQUA, "Now only filling air.");
-            } else if (par[i].equalsIgnoreCase("-e")) {
+
+            } else if (parameter.equals("-e")) {
                 this.fromExisting = !this.fromExisting;
                 v.sendMessage(TextColors.AQUA, "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
+
+            } else if (parameter.startsWith("r")) {
+                try {
+                    this.verticalLimit = (int) Double.parseDouble(parameter.substring(1));
+                    v.sendMessage(TextColors.AQUA, "Vertical range set to ", this.verticalLimit);
+                } catch (NumberFormatException e) {
+                    v.sendMessage(TextColors.RED, "Invalid limit given");
+                }
             } else {
                 v.sendMessage(TextColors.RED, "Invalid brush parameters! use the info parameter to display parameter info.");
             }

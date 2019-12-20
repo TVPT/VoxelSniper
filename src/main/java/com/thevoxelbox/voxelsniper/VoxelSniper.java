@@ -84,9 +84,7 @@ import com.thevoxelbox.voxelsniper.brush.terrain.SplatterOverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.terrain.SplatterVoxelBrush;
 import com.thevoxelbox.voxelsniper.command.VoxelBrushCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelBrushToolCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelCenterCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelDefaultCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelHeightCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelInkCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelInkReplaceCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelListCommand;
@@ -164,9 +162,7 @@ public class VoxelSniper {
         // @Cleanup auto detect and load these?
         VoxelBrushCommand.setup(this);
         VoxelBrushToolCommand.setup(this);
-        VoxelCenterCommand.setup(this);
         VoxelDefaultCommand.setup(this);
-        VoxelHeightCommand.setup(this);
         VoxelInkCommand.setup(this);
         VoxelInkReplaceCommand.setup(this);
         VoxelListCommand.setup(this);
