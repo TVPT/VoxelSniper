@@ -28,6 +28,8 @@ import com.flowpowered.math.GenericMath;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.VoxelSniper;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfiguration;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformBrush;
 import org.spongepowered.api.text.format.TextColors;
@@ -45,12 +47,17 @@ import org.spongepowered.api.world.World;
 )
 public class CylinderBrush extends PerformBrush {
 
+    private int height;
+    private int offset;
+
     public CylinderBrush() {
+        this.height = VoxelSniperConfiguration.DEFAULT_VOXEL_HEIGHT;
+        this.offset = VoxelSniperConfiguration.DEFAULT_CYLINDER_CENTER;
     }
 
     private void cylinder(SnipeData v, Location<World> targetBlock) {
-        int yStartingPoint = targetBlock.getBlockY() + v.getCylinderCenter();
-        int yEndPoint = targetBlock.getBlockY() + v.getVoxelHeight() + v.getCylinderCenter();
+        int yStartingPoint = targetBlock.getBlockY() + this.offset;
+        int yEndPoint = yStartingPoint + this.height - 1;
 
         if (yEndPoint < yStartingPoint) {
             yEndPoint = yStartingPoint;
@@ -110,8 +117,8 @@ public class CylinderBrush extends PerformBrush {
     public final void info(final Message vm) {
         vm.brushName(this.info.name());
         vm.size();
-        vm.height();
-        vm.center();
+        vm.height(this.height);
+        vm.custom(TextColors.DARK_BLUE, "Brush Offset: ", TextColors.DARK_RED, offset);
     }
 
     @Override
@@ -121,22 +128,24 @@ public class CylinderBrush extends PerformBrush {
 
             if (parameter.equalsIgnoreCase("info")) {
                 v.sendMessage(TextColors.GOLD, "Cylinder Brush Parameters:");
-                v.sendMessage(TextColors.AQUA, "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
-                v.sendMessage(TextColors.DARK_BLUE
-                        + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
+                v.sendMessage(TextColors.AQUA, "/b c h[number] -- set the cylinder height.  Default is 1.");
+                v.sendMessage(TextColors.DARK_BLUE,
+                                "/b c o[number] -- set the vertical offset of the cylinder compared to the target ",
+                                "block. Positive numbers will move the cylinder upward, negative will move it ",
+                                "downward. Default is 0.");
                 return;
             }
             if (parameter.startsWith("h")) {
                 try {
-                    v.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
-                    v.sendMessage(TextColors.AQUA, "Cylinder v.voxelHeight set to: " + v.getVoxelHeight());
+                    this.height = Integer.parseInt(parameter.substring(1));
+                    v.sendMessage(TextColors.AQUA, "Cylinder height set to: ", this.height);
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid height given.");
                 }
-            } else if (parameter.startsWith("c")) {
+            } else if (parameter.startsWith("o")) {
                 try {
-                    v.setCylinderCenter((int) Double.parseDouble(parameter.replace("c", "")));
-                    v.sendMessage(TextColors.AQUA, "Cylinder origin set to: " + v.getCylinderCenter());
+                    this.offset = (int) Double.parseDouble(parameter.substring(1));
+                    v.sendMessage(TextColors.AQUA, "Cylinder origin set to: " + this.offset);
                 } catch (NumberFormatException e) {
                     v.sendMessage(TextColors.RED, "Invalid origin given.");
                 }
