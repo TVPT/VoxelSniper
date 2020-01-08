@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import com.thevoxelbox.voxelsniper.command.*;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
