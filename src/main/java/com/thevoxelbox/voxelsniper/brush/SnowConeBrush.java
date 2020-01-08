@@ -1,15 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Snow;
-
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Snow_cone_brush

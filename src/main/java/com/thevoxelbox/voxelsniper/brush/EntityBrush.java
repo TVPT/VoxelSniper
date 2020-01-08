@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.EntityType;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+
+import org.bukkit.ChatColor;
+import org.bukkit.entity.EntityType;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Entity_Brush

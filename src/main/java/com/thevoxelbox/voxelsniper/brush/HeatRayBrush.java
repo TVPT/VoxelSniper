@@ -1,17 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.Random;
+
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
-
-import java.util.Random;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Heat_Ray

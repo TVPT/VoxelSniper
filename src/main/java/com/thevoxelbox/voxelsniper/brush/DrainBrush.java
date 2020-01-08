@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Drain_Brush

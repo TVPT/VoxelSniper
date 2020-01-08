@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
+import com.thevoxelbox.voxelsniper.command.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,24 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelBrushCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelBrushToolCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelCenterCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelChunkCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelDefaultCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelGoToCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelHeightCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelInkCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelInkReplaceCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelListCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelPaintCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelPerformerCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelReplaceCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelSniperCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelUndoCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelUndoUserCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelVoxelCommand;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Voxel

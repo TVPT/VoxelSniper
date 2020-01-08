@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.util.Vector;

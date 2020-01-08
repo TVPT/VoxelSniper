@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.List;
-import java.util.Random;
-
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -13,9 +13,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import java.util.List;
+import java.util.Random;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Punish_Brush

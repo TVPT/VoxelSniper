@@ -1,14 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.HashSet;
-
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
+import java.util.HashSet;
 
 /**
  * @author Piotr

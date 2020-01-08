@@ -1,12 +1,11 @@
 
 package com.thevoxelbox.voxelsniper.util;
 
+import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-
-import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  *

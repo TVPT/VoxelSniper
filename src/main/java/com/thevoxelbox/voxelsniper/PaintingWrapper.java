@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.Set;
-
 import org.bukkit.Art;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -11,6 +9,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 /**
  * Painting state change handler.

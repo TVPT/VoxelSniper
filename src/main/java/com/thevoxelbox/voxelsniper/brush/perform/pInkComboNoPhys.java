@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.util.Inker;
-
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.Inker;
 
 /**
  * @author Voxel

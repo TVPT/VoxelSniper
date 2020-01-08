@@ -16,7 +16,10 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Scanner;
+import java.util.List;
+import java.util.Random;
+import java.util.ArrayList;
 
 /**
  * @author Gavjenks

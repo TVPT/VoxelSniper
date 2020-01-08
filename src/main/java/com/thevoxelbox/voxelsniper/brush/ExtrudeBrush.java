@@ -1,12 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Extrude_Brush

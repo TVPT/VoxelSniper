@@ -1,19 +1,20 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.SpongeSchematic;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Allows the copying and pasting of stencils. Stencils are stored using the Mcedit schematic format. Allows rotation and flipping of

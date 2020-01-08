@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-
-import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_CANYONATOR
