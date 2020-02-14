@@ -115,7 +115,7 @@ public class VoxelList
      */
     public boolean isEmpty()
     {
-        return blocks.isEmpty() || tags.isEmpty();
+        return blocks.isEmpty() && tags.isEmpty();
     }
 
     /**

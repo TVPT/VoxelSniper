@@ -23,7 +23,7 @@ public class VTags {
     }
 
     private static final Set<Material> NATURAL_MATERIALS = EnumSet.of(Material.STONE,
-            Material.GRASS,
+            Material.GRASS_BLOCK,
             Material.DIRT,
             Material.SAND,
             Material.GRAVEL,
