@@ -8,8 +8,9 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.NoteBlock;
 import org.bukkit.util.Vector;
 
 import java.util.LinkedList;
@@ -92,6 +93,9 @@ public class Undo {
      */
     private void updateSpecialBlocks(BlockState blockState) {
         BlockState currentState = blockState.getBlock().getState();
+        BlockData blockData = blockState.getBlockData();
+        BlockData currentData = currentState.getBlockData();
+
         if (blockState instanceof BrewingStand && currentState instanceof BrewingStand) {
             ((BrewingStand) currentState).getInventory().setContents(((BrewingStand) blockState).getInventory().getContents());
         } else if (blockState instanceof Chest && currentState instanceof Chest) {
@@ -109,9 +113,9 @@ public class Undo {
             ((Furnace) currentState).setBurnTime(((Furnace) blockState).getBurnTime());
             ((Furnace) currentState).setCookTime(((Furnace) blockState).getCookTime());
             currentState.update();
-        } else if (blockState instanceof NoteBlock && currentState instanceof NoteBlock) {
-            ((NoteBlock) currentState).setNote(((NoteBlock) blockState).getNote());
-            currentState.update();
+        } else if(blockData instanceof NoteBlock && currentData instanceof NoteBlock) {
+            ((NoteBlock) currentData).setNote(((NoteBlock) blockData).getNote());
+            ((NoteBlock) currentData).setInstrument(((NoteBlock) blockData).getInstrument());
         } else if (blockState instanceof Sign && currentState instanceof Sign) {
             int i = 0;
             for (String text : ((Sign) blockState).getLines()) {
