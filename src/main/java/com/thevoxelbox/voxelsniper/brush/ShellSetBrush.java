@@ -26,8 +26,7 @@ public class ShellSetBrush extends Brush
         this.setName("Shell Set");
     }
 
-    @SuppressWarnings("deprecation")
-	private boolean set(final Block bl, final SnipeData v)
+    private boolean set(final Block bl, final SnipeData v)
     {
         if (this.block == null)
         {
@@ -63,31 +62,31 @@ public class ShellSetBrush extends Brush
                     {
                         for (int z = lowZ; z <= highZ; z++)
                         {
-                            if (this.getWorld().getBlockTypeIdAt(x, y, z) == v.getReplaceId())
+                            if (this.getWorld().getBlockAt(x, y, z).getType() == v.getReplaceData().getMaterial())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(x + 1, y, z) == v.getReplaceId())
+                            else if (this.getWorld().getBlockAt(x + 1, y, z).getType() == v.getReplaceData().getMaterial())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(x - 1, y, z) == v.getReplaceId())
+                            else if (this.getWorld().getBlockAt(x - 1, y, z).getType() == v.getReplaceData().getMaterial())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(x, y, z + 1) == v.getReplaceId())
+                            else if (this.getWorld().getBlockAt(x, y, z + 1).getType() == v.getReplaceData().getMaterial())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(x, y, z - 1) == v.getReplaceId())
+                            else if (this.getWorld().getBlockAt(x, y, z - 1).getType() == v.getReplaceData().getMaterial())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(x, y + 1, z) == v.getReplaceId())
+                            else if (this.getWorld().getBlockAt(x, y + 1, z).getType() == v.getReplaceData().getMaterial())
                             {
                                 continue;
                             }
-                            else if (this.getWorld().getBlockTypeIdAt(x, y - 1, z) == v.getReplaceId())
+                            else if (this.getWorld().getBlockAt(x, y - 1, z).getType() == v.getReplaceData().getMaterial())
                             {
                                 continue;
                             }
@@ -102,10 +101,10 @@ public class ShellSetBrush extends Brush
                 final Undo undo = new Undo();
                 for (final Block currentBlock : blocks)
                 {
-                    if (currentBlock.getTypeId() != v.getVoxelId())
+                    if (currentBlock.getType() != v.getVoxelMat())
                     {
                         undo.put(currentBlock);
-                        currentBlock.setTypeId(v.getVoxelId());
+                        currentBlock.setType(v.getVoxelMat());
                     }
                 }
                 v.owner().storeUndo(undo);

@@ -31,8 +31,7 @@ public class CanyonBrush extends Brush
      * @param chunk
      * @param undo
      */
-    @SuppressWarnings("deprecation")
-	protected final void canyon(final Chunk chunk, final Undo undo)
+    protected final void canyon(final Chunk chunk, final Undo undo)
     {
         for (int x = 0; x < CHUNK_SIZE; x++)
         {
@@ -48,7 +47,7 @@ public class CanyonBrush extends Brush
                     undo.put(block);
                     undo.put(currentYLevelBlock);
 
-                    currentYLevelBlock.setTypeId(block.getTypeId(), false);
+                    currentYLevelBlock.setType(block.getType(), false);
                     block.setType(Material.AIR);
 
                     currentYLevel++;
@@ -56,7 +55,7 @@ public class CanyonBrush extends Brush
 
                 final Block block = chunk.getBlock(x, 0, z);
                 undo.put(block);
-                block.setTypeId(Material.BEDROCK.getId());
+                block.setType(Material.BEDROCK);
 
                 for (int y = 1; y < SHIFT_LEVEL_MIN; y++)
                 {

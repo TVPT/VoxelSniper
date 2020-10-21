@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,8 +13,6 @@ import org.bukkit.block.BlockState;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Moves a selection blockPositionY a certain amount.
@@ -23,52 +22,6 @@ import java.util.TreeSet;
  */
 public class MoveBrush extends Brush
 {
-    /**
-     * Breakable Blocks to determine if no-physics should be used.
-     */
-    private static final Set<Material> BREAKABLE_MATERIALS = new TreeSet<Material>();
-
-    static
-    {
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.SAPLING);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.BED_BLOCK);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.POWERED_RAIL);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.DETECTOR_RAIL);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.LONG_GRASS);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.DEAD_BUSH);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.PISTON_EXTENSION);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.YELLOW_FLOWER);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.RED_ROSE);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.BROWN_MUSHROOM);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.RED_MUSHROOM);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.TORCH);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.FIRE);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.CROPS);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.SIGN_POST);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.WOODEN_DOOR);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.LADDER);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.RAILS);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.WALL_SIGN);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.LEVER);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.STONE_PLATE);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.IRON_DOOR_BLOCK);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.WOOD_PLATE);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.REDSTONE_TORCH_OFF);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.REDSTONE_TORCH_ON);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.STONE_BUTTON);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.SNOW);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.CACTUS);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.CAKE_BLOCK);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.DIODE_BLOCK_OFF);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.DIODE_BLOCK_ON);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.TRAP_DOOR);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.PUMPKIN_STEM);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.MELON_STEM);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.VINE);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.WATER_LILY);
-        MoveBrush.BREAKABLE_MATERIALS.add(Material.NETHER_WARTS);
-    }
 
     /**
      * Saved direction.
@@ -94,8 +47,7 @@ public class MoveBrush extends Brush
      * @param selection
      * @param direction
      */
-    @SuppressWarnings("deprecation")
-	private void moveSelection(final SnipeData v, final Selection selection, final int[] direction)
+    private void moveSelection(final SnipeData v, final Selection selection, final int[] direction)
     {
         if (selection.getBlockStates().size() > 0)
         {
@@ -142,8 +94,7 @@ public class MoveBrush extends Brush
             for (final BlockState blockState : selection.getBlockStates())
             {
                 final Block affectedBlock = world.getBlockAt(blockState.getX() + direction[0], blockState.getY() + direction[1], blockState.getZ() + direction[2]);
-                affectedBlock.setTypeId(blockState.getTypeId(), !MoveBrush.BREAKABLE_MATERIALS.contains(blockState.getType()));
-                affectedBlock.setData(blockState.getRawData());
+                affectedBlock.setBlockData(blockState.getBlockData(), !VTags.POP_OFF.isTagged(blockState.getType()));
             }
         }
     }

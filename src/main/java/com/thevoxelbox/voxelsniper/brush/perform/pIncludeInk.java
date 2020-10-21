@@ -5,10 +5,10 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.Inker;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 
 import org.bukkit.block.Block;
-
 /**
  * @author Voxel
  */
@@ -16,7 +16,7 @@ public class pIncludeInk extends vPerformer
 {
 
     private VoxelList includeList;
-    private byte data;
+    private String ink;
 
     public pIncludeInk()
     {
@@ -28,25 +28,24 @@ public class pIncludeInk extends vPerformer
     {
         vm.performerName(name);
         vm.voxelList();
-        vm.data();
+        vm.voxelInk();
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        data = v.getData();
+        ink = v.getVoxelInk();
         includeList = v.getVoxelList();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void perform(Block b)
     {
-        if (includeList.contains(new int[]{b.getTypeId(), b.getData()}))
+        if (includeList.contains(b.getBlockData()))
         {
             h.put(b);
-            b.setData(data);
+            Inker.ink(b, ink);
         }
     }
 }

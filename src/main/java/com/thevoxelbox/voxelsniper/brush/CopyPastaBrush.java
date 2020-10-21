@@ -5,7 +5,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#CopyPasta_Brush
@@ -24,8 +26,7 @@ public class CopyPastaBrush extends Brush
     private int[] pastePoint = new int[3];
     private int[] minPoint = new int[3];
     private int[] offsetPoint = new int[3];
-    private int[] blockArray;
-    private byte[] dataArray;
+    private BlockData[] blockDataArray;
     private int[] arraySize = new int[3];
     private int pivot = 0; // ccw degrees    
 
@@ -37,8 +38,7 @@ public class CopyPastaBrush extends Brush
         this.setName("CopyPasta");
     }
 
-    @SuppressWarnings("deprecation")
-	private void doCopy(final SnipeData v)
+    private void doCopy(final SnipeData v)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -51,8 +51,7 @@ public class CopyPastaBrush extends Brush
 
         if (this.numBlocks > 0 && this.numBlocks < CopyPastaBrush.BLOCK_LIMIT)
         {
-            this.blockArray = new int[this.numBlocks];
-            this.dataArray = new byte[this.numBlocks];
+            this.blockDataArray = new BlockData[this.numBlocks];
 
             for (int i = 0; i < this.arraySize[0]; i++)
             {
@@ -61,8 +60,7 @@ public class CopyPastaBrush extends Brush
                     for (int k = 0; k < this.arraySize[2]; k++)
                     {
                         final int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
-                        this.blockArray[currentPosition] = this.getWorld().getBlockTypeIdAt(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
-                        this.dataArray[currentPosition] = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k).getData();
+                        this.blockDataArray[currentPosition] = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k).getBlockData();
                     }
                 }
             }
@@ -75,8 +73,7 @@ public class CopyPastaBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
-	private void doPasta(final SnipeData v)
+    private void doPasta(final SnipeData v)
     {
         final Undo undo = new Undo();
 
@@ -105,13 +102,14 @@ public class CopyPastaBrush extends Brush
                             break;
                     }
 
-                    if (!(this.blockArray[currentPosition] == 0 && !this.pasteAir))
+                    if (!(this.blockDataArray[currentPosition].getMaterial() == Material.AIR && !this.pasteAir))
                     {
-                        if (block.getTypeId() != this.blockArray[currentPosition] || block.getData() != this.dataArray[currentPosition])
+                        BlockData data = this.blockDataArray[currentPosition];
+                        if (!block.getBlockData().equals(data))
                         {
                             undo.put(block);
                         }
-                        block.setTypeIdAndData(this.blockArray[currentPosition], this.dataArray[currentPosition], true);
+                        block.setBlockData(data, true);
                     }
                 }
             }
@@ -144,8 +142,7 @@ public class CopyPastaBrush extends Brush
                 this.firstPoint = new int[3];
                 this.secondPoint = new int[3];
                 this.numBlocks = 0;
-                this.blockArray = new int[1];
-                this.dataArray = new byte[1];
+                this.blockDataArray = new BlockData[1];
                 this.points = 0;
                 v.sendMessage(ChatColor.GRAY + "Points cleared.");
                 break;

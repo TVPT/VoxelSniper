@@ -24,8 +24,7 @@ public class FlatOceanBrush extends Brush
         this.setName("FlatOcean");
     }
 
-    @SuppressWarnings("deprecation")
-	private void flatOcean(final Chunk chunk)
+    private void flatOcean(final Chunk chunk)
     {
         for (int x = 0; x < CHUNK_SIZE; x++)
         {
@@ -39,11 +38,11 @@ public class FlatOceanBrush extends Brush
                     }
                     else if (y <= this.waterLevel)
                     {
-                        chunk.getBlock(x, y, z).setTypeId(Material.STATIONARY_WATER.getId(), false);
+                        chunk.getBlock(x, y, z).setType(Material.WATER, false);
                     }
                     else
                     {
-                        chunk.getBlock(x, y, z).setTypeId(Material.AIR.getId(), false);
+                        chunk.getBlock(x, y, z).setType(Material.AIR, false);
                     }
                 }
             }

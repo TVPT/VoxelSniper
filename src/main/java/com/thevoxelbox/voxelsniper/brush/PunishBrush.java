@@ -46,8 +46,7 @@ public class PunishBrush extends PerformBrush
         this.setName("Punish");
     }
 
-    @SuppressWarnings("deprecation")
-	private void applyPunishment(final LivingEntity entity, final SnipeData v)
+    private void applyPunishment(final LivingEntity entity, final SnipeData v)
     {
         switch (this.punishment)
         {
@@ -169,7 +168,7 @@ public class PunishBrush extends PerformBrush
                                 }
                                 target = location.clone();
                                 target.add(x, y, z);
-                                ((Player) entity).sendBlockChange(target, v.getVoxelId(), v.getData());
+                                ((Player) entity).sendBlockChange(target, v.getVoxelData());
                             }
                         }
                     }

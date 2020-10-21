@@ -40,8 +40,7 @@ public class DomeBrush extends Brush
      * @param v
      * @param targetBlock
      */
-    @SuppressWarnings("deprecation")
-	private void generateDome(final SnipeData v, final Block targetBlock)
+    private void generateDome(final SnipeData v, final Block targetBlock)
     {
 
         if (v.getVoxelHeight() == 0)
@@ -88,10 +87,10 @@ public class DomeBrush extends Brush
         for (final Vector vector : changeablePositions)
         {
             final Block currentTargetBlock = vector.toLocation(this.getTargetBlock().getWorld()).getBlock();
-            if (currentTargetBlock.getTypeId() != v.getVoxelId() || currentTargetBlock.getData() != v.getData())
+            if (!currentTargetBlock.getBlockData().matches(v.getVoxelData()))
             {
                 undo.put(currentTargetBlock);
-                currentTargetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
+                currentTargetBlock.setBlockData(v.getVoxelData(), true);
             }
         }
 

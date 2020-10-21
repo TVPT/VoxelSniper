@@ -5,7 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
-
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
@@ -14,8 +14,8 @@ import org.bukkit.block.Block;
 public class pMatMatNoPhys extends vPerformer
 {
 
-    private int i;
-    private int r;
+    private Material vt;
+    private Material rt;
 
     public pMatMatNoPhys()
     {
@@ -26,8 +26,8 @@ public class pMatMatNoPhys extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        i = v.getVoxelId();
-        r = v.getReplaceId();
+        vt = v.getVoxelMat();
+        rt = v.getReplaceMat();
     }
 
     @Override
@@ -38,14 +38,13 @@ public class pMatMatNoPhys extends vPerformer
         vm.replace();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void perform(Block b)
     {
-        if (b.getTypeId() == r)
+        if (b.getType() == rt)
         {
             h.put(b);
-            b.setTypeId(i, false);
+            b.setType(vt, false);
         }
     }
 

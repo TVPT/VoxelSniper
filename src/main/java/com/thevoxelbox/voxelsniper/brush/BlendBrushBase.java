@@ -6,23 +6,31 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Monofraps
  */
-@SuppressWarnings("deprecation")
 public abstract class BlendBrushBase extends Brush
 {
-    private static int maxBlockMaterialID;
     protected boolean excludeAir = true;
     protected boolean excludeWater = true;
+    protected static final Material[] BLOCK_MATERIALS;
 
     static
     {
-        // Find highest placeable block ID
-        for (Material material : Material.values())
+        List<Material> temp = new ArrayList<Material>();
+
+        for (Material mat : Material.values())
         {
-            maxBlockMaterialID = ((material.isBlock() && (material.getId() > maxBlockMaterialID)) ? material.getId() : maxBlockMaterialID);
+            if (mat.isBlock())
+            {
+                temp.add(mat);
+            }
         }
+
+        BLOCK_MATERIALS = temp.toArray(new Material[0]);
     }
 
     /**
@@ -64,22 +72,6 @@ public abstract class BlendBrushBase extends Brush
                 v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
             }
         }
-    }
-
-    /**
-     * @return
-     */
-    protected static int getMaxBlockMaterialID()
-    {
-        return maxBlockMaterialID;
-    }
-
-    /**
-     * @param maxBlockMaterialID
-     */
-    protected static void setMaxBlockMaterialID(int maxBlockMaterialID)
-    {
-        BlendBrushBase.maxBlockMaterialID = maxBlockMaterialID;
     }
 
     /**

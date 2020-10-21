@@ -1,17 +1,11 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelsniper.brush.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Bukkit extension point.
@@ -90,8 +84,6 @@ public class VoxelSniper extends JavaPlugin
         registerBrushes();
         getLogger().info("Registered " + brushManager.registeredSniperBrushes() + " Sniper Brushes with " + brushManager.registeredSniperBrushHandles() + " handles.");
 
-        MetricsManager.getInstance().start();
-
 
         saveDefaultConfig();
         voxelSniperConfiguration = new VoxelSniperConfiguration(getConfig());
@@ -113,7 +105,6 @@ public class VoxelSniper extends JavaPlugin
         brushManager.registerSniperBrush(BlendVoxelDiscBrush.class, "bvd", "blendvoxeldisc");
         brushManager.registerSniperBrush(BlobBrush.class, "blob", "splatblob");
         brushManager.registerSniperBrush(BlockResetBrush.class, "brb", "blockresetbrush");
-        brushManager.registerSniperBrush(BlockResetSurfaceBrush.class, "brbs", "blockresetbrushsurface");
         brushManager.registerSniperBrush(CanyonBrush.class, "ca", "canyon");
         brushManager.registerSniperBrush(CanyonSelectionBrush.class, "cas", "canyonselection");
         brushManager.registerSniperBrush(CheckerVoxelDiscBrush.class, "cvd", "checkervoxeldisc");
@@ -163,7 +154,6 @@ public class VoxelSniper extends JavaPlugin
         brushManager.registerSniperBrush(SignOverwriteBrush.class, "sio", "signoverwriter");
         brushManager.registerSniperBrush(SnipeBrush.class, "s", "snipe");
         brushManager.registerSniperBrush(SnowConeBrush.class, "snow", "snowcone");
-        brushManager.registerSniperBrush(SpiralStaircaseBrush.class, "sstair", "spiralstaircase");
         brushManager.registerSniperBrush(SplatterBallBrush.class, "sb", "splatball");
         brushManager.registerSniperBrush(SplatterDiscBrush.class, "sd", "splatdisc");
         brushManager.registerSniperBrush(SplatterOverlayBrush.class, "sover", "splatteroverlay");

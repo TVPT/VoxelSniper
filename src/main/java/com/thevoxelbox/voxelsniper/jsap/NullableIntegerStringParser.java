@@ -14,7 +14,7 @@ public class NullableIntegerStringParser extends StringParser
 {
 
     @SuppressWarnings("unused")
-	private static final NullableIntegerStringParser INSTANCE = new NullableIntegerStringParser();
+    private static final NullableIntegerStringParser INSTANCE = new NullableIntegerStringParser();
 
     /**
      * Returns a {@link com.thevoxelbox.voxelsniper.jsap.NullableIntegerStringParser}.

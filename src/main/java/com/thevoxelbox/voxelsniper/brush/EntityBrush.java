@@ -50,16 +50,14 @@ public class EntityBrush extends Brush
         this.spawn(v);
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public final void info(final Message vm)
     {
         vm.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
         vm.size();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public final void parameters(final String[] par, final SnipeData v)
     {
         if (par[1].equalsIgnoreCase("info"))

@@ -3,7 +3,9 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 import java.util.Random;
 
@@ -71,8 +73,7 @@ public class RandomErodeBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
-	private boolean fill(final int x, final int y, final int z)
+    private boolean fill(final int x, final int y, final int z)
     {
         if (this.snap[x][y][z].isSolid())
         {
@@ -83,32 +84,32 @@ public class RandomErodeBrush extends Brush
             int d = 0;
             if (this.snap[x + 1][y][z].isSolid())
             {
-                this.snap[x][y][z].setId(this.snap[x + 1][y][z].getNativeBlock().getTypeId());
+                this.snap[x][y][z].setBD(this.snap[x + 1][y][z].getNativeBlock().getBlockData());
                 d++;
             }
             if (this.snap[x - 1][y][z].isSolid())
             {
-                this.snap[x][y][z].setId(this.snap[x - 1][y][z].getNativeBlock().getTypeId());
+                this.snap[x][y][z].setBD(this.snap[x - 1][y][z].getNativeBlock().getBlockData());
                 d++;
             }
             if (this.snap[x][y + 1][z].isSolid())
             {
-                this.snap[x][y][z].setId(this.snap[x][y + 1][z].getNativeBlock().getTypeId());
+                this.snap[x][y][z].setBD(this.snap[x][y + 1][z].getNativeBlock().getBlockData());
                 d++;
             }
             if (this.snap[x][y - 1][z].isSolid())
             {
-                this.snap[x][y][z].setId(this.snap[x][y - 1][z].getNativeBlock().getTypeId());
+                this.snap[x][y][z].setBD(this.snap[x][y - 1][z].getNativeBlock().getBlockData());
                 d++;
             }
             if (this.snap[x][y][z + 1].isSolid())
             {
-                this.snap[x][y][z].setId(this.snap[x][y][z + 1].getNativeBlock().getTypeId());
+                this.snap[x][y][z].setBD(this.snap[x][y][z + 1].getNativeBlock().getBlockData());
                 d++;
             }
             if (this.snap[x][y][z - 1].isSolid())
             {
-                this.snap[x][y][z].setId(this.snap[x][y][z - 1].getNativeBlock().getTypeId());
+                this.snap[x][y][z].setBD(this.snap[x][y][z - 1].getNativeBlock().getBlockData());
                 d++;
             }
             return (d >= this.fillFace);
@@ -170,8 +171,7 @@ public class RandomErodeBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
-	private void rerosion(final SnipeData v)
+    private void rerosion(final SnipeData v)
     {
         final Undo undo = new Undo();
 
@@ -197,7 +197,7 @@ public class RandomErodeBrush extends Brush
                             {
                                 if (this.erode(x, y, z))
                                 {
-                                    this.snap[x][y][z].getNativeBlock().setTypeId(0);
+                                    this.snap[x][y][z].getNativeBlock().setType(Material.AIR);
                                 }
                             }
                         }
@@ -228,7 +228,7 @@ public class RandomErodeBrush extends Brush
                             {
                                 if (this.fill(x, y, z))
                                 {
-                                    this.snap[x][y][z].getNativeBlock().setTypeId(this.snap[x][y][z].getId());
+                                    this.snap[x][y][z].getNativeBlock().setType(this.snap[x][y][z].getBD().getMaterial());
                                 }
                             }
                         }
@@ -243,7 +243,7 @@ public class RandomErodeBrush extends Brush
             {
                 for (final BlockWrapper block : firstSnapString)
                 {
-                    if (block.getI() != block.getNativeBlock().getTypeId())
+                    if (block.getBD().getMaterial() != block.getNativeBlock().getType())
                     {
                         undo.put(block.getNativeBlock());
                     }
@@ -254,8 +254,7 @@ public class RandomErodeBrush extends Brush
         v.owner().storeUndo(undo);
     }
 
-    @SuppressWarnings("deprecation")
-	private void rfilling(final SnipeData v)
+    private void rfilling(final SnipeData v)
     {
         final Undo undo = new Undo();
 
@@ -279,7 +278,7 @@ public class RandomErodeBrush extends Brush
                             {
                                 if (this.fill(x, y, z))
                                 {
-                                    this.snap[x][y][z].getNativeBlock().setTypeId(this.snap[x][y][z].getId());
+                                    this.snap[x][y][z].getNativeBlock().setType(this.snap[x][y][z].getBD().getMaterial());
                                 }
                             }
                         }
@@ -310,7 +309,7 @@ public class RandomErodeBrush extends Brush
                             {
                                 if (this.erode(x, y, z))
                                 {
-                                    this.snap[x][y][z].getNativeBlock().setTypeId(0);
+                                    this.snap[x][y][z].getNativeBlock().setType(Material.AIR);
                                 }
                             }
                         }
@@ -325,7 +324,7 @@ public class RandomErodeBrush extends Brush
             {
                 for (final BlockWrapper block : firstSnapString)
                 {
-                    if (block.getI() != block.getNativeBlock().getTypeId())
+                    if (block.getBD().getMaterial() != block.getNativeBlock().getType())
                     {
                         undo.put(block.getNativeBlock());
                     }
@@ -393,17 +392,15 @@ public class RandomErodeBrush extends Brush
     {
         private boolean solid;
         private Block nativeBlock;
-        private int id;
-        private int i;
+        private BlockData bd;
 
         /**
          * @param bl
          */
-        @SuppressWarnings("deprecation")
-		public BlockWrapper(final Block bl)
+        public BlockWrapper(final Block bl)
         {
             this.setNativeBlock(bl);
-            this.setI(bl.getTypeId());
+            this.setBD(bl.getBlockData());
             switch (bl.getType())
             {
                 case AIR:
@@ -414,13 +411,6 @@ public class RandomErodeBrush extends Brush
                     this.setSolid(false);
                     break;
 
-                case STATIONARY_WATER:
-                    this.setSolid(false);
-                    break;
-
-                case STATIONARY_LAVA:
-                    this.setSolid(false);
-                    break;
                 case LAVA:
                     this.setSolid(false);
                     break;
@@ -450,25 +440,16 @@ public class RandomErodeBrush extends Brush
             this.nativeBlock = nativeBlock;
         }
 
-        public int getId()
+        public BlockData getBD()
         {
-            return id;
+            return bd;
         }
 
-        public void setId(int id)
+        public void setBD(BlockData bd)
         {
-            this.id = id;
+            this.bd = bd;
         }
 
-        public int getI()
-        {
-            return i;
-        }
-
-        public void setI(int i)
-        {
-            this.i = i;
-        }
     }
 
     @Override

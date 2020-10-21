@@ -1,6 +1,7 @@
 name: ${project.artifactId}
 main: com.thevoxelbox.voxelsniper.VoxelSniper
 version: ${project.build.version}
+api-version: "1.13"
 website: ${project.url}
 authors: [przerwap, MikeMatrix, Gavjenks, giltwist, psanker, Deamon5550, DivineRage]
 description: ${project.description}

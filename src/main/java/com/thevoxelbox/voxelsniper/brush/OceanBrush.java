@@ -3,13 +3,11 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.VTags;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_OCEANATOR_5000
@@ -21,34 +19,6 @@ public class OceanBrush extends Brush
     private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
     private static final int WATER_LEVEL_MIN = 12;
     private static final int LOW_CUT_LEVEL = 12;
-    private static final List<Material> EXCLUDED_MATERIALS = new LinkedList<Material>();
-
-    static
-    {
-        EXCLUDED_MATERIALS.add(Material.AIR);
-        EXCLUDED_MATERIALS.add(Material.SAPLING);
-        EXCLUDED_MATERIALS.add(Material.WATER);
-        EXCLUDED_MATERIALS.add(Material.STATIONARY_WATER);
-        EXCLUDED_MATERIALS.add(Material.LAVA);
-        EXCLUDED_MATERIALS.add(Material.STATIONARY_LAVA);
-        EXCLUDED_MATERIALS.add(Material.LOG);
-        EXCLUDED_MATERIALS.add(Material.LEAVES);
-        EXCLUDED_MATERIALS.add(Material.YELLOW_FLOWER);
-        EXCLUDED_MATERIALS.add(Material.RED_ROSE);
-        EXCLUDED_MATERIALS.add(Material.RED_MUSHROOM);
-        EXCLUDED_MATERIALS.add(Material.BROWN_MUSHROOM);
-        EXCLUDED_MATERIALS.add(Material.MELON_BLOCK);
-        EXCLUDED_MATERIALS.add(Material.MELON_STEM);
-        EXCLUDED_MATERIALS.add(Material.PUMPKIN);
-        EXCLUDED_MATERIALS.add(Material.PUMPKIN_STEM);
-        EXCLUDED_MATERIALS.add(Material.COCOA);
-        EXCLUDED_MATERIALS.add(Material.SNOW);
-        EXCLUDED_MATERIALS.add(Material.SNOW_BLOCK);
-        EXCLUDED_MATERIALS.add(Material.ICE);
-        EXCLUDED_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
-        EXCLUDED_MATERIALS.add(Material.LONG_GRASS);
-        EXCLUDED_MATERIALS.add(Material.SNOW);
-    }
 
     private int waterLevel = WATER_LEVEL_DEFAULT;
     private boolean coverFloor = false;
@@ -66,7 +36,7 @@ public class OceanBrush extends Brush
         for (int y = this.getWorld().getHighestBlockYAt(bx, bz); y > 0; y--)
         {
             final Material material = this.clampY(bx, y, bz).getType();
-            if (!EXCLUDED_MATERIALS.contains(material))
+            if (!VTags.OCEAN_EXCLUDED.isTagged(material))
             {
                 return y;
             }
@@ -78,8 +48,7 @@ public class OceanBrush extends Brush
      * @param v
      * @param undo
      */
-    @SuppressWarnings("deprecation")
-	protected final void oceanator(final SnipeData v, final Undo undo)
+    protected final void oceanator(final SnipeData v, final Undo undo)
     {
         final World world = this.getWorld();
 
@@ -113,14 +82,14 @@ public class OceanBrush extends Brush
                 for (int y = this.waterLevel; y > newSeaFloorLevel; y--)
                 {
                     final Block block = world.getBlockAt(x, y, z);
-                    if (!block.getType().equals(Material.STATIONARY_WATER))
+                    if (!block.getType().equals(Material.WATER))
                     {
                         // do not put blocks into the undo we already put into
                         if (!block.getType().equals(Material.AIR))
                         {
                             undo.put(block);
                         }
-                        block.setType(Material.STATIONARY_WATER);
+                        block.setType(Material.WATER);
                     }
                 }
 
@@ -128,10 +97,10 @@ public class OceanBrush extends Brush
                 if (this.coverFloor && (newSeaFloorLevel < this.waterLevel))
                 {
                     Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-                    if (block.getTypeId() != v.getVoxelId())
+                    if (block.getType() != v.getVoxelMat())
                     {
                         undo.put(block);
-                        block.setTypeId(v.getVoxelId());
+                        block.setType(v.getVoxelMat());
                     }
                 }
             }

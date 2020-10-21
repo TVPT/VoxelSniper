@@ -2,8 +2,10 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.VTags;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 import java.util.Random;
 
@@ -40,8 +42,7 @@ public class SplatterOverlayBrush extends PerformBrush
         this.setName("Splatter Overlay");
     }
 
-    @SuppressWarnings("deprecation")
-	private void sOverlay(final SnipeData v)
+    private void sOverlay(final SnipeData v)
     {
 
         // Splatter Time
@@ -125,41 +126,28 @@ public class SplatterOverlayBrush extends PerformBrush
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + v.getBrushSize()][z + v.getBrushSize()] == 1)
                         {
                             // if inside of the column && if to be splattered
-                            final int check = this.getBlockIdAt(this.getTargetBlock().getX() + x, y + 1, this.getTargetBlock().getZ() + z);
-                            if (check == 0 || check == 8 || check == 9)
+                            final Material check = this.getBlockTypeAt(this.getTargetBlock().getX() + x, y + 1, this.getTargetBlock().getZ() + z);
+                            if (check == Material.AIR || check == Material.WATER)
                             {
                                 // must start at surface... this prevents it filling stuff in if you click in a wall
                                 // and it starts out below surface.
                                 if (!this.allBlocks)
                                 {
                                     // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                    switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
+                                    if (VTags.NATURAL.isTagged(this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)))
                                     {
-                                        case 1:
-                                        case 2:
-                                        case 3:
-                                        case 12:
-                                        case 13:
-                                        case 24:// These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess with.
-                                        case 48:
-                                        case 82:
-                                        case 49:
-                                        case 78:
-                                            final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
+                                        final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
 
-                                            for (int d = this.depth - 1; ((this.depth - d) <= depth); d--)
+                                        for (int d = this.depth - 1; ((this.depth - d) <= depth); d--)
+                                        {
+                                            if (this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z).getType() != Material.AIR)
                                             {
-                                                if (this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z).getTypeId() != 0)
-                                                {
-                                                    // fills down as many layers as you specify in parameters
-                                                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d + yOffset, this.getTargetBlock().getZ() + z));
-                                                    // stop it from checking any other blocks in this vertical 1x1 column.
-                                                    memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
-                                                }
+                                                // fills down as many layers as you specify in parameters
+                                                this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d + yOffset, this.getTargetBlock().getZ() + z));
+                                                // stop it from checking any other blocks in this vertical 1x1 column.
+                                                memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1;
                                             }
-                                            break;
-                                        default:
-                                            break;
+                                        }
                                     }
                                 }
                                 else
@@ -167,7 +155,7 @@ public class SplatterOverlayBrush extends PerformBrush
                                     final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
                                     for (int d = this.depth - 1; ((this.depth - d) <= depth); d--)
                                     {
-                                        if (this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z).getTypeId() != 0)
+                                        if (this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z).getType() != Material.AIR)
                                         {
                                             // fills down as many layers as you specify in parameters
                                             this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d + yOffset, this.getTargetBlock().getZ() + z));
@@ -269,40 +257,23 @@ public class SplatterOverlayBrush extends PerformBrush
                     { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + v.getBrushSize()][z + v.getBrushSize()] == 1)
                         { // if inside of the column...&& if to be splattered
-                            if (this.getBlockIdAt(this.getTargetBlock().getX() + x, y - 1, this.getTargetBlock().getZ() + z) != 0)
+                            if (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y - 1, this.getTargetBlock().getZ() + z) != Material.AIR)
                             { // if not a floating block (like one of Notch'world pools)
-                                if (this.getBlockIdAt(this.getTargetBlock().getX() + x, y + 1, this.getTargetBlock().getZ() + z) == 0)
+                                if (this.getBlockTypeAt(this.getTargetBlock().getX() + x, y + 1, this.getTargetBlock().getZ() + z) == Material.AIR)
                                 { // must start at surface... this prevents it filling stuff in if
                                     // you click in a wall and it starts out below surface.
                                     if (!this.allBlocks)
                                     { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                        switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
+                                        if (VTags.NATURAL.isTagged(this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)))
                                         {
-                                            case 1:
-                                            case 2:
-                                            case 3:
-                                            case 12:
-                                            case 13:
-                                            case 14: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to
-                                                // mess with.
-                                            case 15:
-                                            case 16:
-                                            case 24:
-                                            case 48:
-                                            case 82:
-                                            case 49:
-                                            case 78:
-                                                final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
-                                                for (int d = 1; (d < depth + 1); d++)
-                                                {
-                                                    this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d + yOffset, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify
-                                                    // in parameters
-                                                    memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                                }
-                                                break;
-                                            default:
-                                                break;
+                                            final int depth = randomizeHeight ? generator.nextInt(this.depth) : this.depth;
+                                            for (int d = 1; (d < depth + 1); d++)
+                                            {
+                                                this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d + yOffset, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify
+                                                // in parameters
+                                                memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+                                            }
                                         }
                                     }
                                     else

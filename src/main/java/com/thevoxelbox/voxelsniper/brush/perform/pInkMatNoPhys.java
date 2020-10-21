@@ -1,8 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.Inker;
 
 /**
  * @author Voxel
@@ -10,8 +12,8 @@ import com.thevoxelbox.voxelsniper.Message;
 public class pInkMatNoPhys extends vPerformer
 {
 
-    private byte d;
-    private int ir;
+    private String i;
+    private Material rm;
 
     public pInkMatNoPhys()
     {
@@ -22,26 +24,25 @@ public class pInkMatNoPhys extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        d = v.getData();
-        ir = v.getReplaceId();
+        i = v.getVoxelInk();
+        rm = v.getReplaceMat();
     }
 
     @Override
     public void info(Message vm)
     {
         vm.performerName(name);
-        vm.data();
+        vm.voxelInk();
         vm.replace();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void perform(Block b)
     {
-        if (b.getTypeId() == ir)
+        if (b.getType() == rm)
         {
             h.put(b);
-            b.setData(d, false);
+            Inker.ink(b, i, false);
         }
     }
 

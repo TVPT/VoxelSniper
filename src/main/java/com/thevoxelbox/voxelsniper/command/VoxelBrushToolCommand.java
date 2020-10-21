@@ -42,7 +42,7 @@ public class VoxelBrushToolCommand extends VoxelCommand
 
                 if (args.length == 3 && args[2] != null && !args[2].isEmpty())
                 {
-                    Material itemInHand = (player.getItemInHand() != null) ? player.getItemInHand().getType() : null;
+                    Material itemInHand = (player.getInventory().getItemInMainHand() != null) ? player.getInventory().getItemInMainHand().getType() : null;
                     if (itemInHand == null)
                     {
                         player.sendMessage("/btool assign <arrow|powder> <toolid>");
@@ -68,7 +68,7 @@ public class VoxelBrushToolCommand extends VoxelCommand
                 }
                 else
                 {
-                    Material itemInHand = (player.getItemInHand() != null) ? player.getItemInHand().getType() : null;
+                    Material itemInHand = (player.getInventory().getItemInMainHand() != null) ? player.getInventory().getItemInMainHand().getType() : null;
                     if (itemInHand == null)
                     {
                         player.sendMessage("Can't unassign empty hands.");

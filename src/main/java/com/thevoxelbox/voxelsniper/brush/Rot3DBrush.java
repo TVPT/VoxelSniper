@@ -6,7 +6,9 @@ import com.thevoxelbox.voxelsniper.Undo;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  *
@@ -86,8 +88,7 @@ public class Rot3DBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
-	private void getMatrix()
+    private void getMatrix()
     { // only need to do once. But y needs to change + sphere
         final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
         this.brushSize = (this.bSize * 2) + 1;
@@ -114,7 +115,7 @@ public class Rot3DBrush extends Brush
                     {
                         final Block block = this.clampY(sx, sz, sz);
                         this.snap[x][y][z] = new BlockWrapper(block);
-                        block.setTypeId(0);
+                        block.setType(Material.AIR);
                         sz++;
                     }
                 }
@@ -176,11 +177,11 @@ public class Rot3DBrush extends Brush
                         // after all three, though.
 
                         final BlockWrapper block = this.snap[x][y][z];
-                        if (block.getId() == 0)
+                        if (block.getBlockData().getMaterial() == Material.AIR)
                         {
                             continue;
                         }
-                        this.setBlockIdAndDataAt(this.getTargetBlock().getX() + (int) newxyX, this.getTargetBlock().getY() + (int) newyzY, this.getTargetBlock().getZ() + (int) newyzZ, block.getId(), block.getData());
+                        this.setBlockDataAt(this.getTargetBlock().getX() + (int) newxyX, this.getTargetBlock().getY() + (int) newyzY, this.getTargetBlock().getZ() + (int) newyzZ, block.getBlockData());
                     }
                 }
             }
@@ -204,36 +205,29 @@ public class Rot3DBrush extends Brush
                         {
                             // smart fill stuff
                             final int fy = y + this.getTargetBlock().getY() - this.bSize;
-                            final int a = this.getBlockIdAt(fx + 1, fy, fz);
-                            final byte aData = this.getBlockDataAt(fx + 1, fy, fz);
-                            final int d = this.getBlockIdAt(fx - 1, fy, fz);
-                            final byte dData = this.getBlockDataAt(fx - 1, fy, fz);
-                            final int c = this.getBlockIdAt(fx, fy, fz + 1);
-                            final int b = this.getBlockIdAt(fx, fy, fz - 1);
-                            final byte bData = this.getBlockDataAt(fx, fy, fz - 1);
+                            final BlockData a = this.getBlockDataAt(fx + 1, fy, fz);
+                            final BlockData d = this.getBlockDataAt(fx - 1, fy, fz);
+                            final BlockData c = this.getBlockDataAt(fx, fy, fz + 1);
+                            final BlockData b = this.getBlockDataAt(fx, fy, fz - 1);
 
-                            int winner;
-                            byte winnerData;
+                            BlockData winner;
 
                             if (a == b || a == c || a == d)
                             { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
                                 // should
                                 // be fine to do all 5 checks needed to be legit about it.
                                 winner = a;
-                                winnerData = aData;
                             }
                             else if (b == d || c == d)
                             {
                                 winner = d;
-                                winnerData = dData;
                             }
                             else
                             {
                                 winner = b; // blockPositionY making this default, it will also automatically cover situations where B = C;
-                                winnerData = bData;
                             }
 
-                            this.setBlockIdAndDataAt(fx, fy, fz, winner, winnerData);
+                            this.setBlockDataAt(fx, fy, fz, winner);
                         }
                     }
                 }

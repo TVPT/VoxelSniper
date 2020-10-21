@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Tag;
+import org.bukkit.block.data.BlockData;
 
 /**
  *
@@ -58,14 +60,6 @@ public class Message
     }
 
     /**
-     * Display data value.
-     */
-    public void data()
-    {
-        snipeData.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + snipeData.getData());
-    }
-
-    /**
      * Display voxel height.
      */
     public void height()
@@ -86,18 +80,23 @@ public class Message
     /**
      * Displaye replace material.
      */
-    @SuppressWarnings("deprecation")
     public void replace()
     {
-        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getReplaceId()).toString() + ")");
+        snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + snipeData.getReplaceMat().getKey().toString());
     }
 
     /**
-     * Display replace data value.
+     * Display replace ink.
      */
-    public void replaceData()
+    public void replaceInk()
     {
-        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + snipeData.getReplaceData());
+        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace ink: " + ChatColor.DARK_RED + snipeData.getReplaceInk());
+    }
+
+    public void tag()
+    {
+        //TODO: Add tag which retains id?
+        snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace tag: #" + ChatColor.DARK_RED + (snipeData.getTag() != null ? snipeData.getTag().toString() : "None"));
     }
 
     /**
@@ -139,10 +138,14 @@ public class Message
     /**
      * Display voxel type.
      */
-    @SuppressWarnings("deprecation")
     public void voxel()
     {
-        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(snipeData.getVoxelId()).toString() + ")");
+        snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + snipeData.getVoxelMat().getKey().toString());
+    }
+
+    public void voxelInk()
+    {
+        snipeData.sendMessage(ChatColor.BLUE + "Voxel ink: " + ChatColor.DARK_RED + snipeData.getVoxelInk());
     }
 
     /**
@@ -161,14 +164,20 @@ public class Message
             returnValueBuilder.append("Block Types Selected: ");
             returnValueBuilder.append(ChatColor.AQUA);
 
-            for (int[] valuePair : snipeData.getVoxelList().getList())
+            for (BlockData data : snipeData.getVoxelList().getBlockList())
             {
-                returnValueBuilder.append(valuePair[0]);
-                if (valuePair[1] != -1)
-                {
-                    returnValueBuilder.append(":");
-                    returnValueBuilder.append(valuePair[1]);
-                }
+                returnValueBuilder.append(data.getAsString());
+                returnValueBuilder.append(" ");
+            }
+
+            returnValueBuilder.append(ChatColor.DARK_GREEN);
+            returnValueBuilder.append("Tags Selected: ");
+            returnValueBuilder.append(ChatColor.AQUA);
+
+            for (Tag<Material> tag: snipeData.getVoxelList().getTagList())
+            {
+                //TODO: Create a wrapper for tag that holds the name?
+                returnValueBuilder.append(tag.toString());
                 returnValueBuilder.append(" ");
             }
 
