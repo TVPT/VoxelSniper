@@ -11,3 +11,8 @@ script: ./gradlew build
 
 notifications:
 email: false
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
