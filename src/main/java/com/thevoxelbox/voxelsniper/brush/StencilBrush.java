@@ -1,385 +1,151 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.google.common.io.Files;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.util.SpongeSchematic;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 
 /**
- * This is paste only currently. Assumes files exist, and thus has no usefulness until I add in saving stencils later. Uses sniper-exclusive stencil format: 3
- * shorts for X,Z,Y size of cuboid 3 shorts for X,Z,Y offsets from the -X,-Z,-Y corner. This is the reference point for pasting, corresponding to where you
- * click your brush. 1 long integer saying how many runs of blocks are in the schematic (data is compressed into runs) 1 per run: ( 1 boolean: true = compressed
- * line ahead, false = locally unique block ahead. This wastes a bit instead of a byte, and overall saves space, as long as at least 1/8 of all RUNS are going
- * to be size 1, which in Minecraft is almost definitely true. IF boolean was true, next unsigned byte stores the number of consecutive blocks of the same type,
- * up to 256. IF boolean was false, there is no byte here, goes straight to ID and data instead, which applies to just one block. 2 bytes to identify type of
- * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true. )
- * 
- * TODO: Make limit a config option
+ * Allows the copying and pasting of stencils. Stencils are stored using the Mcedit schematic format. Allows rotation and flipping of
+ * stencils.
  *
- * @author Gavjenks
+ * @author Katrix, Gavjenks
  */
 public class StencilBrush extends Brush
 {
     private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
-    private String filename = "NoFileLoaded";
-    private short x;
-    private short z;
-    private short y;
-    private short xRef;
-    private short zRef;
-    private short yRef;
-    private byte pasteParam = 0;
-    private int[] firstPoint = new int[3];
-    private int[] secondPoint = new int[3];
-    private int[] pastePoint = new int[3];
+    private String filename = "";
+    private SpongeSchematic schematic;
+    private BlockVector firstPoint = new BlockVector(0, 0, 0);
+    private BlockVector secondPoint = new BlockVector(0, 0, 0);
+    private BlockVector pastePoint = new BlockVector(0, 0, 0);
     private byte point = 1;
+    private double pitch = 0;
+    private double yaw = 0;
+    private double roll = 0;
+    private boolean xFlipped = false;
+    private boolean yFlipped = false;
+    private boolean zFlipped = false;
 
-    /**
-     *
-     */
     public StencilBrush()
     {
         this.setName("Stencil");
     }
 
-    @SuppressWarnings("deprecation")
-	private void stencilPaste(final SnipeData v)
+    private void stencilPaste(final SnipeData v)
     {
-        if (this.filename.matches("NoFileLoaded"))
+        if (schematic == null)
         {
-            v.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
+            if (this.filename.isEmpty())
+            {
+                v.sendMessage(ChatColor.RED + "No region has been copied yet, and no filename was specified.");
+                return;
+            }
+
+            final File file = getSchematicFile();
+
+            if(!file.exists()) {
+                v.sendMessage(ChatColor.RED + "Sorry, no region was loaded, and no stencil by that name was saved yet.");
+                return;
+            }
+
+            try {
+                schematic = SpongeSchematic.read(file);
+            }
+            catch (IOException e) {
+                v.sendMessage(ChatColor.RED + "There was an issue loading the schematic " + file.getName() + ": " + e.getMessage());
+                return;
+            }
+        }
+
+        if(pasteOption != 0 && pasteOption != 1 && pasteOption != 2) {
+            v.sendMessage(ChatColor.RED +  "Invalid paste option: " + pasteOption);
             return;
         }
 
         final Undo undo = new Undo();
-        final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 
-        if (file.exists())
-        {
-            try
-            {
-                final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+        Vector offset = schematic.getOffset();
+        int offX = offset.getBlockX();
+        int offY = offset.getBlockY();
+        int offZ = offset.getBlockZ();
+        int width = schematic.getWidth();
+        int height = schematic.getHeight();
+        int length = schematic.getLength();
 
-                this.x = in.readShort();
-                this.z = in.readShort();
-                this.y = in.readShort();
+        Block targetBlock = getTargetBlock();
+        int posX = targetBlock.getX() + offX;
+        int posY = targetBlock.getY() + offY;
+        int posZ = targetBlock.getZ() + offZ;
 
-                this.xRef = in.readShort();
-                this.zRef = in.readShort();
-                this.yRef = in.readShort();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                for (int z = 0; z < length; z++) {
+                    Block block = this.clampY(posX + x, posY + y, posZ + z);
 
-                final int numRuns = in.readInt();
+                    boolean test = true;
+                    if(pasteOption == 0) {
+                        test = block.getType() == Material.AIR;
+                    }
+                    else if (pasteOption == 2) {
+                        test = block.getType() != Material.AIR;
+                    }
 
-                int currX = -this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
-                // corner, for example.
-                int currZ = -this.zRef;
-                int currY = -this.yRef;
-                int id;
-                int data;
-                int blockPositionX = getTargetBlock().getX();
-                int blockPositionY = getTargetBlock().getY();
-                int blockPositionZ = getTargetBlock().getZ();
-                if (this.pasteOption == 0)
-                {
-                    for (int i = 1; i < numRuns + 1; i++)
-                    {
-                        if (in.readBoolean())
-                        {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++)
-                            {
-                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
-                                currX++;
-                                if (currX == this.x - this.xRef)
-                                {
-                                    currX = -this.xRef;
-                                    currZ++;
-                                    if (currZ == this.z - this.zRef)
-                                    {
-                                        currZ = -this.zRef;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-                            this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData((in.readByte() + 128), (byte) (in.readByte() + 128), false);
-                            currX++;
-                            if (currX == this.x - this.xRef)
-                            {
-                                currX = -this.xRef;
-                                currZ++;
-                                if (currZ == this.z - this.zRef)
-                                {
-                                    currZ = -this.zRef;
-                                    currY++;
-                                }
-                            }
-                        }
+                    if(test) {
+                        undo.put(block);
+                        block.setBlockData(schematic.getBlockAt(x, y, z), false);
                     }
                 }
-                else if (this.pasteOption == 1)
-                {
-                    for (int i = 1; i < numRuns + 1; i++)
-                    {
-                        if (in.readBoolean())
-                        {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < numLoops; j++)
-                            {
-                                if (id != 0 && this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).getTypeId() == 0)
-                                {
-                                    undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-                                    this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
-                                }
-                                currX++;
-                                if (currX == this.x - this.xRef)
-                                {
-                                    currX = -this.xRef;
-                                    currZ++;
-                                    if (currZ == this.z - this.zRef)
-                                    {
-                                        currZ = -this.zRef;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0 && this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).getTypeId() == 0)
-                            {
-                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-                                // v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
-                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) (data), false);
-                            }
-                            currX++;
-                            if (currX == this.x - this.xRef)
-                            {
-                                currX = -this.xRef;
-                                currZ++;
-                                if (currZ == this.z - this.zRef)
-                                {
-                                    currZ = -this.zRef;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                { // replace
-                    for (int i = 1; i < numRuns + 1; i++)
-                    {
-                        if (in.readBoolean())
-                        {
-                            final int numLoops = in.readByte() + 128;
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            for (int j = 0; j < (numLoops); j++)
-                            {
-                                if (id != 0)
-                                {
-                                    undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-                                    this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
-                                }
-                                currX++;
-                                if (currX == this.x - this.xRef)
-                                {
-                                    currX = -this.xRef;
-                                    currZ++;
-                                    if (currZ == this.z - this.zRef)
-                                    {
-                                        currZ = -this.zRef;
-                                        currY++;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            id = (in.readByte() + 128);
-                            data = (in.readByte() + 128);
-                            if (id != 0)
-                            {
-                                undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
-                                this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).setTypeIdAndData(id, (byte) data, false);
-                            }
-                            currX++;
-                            if (currX == this.x)
-                            {
-                                currX = 0;
-                                currZ++;
-                                if (currZ == this.z)
-                                {
-                                    currZ = 0;
-                                    currY++;
-                                }
-                            }
-                        }
-                    }
-                }
-                in.close();
-                v.owner().storeUndo(undo);
-
             }
-            catch (final Exception exception)
-            {
-                v.sendMessage(ChatColor.RED + "Something went wrong.");
-                exception.printStackTrace();
-            }
-        }
-        else
-        {
-            v.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
         }
     }
 
-    @SuppressWarnings("deprecation")
-	private void stencilSave(final SnipeData v)
+    private void stencilSave(final SnipeData v)
     {
+        schematic = SpongeSchematic.createFromWorld(v.getWorld(), this.firstPoint, this.secondPoint, this.pastePoint);
 
-        final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
-        try
+        if (!filename.isEmpty())
         {
-            this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
-            this.z = (short) (Math.abs((this.firstPoint[1] - this.secondPoint[1])) + 1);
-            this.y = (short) (Math.abs((this.firstPoint[2] - this.secondPoint[2])) + 1);
-            this.xRef = (short) ((this.firstPoint[0] > this.secondPoint[0]) ? (this.pastePoint[0] - this.secondPoint[0]) : (this.pastePoint[0] - this.firstPoint[0]));
-            this.zRef = (short) ((this.firstPoint[1] > this.secondPoint[1]) ? (this.pastePoint[1] - this.secondPoint[1]) : (this.pastePoint[1] - this.firstPoint[1]));
-            this.yRef = (short) ((this.firstPoint[2] > this.secondPoint[2]) ? (this.pastePoint[2] - this.secondPoint[2]) : (this.pastePoint[2] - this.firstPoint[2]));
-
-            if ((this.x * this.y * this.z) > 50000)
+            final File file = getSchematicFile();
+            try
             {
-                v.sendMessage(ChatColor.AQUA + "Volume exceeds maximum limit.");
-                return;
+                schematic.writeTo(file);
             }
-
-            Files.createParentDirs(file);
-            file.createNewFile();
-            final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-            int blockPositionX = (this.firstPoint[0] > this.secondPoint[0]) ? this.secondPoint[0] : this.firstPoint[0];
-            int blockPositionZ = (this.firstPoint[1] > this.secondPoint[1]) ? this.secondPoint[1] : this.firstPoint[1];
-            int blockPositionY = (this.firstPoint[2] > this.secondPoint[2]) ? this.secondPoint[2] : this.firstPoint[2];
-            out.writeShort(this.x);
-            out.writeShort(this.z);
-            out.writeShort(this.y);
-            out.writeShort(this.xRef);
-            out.writeShort(this.zRef);
-            out.writeShort(this.yRef);
-
-            v.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
-
-            byte[] blockArray = new byte[this.x * this.z * this.y];
-            byte[] dataArray = new byte[this.x * this.z * this.y];
-            byte[] runSizeArray = new byte[this.x * this.z * this.y];
-
-            byte lastId = (byte) (this.getWorld().getBlockTypeIdAt(blockPositionX, blockPositionY, blockPositionZ) - 128);
-            byte lastData = (byte) (this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() - 128);
-            byte thisId;
-            byte thisData;
-            int counter = 0;
-            int arrayIndex = 0;
-            for (int y = 0; y < this.y; y++)
+            catch (IOException e)
             {
-                for (int z = 0; z < this.z; z++)
-                {
-                    for (int x = 0; x < this.x; x++)
-                    {
-                        Block currentBlock = getWorld().getBlockAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z);
-                        thisId = (byte) (currentBlock.getTypeId() - 128);
-                        thisData = (byte) (currentBlock.getData() - 128);
-                        if (thisId != lastId || thisData != lastData || counter == 255)
-                        {
-                            blockArray[arrayIndex] = lastId;
-                            dataArray[arrayIndex] = lastData;
-                            runSizeArray[arrayIndex] = (byte) (counter - 128);
-                            arrayIndex++;
-                            counter = 1;
-                            lastId = thisId;
-                            lastData = thisData;
-                        }
-                        else
-                        {
-                            counter++;
-                            lastId = thisId;
-                            lastData = thisData;
-                        }
-                    }
-                }
+                v.sendMessage(ChatColor.RED + "There was an issue while saving your schematic  " + file.getName() + ": " + e.getMessage());
             }
-            blockArray[arrayIndex] = lastId; // saving last run, which will always be left over.
-            dataArray[arrayIndex] = lastData;
-            runSizeArray[arrayIndex] = (byte) (counter - 128);
-
-            out.writeInt(arrayIndex + 1);
-            // v.sendMessage("number of runs = " + arrayIndex);
-            for (int i = 0; i < arrayIndex + 1; i++)
-            {
-                if (runSizeArray[i] > -127)
-                {
-                    out.writeBoolean(true);
-                    out.writeByte(runSizeArray[i]);
-                    out.writeByte(blockArray[i]);
-                    out.writeByte(dataArray[i]);
-                }
-                else
-                {
-                    out.writeBoolean(false);
-                    out.writeByte(blockArray[i]);
-                    out.writeByte(dataArray[i]);
-                }
-            }
-
-            v.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
-            out.close();
-
         }
-        catch (final Exception exception)
-        {
-            v.sendMessage(ChatColor.RED + "Something went wrong.");
-            exception.printStackTrace();
-        }
+
+        v.sendMessage(ChatColor.RED + "Region was successfully copied!");
     }
 
     @Override
     protected final void arrow(final SnipeData v)
-    { // will be used to copy/save later on?
+    {
+        BlockVector vec = this.getTargetBlock().getLocation().toVector().toBlockVector();
         if (this.point == 1)
         {
-            this.firstPoint[0] = this.getTargetBlock().getX();
-            this.firstPoint[1] = this.getTargetBlock().getZ();
-            this.firstPoint[2] = this.getTargetBlock().getY();
+            this.firstPoint = vec;
             v.sendMessage(ChatColor.GRAY + "First point");
-            v.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
+            v.sendMessage(this.formatVector(this.firstPoint));
             this.point = 2;
         }
         else if (this.point == 2)
         {
-            this.secondPoint[0] = this.getTargetBlock().getX();
-            this.secondPoint[1] = this.getTargetBlock().getZ();
-            this.secondPoint[2] = this.getTargetBlock().getY();
-            if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(this.firstPoint[2] - this.secondPoint[2])) > 5000000)
+            this.secondPoint = vec;
+            if (this.vecArea(this.firstPoint, this.secondPoint) > 5000000)
             {
                 v.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
                 this.point = 1;
@@ -387,21 +153,31 @@ public class StencilBrush extends Brush
             else
             {
                 v.sendMessage(ChatColor.GRAY + "Second point");
-                v.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
+                v.sendMessage(this.formatVector(this.secondPoint));
                 this.point = 3;
             }
         }
         else if (this.point == 3)
         {
-            this.pastePoint[0] = this.getTargetBlock().getX();
-            this.pastePoint[1] = this.getTargetBlock().getZ();
-            this.pastePoint[2] = this.getTargetBlock().getY();
+            this.pastePoint = vec;
             v.sendMessage(ChatColor.GRAY + "Paste Reference point");
-            v.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
+            v.sendMessage(this.formatVector(this.pastePoint));
             this.point = 1;
 
             this.stencilSave(v);
         }
+    }
+
+    private File getSchematicFile() {
+        return new File("plugins/VoxelSniper/stencils/" + this.filename + ".schem");
+    }
+
+    private String formatVector(BlockVector vec) {
+        return "X:" + vec.getBlockX() + " Z:" + vec.getBlockZ() + " Y:" + vec.getBlockZ();
+    }
+
+    private int vecArea(BlockVector v1, BlockVector v2) {
+        return (Math.abs(v1.getBlockX() - v2.getBlockX()) * Math.abs(v1.getBlockY() - v2.getBlockY()) * Math.abs(v1.getBlockZ() - v2.getBlockZ()));
     }
 
     @Override
@@ -414,50 +190,178 @@ public class StencilBrush extends Brush
     public final void info(final Message vm)
     {
         vm.brushName(this.getName());
-        vm.custom("File loaded: " + this.filename);
+        vm.custom("File loaded: " + (this.filename.isEmpty() ? "None; Using clipboard only." : this.filename));
     }
 
     @Override
-    public final void parameters(final String[] par, final SnipeData v)
+    public final void parameters(final String[] pars, final SnipeData v)
     {
-        if (par[1].equalsIgnoreCase("info"))
+        int parN = 1;
+        String par = pars[parN];
+        if (par.equalsIgnoreCase("info"))
         {
             v.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
-            v.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
-            v.sendMessage(ChatColor.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
+            v.sendMessage(ChatColor.AQUA + "/b st (full|fill|replace) [name] (-r #) (-f N|S|E|W|NORTH|SOUTH|EAST|WEST) (p#) (y#) (r#) -- Loads the specified schematic. '-r #' or 'y#' specify yaw 'p#' specifies pitch and 'r#' specifies roll. -f specifies which axis to flip. All rotations are in degrees, not restricted to multiples of 90.");
             return;
         }
-        else if (par[1].equalsIgnoreCase("full"))
+        else if (par.equalsIgnoreCase("full"))
         {
             this.pasteOption = 0;
-            this.pasteParam = 1;
+            parN++;
         }
-        else if (par[1].equalsIgnoreCase("fill"))
+        else if (par.equalsIgnoreCase("fill"))
         {
             this.pasteOption = 1;
-            this.pasteParam = 1;
+            parN++;
         }
-        else if (par[1].equalsIgnoreCase("replace"))
+        else if (par.equalsIgnoreCase("replace"))
         {
             this.pasteOption = 2;
-            this.pasteParam = 1;
+            parN++;
         }
-        try
+
+        if (pars.length > parN)
         {
-            this.filename = par[1 + this.pasteParam];
-            final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+            this.filename = pars[parN++];
+            final File file = getSchematicFile();
+            if (!file.getParentFile().exists())
+            {
+                file.getParentFile().mkdirs();
+            }
+
             if (file.exists())
             {
-                v.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
+                try {
+                    schematic = SpongeSchematic.read(file);
+                    v.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
+                }
+                catch (IOException e) {
+                    v.sendMessage(ChatColor.DARK_RED + "There was an issue loading " + this.filename + ".schem " + e.getMessage());
+                    v.sendMessage(ChatColor.AQUA + "Running in clipboard mode. Can copy/paste but will not save to file.");
+                    this.schematic = null;
+                    this.filename = "";
+                    return;
+                }
             }
             else
             {
                 v.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
             }
         }
-        catch (final Exception exception)
+        else
         {
-            v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
+            this.filename = "";
+            v.sendMessage(ChatColor.AQUA + "No filename specified, running in clipboard mode. Can copy/paste but will not save to file.");
+        }
+
+        xFlipped = yFlipped = zFlipped = false;
+        yaw = pitch = roll = 0;
+
+        for (int i = parN; i < pars.length; i++)
+        {
+            if ((pars[i].equalsIgnoreCase("-r") || pars[i].equalsIgnoreCase("-rotate")) && i < pars.length - 1)
+            {
+                try
+                {
+                    double rot = Double.parseDouble(pars[++i]);
+                    this.yaw = (-rot) % 360;
+                    v.sendMessage("Stencil yaw set to " + rot + " degrees.");
+                }
+                catch (NumberFormatException e)
+                {
+                    continue;
+                }
+            }
+
+            if ((pars[i].equalsIgnoreCase("-f") || pars[i].equalsIgnoreCase("-flip")) && i < pars.length - 1)
+            {
+                String dir = pars[++i];
+                int start = 0;
+                Pattern pat = Pattern.compile("(north|n|south|s)|(east|e|west|w)|(up|u|down|d)");
+                Matcher matcher = pat.matcher(dir);
+                int end = dir.length();
+                while (start < end)
+                {
+                    matcher.region(start, end);
+                    if (matcher.find()) {
+                        start = matcher.end();
+
+                        if (matcher.group(1) != null)
+                        {
+                            xFlipped = true;
+                        }
+
+                        if (matcher.group(2) != null)
+                        {
+                            zFlipped = true;
+                        }
+
+                        if (matcher.group(3) != null)
+                        {
+                            yFlipped = true;
+                        }
+                    }
+                    else
+                    {
+                        start++;
+                    }
+                }
+
+                if (xFlipped)
+                {
+                    v.sendMessage("Stencil set to flip on the X axis.");
+                }
+                if (yFlipped)
+                {
+                    v.sendMessage("Stencil set to flip on the Y axis.");
+                }
+                if (zFlipped)
+                {
+                    v.sendMessage("Stencil set to flip on the Z axis.");
+                }
+            }
+
+            if (pars[i].startsWith("p"))
+            {
+                try
+                {
+                    double rot = Double.parseDouble(pars[i].substring(1));
+                    this.pitch = rot % 360;
+                    v.sendMessage("Stencil pitch set to " + rot + " degrees.");
+                }
+                catch (NumberFormatException e)
+                {
+                    continue;
+                }
+            }
+
+            if (pars[i].startsWith("y"))
+            {
+                try
+                {
+                    double rot = Double.parseDouble(pars[i].substring(1));
+                    this.yaw = (-rot) % 360;
+                    v.sendMessage("Stencil yaw set to " + rot + " degrees.");
+                }
+                catch (NumberFormatException e)
+                {
+                    continue;
+                }
+            }
+
+            if (pars[i].startsWith("r"))
+            {
+                try
+                {
+                    double rot = Double.parseDouble(pars[i].substring(1));
+                    this.roll = rot % 360;
+                    v.sendMessage("Stencil roll set to " + rot + " degrees.");
+                }
+                catch (NumberFormatException e)
+                {
+                    continue;
+                }
+            }
         }
     }
 

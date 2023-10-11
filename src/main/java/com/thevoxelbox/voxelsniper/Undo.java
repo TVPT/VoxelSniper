@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.google.common.collect.Sets;
-import org.bukkit.Material;
+import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
@@ -9,11 +9,11 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.NoteBlock;
 import org.bukkit.util.Vector;
 
-import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -24,51 +24,6 @@ import java.util.Set;
  */
 public class Undo {
 
-    private static final Set<Material> FALLING_MATERIALS = EnumSet.of(
-            Material.WATER,
-            Material.STATIONARY_WATER,
-            Material.LAVA,
-            Material.STATIONARY_LAVA);
-    private static final Set<Material> FALLOFF_MATERIALS = EnumSet.of(
-            Material.SAPLING,
-            Material.BED_BLOCK,
-            Material.POWERED_RAIL,
-            Material.DETECTOR_RAIL,
-            Material.LONG_GRASS,
-            Material.DEAD_BUSH,
-            Material.PISTON_EXTENSION,
-            Material.YELLOW_FLOWER,
-            Material.RED_ROSE,
-            Material.BROWN_MUSHROOM,
-            Material.RED_MUSHROOM,
-            Material.TORCH,
-            Material.FIRE,
-            Material.CROPS,
-            Material.SIGN_POST,
-            Material.WOODEN_DOOR,
-            Material.LADDER,
-            Material.RAILS,
-            Material.WALL_SIGN,
-            Material.LEVER,
-            Material.STONE_PLATE,
-            Material.IRON_DOOR_BLOCK,
-            Material.WOOD_PLATE,
-            Material.REDSTONE_TORCH_OFF,
-            Material.REDSTONE_TORCH_ON,
-            Material.REDSTONE_WIRE,
-            Material.STONE_BUTTON,
-            Material.SNOW,
-            Material.CACTUS,
-            Material.SUGAR_CANE_BLOCK,
-            Material.CAKE_BLOCK,
-            Material.DIODE_BLOCK_OFF,
-            Material.DIODE_BLOCK_ON,
-            Material.TRAP_DOOR,
-            Material.PUMPKIN_STEM,
-            Material.MELON_STEM,
-            Material.VINE,
-            Material.WATER_LILY,
-            Material.NETHER_WARTS);
     private final Set<Vector> containing = Sets.newHashSet();
     private final List<BlockState> all;
     private final List<BlockState> falloff;
@@ -103,9 +58,9 @@ public class Undo {
             return;
         }
         this.containing.add(pos);
-        if (Undo.FALLING_MATERIALS.contains(block.getType())) {
+        if (VTags.LIQUID.isTagged(block.getType())) {
             dropdown.add(block.getState());
-        } else if (Undo.FALLOFF_MATERIALS.contains(block.getType())) {
+        } else if (VTags.POP_OFF.isTagged(block.getType())) {
             falloff.add(block.getState());
         } else {
             all.add(block.getState());
@@ -139,6 +94,9 @@ public class Undo {
      */
     private void updateSpecialBlocks(BlockState blockState) {
         BlockState currentState = blockState.getBlock().getState();
+        BlockData blockData = blockState.getBlockData();
+        BlockData currentData = currentState.getBlockData();
+
         if (blockState instanceof BrewingStand && currentState instanceof BrewingStand) {
             ((BrewingStand) currentState).getInventory().setContents(((BrewingStand) blockState).getInventory().getContents());
         } else if (blockState instanceof Chest && currentState instanceof Chest) {
@@ -156,13 +114,13 @@ public class Undo {
             ((Furnace) currentState).setBurnTime(((Furnace) blockState).getBurnTime());
             ((Furnace) currentState).setCookTime(((Furnace) blockState).getCookTime());
             currentState.update();
-        } else if (blockState instanceof NoteBlock && currentState instanceof NoteBlock) {
-            ((NoteBlock) currentState).setNote(((NoteBlock) blockState).getNote());
-            currentState.update();
+        } else if(blockData instanceof NoteBlock && currentData instanceof NoteBlock) {
+            ((NoteBlock) currentData).setNote(((NoteBlock) blockData).getNote());
+            ((NoteBlock) currentData).setInstrument(((NoteBlock) blockData).getInstrument());
         } else if (blockState instanceof Sign && currentState instanceof Sign) {
             int i = 0;
-            for (String text : ((Sign) blockState).getLines()) {
-                ((Sign) currentState).setLine(i++, text);
+            for (Component text : ((Sign) blockState).lines()) {
+                ((Sign) currentState).line(i++, text);
             }
             currentState.update();
         }

@@ -28,7 +28,6 @@ public class VoxelSniperListener implements Listener
     public VoxelSniperListener(final VoxelSniper plugin)
     {
         this.plugin = plugin;
-        MetricsManager.setSnipeCounterInitTimeStamp(System.currentTimeMillis());
         addCommand(new VoxelBrushCommand(plugin));
         addCommand(new VoxelBrushToolCommand(plugin));
         addCommand(new VoxelCenterCommand(plugin));
@@ -113,7 +112,6 @@ public class VoxelSniperListener implements Listener
             Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
             if (sniper.isEnabled() && sniper.snipe(event.getAction(), event.getMaterial(), event.getClickedBlock(), event.getBlockFace()))
             {
-                MetricsManager.increaseSnipeCounter();
                 event.setCancelled(true);
             }
         }

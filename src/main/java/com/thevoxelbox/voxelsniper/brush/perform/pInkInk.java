@@ -5,6 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.util.Inker;
 
 import org.bukkit.block.Block;
 
@@ -14,8 +15,8 @@ import org.bukkit.block.Block;
 public class pInkInk extends vPerformer
 {
 
-    private byte d;
-    private byte dr;
+    private String i;
+    private String ri;
 
     public pInkInk()
     {
@@ -26,26 +27,25 @@ public class pInkInk extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        d = v.getData();
-        dr = v.getReplaceData();
+        i = v.getVoxelInk();
+        ri = v.getReplaceInk();
     }
 
     @Override
     public void info(Message vm)
     {
         vm.performerName(name);
-        vm.data();
-        vm.replaceData();
+        vm.voxelInk();
+        vm.replaceInk();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void perform(Block b)
     {
-        if (b.getData() == dr)
+        if (Inker.matches(b, ri))
         {
             h.put(b);
-            b.setData(d, true);
+            Inker.ink(b, i, true);
         }
     }
 

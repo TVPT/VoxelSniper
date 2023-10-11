@@ -6,6 +6,8 @@ import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Repeater;
 
 /**
  * @author Voxel
@@ -55,13 +57,32 @@ public class SetRedstoneRotateBrush extends Brush
         }
     }
 
-    @SuppressWarnings("deprecation")
-	private void perform(final Block bl)
+    private void perform(final Block bl)
     {
-        if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF)
+        if (bl.getType() == Material.REPEATER)
         {
             this.undo.put(bl);
-            bl.setData((((bl.getData() % 4) + 1 < 5) ? (byte) (bl.getData() + 1) : (byte) (bl.getData() - 4)));
+            Repeater repeater = (Repeater)bl.getBlockData();
+            BlockFace newFace;
+            switch(repeater.getFacing())
+            {
+                case NORTH:
+                    newFace = BlockFace.EAST;
+                    break;
+                case EAST:
+                    newFace = BlockFace.SOUTH;
+                    break;
+                case SOUTH:
+                    newFace = BlockFace.WEST;
+                    break;
+                case WEST:
+                    newFace = BlockFace.NORTH;
+                    break;
+                default:
+                    newFace = null;
+                    break;
+            }
+            repeater.setFacing(newFace);
         }
     }
 

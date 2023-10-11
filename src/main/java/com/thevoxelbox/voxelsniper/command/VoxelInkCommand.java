@@ -1,11 +1,9 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class VoxelInkCommand extends VoxelCommand
@@ -22,36 +20,28 @@ public class VoxelInkCommand extends VoxelCommand
     {
         Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
 
-        byte dataValue;
+        String ink;
 
         if (args.length == 0)
         {
-            Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
-            if (targetBlock != null)
-            {
-                dataValue = targetBlock.getData();
-            }
-            else
-            {
-                return true;
-            }
+            ink = "";
         }
         else
         {
-            try
-            {
-                dataValue = Byte.parseByte(args[0]);
+            String arg = args[0];
+            // We do some basic validation, but hard to do much here. Maybe we could do more in the future.
+            if (arg.startsWith("[") && arg.endsWith("]")) {
+                ink = arg;
             }
-            catch (NumberFormatException exception)
-            {
-                player.sendMessage("Couldn't parse input.");
+            else {
+                player.sendMessage("Input is not a valid trait list.");
                 return true;
             }
         }
 
         SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
-        snipeData.setData(dataValue);
-        snipeData.getVoxelMessage().data();
+        snipeData.setVoxelInk(ink);
+        snipeData.getVoxelMessage().voxelInk();
         return true;
     }
 }

@@ -1,8 +1,9 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.thevoxelbox.voxelsniper.util.Inker;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
-
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 
@@ -12,13 +13,11 @@ import org.bukkit.block.data.BlockData;
 public class SnipeData
 {
 
-    public static final int DEFAULT_REPLACE_DATA_VALUE = 0;
     public static final int DEFAULT_CYLINDER_CENTER = 0;
     public static final int DEFAULT_VOXEL_HEIGHT = 1;
     public static final int DEFAULT_BRUSH_SIZE = 3;
-    public static final int DEFAULT_DATA_VALUE = 0;
-    public static final int DEFAULT_REPLACE_ID = 0;
-    public static final int DEFAULT_VOXEL_ID = 0;
+    public static final Material DEFAULT_MATERIAL = Material.AIR;
+    public static final String DEFAULT_INK = "";
 
     private final Sniper owner;
     private Message voxelMessage;
@@ -26,26 +25,6 @@ public class SnipeData
      * Brush size -- set blockPositionY /b #.
      */
     private int brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
-    /**
-     * Voxel Id -- set blockPositionY /v (#,name).
-     */
-    @Deprecated
-    private int voxelId = SnipeData.DEFAULT_VOXEL_ID;
-    /**
-     * Voxel Replace Id -- set blockPositionY /vr #.
-     */
-    @Deprecated
-    private int replaceId = SnipeData.DEFAULT_REPLACE_ID;
-    /**
-     * Voxel 'ink' -- set blockPositionY /vi #.
-     */
-    @Deprecated
-    private byte data = SnipeData.DEFAULT_DATA_VALUE;
-    /**
-     * Voxel 'ink' Replace -- set blockPositionY /vir #.
-     */
-    @Deprecated
-    private byte replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
     /**
      * Voxel List of ID's -- set blockPositionY /vl # # # -#.
      */
@@ -61,7 +40,13 @@ public class SnipeData
     private int range = 0;
     private boolean ranged = false;
     private boolean lightning = false;
-    private BlockData blockData = Material.AIR.createBlockData();
+    private Material voxelMat = SnipeData.DEFAULT_MATERIAL;
+    private String voxelInk = SnipeData.DEFAULT_INK;
+    private BlockData voxelData = null;
+    private Material replaceMat = SnipeData.DEFAULT_MATERIAL;
+    private String replaceInk = SnipeData.DEFAULT_INK;
+    private BlockData replaceData = null;
+    private Tag<Material> tag = null;
 
     /**
      * @param vs
@@ -88,47 +73,11 @@ public class SnipeData
     }
 
     /**
-     * @return the data
-     */
-    @Deprecated
-    public final byte getData()
-    {
-        return this.data;
-    }
-
-    /**
-     * @return the replaceData
-     */
-    @Deprecated
-    public final byte getReplaceData()
-    {
-        return this.replaceData;
-    }
-
-    /**
-     * @return the replaceId
-     */
-    @Deprecated
-    public final int getReplaceId()
-    {
-        return this.replaceId;
-    }
-
-    /**
      * @return the voxelHeight
      */
     public final int getVoxelHeight()
     {
         return this.voxelHeight;
-    }
-
-    /**
-     * @return the voxelId
-     */
-    @Deprecated
-    public final int getVoxelId()
-    {
-        return this.voxelId;
     }
 
     /**
@@ -168,13 +117,16 @@ public class SnipeData
      */
     public final void reset()
     {
-        this.voxelId = SnipeData.DEFAULT_VOXEL_ID;
-        this.replaceId = SnipeData.DEFAULT_REPLACE_ID;
-        this.data = SnipeData.DEFAULT_DATA_VALUE;
+        this.voxelMat = SnipeData.DEFAULT_MATERIAL;
+        this.voxelInk = SnipeData.DEFAULT_INK;
+        this.voxelData = null;
+        this.replaceMat = SnipeData.DEFAULT_MATERIAL;
+        this.replaceInk = SnipeData.DEFAULT_INK;
+        this.replaceData = null;
+        this.tag = null;
         this.brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
         this.voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
         this.cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
-        this.replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
         this.voxelList = new VoxelList();
     }
 
@@ -205,48 +157,12 @@ public class SnipeData
     }
 
     /**
-     * @param data
-     *         the data to set
-     */
-    public final void setData(final byte data)
-    {
-        this.data = data;
-    }
-
-    /**
-     * @param replaceData
-     *         the replaceData to set
-     */
-    public final void setReplaceData(final byte replaceData)
-    {
-        this.replaceData = replaceData;
-    }
-
-    /**
-     * @param replaceId
-     *         the replaceId to set
-     */
-    public final void setReplaceId(final int replaceId)
-    {
-        this.replaceId = replaceId;
-    }
-
-    /**
      * @param voxelHeight
      *         the voxelHeight to set
      */
     public final void setVoxelHeight(final int voxelHeight)
     {
         this.voxelHeight = voxelHeight;
-    }
-
-    /**
-     * @param voxelId
-     *         the voxelId to set
-     */
-    public final void setVoxelId(final int voxelId)
-    {
-        this.voxelId = voxelId;
     }
 
     /**
@@ -297,11 +213,75 @@ public class SnipeData
         this.lightning = lightning;
     }
 
-    public void setVoxelData(BlockData blockData) {
-        this.blockData = blockData;
+    public BlockData getVoxelData()
+    {
+        if(this.voxelData == null) {
+            this.voxelData = Inker.inkMat(voxelMat, voxelInk);
+        }
+
+        return voxelData;
     }
 
-    public BlockData getVoxelData() {
-        return this.blockData;
+    public Material getVoxelMat()
+    {
+        return voxelMat;
+    }
+
+    public String getVoxelInk()
+    {
+        return voxelInk;
+    }
+
+    public BlockData getReplaceData()
+    {
+        if (this.replaceData == null) {
+            this.replaceData = Inker.inkMat(replaceMat, replaceInk);
+        }
+
+        return replaceData;
+    }
+
+    public Material getReplaceMat()
+    {
+        return replaceMat;
+    }
+
+    public String getReplaceInk()
+    {
+        return replaceInk;
+    }
+
+    public Tag<Material> getTag()
+    {
+        return tag;
+    }
+
+    public void setVoxelMat(Material voxelMat)
+    {
+        this.voxelData = null;
+        this.voxelMat = voxelMat;
+    }
+
+    public void setVoxelInk(String voxelInk)
+    {
+        this.voxelData = null;
+        this.voxelInk = voxelInk;
+    }
+
+    public void setReplaceMat(Material replaceMat)
+    {
+        this.replaceData = null;
+        this.replaceMat = replaceMat;
+    }
+
+    public void setReplaceInk(String replaceInk)
+    {
+        this.replaceData = null;
+        this.replaceInk = replaceInk;
+    }
+
+    public void setTag(Tag<Material> tag)
+    {
+        this.tag = tag;
     }
 }

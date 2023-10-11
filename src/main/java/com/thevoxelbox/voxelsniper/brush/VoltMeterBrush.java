@@ -21,11 +21,10 @@ public class VoltMeterBrush extends Brush
         this.setName("VoltMeter");
     }
 
-    @SuppressWarnings("deprecation")
-	private void data(final SnipeData v)
+    private void data(final SnipeData v)
     {
         final Block block = this.clampY(this.getTargetBlock().getX(), this.getTargetBlock().getY(), this.getTargetBlock().getZ());
-        final byte data = block.getData();
+        final int data = block.getBlockPower();
         v.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + data);
     }
 

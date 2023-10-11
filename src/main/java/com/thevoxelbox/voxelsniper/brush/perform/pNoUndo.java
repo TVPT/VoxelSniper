@@ -5,7 +5,7 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
-
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
@@ -14,7 +14,7 @@ import org.bukkit.block.Block;
 public class pNoUndo extends vPerformer
 {
 
-    private int i;
+    private Material t;
 
     public pNoUndo()
     {
@@ -25,7 +25,7 @@ public class pNoUndo extends vPerformer
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        i = v.getVoxelId();
+        t = v.getVoxelMat();
     }
 
     @Override
@@ -35,13 +35,12 @@ public class pNoUndo extends vPerformer
         vm.voxel();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void perform(Block b)
     {
-        if (b.getTypeId() != i)
+        if (b.getType() != t)
         {
-            b.setTypeId(i);
+            b.setType(t);
         }
     }
 }

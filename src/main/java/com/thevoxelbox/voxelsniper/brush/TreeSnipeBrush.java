@@ -30,8 +30,7 @@ public class TreeSnipeBrush extends Brush
         this.setName("Tree Snipe");
     }
 
-    @SuppressWarnings("deprecation")
-	private void single(final SnipeData v, Block targetBlock)
+    private void single(final SnipeData v, Block targetBlock)
     {
         UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
         Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
@@ -40,7 +39,7 @@ public class TreeSnipeBrush extends Brush
         blockBelow.setType(Material.GRASS);
         this.getWorld().generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
         Undo undo = undoDelegate.getUndo();
-        blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
+        blockBelow.setBlockData(currentState.getBlockData(), true);
         undo.put(blockBelow);
         v.owner().storeUndo(undo);
     }

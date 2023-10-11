@@ -8,6 +8,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
@@ -16,8 +17,7 @@ public class pExcludeCombo extends vPerformer
 {
 
     private VoxelList excludeList;
-    private int id;
-    private byte data;
+    private BlockData bd;
 
     public pExcludeCombo()
     {
@@ -30,26 +30,23 @@ public class pExcludeCombo extends vPerformer
         vm.performerName(name);
         vm.voxelList();
         vm.voxel();
-        vm.data();
+        vm.voxelInk();
     }
 
     @Override
     public void init(com.thevoxelbox.voxelsniper.SnipeData v)
     {
         w = v.getWorld();
-        id = v.getVoxelId();
-        data = v.getData();
+        bd = v.getVoxelData();
         excludeList = v.getVoxelList();
     }
 
-    @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void perform(Block b)
     {
-        if (!excludeList.contains(new int[] {b.getTypeId(), b.getData()}))
-        {
+        if(!excludeList.contains(b.getBlockData())) {
             h.put(b);
-            b.setTypeIdAndData(id, data, true);
+            b.setBlockData(bd, true);
         }
     }
 }

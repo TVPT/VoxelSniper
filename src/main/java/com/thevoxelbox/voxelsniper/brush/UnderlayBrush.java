@@ -2,8 +2,10 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.VTags;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Underlay_Brush
@@ -25,8 +27,7 @@ public class UnderlayBrush extends PerformBrush
         this.setName("Underlay (Reverse Overlay)");
     }
 
-    @SuppressWarnings("deprecation")
-	private void underlay(final SnipeData v)
+    private void underlay(final SnipeData v)
     {
         final int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
         final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
@@ -43,38 +44,23 @@ public class UnderlayBrush extends PerformBrush
                         { // if inside of the column...
                             if (!this.allBlocks)
                             { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
-                                {
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                    case 12:
-                                    case 13:
-                                    case 24:// These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess with.
-                                    case 48:
-                                    case 82:
-                                    case 49:
-                                    case 78:
-                                        for (int d = 0; (d < this.depth); d++)
+                                if(VTags.NATURAL.isTagged(this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))) {
+                                    for (int d = 0; (d < this.depth); d++)
+                                    {
+                                        if (this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z).getType() != Material.AIR)
                                         {
-                                            if (this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z).getTypeId() != 0)
-                                            {
-                                                this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
-                                                // parameters
-                                                memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                            }
+                                            this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
+                                            // parameters
+                                            memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
                                         }
-                                        break;
-
-                                    default:
-                                        break;
+                                    }
                                 }
                             }
                             else
                             {
                                 for (int d = 0; (d < this.depth); d++)
                                 {
-                                    if (this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z).getTypeId() != 0)
+                                    if (this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z).getType() != Material.AIR)
                                     {
                                         this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y + d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
                                         // parameters
@@ -111,31 +97,14 @@ public class UnderlayBrush extends PerformBrush
                             if (!this.allBlocks)
                             { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 
-                                switch (this.getBlockIdAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z))
+                                if(VTags.NATURAL.isTagged(this.getBlockTypeAt(this.getTargetBlock().getX() + x, y, this.getTargetBlock().getZ() + z)))
                                 {
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                    case 12:
-                                    case 13:
-                                    case 14: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess
-                                        // with.
-                                    case 15:
-                                    case 16:
-                                    case 24:
-                                    case 48:
-                                    case 82:
-                                    case 49:
-                                    case 78:
-                                        for (int d = -1; (d < this.depth - 1); d++)
-                                        {
-                                            this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
-                                            // parameters
-                                            memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                        }
-                                        break;
-                                    default:
-                                        break;
+                                    for (int d = -1; (d < this.depth - 1); d++)
+                                    {
+                                        this.current.perform(this.clampY(this.getTargetBlock().getX() + x, y - d, this.getTargetBlock().getZ() + z)); // fills down as many layers as you specify in
+                                        // parameters
+                                        memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+                                    }
                                 }
                             }
                             else
