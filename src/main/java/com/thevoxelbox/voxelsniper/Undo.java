@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.google.common.collect.Sets;
+import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
@@ -118,8 +119,8 @@ public class Undo {
             ((NoteBlock) currentData).setInstrument(((NoteBlock) blockData).getInstrument());
         } else if (blockState instanceof Sign && currentState instanceof Sign) {
             int i = 0;
-            for (String text : ((Sign) blockState).getLines()) {
-                ((Sign) currentState).setLine(i++, text);
+            for (Component text : ((Sign) blockState).lines()) {
+                ((Sign) currentState).line(i++, text);
             }
             currentState.update();
         }

@@ -19,7 +19,7 @@ public class VTags {
     private static Tag<Material> getBlockTag(String name, Set<Material> defaults)
     {
         Tag<Material> tag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, vKey(name), Material.class);
-        return tag == null ? new SetTag<Material>(defaults) : tag;
+        return tag == null ? new SetTag<Material>(defaults, vKey(name)) : tag;
     }
 
     private static final Set<Material> NATURAL_MATERIALS = EnumSet.of(Material.STONE,
@@ -69,8 +69,6 @@ public class VTags {
             Material.RED_BED,
             Material.WHITE_BED,
             Material.YELLOW_BED,
-            Material.POWERED_RAIL,
-            Material.DETECTOR_RAIL,
             Material.TALL_GRASS,
             Material.DEAD_BUSH,
             Material.PISTON_HEAD,
@@ -81,7 +79,14 @@ public class VTags {
             Material.TORCH,
             Material.FIRE,
             Material.WHEAT,
-            Material.SIGN,
+            Material.OAK_SIGN,
+            Material.SPRUCE_SIGN,
+            Material.BIRCH_SIGN,
+            Material.JUNGLE_SIGN,
+            Material.ACACIA_SIGN,
+            Material.DARK_OAK_SIGN,
+            Material.CRIMSON_SIGN,
+            Material.WARPED_SIGN,
             Material.DARK_OAK_DOOR,
             Material.ACACIA_DOOR,
             Material.BIRCH_DOOR,
@@ -94,7 +99,14 @@ public class VTags {
             Material.ACTIVATOR_RAIL,
             Material.DETECTOR_RAIL,
             Material.POWERED_RAIL,
-            Material.WALL_SIGN,
+            Material.OAK_WALL_SIGN,
+            Material.SPRUCE_WALL_SIGN,
+            Material.BIRCH_WALL_SIGN,
+            Material.JUNGLE_WALL_SIGN,
+            Material.ACACIA_WALL_SIGN,
+            Material.DARK_OAK_WALL_SIGN,
+            Material.CRIMSON_WALL_SIGN,
+            Material.WARPED_WALL_SIGN,
             Material.LEVER,
             Material.ACACIA_PRESSURE_PLATE,
             Material.BIRCH_PRESSURE_PLATE,
@@ -105,7 +117,6 @@ public class VTags {
             Material.DARK_OAK_PRESSURE_PLATE,
             Material.HEAVY_WEIGHTED_PRESSURE_PLATE,
             Material.LIGHT_WEIGHTED_PRESSURE_PLATE,
-            Material.IRON_DOOR,
             Material.REDSTONE_TORCH,
             Material.REDSTONE_WIRE,
             Material.STONE_BUTTON,
@@ -129,8 +140,22 @@ public class VTags {
     public static final Tag<Material> POP_OFF = getBlockTag("pop_off", POP_OFF_MATERIALS);
 
     private static final Set<Material> RESET_DENIED_UPDATE_MATERIALS = EnumSet.of(
-            Material.SIGN,
-            Material.WALL_SIGN,
+            Material.OAK_SIGN,
+            Material.SPRUCE_SIGN,
+            Material.BIRCH_SIGN,
+            Material.JUNGLE_SIGN,
+            Material.ACACIA_SIGN,
+            Material.DARK_OAK_SIGN,
+            Material.CRIMSON_SIGN,
+            Material.WARPED_SIGN,
+            Material.OAK_WALL_SIGN,
+            Material.SPRUCE_WALL_SIGN,
+            Material.BIRCH_WALL_SIGN,
+            Material.JUNGLE_WALL_SIGN,
+            Material.ACACIA_WALL_SIGN,
+            Material.DARK_OAK_WALL_SIGN,
+            Material.CRIMSON_WALL_SIGN,
+            Material.WARPED_WALL_SIGN,
             Material.CHEST,
             Material.FURNACE,
             Material.REDSTONE_TORCH,

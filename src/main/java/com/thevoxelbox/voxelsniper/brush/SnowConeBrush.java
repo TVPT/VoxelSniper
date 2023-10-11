@@ -29,7 +29,12 @@ public class SnowConeBrush extends Brush
         }
         else
         {
-            brushSize = this.clampY(blockPositionX, blockPositionY, blockPositionZ).getData() + 1;
+            Block block = this.clampY(blockPositionX, blockPositionY, blockPositionZ);
+            if (block instanceof Snow) {
+                brushSize = ((Snow) block).getLayers() + 1;
+            } else {
+                brushSize = 0;
+            }
         }
 
         final int brushSizeDoubled = 2 * brushSize;

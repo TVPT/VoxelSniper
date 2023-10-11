@@ -30,11 +30,18 @@ public class BiomeBrush extends Brush
         {
             final double xSquared = Math.pow(x, 2);
 
-            for (int z = -brushSize; z <= brushSize; z++)
+            for (int y = -brushSize; y <= brushSize; y++)
             {
-                if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared)
+                final double ySquared = Math.pow(y, 2);
+
+                for (int z = -brushSize; z <= brushSize; z++)
                 {
-                    this.getWorld().setBiome(this.getTargetBlock().getX() + x, this.getTargetBlock().getZ() + z, this.selectedBiome);
+                    final double zSquared = Math.pow(z, 2);
+
+                    if ((xSquared + ySquared + zSquared) <= brushSizeSquared)
+                    {
+                        this.getWorld().setBiome(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z, this.selectedBiome);
+                    }
                 }
             }
         }
